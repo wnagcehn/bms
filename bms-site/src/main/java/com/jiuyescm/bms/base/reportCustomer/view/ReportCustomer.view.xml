@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.reportCustomer.vo.ReportWarehouseCustomerVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property></Property>
+        <Property name="label">设置日期</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchQuotePR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;CUSTOMER_BIZTYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">年份</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">月份</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="year">
+        <Property></Property>
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsEntity">
+      <Property name="dataType">[dtEntity]</Property>
+      <Property name="dataProvider">reportCustomerController#query</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot/>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+&#xD;
+var year=condition.get(&quot;year&quot;);&#xD;
+var month=condition.get(&quot;month&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(year)){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(month)){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(!isNullOrEmpty(month)){&#xD;
+	if(month.length==1){&#xD;
+		month='0'+month;&#xD;
+	}&#xD;
+}&#xD;
+condition.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
+&#xD;
+var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsEntity.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#addDialog&quot;).show();</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnUpdate">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsEntity.data&quot;).current;&#xD;
+if(data){&#xD;
+							&#xD;
+	var createMonth=data.get(&quot;createMonth&quot;);&#xD;
+	&#xD;
+	var dates = createMonth.split('-')&#xD;
+	&#xD;
+	var year=dates[0];&#xD;
+	var month=dates[1];&#xD;
+	&#xD;
+	if(month.indexOf(&quot;0&quot;) == 0){&#xD;
+	   month=month.slice(1);&#xD;
+	}&#xD;
+&#xD;
+	data.set(&quot;year&quot;, year);&#xD;
+	data.set(&quot;month&quot;, month);&#xD;
+&#xD;
+	view.get(&quot;#updateDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+&#xD;
+if(selectData.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要删除的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+dorado.MessageBox.confirm(&quot;是否确定要删除数据?&quot;,function(){&#xD;
+		view.get(&quot;#deleteAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+				tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+			}&#xD;
+		});&#xD;
+	});</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnCopy">
+        <Property name="caption">复制</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -280px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnExport">
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queryForm">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">year</Property>
+        <Property name="property">year</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">month</Property>
+        <Property name="property">month</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bizType</Property>
+        <Property name="property">bizType</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dsDataGrid">
+        <Property name="dataSet">dsEntity</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="selectionMode">multiRows</Property>
+        <RowSelectorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+        </DataColumn>
+        <DataColumn name="warehouseCode">
+          <Property name="property">warehouseCode</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+        </DataColumn>
+        <DataColumn name="bizType">
+          <Property name="property">bizType</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="addDialog">
+      <Buttons>
+        <Button id="btnAddSave">
+          <ClientEvent name="onClick">var entity=view.get(&quot;#addForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(year)){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(month)){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(!isNullOrEmpty(month)){&#xD;
+	if(month.length==1){&#xD;
+		month='0'+month;&#xD;
+	}&#xD;
+}&#xD;
+entity.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
+&#xD;
+view.id(&quot;addAction&quot;).execute(&#xD;
+	function(result){	&#xD;
+		if(&quot;SUCC&quot; == result.code){&#xD;
+			alertMsg(result.code, result.message);		&#xD;
+			view.id(&quot;addDialog&quot;).hide();		&#xD;
+			with (view.get(&quot;#dsEntity&quot;)){&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;操作失败!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">确认</Property>
+        </Button>
+        <Button id="btnAddCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;addDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="addForm">
+          <Property name="dataSet">dsEntity</Property>
+          <Property name="dataType">dtEntity</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">year</Property>
+            <Property name="property">year</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">month</Property>
+            <Property name="property">month</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">customerName</Property>
+            <Property name="property">customerName</Property>
+            <Property name="trigger">triggerCustomer</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">warehouseCode</Property>
+            <Property name="property">warehouseCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">bizType</Property>
+            <Property name="property">bizType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="updateDialog">
+      <Buttons>
+        <Button id="btnUpdateSave">
+          <ClientEvent name="onClick">var entity=view.get(&quot;#editForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(year)){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(month)){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(!isNullOrEmpty(month)){&#xD;
+	if(month.length==1){&#xD;
+		month='0'+month;&#xD;
+	}&#xD;
+}&#xD;
+entity.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
+&#xD;
+view.id(&quot;updateAction&quot;).execute(&#xD;
+	function(result){	&#xD;
+		if(&quot;SUCC&quot; == result.code){	&#xD;
+			alertMsg(result.code, result.message);&#xD;
+			view.id(&quot;updateDialog&quot;).hide();		&#xD;
+			with (view.get(&quot;#dsEntity&quot;)){&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		}else{&#xD;
+			alertMsg(result.code, result.message);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">确认</Property>
+        </Button>
+        <Button id="btnUpdateCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;addDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="editForm">
+          <Property name="dataSet">dsEntity</Property>
+          <Property name="dataType">dtEntity</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">year</Property>
+            <Property name="property">year</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">month</Property>
+            <Property name="property">month</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">customerName</Property>
+            <Property name="property">customerName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">warehouseCode</Property>
+            <Property name="property">warehouseCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">bizType</Property>
+            <Property name="property">bizType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="addAction">
+      <Property name="dataResolver">reportCustomerController#save</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">reportCustomerController#update</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsEntity&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;),&#xD;
+		customerName:data.get(&quot;customername&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="deleteAction">
+      <Property name="dataResolver">reportCustomerController#updateList</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>
