@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库编号</Property>
+      </PropertyDef>
+      <PropertyDef name="elecBizName">
+        <Property name="label">电商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="elecBizCode"/>
+      <PropertyDef name="provinceName">
+        <Property name="label">省</Property>
+      </PropertyDef>
+      <PropertyDef name="cityName">
+        <Property name="label">市</Property>
+      </PropertyDef>
+      <PropertyDef name="districtName">
+        <Property name="label">区</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtWareHouseVo">
+      <Property name="creationType">com.jiuyescm.mdm.warehouse.vo.WarehouseVo</Property>
+      <PropertyDef name="warehouseid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehousecode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehousename">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="regionid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="zipcode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="virtualflag">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition.data&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsPubElecWarehouseEntity">
+      <Property name="dataType">[dtPubElecWarehouseEntity]</Property>
+      <Property name="dataProvider">eWareHousePR#queryAll</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsPlatFormEntity">
+      <Property name="dataType">[dtSystemCodeEntity]</Property>
+      <Property name="dataProvider">eWareHousePR#findEnumList</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <DataSet id="dsAllProvinces">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getAllProvinces</Property>
+    </DataSet>
+    <DataSet id="dsCities">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getCitiesByProvinceCode</Property>
+    </DataSet>
+    <DataSet id="dsDistricts">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getDistrictsByCityCode</Property>
+    </DataSet>
+    <DataSetDropDown id="ddropDownQueryProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	provinceName:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+data.set(&quot;cityName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;districtName&quot;,&quot;&quot;);&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryCity">
+      <ClientEvent name="beforeExecute">&#xD;
+var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var province = data.get(&quot;provinceName&quot;);&#xD;
+&#xD;
+if(province){&#xD;
+	var parameter={&#xD;
+		province:province&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	cityName:arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+data.set(&quot;districtName&quot;,&quot;&quot;);&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var city = data.get(&quot;cityName&quot;);&#xD;
+var province = data.get(&quot;provinceName&quot;);&#xD;
+if(city){&#xD;
+	var parameter={&#xD;
+		province:province,city:city&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	districtName:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryPlatform">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	elecBizName:arg.selectedValue.get(&quot;codeName&quot;),&#xD;
+	elecBizCode:arg.selectedValue.get(&quot;code&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsPlatFormEntity</Property>
+      <Property name="displayProperty">codeName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <Container id="Container_Main">
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsPubElecWarehouseEntity</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsPubElecWarehouseEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnAdd">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsPubElecWarehouseEntity.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
+          <Property name="caption">新增</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnUpdate">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsPubElecWarehouseEntity.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">编辑</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnRemove">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsPubElecWarehouseEntity.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsPubElecWarehouseEntity&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">删除</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <Property name="cols">*,*,*,*,*,*</Property>
+        <Property name="showHint">false</Property>
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="labelWidth">60</Property>
+        <Property name="labelSpacing">0</Property>
+        <Property name="colPadding">15</Property>
+        <AutoFormElement>
+          <Property name="name">warehouseName</Property>
+          <Property name="property">warehouseName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">warehouseCode</Property>
+          <Property name="property">warehouseCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">elecBizName</Property>
+          <Property name="property">elecBizName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">provinceName</Property>
+          <Property name="property">provinceName</Property>
+          <Property name="trigger">ddropDownQueryProvince</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">cityName</Property>
+          <Property name="property">cityName</Property>
+          <Property name="trigger">ddropDownQueryCity</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">districtName</Property>
+          <Property name="property">districtName</Property>
+          <Property name="trigger">ddropDownQueryDistrict</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsPubElecWarehouseEntity</Property>
+        <Property name="stretchColumnsMode">off</Property>
+        <Property name="readOnly">true</Property>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="warehouseCode">
+          <Property name="property">warehouseCode</Property>
+        </DataColumn>
+        <DataColumn name="warehouseName">
+          <Property name="property">warehouseName</Property>
+        </DataColumn>
+        <DataColumn name="elecBizCode">
+          <Property name="property">elecBizCode</Property>
+        </DataColumn>
+        <DataColumn name="elecBizName">
+          <Property name="property">elecBizName</Property>
+        </DataColumn>
+        <DataColumn name="provinceName">
+          <Property name="property">provinceName</Property>
+        </DataColumn>
+        <DataColumn name="cityName">
+          <Property name="property">cityName</Property>
+        </DataColumn>
+        <DataColumn name="districtName">
+          <Property name="property">districtName</Property>
+        </DataColumn>
+        <DataColumn name="detailAddress">
+          <Property name="property">detailAddress</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="creatorCode">
+          <Property name="property">creatorCode</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+        </DataColumn>
+        <DataColumn name="last_modify_time">
+          <Property name="property">last_modify_time</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">600</Property>
+      <Property name="height">400</Property>
+      <Property name="caption">数据维护</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var warehouseName = entity.get(&quot;warehouseName&quot;);//仓库名称&#xD;
+var elecBizCode = entity.get(&quot;elecBizCode&quot;); //电商名称&#xD;
+var provinceName = entity.get(&quot;provinceName&quot;);//省&#xD;
+var cityName=entity.get(&quot;cityName&quot;);//市&#xD;
+var districtName=entity.get(&quot;districtName&quot;);//区&#xD;
+var detailAddress =  entity.get(&quot;detailAddress&quot;); //详细地址&#xD;
+&#xD;
+if(warehouseName==null || warehouseName==''){&#xD;
+	dorado.MessageBox.alert(&quot;仓库名称不能为空!&quot;);&#xD;
+}&#xD;
+else if(elecBizCode==null || elecBizCode==''){&#xD;
+	dorado.MessageBox.alert(&quot;请选择电商!&quot;);&#xD;
+}&#xD;
+else if(provinceName==null || provinceName==''){&#xD;
+	dorado.MessageBox.alert(&quot;请选择省!&quot;);&#xD;
+}&#xD;
+else if(cityName==null || cityName==''){&#xD;
+	dorado.MessageBox.alert(&quot;请选择市!&quot;);&#xD;
+}&#xD;
+else if(districtName==null || districtName==''){&#xD;
+	dorado.MessageBox.alert(&quot;请选择区/县!&quot;);&#xD;
+}&#xD;
+else if(detailAddress==null || detailAddress==''){&#xD;
+	dorado.MessageBox.alert(&quot;请输入详细地址!&quot;);&#xD;
+}&#xD;
+else{&#xD;
+	view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+					view.get(&quot;#dialogEdit&quot;).hide();&#xD;
+				});&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSetDropDown id="ddPlatFormEdit">
+          <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	elecBizName:arg.selectedValue.get(&quot;codeName&quot;),&#xD;
+	elecBizCode:arg.selectedValue.get(&quot;code&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+          <Property name="autoOpen">true</Property>
+          <Property name="dataSet">dsPlatFormEntity</Property>
+          <Property name="displayProperty">codeName</Property>
+          <Property name="editable">false</Property>
+          <Property name="useEmptyItem">false</Property>
+        </DataSetDropDown>
+        <DataSetDropDown id="ddProvinceEdit">
+          <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	provinceName:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+          <Property name="autoOpen">true</Property>
+          <Property name="dataSet">dsAllProvinces</Property>
+          <Property name="displayProperty">province</Property>
+          <Property name="editable">false</Property>
+          <Property name="useEmptyItem">false</Property>
+        </DataSetDropDown>
+        <DataSetDropDown id="ddCityEdit">
+          <ClientEvent name="beforeExecute">&#xD;
+var data = this.get(&quot;#dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;);&#xD;
+var province = data.get(&quot;provinceName&quot;);&#xD;
+&#xD;
+if(province){&#xD;
+	var parameter={&#xD;
+		province:province&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+          <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	cityName:arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+          <Property name="assignmentMap">areaCode=areaCode</Property>
+          <Property name="autoOpen">true</Property>
+          <Property name="dataSet">dsCities</Property>
+          <Property name="displayProperty">city</Property>
+          <Property name="editable">false</Property>
+          <Property name="useEmptyItem">true</Property>
+        </DataSetDropDown>
+        <DataSetDropDown id="ddDistrictEdit">
+          <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;);&#xD;
+var city = data.get(&quot;cityName&quot;);&#xD;
+var province =  data.get(&quot;provinceName&quot;);&#xD;
+if(city){&#xD;
+	var parameter={&#xD;
+		province:province,city:city&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}</ClientEvent>
+          <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsPubElecWarehouseEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	districtName:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+          <Property name="autoOpen">true</Property>
+          <Property name="dataSet">dsDistricts</Property>
+          <Property name="displayProperty">district</Property>
+          <Property name="editable">false</Property>
+          <Property name="useEmptyItem">false</Property>
+        </DataSetDropDown>
+        <AutoForm id="formEdit">
+          <Property name="dataSet">dsPubElecWarehouseEntity</Property>
+          <Property name="dataType">dtPubElecWarehouseEntity</Property>
+          <Property name="cols">*,*,*</Property>
+          <Property name="labelWidth">60</Property>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">warehouseName</Property>
+            <Property name="property">warehouseName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">elecBizName</Property>
+            <Property name="property">elecBizName</Property>
+            <Property name="trigger">ddPlatFormEdit</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">provinceName</Property>
+            <Property name="property">provinceName</Property>
+            <Property name="trigger">ddProvinceEdit</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">cityName</Property>
+            <Property name="property">cityName</Property>
+            <Property name="trigger">ddCityEdit</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">districtName</Property>
+            <Property name="property">districtName</Property>
+            <Property name="trigger">ddDistrictEdit</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">detailAddress</Property>
+            <Property name="property">detailAddress</Property>
+            <Editor>
+              <TextArea/>
+            </Editor>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor>
+              <TextArea/>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="removeAction">
+      <Property name="successMessage">数删除成功</Property>
+      <Property name="dataResolver">eWareHousePR#removeEWareHouse</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPubElecWarehouseEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">eWareHousePR#saveAll</Property>
+      <Property name="successMessage">保存成功!</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPubElecWarehouseEntity</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

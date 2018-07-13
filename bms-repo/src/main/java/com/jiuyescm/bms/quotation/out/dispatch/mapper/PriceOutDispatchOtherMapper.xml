@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.quotation.out.dispatch.mapper.PriceOutDispatchOtherMapper">
+	<!-- 主数据 -->
+	<resultMap id="ResultMainPriceDistribution" type="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispatchOtherDetailEntity">
+		<!-- price_deliver_detail 地址单表结果集映射字段 -->
+		<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="lower" property="lower" jdbcType="DOUBLE" />
+	    <result column="upper" property="upper" jdbcType="DOUBLE" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="extra1" property="extra1" jdbcType="VARCHAR" />
+	    <result column="extra2" property="extra2" jdbcType="VARCHAR" />
+	    <result column="extra3" property="extra3" jdbcType="VARCHAR" />
+	    <result column="extra4" property="extra4" jdbcType="VARCHAR" />
+	    <result column="extra5" property="extra5" jdbcType="VARCHAR" />
+	    <result column="extra6" property="extra6" jdbcType="VARCHAR" /> 
+	</resultMap>
+
+	<sql id="baseColumns">
+        id,template_id,subject_code, lower, upper, unit_price, remark, creator, create_time, last_modifier, last_modify_time, del_flag, extra1, extra2, extra3, extra4, extra5, extra6
+    </sql>
+    
+    <sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(templateId != null and templateId !='')" >
+				and template_id = #{templateId}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(lower != null and lower !='')" >
+				and lower = #{lower}
+		</if>
+		<if test="(upper != null and upper !='')" >
+				and upper = #{upper}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(extra1 != null and extra1 !='')" >
+				and extra1 = #{extra1}
+		</if>
+		<if test="(extra2 != null and extra2 !='')" >
+				and extra2 = #{extra2}
+		</if>
+		<if test="(extra3 != null and extra3 !='')" >
+				and extra3 = #{extra3}
+		</if>
+		<if test="(extra4 != null and extra4 !='')" >
+				and extra4 = #{extra4}
+		</if>
+		<if test="(extra5 != null and extra5 !='')" >
+				and extra5 = #{extra5}
+		</if>
+		<if test="(extra6 != null and extra6 !='')" >
+				and extra6 = #{extra6}
+		</if>
+    </sql>
+    
+	<!-- 查询主要的配送报价 -->
+	<select id="queryAll" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+		select
+        <include refid="baseColumns" />
+        from price_out_dispatch_other_detail
+        where 1=1 and del_flag='0'
+		<include refid="baseSelectColumns" />
+	</select>
+	
+	<!-- 插入新的报价模板 -->
+	<insert id="createPriceDistribution" parameterType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispatchOtherDetailEntity">
+		 insert into price_out_dispatch_other_detail(template_id,subject_code, lower, upper, unit_price, remark, creator, create_time, last_modifier, last_modify_time, del_flag, extra1, extra2, extra3, extra4, extra5, extra6)
+	        values (
+	#{templateId,jdbcType=VARCHAR},
+	#{subjectCode,jdbcType=VARCHAR}, 
+	#{lower,jdbcType=DOUBLE}, 
+	#{upper,jdbcType=DOUBLE}, 
+	#{unitPrice,jdbcType=DOUBLE}, 
+	#{remark,jdbcType=VARCHAR}, 
+	#{creator,jdbcType=VARCHAR}, 
+	#{createTime,jdbcType=TIMESTAMP}, 
+	#{lastModifier,jdbcType=VARCHAR}, 
+	#{lastModifyTime,jdbcType=TIMESTAMP}, 
+	#{delFlag,jdbcType=VARCHAR},
+	#{extra1,jdbcType=VARCHAR}, 
+	#{extra2,jdbcType=VARCHAR}, 
+	#{extra3,jdbcType=VARCHAR}, 
+	#{extra4,jdbcType=VARCHAR}, 
+	#{extra5,jdbcType=VARCHAR}, 
+	#{extra6,jdbcType=VARCHAR}
+	        )
+	</insert>
+	
+	<!-- 修改新的报价模板 -->
+	<update id="updatePriceDistribution">
+		update price_out_dispatch_other_detail 
+		<set >
+			<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="lower != null" >lower=#{lower,jdbcType=DOUBLE},</if>
+			<if test="upper != null" >upper=#{upper,jdbcType=DOUBLE},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="extra1 != null" >extra1=#{extra1,jdbcType=VARCHAR},</if>
+			<if test="extra2 != null" >extra2=#{extra2,jdbcType=VARCHAR},</if>
+			<if test="extra3 != null" >extra3=#{extra3,jdbcType=VARCHAR},</if>
+			<if test="extra4 != null" >extra4=#{extra4,jdbcType=VARCHAR},</if>
+			<if test="extra5 != null" >extra5=#{extra5,jdbcType=VARCHAR},</if>
+			<if test="extra6 != null" >extra6=#{extra6,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+	</update>
+	
+	<!-- 删除配送报价模板 -->
+	<delete id="deletePriceDistribution" parameterType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispatchOtherDetailEntity">
+		update price_out_dispatch_other_detail
+		<set>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR}</if>
+		</set>
+		 where id=#{id,jdbcType=BIGINT}
+	</delete>
+	
+	<!-- 查询所有的电商仓库信息 -->                    
+	<select id="getAllPubWareHouse" resultType="com.jiuyescm.bms.quotation.dispatch.entity.PubWarehouseEntity">
+		SELECT * from omsprd.pub_warehouse where 1=1
+	</select>
+	
+	<!-- 根据电仓仓库名获取电商仓库信息 -->
+	<select id="getWareHouse" resultType="com.jiuyescm.bms.quotation.dispatch.entity.PubWarehouseEntity" parameterType="java.lang.String">
+		select * from omsprd.pub_warehouse where warehousename=#{wareHouseName,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 批量插入配送报价模板 -->
+	<insert id="insertBatchTemplate" parameterType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispatchOtherDetailEntity">
+		insert into price_out_dispatch_other_detail(template_id, subject_code, lower, upper, unit_price, remark, creator, create_time, last_modifier, last_modify_time, del_flag, extra1, extra2, extra3, extra4, extra5, extra6)
+        values (
+        	#{templateId,jdbcType=VARCHAR},
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{lower,jdbcType=DOUBLE}, 
+			#{upper,jdbcType=DOUBLE}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{extra1,jdbcType=VARCHAR}, 
+			#{extra2,jdbcType=VARCHAR}, 
+			#{extra3,jdbcType=VARCHAR}, 
+			#{extra4,jdbcType=VARCHAR}, 
+			#{extra5,jdbcType=VARCHAR}, 
+			#{extra6,jdbcType=VARCHAR}
+        )
+		
+	</insert>
+	
+	<select id="getDispatchById" resultMap="ResultMainPriceDistribution" parameterType="java.lang.String">
+		SELECT * FROM price_out_dispatch_other_detail d
+		where 1=1 and d.template_id=#{temid,jdbcType=VARCHAR}
+		and d.del_flag='0'
+		
+	</select>
+	
+	<!-- 通过temid查找对应的id -->
+	<select id="getId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id FROM price_out_dispatch_other_template where template_code=#{temid,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 查询主要的配送报价 -->
+	<select id="queryOne" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	SELECT * FROM price_out_dispatch_other_detail d 
+	where 1=1
+	<include refid="baseSelectColumns" />	
+	and d.del_flag='0' limit 1
+	</select>
+	
+	<update id="removeDispatchByMap" parameterType="java.util.Map">
+		update price_out_dispatch_other_detail
+		<set>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			del_flag='1'
+		</set>
+		 where template_id=#{templateId}
+	</update>
+	
+	<select id="queryAllOutDispatch" parameterType="java.util.Map" resultMap="ResultMainPriceDistribution">
+		select d.* from price_contract_info a 
+		inner join price_contract_item b on a.contract_code=b.contract_code and b.del_flag=0
+		inner join price_out_dispatch_other_template c on c.template_code=b.template_id and c.del_flag=0
+		inner join price_out_dispatch_other_detail d on c.id=d.template_id and d.del_flag=0
+		where a.customerId=#{deliveryid} and b.subject_id=#{subjectId};
+	</select>
+</mapper>

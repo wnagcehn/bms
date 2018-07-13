@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.jiuyescm.framework</groupId>
+		<artifactId>jiuyescm-parent</artifactId>
+		<version>1.1.0</version>
+	</parent>
+	<groupId>com.jiuyescm.bms</groupId>
+	<artifactId>bms-job</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>bms-job</name>
+	<description>Job Starter</description>
+
+	<dependencies>
+		<dependency>
+		  <groupId>com.jiuyescm.bms</groupId>
+		  <artifactId>bms-bpi-impl</artifactId>
+		  <version>1.0.1-SNAPSHOT</version>
+		  <exclusions>
+		  		<exclusion>
+				    <groupId>com.jiuyescm.bms</groupId>
+					<artifactId>bms-api</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>com.jiuyescm.bms</groupId>
+					<artifactId>bms-api-impl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- mdm jar包 -->
+		<dependency>
+			<groupId>com.jiuyescm.mdm</groupId>
+			<artifactId>mdm-customer-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+	 	<dependency>
+			<groupId>com.jiuyescm.mdm</groupId>
+			<artifactId>mdm-carrier-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<!-- logback -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-core</artifactId>
+			<version>1.8.1</version>
+		</dependency>
+		<!-- disconf-ext -->
+		<dependency>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>disconf-client-ext</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>datasource-multiple</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<!-- dubbo -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+		</dependency>
+		<!-- disconf -->
+		<dependency>
+			<groupId>com.baidu.disconf</groupId>
+			<artifactId>disconf-client</artifactId>
+		</dependency>
+		<!-- druid -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+		</dependency>
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+		<!-- zk -->
+		<dependency>
+			<groupId>com.github.sgroschupf</groupId>
+			<artifactId>zkclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+		</dependency>
+		<!-- mysql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.2.4.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>net.sf.json-lib</groupId>
+		    <artifactId>json-lib</artifactId>
+		    <version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>spring/*</include>
+					<include>dubbo/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/conf</directory>
+				<excludes>
+					<exclude>dev/*</exclude>
+					<exclude>qa/*</exclude>
+					<exclude>stage/*</exclude>
+					<exclude>prod/*</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/conf/${profiles.active}</directory>
+			</resource>
+			<!-- 结合com.alibaba.dubbo.container.Main -->
+			<resource>
+				<targetPath>${project.build.directory}/classes/META-INF/spring</targetPath>
+				<directory>src/main/resources/spring</directory>
+<!-- 				<filtering>true</filtering> -->
+<!-- 				<includes> -->
+<!-- 					<include>spring-context.xml</include> -->
+<!-- 				</includes> -->
+			</resource>
+			<resource>
+				<targetPath>${project.build.directory}/classes/META-INF/dubbo</targetPath>
+				<directory>src/main/resources/dubbo</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<classesDirectory>target/classes/</classesDirectory>
+					<archive>
+						<manifest>
+							<mainClass>com.jiuyescm.bms.JobApplication</mainClass>
+							<!-- 打包时 MANIFEST.MF文件不记录的时间戳版本 -->
+							<useUniqueVersions>true</useUniqueVersions>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>.</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/distribution.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

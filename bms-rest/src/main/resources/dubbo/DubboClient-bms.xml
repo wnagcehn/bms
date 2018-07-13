@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+	<dubbo:reference id="provinceCityEnquiryService" interface="com.jiuyescm.bms.wechat.enquiry.api.IProvinceCityEnquiryService" registry="registry"/>
+	
+	<dubbo:reference id="productTypeEnquiryService" interface="com.jiuyescm.bms.wechat.enquiry.api.IProductTypeEnquiryService" registry="registry"/>
+	
+	<dubbo:reference id="quotationEnquiryService" interface="com.jiuyescm.bms.wechat.enquiry.api.IQuotationEnquiryService" registry="registry"/>
+	
+	<dubbo:reference id="elecWarehouseService" interface="com.jiuyescm.bms.wechat.enquiry.api.IElecWarehouseEnquiryService" registry="registry"/>
+	
+	<dubbo:reference id="transportTrialService" interface="com.jiuyescm.bms.wechat.enquiry.api.ITransportTrialService" registry="registry"/>
+	
+	<dubbo:reference id="carModelEnquiryService" interface="com.jiuyescm.bms.wechat.enquiry.api.ICarModelEnquiryService" registry="registry"/>
+	
+	<dubbo:reference id="airPortEnquiryService" interface="com.jiuyescm.bms.wechat.enquiry.api.IAirPortEnquiryService" registry="registry"/>
+</beans>

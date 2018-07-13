@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtFeesPayImport">
+      <Property name="creationType">com.jiuyescm.bms.paymanage.payimport.FeesPayImportEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;BUSSINESS_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;pay_outcome_import_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property></Property>
+        <Property name="label">费用名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property></Property>
+        <Property name="label">所在月份</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="extarr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extarr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extarr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extarr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extarr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property></Property>
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="state">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getCheckedState&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">审核状态</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="year">
+        <Property></Property>
+        <Property name="label">年</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;BUSSINESS_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库id</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="state">
+        <Property></Property>
+        <Property name="label">审核状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;customerContractController#getCheckedState&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsFeesPayImport">
+      <Property name="dataType">[dtFeesPayImport]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">feesPayImportController#queryAll</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsFeesPayImport</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
+if(!isNullOrEmpty(year)){&#xD;
+	if(!isNullOrEmpty(month)){&#xD;
+		if(month.length==1){&#xD;
+			month='0'+month;&#xD;
+		}&#xD;
+		entity.set(&quot;createMonth&quot;,year+&quot;&quot;+month);&#xD;
+		&#xD;
+	}else{&#xD;
+		entity.set(&quot;createYear&quot;,year);&#xD;
+	}&#xD;
+}else{&#xD;
+	if(!isNullOrEmpty(month)){&#xD;
+		dorado.MessageBox.alert(&quot;请选择月份！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	entity.set(&quot;createMonth&quot;,&quot;&quot;);&#xD;
+	entity.set(&quot;createYear&quot;,&quot;&quot;);&#xD;
+}&#xD;
+view.get(&quot;#dsFeesPayImport&quot;).set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnSelectRemove">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectData = view.get(&quot;#feesDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+if(selectData.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择需要删除的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var result=&quot;0&quot;;&#xD;
+selectData.each(function(item){&#xD;
+	if(item.get(&quot;state&quot;)=='1'){&#xD;
+		result=&quot;1&quot;;&#xD;
+		return;&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(result=='1'){&#xD;
+	dorado.MessageBox.alert(&quot;选中的数据中存在已审核的数据，无法删除!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+dorado.MessageBox.confirm(&quot;是否确定删除?&quot;,function(){&#xD;
+	view.get(&quot;#feesRemoveAction&quot;).execute(function(result){&#xD;
+		var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+		view.get(&quot;#dsFeesPayImport&quot;).set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();	&#xD;
+	});&#xD;
+});&#xD;
+</ClientEvent>
+        <Property name="caption">批量删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnDownloadTemplate">
+        <ClientEvent name="onClick">view.get(&quot;#templateDownloadAction&quot;).execute();	</ClientEvent>
+        <Property name="caption">模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnImportTemplate">
+        <ClientEvent name="onClick">view.get(&quot;#StepImportDialog&quot;).show();</ClientEvent>
+        <Property name="caption">模板导入</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnSelectCheck">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectData = view.get(&quot;#feesDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+if(selectData.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择需要审核的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var re=&quot;0&quot;;&#xD;
+selectData.each(function(item){&#xD;
+	if(item.get(&quot;state&quot;)==&quot;1&quot;){&#xD;
+		re=&quot;1&quot;;&#xD;
+		return;&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(re==&quot;1&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;选择的数据中存在已审核的数据，请重新选择!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+selectData.each(function(item){&#xD;
+	item.set(&quot;state&quot;,&quot;1&quot;);&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#feesUpdateAction&quot;).execute(function(result){&#xD;
+	dorado.MessageBox.alert(&quot;审核成功!&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+	view.get(&quot;#dsFeesPayImport&quot;).set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();	&#xD;
+});&#xD;
+</ClientEvent>
+        <Property name="caption">批量审核</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnunaudit">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectData = view.get(&quot;#feesDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+var seperator = &quot;-&quot;;&#xD;
+if(selectData.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择需要反审核的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var re=&quot;0&quot;;&#xD;
+selectData.each(function(item){&#xD;
+	if(item.get(&quot;state&quot;)==&quot;0&quot;){&#xD;
+		re=&quot;1&quot;;&#xD;
+		return;&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(re==&quot;1&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;选择的数据中存在未审核的数据，请重新选择!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+//上月&#xD;
+var re='0';&#xD;
+var date=new Date();&#xD;
+var year = date.getFullYear();&#xD;
+var month = formatMonth(date.getMonth());&#xD;
+var firstDay = year +&quot;&quot;+ month;//上个月的第一天&#xD;
+&#xD;
+view.get(&quot;#feesAjaxAction&quot;).execute(function(result){&#xD;
+	if(result=='yes'){&#xD;
+		selectData.each(function(item){&#xD;
+			if(item.get(&quot;createMonth&quot;)!=firstDay){&#xD;
+				re='1';&#xD;
+				return;&#xD;
+			}&#xD;
+		});	&#xD;
+	}&#xD;
+	&#xD;
+	if(re=='1'){&#xD;
+		dorado.MessageBox.alert(&quot;存在超过上个月的数据，无法反审核!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	selectData.each(function(item){&#xD;
+		item.set(&quot;state&quot;,&quot;0&quot;);&#xD;
+	});&#xD;
+	&#xD;
+	view.get(&quot;#feesUpdateAction&quot;).execute(function(result){&#xD;
+		dorado.MessageBox.alert(&quot;批量反审核成功!&quot;);&#xD;
+		var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+		view.get(&quot;#dsFeesPayImport&quot;).set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();	&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
+&#xD;
+&#xD;
+function formatMonth(month){&#xD;
+	if(month&lt;=0){&#xD;
+		month=12+month;&#xD;
+		 year=year-1;&#xD;
+	}&#xD;
+	if (month >= 1 &amp;&amp; month &lt;= 9) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+	return month;&#xD;
+}</ClientEvent>
+        <Property name="caption">批量反审核</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -220px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">year</Property>
+        <Property name="property">year</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">month</Property>
+        <Property name="property">month</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bizType</Property>
+        <Property name="property">bizType</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">state</Property>
+        <Property name="property">state</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="feesDataGrid">
+        <Property name="dataSet">dsFeesPayImport</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="selectionMode">multiRows</Property>
+        <RowNumColumn/>
+        <RowSelectorColumn/>
+        <DataColumn name="bizType">
+          <Property name="property">bizType</Property>
+        </DataColumn>
+        <DataColumn name="subjectName">
+          <Property name="property">subjectName</Property>
+        </DataColumn>
+        <DataColumn name="amount">
+          <Property name="property">amount</Property>
+        </DataColumn>
+        <DataColumn name="warehouseCode">
+          <Property name="property">warehouseCode</Property>
+        </DataColumn>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+        </DataColumn>
+        <DataColumn name="state">
+          <Property name="property">state</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="StepImportDialog">
+      <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">导入</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="impCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#StepImportDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="fileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="impBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">impBtn</Property>
+            <Property name="property">impBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="impBtn2">
+                <Property name="action">StepUploadAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="progressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="exportProgressBar"/>
+        <AjaxAction id="getProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">feesPayImportController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="setProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">feesPayImportController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="StepUploadAction">
+          <ClientEvent name="onFileUploaded">&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+var data= arg.returnValue;&#xD;
+ &#xD;
+if(data.error!=null){  &#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+	view.get(&quot;#dsFeesPayImport&quot;).set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+}&#xD;
+&#xD;
+ &#xD;
+</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName input&quot;).val(fname);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_exportProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getProgess&quot;);&#xD;
+var setAction = view.get(&quot;#setProgess&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">5MB</Property>
+          <Property name="successMessage">操作完成!</Property>
+          <Property name="fileResolver">feesPayImportController#importFeesPayTemplate</Property>
+          <Filters/>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="errorProductMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="height">300</Property>
+      <Property name="width">540</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorProductMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+            <Property name="readOnly">true</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+            <Property name="readOnly">true</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="feesRemoveAction">
+      <ClientEvent name="onGetUpdateData">var selectData = view.get(&quot;#feesDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+arg.data=selectData;</ClientEvent>
+      <Property name="successMessage">删除成功</Property>
+      <Property name="dataResolver">feesPayImportController#remove</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsFeesPayImport</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="feesUpdateAction">
+      <ClientEvent name="onGetUpdateData">var selectData = view.get(&quot;#feesDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+arg.data=selectData;</ClientEvent>
+      <Property name="dataResolver">feesPayImportController#update</Property>
+      <Property name="successMessage">更新成功</Property>
+      <UpdateItem/>
+    </UpdateAction>
+    <AjaxAction id="feesAjaxAction">
+      <Property name="service">feesPayImportController#queryIsLimit</Property>
+    </AjaxAction>
+    <DownloadAction id="templateDownloadAction">
+      <Property name="fileProvider">feesPayImportController#getTemplate</Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

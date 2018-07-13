@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.transport.mapper.GenericTemplateMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="customerId" property="customerId" jdbcType="VARCHAR" />
+   	    <result column="customerName" property="customerName" jdbcType="VARCHAR" />
+	    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+	    <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+	    <result column="template_type" property="templateType" jdbcType="VARCHAR" />
+	    <result column="biz_type_code" property="bizTypeCode" jdbcType="VARCHAR" />
+	    <result column="subject_id" property="subjectId" jdbcType="VARCHAR" />
+	    <result column="bill_way_code" property="billWayCode" jdbcType="VARCHAR" />
+	    <result column="storage_template_type" property="storageTemplateType" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id,customerId,customerName, template_code, template_name, template_type, biz_type_code, subject_id,bill_way_code,
+        storage_template_type,remark, param1, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customerId = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customerName = #{customerName}
+		</if>
+		<if test="(templateCode != null and templateCode !='')" >
+				and template_code = #{templateCode}
+		</if>
+		<if test="(templateName != null and templateName !='')" >
+				and template_name = #{templateName}
+		</if>
+		<if test="(templateType != null and templateType !='')" >
+				and template_type = #{templateType}
+		</if>
+		<if test="(bizTypeCode != null and bizTypeCode !='')" >
+				and biz_type_code = #{bizTypeCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+				and subject_id = #{subjectId}
+		</if>
+		<if test="(billWayCode != null and billWayCode !='')" >
+				and bill_way_code = #{billWayCode}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
+        select
+        <include refid="baseColumns" />
+        from price_general_template
+        where 1=1 and del_flag=0
+        <if test="(customerId != null and customerId !='')" >
+				and customerId = #{customerId}
+		</if>
+		<if test="(templateCode != null and templateCode !='')" >
+				and template_code  like '%${templateCode}%' 
+		</if>
+		<if test="(templateName != null and templateName !='')" >
+				and template_name  like  '%${templateName}%'
+		</if>
+		<if test="(templateType != null and templateType !='')" >
+				and template_type = #{templateType}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark  like  '%${remark}%'
+		</if>
+		<if test="(storageTemplateType != null and storageTemplateType !='')" >
+				and storage_template_type = #{storageTemplateType}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		order by create_time desc,id desc
+    </select>
+    
+    <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
+        select
+        <include refid="baseColumns" />
+        from price_general_template
+        where 1=1 and del_flag='0'
+		<if test="(templateCode != null and templateCode !='')" >
+				and template_code  like '%${templateCode}%' 
+		</if>
+		<if test="(templateName != null and templateName !='')" >
+				and template_name  like  '%${templateName}%'
+		</if>
+		<if test="(templateType != null and templateType !='')" >
+				and template_type = #{templateType}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark  like  '%${remark}%'
+		</if>
+		<if test="(storageTemplateType != null and storageTemplateType !='')" >
+				and storage_template_type = #{storageTemplateType}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customerId = #{customerId}
+		</if>
+		order by create_time desc,id desc
+		limit 1
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
+        select
+        <include refid="baseColumns" />
+        from price_general_template
+        where id=#{id} 
+        order by create_time desc,id desc
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
+        insert into price_general_template(customerId,customerName,template_code,template_name, template_type, biz_type_code,
+        	subject_id, bill_way_code,storage_template_type,remark, param1, creator, create_time, 
+        	last_modifier, last_modify_time, del_flag)
+        values (
+        	#{customerId},#{customerName},
+			#{templateCode,jdbcType=VARCHAR}, 
+			#{templateName,jdbcType=VARCHAR}, 
+			#{templateType,jdbcType=VARCHAR}, 
+			#{bizTypeCode,jdbcType=VARCHAR}, 
+			#{subjectId,jdbcType=VARCHAR}, 
+			#{billWayCode,jdbcType=VARCHAR}, 
+			#{storageTemplateType,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
+        update price_general_template 
+		<set >
+			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customerName=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="templateName != null" >template_name=#{templateName,jdbcType=VARCHAR},</if>
+			<if test="bizTypeCode != null" >biz_type_code=#{bizTypeCode,jdbcType=VARCHAR},</if>
+			<if test="templateType != null" >template_type=#{templateType,jdbcType=VARCHAR},</if>
+			<if test="subjectId != null" >subject_id=#{subjectId,jdbcType=VARCHAR},</if>
+			<if test="billWayCode != null" >bill_way_code=#{billWayCode,jdbcType=VARCHAR},</if>
+			<if test="storageTemplateType != null" >storage_template_type=#{storageTemplateType,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+	<update id="remove" parameterType="Map">
+		update price_general_template set del_flag=1,
+		last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
+		where id=#{templateId}
+	</update>
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from price_general_template where
+        id=#{id}
+    </delete>
+</mapper>

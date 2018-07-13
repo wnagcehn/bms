@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.BizOutstockDetailEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="oms_id" property="omsId" jdbcType="VARCHAR" />
+	    <result column="oms_item_id" property="omsItemId" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="external_product_code" property="externalProductCode" jdbcType="VARCHAR" />
+	    <result column="product_category_code" property="productCategoryCode" jdbcType="VARCHAR" />
+	    <result column="product_category_name" property="productCategoryName" jdbcType="VARCHAR" />
+	    <result column="temperature_code" property="temperatureCode" jdbcType="VARCHAR" />
+	    <result column="temperature_name" property="temperatureName" jdbcType="VARCHAR" />
+	    <result column="num" property="num" jdbcType="DOUBLE" />
+	    <result column="resize_num" property="resizeNum" jdbcType="DOUBLE" />
+	    <result column="unit_code" property="unitCode" jdbcType="VARCHAR" />
+	    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+   		<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, oms_id, oms_item_id, outstock_no, product_code, product_name, external_product_code, product_category_code, product_category_name, temperature_code, temperature_name, num, resize_num, unit_code, unit_name, creator, create_time, last_modifier, last_modify_time,write_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(omsId != null and omsId !='')" >
+				and oms_id = #{omsId}
+		</if>
+		<if test="(omsItemId != null and omsItemId !='')" >
+				and oms_item_id = #{omsItemId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(productCode != null and productCode !='')" >
+				and product_code = #{productCode}
+		</if>
+		<if test="(productName != null and productName !='')" >
+				and product_name = #{productName}
+		</if>
+		<if test="(externalProductCode != null and externalProductCode !='')" >
+				and external_product_code = #{externalProductCode}
+		</if>
+		<if test="(productCategoryCode != null and productCategoryCode !='')" >
+				and product_category_code = #{productCategoryCode}
+		</if>
+		<if test="(productCategoryName != null and productCategoryName !='')" >
+				and product_category_name = #{productCategoryName}
+		</if>
+		<if test="(temperatureCode != null and temperatureCode !='')" >
+				and temperature_code = #{temperatureCode}
+		</if>
+		<if test="(temperatureName != null and temperatureName !='')" >
+				and temperature_name = #{temperatureName}
+		</if>
+		<if test="(num != null and num !='')" >
+				and num = #{num}
+		</if>
+		<if test="(resizeNum != null and resizeNum !='')" >
+				and resize_num = #{resizeNum}
+		</if>
+		<if test="(unitCode != null and unitCode !='')" >
+				and unit_code = #{unitCode}
+		</if>
+		<if test="(unitName != null and unitName !='')" >
+				and unit_name = #{unitName}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_outstock_detail
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_outstock_detail
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity">
+        insert into biz_outstock_detail(oms_id, oms_item_id, outstock_no, product_code, product_name, external_product_code, product_category_code, product_category_name, temperature_code, temperature_name, num, resize_num, unit_code, unit_name, creator, create_time, last_modifier, last_modify_time, write_time,del_flag)
+        values (
+
+#{omsId,jdbcType=VARCHAR}, 
+#{omsItemId,jdbcType=VARCHAR}, 
+#{outstockNo,jdbcType=VARCHAR}, 
+#{productCode,jdbcType=VARCHAR}, 
+#{productName,jdbcType=VARCHAR}, 
+#{externalProductCode,jdbcType=VARCHAR}, 
+#{productCategoryCode,jdbcType=VARCHAR}, 
+#{productCategoryName,jdbcType=VARCHAR}, 
+#{temperatureCode,jdbcType=VARCHAR}, 
+#{temperatureName,jdbcType=VARCHAR}, 
+#{num,jdbcType=DOUBLE}, 
+#{resizeNum,jdbcType=DOUBLE}, 
+#{unitCode,jdbcType=VARCHAR}, 
+#{unitName,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity">
+        update biz_outstock_detail 
+		<set >
+
+<if test="omsId != null" >oms_id=#{omsId,jdbcType=VARCHAR},</if>
+<if test="omsItemId != null" >oms_item_id=#{omsItemId,jdbcType=VARCHAR},</if>
+<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+<if test="productCode != null" >product_code=#{productCode,jdbcType=VARCHAR},</if>
+<if test="productName != null" >product_name=#{productName,jdbcType=VARCHAR},</if>
+<if test="externalProductCode != null" >external_product_code=#{externalProductCode,jdbcType=VARCHAR},</if>
+<if test="productCategoryCode != null" >product_category_code=#{productCategoryCode,jdbcType=VARCHAR},</if>
+<if test="productCategoryName != null" >product_category_name=#{productCategoryName,jdbcType=VARCHAR},</if>
+<if test="temperatureCode != null" >temperature_code=#{temperatureCode,jdbcType=VARCHAR},</if>
+<if test="temperatureName != null" >temperature_name=#{temperatureName,jdbcType=VARCHAR},</if>
+<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+<if test="resizeNum != null" >resize_num=#{resizeNum,jdbcType=DOUBLE},</if>
+<if test="unitCode != null" >unit_code=#{unitCode,jdbcType=VARCHAR},</if>
+<if test="unitName != null" >unit_name=#{unitName,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from biz_outstock_detail where
+        id=#{id}
+    </delete>
+</mapper>

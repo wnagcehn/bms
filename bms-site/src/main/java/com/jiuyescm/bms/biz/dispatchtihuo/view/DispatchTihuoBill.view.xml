@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBizTihuoBillEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="countDate">
+        <Property name="label">统计时间</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="totalNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">单量</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverid">
+        <Property></Property>
+        <Property name="label">宅配商id</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property></Property>
+        <Property name="label">宅配商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">是否计算</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr6">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="calculateTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">计算时间</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property/>
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property/>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="deliverid">
+        <Property name="label">宅配商</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property name="label">宅配商简称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtFileExportTaskEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.file.entity.FileExportTaskEntity</Property>
+      <PropertyDef name="taskId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property></Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="taskType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="taskState">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">已创建</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">处理中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">失败</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="progress">
+        <Property name="dataType">Double</Property>
+        <Property name="label">进度</Property>
+      </PropertyDef>
+      <PropertyDef name="filePath">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtFileExportTaskCondition">
+      <PropertyDef name="taskName">
+        <Property></Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="taskType">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBizTihuoBillEntity">
+      <Property name="dataType">[dtBizTihuoBillEntity]</Property>
+      <Property name="dataProvider">dispatchTihuoController#queryAll</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsFileExportTaskList">
+      <Property name="dataType">[dtFileExportTaskEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">fileExportTaskController#query</Property>
+    </DataSet>
+    <DataSet id="dsFileExportTaskCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsFileExportTaskCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtFileExportTaskCondition]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBizTihuoBillEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBizTihuoBillEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#queyConditionForm&quot;);&#xD;
+&#xD;
+var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;createTime&quot;);&#xD;
+var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;endTime&quot;);&#xD;
+&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="export">
+        <ClientEvent name="onClick">var condition=view.get(&quot;#queyConditionForm.entity&quot;);&#xD;
+var deliverid=condition.get(&quot;deliverid&quot;);&#xD;
+var cre=condition.get(&quot;createTime&quot;);&#xD;
+var end=condition.get(&quot;endTime&quot;);&#xD;
+if(isNullOrEmpty(deliverid)){&#xD;
+	dorado.MessageBox.alert(&quot;宅配商不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(cre)){&#xD;
+	dorado.MessageBox.alert(&quot;开始时间不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(end)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute(&#xD;
+	function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="biz_download">
+        <ClientEvent name="onClick">with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		taskType:'tihuo'&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
+        <Property name="caption">数据下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <Container>
+      <AutoForm id="queyConditionForm">
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <AutoFormElement>
+          <Property name="name">deliverid</Property>
+          <Property name="property">deliverid</Property>
+          <Property name="trigger">triggerDeliver</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">isCalculated</Property>
+          <Property name="property">isCalculated</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsBizTihuoBillEntity</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="countDate">
+          <Property name="property">countDate</Property>
+        </DataColumn>
+        <DataColumn name="totalNum">
+          <Property name="property">totalNum</Property>
+        </DataColumn>
+        <DataColumn name="deliverid">
+          <Property name="property">deliverid</Property>
+        </DataColumn>
+        <DataColumn name="deliverName">
+          <Property name="property">deliverName</Property>
+        </DataColumn>
+        <DataColumn name="isCalculated">
+          <Property name="property">isCalculated</Property>
+        </DataColumn>
+        <DataColumn name="calculateTime">
+          <Property name="property">calculateTime</Property>
+        </DataColumn>
+        <DataColumn name="feesNo">
+          <Property name="property">feesNo</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Trigger id="triggerDeliver">
+      <ClientEvent name="onExecute">view.get(&quot;#panelDeliver&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeliver">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeliver.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queyConditionForm.entity&quot;).set(&quot;deliverid&quot;,data.get(&quot;deliverid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeliver">
+          <Property name="subView">com.jiuyescm.bms.base.delivery.view.DeliveryLookUp1</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="bizDownAction">
+      <Property name="dataResolver">dispatchTihuoController#asynExport</Property>
+    </UpdateAction>
+    <Dialog id="fileExportTaskDialog">
+      <Property name="closeable">false</Property>
+      <Property name="caption">账单下载</Property>
+      <Property name="height">500</Property>
+      <Property name="width">900</Property>
+      <Buttons>
+        <Button id="btnFileExportTaskClose">
+          <ClientEvent name="onClick">var condition = view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+condition.set(&quot;taskName&quot;,null);&#xD;
+view.get(&quot;#fileExportTaskDialog&quot;).hide();</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsFileExportTaskList</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var condition=view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+var taskName = &quot;&quot;;&#xD;
+if(null != condition){&#xD;
+	taskName = condition.get(&quot;taskName&quot;);&#xD;
+}&#xD;
+with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		taskType:'tihuo',&#xD;
+		taskName:taskName&#xD;
+	}; &#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsFileExportTaskList.data&quot;).current;&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var taskId = data.get(&quot;taskId&quot;);&#xD;
+if(isNullOrEmpty(taskId)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var action=view.get(&quot;#delExportTaskAction&quot;);&#xD;
+dorado.MessageBox.confirm(&quot;确定删除[&quot;+data.get(&quot;taskName&quot;)+&quot;]的记录?&quot;,function(){&#xD;
+	action.set(&quot;parameter&quot;,data).execute(function(){&#xD;
+		dorado.MessageBox.alert(&quot;删除成功!&quot;);&#xD;
+		with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				taskType:'tihuo'&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+})</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="exportTaskForm">
+            <Property name="cols">*,*,*</Property>
+            <Property name="dataSet">dsFileExportTaskCondition</Property>
+            <Property name="dataType">dtFileExportTaskCondition</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">taskName</Property>
+              <Property name="property">taskName</Property>
+              <Property name="editable">true</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="fileExportTaskDetailGrid">
+            <Property name="dataSet">dsFileExportTaskList</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="selectionMode">singleRow</Property>
+            <RowNumColumn/>
+            <DataColumn>
+              <Property name="property">taskId</Property>
+              <Property name="width">150</Property>
+              <Property name="name">taskId</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">taskName</Property>
+              <Property name="width">150</Property>
+              <Property name="name">taskName</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">taskState</Property>
+              <Property name="width">80</Property>
+              <Property name="name">taskState</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">startTime</Property>
+              <Property name="name">startTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">endTime</Property>
+              <Property name="name">endTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">filePath</Property>
+              <Property name="name">filePath</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">progress</Property>
+              <Property name="name">progress</Property>
+              <Property name="displayFormat">##%</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var taskState=arg.data.get(&quot;taskState&quot;);&#xD;
+if(taskState==2){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;下载&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+			  var action=view.get(&quot;#fileExportDownAction&quot;);&#xD;
+			  action.set(&quot;parameter&quot;,arg.data).execute();&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}</ClientEvent>
+              <Property name="align">center</Property>
+              <Property name="caption">操作</Property>
+              <Property name="name">operator</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="fileExportDownAction">
+      <Property name="fileProvider">fileExportTaskController#exportDetail</Property>
+      <Property name="caption">导出</Property>
+    </DownloadAction>
+    <UpdateAction id="delExportTaskAction">
+      <Property name="dataResolver">fileExportTaskController#delExportTask</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsFileExportTaskList</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

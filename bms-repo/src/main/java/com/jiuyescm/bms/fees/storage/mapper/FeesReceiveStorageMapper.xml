@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="cost_type" property="costType" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="tempreture_type" property="tempretureType" jdbcType="VARCHAR" />
+	    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+	    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="external_product_no" property="externalProductNo" jdbcType="VARCHAR" />
+	    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+	    <result column="unit" property="unit" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DOUBLE" />
+	    <result column="volume" property="volume" jdbcType="DOUBLE" />
+	    <result column="varieties" property="varieties" jdbcType="INTEGER" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DOUBLE" />
+	    <result column="cost" property="cost" jdbcType="DECIMAL" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param6" property="param6" jdbcType="VARCHAR" />
+	    <result column="rule_no" property="ruleNo" jdbcType="VARCHAR" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="biz_id" property="bizId" jdbcType="VARCHAR" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE"/>
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE"/>
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id,creator, create_time, last_modifier, last_modify_time, fees_no, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, cost_type, subject_code, other_subject_code,tempreture_type, product_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, cost,biz_type, param1, param2, param3, param4, param6, rule_no, bill_no, 
+        status,operate_time,biz_id,derate_amount,ifnull(cost,0)-ifnull(derate_amount,0) as receipt_amount, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTimeBegin != null and createTimeBegin !='')" >
+			    and create_time <![CDATA[>= ]]> #{createTimeBegin}
+		</if>
+		<if test="(createTimeEnd != null and createTimeEnd !='')" >
+			    and <![CDATA[create_time <= #{createTimeEnd}]]>
+		</if>
+		<if test="(operatorTimeBegin != null and operatorTimeBegin !='')" >
+			    and operate_time <![CDATA[>= ]]> #{operatorTimeBegin}
+		</if>
+		<if test="(operatorTimeEnd != null and operatorTimeEnd !='')" >
+			    and operate_time<![CDATA[ <= ]]>#{operatorTimeEnd}
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(customerIdList!=null and customerIdList.size()>0)">
+			 	and customer_id in
+			 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+	    </if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name like "%"#{customerName}"%"
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(orderType != null and orderType !='')" >
+				and order_type = #{orderType}
+		</if>
+		<if test="(orderNo != null and orderNo !='')" >
+				and order_no = #{orderNo}
+		</if>
+		<if test="(costType != null and costType !='')" >
+				and cost_type = #{costType}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='' and subjectCode !='全部')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(otherSubjectCode != null and otherSubjectCode !='' and otherSubjectCode !='ALL')" >
+				and other_subject_code = #{otherSubjectCode}
+		</if>
+		<if test="(tempretureType != null and tempretureType !='')" >
+				and tempreture_type = #{tempretureType}
+		</if>
+		<if test="(productType != null and productType !='')" >
+				and product_type = #{productType}
+		</if>
+		<if test="(productNo != null and productNo !='')" >
+				and product_no = #{productNo}
+		</if>
+		<if test="(productName != null and productName !='')" >
+				and product_name = #{productName}
+		</if>
+		<if test="(externalProductNo != null and externalProductNo !='')" >
+				and external_product_no = #{externalProductNo}
+		</if>
+		<if test="(quantity != null and quantity !='')" >
+				and quantity = #{quantity}
+		</if>
+		<if test="(unit != null and unit !='')" >
+				and unit = #{unit}
+		</if>
+		<if test="(weight != null and weight !='')" >
+				and weight = #{weight}
+		</if>
+		<if test="(volume != null and volume !='')" >
+				and volume = #{volume}
+		</if>
+		<if test="(varieties != null and varieties !='')" >
+				and varieties = #{varieties}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(continuedPrice != null and continuedPrice !='')" >
+				and continued_price = #{continuedPrice}
+		</if>
+		<if test="(cost != null and cost !='')" >
+				and cost = #{cost}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(param2 != null and param2 !='')" >
+				and param2 = #{param2}
+		</if>
+		<if test="(param3 != null and param3 !='')" >
+				and param3 = #{param3}
+		</if>
+		<if test="(param4 != null and param4 !='')" >
+				and param4 = #{param4}
+		</if>
+		<if test="(param6 != null and param6 !='')" >
+				and param6 = #{param6}
+		</if>
+		<if test="(ruleNo != null and ruleNo !='')" >
+				and rule_no = #{ruleNo}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(status != null and status !='' and status !='全部')" >
+				and status = #{status}
+		</if>
+		<if test="(bizId != null and bizId !='')" >
+				and biz_id = #{bizId}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		and del_flag='0'
+    </sql>
+	  
+	<!-- 生成账单-自定义查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by create_time desc
+    </select>
+    <select id="queryGroup" parameterType="java.util.Map" resultType="java.util.Map">
+    	select warehouse_code as warehouseCode,subject_code as subjectCode,
+    	other_subject_code as otherSubjectCode,count(1) as subjectCount,
+    	sum(cost) as cost,sum(derate_amount) as derateAmount 
+    	from fees_receive_storage
+    	where 1=1
+		<include refid="baseSelectColumns" />
+		group by warehouseCode,subject_code,other_subject_code
+    </select>
+      <select id="querySum" parameterType="java.util.Map"
+        resultType="java.lang.Double">
+        select
+         sum(cost) as totalCost
+        from fees_receive_storage
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where del_flag='0' and id=#{id} 
+    </select>
+
+    <select id="queryPreBillWarehouse" parameterType="java.util.Map" resultType="java.lang.String">
+	    select warehouse_code 
+	    from fees_receive_storage
+	    WHERE del_flag = '0'
+		    and customer_id = #{customerId}
+			and create_time <![CDATA[>=]]> #{startTime}
+			and create_time <![CDATA[<]]> #{endTime}
+			and (warehouse_code is not null or warehouse_code != '')
+	    group by warehouse_code
+    </select>
+    
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        insert into fees_receive_storage(creator, create_time, last_modifier, last_modify_time, fees_no, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, cost_type, subject_code,other_subject_code, tempreture_type, product_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, cost,biz_type, is_calculated, calculate_time, param1, param2, param3, param4, param6, rule_no, bill_no, status,operate_time,biz_id, del_flag)
+        values (
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{orderType,jdbcType=VARCHAR}, 
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{costType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{otherSubjectCode,jdbcType=VARCHAR}, 
+			#{tempretureType,jdbcType=VARCHAR}, 
+			#{productType,jdbcType=VARCHAR}, 
+			#{productNo,jdbcType=VARCHAR}, 
+			#{productName,jdbcType=VARCHAR}, 
+			#{externalProductNo,jdbcType=VARCHAR}, 
+			#{quantity,jdbcType=INTEGER}, 
+			#{unit,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DOUBLE}, 
+			#{volume,jdbcType=DOUBLE}, 
+			#{varieties,jdbcType=INTEGER}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{cost,jdbcType=DECIMAL}, 
+			#{bizType,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP},
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param6,jdbcType=VARCHAR}, 
+			#{ruleNo,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{status,jdbcType=VARCHAR},
+			#{operateTime,jdbcType=TIMESTAMP},
+			#{bizId,jdbcType=VARCHAR},
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        update fees_receive_storage 
+		<set >
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="orderType != null" >order_type=#{orderType,jdbcType=VARCHAR},</if>
+			<if test="orderNo != null" >order_no=#{orderNo,jdbcType=VARCHAR},</if>
+			<if test="costType != null" >cost_type=#{costType,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if>
+			<if test="tempretureType != null" >tempreture_type=#{tempretureType,jdbcType=VARCHAR},</if>
+			<if test="productType != null" >product_type=#{productType,jdbcType=VARCHAR},</if>
+			<if test="productNo != null" >product_no=#{productNo,jdbcType=VARCHAR},</if>
+			<if test="productName != null" >product_name=#{productName,jdbcType=VARCHAR},</if>
+			<if test="externalProductNo != null" >external_product_no=#{externalProductNo,jdbcType=VARCHAR},</if>
+			<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER},</if>
+			<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
+			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
+			<if test="volume != null" >volume=#{volume,jdbcType=DOUBLE},</if>
+			<if test="varieties != null" >varieties=#{varieties,jdbcType=INTEGER},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
+			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DOUBLE},</if>
+			<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="operateTime != null" >operate_time=#{operateTime,jdbcType=TIMESTAMP},</if>
+			<if test="bizId != null" >biz_id=#{bizId,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where fees_no=#{feesNo}
+    </update>
+    
+    <update id="updateBillNo"  parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+    	  update fees_receive_storage 
+		<set >
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+		</set>
+        where fees_no=#{feesNo} and ifnull(bill_no,'')=''
+    </update>
+    <update id="updateBillNoById" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+    	 update fees_receive_storage 
+		<set >
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from fees_receive_storage where
+        id=#{id}
+    </delete>
+    
+    <select id="getUnitPrice" parameterType="java.util.Map" resultType="String">
+		SELECT
+		d.unit_price
+		FROM
+			price_contract_info a
+		LEFT JOIN price_contract_item b ON a.contract_code = b.contract_code
+		AND b.del_flag = 0 and a.del_flag  = 0
+		LEFT JOIN price_general_template c ON c.template_code = b.template_id
+		AND c.del_flag = 0
+		LEFT JOIN price_storage_extra d ON c.id = d.template_id
+		AND d.del_flag = 0
+		WHERE c.storage_template_type = 'STORAGE_EXTRA_PRICE_TEMPLATE'
+		AND a.customerId = #{customerId}
+		AND d.subject_id = #{subjectCode}
+	</select>
+	
+	<!-- 生成账单  查询符合账单条件的费用数量-->
+	<select id="queryCountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity" resultType="int">
+		select count(0) from fees_receive_storage
+        where 1=1 and del_flag='0' and customer_id=#{customerid}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and create_time <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and create_time <![CDATA[<=]]> #{billendtime}
+        </if>
+	</select>
+	
+	<!-- 生成账单  查询符合账单条件的费用金额-->
+	<select id="queryAmountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity" resultType="double">
+		select sum(cost) from fees_receive_storage
+        where 1=1 and del_flag='0' and customer_id=#{customerid}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and create_time <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and create_time <![CDATA[<=]]> #{billendtime}
+        </if>
+	</select>
+	
+	<!-- 更新符合条件的费用信息 -->
+	<update id="updateByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		update fees_receive_storage
+		set bill_no=#{billno},status=#{billstatus},
+			last_modifier=#{modpersonname},last_modify_time=#{modtime}
+		where 1=1 and customer_id=#{customerid}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and create_time <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and create_time <![CDATA[<=]]> #{billendtime}
+        </if>
+	</update>
+	
+	<!-- 按仓库分组统计 -->
+	<select id="querywarehouseStorageAmount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+		select warehouse_code as warehouseCode,bill_no as billNo,sum(cost) as amount 
+		from fees_receive_storage
+		where del_flag='0' and bill_no=#{billNo} and is_calculated in ('1','5')
+		group by warehouse_code,bill_no
+	</select>
+	
+	 <!-- 按仓库，账单编号查询详细 -->
+	 <select id="queryStorageDetailGroupPage" parameterType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where del_flag='0' 
+        and bill_no=#{billNo} and warehouse_code=#{warehouseCode} and is_calculated in ('1','5')
+        <if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and subject_code = #{subjectCode}
+		</if>
+		order by fees_no desc
+    </select>
+    
+    <!-- 按账单查询-导出 订单操作费(1004)并到配送费sheet 耗材使用(1009)关联运单号-->
+     <select id="querystorageDetailByBillNo" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where del_flag='0' 
+        and subject_code not in ('wh_product_storage', 'wh_material_storage', 'wh_b2c_work', 'wh_b2b_work','wh_material_use','wh_product_pallet_storage')
+        and bill_no = #{billNo,jdbcType=VARCHAR}
+		order by fees_no desc
+    </select>
+    
+     <select id="queryStorageByBillNoSubjectId" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where del_flag='0' and subject_code = #{subjectId,jdbcType=VARCHAR}
+        and bill_no = #{billNo,jdbcType=VARCHAR}
+        <if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		order by fees_no desc
+    </select>
+    
+    <!-- 按账单查询-导出 耗材使用(1009)关联运单号-->
+     <select id="queryPackMaterialByBillNo" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select frs.id, frs.creator, frs.create_time, frs.last_modifier, frs.last_modify_time, frs.fees_no,
+        	frs.customer_id, frs.customer_name, frs.warehouse_code, frs.warehouse_name, frs.order_type,
+        	frs.order_no, frs.cost_type, frs.subject_code, frs.other_subject_code, frs.tempreture_type,
+        	frs.product_type, frs.product_no, frs.product_name, frs.external_product_no, frs.quantity, frs.unit,
+        	frs.weight, frs.volume, frs.varieties, frs.unit_price, frs.continued_price, frs.cost, frs.biz_type,
+        	frs.param1, frs.param2, frs.param3, frs.param4, frs.param6, frs.rule_no, frs.bill_no, frs.status,
+        	frs.operate_time, frs.biz_id, bop.waybill_no as waybillNo
+        from fees_receive_storage frs
+        LEFT JOIN biz_outstock_packmaterial bop on frs.fees_no = bop.fees_no
+        where frs.subject_code = 'wh_material_use'
+        and frs.del_flag = '0' and bop.del_flag = '0'
+        and frs.bill_no = #{billNo,jdbcType=VARCHAR}
+        <if test="warehouseCode!=null and warehouseCode!=''"> and frs.warehouse_code = #{warehouseCode}</if>
+		order by bop.waybill_no,frs.product_no desc
+    </select>
+    
+    <!-- 核销账单 -->
+	<update id="confirmFeesBill" parameterType="java.util.Map">
+		update fees_receive_storage set last_modifier=#{modperson},last_modify_time=#{modtime},status=#{status}
+		where bill_no=#{billNo}
+	</update>
+	
+	<!-- 删除账单 -->
+	<update id="deleteFeesBill" parameterType="java.util.Map">
+		update fees_receive_storage set last_modifier=#{modperson},last_modify_time=#{modtime},status=#{status},bill_no='',derate_amount=#{derateAmount}
+		where bill_no=#{billNo}
+		<if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+	</update>
+	
+	<!-- 删除账单-理赔 -->
+	<delete id="deleteFeesBillAbnormal" parameterType="java.util.Map">
+        delete from fees_receive_storage 
+        where bill_no=#{billNo,jdbcType=VARCHAR}
+        and subject_code = 'wh_abnormal_pay'
+        <if test="(feeNos !=null and feeNos.size() > 0)">
+	 		and fees_no in
+	 		<foreach collection="feeNos" index="index" item="item" open="(" separator="," close=")">
+	 			#{item}
+	 		</foreach>
+	 	</if>
+    </delete>
+    
+	 <delete id="deleteEntity" parameterType="java.lang.String">
+        delete from fees_receive_storage where
+        fees_no = #{feesNo}
+    </delete>
+    
+    <update id="updateDiscountAmountBatch" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+    update fees_receive_storage 
+		<set >
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		    <if test="discountAmount!=null">discount_amount=#{discountAmount},</if>
+		    <if test="billStatus!=null">bill_status=#{billStatus},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <select id="queryStoragePage" parameterType="Map" resultMap="baseResultMap">
+   	 select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where del_flag='0' and bill_no=#{billno} 
+        <if test="(warehouseCode!=null and warehouseCode!='')">
+        	and warehouse_code=#{warehouseCode}
+        </if>
+        <if test="(unit!=null and unit!='')">
+        	and unit=#{unit}
+        </if> 
+       <if test="(feesnoList!=null and feesnoList.size()>0)">
+        	and  fees_no in
+        	<foreach collection="feesnoList" index="index" item="item" open="(" separator="," close=")">
+        		#{item}
+        	</foreach>
+       </if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and subject_code = #{subjectCode}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId}
+		</if>
+		<if test="startTime!=null">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="endTime!=null">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>
+		order by fees_no desc
+    </select>
+    
+   <select id="queryMaterialPage" parameterType="Map" resultMap="baseResultMap">
+   		select a.*, b.waybill_no as waybillNo,b.consumer_material_code,
+   		b.consumer_material_name,b.spec_desc,ifnull(a.cost,0)-ifnull(a.derate_amount,0) as receipt_amount
+   		from  fees_receive_storage a
+   		left join biz_outstock_packmaterial b
+   		on a.fees_no = b.fees_no and b.del_flag = '0'
+        where a.del_flag = '0' and a.bill_no=#{billno} 
+         <if test="(warehouseCode!=null and warehouseCode!='')">
+        	and a.warehouse_code=#{warehouseCode}
+        </if>
+         <if test="(feesnoList != null and feesnoList.size()>0)" >
+			and a.fees_no in
+			<foreach collection="feesnoList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and a.subject_code = #{subjectCode}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and a.customer_id = #{customerId}
+		</if>
+		<if test="startTime!=null">
+			and <![CDATA[a.create_time>=#{startTime}]]>
+		</if>
+		<if test="endTime!=null">
+			and <![CDATA[a.create_time<=#{endTime}]]>
+		</if>
+		order by a.fees_no desc
+   </select>
+   
+   <select id="queryStorageAddFeePage" parameterType="Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+   	  select  a.id,a.creator, a.create_time, a.last_modifier, a.last_modify_time, a.fees_no, a.customer_id, a.customer_name, a.warehouse_code, a.warehouse_name,    a.order_type, a.order_no, a.cost_type, a.subject_code, a.other_subject_code,a.tempreture_type, a.product_type, a.product_no, a.product_name, a.external_product_no,    a.quantity, a.unit, a.weight, a.volume, a.varieties, a.unit_price, a.continued_price, a.cost,a.biz_type, a.param1, a.param2, a.param3, a.param4, a.param6, a.rule_no,    a.bill_no, a.status,a.operate_time,a.biz_id,a.derate_amount,ifnull(a.cost,0)-ifnull(a.derate_amount,0) as receipt_amount, a.del_flag,b.external_no,b.service_content,b.remark_content
+   		from  fees_receive_storage a
+   		inner join biz_add_fee b
+   		on a.fees_no=b.fees_no and b.del_flag=0
+        where a.del_flag='0' and a.bill_no=#{billno}
+        <if test="(warehouseCode!=null and warehouseCode!='')">
+        	and a.warehouse_code=#{warehouseCode}
+        </if>
+        <if test="(feesnoList != null and feesnoList.size()>0)" >
+			and a.fees_no in
+			<foreach collection="feesnoList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and a.subject_code = #{subjectCode}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and a.customer_id = #{customerId}
+		</if>
+		<if test="startTime!=null">
+			and <![CDATA[a.create_time>=#{startTime}]]>
+		</if>
+		<if test="endTime!=null">
+			and <![CDATA[a.create_time<=#{endTime}]]>
+		</if>
+		order by a.fees_no desc
+   </select>
+   
+	<!-- 预账单增值费 -->
+	<select id="queryPreBillStorageAddFee" parameterType="Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+	   	SELECT b.warehouse_code as warehouseCode, b.warehouse_name as warehouseName, b.customerid as customerId, 
+	   		b.customer_name as customerName, b.fees_no as feesNo, b.fees_type as otherSubjectCode,
+			a.cost, a.derate_amount as derateAmount, ifnull(a.cost,0)-ifnull(a.derate_amount,0) as receiptAmount,
+			b.num as quantity, b.fees_unit as unit, a.unit_price as unitPrice, b.create_time as createTime,
+			b.service_content as serviceContent, b.external_no as externalNo, b.remark_content as remarkContent
+		FROM biz_add_fee b
+		left join fees_receive_storage a 
+			on b.fees_no = a.fees_no and a.del_flag = '0'
+		WHERE b.del_flag = '0' 
+		AND b.customerid = #{customerId}
+		<if test="startTime!=null">
+			AND b.create_time <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime!=null">
+			AND b.create_time <![CDATA[<]]> #{endTime}
+		</if>
+		order by b.fees_no desc
+	</select>
+   
+    <select id="queryAllByBillSubject" parameterType="Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where  del_flag='0' and bill_no=#{billno} and subject_code = #{subjectCode}
+    </select>
+    
+    <!-- new生成账单  查询符合账单条件的费用数量-->
+	<select id="queryCountByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"
+		 resultType="int">
+		select count(0) from fees_receive_storage
+        where 1=1 and customer_id=#{customerId}
+        	and status = '0' and is_calculated in ('1','5')
+        	and del_flag = '0'
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+	<!-- new生成账单  查询符合账单条件的费用金额-->
+	<select id="queryAmountByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"
+		resultType="double">
+		select sum(cost) from fees_receive_storage
+        where 1=1 and customer_id=#{customerId}
+        	and status = '0' and is_calculated in ('1','5')
+        	and del_flag = '0'
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+	<!-- new更新符合条件的费用信息 -->
+	<update id="updateByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+		update fees_receive_storage
+		set bill_no=#{billNo},status=#{status},derate_amount='0',
+			last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
+		where 1=1 and customer_id=#{customerId}
+        	and status = '0' and is_calculated in ('1','5')
+        	and del_flag = '0'
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+	</update>
+	
+	<!-- new生成账单  查询账单科目费用-->
+	<select id="queryFeesBillSubjectInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"
+		resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select bill_no as billNo, warehouse_code as warehouseCode, 
+			subject_code as subjectCode, sum(cost) as totalAmount,count(0) as num
+		from fees_receive_storage
+        where 1=1 and del_flag = '0' and bill_no=#{billNo}
+        group by bill_no,warehouse_code,subject_code
+	</select>
+	
+	<update id="deleteStorageBill" parameterType="Map">
+		update fees_receive_storage set bill_no='',status=0,derate_amount=0
+		where bill_no=#{billNo}
+		<if test="(warehouseCode!=null and warehouseCode!='')">
+			and warehouse_code=#{warehouseCode}
+		</if>
+		<if test="(subjectCode!=null and subjectCode!='')">
+			and subject_code=#{subjectCode}
+		</if>
+	</update>
+	<select id="queryAllByBillSubjectCondition" parameterType="Map" resultMap="baseResultMap">
+		select  
+		  id,cost,derate_amount,ifnull(cost,0)-ifnull(derate_amount,0) as receipt_amount,123
+		from fees_receive_storage 
+		where bill_no='' and del_flag = '0'
+		and warehouse_code=#{warehouseCode}
+		and subject_code=#{subjectCode}
+		and customer_id=#{customerId}
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>
+		
+	</select>
+	<select id="queryAllByBillSubjectInfo" parameterType="Map" resultMap="baseResultMap">
+		select  
+		  id,cost,derate_amount,ifnull(cost,0)-ifnull(derate_amount,0) as receipt_amount
+		from fees_receive_storage 
+		where del_flag = '0' and bill_no=#{billNo}
+		and warehouse_code=#{warehouseCode}
+		and subject_code=#{subjectCode}
+	</select>
+	<update id="derateBatchAmount" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+		update fees_receive_storage set derate_amount=#{derateAmount}
+		where fees_no=#{feesNo}
+	</update>
+	<update id="deleteBatchFees" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+		update fees_receive_storage set bill_no='',status=0,derate_amount=0
+	    where fees_no=#{feesNo}
+	</update>
+	
+	 <select id="queryStorageByWarehouse" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where del_flag = '0' 
+        and subject_code = #{subjectId,jdbcType=VARCHAR}
+        and bill_no = #{billNo,jdbcType=VARCHAR}
+        <if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(unit != null and unit !='')" >
+				and unit=#{unit}
+		</if>
+		order by fees_no
+    </select>
+    
+    <!-- 预账单仓储费 -->
+    <select id="queryPreBillStorage" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select bp.create_time as createTime, bp.customerid as customerId, bp.customer_name as customerName, 
+        	bp.warehouse_code as warehouseCode, bp.temperature_type_code as tempretureType,
+        	bp.pallet_num as quantity, frs.unit, frs.unit_price as unitPrice,
+			ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
+			ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount
+        FROM biz_product_pallet_storage bp
+		LEFT JOIN fees_receive_storage frs ON bp.fees_no = frs.fees_no AND frs.del_flag = '0'
+        WHERE bp.del_flag = '0'
+        AND bp.customerid = #{customerId}
+		AND bp.create_time <![CDATA[>=]]> #{startTime}
+		AND bp.create_time <![CDATA[<]]> #{endTime}
+		AND frs.unit = 'PALLETS'
+		AND frs.subject_code = 'wh_product_storage'
+        <if test="(warehouseCode != null and warehouseCode !='')" >
+			AND bp.warehouse_code = #{warehouseCode}
+		</if>
+		order by bp.fees_no
+    </select>
+    
+    <!-- 预账单耗材存储费 -->
+    <select id="queryPreBillMaterialStorage" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select bps.create_time as createTime, bps.customerid as customerId, bps.customer_name as customerName, 
+        	bps.warehouse_code as warehouseCode,
+        	bps.pallet_num as quantity, frs.unit, frs.unit_price as unitPrice,
+			ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
+			ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount
+        FROM biz_pack_storage bps
+		LEFT JOIN fees_receive_storage frs ON bps.fees_no = frs.fees_no AND frs.del_flag = '0'
+        WHERE bps.del_flag = '0'
+        AND bps.customerid = #{customerId}
+		AND bps.create_time <![CDATA[>=]]> #{startTime}
+		AND bps.create_time <![CDATA[<]]> #{endTime}
+		AND frs.unit = 'PALLETS'
+		AND frs.subject_code = 'wh_material_storage'
+        <if test="(warehouseCode != null and warehouseCode !='')" >
+			AND bps.warehouse_code = #{warehouseCode}
+		</if>
+		order by bps.fees_no
+    </select>
+    
+    <select id="queryBizFeesData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+    	select  
+		 	b.id,
+		 	b.creator, 
+		 	b.create_time, 
+		 	b.last_modifier,
+			b.last_modify_time, 
+ 	 		b.fees_no, 
+ 	 		b.customer_id, 
+ 	 		b.customer_name, 
+ 	 		b.warehouse_code,
+ 	 		b.warehouse_name, 
+ 	 		b.order_type, 
+ 	 		b.order_no, 
+ 	 		b.cost_type, 
+ 	 		b.subject_code, 
+ 	 		b.other_subject_code,
+ 	 		b.tempreture_type, 
+ 	 		b.product_type, 
+ 	 		b.product_no, 
+ 	 		b.product_name, 
+ 	 		b.external_product_no, 
+ 	 		b.quantity, 
+ 	 		b.unit, 
+ 	 		b.weight, 
+ 	 		b.volume, 
+ 	 		b.varieties, 
+ 	 		b.unit_price, 
+ 	 		b.continued_price, 
+ 	 		b.cost,b.biz_type, 
+ 	 		b.param1, 
+ 	 		b.param2, 
+ 	 		b.param3, 
+ 	 		b.param4, 
+ 	 		b.param6, 
+ 	 		b.rule_no, 
+ 	 		b.bill_no, 
+        	b.status,
+        	b.operate_time,
+        	b.biz_id,
+        	b.derate_amount,
+        	ifnull(b.cost,0)-ifnull(b.derate_amount,0) as receipt_amount, 
+        	b.del_flag
+          from biz_outstock_master a left join fees_receive_storage b
+          on a.waybill_no=b.waybill_no
+          where a.del_flag=0 and b.del_flag = '0' and a.customerid=#{customerId}
+          
+    </select>
+    
+    <select id="queryFeeMaterialByWarehouse" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
+        select  frs.customer_id, frs.customer_name, frs.warehouse_code, frs.warehouse_name, 
+          frs.product_no, frs.product_name, frs.external_product_no, frs.quantity, 
+          frs.weight,frs.unit_price,frs.cost,
+          frs.bill_no,
+          bop.waybill_no as waybillNo,
+          b.receive_name,
+          b.receive_province_id,
+          b.receive_city_id, 
+          b.receive_detail_address,
+          b.totalqty,
+          b.product_detail,
+          b.total_weight as systemWeight,
+          b.carrier_name,
+          b.external_no,
+          b.create_time,
+          b.outstock_no
+        from fees_receive_storage frs
+        LEFT JOIN biz_outstock_packmaterial bop on frs.fees_no = bop.fees_no
+        LEFT JOIN biz_dispatch_bill b on bop.waybill_no = b.waybill_no
+        where frs.del_flag = '0' and bop.del_flag = '0' and b.del_flag = '0'
+        and frs.subject_code = 'wh_material_use'
+        and frs.bill_no = #{billNo,jdbcType=VARCHAR}
+        and frs.warehouse_code = #{warehouseCode}
+		order by bop.waybill_no,frs.product_no
+    </select>
+    
+    <select id="queryFeeAdd" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+		SELECT
+			create_time,
+			warehouse_name,
+			customer_name,
+			param1,
+			quantity,
+			unit_price,
+			other_subject_code,
+			cost,
+			unit,
+			subject_code
+      FROM
+	     fees_receive_storage
+      where del_flag = '0' and subject_code = 'wh_value_add_subject'
+        and bill_no = #{billNo,jdbcType=VARCHAR}
+       UNION ALL
+       SELECT
+			create_time,
+			warehouse_name,
+			customer_name,
+			param1,
+			quantity,
+			unit_price,
+			other_subject_code,
+			cost,
+			unit,
+			subject_code
+      FROM
+	     fees_receive_storage
+      where del_flag = '0' and subject_code = 'ZXF'
+        and bill_no = #{billNo,jdbcType=VARCHAR}
+    </select>
+	<select id="sumSubjectMoney" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select sum(cost) as totalAmount,sum(derate_amount) as derateAmount,count(0) as num from fees_receive_storage 
+		where del_flag = '0' 
+		and bill_no=#{billNo} and warehouse_code=#{warehouseCode} and subject_code=#{subjectCode}
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>
+	</select>
+	<update id="updateFeeByParam" parameterType="java.util.Map">
+		update fees_receive_storage set bill_no=#{billNo},`status`=#{status} where warehouse_code=#{warehouseCode} and subject_code=#{subjectCode}
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>	
+	</update>
+	<update id="updateByFeeNoList" parameterType="java.util.Map">
+        update fees_receive_storage set del_flag='1' where del_flag='0' and
+        fees_no in
+		<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+		</foreach>
+    </update>
+    
+    <delete id="deleteBatch" parameterType="java.util.Map">
+        delete from fees_receive_storage where
+        fees_no in
+		<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
+			 #{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtQuotaEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="quotationNo">
+        <Property></Property>
+        <Property name="label">报价编号</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getBussinessTypeEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="feeUnitCode">
+        <Property></Property>
+        <Property name="label">计费单位</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;STORAGE_CHARGE_TYPE&quot;)}</Property>
+        </Property>
+        <Property name="defaultValue">ITEM</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="description">
+        <Property></Property>
+        <Property name="label">计费说明</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="priceType">
+        <Property name="label">报价类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;PRICE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="templateType">
+        <Property></Property>
+        <Property name="label">模版类型</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtGCondition">
+      <PropertyDef name="quotationNo">
+        <Property name="label">报价编号</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStepEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity</Property>
+      <PropertyDef name="quotationId">
+        <Property name="label">模板Id</Property>
+      </PropertyDef>
+      <PropertyDef name="weightLower">
+        <Property name="label">重量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="weightUpper">
+        <Property name="label">重量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property></Property>
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property></Property>
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="skuUpper">
+        <Property name="label">sku上限</Property>
+      </PropertyDef>
+      <PropertyDef name="skuLower">
+        <Property name="label">sku下限</Property>
+      </PropertyDef>
+      <PropertyDef name="volumeUpper">
+        <Property name="label">体积上限</Property>
+      </PropertyDef>
+      <PropertyDef name="volumeLower">
+        <Property name="label">体积下限</Property>
+      </PropertyDef>
+      <PropertyDef name="numUpper">
+        <Property name="label">数量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="numLower">
+        <Property name="label">数量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine1">
+        <Property name="label">扩展1</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine2">
+        <Property name="label">扩展2</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine3">
+        <Property name="label">扩展3</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine4">
+        <Property name="label">扩展4</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine5">
+        <Property name="label">扩展5</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedItem">
+        <Property name="label">续件价格</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsQuotaList">
+      <Property name="dataType">[dtQuotaEntity]</Property>
+      <Property name="dataProvider">generalStorageQuoteController#query</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsStepList">
+      <Property name="dataProvider">stroageStepQuoteController#query</Property>
+      <Property name="dataType">[dtStepEntity]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsGCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsGCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtGCondition]</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsQuotaList</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <ToolBarButton id="query">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsGCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}			</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="select">
+          <ClientEvent name="onClick">this.get(&quot;#actionSelect&quot;).execute();</ClientEvent>
+          <Property name="caption">选择</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <Property name="cols">*,*,*</Property>
+        <Property name="dataSet">dsGCondition</Property>
+        <Property name="dataType">dtGCondition</Property>
+        <AutoFormElement>
+          <Property name="name">quotationNo</Property>
+          <Property name="property">quotationNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">customerId</Property>
+          <Property name="name">customerId</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectId</Property>
+          <Property name="property">subjectId</Property>
+          <Property name="editable">false</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid id="dg_QuotaList">
+        <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsQuotaList.data&quot;);&#xD;
+var quotationId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dsStepList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		quotationId:quotationId&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dsQuotaList</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="lazyInit">true</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="height">200</Property>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="quotationNo">
+          <Property name="property">quotationNo</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">customerName</Property>
+          <Property name="name">customerName</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">priceType</Property>
+          <Property name="property">priceType</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">customerName</Property>
+          <Property name="name">customerName</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="bizTypeCode">
+          <Property name="property">bizTypeCode</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">templateType</Property>
+          <Property name="name">templateType</Property>
+        </DataColumn>
+        <DataColumn name="subjectId">
+          <Property name="property">subjectId</Property>
+        </DataColumn>
+        <DataColumn name="feeUnitCode">
+          <Property name="property">feeUnitCode</Property>
+        </DataColumn>
+        <DataColumn name="unitPrice">
+          <Property name="property">unitPrice</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <TabControl>
+      <ControlTab>
+        <Property name="caption">存储费阶梯报价</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsStepList</Property>
+            </DataPilot>
+            <Separator/>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsStepList</Property>
+            <Property name="selectionMode">singleRow</Property>
+            <Property name="width">2000</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn>
+              <Property name="property">temperatureTypeCode</Property>
+              <Property name="name">temperatureTypeCode</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">unitPrice</Property>
+              <Property name="name">unitPrice</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">continuedItem</Property>
+              <Property name="property">continuedItem</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">weightLower</Property>
+              <Property name="name">weightLower</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">weightUpper</Property>
+              <Property name="name">weightUpper</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">numLower</Property>
+              <Property name="name">numLower</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">numUpper</Property>
+              <Property name="name">numUpper</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">skuLower</Property>
+              <Property name="name">skuLower</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">skuUpper</Property>
+              <Property name="name">skuUpper</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">volumeLower</Property>
+              <Property name="name">volumeLower</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">volumeUpper</Property>
+              <Property name="name">volumeUpper</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">userDefine1</Property>
+              <Property name="name">userDefine1</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">userDefine2</Property>
+              <Property name="name">userDefine2</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">userDefine3</Property>
+              <Property name="name">userDefine3</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">userDefine4</Property>
+              <Property name="name">userDefine4</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">userDefine5</Property>
+              <Property name="name">userDefine5</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">130</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <Action id="actionSelect">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsGCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;),&#xD;
+		customerName:data.get(&quot;customername&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

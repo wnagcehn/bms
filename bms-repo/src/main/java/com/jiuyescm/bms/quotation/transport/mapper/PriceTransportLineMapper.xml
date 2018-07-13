@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.transport.PriceTransportLineMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity" >
+       <id column="id" property="id" jdbcType="BIGINT" />
+	   <result column="id" property="id" jdbcType="BIGINT" />
+	   <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
+	   <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	   <result column="transport_line_no" property="transportLineNo" jdbcType="VARCHAR" />
+	   <result column="transport_line_name" property="transportLineName" jdbcType="VARCHAR" />
+	   <result column="transport_type_code" property="transportTypeCode" jdbcType="VARCHAR" />
+	   <result column="from_warehouse_id" property="fromWarehouseId" jdbcType="VARCHAR" />
+	   <result column="from_province_id" property="fromProvinceId" jdbcType="VARCHAR" />
+	   <result column="from_city_id" property="fromCityId" jdbcType="VARCHAR" />
+	   <result column="from_district_id" property="fromDistrictId" jdbcType="VARCHAR" />
+	   <result column="from_address" property="fromAddress" jdbcType="VARCHAR" />
+	   <result column="end_warehouse_id" property="endWarehouseId" jdbcType="VARCHAR" />
+	   <result column="to_province_id" property="toProvinceId" jdbcType="VARCHAR" />
+	   <result column="to_city_id" property="toCityId" jdbcType="VARCHAR" />
+	   <result column="to_district_id" property="toDistrictId" jdbcType="VARCHAR" />
+	   <result column="to_address" property="toAddress" jdbcType="VARCHAR" />
+	   <result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
+	   <result column="send_cycle" property="sendCycle" jdbcType="VARCHAR" />
+	   <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+	   <result column="timeliness" property="timeliness" jdbcType="VARCHAR" />
+	   
+  	   <result column="receipt_aging" property="receiptAging" jdbcType="DOUBLE" /> 
+ 	   <result column="business_time" property="businessTime" jdbcType="TIMESTAMP" />
+ 	   <result column="order_acceptaging" property="orderAcceptAging" jdbcType="DOUBLE" /> 
+ 	   <result column="order_deadline" property="orderDeadLine" jdbcType="TIMESTAMP" />
+ 	   <result column="self_pickedaging" property="selfPickedAging" jdbcType="DOUBLE" /> 
+ 	   <result column="delivery_aging" property="deliveryAging" jdbcType="DOUBLE" />
+ 	   <result column="w2bubble_ratio" property="w2bubbleRatio" jdbcType="VARCHAR" />
+	   <result column="value_ratio" property="valueRatio" jdbcType="VARCHAR" />
+	   <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	   <result column="creator" property="creator" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	   
+	   <result column="fromProvinceName" property="fromProvinceName" jdbcType="VARCHAR" />
+	   <result column="fromCityName" property="fromCityName" jdbcType="VARCHAR" />
+	   <result column="fromDistrictName" property="fromDistrictName" jdbcType="VARCHAR" />
+	   <result column="toProvinceName" property="toProvinceName" jdbcType="VARCHAR" />
+	   <result column="toCityName" property="toCityName" jdbcType="VARCHAR" />
+	   <result column="toDistrictName" property="toDistrictName" jdbcType="VARCHAR" />
+	   <result column="start_station" property="startStation" jdbcType="VARCHAR" />
+	   <result column="end_station" property="endStation" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, carrier_code,carrier_name, transport_line_no, transport_line_name, transport_type_code, from_warehouse_id, 
+        from_province_id,from_city_id, from_district_id, from_address, end_warehouse_id,to_province_id, 
+        to_city_id, to_district_id, to_address, service_type_code, send_cycle,send_time, timeliness,
+        receipt_aging,business_time,order_acceptaging,order_deadline,self_pickedaging,delivery_aging,
+        w2bubble_ratio,value_ratio, remark, template_id, creator, create_time, last_modifier, last_modify_time, 
+        del_flag,start_station,end_station
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and line.id = #{id}
+		</if>
+	  	<if test="(carrierCode != null and carrierCode !='')" >
+				and line.carrier_code  = #{carrierCode}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and line.carrier_name like '%${carrierName}%'
+		</if>
+		<if test="(transportLineNo != null and transportLineNo !='')" >
+				and line.transport_line_no  = #{transportLineNo}
+		</if>
+		<if test="(transportLineName != null and transportLineName !='')" >
+				and line.transport_line_name  = #{transportLineName}
+		</if>
+		<if test="(transportTypeCode != null and transportTypeCode !='')" >
+				and line.transport_type_code = #{transportTypeCode}
+		</if>
+		<if test="(fromWarehouseId != null and fromWarehouseId !='')" >
+				and line.from_warehouse_id = #{fromWarehouseId}
+		</if>
+		<if test="(fromProvinceId != null and fromProvinceId !='')" >
+				and line.from_province_id  = #{fromProvinceId}
+		</if>
+		<if test="(fromCityId != null and fromCityId !='')" >
+				and line.from_city_id  = #{fromCityId}
+		</if>
+		<if test="(fromDistrictId != null and fromDistrictId !='')" >
+				and line.from_district_id = #{fromDistrictId}
+		</if>
+		<if test="(fromAddress != null and fromAddress !='')" >
+				and line.from_address  = #{fromAddress}
+		</if>
+		<if test="(endWarehouseId != null and endWarehouseId !='')" >
+				and line.end_warehouse_id = #{endWarehouseId}
+		</if>
+		<if test="(toProvinceId != null and toProvinceId !='')" >
+				and line.to_province_id  = #{toProvinceId}
+		</if>
+		<if test="(toCityId != null and toCityId !='')" >
+				and line.to_city_id  = #{toCityId}
+		</if>
+		<if test="(toDistrictId != null and toDistrictId !='')" >
+				and line.to_district_id = #{toDistrictId}
+		</if>
+		<if test="(toAddress != null and toAddress !='')" >
+				and line.to_address  = #{toAddress}
+		</if>
+		<if test="(serviceTypeCode != null and serviceTypeCode !='')" >
+				and line.service_type_code  = #{serviceTypeCode}
+		</if>
+		<if test="(sendCycle != null and sendCycle !='')" >
+				and line.send_cycle = #{sendCycle}
+		</if>
+		<if test="(sendTime != null and sendTime !='')" >
+			    and line.send_time >= #{sendTime} and <![CDATA[line.send_time <= #{sendTime}]]>
+		</if>
+	    <if test="(timeliness != null and timeliness !='')" >
+				and line.timeliness = #{timeliness}
+		</if>
+		<if test="(receiptAging != null and receiptAging !='')" >
+				and line.receipt_aging = #{receiptAging}
+		</if>
+		<if test="(businessTime != null and businessTime !='')" >
+			    and line.business_time >= #{businessTime} and <![CDATA[line.business_time <= #{businessTime}]]>
+		</if>
+		<if test="(orderAcceptAging != null and orderAcceptAging !='')" >
+				and line.order_acceptaging = #{orderAcceptAging}
+		</if>
+		<if test="(orderDeadLine != null and orderDeadLine !='')" >
+			    and line.order_deadline >= #{orderDeadLine} and <![CDATA[line.order_deadline <= #{orderDeadLine}]]>
+		</if>		
+		<if test="(selfPickedAging != null and selfPickedAging !='')" >
+				and line.self_pickedaging = #{selfPickedAging}
+		</if>
+		<if test="(deliveryAging != null and deliveryAging !='')" >
+				and line.delivery_aging = #{deliveryAging}
+		</if>
+		<if test="(w2bubbleRatio != null and w2bubbleRatio !='')" >
+				and line.w2bubble_ratio = #{w2bubbleRatio}
+		</if>
+	    <if test="(templateId != null and templateId !='')" >
+				and line.template_id = #{templateId}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and line.remark like '%${remark}%'
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and line.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and line.create_time >= #{createTime} and <![CDATA[line.create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and line.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and line.last_modify_time >= #{lastModifyTime} and <![CDATA[line.last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and line.del_flag = #{delFlag}
+		</if>
+		 <if test="(startStation != null and startStation !='')" >
+				and line.start_station = #{startStation}
+		</if>
+		 <if test="(endStation != null and endStation !='')" >
+				and line.end_station = #{endStation}
+		</if>
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity">
+        select
+        	id, carrier_code,carrier_name, transport_line_no, transport_line_name, transport_type_code,
+        	from_warehouse_id, 
+        	from_province_id,from_city_id, from_district_id, from_address, end_warehouse_id,
+        	to_province_id, to_city_id, to_district_id, to_address, service_type_code, send_cycle,
+        	send_time, timeliness,receipt_aging,business_time,order_acceptaging,order_deadline,
+        	self_pickedaging,delivery_aging,w2bubble_ratio,value_ratio, remark, template_id, creator, create_time, 
+        	last_modifier, last_modify_time, del_flag,start_station,end_station 
+        from price_transport_line line 
+        where 1=1
+        <include refid="baseSelectColumns" />
+        order by line.create_time desc,line.id desc
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity">
+        select
+        <include refid="baseColumns" />
+        from price_transport_line
+        where id=#{id}
+        order by create_time desc,id desc
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity" useGeneratedKeys="true" keyProperty="id">
+         insert into price_transport_line(carrier_code, carrier_name, transport_line_no, transport_line_name, 
+         	transport_type_code, from_warehouse_id, from_province_id, from_city_id, from_district_id, 
+         	from_address, end_warehouse_id, to_province_id, to_city_id, to_district_id, to_address, 
+         	service_type_code, send_cycle, timeliness, order_deadline, delivery_aging, w2bubble_ratio, value_ratio,
+         	self_pickedaging, order_acceptaging, business_time, receipt_aging, send_time, remark, template_id, 
+         	creator, create_time, last_modifier, last_modify_time, del_flag, start_station, end_station)
+        values (
+			#{carrierCode,jdbcType=VARCHAR}, 
+			#{carrierName,jdbcType=VARCHAR}, 
+			#{transportLineNo,jdbcType=VARCHAR}, 
+			#{transportLineName,jdbcType=VARCHAR}, 
+			#{transportTypeCode,jdbcType=VARCHAR}, 
+			#{fromWarehouseId,jdbcType=VARCHAR}, 
+			#{fromProvinceId,jdbcType=VARCHAR}, 
+			#{fromCityId,jdbcType=VARCHAR}, 
+			#{fromDistrictId,jdbcType=VARCHAR}, 
+			#{fromAddress,jdbcType=VARCHAR}, 
+			#{endWarehouseId,jdbcType=VARCHAR}, 
+			#{toProvinceId,jdbcType=VARCHAR}, 
+			#{toCityId,jdbcType=VARCHAR}, 
+			#{toDistrictId,jdbcType=VARCHAR}, 
+			#{toAddress,jdbcType=VARCHAR}, 
+			#{serviceTypeCode,jdbcType=VARCHAR}, 
+			#{sendCycle,jdbcType=VARCHAR}, 
+			#{timeliness,jdbcType=VARCHAR}, 
+			#{orderDeadLine,jdbcType=TIMESTAMP}, 
+			#{deliveryAging,jdbcType=DOUBLE}, 
+			#{w2bubbleRatio,jdbcType=VARCHAR},
+			#{valueRatio,jdbcType=VARCHAR}, 
+			#{selfPickedAging,jdbcType=DOUBLE}, 
+			#{orderAcceptAging,jdbcType=DOUBLE}, 
+			#{businessTime,jdbcType=TIMESTAMP}, 
+			#{receiptAging,jdbcType=DOUBLE}, 
+			#{sendTime,jdbcType=TIMESTAMP}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{templateId,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{startStation,jdbcType=VARCHAR}, 
+			#{endStation,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity">
+        update price_transport_line 
+		<set >
+			<if test="carrierCode != null" >carrier_code=#{carrierCode,jdbcType=VARCHAR},</if>
+			<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+			<if test="transportLineNo != null" >transport_line_no=#{transportLineNo,jdbcType=VARCHAR},</if>
+			<if test="transportLineName != null" >transport_line_name=#{transportLineName,jdbcType=VARCHAR},</if>
+			<if test="transportTypeCode != null" >transport_type_code=#{transportTypeCode,jdbcType=VARCHAR},</if>
+			<if test="fromWarehouseId != null" >from_warehouse_id=#{fromWarehouseId,jdbcType=VARCHAR},</if>
+			from_province_id=#{fromProvinceId,jdbcType=VARCHAR},
+			from_city_id=#{fromCityId,jdbcType=VARCHAR},
+			from_district_id=#{fromDistrictId,jdbcType=VARCHAR},
+			from_address=#{fromAddress,jdbcType=VARCHAR},
+			<if test="endWarehouseId != null" >end_warehouse_id=#{endWarehouseId,jdbcType=VARCHAR},</if>
+			to_province_id=#{toProvinceId,jdbcType=VARCHAR},
+			to_city_id=#{toCityId,jdbcType=VARCHAR},
+			to_district_id=#{toDistrictId,jdbcType=VARCHAR},
+			to_address=#{toAddress,jdbcType=VARCHAR},
+			<if test="serviceTypeCode != null" >service_type_code=#{serviceTypeCode,jdbcType=VARCHAR},</if>
+			<if test="sendCycle != null" >send_cycle=#{sendCycle,jdbcType=VARCHAR},</if>
+			<if test="timeliness != null" >timeliness=#{timeliness,jdbcType=VARCHAR},</if>
+			<if test="orderDeadLine != null" >order_deadline=#{orderDeadLine,jdbcType=TIMESTAMP},</if>
+			<if test="deliveryAging != null" >delivery_aging=#{deliveryAging,jdbcType=DOUBLE},</if>
+			<if test="w2bubbleRatio != null" >w2bubble_ratio=#{w2bubbleRatio,jdbcType=VARCHAR},</if>
+			<if test="valueRatio != null" >value_ratio=#{valueRatio,jdbcType=VARCHAR},</if>
+			<if test="selfPickedAging != null" >self_pickedaging=#{selfPickedAging,jdbcType=DOUBLE},</if>
+			<if test="orderAcceptAging != null" >order_acceptaging=#{orderAcceptAging,jdbcType=DOUBLE},</if>
+			<if test="businessTime != null" >business_time=#{businessTime,jdbcType=TIMESTAMP},</if>
+			<if test="receiptAging != null" >receipt_aging=#{receiptAging,jdbcType=DOUBLE},</if>
+			<if test="sendTime != null" >send_time=#{sendTime,jdbcType=TIMESTAMP},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="startStation != null" >start_station=#{startStation,jdbcType=VARCHAR},</if>
+			<if test="endStation != null" >end_station=#{endStation,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from price_transport_line where
+        id=#{id}
+    </delete>
+    
+    <!-- 通过LineNo查找对应的id -->
+	<select id="findIdByLineNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		 select
+         id
+         FROM price_transport_line 
+         where transport_line_no=#{lineNo,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteBatchDetail" parameterType="java.lang.Long">
+        delete from price_transport_line_range  where line_id in (SELECT id from price_transport_line  where template_id = #{id})
+    </delete>
+    
+    <delete id="deleteBatch" parameterType="java.lang.Long">
+        delete from price_transport_line  where template_id = #{id}
+    </delete>
+    
+    <delete id="deleteBatchRange" parameterType="java.lang.Long">
+        delete from price_transport_line_range  where line_id = #{id}
+    </delete>
+    
+    
+    <!-- 根据产品类型查询路线报价 -->
+	<select id="queryToCityByProductType" parameterType="java.lang.String" 
+		resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity">
+		SELECT ptl.to_province_id as toProvinceId, ptl.to_city_id as toCityId, 
+			GROUP_CONCAT(DISTINCT ptl.to_district_id SEPARATOR ',') as toDistrictId
+		from price_transport_line ptl
+		where ptl.del_flag = '0' 
+		AND ptl.template_id = (
+			SELECT id from price_transport_template
+			where del_flag = '0' and template_type = 'S'
+			<if test="(templateTypeCode != null and templateTypeCode !='')" >
+				AND template_type_code = #{templateTypeCode}
+			</if>
+			LIMIT 1
+		)
+		AND ptl.id IN (
+			SELECT DISTINCT ptlr.line_id from price_transport_line_range ptlr 
+			where  ptlr.del_flag = '0'
+			<if test="(productType != null and productType !='')" >
+				AND ptlr.product_type_code = #{productType}
+			</if>
+		)
+		<if test="(transportType != null and transportType !='')" >
+			AND ptl.transport_type_code = #{transportType}
+		</if> 
+		<if test="(fromProvince != null and fromProvince !='')" >
+			AND ptl.from_province_id = #{fromProvince}
+		</if>
+		<if test="(fromCity != null and fromCity !='')" >
+			AND ptl.from_city_id = #{fromCity}
+		</if>
+		GROUP BY ptl.to_province_id,ptl.to_city_id
+	</select>
+	
+	<!-- 查询目的省市区-->
+	<select id="queryToCity" parameterType="java.lang.String" 
+		resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity">
+		SELECT ptl.to_province_id as toProvinceId, ptl.to_city_id as toCityId, 
+			GROUP_CONCAT(DISTINCT ptl.to_district_id SEPARATOR ',') as toDistrictId 
+		from price_transport_line ptl
+		where ptl.del_flag = '0' 
+		and ptl.template_id = (
+			SELECT id from price_transport_template
+			where del_flag = '0' and template_type = 'S'
+			<if test="(templateTypeCode != null and templateTypeCode !='')" >
+				AND template_type_code = #{templateTypeCode}
+			</if>
+			LIMIT 1
+		)
+		<if test="(transportType != null and transportType !='')" >
+			AND ptl.transport_type_code = #{transportType}
+		</if>
+		<if test="(fromProvince != null and fromProvince !='')" >
+			AND ptl.from_province_id = #{fromProvince}
+		</if>
+		<if test="(fromCity != null and fromCity !='')" >
+			AND ptl.from_city_id = #{fromCity}
+		</if>
+		GROUP BY ptl.to_province_id,ptl.to_city_id
+	</select>
+	
+    <!-- 查询标准报价的路线 -->
+	<select id="queryStandardTemplateLine" parameterType="java.lang.String" 
+		resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity">
+		SELECT * from price_transport_line where template_id = (
+			SELECT id from price_transport_template
+			where del_flag = '0' and template_type = 'S'
+			<if test="(templateTypeCode != null and templateTypeCode !='')" >
+				AND template_type_code = #{templateTypeCode}
+			</if>
+			LIMIT 1
+		)
+		and del_flag = '0'
+		<if test="(startStation != null and startStation !='')" >
+			AND start_station = #{startStation}
+		</if>
+		<if test="(transportType != null and transportType !='')" >
+			AND transport_type_code = #{transportType}
+		</if>
+		<if test="(fromProvince != null and fromProvince !='')" >
+			AND from_province_id = #{fromProvince}
+		</if>
+		<if test="(fromCity != null and fromCity !='')" >
+			AND from_city_id = #{fromCity}
+		</if>
+		<if test="(toProvince != null and toProvince !='')" >
+			AND to_province_id = #{toProvince}
+		</if>
+		<if test="(toCity != null and toCity !='')" >
+			AND to_city_id = #{toCity}
+		</if>
+		<if test="(toDistrict != null and toDistrict !='')" >
+			AND to_district_id = #{toDistrict}
+		</if>
+		<if test="(fromWarehouseId != null and fromWarehouseId !='')" >
+			AND from_warehouse_id = #{fromWarehouseId}
+		</if>
+		<if test="(endStation != null and endStation !='')" >
+			AND end_station = #{endStation}
+		</if>
+	</select>
+	
+	<select id="queryTransportQuos" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select line.* from  price_contract_item a
+		inner join price_transport_template b
+		on a.template_id=b.template_code and b.del_flag=0
+		inner join price_transport_line line
+		on line.template_id=b.id and line.del_flag=0
+		where a.contract_code=#{contractCode} and a.subject_id=#{templateTypeCode}
+		and a.del_flag=0
+		<include refid="baseSelectColumns" />
+	</select>
+	
+	<select id="queryTemplateLine" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select line.* from price_transport_line line 
+			where line.del_flag = 0 and line.template_id =
+		(select id from price_transport_template where del_flag = '0' 
+			and customerId = #{customerId} and template_type_code = #{templateTypeCode})
+		<include refid="baseSelectColumns" />
+	</select>
+</mapper>

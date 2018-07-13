@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.mapper.BmsMaterialReportMapper" >
+   <resultMap id="baseResultMap" type="com.jiuyescm.bms.report.month.entity.BmsMaterialReportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="consumer_material_code" property="consumerMaterialCode" jdbcType="VARCHAR" />
+	    <result column="consumer_material_name" property="consumerMaterialName" jdbcType="VARCHAR" />
+	    <result column="consumer_material_type" property="consumerMaterialType" jdbcType="VARCHAR" />
+	    <result column="unit" property="unit" jdbcType="VARCHAR" />
+	    <result column="wms_num" property="wmsNum" jdbcType="DECIMAL" />
+	    <result column="bms_num" property="bmsNum" jdbcType="DECIMAL" />
+	    <result column="different_num" property="differentNum" jdbcType="DECIMAL" />
+	    <result column="report_year" property="reportYear" jdbcType="VARCHAR" />
+	    <result column="report_month" property="reportMonth" jdbcType="VARCHAR" />
+	    <result column="report_time" property="reportTime" jdbcType="DATE" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, warehouse_code, warehouse_name, customerid, customer_name, consumer_material_code, consumer_material_name, consumer_material_type, unit, wms_num, bms_num, different_num, report_year, report_month, report_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(consumerMaterialName != null and consumerMaterialName !='')" >
+				and consumer_material_name = #{consumerMaterialName}
+		</if>
+		<if test="(consumerMaterialType != null and consumerMaterialType !='')" >
+				and consumer_material_type = #{consumerMaterialType}
+		</if>
+		<if test="(unit != null and unit !='')" >
+				and unit = #{unit}
+		</if>
+		<if test="(wmsNum != null and wmsNum !='')" >
+				and wms_num = #{wmsNum}
+		</if>
+		<if test="(bmsNum != null and bmsNum !='')" >
+				and bms_num = #{bmsNum}
+		</if>
+		<if test="(isDifferent != null and isDifferent !='' and isDifferent !='1')" >
+				and different_num !=0
+		</if>
+		<if test="(reportYear != null and reportYear !='')" >
+				and report_year = #{reportYear}
+		</if>
+		<if test="(reportMonth != null and reportMonth !='')" >
+				and report_month = #{reportMonth}
+		</if>
+		<if test="(reportTime != null and reportTime !='')" >
+				and report_time = #{reportTime}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from bms_material_report
+        where 1=1 and del_flag='0'
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="queryBmsMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select waybill_no,create_time,warehouse_name,customer_name,consumer_material_code,consumer_material_name,num from biz_outstock_packmaterial
+    	where 1=1
+    	<if test="(time != null and time !='')" >
+				and create_time like '${time}%'
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customer_id=#{customerid}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code=#{warehouseCode}
+		</if>
+    </select>
+    
+    <select id="queryWmsMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizWmsOutstockPackmaterialEntity">
+    	select waybill_no,create_time,warehouse_name,customer_name,consumer_material_code,consumer_material_name,num from biz_wms_outstock_packmaterial
+    	where 1=1
+    	<if test="(time != null and time !='')" >
+				and create_time like '${time}%'
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customer_id=#{customerid}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code=#{warehouseCode}
+		</if>
+    </select>
+    
+</mapper>

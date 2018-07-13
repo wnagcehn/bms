@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.storage.PriceStepQuotationMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="quotation_id" property="quotationId" jdbcType="VARCHAR" />
+	    <result column="weight_lower" property="weightLower" jdbcType="DOUBLE" />
+	    <result column="weight_upper" property="weightUpper" jdbcType="DOUBLE" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	    <result column="continued_item" property="continuedItem" jdbcType="DOUBLE" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="num_upper" property="numUpper" jdbcType="DOUBLE" />
+	    <result column="num_lower" property="numLower" jdbcType="DOUBLE" />
+	    <result column="sku_upper" property="skuUpper" jdbcType="DOUBLE" />
+	    <result column="sku_lower" property="skuLower" jdbcType="DOUBLE" />
+	    <result column="volume_upper" property="volumeUpper" jdbcType="DOUBLE" />
+	    <result column="volume_lower" property="volumeLower" jdbcType="CHAR" />
+	    <result column="user_define1" property="userDefine1" jdbcType="VARCHAR" />
+	    <result column="user_define2" property="userDefine2" jdbcType="CHAR" />
+	    <result column="user_define3" property="userDefine3" jdbcType="VARCHAR" />
+	    <result column="user_define4" property="userDefine4" jdbcType="VARCHAR" />
+	    <result column="user_define5" property="userDefine5" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, quotation_id, weight_lower, weight_upper, temperature_type_code, unit_price,continued_item, 
+    remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, 
+    num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, 
+    user_define3, user_define4, user_define5
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(templateId != null and templateId !='')" >
+				and template_id = #{templateId}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+				and subject_id = #{subjectId}
+		</if>
+		<if test="(feeUnitCode != null and feeUnitCode !='')" >
+				and fee_unit_code = #{feeUnitCode}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+        select
+        <include refid="baseColumns" />
+        from price_storage_step
+        where del_flag = 0 
+		<if test="(quotationId != null and quotationId !='')" >
+				and quotation_id = #{quotationId}
+		</if>
+		
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} add <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		order by id
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+        select
+        <include refid="baseColumns" />
+        from price_storage_step
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+    insert into price_storage_step (id, quotation_id, weight_lower, 
+      weight_upper, temperature_type_code, unit_price, continued_item,
+      remark, creator, create_time, 
+      last_modifier, last_modify_time, del_flag, 
+      num_upper, num_lower, sku_upper, 
+      sku_lower, volume_upper, volume_lower, 
+      user_define1, user_define2, user_define3, 
+      user_define4, user_define5)
+    values (#{id,jdbcType=BIGINT}, #{quotationId,jdbcType=VARCHAR}, #{weightLower,jdbcType=DOUBLE}, 
+      #{weightUpper,jdbcType=DOUBLE}, #{temperatureTypeCode,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DOUBLE},#{continuedItem,jdbcType=DOUBLE}, 
+      #{remark,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastModifier,jdbcType=VARCHAR}, #{lastModifyTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}, 
+      #{numUpper,jdbcType=DOUBLE}, #{numLower,jdbcType=DOUBLE}, #{skuUpper,jdbcType=DOUBLE}, 
+      #{skuLower,jdbcType=DOUBLE}, #{volumeUpper,jdbcType=DOUBLE}, #{volumeLower,jdbcType=CHAR}, 
+      #{userDefine1,jdbcType=VARCHAR}, #{userDefine2,jdbcType=CHAR}, #{userDefine3,jdbcType=VARCHAR}, 
+      #{userDefine4,jdbcType=VARCHAR}, #{userDefine5,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+        update price_storage_step 
+	set
+       weight_lower = #{weightLower,jdbcType=DOUBLE},
+        weight_upper = #{weightUpper,jdbcType=DOUBLE},
+        temperature_type_code = #{temperatureTypeCode,jdbcType=VARCHAR},
+        unit_price = #{unitPrice,jdbcType=DOUBLE},
+        continued_item = #{continuedItem,jdbcType=DOUBLE},
+        remark = #{remark,jdbcType=VARCHAR},
+        creator = #{creator,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        last_modifier = #{lastModifier,jdbcType=VARCHAR},
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+        num_upper = #{numUpper,jdbcType=DOUBLE},
+        num_lower = #{numLower,jdbcType=DOUBLE},
+        sku_upper = #{skuUpper,jdbcType=DOUBLE},
+        sku_lower = #{skuLower,jdbcType=DOUBLE},
+        volume_upper = #{volumeUpper,jdbcType=DOUBLE},
+        volume_lower = #{volumeLower,jdbcType=CHAR},
+        user_define1 = #{userDefine1,jdbcType=VARCHAR},
+        user_define2 = #{userDefine2,jdbcType=CHAR},
+        user_define3 = #{userDefine3,jdbcType=VARCHAR},
+        user_define4 = #{userDefine4,jdbcType=VARCHAR},
+        user_define5 = #{userDefine5,jdbcType=VARCHAR}
+    
+        where id=#{id}
+    </update>
+	<update id="removeAll" parameterType="Map">
+		update price_storage_step set del_flag=1,last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
+		where quotation_id=#{templateId} and del_flag=0
+	</update>
+    <update id="delete" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+        update price_storage_step 
+		<set >
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+     <select id="queryPriceStep" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+		select ps.quotation_id, ps.weight_lower, ps.weight_upper, ps.temperature_type_code, ps.unit_price, ps.num_upper, 
+		ps.num_lower, ps.sku_upper, ps.sku_lower, ps.volume_upper, ps.volume_lower, ps.user_define1, ps.user_define2, 
+		ps.user_define3, ps.user_define4, ps.user_define5,ps.continued_item from price_storage_step ps,
+		(SELECT pg.id from  price_general_quotation pg LEFT JOIN price_contract_item pi on pi.template_id = pg.quotation_no  LEFT JOIN  price_contract_info  con on con.contract_code = pi.contract_code  
+		where pi.contract_code = #{contractCode} and pi.subject_id = #{subjectId} and con.contract_state = '1' and pi.del_flag = 0 and pg.del_flag = 0 ) px where px.id = ps.quotation_id and ps.del_flag = 0
+	</select>
+	
+	<!-- 查询标准阶梯报价 -->
+	<select id="queryPriceStandardStep" parameterType="java.util.Map"
+		resultType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
+		select ps.quotation_id, ps.weight_lower, ps.weight_upper, ps.temperature_type_code, ps.unit_price, ps.num_upper, 
+		ps.num_lower, ps.sku_upper, ps.sku_lower, ps.volume_upper, ps.volume_lower, ps.user_define1, ps.user_define2, 
+		ps.user_define3, ps.user_define4, ps.user_define5,ps.continued_item 
+		from price_storage_step ps
+		left join price_general_quotation pg on pg.id = ps.quotation_id and ps.del_flag = 0
+		where pg.del_flag = 0 and pg.template_type = 'S'
+		<if test="(subjectId != null and subjectId !='')">
+			and pg.subject_id= #{subjectId}
+		</if>
+	</select>
+    <select id="queryPriceStepByQuatationId" parameterType="java.util.Map" resultMap="baseResultMap">
+    	 select * from price_storage_step  where quotation_id=#{quotationId} and del_flag=0;
+    </select>
+</mapper>

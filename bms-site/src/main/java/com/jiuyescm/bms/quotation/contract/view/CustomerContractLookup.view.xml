@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtMyCondition">
+      <PropertyDef name="contractObj">
+        <Property name="label">合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="contractState">
+        <Property></Property>
+        <Property name="label">审核状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;customerContractController#getCheckedState&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="paperContractNo">
+        <Property name="label">纸质编号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">有效期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">-</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家id</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPriceContractInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+        <Property name="label">合同编号</Property>
+      </PropertyDef>
+      <PropertyDef name="contractTypeCode">
+        <Property></Property>
+        <Property name="label">合同类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getContractTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="contractObj">
+        <Property></Property>
+        <Property name="label">合同名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="paperContractNo">
+        <Property></Property>
+        <Property name="label">纸质编号</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="label">生效日期</Property>
+        <Property name="dataType">DateTime</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="expireDate">
+        <Property name="label">失效日期</Property>
+        <Property name="dataType">DateTime</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="description">
+        <Property></Property>
+        <Property name="label">合同描述</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="contractState">
+        <Property></Property>
+        <Property name="label">审核状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;customerContractController#getCheckedState&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPriceContractItemEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">入仓服务</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">计费模板</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtContractDetail">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity</Property>
+      <PropertyDef name="transportCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="transportName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="storageCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="storageName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="template_id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property></Property>
+        <Property name="label">服务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="theLastName">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchName">
+        <Property></Property>
+        <Property name="label">服务报价</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageSystemCode">
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="typeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="updateId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deleteId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCheck">
+        <Property name="label">类型</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property name="readOnly">false</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtTransportSystemCode">
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="typeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="updateId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deleteId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCheck">
+        <Property name="label">类型</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId"/>
+    </DataType>
+    <DataType name="dtDispatchSystemCode">
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="typeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="updateId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deleteId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCheck">
+        <Property name="label">类型</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId"/>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsMyCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsMyCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtMyCondition]</Property>
+    </DataSet>
+    <DataSet id="dsPriceContractInfoEntity">
+      <Property name="dataType">[dtPriceContractInfoEntity]</Property>
+      <Property name="dataProvider">customerContractController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsPriceContractItemEntity">
+      <Property name="dataType">[dtPriceContractItemEntity]</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsContractDetail">
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dtContractDetail]</Property>
+    </DataSet>
+    <DataSet id="dsContactDetailStorage">
+      <Property name="dataProvider">customerContractController#queryStorage</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataType">[dtContractDetail]</Property>
+    </DataSet>
+    <DataSet id="dsContractDetailTransport">
+      <Property name="dataProvider">customerContractController#queryTranslate</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataType">[dtContractDetail]</Property>
+    </DataSet>
+    <DataSet id="dsContractDetailDispatch">
+      <Property name="dataProvider">customerContractController#queryDispatch</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataType">[dtContractDetail]</Property>
+    </DataSet>
+    <DataSet id="dsStorageSystemCode">
+      <Property name="dataType">[dtStorageSystemCode]</Property>
+      <Property name="dataProvider">customerContractController#queryStorageService</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsTransportSystemCode">
+      <Property name="dataType">[dtTransportSystemCode]</Property>
+      <Property name="dataProvider">customerContractController#queryTransportService</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsDispatchSystemCode">
+      <Property name="dataType">[dtDispatchSystemCode]</Property>
+      <Property name="dataProvider">customerContractController#queryDispatchService</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="itemCodes">pages,pageSize</Property>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsPriceContractInfoEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+&#xD;
+var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;startTime&quot;);&#xD;
+var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;endTime&quot;);&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+//清空下面的签约服务&#xD;
+var storageData=view.get(&quot;#dsContactDetailStorage.data&quot;);&#xD;
+if(!isNullOrEmpty(storageData)){&#xD;
+	storageData.clear();&#xD;
+}&#xD;
+&#xD;
+var transportData=view.get(&quot;#dsContractDetailTransport.data&quot;);&#xD;
+if(!isNullOrEmpty(transportData)){&#xD;
+	transportData.clear();&#xD;
+}&#xD;
+&#xD;
+var dispatchData=view.get(&quot;#dsContractDetailDispatch.data&quot;);&#xD;
+if(!isNullOrEmpty(dispatchData)){&#xD;
+	dispatchData.clear();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <Container>
+      <AutoForm id="formCondition">
+        <Property name="dataSet">dsMyCondition</Property>
+        <Property name="cols">240,240,240</Property>
+        <Property name="dataType">dtMyCondition</Property>
+        <AutoFormElement>
+          <Property name="name">contractObj</Property>
+          <Property name="property">contractObj</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">paperContractNo</Property>
+          <Property name="property">paperContractNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">contractState</Property>
+          <Property name="property">contractState</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Property name="labelWidth">3</Property>
+          <Property name="width">170</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid>
+        <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
+if (data != null) {&#xD;
+	&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, data.current); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="width">2000</Property>
+        <RowNumColumn/>
+        <DataColumn name="contractCode">
+          <Property name="property">contractCode</Property>
+        </DataColumn>
+        <DataColumn name="paperContractNo">
+          <Property name="property">paperContractNo</Property>
+        </DataColumn>
+        <DataColumn name="contractObj">
+          <Property name="property">contractObj</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+        </DataColumn>
+        <DataColumn name="startDate">
+          <Property name="property">startDate</Property>
+        </DataColumn>
+        <DataColumn name="expireDate">
+          <Property name="property">expireDate</Property>
+        </DataColumn>
+        <DataColumn name="contractState">
+          <Property name="property">contractState</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Trigger id="triggerCus">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCus&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCus">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtFowarderQuery">
+      <PropertyDef name="code">
+        <Property name="label">承运商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="label">承运商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="shortName">
+        <Property name="label">承运商简称</Property>
+      </PropertyDef>
+      <PropertyDef name="linkMan">
+        <Property name="label">联系人</Property>
+      </PropertyDef>
+      <PropertyDef name="postcode">
+        <Property name="label">邮编</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="label">作废标记</Property>
+        <Property name="dataType">Integer</Property>
+        <Property name="defaultValue">0</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;forwarderPR#getInvalidflag&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="forwardId">
+        <Property name="label">承运商ID</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtForwarder">
+      <Property name="creationType">com.jiuyescm.mdm.forwarder.vo.ForwarderVo</Property>
+      <PropertyDef name="id">
+        <Property name="label">承运商编号</Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property name="label">承运商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="label">承运商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="shortName">
+        <Property name="label">承运商简称</Property>
+      </PropertyDef>
+      <PropertyDef name="linkMan">
+        <Property name="label">联系人</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="label">手机号</Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property name="label">电话号码</Property>
+      </PropertyDef>
+      <PropertyDef name="linkAddress">
+        <Property name="label">联系人地址</Property>
+      </PropertyDef>
+      <PropertyDef name="postcode">
+        <Property name="label">邮编</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="label">作废标记</Property>
+        <Property name="dataType">Integer</Property>
+        <Property name="defaultValue">0</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">未作废</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">已作废</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonid">
+        <Property></Property>
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonid">
+        <Property></Property>
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="forwardId">
+        <Property></Property>
+        <Property name="label">承运商ID</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPubForwarderEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnquery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsPubForwarderQuery.data&quot;).current;&#xD;
+with (view.get(&quot;#dsPubForwarderEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnSelect">
+        <ClientEvent name="onClick">this.get(&quot;#actionSelectDeliver&quot;).execute();</ClientEvent>
+        <Property name="caption">选择</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsPubForwarderEntity">
+      <Property name="dataType">[dtForwarder]</Property>
+      <Property name="dataProvider">forwarderPR#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">lazy</Property>
+    </DataSet>
+    <DataSet id="dsPubForwarderQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsPubForwarderQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtFowarderQuery]</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="dataSet">dsPubForwarderQuery</Property>
+      <Property name="dataType">dtFowarderQuery</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <AutoFormElement>
+        <Property name="property">forwardId</Property>
+        <Property name="name">forwardId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">code</Property>
+        <Property name="property">code</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">name</Property>
+        <Property name="property">name</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">shortName</Property>
+        <Property name="property">shortName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">linkMan</Property>
+        <Property name="property">linkMan</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="property">postcode</Property>
+        <Property name="name">postcode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="property">delflag</Property>
+        <Property name="name">delflag</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <ClientEvent name="onDataRowDoubleClick">this.get(&quot;#actionSelectDeliver&quot;).execute();</ClientEvent>
+      <Property name="dataSet">dsPubForwarderEntity</Property>
+      <Property name="readOnly">true</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn>
+        <Property name="property">forwardId</Property>
+        <Property name="name">forwardId</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="code">
+        <Property name="property">code</Property>
+      </DataColumn>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+      </DataColumn>
+      <DataColumn name="shortName">
+        <Property name="property">shortName</Property>
+      </DataColumn>
+      <DataColumn name="linkMan">
+        <Property name="property">linkMan</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+      </DataColumn>
+      <DataColumn name="tel">
+        <Property name="property">tel</Property>
+      </DataColumn>
+      <DataColumn name="linkAddress">
+        <Property name="property">linkAddress</Property>
+      </DataColumn>
+      <DataColumn name="postcode">
+        <Property name="property">postcode</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+      <DataColumn name="delflag">
+        <Property name="property">delflag</Property>
+      </DataColumn>
+      <DataColumn name="creperson">
+        <Property name="property">creperson</Property>
+      </DataColumn>
+      <DataColumn name="cretime">
+        <Property name="property">cretime</Property>
+      </DataColumn>
+      <DataColumn name="modperson">
+        <Property name="property">modperson</Property>
+      </DataColumn>
+      <DataColumn name="modtime">
+        <Property name="property">modtime</Property>
+      </DataColumn>
+    </DataGrid>
+    <Action id="actionSelectDeliver">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsPubForwarderEntity&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
+  </View>
+</ViewConfig>

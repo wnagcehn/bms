@@ -1,0 +1,3019 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="createMonthStart">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthEnd">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckStatus">
+        <Property></Property>
+        <Property name="label">对账状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckStateMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerName">
+        <Property></Property>
+        <Property name="label">项目人员</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售人员</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceStatus">
+        <Property></Property>
+        <Property name="label">开票状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">责任部门</Property>
+      </PropertyDef>
+      <PropertyDef name="balanceName">
+        <Property></Property>
+        <Property name="label">结算人员</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceNo">
+        <Property name="label">发票号</Property>
+      </PropertyDef>
+      <PropertyDef name="expectReceiptDateStart">
+        <Property name="dataType">Date</Property>
+        <Property name="label">预计回款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="expectReceiptDateEnd">
+        <Property name="dataType">Date</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="isapplyBad">
+        <Property></Property>
+        <Property name="label">是否申请坏账</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getIsState&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckInfo">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">bms商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStartTime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">业务启动时间</Property>
+      </PropertyDef>
+      <PropertyDef name="firstClassName">
+        <Property></Property>
+        <Property name="label">一级品类</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeName">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="projectName">
+        <Property></Property>
+        <Property name="label">项目</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员名称</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">责任部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="deptCode">
+        <Property></Property>
+        <Property name="label">责任部门编码</Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerName">
+        <Property></Property>
+        <Property name="label">项目管理员</Property>
+      </PropertyDef>
+      <PropertyDef name="balanceName">
+        <Property></Property>
+        <Property name="label">结算员</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckStatus">
+        <Property></Property>
+        <Property name="label">对账状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckStateMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="billConfirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">账单确认日期</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceStatus">
+        <Property></Property>
+        <Property name="label">开票状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="expectAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">预计金额</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">最终确认额</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">发票金额</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">开票日期</Property>
+      </PropertyDef>
+      <PropertyDef name="expectReceiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">预计回款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="unReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">未收款金额</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceUnReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">开票未回款金额</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">收款金额</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">收款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="billExcelUrl">
+        <Property></Property>
+        <Property name="label">账单下载地址</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">确认日期</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+        <Property name="label">确认人</Property>
+      </PropertyDef>
+      <PropertyDef name="isneedInvoice">
+        <Property></Property>
+        <Property name="label">是否需要发票</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getIsState&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="isapplyBad">
+        <Property></Property>
+        <Property name="label">是否申请坏账</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getIsState&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceMan">
+        <Property></Property>
+        <Property name="label">开票人</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptMan">
+        <Property></Property>
+        <Property name="label">收款人</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+        <Property name="label">收款状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="badBillAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="operDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceManId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiptManId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="balanceId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="badBillDesc">
+        <Property></Property>
+        <Property name="label">坏账描述</Property>
+      </PropertyDef>
+      <PropertyDef name="badBillReason">
+        <Property></Property>
+        <Property name="label">坏账原因</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBadBillTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="fileUrl">
+        <Property></Property>
+        <Property name="label">附件地址</Property>
+      </PropertyDef>
+      <PropertyDef name="fileName">
+        <Property></Property>
+        <Property name="label">附件名称</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmUnInvoiceAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">已确认未开票金额</Property>
+      </PropertyDef>
+      <PropertyDef name="overDays">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDays">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalConfirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalInvoiceAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalUnReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalInvoiceUnReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalConfirmUnInvoiceAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">调整金额</Property>
+      </PropertyDef>
+      <PropertyDef name="checked">
+        <Property name="label">State</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckInvoice">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">对账主表id</Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">发票序号</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceNo">
+        <Property></Property>
+        <Property name="label">发票编号</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">发票金额</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">发票日期</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceDays">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">已开票天数</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">说明</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckLog">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckLogVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">对账主表ID</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatusCode">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="deptId">
+        <Property></Property>
+        <Property name="label">部门编号</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="fileName">
+        <Property></Property>
+        <Property name="label">附件名称</Property>
+      </PropertyDef>
+      <PropertyDef name="fileUrl">
+        <Property></Property>
+        <Property name="label">附件地址</Property>
+      </PropertyDef>
+      <PropertyDef name="operateDesc">
+        <Property></Property>
+        <Property name="label">操作明细</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">操作人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="logType">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckReceipt">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckReceiptVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">对账主表ID</Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">回款序号</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">回款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="label">回款金额</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckAdjustInfo">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustDate">
+        <Property name="dataType">Long</Property>
+        <Property name="label">调整日期</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">调整金额</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">调整原因</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckFollowEntity">
+      <Property name="creationType">com.jiuyescm.bms.bill.check.vo.BillCheckFollowVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">int</Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="takesTime">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">跟进时效</Property>
+      </PropertyDef>
+      <PropertyDef name="appointMan">
+        <Property></Property>
+        <Property name="label">指派人</Property>
+      </PropertyDef>
+      <PropertyDef name="appointDeptId">
+        <Property></Property>
+        <Property name="label">指派部门</Property>
+      </PropertyDef>
+      <PropertyDef name="followMan">
+        <Property></Property>
+        <Property name="label">跟进人</Property>
+      </PropertyDef>
+      <PropertyDef name="followDeptId">
+        <Property></Property>
+        <Property name="label">跟进部门</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">作废标记</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">详细描述</Property>
+      </PropertyDef>
+      <PropertyDef name="fileName">
+        <Property></Property>
+        <Property name="label">文件名称</Property>
+      </PropertyDef>
+      <PropertyDef name="filePath">
+        <Property></Property>
+        <Property name="label">文件路径</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+      </PropertyDef>
+      <PropertyDef name="appointManId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="appointDept">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="followState">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="followManId">
+        <Property></Property>
+        <Property name="label">跟进人</Property>
+      </PropertyDef>
+      <PropertyDef name="followDept">
+        <Property></Property>
+        <Property name="label">跟进部门</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="followState">
+        <Property name="label">跟进处理状态</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtReceiptFollowEntity">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">反馈日期</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDeptId">
+        <Property></Property>
+        <Property name="label">反馈部门id</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDept">
+        <Property></Property>
+        <Property name="label">反馈部门</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptMan">
+        <Property></Property>
+        <Property name="label">反馈人</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptManId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="expectReceiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">预计回款时间</Property>
+      </PropertyDef>
+      <PropertyDef name="followType">
+        <Property></Property>
+        <Property name="label">跟进类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillReceiptFollowStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="operdesc">
+        <Property></Property>
+        <Property name="label">详细说明</Property>
+      </PropertyDef>
+      <PropertyDef name="fileName">
+        <Property></Property>
+        <Property name="label">文件名称</Property>
+      </PropertyDef>
+      <PropertyDef name="fileUrl">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="expectReceiptMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">预计回款金额</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">view.get(&quot;#ajaxUserAction&quot;).execute(function(result){&#xD;
+	if(result!=null){	&#xD;
+		//是否为管理员 权限 0-管理员 1-普通用户&#xD;
+		if(result.administrator=='1'){&#xD;
+			//只能 查询、回款反馈、回款跟进模板下载、回款跟进导入、导出&#xD;
+			view.get(&quot;#btnModify&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#btnCancel&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#btnZhipai&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#btnReceipt&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temdown1&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temdown2&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temdown3&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temdown4&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temimport1&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temimport2&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temimport3&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#temimport4&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#btnBadCheck&quot;).set(&quot;visible&quot;,false);	&#xD;
+		}else{&#xD;
+			view.get(&quot;#btnModify&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#btnCancel&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#btnZhipai&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#btnReceipt&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temdown1&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temdown2&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temdown3&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temdown4&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temimport1&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temimport2&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temimport3&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#temimport4&quot;).set(&quot;visible&quot;,true);&#xD;
+			view.get(&quot;#btnBadCheck&quot;).set(&quot;visible&quot;,true);		&#xD;
+		}&#xD;
+	}&#xD;
+});</ClientEvent>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckInfo">
+      <Property name="dataType">[dtBillCheckInfo]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckInvoice">
+      <Property name="dataType">[dtBillCheckInvoice]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryInvoiceAll</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckLog">
+      <Property name="dataType">[dtBillCheckLog]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryLogAll</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckReceipt">
+      <Property name="dataType">[dtBillCheckReceipt]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryReceiptAll</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckAdjustInfo">
+      <Property name="dataType">[dtBillCheckAdjustInfo]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryAllAdjust</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckInfoModify">
+      <Property name="dataType">[dtBillCheckInfo]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryModify</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckFollow">
+      <Property name="dataType">[dtBillCheckFollowEntity]</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckCallBack">
+      <Property name="dataType">[dtBillCheckFollowEntity]</Property>
+    </DataSet>
+    <DataSet id="dsReceiptFollow">
+      <Property name="dataType">[dtReceiptFollowEntity]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryReceiptFollowAll</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="itemCodes">pages,pageSize</Property>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+&#xD;
+var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
+&#xD;
+if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;业务月份的结束时间不能大于起始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
+&#xD;
+//清空下面的数据&#xD;
+var logData=view.get(&quot;#dsBillCheckLog.data&quot;);&#xD;
+if(!isNullOrEmpty(logData)){&#xD;
+	logData.clear();&#xD;
+}&#xD;
+var invoiceData=view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
+if(!isNullOrEmpty(invoiceData)){&#xD;
+	invoiceData.clear();&#xD;
+}&#xD;
+var receiptData=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
+if(!isNullOrEmpty(receiptData)){&#xD;
+	receiptData.clear();&#xD;
+}&#xD;
+var receiptFollowData=view.get(&quot;#dsReceiptFollow.data&quot;);&#xD;
+if(!isNullOrEmpty(receiptFollowData)){&#xD;
+	receiptFollowData.clear();&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){&#xD;
+ 	//修改，只能选择一条&#xD;
+	var entity=selectDatas[0];&#xD;
+	if(entity!=null){&#xD;
+		//判断是否是坏账&#xD;
+		if(entity.get(&quot;billStatus&quot;)=='INVALIDATE'){&#xD;
+			dorado.MessageBox.alert(&quot;作废状态下无法修改!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		//判断是否是坏账&#xD;
+		if(entity.get(&quot;billStatus&quot;)=='BAD_BILL'){&#xD;
+			dorado.MessageBox.alert(&quot;坏账状态下无法修改!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		//已收款状态无法修改&#xD;
+		if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;已收款状态下无法修改!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		//查询账单主表的相关信息&#xD;
+		&#xD;
+		with (view.get(&quot;#dsBillCheckInfoModify&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				id:entity.get(&quot;id&quot;)&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();	&#xD;
+		}&#xD;
+		//查询收款调整的信息&#xD;
+		var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				billCheckId:entity.get(&quot;id&quot;)&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();	&#xD;
+		}	&#xD;
+		view.get(&quot;#dialogEdit&quot;).show();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请勾选一条账单&quot;);&#xD;
+	}&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条账单!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条账单!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnCancel">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){&#xD;
+ 	//修改，只能选择一条&#xD;
+	var entity=selectDatas[0];&#xD;
+	if(entity!=null){&#xD;
+		//判断是否是待确认状态&#xD;
+		if(entity.get(&quot;billStatus&quot;)!='TB_CONFIRMED'){&#xD;
+			dorado.MessageBox.alert(&quot;只有待确认状态下才能作废!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		//判断是否是坏账&#xD;
+		if(entity.get(&quot;billStatus&quot;)=='BAD_BILL'){&#xD;
+			dorado.MessageBox.alert(&quot;坏账状态下无法作废!&quot;);&#xD;
+			return;&#xD;
+		}	&#xD;
+		&#xD;
+		//已收款状态无法操作&#xD;
+		if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;已收款状态下无法操作!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		view.get(&quot;#dsBillCheckLog&quot;).insert();&#xD;
+		view.get(&quot;#dialogCancel&quot;).show();	&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请勾选一条账单&quot;);&#xD;
+	}&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条账单!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条账单!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">作废</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnZhipai">
+        <ClientEvent name="onClick">view.get(&quot;#dsBillCheckFollow&quot;).insert();&#xD;
+view.id(&quot;txtFileName2&quot;).set(&quot;text&quot;,&quot;&quot;);&#xD;
+//选中的记录&#xD;
+var selectData = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+if(selectData.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择需要指派的账单!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var result=&quot;&quot;;&#xD;
+selectData.each(function(item){&#xD;
+	result+=item.get(&quot;id&quot;)+&quot;&amp;&quot;;&#xD;
+});&#xD;
+&#xD;
+var entity=view.get(&quot;#dsBillCheckFollow.data&quot;).current;&#xD;
+entity.set({&#xD;
+	billName:result&#xD;
+});&#xD;
+view.get(&quot;#dialogZp&quot;).show();&#xD;
+&#xD;
+&#xD;
+/*&#xD;
+if(result=='1'){&#xD;
+	dorado.MessageBox.alert(&quot;待确认状态下才能去指派!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(data){	&#xD;
+	//待确认状态下才能去指派&#xD;
+	if(data.get(&quot;billStatus&quot;)!='TB_CONFIRMED'){&#xD;
+		dorado.MessageBox.alert(&quot;待确认状态下才能去指派!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	//坏账申请状态下无法操作&#xD;
+	if(data.get(&quot;isapplyBad&quot;)=='1'){&#xD;
+		dorado.MessageBox.alert(&quot;坏账申请中!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	var entity=view.get(&quot;#dsBillCheckFollow.data&quot;).current;&#xD;
+	entity.set({&#xD;
+		billCheckId:data.get(&quot;id&quot;),&#xD;
+		billStatus:data.get(&quot;billStatus&quot;)&#xD;
+	});&#xD;
+	view.get(&quot;#dialogZp&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择账单!&quot;);&#xD;
+}&#xD;
+*/</ClientEvent>
+        <Property name="caption">问题指派</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -100px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnConfirmBill">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBillCheckInfo.data&quot;);&#xD;
+if(data.current){&#xD;
+	&#xD;
+	//判断是否是待确认状态&#xD;
+	if(data.current.get(&quot;billStatus&quot;)!='TB_CONFIRMED'){&#xD;
+		dorado.MessageBox.alert(&quot;只有待确认状态下才能确认账单!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	//已收款状态无法操作&#xD;
+	if(data.current.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;已收款状态下无法操作!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	dorado.MessageBox.confirm(&quot;是否确认账单?&quot;,function(){&#xD;
+		var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+		entity.set(&quot;operDesc&quot;,&quot;确认账单&quot;);	&#xD;
+		view.get(&quot;#confirmBillCheckAction&quot;).execute(function(result){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+			if(result==&quot;确认账单成功!&quot;){&#xD;
+				with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}	&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">确认账单</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+        <Property name="visible">false</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnReceipt">
+        <ClientEvent name="onClick">view.get(&quot;#finishAction&quot;).execute(function(result){&#xD;
+	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+});&#xD;
+</ClientEvent>
+        <Property name="caption">一键收款</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnBadApply">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){&#xD;
+ 	//修改，只能选择一条&#xD;
+	var entity=selectDatas[0];&#xD;
+	if(entity!=null){&#xD;
+		//判断是否是待确认状态&#xD;
+		if(entity.get(&quot;billStatus&quot;)!='TB_CONFIRMED' &amp;&amp; entity.get(&quot;billStatus&quot;)!='TB_INVOICE' &amp;&amp; entity.get(&quot;billStatus&quot;)!='TB_RECEIPT'){&#xD;
+			dorado.MessageBox.alert(&quot;只有待确认状、待开票、待收款态下才能坏账申请!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		//判断是否已是坏账申请状态			   &#xD;
+		if(entity.get(&quot;isapplyBad&quot;)=='1'){&#xD;
+			dorado.MessageBox.alert(&quot;坏账申请状态，无法继续坏账申请!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		dorado.MessageBox.confirm(&quot;是否坏账申请?&quot;, {&#xD;
+			detailCallback: function(button, text) {&#xD;
+		       if(button==&quot;yes&quot;){&#xD;
+	   			 entity.set(&quot;isapplyBad&quot;,&quot;1&quot;);&#xD;
+				 view.get(&quot;#updateBill&quot;).execute(function(result){&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+					//插入日志&#xD;
+					view.get(&quot;#dsBillCheckLog&quot;).insert();&#xD;
+					var log=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
+					log.set(&quot;billCheckId&quot;,entity.get(&quot;id&quot;));&#xD;
+					log.set(&quot;billStatusCode&quot;,entity.get(&quot;billStatus&quot;));&#xD;
+					log.set(&quot;operateDesc&quot;,&quot;坏账申请&quot;);&#xD;
+					view.get(&quot;#insertLogAction&quot;).execute();	 &#xD;
+				 });&#xD;
+			   }&#xD;
+		    }&#xD;
+		});&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请勾选一条账单&quot;);&#xD;
+	}&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条账单!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条账单!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">坏账申请</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnBadCheck">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){&#xD;
+ 	//修改，只能选择一条&#xD;
+	var entity=selectDatas[0];&#xD;
+	if(entity!=null){&#xD;
+		if(entity.get(&quot;isapplyBad&quot;)=='0'){&#xD;
+			dorado.MessageBox.alert(&quot;不是坏账审批状态，无法进行审批!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		//已是坏账状态，不允许继续操作&#xD;
+		if(entity.get(&quot;billStatus&quot;)=='BAD_BILL'){&#xD;
+			dorado.MessageBox.alert(&quot;已是坏账状态!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		&#xD;
+		dorado.MessageBox.show({&#xD;
+			icon:&quot;INFO&quot;,&#xD;
+		    title: &quot;坏账审批&quot;,&#xD;
+		    message: &quot;是否审批通过&quot;,&#xD;
+		    buttons: [&quot;yes&quot;, &quot;no&quot;],&#xD;
+		    closeAction: &quot;cancel&quot;,&#xD;
+		    detailCallback: function(button, text) {&#xD;
+				if(button==&quot;yes&quot;){&#xD;
+				   	entity.set(&quot;billStatus&quot;,&quot;BAD_BILL&quot;);&#xD;
+					view.get(&quot;#updateBill&quot;).execute(function(result){&#xD;
+						dorado.MessageBox.alert(result);&#xD;
+						//插入日志&#xD;
+						view.get(&quot;#dsBillCheckLog&quot;).insert();&#xD;
+						var log=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
+						log.set(&quot;billCheckId&quot;,entity.get(&quot;id&quot;));&#xD;
+						log.set(&quot;billStatusCode&quot;,entity.get(&quot;billStatus&quot;));&#xD;
+						log.set(&quot;operateDesc&quot;,&quot;坏账审核通过&quot;);&#xD;
+						view.get(&quot;#insertLogAction&quot;).execute();	   &#xD;
+					});&#xD;
+			   }else if(button==&quot;no&quot;){&#xD;
+			   		entity.set(&quot;isapplyBad&quot;,&quot;0&quot;);&#xD;
+					view.get(&quot;#updateBill&quot;).execute(function(result){&#xD;
+						dorado.MessageBox.alert(result);&#xD;
+						//插入日志&#xD;
+						view.get(&quot;#dsBillCheckLog&quot;).insert();&#xD;
+						var log=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
+						log.set(&quot;billCheckId&quot;,entity.get(&quot;id&quot;));&#xD;
+						log.set(&quot;billStatusCode&quot;,entity.get(&quot;billStatus&quot;));&#xD;
+						log.set(&quot;operateDesc&quot;,&quot;坏账未审核通过&quot;);&#xD;
+						view.get(&quot;#insertLogAction&quot;).execute();	&#xD;
+					});&#xD;
+			   } &#xD;
+		    }&#xD;
+		});&#xD;
+		&#xD;
+		&#xD;
+		&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请勾选一条账单&quot;);&#xD;
+	}&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条账单!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条账单!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">坏账审批</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <MenuButton id="btnTemplateDownload">
+        <Property name="caption">模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+        <MenuItem id="temdown1">
+          <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;billcheck_bill_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();&#xD;
+</ClientEvent>
+          <Property name="caption">账单模板</Property>
+        </MenuItem>
+        <MenuItem id="temdown2">
+          <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;billcheck_invoice_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();&#xD;
+</ClientEvent>
+          <Property name="caption">发票模板</Property>
+        </MenuItem>
+        <MenuItem id="temdown3">
+          <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;billcheck_receipt_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();&#xD;
+</ClientEvent>
+          <Property name="caption">收款模板</Property>
+        </MenuItem>
+        <MenuItem id="temdown4">
+          <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;billcheck_receipt_adjust_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
+          <Property name="caption">收款调整模板</Property>
+        </MenuItem>
+        <MenuItem id="temdown5">
+          <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;billcheck_receipt_follow_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
+          <Property name="caption">回款跟进模板</Property>
+        </MenuItem>
+      </MenuButton>
+      <MenuButton id="btnTemplateImport">
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        <Property name="caption">导入</Property>
+        <MenuItem id="temimport1">
+          <ClientEvent name="onClick">view.get(&quot;#importExcelAction&quot;).set(&quot;fileResolver&quot;,&quot;billCheckInfoImportController#importExcel&quot;);&#xD;
+view.get(&quot;#getProgress&quot;).set(&quot;service&quot;,&quot;billCheckInfoImportController#getProgress&quot;);&#xD;
+view.get(&quot;#setProgress&quot;).set(&quot;service&quot;,&quot;billCheckInfoImportController#setProgress&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).set(&quot;caption&quot;,&quot;账单导入&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">账单导入</Property>
+        </MenuItem>
+        <MenuItem id="temimport2">
+          <ClientEvent name="onClick">view.get(&quot;#importExcelAction&quot;).set(&quot;fileResolver&quot;,&quot;billCheckInvoiceImportController#importExcel&quot;);&#xD;
+view.get(&quot;#getProgress&quot;).set(&quot;service&quot;,&quot;billCheckInvoiceImportController#getProgress&quot;);&#xD;
+view.get(&quot;#setProgress&quot;).set(&quot;service&quot;,&quot;billCheckInvoiceImportController#setProgress&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).set(&quot;caption&quot;,&quot;发票导入&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">发票导入</Property>
+        </MenuItem>
+        <MenuItem id="temimport3">
+          <ClientEvent name="onClick">view.get(&quot;#importExcelAction&quot;).set(&quot;fileResolver&quot;,&quot;billCheckReceiptImportController#importExcel&quot;);&#xD;
+view.get(&quot;#getProgress&quot;).set(&quot;service&quot;,&quot;billCheckReceiptImportController#getProgress&quot;);&#xD;
+view.get(&quot;#setProgress&quot;).set(&quot;service&quot;,&quot;billCheckReceiptImportController#setProgress&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).set(&quot;caption&quot;,&quot;收款导入&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">收款导入</Property>
+        </MenuItem>
+        <MenuItem id="temimport4">
+          <ClientEvent name="onClick">view.get(&quot;#importExcelAction&quot;).set(&quot;fileResolver&quot;,&quot;billCheckAdjustInfoImportController#importExcel&quot;);&#xD;
+view.get(&quot;#getProgress&quot;).set(&quot;service&quot;,&quot;billCheckAdjustInfoImportController#getProgress&quot;);&#xD;
+view.get(&quot;#setProgress&quot;).set(&quot;service&quot;,&quot;billCheckAdjustInfoImportController#setProgress&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).set(&quot;caption&quot;,&quot;收款调整导入&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).show();</ClientEvent>
+          <Property name="caption">收款调整导入</Property>
+        </MenuItem>
+        <MenuItem id="temimport5">
+          <ClientEvent name="onClick">view.get(&quot;#importExcelAction&quot;).set(&quot;fileResolver&quot;,&quot;billReceiptFollowImportController#importExcel&quot;);&#xD;
+view.get(&quot;#getProgress&quot;).set(&quot;service&quot;,&quot;billReceiptFollowImportController#getProgress&quot;);&#xD;
+view.get(&quot;#setProgress&quot;).set(&quot;service&quot;,&quot;billReceiptFollowImportController#setProgress&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).set(&quot;caption&quot;,&quot;回款跟进导入&quot;);&#xD;
+view.get(&quot;#importDialog&quot;).show();</ClientEvent>
+          <Property name="caption">回款跟进导入</Property>
+        </MenuItem>
+      </MenuButton>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var entity=view.get(&quot;#formCondition&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute();&#xD;
+</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">210,*,*,*,*,*</Property>
+      <Property name="labelWidth">60</Property>
+      <Property name="editorWidth">240</Property>
+      <AutoFormElement>
+        <Property name="name">createMonthStart</Property>
+        <Property name="property">createMonthStart</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createMonthEnd</Property>
+        <Property name="property">createMonthEnd</Property>
+        <Property name="labelWidth">10</Property>
+        <Property name="editorWidth">100</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceName</Property>
+        <Property name="property">invoiceName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">billName</Property>
+        <Property name="property">billName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">billCheckStatus</Property>
+        <Property name="property">billCheckStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="projectManagerName">
+        <Property name="name">projectManagerName</Property>
+        <Property name="property">projectManagerName</Property>
+        <Property name="trigger">triggerDeptProject</Property>
+        <Property name="hideMode">display</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="sellerName">
+        <Property name="name">sellerName</Property>
+        <Property name="property">sellerName</Property>
+        <Property name="trigger">triggerDeptSeller</Property>
+        <Property name="hideMode">display</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceStatus</Property>
+        <Property name="property">invoiceStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">billStatus</Property>
+        <Property name="property">billStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">deptName</Property>
+        <Property name="property">deptName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="balanceName">
+        <Property name="name">balanceName</Property>
+        <Property name="property">balanceName</Property>
+        <Property name="trigger">triggerDeptUser</Property>
+        <Property name="hideMode">display</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceNo</Property>
+        <Property name="property">invoiceNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">expectReceiptDateStart</Property>
+        <Property name="property">expectReceiptDateStart</Property>
+        <Property name="labelWidth">90</Property>
+        <Property name="editorWidth">220</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">expectReceiptDateEnd</Property>
+        <Property name="property">expectReceiptDateEnd</Property>
+        <Property name="labelWidth">10</Property>
+        <Property name="editorWidth">100</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">isapplyBad</Property>
+        <Property name="property">isapplyBad</Property>
+        <Property name="editorWidth">120</Property>
+        <Property name="labelWidth">90</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <SplitPanel>
+      <Property name="direction">bottom</Property>
+      <Property name="position">200</Property>
+      <MainControl>
+        <Container>
+          <DataGrid id="dsBillGrid">
+            <ClientEvent name="onDataRowClick">var index=view.get(&quot;#tab&quot;).get(&quot;currentIndex&quot;);&#xD;
+var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+&#xD;
+//日志记录&#xD;
+if(index==0){&#xD;
+	with (view.get(&quot;#dsBillCheckLog&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billCheckId:entity.get(&quot;id&quot;),&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();	&#xD;
+	}&#xD;
+}&#xD;
+//发票&#xD;
+if(index==1){&#xD;
+	with (view.get(&quot;#dsBillCheckInvoice&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billCheckId:entity.get(&quot;id&quot;),&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();	&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//回款&#xD;
+if(index==2){&#xD;
+	with (view.get(&quot;#dsBillCheckReceipt&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billCheckId:entity.get(&quot;id&quot;),&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();	&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//回款反馈&#xD;
+if(index==3){&#xD;
+	with (view.get(&quot;#dsReceiptFollow&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billCheckId:entity.get(&quot;id&quot;),&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();	&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="dataSet">dsBillCheckInfo</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="showFooter">true</Property>
+            <Property name="selectionMode">multiRows</Property>
+            <Property name="filterMode">clientSide</Property>
+            <RowSelectorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="createMonth">
+              <ClientEvent name="onRenderFooterCell">arg.dom.innerHTML=&quot;合计:&quot;;</ClientEvent>
+              <Property name="property">createMonth</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="invoiceName">
+              <Property name="property">invoiceName</Property>
+              <Property name="width">130</Property>
+            </DataColumn>
+            <DataColumn name="billName">
+              <Property name="property">billName</Property>
+              <Property name="width">130</Property>
+            </DataColumn>
+            <DataColumn name="billStartTime">
+              <Property name="property">billStartTime</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="billStatus">
+              <Property name="property">billStatus</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="billCheckStatus">
+              <Property name="property">billCheckStatus</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="balanceName">
+              <Property name="property">balanceName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="projectName">
+              <Property name="property">projectName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="area">
+              <Property name="property">area</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="sellerName">
+              <Property name="property">sellerName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="projectManagerName">
+              <Property name="property">projectManagerName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="invoiceStatus">
+              <Property name="property">invoiceStatus</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="deptName">
+              <Property name="property">deptName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="deptCode">
+              <Property name="property">deptCode</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="firstClassName">
+              <Property name="property">firstClassName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="bizTypeName">
+              <Property name="property">bizTypeName</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="confirmDate">
+              <Property name="property">confirmDate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="expectAmount">
+              <Property name="property">expectAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="confirmAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalConfirmAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">confirmAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="invoiceAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalInvoiceAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">invoiceAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="invoiceDate">
+              <Property name="property">invoiceDate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="expectReceiptDate">
+              <Property name="property">expectReceiptDate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="unReceiptAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalUnReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">unReceiptAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="invoiceUnReceiptAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalInvoiceUnReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">invoiceUnReceiptAmount</Property>
+              <Property name="width">100</Property>
+            </DataColumn>
+            <DataColumn name="confirmUnInvoiceAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalConfirmUnInvoiceAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">confirmUnInvoiceAmount</Property>
+              <Property name="width">100</Property>
+            </DataColumn>
+            <DataColumn name="receiptAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">receiptAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="receiptDate">
+              <Property name="property">receiptDate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="adjustMoney">
+              <Property name="property">adjustMoney</Property>
+              <Property name="width">100</Property>
+            </DataColumn>
+            <DataColumn name="isapplyBad">
+              <Property name="property">isapplyBad</Property>
+              <Property name="width">80</Property>
+              <Property name="align">center</Property>
+            </DataColumn>
+            <DataColumn name="billExcelUrl">
+              <Property name="property">billExcelUrl</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="remark">
+              <Property name="property">remark</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="checked">
+              <Property name="property">checked</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <TabControl id="tab">
+            <ControlTab>
+              <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+if(entity!=null){&#xD;
+	with (view.get(&quot;#dsBillCheckLog&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		billCheckId:entity.get(&quot;id&quot;)&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">账单日志</Property>
+              <Property name="width">100</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot>
+                    <Property name="dataSet">dsBillCheckLog</Property>
+                    <Property name="itemCodes">pages,pageSize</Property>
+                  </DataPilot>
+                </ToolBar>
+                <DataGrid id="logGrid">
+                  <ClientEvent name="onDataRowDoubleClick">view.get(&quot;#operDescDialog&quot;).show();&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dsBillCheckLog</Property>
+                  <Property name="readOnly">true</Property>
+                  <RowNumColumn/>
+                  <DataColumn name="createTime">
+                    <Property name="property">createTime</Property>
+                  </DataColumn>
+                  <DataColumn name="billStatusCode">
+                    <Property name="property">billStatusCode</Property>
+                  </DataColumn>
+                  <DataColumn name="operateDesc">
+                    <Property name="property">operateDesc</Property>
+                  </DataColumn>
+                  <DataColumn name="creator">
+                    <Property name="property">creator</Property>
+                  </DataColumn>
+                  <DataColumn name="deptName">
+                    <Property name="property">deptName</Property>
+                    <Property name="width">80</Property>
+                  </DataColumn>
+                  <DataColumn name="fileName">
+                    <ClientEvent name="onRenderCell">var fileUrl=arg.data.get(&quot;fileUrl&quot;);&#xD;
+var	fileName=arg.data.get(&quot;fileName&quot;);&#xD;
+var param={&#xD;
+	fileUrl:fileUrl,&#xD;
+	fileName:fileName&#xD;
+};&#xD;
+jQuery(arg.dom).empty();&#xD;
+if(fileUrl!=&quot;&quot; &amp;&amp;  fileName!=&quot;&quot;){&#xD;
+	jQuery(arg.dom).xCreate({&#xD;
+	    tagName: &quot;A&quot;,&#xD;
+	    href: &quot;#&quot;,&#xD;
+	    content:fileName,&#xD;
+	    onclick: function() {&#xD;
+			view.get(&quot;#downloadfileAction&quot;).set(&quot;parameter&quot;,param).execute();&#xD;
+    	}&#xD;
+	}&#xD;
+);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+                    <Property name="property">fileName</Property>
+                  </DataColumn>
+                </DataGrid>
+                <Dialog id="operDescDialog">
+                  <Property name="width">400</Property>
+                  <Property name="height">450</Property>
+                  <Buttons/>
+                  <Children>
+                    <AutoForm>
+                      <Property name="dataSet">dsBillCheckLog</Property>
+                      <Property name="dataType">dtBillCheckLog</Property>
+                      <AutoFormElement>
+                        <Property name="name">operateDesc</Property>
+                        <Property name="property">operateDesc</Property>
+                        <Property name="editorType">TextArea</Property>
+                        <Property name="height">400</Property>
+                        <Property name="width">360</Property>
+                        <Property name="readOnly">true</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+              </Container>
+            </ControlTab>
+            <ControlTab>
+              <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+if(entity!=null){&#xD;
+	with (view.get(&quot;#dsBillCheckInvoice&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		billCheckId:entity.get(&quot;id&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">发票</Property>
+              <Property name="width">100</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot>
+                    <Property name="dataSet">dsBillCheckInvoice</Property>
+                    <Property name="itemCodes">pages,pageSize</Property>
+                  </DataPilot>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+var datas = view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;已收款状态下无法删除!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#deleteInvoiceAction&quot;).execute(&#xD;
+			function(result){&#xD;
+				dorado.MessageBox.alert(result);&#xD;
+				var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+				var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+				tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+				&#xD;
+				var subData=view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
+				subData.clear();&#xD;
+				&#xD;
+				//with (view.get(&quot;#dsBillCheckInvoice&quot;)){&#xD;
+					//定义查询条件json结构&#xD;
+				//	var queryJson={&#xD;
+				//		billCheckId:entity.get(&quot;id&quot;),&#xD;
+				//	};&#xD;
+				//	set(&quot;parameter&quot;, queryJson);&#xD;
+				//	flushAsync();	&#xD;
+				//}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">删除</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <DataGrid id="invoiceGrid">
+                  <Property name="dataSet">dsBillCheckInvoice</Property>
+                  <Property name="readOnly">true</Property>
+                  <RowNumColumn/>
+                  <DataColumn name="sortNo">
+                    <Property name="property">sortNo</Property>
+                  </DataColumn>
+                  <DataColumn name="invoiceNo">
+                    <Property name="property">invoiceNo</Property>
+                  </DataColumn>
+                  <DataColumn name="invoiceAmount">
+                    <Property name="property">invoiceAmount</Property>
+                  </DataColumn>
+                  <DataColumn name="invoiceDate">
+                    <Property name="property">invoiceDate</Property>
+                  </DataColumn>
+                  <DataColumn name="waybillNo">
+                    <Property name="property">waybillNo</Property>
+                  </DataColumn>
+                  <DataColumn name="invoiceDays">
+                    <Property name="property">invoiceDays</Property>
+                  </DataColumn>
+                  <DataColumn name="remark">
+                    <Property name="property">remark</Property>
+                  </DataColumn>
+                </DataGrid>
+                <UpdateAction id="deleteInvoiceAction">
+                  <Property name="dataResolver">billCheckInfoController#deleteInvoice</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckInvoice</Property>
+                    <Property name="dataPath">[#current]</Property>
+                  </UpdateItem>
+                </UpdateAction>
+              </Container>
+            </ControlTab>
+            <ControlTab>
+              <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+if(entity!=null){&#xD;
+	with (view.get(&quot;#dsBillCheckReceipt&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		billCheckId:entity.get(&quot;id&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}&#xD;
+}</ClientEvent>
+              <Property name="caption">回款</Property>
+              <Property name="width">100</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot>
+                    <Property name="dataSet">dsBillCheckReceipt</Property>
+                    <Property name="itemCodes">pages,pageSize</Property>
+                  </DataPilot>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+var datas = view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;已收款状态下无法删除!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#deleteReceiptAction&quot;).execute(&#xD;
+			function(result){&#xD;
+				dorado.MessageBox.alert(result);&#xD;
+				&#xD;
+				var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+				var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+				tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+				var subData=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
+				subData.clear();&#xD;
+				&#xD;
+				//with (view.get(&quot;#dsBillCheckReceipt&quot;)){&#xD;
+					//定义查询条件json结构&#xD;
+				//	var queryJson={&#xD;
+				//		billCheckId:entity.get(&quot;id&quot;),&#xD;
+				//	};&#xD;
+				//	set(&quot;parameter&quot;, queryJson);&#xD;
+				//	flushAsync();	&#xD;
+				//}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">删除</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <DataGrid id="receiptGrid">
+                  <Property name="dataSet">dsBillCheckReceipt</Property>
+                  <Property name="readOnly">true</Property>
+                  <RowNumColumn/>
+                  <DataColumn name="sortNo">
+                    <Property name="property">sortNo</Property>
+                  </DataColumn>
+                  <DataColumn name="receiptDate">
+                    <Property name="property">receiptDate</Property>
+                  </DataColumn>
+                  <DataColumn name="receiptAmount">
+                    <Property name="property">receiptAmount</Property>
+                  </DataColumn>
+                </DataGrid>
+                <UpdateAction id="deleteReceiptAction">
+                  <Property name="dataResolver">billCheckInfoController#deleteReceipt</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckReceipt</Property>
+                    <Property name="dataPath">[#current]</Property>
+                  </UpdateItem>
+                </UpdateAction>
+              </Container>
+            </ControlTab>
+            <ControlTab>
+              <Property name="caption">回款反馈</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot/>
+                  <ToolBarButton id="btnQueBack">
+                    <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+if(entity!=null){&#xD;
+	//判断是否是坏账&#xD;
+	if(entity.get(&quot;billStatus&quot;)=='BAD_BILL'){&#xD;
+		dorado.MessageBox.alert(&quot;坏账状态下无法操作!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	//判断是否是已作废&#xD;
+	if(entity.get(&quot;billStatus&quot;)=='INVALIDATE'){&#xD;
+		dorado.MessageBox.alert(&quot;作废状态下无法操作!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	//已收款状态无法操作&#xD;
+	if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;已收款状态下无法操作!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	var date=new Date();&#xD;
+	&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).insert();&#xD;
+	var receiptFollow=view.get(&quot;#dsReceiptFollow.data&quot;).current;&#xD;
+	if(receiptFollow!=null){&#xD;
+		receiptFollow.set(&quot;receiptTime&quot;,date);&#xD;
+		receiptFollow.set(&quot;receiptDept&quot;,&quot;销售部&quot;);&#xD;
+	}&#xD;
+	&#xD;
+	view.get(&quot;#ajaxUserAction&quot;).execute(function(result){&#xD;
+		receiptFollow.set(&quot;receiptMan&quot;,result.userName);&#xD;
+	});&#xD;
+	&#xD;
+	view.get(&quot;#returnFollowDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+                    <Property name="caption">回款反馈</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <DataGrid id="receprtFollowGrid">
+                  <Property name="dataSet">dsReceiptFollow</Property>
+                  <Property name="readOnly">true</Property>
+                  <RowNumColumn/>
+                  <DataColumn name="receiptTime">
+                    <Property name="property">receiptTime</Property>
+                  </DataColumn>
+                  <DataColumn name="receiptDept">
+                    <Property name="property">receiptDept</Property>
+                  </DataColumn>
+                  <DataColumn name="receiptMan">
+                    <Property name="property">receiptMan</Property>
+                  </DataColumn>
+                  <DataColumn name="expectReceiptMoney">
+                    <Property name="property">expectReceiptMoney</Property>
+                  </DataColumn>
+                  <DataColumn name="expectReceiptDate">
+                    <Property name="property">expectReceiptDate</Property>
+                  </DataColumn>
+                  <DataColumn name="followType">
+                    <Property name="property">followType</Property>
+                  </DataColumn>
+                  <DataColumn name="operdesc">
+                    <Property name="property">operdesc</Property>
+                  </DataColumn>
+                  <DataColumn name="creator">
+                    <Property name="property">creator</Property>
+                  </DataColumn>
+                </DataGrid>
+              </Container>
+            </ControlTab>
+          </TabControl>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dialogEdit">
+      <Property name="width">1090</Property>
+      <Property name="height">500</Property>
+      <Buttons>
+        <Button id="btSave">
+          <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+&#xD;
+var confirmAmount=entity.get(&quot;confirmAmount&quot;);&#xD;
+if(confirmAmount!=null){&#xD;
+	if(confirmAmount.toString().indexOf(&quot;.&quot;)!=-1){&#xD;
+		var length=confirmAmount.toString().split(&quot;.&quot;)[1].length;&#xD;
+		if(length>2){&#xD;
+			dorado.MessageBox.alert(&quot;最终确认额小数位数不能超过两位&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+entity.set(&quot;operDesc&quot;,&quot;账单修改&quot;);&#xD;
+view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result!='sucess'){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}else{&#xD;
+			with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+			view.id(&quot;dialogEdit&quot;).hide();&#xD;
+		}&#xD;
+		&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">确认修改</Property>
+        </Button>
+        <Button id="btCancel">
+          <ClientEvent name="onClick">view.get(&quot;#dialogEdit&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogBadBillEdit&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">坏账确认</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Container>
+          <FieldSet layoutConstraint="left padding:10">
+            <Property name="caption">账单信息</Property>
+            <Property name="width">380</Property>
+            <Buttons/>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsBillCheckInfoModify</Property>
+                <Property name="editorWidth">200</Property>
+                <Property name="labelWidth">85</Property>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">createMonth</Property>
+                  <Property name="property">createMonth</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">billName</Property>
+                  <Property name="property">billName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:1">
+                  <Property name="name">balanceName</Property>
+                  <Property name="property">balanceName</Property>
+                  <Property name="trigger">triggerUserBalance</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:1">
+                  <Property name="name">sellerName</Property>
+                  <Property name="property">sellerName</Property>
+                  <Property name="trigger">triggerUserSeller</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:1">
+                  <Property name="name">projectManagerName</Property>
+                  <Property name="property">projectManagerName</Property>
+                  <Property name="trigger">triggerUserProject</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:1">
+                  <Property name="name">deptName</Property>
+                  <Property name="property">deptName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">area</Property>
+                  <Property name="property">area</Property>
+                  <Property name="readOnly">true</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">billCheckStatus</Property>
+                  <Property name="property">billCheckStatus</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">confirmAmount</Property>
+                  <Property name="property">confirmAmount</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">confirmDate</Property>
+                  <Property name="property">confirmDate</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">confirmMan</Property>
+                  <Property name="property">confirmMan</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">isneedInvoice</Property>
+                  <Property name="property">isneedInvoice</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </FieldSet>
+          <Container>
+            <FieldSet layoutConstraint="center padding:10">
+              <Property name="caption">发票信息</Property>
+              <Property name="width">350</Property>
+              <Buttons/>
+              <Children>
+                <AutoForm>
+                  <Property name="dataSet">dsBillCheckInfoModify</Property>
+                  <Property name="editorWidth">200</Property>
+                  <Property name="labelWidth">60</Property>
+                  <Property name="cols">175,130</Property>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">invoiceName</Property>
+                    <Property name="property">invoiceName</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">invoiceStatus</Property>
+                    <Property name="property">invoiceStatus</Property>
+                    <Property name="readOnly">true</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">invoiceAmount</Property>
+                    <Property name="property">invoiceAmount</Property>
+                    <Property name="readOnly">true</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:1">
+                    <Property name="name">invoiceDate</Property>
+                    <Property name="property">invoiceDate</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="editorWidth">260</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:1">
+                    <Property name="name">invoiceMan</Property>
+                    <Property name="property">invoiceMan</Property>
+                    <Property name="editorWidth">150</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Children>
+            </FieldSet>
+            <FieldSet layoutConstraint="center padding:10">
+              <Property name="caption">收款信息</Property>
+              <Property name="width">350</Property>
+              <Buttons/>
+              <Children>
+                <AutoForm>
+                  <Property name="dataSet">dsBillCheckInfoModify</Property>
+                  <Property name="editorWidth">200</Property>
+                  <Property name="labelWidth">60</Property>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">receiptAmount</Property>
+                    <Property name="property">receiptAmount</Property>
+                    <Property name="readOnly">true</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">receiptStatus</Property>
+                    <Property name="property">receiptStatus</Property>
+                    <Property name="readOnly">true</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">receiptDate</Property>
+                    <Property name="property">receiptDate</Property>
+                    <Property name="readOnly">true</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">receiptMan</Property>
+                    <Property name="property">receiptMan</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Children>
+            </FieldSet>
+          </Container>
+          <FieldSet layoutConstraint="right padding:10">
+            <Property name="caption">收款调整</Property>
+            <Property name="width">350</Property>
+            <Buttons/>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                <Property name="editorWidth">200</Property>
+                <Property name="labelWidth">80</Property>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">adjustDate</Property>
+                  <Property name="property">adjustDate</Property>
+                  <Property name="readOnly">true</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">adjustAmount</Property>
+                  <Property name="property">adjustAmount</Property>
+                  <Property name="readOnly">true</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2;rowSpan:15">
+                  <Property name="name">remark</Property>
+                  <Property name="property">remark</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Property name="width">320</Property>
+                  <Property name="height">220</Property>
+                  <Property name="readOnly">true</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </FieldSet>
+        </Container>
+        <AutoForm layoutConstraint="bottom">
+          <Property name="dataSet">dsBillCheckInfoModify</Property>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">60</Property>
+            <Property name="width">1000</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+        <Trigger id="triggerUserSeller">
+          <ClientEvent name="onExecute">view.get(&quot;#panelUserSeller&quot;).show();</ClientEvent>
+        </Trigger>
+        <FloatPanel id="panelUserSeller">
+          <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectUserSeller.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+	entity.set(&quot;sellerName&quot;,data.userName);&#xD;
+	entity.set(&quot;sellerId&quot;,data.userId);&#xD;
+	entity.set(&quot;area&quot;,data.deptName);&#xD;
+}</ClientEvent>
+          <Property name="caption">用户选择</Property>
+          <Property name="center">true</Property>
+          <Property name="closeable">true</Property>
+          <Property name="contentOverflow">scroll</Property>
+          <Property name="height">450</Property>
+          <Property name="modal">true</Property>
+          <Property name="width">800</Property>
+          <Buttons/>
+          <Children>
+            <SubViewHolder id="viewSelectUserSeller">
+              <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+            </SubViewHolder>
+          </Children>
+          <Tools/>
+        </FloatPanel>
+        <Trigger id="triggerUserProject">
+          <ClientEvent name="onExecute">view.get(&quot;#panelUserProject&quot;).show();</ClientEvent>
+        </Trigger>
+        <FloatPanel id="panelUserProject">
+          <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectUserProject.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+	entity.set(&quot;projectManagerName&quot;,data.userName);&#xD;
+	entity.set(&quot;projectManagerId&quot;,data.userId);&#xD;
+}</ClientEvent>
+          <Property name="caption">用户选择</Property>
+          <Property name="center">true</Property>
+          <Property name="closeable">true</Property>
+          <Property name="contentOverflow">scroll</Property>
+          <Property name="height">450</Property>
+          <Property name="modal">true</Property>
+          <Property name="width">800</Property>
+          <Buttons/>
+          <Children>
+            <SubViewHolder id="viewSelectUserProject">
+              <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+            </SubViewHolder>
+          </Children>
+          <Tools/>
+        </FloatPanel>
+        <Trigger id="triggerUserBalance">
+          <ClientEvent name="onExecute">view.get(&quot;#panelUserBalance&quot;).show();</ClientEvent>
+        </Trigger>
+        <FloatPanel id="panelUserBalance">
+          <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectUserBalance.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+	entity.set(&quot;balanceName&quot;,data.userName);&#xD;
+	entity.set(&quot;balanceId&quot;,data.userId);&#xD;
+}</ClientEvent>
+          <Property name="caption">用户选择</Property>
+          <Property name="center">true</Property>
+          <Property name="closeable">true</Property>
+          <Property name="contentOverflow">scroll</Property>
+          <Property name="height">450</Property>
+          <Property name="modal">true</Property>
+          <Property name="width">800</Property>
+          <Buttons/>
+          <Children>
+            <SubViewHolder id="viewSelectUserBalance">
+              <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+            </SubViewHolder>
+          </Children>
+          <Tools/>
+        </FloatPanel>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogBadBillEdit">
+      <Property name="caption">坏账确认</Property>
+      <Property name="width">400</Property>
+      <Property name="height">300</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+entity.set(&quot;billStatus&quot;,&quot;BAD_BILL&quot;);&#xD;
+entity.set(&quot;operDesc&quot;,&quot;坏账确认&quot;);&#xD;
+view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		&#xD;
+		//插入日志&#xD;
+		view.get(&quot;#dsBillCheckLog&quot;).insert();&#xD;
+		var log=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
+		log.set(&quot;fileUrl&quot;,entity.get(&quot;fileUrl&quot;));&#xD;
+		log.set(&quot;fileName&quot;,entity.get(&quot;fileName&quot;));&#xD;
+		log.set(&quot;billCheckId&quot;,entity.get(&quot;id&quot;));&#xD;
+		log.set(&quot;billStatusCode&quot;,entity.get(&quot;billStatus&quot;));&#xD;
+		log.set(&quot;operateDesc&quot;,&quot;坏账确认&quot;);&#xD;
+		view.get(&quot;#insertLogAction&quot;).execute();&#xD;
+		&#xD;
+		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.id(&quot;dialogBadBillEdit&quot;).hide();&#xD;
+		view.id(&quot;dialogEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">确认</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dialogBadBillEdit&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsBillCheckInfoModify</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">badBillReason</Property>
+            <Property name="property">badBillReason</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">badBillDesc</Property>
+            <Property name="property">badBillDesc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">100</Property>
+            <Property name="width">380</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Editor>
+              <Container layout="hbox">
+                <TextEditor id="txtFileName3">
+                  <Property name="editable">false</Property>
+                  <Property name="width">150</Property>
+                  <Property name="readOnly">true</Property>
+                </TextEditor>
+                <Button>
+                  <Property name="caption">导入</Property>
+                  <Property name="action">uploadBadBillFileAction</Property>
+                </Button>
+              </Container>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <UploadAction id="uploadBadBillFileAction">
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+view.id(&quot;txtFileName3&quot;).set(&quot;text&quot;,fname);&#xD;
+var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+entity.set({&#xD;
+	fileName:fname&#xD;
+});&#xD;
+</ClientEvent>
+          <ClientEvent name="onFileUploaded">var data= arg.returnValue;&#xD;
+var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
+entity.set({&#xD;
+	fileUrl:data&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="fileResolver">billCheckInfoController#uploadFile</Property>
+          <Filters/>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogCancel">
+      <ClientEvent name="onClose">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onHide">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">400</Property>
+      <Property name="caption">作废</Property>
+      <Property name="height">400</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dsBillCheckInfo=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+var dsBillCheckLog=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
+&#xD;
+dsBillCheckInfo.set(&quot;operDesc&quot;,&quot;作废账单&quot;+dsBillCheckLog.get(&quot;operateDesc&quot;));&#xD;
+view.id(&quot;updateBillStatus&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.id(&quot;dialogCancel&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">确认</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dialogCancel&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm layoutConstraint="bottom">
+          <Property name="dataSet">dsBillCheckLog</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">operateDesc</Property>
+            <Property name="property">operateDesc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">300</Property>
+            <Property name="hintSpacing">0</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="labelWidth">60</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Property name="className">请输入原因</Property>
+            <Property name="exClassName">请输入原因</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="downloadTemplateAction">
+      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
+      <Property name="hotkey">                    </Property>
+    </DownloadAction>
+    <Dialog id="importDialog">
+      <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_importProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_importProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <Property name="width">400</Property>
+      <Property name="height">180</Property>
+      <Buttons>
+        <Button id="importCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#importDialog&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="fileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="importBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">importBtn</Property>
+            <Property name="property">importBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="importBtn2">
+                <Property name="caption">导入</Property>
+                <Property name="action">importExcelAction</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="progressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="importProgressBar"/>
+        <AjaxAction id="getProgress">
+          <Property name="modal">false</Property>
+        </AjaxAction>
+        <AjaxAction id="setProgress">
+          <Property name="modal">false</Property>
+        </AjaxAction>
+        <UploadAction id="importExcelAction">
+          <ClientEvent name="beforeFileUploaded">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName input&quot;).val(fname);&#xD;
+view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_importProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	var action = view.get(&quot;#getProgress&quot;);&#xD;
+	action.execute(function (res) {&#xD;
+		switch(res){&#xD;
+			case 0:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;开始处理Excel&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 10);&#xD;
+			break;&#xD;
+			case 1:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;验证模板........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 20);&#xD;
+			break;&#xD;
+			case 2:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;读取Excel。。。。。。。&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 40);&#xD;
+			break;&#xD;
+			case 3:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;验证数据........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 60);&#xD;
+			break;&#xD;
+			case 4:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;保存数据........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 80);&#xD;
+			break;&#xD;
+			case 5:&#xD;
+			clearInterval(progressJob);&#xD;
+			resetProgress();&#xD;
+			view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;保存成功........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 100);&#xD;
+			break;&#xD;
+			case 6:&#xD;
+			clearInterval(progressJob);&#xD;
+			resetProgress();&#xD;
+			view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;导入失败........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 99);&#xD;
+			break;&#xD;
+			default:&#xD;
+			//view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, res);&#xD;
+			break;&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+function resetProgress(){&#xD;
+	view.get(&quot;#setProgress&quot;).execute();	&#xD;
+}&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <ClientEvent name="onFileUploaded">view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.error!=null){&#xD;
+	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+	 view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 99);&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 100);&#xD;
+	&#xD;
+	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
+		view.get(&quot;#importDialog&quot;).hide();&#xD;
+		&#xD;
+		&#xD;
+		var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+		var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+		tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+		&#xD;
+		view.get(&quot;#dsBillCheckLog.data&quot;).clear();&#xD;
+		view.get(&quot;#dsBillCheckInvoice.data&quot;).clear();&#xD;
+		view.get(&quot;#dsBillCheckReceipt.data&quot;).clear();&#xD;
+		view.get(&quot;#dsReceiptFollow.data&quot;).clear();&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <Filters/>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateBillModifyAction">
+      <Property name="dataResolver">billCheckInfoController#saveAll</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfoModify</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="confirmBillCheckAction">
+      <Property name="dataResolver">billCheckInfoController#confirmBillCheckInfo</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateBillStatus">
+      <Property name="dataResolver">billCheckInfoController#updateBillStatus</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="returnFollowDialog">
+      <ClientEvent name="onClose">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onHide">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">回款反馈</Property>
+      <Property name="width">400</Property>
+      <Property name="height">400</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var bill=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+&#xD;
+var receiptFollow=view.get(&quot;#dsReceiptFollow.data&quot;).current;&#xD;
+&#xD;
+var expectReceiptMoney=receiptFollow.get(&quot;expectReceiptMoney&quot;);&#xD;
+&#xD;
+if(expectReceiptMoney!=null){&#xD;
+	if(expectReceiptMoney.toString().indexOf(&quot;.&quot;)!=-1){&#xD;
+		var length=expectReceiptMoney.toString().split(&quot;.&quot;)[1].length;&#xD;
+		if(length>2){&#xD;
+			dorado.MessageBox.alert(&quot;预计回款金额小数位数不能超过两位&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+var expectReceiptDate=receiptFollow.get(&quot;expectReceiptDate&quot;);&#xD;
+if(isNullOrEmpty(expectReceiptDate)){&#xD;
+	dorado.MessageBox.alert(&quot;预计回款时间必填&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+receiptFollow.set(&quot;billCheckId&quot;,bill.get(&quot;id&quot;));&#xD;
+receiptFollow.set(&quot;billStatus&quot;,bill.get(&quot;billStatus&quot;));&#xD;
+view.get(&quot;#returnFollowAction&quot;).execute(function(result){&#xD;
+	view.get(&quot;#returnFollowDialog&quot;).hide();&#xD;
+	&#xD;
+	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">确认反馈</Property>
+          <Property name="style">
+            <Property name="margin-right">20px</Property>
+          </Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#returnFollowDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsReceiptFollow</Property>
+          <Property name="dataType">dtReceiptFollowEntity</Property>
+          <Property name="cols">*</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">receiptTime</Property>
+            <Property name="property">receiptTime</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiptDept</Property>
+            <Property name="property">receiptDept</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiptMan</Property>
+            <Property name="property">receiptMan</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">expectReceiptMoney</Property>
+            <Property name="property">expectReceiptMoney</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">expectReceiptDate</Property>
+            <Property name="property">expectReceiptDate</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">followType</Property>
+            <Property name="property">followType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">operdesc</Property>
+            <Property name="property">operdesc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">80</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Editor>
+              <Container layout="hbox">
+                <TextEditor id="txtReceiptFileName">
+                  <Property name="editable">false</Property>
+                  <Property name="width">150</Property>
+                  <Property name="readOnly">true</Property>
+                </TextEditor>
+                <Button>
+                  <Property name="caption">导入</Property>
+                  <Property name="action">uploadReceiptFileAction</Property>
+                </Button>
+              </Container>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <UploadAction id="uploadReceiptFileAction">
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+view.id(&quot;txtReceiptFileName&quot;).set(&quot;text&quot;,fname);&#xD;
+var entity=view.get(&quot;#dsReceiptFollow.data&quot;).current;&#xD;
+entity.set({&#xD;
+	fileName:fname&#xD;
+});&#xD;
+</ClientEvent>
+          <ClientEvent name="onFileUploaded">var data= arg.returnValue;&#xD;
+var entity=view.get(&quot;#dsReceiptFollow.data&quot;).current;&#xD;
+entity.set({&#xD;
+	fileUrl:data&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="fileResolver">billCheckInfoController#uploadFile</Property>
+          <Filters/>
+        </UploadAction>
+        <UpdateAction id="returnFollowAction">
+          <Property name="dataResolver">billCheckInfoController#insertReturnFollow</Property>
+          <UpdateItem>
+            <Property name="dataSet">dsReceiptFollow</Property>
+            <Property name="dataPath">[#current]</Property>
+          </UpdateItem>
+        </UpdateAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogZp">
+      <ClientEvent name="onClick">&#xD;
+</ClientEvent>
+      <Property name="caption">问题指派</Property>
+      <Property name="width">400</Property>
+      <Property name="height">300</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var billCheckInfo=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+&#xD;
+var currentData=view.get(&quot;#dsBillCheckFollow.data&quot;).current;&#xD;
+if(!currentData){&#xD;
+	dorado.MessageBox.alert(&quot;无数据提交!&quot;)&#xD;
+	return;&#xD;
+}&#xD;
+var remark=currentData.get(&quot;remark&quot;);&#xD;
+if(!remark||remark==''){&#xD;
+	dorado.MessageBox.alert(&quot;请填写详细描述!&quot;)&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var  action=view.get(&quot;#questionZpAction&quot;);&#xD;
+action.execute(function(result){&#xD;
+	if(result=='SUCESS'){&#xD;
+		dorado.MessageBox.alert(&quot;指派成功!&quot;);&#xD;
+	}else{&#xD;
+		&#xD;
+		var a=result.split(&quot;&amp;&quot;);&#xD;
+		var re=&quot;&quot;;&#xD;
+		a.each(function(item){&#xD;
+			re+=item+'\n';&#xD;
+		});&#xD;
+		dorado.MessageBox.alert(re);&#xD;
+	}&#xD;
+	view.get(&quot;#dialogZp&quot;).hide();&#xD;
+})</ClientEvent>
+          <Property name="caption">指派</Property>
+          <Property name="style">
+            <Property name="margin-right">30px</Property>
+          </Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dialogZp&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsBillCheckFollow</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">followDept</Property>
+            <Property name="property">followDept</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">followMan</Property>
+            <Property name="property">followMan</Property>
+            <Property name="trigger">triggerFollowMan</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">100</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Editor>
+              <Container layout="hbox">
+                <TextEditor id="txtFileName2">
+                  <Property name="editable">false</Property>
+                  <Property name="width">150</Property>
+                  <Property name="readOnly">true</Property>
+                </TextEditor>
+                <Button>
+                  <Property name="caption">导入</Property>
+                  <Property name="action">uploadFile2Action</Property>
+                </Button>
+              </Container>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <UploadAction id="uploadFile2Action">
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+view.id(&quot;txtFileName2&quot;).set(&quot;text&quot;,fname);&#xD;
+var entity=view.get(&quot;#dsBillCheckFollow.data&quot;).current;&#xD;
+entity.set({&#xD;
+	fileName:fname&#xD;
+});&#xD;
+</ClientEvent>
+          <ClientEvent name="onFileUploaded">var data= arg.returnValue;&#xD;
+var entity=view.get(&quot;#dsBillCheckFollow.data&quot;).current;&#xD;
+entity.set({&#xD;
+	filePath:data&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="fileResolver">billCheckFollowController#uploadFile</Property>
+          <Filters/>
+        </UploadAction>
+        <UpdateAction id="questionZpAction">
+          <Property name="dataResolver">billCheckFollowController#questionZPAll</Property>
+          <UpdateItem>
+            <Property name="dataSet">dsBillCheckFollow</Property>
+            <Property name="dataPath">[#current]</Property>
+          </UpdateItem>
+        </UpdateAction>
+        <Trigger id="triggerFollowMan">
+          <ClientEvent name="onExecute">view.get(&quot;#panelFollowMan&quot;).show();</ClientEvent>
+        </Trigger>
+        <FloatPanel id="panelFollowMan">
+          <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectFollowMan.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#dsBillCheckFollow.data&quot;).current.set(&quot;followManId&quot;,data.userId);&#xD;
+	view.get(&quot;#dsBillCheckFollow.data&quot;).current.set(&quot;followMan&quot;,data.userName);&#xD;
+	view.get(&quot;#dsBillCheckFollow.data&quot;).current.set(&quot;followDept&quot;,data.deptName);&#xD;
+	view.get(&quot;#dsBillCheckFollow.data&quot;).current.set(&quot;followDeptId&quot;,data.deptId);&#xD;
+	view.get(&quot;#dsBillCheckFollow.data&quot;).current.set(&quot;email&quot;,data.email);&#xD;
+}</ClientEvent>
+          <Property name="caption">用户选择</Property>
+          <Property name="center">true</Property>
+          <Property name="closeable">true</Property>
+          <Property name="contentOverflow">scroll</Property>
+          <Property name="height">450</Property>
+          <Property name="modal">true</Property>
+          <Property name="width">800</Property>
+          <Buttons/>
+          <Children>
+            <SubViewHolder id="viewSelectFollowMan">
+              <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+            </SubViewHolder>
+          </Children>
+          <Tools/>
+        </FloatPanel>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="insertLogAction">
+      <Property name="dataResolver">billCheckInfoController#addLog</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckLog</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DownloadAction id="downloadfileAction">
+      <Property name="fileProvider">billCheckInfoController#downFileExcel</Property>
+    </DownloadAction>
+    <Dialog id="errorMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="width">540</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerDeptUser">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;1002&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;财务部&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+//var entity=subview.get(&quot;#dsDept.data&quot;).current;&#xD;
+&#xD;
+//entity.get(&quot;children&quot;).set(&quot;parentId&quot;,&quot;7&quot;);&#xD;
+//subview.get(&quot;#dsDept&quot;).flushAsync();&#xD;
+//subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+//var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+//dsEntity.set(&quot;deptId&quot;,&quot;1005&quot;);&#xD;
+//subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+view.get(&quot;#panelDeptUser&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptUser">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptUser.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceId&quot;,data.userId);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptUser">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerDeptProject">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptProject&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;100134&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;项目保障&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+view.get(&quot;#panelDeptProject&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptProject">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptProject.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;projectManagerId&quot;,data.userId);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;projectManagerName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptProject">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerDeptSeller">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptSeller&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;1006&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;销售部&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+view.get(&quot;#panelDeptSeller&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptSeller">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptSeller.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;sellerName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptSeller">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="billDownAction"/>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dsBillGrid</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+    <AjaxAction id="ajaxUserAction">
+      <Property name="service">billCheckInfoController#getUserDetail</Property>
+    </AjaxAction>
+    <Trigger id="triggerReurnFollowMan">
+      <ClientEvent name="onExecute">view.get(&quot;#panelReturnFollowMan&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelReturnFollowMan">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectReurnFollowMan.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptManId&quot;,data.userId);&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptMan&quot;,data.userName);&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptDept&quot;,data.deptName);&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptDeptId&quot;,data.deptId);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectReurnFollowMan">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="finishAction">
+      <Property name="dataResolver">billCheckInfoController#finishBill</Property>
+    </UpdateAction>
+    <UpdateAction id="updateBill">
+      <Property name="dataResolver">billCheckInfoController#updateBill</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">billCheckInfoController#export</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

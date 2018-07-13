@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeRole" parent="$dataTypeRole">
+      <Reference name="urls">
+        <Property name="dataType">[dataTypeUrl]</Property>
+        <Property name="dataProvider">bdf2.roleComponentMaintain#loadUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId"></Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeUrl" parent="$dataTypeUrl">
+      <Reference name="children">
+        <Property name="dataProvider">bdf2.roleComponentMaintain#loadUrls</Property>
+        <Property name="dataType">[SELF]</Property>
+      </Reference>
+      <Reference name="components">
+        <Property name="dataType">[dataTypeViewComponent]</Property>
+        <Property name="dataProvider">bdf2.roleComponentMaintain#loadViewComponents</Property>
+      </Reference>
+      <PropertyDef name="use">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeViewComponent">
+      <Property name="creationType">com.bstek.bdf2.core.view.ViewComponent</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">组件</Property>
+      </PropertyDef>
+      <PropertyDef name="name"/>
+      <PropertyDef name="icon">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="use">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="children">
+        <Property name="dataType">[SELF]</Property>
+      </PropertyDef>
+      <PropertyDef name="authorityType">
+        <Property name="label">授权类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">read</Property>
+                <Property name="value">读操作</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">write</Property>
+                <Property name="value">写操作</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="label">标题</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="RoleEntity">
+      <Property name="creationType">com.bstek.bdf2.core.model.Role</Property>
+      <PropertyDef name="id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="companyId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;jiuye.roleMaintain#getApp&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="createUser">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <Reference name="roleUrls">
+        <Property name="dataType">[dataTypeUrl]</Property>
+        <Property name="dataProvider">bdf2.roleUrlMaintain#loadUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.parentId}</Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="urls">
+        <Property name="dataType">[dataTypeUrl]</Property>
+        <Property name="dataProvider">bdf2.roleComponentMaintain#loadUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.parentId}</Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetRole">
+      <Property name="dataProvider">bms.roleComponentMaintain#loadRoles</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[RoleEntity]</Property>
+    </DataSet>
+    <Container layoutConstraint="left">
+      <Property name="width">300</Property>
+      <ToolBar layoutConstraint="top">
+        <DataPilot>
+          <Property name="dataSet">dataSetRole</Property>
+          <Property name="itemCodes">pages</Property>
+        </DataPilot>
+      </ToolBar>
+      <DataGrid layoutConstraint="center">
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFilterBar">true</Property>
+        <Property name="filterMode">serverSide</Property>
+        <DataColumn name="name">
+          <Property name="property">name</Property>
+          <Property name="caption">角色</Property>
+        </DataColumn>
+        <DataColumn name="desc">
+          <Property name="property">desc</Property>
+          <Property name="filterable">false</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <SplitPanel layoutConstraint="center">
+      <Property name="position">300</Property>
+      <MainControl>
+        <Container layoutConstraint="right">
+          <ToolBar>
+            <ToolBarButton id="buttonSave">
+              <Property name="caption">保存</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="buttonRefreshCache">
+              <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+              <Property name="caption">刷新缓存</Property>
+              <Property name="action">ajaxActionRefreshCache</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataTreeGrid id="dataTreeComponents">
+            <Property name="dataPath">!currentUrl.components</Property>
+            <Property name="dataSet">dataSetRole</Property>
+            <Property name="dataType">dataTypeViewComponent</Property>
+            <Property name="treeColumn">id</Property>
+            <Property name="stretchColumnsMode">off</Property>
+            <BindingConfigs>
+              <BindingConfig>
+                <Property name="checkable">true</Property>
+                <Property name="checkedProperty">use</Property>
+                <Property name="childrenProperty">children</Property>
+                <Property name="expandLevel">10</Property>
+                <Property name="iconProperty">icon</Property>
+                <Property name="recursive">true</Property>
+                <Property name="labelProperty">id</Property>
+                <Property name="autoCheckChildren">false</Property>
+              </BindingConfig>
+            </BindingConfigs>
+            <Columns>
+              <DataColumn>
+                <Property name="name">id</Property>
+                <Property name="property">id</Property>
+                <Property name="width">350</Property>
+                <Property name="readOnly">true</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">desc</Property>
+                <Property name="property">desc</Property>
+                <Property name="width">90</Property>
+                <Property name="readOnly">true</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <ClientEvent name="onRenderCell">var type=arg.data.get(&quot;authorityType&quot;);&#xD;
+if(type==&quot;read&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>读操作&lt;/font>&quot;;&#xD;
+}else if(type==&quot;write&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='blue'>写操作&lt;/font>&quot;;&#xD;
+}</ClientEvent>
+                <Property name="name">authorityType</Property>
+                <Property name="property">authorityType</Property>
+                <Property name="width">75</Property>
+                <Editor/>
+              </DataColumn>
+            </Columns>
+          </DataTreeGrid>
+          <AjaxAction id="ajaxActionInsertUrlComponent">
+            <Property name="successMessage">操作成功</Property>
+            <Property name="service">bdf2.roleComponentMaintain#insertUrlComponents</Property>
+          </AjaxAction>
+          <AjaxAction id="ajaxActionRefreshCache">
+            <Property name="service">bdf2.roleMemberMaintain#refreshComponentSecurityMetadata</Property>
+            <Property name="confirmMessage">真的要刷新权限缓存信息吗?</Property>
+            <Property name="successMessage">操作成功</Property>
+          </AjaxAction>
+          <Dialog id="dialogHelper">
+            <Property name="caption">帮助</Property>
+            <Property name="height">200</Property>
+            <Buttons/>
+            <Children>
+              <TextArea>
+                <Property name="text">如果组件权限设置不起作用，请注意:
+组件默认情况下都是可见的，只有你把这个组件分配给A角色的时候,这个时候不是A角色的用户才会无法访问到这个组件.
+因此组件首先要成为权限资源(授权给某个角色)，之后再分配权限才会起作用。</Property>
+              </TextArea>
+              <Label/>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container layoutConstraint="center">
+          <DataTree id="dataTreeUrl">
+            <Property name="dataSet">dataSetRole</Property>
+            <Property name="dataPath">#.urls</Property>
+            <Property name="currentNodeDataPath">currentUrl</Property>
+            <BindingConfigs>
+              <BindingConfig>
+                <Property name="childrenProperty">children</Property>
+                <Property name="expandLevel">2</Property>
+                <Property name="labelProperty">name</Property>
+                <Property name="recursive">true</Property>
+                <Property name="tipProperty">desc</Property>
+                <Property name="iconProperty">icon</Property>
+              </BindingConfig>
+            </BindingConfigs>
+          </DataTree>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

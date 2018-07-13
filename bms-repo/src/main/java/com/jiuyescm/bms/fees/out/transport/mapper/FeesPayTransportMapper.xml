@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.fees.out.transport.mapper.FeesPayTransportMapper">
+	<resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.out.transport.entity.FeesPayTransportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="operationtime" property="operationtime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="forwarder_id" property="forwarderId" jdbcType="VARCHAR" />
+	    <result column="forwarder_name" property="forwarderName" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="linename" property="linename" jdbcType="VARCHAR" />
+	    <result column="orderno" property="orderno" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="originatingcity" property="originatingcity" jdbcType="VARCHAR" />
+	    <result column="originatingdistrict" property="originatingdistrict" jdbcType="VARCHAR" />
+	    <result column="targetwarehouse" property="targetwarehouse" jdbcType="VARCHAR" />
+	    <result column="targetcity" property="targetcity" jdbcType="VARCHAR" />
+	    <result column="targetdistrict" property="targetdistrict" jdbcType="VARCHAR" />
+	    <result column="temperaturetype" property="temperaturetype" jdbcType="VARCHAR" />
+	    <result column="category" property="category" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DOUBLE" />
+	    <result column="volume" property="volume" jdbcType="DOUBLE" />
+	    <result column="kilometers" property="kilometers" jdbcType="DOUBLE" />
+	    <result column="spendtime" property="spendtime" jdbcType="DOUBLE" />
+	    <result column="carmodel" property="carmodel" jdbcType="VARCHAR" />
+	    <result column="templatenum" property="templatenum" jdbcType="VARCHAR" />
+	    <result column="islight" property="islight" jdbcType="TINYINT" />
+	    <result column="bubble_weight" property="bubbleWeight" jdbcType="DOUBLE" />
+	    <result column="unitprice" property="unitprice" jdbcType="DOUBLE" />
+	    <result column="totleprice" property="totleprice" jdbcType="DOUBLE" />
+	    <result column="accepttime" property="accepttime" jdbcType="TIMESTAMP" />
+	    <result column="signtime" property="signtime" jdbcType="TIMESTAMP" />
+	    <result column="billno" property="billno" jdbcType="VARCHAR" />
+	    <result column="ruleno" property="ruleno" jdbcType="VARCHAR" />
+	    <result column="state" property="state" jdbcType="VARCHAR" />
+	    <result column="creperson" property="creperson" jdbcType="VARCHAR" />
+	    <result column="crepersonname" property="crepersonname" jdbcType="VARCHAR" />
+	    <result column="cretime" property="cretime" jdbcType="TIMESTAMP" />
+	    <result column="modperson" property="modperson" jdbcType="VARCHAR" />
+	    <result column="modpersonname" property="modpersonname" jdbcType="VARCHAR" />
+	    <result column="modtime" property="modtime" jdbcType="TIMESTAMP" />
+	    <result column="boxnum" property="boxnum" jdbcType="VARCHAR" />
+	    <result column="ordernum" property="ordernum" jdbcType="VARCHAR" />
+	    <result column="backnum" property="backnum" jdbcType="VARCHAR" />
+	    <result column="receivenum" property="receivenum" jdbcType="VARCHAR" />
+	    <result column="hasreceipt" property="hasreceipt" jdbcType="VARCHAR" />
+	    <result column="dispatch_type" property="dispatchType" jdbcType="VARCHAR" />
+	    <result column="good_type" property="goodType" jdbcType="VARCHAR" />
+	    <result column="product_Type" property="productType" jdbcType="VARCHAR" />
+	    <result column="roadbill_no" property="roadbillNo" jdbcType="VARCHAR" />
+	    <result column="orgaddress" property="orgaddress" jdbcType="VARCHAR" />
+	    <result column="targetaddress" property="targetaddress" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="extarr1" property="extarr1" jdbcType="VARCHAR" />
+	    <result column="extarr2" property="extarr2" jdbcType="VARCHAR" />
+	    <result column="extarr3" property="extarr3" jdbcType="VARCHAR" />
+	    <result column="extarr4" property="extarr4" jdbcType="VARCHAR" />
+	    <result column="extarr5" property="extarr5" jdbcType="VARCHAR" />
+	    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="VARCHAR" />
+    </resultMap>
+	<sql id="baseColumns">
+		frt.fees_no,frt.forwarder_id,frt.forwarder_name,frt.warehouse_code,frt.operationtime,
+		frt.subject_code,frt.other_subject_code,frt.linename,
+		frt.orderno,frt.waybill_no, frt.originatingcity,
+		frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+		frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+		frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.bubble_weight,frt.unitprice,
+		frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+		frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+		frt.modtime,frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity,
+		frt.customer_name,frt.customer_id,frt.productdetails,
+		frt.boxnum, frt.ordernum, frt.backnum, frt.receivenum, frt.hasreceipt, frt.dispatch_type, frt.good_type, frt.product_Type, frt.roadbill_no, frt.targetaddress, frt.orgaddress,frt.external_no,
+		frt.distributiontype,frt.del_flag,frt.derate_amount
+	</sql>
+	<sql id="baseSelectColumns">
+		<if test="(feesNo != null and feesNo !='')" >
+				and frt.fees_no = #{feesNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and frt.subject_code = #{subjectCode}
+		</if>
+		<if test="(forwarderId != null and forwarderId !='')" >
+				and frt.forwarder_id = #{forwarderId}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and frt.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(orderno != null and orderno !='')" >
+				and frt.orderno = #{orderno}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and frt.waybill_no = #{waybillNo}
+		</if>
+		<if test="(state != null and state !='')" >
+				and frt.state = #{state}
+		</if>
+		<if test="(billno != null and billno !='')" >
+				and frt.billno = #{billno}
+		</if>
+		<if test="(ruleno != null and ruleno !='')" >
+				and frt.ruleno = #{ruleno}
+		</if>
+	</sql>
+	
+	<select id="query" parameterType="com.jiuyescm.bms.fees.out.transport.entity.FeesPayTransportQueryEntity" resultMap="BaseResultMap">
+       	select
+       	<include refid="baseColumns" />
+		 from fees_pay_transport frt where 1=1 
+		 <if test="(customerIdList!=null and customerIdList.size()>0)">
+		 	and frt.customer_id in
+		 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </if>
+		 <if test="ordernoList!=null and ordernoList.size()>0">
+		 	and frt.orderno in
+		 	<foreach collection="ordernoList"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </if>
+		 <if test="waybillNolist!=null and waybillNolist.size()>0">
+		 	and frt.waybill_no in
+		 	<foreach collection="waybillNolist"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </if>
+		<if test="billnolist!=null and billnolist.size()>0">
+			and frt.billno in
+		 	<foreach collection="billnolist"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		</if>
+		<if test="rulenolist!=null and rulenolist.size()>0">
+			and frt.ruleno in
+			<foreach collection="rulenolist"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		</if>
+		<if test="(forwarderId != null and forwarderId !='')" >
+			and frt.forwarder_id = #{forwarderId}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and frt.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and frt.customer_id = #{customerId}
+		</if>
+		<if test="operationstime != null" >
+			and  frt.cretime <![CDATA[ >= ]]>#{operationstime}
+		</if>
+		<if test="operationetime != null" >
+			and  frt.cretime <![CDATA[ < ]]>#{operationetime}
+		</if>
+		<if test="(feesNo!=null and feesNo!='')">
+			and frt.fees_no=#{feesNo}
+		</if>
+		<if test="(subjectCode!=null and subjectCode!='')">
+		 	and frt.subject_code=#{subjectCode}
+		</if>
+		<if test="(otherSubjectCode!=null and otherSubjectCode!='')">
+		 	and frt.other_subject_code=#{otherSubjectCode}
+		</if>
+    </select>
+    
+    <select id="querySum" parameterType="com.jiuyescm.bms.fees.out.transport.entity.FeesPayTransportQueryEntity"
+        resultType="java.lang.Double">
+        select
+         sum(totleprice) as totalCost
+        from fees_pay_transport
+		where 1=1 
+		 <if test="ordernoList!=null and ordernoList.size()>0">
+		 	and orderno in
+		 	<foreach collection="ordernoList"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </if>
+		 <if test="waybillNolist!=null and waybillNolist.size()>0">
+		 	and waybill_no in
+		 	<foreach collection="waybillNolist"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </if>
+		<if test="billnolist!=null and billnolist.size()>0">
+			and billno in
+		 	<foreach collection="billnolist"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		</if>
+		<if test="rulenolist!=null and rulenolist.size()>0">
+			and ruleno in
+			<foreach collection="rulenolist"  index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		</if>
+		<if test="(forwarderId != null and forwarderId !='')" >
+			and forwarder_id = #{forwarderId}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId}
+		</if>
+		<if test="operationstime != null" >
+			and  cretime <![CDATA[ >= ]]>#{operationstime}
+		</if>
+		<if test="operationetime != null" >
+			and  cretime <![CDATA[ < ]]>#{operationetime}
+		</if>
+		<if test="(feesNo!=null and feesNo!='')">
+			and fees_no=#{feesNo}
+		</if>
+		<if test="(subjectCode!=null and subjectCode!='')">
+		 	and subject_code=#{subjectCode}
+		</if>
+		<if test="(otherSubjectCode!=null and otherSubjectCode!='')">
+		 	and other_subject_code=#{otherSubjectCode}
+		</if>
+    </select>
+    
+    <select id="queryDetail" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		select 
+			subject_code,
+			fees_no,forwarder_id,forwarder_name,warehouse_code,operationtime,
+			other_subject_code,linename,
+			orderno,waybill_no, originatingcity,
+			originatingdistrict,targetwarehouse,targetcity,targetdistrict,
+			temperaturetype,category,weight,volume,kilometers,
+			spendtime,carmodel,templatenum,islight,unitprice,
+		    totleprice,
+			accepttime,signtime,billno,ruleno,
+			state,creperson,crepersonname,cretime,modperson,modpersonname,
+			modtime,extarr1,extarr2,extarr3,extarr4,extarr5,quantity,customer_name,customer_id,
+			productdetails, boxnum, ordernum, backnum, receivenum, hasreceipt, dispatch_type, good_type, product_Type, roadbill_no, targetaddress, orgaddress, external_no,distributiontype,del_flag,derate_amount
+        from fees_pay_transport
+        where 1=1 and state = '0' and del_flag='0'
+        <if test="(forwarderId != null and forwarderId !='')" >
+			and forwarder_id = #{forwarderId}
+		</if>
+		<if test="(operatorTimeBegin != null and operatorTimeBegin !='')" >
+		    and cretime <![CDATA[ >= ]]> #{operatorTimeBegin}
+		</if>
+		<if test="(operatorTimeEnd != null and operatorTimeEnd !='')" >
+		    and cretime<![CDATA[ <= ]]>#{operatorTimeEnd}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and subject_code = #{subjectCode}
+		</if>
+		<if test="(otherSubjectCode!=null and otherSubjectCode!='')">
+			and other_subject_code=#{otherSubjectCode}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo}
+		</if>
+	</select>
+	
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.out.transport.entity.FeesPayTransportEntity">
+    	insert into fees_pay_transport (
+    	 	fees_no,forwarder_id,forwarder_name,warehouse_code,operationtime,subject_code,other_subject_code,linename,
+			orderno,waybill_no,originatingcity,originatingdistrict,targetwarehouse,targetcity,targetdistrict
+			,temperaturetype,category,weight,volume,kilometers,spendtime,carmodel,templatenum,islight,unitprice,quantity,
+			totleprice,accepttime,signtime,billno,ruleno,state,creperson,crepersonname,cretime,modperson,modpersonname,
+			modtime,extarr1,extarr2,extarr3,extarr4,extarr5,customer_name,customer_id,productdetails, boxnum, ordernum, backnum, receivenum, hasreceipt, dispatch_type, good_type, product_Type, roadbill_no, targetaddress, orgaddress, external_no,
+			distributiontype,del_flag,derate_amount
+    	)
+    	 values (
+    		#{feesNo},#{forwarderId},#{forwarderName},#{warehouseCode},#{operationtime},#{subjectCode},#{otherSubjectCode}, #{linename},
+			#{orderno},#{waybillNo},#{originatingcity},#{originatingdistrict},#{targetwarehouse},#{targetcity},#{targetdistrict},
+			#{temperaturetype},#{category},#{weight},#{volume},#{kilometers},#{spendtime},#{carmodel},#{templatenum},#{islight},#{unitprice},#{quantity},
+			#{totleprice},#{accepttime},#{signtime},#{billno},#{ruleno},#{state},#{creperson},#{crepersonname},#{cretime},#{modperson},#{modpersonname},
+			#{modtime},#{extarr1},#{extarr2},#{extarr3},#{extarr4},#{extarr5},#{customerName},#{customerId},#{productdetails}	
+			,#{boxnum}, #{ordernum}, #{backnum}, #{receivenum}, #{hasreceipt}, #{dispatchType}, #{goodType}, #{productType}, #{roadbillNo}, #{targetaddress}, #{orgaddress}, #{externalNo} 
+			,#{distributiontype},#{delFlag},#{derateAmount}
+    	);
+    </insert>
+    
+	<select id="queryunitPrice" parameterType="java.util.Map" resultType="java.lang.Double">
+		select d.unit_price from price_contract_info a 
+		left JOIN price_contract_item b on a.contract_code=b.contract_code and b.del_flag='0'
+		left join price_transport_template c on c.template_code=b.template_id and c.del_flag='0'
+		left join price_transport_valueadded d on c.id=d.template_id  and d.del_flag='0'
+		where a.customerId=#{carrierId} and d.subject_code=#{subjectcode}
+		and a.del_flag='0' and a.contract_state='1'
+	</select>
+	
+	<!-- 按运输费用科目分组统计 -->
+	<select id="queryGroupTransportAmount"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+		select subject_code as subjectCode,other_subject_code,sum(totleprice) as amount,billno as billNo  
+		from fees_pay_transport
+		where billno=#{billNo} and <![CDATA[subject_code<>'ts_abnormal_pay']]>  and del_flag='0' GROUP BY subject_code,billno,other_subject_code
+	</select>
+	
+	<select id="queryAbnormalGroupAmount"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+		select subject_code as subjectCode,other_subject_code,sum(totleprice) as amount,billno as billNo  
+		from fees_pay_transport
+		where billno=#{billNo} and <![CDATA[subject_code='ts_abnormal_pay']]> and del_flag='0' GROUP BY subject_code,billno,other_subject_code
+	</select>
+	
+	<!-- 按费用科目，账单编号查询详细 -->
+	<select id="queryTransportDetailGroupPage"  parameterType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity" resultMap="BaseResultMap">
+		 select
+		    fpt.subject_code,
+			fpt.fees_no,fpt.forwarder_id,fpt.forwarder_name,fpt.warehouse_code,fpt.operationtime,
+			fpt.other_subject_code,fpt.linename,
+			fpt.orderno,fpt.waybill_no, fpt.originatingcity,
+			fpt.originatingdistrict,fpt.targetwarehouse,fpt.targetcity,fpt.targetdistrict,
+			fpt.temperaturetype,fpt.category,fpt.weight,fpt.volume,fpt.kilometers,
+			fpt.spendtime,fpt.carmodel,fpt.templatenum,fpt.islight,fpt.unitprice,
+			fpt.totleprice,fpt.accepttime,fpt.signtime,fpt.billno,fpt.ruleno,
+			fpt.state,fpt.creperson,fpt.crepersonname,fpt.cretime,fpt.modperson,fpt.modpersonname,
+			fpt.modtime,fpt.extarr1,fpt.extarr2,fpt.extarr3,fpt.extarr4,fpt.extarr5,fpt.quantity,
+			fpt.customer_name,fpt.customer_id,fpt.productdetails,fpt.boxnum,fpt.ordernum,fpt.receivenum,
+			fpt.hasreceipt,fpt.distributiontype,fpt.del_flag,fpt.derate_amount
+        from fees_pay_transport fpt
+        where 1=1 and fpt.billno=#{billNo} and fpt.subject_code=#{subjectCode} and fpt.del_flag='0' 
+        <if test="(otherSubjectCode!=null and otherSubjectCode!='')">
+        	and fpt.other_subject_code=#{otherSubjectCode}
+        </if>
+        <if test="(feesNo != null and feesNo !='')" >
+			and fpt.fees_no = #{feesNo}
+		</if>
+	</select>
+	
+	<!-- 生成账单  查询符合账单条件的费用数量-->
+	<select id="queryCountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity"  resultType="int">
+		select count(0) from fees_pay_transport
+        where 1=1 and forwarder_id=#{forwarderId}
+        	and state = '0'
+        <if test="(startTime != null and startTime !='')" >
+        	and cretime <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and cretime <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+	<!-- 生成账单  查询符合账单条件的费用金额-->
+	<select id="queryAmountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity"  resultType="double">
+		select sum(totleprice) from fees_pay_transport
+        where 1=1 and forwarder_id=#{forwarderId}
+        	and state = '0'
+       <if test="(startTime != null and startTime !='')" >
+        	and cretime <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and cretime <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+	<!-- 更新符合条件的费用信息 -->
+	<update id="updateByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		update fees_pay_transport
+		set billno=#{billNo},state=#{status},
+			modpersonname=#{lastModifier},modtime=#{lastModifyTime}
+		where 1=1 and forwarder_id=#{forwarderId}
+        	and state = '0'
+       <if test="(startTime != null and startTime !='')" >
+        	and cretime <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and cretime <![CDATA[<=]]> #{endTime}
+        </if>
+	</update>
+	
+	<!-- 按账单查询-导出 -->
+	<select id="queryTransportDetailByBillNo"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		 select
+        	subject_code,
+			fees_no,forwarder_id,forwarder_name,warehouse_code,operationtime,
+			other_subject_code,linename,
+			orderno,waybill_no, originatingcity,
+			originatingdistrict,targetwarehouse,targetcity,targetdistrict,
+			temperaturetype,category,weight,volume,kilometers,
+			spendtime,carmodel,templatenum,islight,unitprice,
+			totleprice,accepttime,signtime,billno,ruleno,
+			state,creperson,crepersonname,cretime,modperson,modpersonname,
+			modtime,extarr1,extarr2,extarr3,extarr4,extarr5,quantity,customer_name,customer_id,
+			productdetails,boxnum,ordernum,receivenum,hasreceipt,distributiontype,del_flag,derate_amount
+        from fees_pay_transport
+        where 1=1 and billno=#{billNo} and del_flag='0' and <![CDATA[subject_code<>'ts_abnormal_pay']]>
+	</select>
+	
+	<select id="queryAbnormalDetailByBillNo"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		 select
+        	subject_code,
+			fees_no,forwarder_id,forwarder_name,warehouse_code,operationtime,
+			other_subject_code,linename,
+			orderno,waybill_no, originatingcity,
+			originatingdistrict,targetwarehouse,targetcity,targetdistrict,
+			temperaturetype,category,weight,volume,kilometers,
+			spendtime,carmodel,templatenum,islight,unitprice,
+			totleprice,accepttime,signtime,billno,ruleno,
+			state,creperson,crepersonname,cretime,modperson,modpersonname,
+			modtime,extarr1,extarr2,extarr3,extarr4,extarr5,quantity,customer_name,customer_id,
+			productdetails,boxnum,ordernum,receivenum,hasreceipt,distributiontype,del_flag,derate_amount
+        from fees_pay_transport
+        where 1=1 and billno=#{billNo} and del_flag='0' and <![CDATA[subject_code='ts_abnormal_pay']]>
+	</select>
+	
+	<update id="updateBillNo" parameterType="com.jiuyescm.bms.fees.out.transport.entity.FeesPayTransportEntity">
+		update fees_pay_transport 
+		<set >
+			<if test="billno!=null">billno=#{billno},</if>
+			<if test="state!=null">state=#{state},</if>
+			<if test="weight!=null">weight=#{weight},</if>
+			<if test="totleprice!=null">totleprice=#{totleprice},</if>
+			<if test="modperson!=null">modperson=#{modperson},</if>
+			<if test="modpersonname!=null">modpersonname=#{modpersonname},</if>
+			<if test="modtime!=null">modtime=#{modtime},</if>
+		</set>
+		where fees_no=#{feesNo} and ifnull(billno,'')=''
+	</update>
+	
+	<update id="confirmFeesBill" parameterType="java.util.Map">
+		update  fees_pay_transport  set state=#{status},
+		modpersonname=#{lastModifier},modtime=#{lastModifyTime} where billno=#{billNo}
+	</update>
+	
+	<update id="deleteFeesBill" parameterType="java.util.Map">
+		update  fees_pay_transport  set state=#{status},
+		modpersonname=#{lastModifier},modtime=#{lastModifyTime},billno='' where billno=#{billNo} 
+		<if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+		<if test="(deliveryid!=null and deliveryid!='')">
+			and forwarder_id=#{deliveryid}
+		</if>
+	</update>
+	<select id="queryByWaybillNo" parameterType="String" resultMap="BaseResultMap">
+		select fees_no,orderno,subject_code,other_subject_code,waybill_no
+		from fees_pay_transport where waybill_no=#{waybillno}
+	</select>
+	<select id="queryList" resultMap="BaseResultMap">
+		select
+        <include refid="baseColumns" />
+        from fees_pay_transport frt
+        where 1=1 and state = '0' and frt.cretime like '${cretime}%'
+        and frt.waybill_no in 
+		<foreach collection="wayBillNoList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+	</select>
+</mapper>

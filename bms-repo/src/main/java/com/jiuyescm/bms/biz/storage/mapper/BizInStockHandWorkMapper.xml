@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.mapper.BizInStockHandWorkMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.storage.vo.BizInstockHandworkVo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="oms_id" property="omsId" jdbcType="VARCHAR" />
+	    <result column="instock_no" property="instockNo" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="external_num" property="externalNum" jdbcType="VARCHAR" />
+	    <result column="instock_type" property="instockType" jdbcType="VARCHAR" />
+	    <result column="instock_date" property="instockDate" jdbcType="TIMESTAMP" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="fee_amount" property="feeAmount" jdbcType="DOUBLE" />
+	    <result column="num" property="num" jdbcType="DOUBLE" />
+	    <result column="adjust_num" property="adjustNum" jdbcType="DOUBLE" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+   		<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+    </resultMap>
+  	<sql id="Base_Column_List" >
+         id, oms_id, instock_no, warehouse_code, warehouse_name, customerid, customer_name, external_num, instock_type, instock_date, fees_no, fee_amount, num, adjust_num, is_calculated, receiver, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, extattr1, extattr2, extattr3, extattr4, extattr5, weight, adjust_weight
+  	</sql>
+    
+    <sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(omsId != null and omsId !='')" >
+				and a.oms_id = #{omsId}
+		</if>
+		<if test="(instockNo != null and instockNo !='')" >
+				and a.instock_no = #{instockNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and a.warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and a.customerid = #{customerId}
+		</if>
+		<if test="(externalNum != null and externalNum !='')" >
+				and a.external_num = #{externalNum}
+		</if>
+		<if test="(instockType != null and instockType !='')" >
+				and a.instock_type = #{instockType}
+		</if>
+		<if test="(instockDate != null and instockDate !='')" >
+			    and a.instock_date >= #{instockDate} add <![CDATA[a.instock_date <= #{instockDate}]]>
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(num != null and num !='')" >
+				and a.num = #{num}
+		</if>
+		<if test="(adjustNum != null and adjustNum !='')" >
+				and a.adjust_num = #{adjustNum}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and a.is_calculated = #{isCalculated}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time <![CDATA[<= ]]>#{endTime}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+    </sql>
+  
+   <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.vo.BizInstockHandworkVo">
+        select
+        <include refid="Base_Column_List" />
+        from  biz_instock_handwork a
+       	where del_flag = 0 
+		<include refid="baseSelectColumns" />
+       
+  </select>
+      <update id="update" parameterType="com.jiuyescm.bms.biz.storage.vo.BizInstockHandworkVo">
+        update biz_instock_handwork
+		<set >
+			<if test="omsId != null" >oms_id=#{omsId,jdbcType=VARCHAR},</if>
+			<if test="instockNo != null" >instock_no=#{instockNo,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="externalNum != null" >external_num=#{externalNum,jdbcType=VARCHAR},</if>
+			<if test="instockType != null" >instock_type=#{instockType,jdbcType=VARCHAR},</if>
+			<if test="instockDate != null" >instock_date=#{instockDate,jdbcType=TIMESTAMP},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="feeAmount != null" >fee_amount=#{feeAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="adjustNum != null" >adjust_num=#{adjustNum,jdbcType=DOUBLE},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="receiver != null" >receiver=#{receiver,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+			<if test="extattr1 != null" >extattr1=#{extattr1,jdbcType=VARCHAR},</if>
+			<if test="extattr2 != null" >extattr2=#{extattr2,jdbcType=VARCHAR},</if>
+			<if test="extattr3 != null" >extattr3=#{extattr3,jdbcType=VARCHAR},</if>
+			<if test="extattr4 != null" >extattr4=#{extattr4,jdbcType=VARCHAR},</if>
+			<if test="extattr5 != null" >extattr5=#{extattr5,jdbcType=VARCHAR},</if>
+			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
+			<if test="adjustWeight != null" >adjust_weight=#{adjustWeight,jdbcType=DOUBLE},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">
+        select a.instock_no from biz_instock_handwork a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
+		where a.del_flag = 0 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+    
+    <select id="validCalcuForRetry" parameterType="java.util.Map" resultType = "String">
+       	select a.instock_no from biz_instock_handwork a
+		where a.del_flag = 0 and a.is_calculated = 1 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+	
+	<update id="retryForCalcu" parameterType="java.util.Map">
+        update biz_instock_handwork a set a.is_calculated = 99 where a.del_flag = 0
+        <include refid="baseSelectColumns" />
+    </update>
+</mapper>

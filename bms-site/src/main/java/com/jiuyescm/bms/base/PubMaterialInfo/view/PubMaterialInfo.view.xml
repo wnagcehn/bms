@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtPubMaterial">
+      <Property name="creationType">com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo</Property>
+      <PropertyDef name="materialId">
+        <Property name="dataType">Long</Property>
+        <Property name="label">主键ID</Property>
+      </PropertyDef>
+      <PropertyDef name="materialNo">
+        <Property></Property>
+        <Property name="label">耗材编号</Property>
+      </PropertyDef>
+      <PropertyDef name="materialName">
+        <Property></Property>
+        <Property name="label">耗材名称</Property>
+      </PropertyDef>
+      <PropertyDef name="barcode">
+        <Property></Property>
+        <Property name="label">条码</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property></Property>
+        <Property name="label">耗材类别</Property>
+      </PropertyDef>
+      <PropertyDef name="outLength">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">外径长(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="outWidth">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">外径宽(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="outHeight">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">外径高(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="outVolume">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">外径体积</Property>
+      </PropertyDef>
+      <PropertyDef name="inLength">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">内径长(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="inWidth">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">内径宽(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="inVolume">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">内径体积</Property>
+      </PropertyDef>
+      <PropertyDef name="inHeight">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">内径高(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="unit">
+        <Property></Property>
+        <Property name="label">单位</Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="isOwn">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">是否自有</Property>
+      </PropertyDef>
+      <PropertyDef name="wallThickness">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">壁厚(CM)</Property>
+      </PropertyDef>
+      <PropertyDef name="materialPrice">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="region">
+        <Property></Property>
+        <Property name="label">地区</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierId">
+        <Property name="dataType">Long</Property>
+        <Property name="label">供应商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">作废标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">未作废</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">已作废</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="crePersonId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="crePerson">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="modPersonId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="modPerson">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtQuery">
+      <PropertyDef name="materialNo">
+        <Property></Property>
+        <Property name="label">耗材编号</Property>
+      </PropertyDef>
+      <PropertyDef name="materialName">
+        <Property></Property>
+        <Property name="label">耗材名称</Property>
+      </PropertyDef>
+      <PropertyDef name="barcode">
+        <Property></Property>
+        <Property name="label">条码</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property></Property>
+        <Property name="label">耗材类别</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getMaterialTypeEnum&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="defaultValue">0</Property>
+        <Property name="label">作废</Property>
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtQuery]</Property>
+    </DataSet>
+    <DataSet id="dsPubMaterial">
+      <Property name="dataProvider">pubMaterialInfoController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="dataType">[dtPubMaterial]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPubMaterial</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data =view.get(&quot;#dsQuery.data&quot;);//获取条件查询数据&#xD;
+with (view.get(&quot;#dsPubMaterial&quot;)){&#xD;
+	set(&quot;parameter&quot;, data.current);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm>
+      <Property name="dataSet">dsQuery</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="dataType">dtQuery</Property>
+      <AutoFormElement>
+        <Property name="name">materialNo</Property>
+        <Property name="property">materialNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">materialName</Property>
+        <Property name="property">materialName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">barcode</Property>
+        <Property name="property">barcode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">materialType</Property>
+        <Property name="property">materialType</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="property">delFlag</Property>
+        <Property name="name">delFlag</Property>
+        <Property name="editorType">CheckBox</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <ClientEvent name="onDoubleClick">var data=view.get(&quot;#dsProject.data&quot;).current;&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;projectid&quot;,data.get(&quot;projectid&quot;));</ClientEvent>
+        <Property name="dataSet">dsPubMaterial</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="dataType">dtPubMaterial</Property>
+        <Property name="width">2000</Property>
+        <Property name="selectionMode">multiRows</Property>
+        <DataColumn name="materialNo">
+          <Property name="property">materialNo</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="materialName">
+          <Property name="property">materialName</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="barcode">
+          <Property name="property">barcode</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="materialType">
+          <Property name="property">materialType</Property>
+        </DataColumn>
+        <DataColumn name="outLength">
+          <Property name="property">outLength</Property>
+        </DataColumn>
+        <DataColumn name="outWidth">
+          <Property name="property">outWidth</Property>
+        </DataColumn>
+        <DataColumn name="outHeight">
+          <Property name="property">outHeight</Property>
+        </DataColumn>
+        <DataColumn name="outVolume">
+          <Property name="property">outVolume</Property>
+        </DataColumn>
+        <DataColumn name="inLength">
+          <Property name="property">inLength</Property>
+        </DataColumn>
+        <DataColumn name="inWidth">
+          <Property name="property">inWidth</Property>
+        </DataColumn>
+        <DataColumn name="inVolume">
+          <Property name="property">inVolume</Property>
+        </DataColumn>
+        <DataColumn name="inHeight">
+          <Property name="property">inHeight</Property>
+        </DataColumn>
+        <DataColumn name="unit">
+          <Property name="property">unit</Property>
+        </DataColumn>
+        <DataColumn name="weight">
+          <Property name="property">weight</Property>
+        </DataColumn>
+        <DataColumn name="isOwn">
+          <Property name="property">isOwn</Property>
+        </DataColumn>
+        <DataColumn name="wallThickness">
+          <Property name="property">wallThickness</Property>
+        </DataColumn>
+        <DataColumn name="materialPrice">
+          <Property name="property">materialPrice</Property>
+        </DataColumn>
+        <DataColumn name="region">
+          <Property name="property">region</Property>
+        </DataColumn>
+        <DataColumn name="supplierId">
+          <Property name="property">supplierId</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="crePerson">
+          <Property name="property">crePerson</Property>
+        </DataColumn>
+        <DataColumn name="creTime">
+          <Property name="property">creTime</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

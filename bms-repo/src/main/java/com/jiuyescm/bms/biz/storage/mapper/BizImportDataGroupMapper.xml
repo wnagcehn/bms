@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.mapper.BizImportDataGroupMapper" >
+	<select id="query" parameterType="com.jiuyescm.bms.biz.storage.entity.BizCustomerImportQueryEntity" resultType="com.jiuyescm.bms.biz.storage.entity.BizCustomerImportDataEntity">
+	select * from (
+		select customerName,max(case subject_id when 'wh_product_pallet_storage' then palletCount end) palletCount,
+			max(case subject_id when 'wh_material_storage' then packstorageCount end) packstorageCount,
+			max(case subject_id when 'wh_material_use' then packoutstorageCount end) packoutstorageCount,
+			max(outCount) as outCount
+			from 
+			(
+			select a.customerid,a.customerName,b.biz_type_code,b.subject_id,b.template_id,
+			ifnull(c.palletCount,0) palletCount,ifnull(d.packstorageCount,0) packstorageCount
+			,ifnull(packoutstorageCount,0) packoutstorageCount,ifnull(g.outCount,0) outCount
+			from price_contract_info a 
+			left join price_contract_item b on a.contract_code=b.contract_code and b.del_flag=0
+			
+			left join (select count(1) as outCount,customerid from biz_outstock_master
+			where  1=1 and del_flag=0
+			<if test="(wareHouseId!=null and wareHouseId!='')"> and  warehouse_code=#{wareHouseId}</if>
+			<if test="startTime!=null"><![CDATA[ and create_time>=#{startTime}]]></if>
+			<if test="endTime!=null"><![CDATA[ and create_time<#{endTime}]]></if>
+			group by customerid  
+			) g on g.customerid=a.customerid
+			
+			left join (select count(1) as palletCount,customerid from biz_product_pallet_storage
+			where  1=1 and del_flag=0
+			<if test="(wareHouseId!=null and wareHouseId!='')"> and  warehouse_code=#{wareHouseId}</if>
+			<if test="startTime!=null"><![CDATA[ and create_time>=#{startTime}]]></if>
+			<if test="endTime!=null"><![CDATA[ and create_time<#{endTime}]]></if>
+			group by customerid
+			) c on a.customerId=c.customerid 
+			
+			left join (select count(1) as packstorageCount,customerid from biz_pack_storage
+			where 1=1 and del_flag=0
+			<if test="(wareHouseId!=null and wareHouseId!='')"> and  warehouse_code=#{wareHouseId}</if>
+			<if test="startTime!=null"><![CDATA[ and create_time>=#{startTime}]]></if>
+			<if test="endTime!=null"><![CDATA[ and create_time<#{endTime}]]></if>
+			group by customerid
+			 ) d on d.customerid=a.customerid 
+			
+			left join (select count(1) as packoutstorageCount,customer_id from biz_outstock_packmaterial
+			where 1=1 and del_flag=0
+			<if test="(wareHouseId!=null and wareHouseId!='')"> and  warehouse_code=#{wareHouseId}</if>
+			<if test="startTime!=null"><![CDATA[ and create_time>=#{startTime}]]></if>
+			<if test="endTime!=null"><![CDATA[ and create_time<#{endTime}]]></if>
+			group by customer_id
+			) e on e.customer_id=a.customerId
+			
+			where 1=1
+			 <if test="(startTime!=null or endTime!=null)">
+			 	<![CDATA[ and (a.start_date>=#{startTime} or a.expire_date<#{endTime})]]>
+			 </if>
+			 <if test="(customerId!=null and customerId!='')">
+			 	and a.customerId=#{customerId}
+			 </if>
+			 and a.del_flag=0  
+			) f group by customerName
+			) h where 1=1
+			<if test="status==1">
+				<![CDATA[ and (outCount=0 or (palletCount<>0 and packstorageCount<>0 and packoutstorageCount<>0 and outCount>0))]]>
+			</if>
+			<if test="status==0">
+				<![CDATA[ and outCount>0 and (palletCount=0 or packstorageCount=0 or packoutstorageCount=0)]]>
+			</if>
+	</select>
+</mapper>

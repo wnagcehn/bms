@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.bill.mapper.FeesPayBillMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="bill_name" property="billName" jdbcType="VARCHAR" />
+	    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="forwarder_id" property="forwarderId" jdbcType="VARCHAR" />
+	    <result column="forwarder_name" property="forwarderName" jdbcType="VARCHAR" />
+	    <result column="deliveryid" property="deliveryid" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="totleprice" property="totleprice" jdbcType="DOUBLE" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id,bill_no, bill_name, forwarder_id, forwarder_name ,start_time, end_time,deliveryid, deliver_name, totleprice, 
+        receipt_amount, status, remark, type, creator, create_time, last_modifier, last_modify_time, del_flag,customer_id
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(billNo != null and billNo !='')" >
+			and bill_no = #{billNo}
+		</if>
+		<if test="(billName != null and billName !='')" >
+			and bill_name = #{billName}
+		</if>
+		<if test="(forwarderId != null and forwarderId !='')" >
+			and forwarder_id = #{forwarderId}
+		</if>
+		<if test="(forwarderName != null and forwarderName !='')" >
+			and forwarder_name = #{forwarderName}
+		</if>
+		<if test="(deliveryid != null and deliveryid !='')" >
+			and deliveryid = #{deliveryid}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+			and deliver_name = #{deliverName}
+		</if>
+		<if test="(totleprice != null and totleprice !='')" >
+			and totleprice = #{totleprice}
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+			and receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(status != null and status !='')" >
+			and status = #{status}
+		</if>
+		<if test="(remark != null and remark !='')" >
+			and remark = #{remark}
+		</if>
+		<if test="(type != null and type !='')" >
+			and type = #{type}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			and creator = #{creator}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+		    and create_time <![CDATA[ >= ]]> #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+		    and create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+			and last_modifier = #{lastModifier}
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+			and del_flag = #{delFlag}
+		</if>
+    </sql>
+	
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_pay_bill
+        where del_flag ='0'
+		<include refid="baseSelectColumns" />
+		order by create_time DESC
+    </select>
+    
+	<insert id="save" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+        insert into fees_pay_bill(bill_no, bill_name, start_time, end_time, forwarder_id, forwarder_name,
+        	deliveryid, deliver_name, totleprice, receipt_amount, status, remark, type, 
+        	creator, create_time, last_modifier, last_modify_time, del_flag,customer_id)
+        values (
+			#{billNo,jdbcType=VARCHAR}, 
+			#{billName,jdbcType=VARCHAR}, 
+			#{startTime,jdbcType=TIMESTAMP}, 
+			#{endTime,jdbcType=TIMESTAMP}, 
+			#{forwarderId,jdbcType=VARCHAR}, 
+			#{forwarderName,jdbcType=VARCHAR}, 
+			#{deliveryid,jdbcType=VARCHAR}, 
+			#{deliverName,jdbcType=VARCHAR},
+			#{totleprice,jdbcType=DOUBLE}, 
+			#{receiptAmount,jdbcType=DOUBLE}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{type,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{customerId}
+        )
+    </insert>
+    
+    <update id="confirmFeesBill" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		update fees_pay_bill set 
+		status=#{status},
+		totleprice=#{totleprice},
+		receipt_amount=#{receiptAmount},
+		remark=#{remark},
+		last_modifier=#{lastModifier},
+		last_modify_time=#{lastModifyTime}
+		where 
+		bill_no=#{billNo} and status=0
+		<if test="(deliveryid != null and deliveryid !='')" >
+			and  deliveryid=#{deliveryid}
+		</if>
+	</update>
+	
+	<update id="deleteFeesBill" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		update fees_pay_bill set 
+		status=#{status},
+		last_modifier=#{lastModifier},
+		last_modify_time=#{lastModifyTime},
+		del_flag=#{delFlag}
+		where 
+		bill_no=#{billNo} and status=0 and del_flag='0'
+		<if test="(deliveryid != null and deliveryid !='')" >
+			and  deliveryid=#{deliveryid}
+		</if>
+	</update>
+	
+	<select id="getlastBillTime" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		SELECT A.* FROM fees_pay_bill A,
+		(SELECT forwarder_id, max(end_time) max_day FROM fees_pay_bill 
+			where forwarder_id = #{forwarderId} and del_flag=0 GROUP BY forwarder_id) B
+		WHERE A.forwarder_id = B.forwarder_id AND A.end_time = B.max_day
+		ORDER BY A.bill_no DESC
+	</select>
+	
+	<select id="getLastBillTimeDelivery" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		select deliveryid,max(end_time) end_time,deliver_name
+		 from fees_pay_bill
+		where del_flag=0 and deliveryid in 
+				<foreach collection="deliveridList" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+				</foreach>
+		GROUP BY deliveryid,deliver_name
+	</select>
+	
+	<update id="update" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		update fees_pay_bill set 
+		totleprice=#{totleprice},
+		last_modifier=#{lastModifier},
+		last_modify_time=#{lastModifyTime}
+		where 
+		bill_no=#{billNo} and status=0 and del_flag=0
+	</update>
+	
+</mapper>

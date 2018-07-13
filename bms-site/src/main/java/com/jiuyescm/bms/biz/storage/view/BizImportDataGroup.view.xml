@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBizCustomerImportQuery">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizCustomerImportQueryEntity</Property>
+      <PropertyDef name="wareHouseId">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property name="dataType">int</Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">-1</Property>
+                <Property name="value">全部</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">未导入</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">已导入</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">-1</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBizCustomerImportData">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizCustomerImportDataEntity</Property>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="palletStatus">
+        <Property></Property>
+        <Property name="label">商品按托</Property>
+      </PropertyDef>
+      <PropertyDef name="palletCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">商品按托单量</Property>
+      </PropertyDef>
+      <PropertyDef name="packStorageStatus">
+        <Property></Property>
+        <Property name="label">耗材库存</Property>
+      </PropertyDef>
+      <PropertyDef name="packstorageCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">耗材库存数量</Property>
+      </PropertyDef>
+      <PropertyDef name="packoutstorageStatus">
+        <Property></Property>
+        <Property name="label">耗材出库明细</Property>
+      </PropertyDef>
+      <PropertyDef name="packoutstorageCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">耗材出库明细数量</Property>
+      </PropertyDef>
+      <PropertyDef name="outCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">出库单量</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBizCustomerImportQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBizCustomerImportQuery&quot;).insert()&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtBizCustomerImportQuery]</Property>
+    </DataSet>
+    <DataSet id="dsBizCustomerImportData">
+      <Property name="dataType">[dtBizCustomerImportData]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bizImportDataGroupController#query</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBizCustomerImportData</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBizCustomerImportQuery.data&quot;);&#xD;
+var wareHouseId=data.current.get(&quot;wareHouseId&quot;);&#xD;
+if(wareHouseId==null||wareHouseId==&quot;&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;请选择仓库查询&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+with (view.get(&quot;#dsBizCustomerImportData&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queryForm">
+      <ClientEvent name="onReady">var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set({&#xD;
+		startTime:firstDay,&#xD;
+		endTime:lastDay&#xD;
+	});</ClientEvent>
+      <Property name="dataSet">dsBizCustomerImportQuery</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">wareHouseId</Property>
+        <Property name="property">wareHouseId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="property">customerId</Property>
+        <Property name="name">customerId</Property>
+        <Property name="trigger">trgQueryCustomerSelect</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">startTime</Property>
+        <Property name="property">startTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endTime</Property>
+        <Property name="property">endTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">status</Property>
+        <Property name="property">status</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsBizCustomerImportData</Property>
+      <Property name="readOnly">true</Property>
+      <DataColumn name="customerName">
+        <Property name="property">customerName</Property>
+      </DataColumn>
+      <DataColumn name="palletStatus">
+        <ClientEvent name="onRenderCell">arg.dom.style.background = (arg.data.get(&quot;palletStatus&quot;)==&quot;未导入&quot;) ? &quot;red&quot; : &quot;&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+        <Property name="property">palletStatus</Property>
+      </DataColumn>
+      <DataColumn name="packStorageStatus">
+        <ClientEvent name="onRenderCell">arg.dom.style.background = (arg.data.get(&quot;packStorageStatus&quot;)==&quot;未导入&quot;) ? &quot;red&quot; : &quot;&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+        <Property name="property">packStorageStatus</Property>
+      </DataColumn>
+      <DataColumn name="packoutstorageStatus">
+        <ClientEvent name="onRenderCell">arg.dom.style.background = (arg.data.get(&quot;packoutstorageStatus&quot;)==&quot;未导入&quot;) ? &quot;red&quot; : &quot;&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+        <Property name="property">packoutstorageStatus</Property>
+      </DataColumn>
+    </DataGrid>
+    <FloatPanel id="panelCustomerSelect">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewpanelCustomerSelect.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewpanelCustomerSelect">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="trgQueryCustomerSelect">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomerSelect&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+  </View>
+</ViewConfig>

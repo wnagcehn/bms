@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckReceiptSum">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckReceiptSumVo</Property>
+      <PropertyDef name="deptId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceUnReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">开票未回款</Property>
+      </PropertyDef>
+      <PropertyDef name="unInvoiceUnReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">未开票未回款</Property>
+      </PropertyDef>
+      <PropertyDef name="unConfirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">账单未确认</Property>
+      </PropertyDef>
+      <PropertyDef name="totalAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">小计</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition.data&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckReceiptSum">
+      <Property name="dataType">[dtBillCheckReceiptSum]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">billCheckReportController#queryReceiptSum</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBillCheckReceiptSum</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBillCheckReceiptSum&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+        <Property name="caption">查询</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="action">export2ReportAction</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">deptName</Property>
+        <Property name="property">deptName</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="receiptList">
+        <Property name="dataSet">dsBillCheckReceiptSum</Property>
+        <Property name="dataType">dtBillCheckReceiptSum</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="deptName">
+          <Property name="property">deptName</Property>
+        </DataColumn>
+        <DataColumn name="invoiceUnReceiptAmount">
+          <Property name="property">invoiceUnReceiptAmount</Property>
+        </DataColumn>
+        <DataColumn name="unInvoiceUnReceiptAmount">
+          <Property name="property">unInvoiceUnReceiptAmount</Property>
+        </DataColumn>
+        <DataColumn name="unConfirmAmount">
+          <Property name="property">unConfirmAmount</Property>
+        </DataColumn>
+        <DataColumn name="totalAmount">
+          <Property name="property">totalAmount</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">receiptList</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+  </View>
+</ViewConfig>

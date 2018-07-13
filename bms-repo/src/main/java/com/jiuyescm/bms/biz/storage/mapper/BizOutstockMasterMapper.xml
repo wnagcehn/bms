@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="oms_id" property="omsId" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="chyun_code" property="chyunCode" jdbcType="VARCHAR" />
+	    <result column="chyun_name" property="chyunName" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="unpacking" property="unpacking" jdbcType="VARCHAR" />
+	    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="temperature_type_name" property="temperatureTypeName" jdbcType="VARCHAR" />
+	    <result column="bill_type_code" property="billTypeCode" jdbcType="VARCHAR" />
+	    <result column="bill_type_name" property="billTypeName" jdbcType="VARCHAR" />
+	    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	    <result column="resize_weight" property="resizeWeight" jdbcType="DOUBLE" />
+	    <result column="resize_num" property="resizeWeight" jdbcType="DOUBLE" />
+	    <result column="total_quantity" property="totalQuantity" jdbcType="DOUBLE" />
+	    <result column="total_varieties" property="totalVarieties" jdbcType="DOUBLE" />
+	    <result column="split_single" property="splitSingle" jdbcType="DOUBLE" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+   		<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="product_detail" property="productDetail" jdbcType="VARCHAR" />
+	    <result column="boxnum" property="boxnum" jdbcType="INTEGER" />
+	    <result column="adjust_boxnum" property="adjustBoxnum" jdbcType="INTEGER" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, oms_id, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, chyun_code, chyun_name, waybill_no, unpacking, send_time, temperature_type_code, temperature_type_name, bill_type_code, bill_type_name, b2b_flag, total_weight, resize_weight,resize_num, total_quantity, total_varieties, split_single, is_calculated, fees_no, remark, creator, create_time, last_modifier, last_modify_time,write_time,calculate_time, del_flag,product_detail, extattr1, extattr2, extattr3, extattr4, extattr5,boxnum,adjust_boxnum
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(externalNo != null and externalNo !='')" >
+				and a.external_no = #{externalNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and a.warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and a.customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and a.customer_name = #{customerName}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+				and a.carrier_id = #{carrierId}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and a.carrier_name = #{carrierName}
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and a.deliver_id = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and a.deliver_name = #{deliverName}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and a.temperature_type_code = #{temperatureTypeCode}
+		</if>
+		<if test="(temperatureTypeName != null and temperatureTypeName !='')" >
+				and a.temperature_type_name = #{temperatureTypeName}
+		</if>
+		<if test="(billTypeCode != null and billTypeCode !='')" >
+				and a.bill_type_code = #{billTypeCode}
+		</if>
+		<if test="(billTypeName != null and billTypeName !='' and billTypeNameOther == null )" >
+				and a.bill_type_name = #{billTypeName}
+		</if>
+		<if test="(billTypeNameOther != null and billTypeNameOther !='')" >
+				and (a.bill_type_name = #{str0}  or a.bill_type_name = #{str1})
+		</if>
+		<if test="(b2bFlag != null and b2bFlag !='')" >
+				and a.b2b_flag = #{b2bFlag}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='' and isCalculated !='ALL')" >
+				and a.is_calculated = #{isCalculated}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time <![CDATA[<= ]]>#{endTime}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_outstock_master a
+        where del_flag = 0 
+		<include refid="baseSelectColumns" />
+    </select>
+    
+     <select id="queryGroup" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+		select warehouse_name,customer_name,temperature_type_name,COUNT(*) as total_quantity 
+		from 
+       ( 
+       select warehouse_name,customer_name,temperature_type_name 
+       from biz_outstock_master a
+       where del_flag = 0
+		<include refid="baseSelectColumns" /> 
+		) q 
+		group by warehouse_name,customer_name,temperature_type_name
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_outstock_master
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        insert into biz_outstock_master(oms_id, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, chyun_code, chyun_name, waybill_no, unpacking, send_time, temperature_type_code, temperature_type_name, bill_type_code, bill_type_name, b2b_flag, total_weight, resize_weight, total_quantity, total_varieties, split_single, is_calculated, fees_no, remark, creator, create_time, last_modifier, last_modify_time,write_time, calculate_time, del_flag)
+        values (
+
+#{omsId,jdbcType=VARCHAR}, 
+#{outstockNo,jdbcType=VARCHAR}, 
+#{externalNo,jdbcType=VARCHAR}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{warehouseName,jdbcType=VARCHAR}, 
+#{customerid,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{carrierId,jdbcType=VARCHAR}, 
+#{carrierName,jdbcType=VARCHAR}, 
+#{deliverId,jdbcType=VARCHAR}, 
+#{deliverName,jdbcType=VARCHAR}, 
+#{chyunCode,jdbcType=VARCHAR}, 
+#{chyunName,jdbcType=VARCHAR}, 
+#{waybillNo,jdbcType=VARCHAR}, 
+#{unpacking,jdbcType=VARCHAR}, 
+#{sendTime,jdbcType=TIMESTAMP}, 
+#{temperatureTypeCode,jdbcType=VARCHAR}, 
+#{temperatureTypeName,jdbcType=VARCHAR}, 
+#{billTypeCode,jdbcType=VARCHAR}, 
+#{billTypeName,jdbcType=VARCHAR}, 
+#{b2bFlag,jdbcType=VARCHAR}, 
+#{totalWeight,jdbcType=DOUBLE}, 
+#{resizeWeight,jdbcType=DOUBLE}, 
+#{totalQuantity,jdbcType=DOUBLE}, 
+#{totalVarieties,jdbcType=DOUBLE}, 
+#{splitSingle,jdbcType=DOUBLE}, 
+#{isCalculated,jdbcType=VARCHAR}, 
+#{feesNo,jdbcType=VARCHAR}, 
+#{remark,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP},
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{calculateTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        update biz_outstock_master 
+		<set >
+
+<if test="omsId != null" >oms_id=#{omsId,jdbcType=VARCHAR},</if>
+<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="carrierId != null" >carrier_id=#{carrierId,jdbcType=VARCHAR},</if>
+<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+<if test="deliverId != null" >deliver_id=#{deliverId,jdbcType=VARCHAR},</if>
+<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+<if test="chyunCode != null" >chyun_code=#{chyunCode,jdbcType=VARCHAR},</if>
+<if test="chyunName != null" >chyun_name=#{chyunName,jdbcType=VARCHAR},</if>
+<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+<if test="unpacking != null" >unpacking=#{unpacking,jdbcType=VARCHAR},</if>
+<if test="sendTime != null" >send_time=#{sendTime,jdbcType=TIMESTAMP},</if>
+<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
+<if test="temperatureTypeName != null" >temperature_type_name=#{temperatureTypeName,jdbcType=VARCHAR},</if>
+<if test="billTypeCode != null" >bill_type_code=#{billTypeCode,jdbcType=VARCHAR},</if>
+<if test="billTypeName != null" >bill_type_name=#{billTypeName,jdbcType=VARCHAR},</if>
+<if test="b2bFlag != null" >b2b_flag=#{b2bFlag,jdbcType=VARCHAR},</if>
+<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DOUBLE},</if>
+<if test="resizeWeight != null" >resize_weight=#{resizeWeight,jdbcType=DOUBLE},</if>
+<if test="resizeNum != null" >resize_num=#{resizeNum,jdbcType=DOUBLE},</if>
+<if test="totalQuantity != null" >total_quantity=#{totalQuantity,jdbcType=DOUBLE},</if>
+<if test="totalVarieties != null" >total_varieties=#{totalVarieties,jdbcType=DOUBLE},</if>
+<if test="splitSingle != null" >split_single=#{splitSingle,jdbcType=DOUBLE},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="adjustBoxnum != null" >adjust_boxnum=#{adjustBoxnum,jdbcType=INTEGER},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from biz_outstock_master where
+        id=#{id}
+    </delete>
+    
+    
+    <select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">
+        select a.waybill_no from biz_outstock_master a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
+		where a.del_flag = 0 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+    
+    <select id="validCalcuForRetry" parameterType="java.util.Map" resultType = "String">
+       	select a.waybill_no from biz_outstock_master a
+		where a.del_flag = 0 and a.is_calculated = 1 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+	
+	<update id="retryForCalcu" parameterType="java.util.Map">
+        update biz_outstock_master a set a.is_calculated = 99 where a.del_flag = 0
+        <include refid="baseSelectColumns" />
+    </update>
+    
+      <select id="queryExceptionOne" parameterType="java.util.Map" resultMap="baseResultMap">
+    	SELECT * from biz_outstock_master where del_flag='0' 
+    	<if test="(createTime != null and createTime !='')" >
+			    and create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time <= #{endTime} ]]>
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+    	 and is_calculated not in ('1','5') limit 1
+    </select>
+</mapper>

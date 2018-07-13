@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.storage.BizPackStorageMapper" >
+    <resultMap id="bizPackStorageMap" type="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="wms_id" property="wmsId" jdbcType="VARCHAR" />
+	    <result column="cur_time" property="curTime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="pack_no" property="packNo" jdbcType="VARCHAR" />
+	    <result column="pack_name" property="packName" jdbcType="VARCHAR" />
+	    <result column="qty" property="qty" jdbcType="DOUBLE" />
+	    <result column="pallet_num" property="palletNum" jdbcType="DOUBLE" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="data_num" property="dataNum" jdbcType="VARCHAR" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="temperature_type_name" property="temperatureTypeName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   	<result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+	    <result column="adjust_pallet_num" property="adjustPalletNum" jdbcType="DOUBLE" />
+    </resultMap>
+
+	  
+    <select id="querybizPack" parameterType="java.util.Map" resultMap="bizPackStorageMap">
+		select 
+			id,warehouse_code,warehouse_name,customerid,customer_name,
+			pack_no,pack_name,qty,pallet_num,fees_no,is_calculated,
+			data_num,temperature_type_code,temperature_type_name,cur_time, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_pallet_num
+		from biz_pack_storage where del_flag = '0'
+		<if test="(beginTime != null and beginTime !='')" >
+			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = concat(${isCalculated})
+		</if>
+		LIMIT #{num}
+    </select>
+
+    <select id="updatebizPack" resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+       update biz_pack_storage
+       <set>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </select>
+
+</mapper>

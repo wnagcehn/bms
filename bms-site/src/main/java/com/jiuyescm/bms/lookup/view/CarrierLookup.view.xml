@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="carrierid">
+        <Property></Property>
+        <Property name="label">物流商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property></Property>
+        <Property name="label">商家简称</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">物流商全称</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="label">作废标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsCarrierEntity">
+      <Property name="dataType">[dtCarrierEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="dataProvider">carrierController#query</Property>
+    </DataSet>
+    <Container id="Container_Main">
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsCarrierEntity</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsCarrierEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnSelectCarrier">
+          <ClientEvent name="onClick">this.get(&quot;#actionSelectCarrier&quot;).execute();</ClientEvent>
+          <Property name="caption">选择</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="showHint">false</Property>
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="labelWidth">75</Property>
+        <Property name="labelSpacing">0</Property>
+        <Property name="colPadding">15</Property>
+        <AutoFormElement>
+          <Property name="name">shortname</Property>
+          <Property name="property">shortname</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">name</Property>
+          <Property name="property">name</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid id="dg_CarrierList">
+        <ClientEvent name="onDoubleClick">this.get(&quot;#actionSelectCarrier&quot;).execute();</ClientEvent>
+        <Property name="dataSet">dsCarrierEntity</Property>
+        <Property name="stretchColumnsMode">off</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="carrierid">
+          <Property name="property">carrierid</Property>
+        </DataColumn>
+        <DataColumn name="carriercode">
+          <Property name="property">carriercode</Property>
+        </DataColumn>
+        <DataColumn name="shortname">
+          <Property name="property">shortname</Property>
+        </DataColumn>
+        <DataColumn name="name">
+          <Property name="property">name</Property>
+        </DataColumn>
+        <DataColumn name="linkman">
+          <Property name="property">linkman</Property>
+        </DataColumn>
+        <DataColumn name="tel">
+          <Property name="property">tel</Property>
+        </DataColumn>
+        <DataColumn name="mobile">
+          <Property name="property">mobile</Property>
+        </DataColumn>
+        <DataColumn name="address">
+          <Property name="property">address</Property>
+        </DataColumn>
+        <DataColumn name="creperson">
+          <Property name="property">creperson</Property>
+        </DataColumn>
+        <DataColumn name="cretime">
+          <Property name="property">cretime</Property>
+        </DataColumn>
+        <DataColumn name="modperson">
+          <Property name="property">modperson</Property>
+        </DataColumn>
+        <DataColumn name="modtime">
+          <Property name="property">modtime</Property>
+        </DataColumn>
+      </DataGrid>
+      <Action id="actionSelectCarrier">
+        <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsCarrierEntity&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+      </Action>
+    </Container>
+  </View>
+</ViewConfig>

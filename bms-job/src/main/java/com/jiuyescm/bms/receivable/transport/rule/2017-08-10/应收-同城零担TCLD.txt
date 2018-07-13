@@ -1,0 +1,148 @@
+package com.jiuyescm.bms.biz.transport.entity;
+import java.util.List;
+import java.math.BigDecimal;
+import com.jiuyescm.bms.common.entity.CalculateVo;
+import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
+import com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity;
+import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity;
+import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineRangeEntity;
+import function com.jiuyescm.common.utils.drools.Utility.helper;
+import function com.jiuyescm.common.utils.drools.Utility.help;
+import org.apache.commons.lang.StringUtils;
+
+rule "transportFee2Volumn:SSQ"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="Y" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isNotEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isNotEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),fromDistrictId==data.getSendDistrictId(),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),toDistrictId==data.getReceiverDistrictId()) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode()) from $line.child;	
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), data.getTotalVolume()*167));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市区]规则transportFee2Volumn:SSQ按体积[isLight="+ data.getIsLight() +"]试算.");
+end;
+
+
+
+
+rule "transportFee2Volumn:SS"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="Y" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode()) from $line.child;	
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), data.getTotalVolume()*167));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市]规则transportFee2Volumn:SS按体积[isLight="+ data.getIsLight() +"]试算.");
+end;
+
+
+
+rule "transportFee2Volumn:S"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="Y" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),StringUtils.isEmpty(fromCityId),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),StringUtils.isEmpty(toCityId),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode()) from $line.child;	
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), data.getTotalVolume()*167));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省]规则transportFee2Volumn:S按体积[isLight="+ data.getIsLight() +"]试算.");
+end;
+
+
+
+
+rule "transportFee2weight:SSQ1"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="N" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isNotEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isNotEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),fromDistrictId==data.getSendDistrictId(),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),toDistrictId==data.getReceiverDistrictId()) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode(),add(data.getTotalWeight(), data.getAdjustWeight())>=weightLowerLimit && add(data.getTotalWeight(), data.getAdjustWeight())<=weightUpperLimit && add(data.getTotalWeight(), data.getAdjustWeight())> minWeightShipment) from $line.child;	
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), add(data.getTotalWeight(), data.getAdjustWeight()) ));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市区]规则transportFee2weight:SSQ1按重量[isLight="+ data.getIsLight() +"]试算,超过最低起运量.");
+end;
+
+rule "transportFee2weight:SSQ2"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="N" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isNotEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isNotEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),fromDistrictId==data.getSendDistrictId(),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),toDistrictId==data.getReceiverDistrictId()) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode(),add(data.getTotalWeight(), data.getAdjustWeight())>=weightLowerLimit && add(data.getTotalWeight(), data.getAdjustWeight())<=weightUpperLimit && add(data.getTotalWeight(), data.getAdjustWeight())<= minWeightShipment) from $line.child;
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), $lineRange.getMinWeightShipment()));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市区]规则transportFee2weight:SSQ2按重量[isLight="+ data.getIsLight() +"]试算,按最低起运量计算.");
+end;
+
+
+rule "transportFee2weight:SS1"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="N" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode(),add(data.getTotalWeight(), data.getAdjustWeight())>=weightLowerLimit && add(data.getTotalWeight(), data.getAdjustWeight())<=weightUpperLimit && add(data.getTotalWeight(), data.getAdjustWeight())> minWeightShipment) from $line.child;	
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), add(data.getTotalWeight(), data.getAdjustWeight()) ));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市]规则transportFee2weight:SS1按重量[isLight="+ data.getIsLight() +"]试算,超过最低起运量.");
+end;
+
+rule "transportFee2weight:SS2"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="N" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode(),add(data.getTotalWeight(), data.getAdjustWeight())>=weightLowerLimit && add(data.getTotalWeight(), data.getAdjustWeight())<=weightUpperLimit && add(data.getTotalWeight(), data.getAdjustWeight())<= minWeightShipment) from $line.child;
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), $lineRange.getMinWeightShipment()));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市]规则transportFee2weight:SS2按重量[isLight="+ data.getIsLight() +"]试算,按最低起运量计算.");
+end;
+
+
+rule "transportFee2weight:S1"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="N" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),StringUtils.isEmpty(fromCityId),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),StringUtils.isEmpty(toCityId),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode(),add(data.getTotalWeight(), data.getAdjustWeight())>=weightLowerLimit && add(data.getTotalWeight(), data.getAdjustWeight())<=weightUpperLimit && add(data.getTotalWeight(), data.getAdjustWeight())> minWeightShipment) from $line.child;	
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), add(data.getTotalWeight(), data.getAdjustWeight()) ));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省]规则transportFee2weight:S1按重量[isLight="+ data.getIsLight() +"]试算,超过最低起运量.");
+end;
+
+rule "transportFee2weight:S2"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="TCLD" && isLight=="N" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),StringUtils.isEmpty(fromCityId),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),StringUtils.isEmpty(toCityId),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(temperatureTypeCode==data.getTemperatureTypeCode(),add(data.getTotalWeight(), data.getAdjustWeight())>=weightLowerLimit && add(data.getTotalWeight(), data.getAdjustWeight())<=weightUpperLimit && add(data.getTotalWeight(), data.getAdjustWeight())<= minWeightShipment) from $line.child;
+then
+	$parent.setPrice(multiCal($lineRange.getUnitPrice(), $lineRange.getMinWeightShipment()));
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省]规则transportFee2weight:S2按重量[isLight="+ data.getIsLight() +"]试算,按最低起运量计算.");
+end;
+
+
+function BigDecimal multiCal(Double v1, Double v2){ 
+	return new BigDecimal(v1 * v2).setScale(2, BigDecimal.ROUND_HALF_UP);
+}
+function double add(double v1, double v2) {  
+    BigDecimal b1 = new BigDecimal(Double.toString(v1));  
+    BigDecimal b2 = new BigDecimal(Double.toString(v2));  
+    return b1.add(b2).doubleValue();  
+}

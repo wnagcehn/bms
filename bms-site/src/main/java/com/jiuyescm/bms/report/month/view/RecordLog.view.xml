@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtRecordLogEntity">
+      <Property name="creationType">com.jiuyescm.bms.pub.PubRecordLogEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+        <Property name="label">模块</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;recordLogController#getBizType&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="operateType">
+        <Property></Property>
+        <Property name="label">操作</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;recordLogController#getOperateType&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="operateTable">
+        <Property></Property>
+        <Property name="label">表</Property>
+      </PropertyDef>
+      <PropertyDef name="operateDesc">
+        <Property></Property>
+        <Property name="label">操作备注</Property>
+      </PropertyDef>
+      <PropertyDef name="operatePerson">
+        <Property></Property>
+        <Property name="label">操作人</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="oldData">
+        <Property></Property>
+        <Property name="label">历史数据</Property>
+      </PropertyDef>
+      <PropertyDef name="newData">
+        <Property></Property>
+        <Property name="label">新数据</Property>
+      </PropertyDef>
+      <PropertyDef name="urlName">
+        <Property></Property>
+        <Property name="label">界面</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;recordLogController#getUrlName&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="operateTableKey">
+        <Property></Property>
+        <Property name="label">主键</Property>
+      </PropertyDef>
+      <PropertyDef name="operateTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">操作时间</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtRecordLogQueryEntity">
+      <PropertyDef name="bizType">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;recordLogController#getBizType&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">模块</Property>
+      </PropertyDef>
+      <PropertyDef name="operateType">
+        <Property></Property>
+        <Property name="label">操作</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;recordLogController#getOperateType&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="urlName">
+        <Property></Property>
+        <Property name="label">界面</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;recordLogController#getUrlName&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">操作时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">·</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsRecordLog">
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataType">[dtRecordLogEntity]</Property>
+      <Property name="dataProvider">recordLogController#queryAll</Property>
+    </DataSet>
+    <DataSet id="dsRecordLogQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsRecordLogQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtRecordLogQueryEntity]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsRecordLog</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsRecordLogQuery.data&quot;).current;&#xD;
+var ds=view.get(&quot;#dsRecordLog&quot;);&#xD;
+ds.set(&quot;parameter&quot;,data).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm>
+      <Property name="dataSet">dsRecordLogQuery</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">bizType</Property>
+        <Property name="property">bizType</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">urlName</Property>
+        <Property name="property">urlName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">operateType</Property>
+        <Property name="property">operateType</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">startTime</Property>
+        <Property name="property">startTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endTime</Property>
+        <Property name="property">endTime</Property>
+        <Property name="labelWidth">20</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsRecordLog</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="bizType">
+          <Property name="property">bizType</Property>
+        </DataColumn>
+        <DataColumn name="urlName">
+          <Property name="property">urlName</Property>
+        </DataColumn>
+        <DataColumn name="operateType">
+          <Property name="property">operateType</Property>
+        </DataColumn>
+        <DataColumn name="operateTime">
+          <Property name="property">operateTime</Property>
+        </DataColumn>
+        <DataColumn name="operateTable">
+          <Property name="property">operateTable</Property>
+        </DataColumn>
+        <DataColumn name="operateTableKey">
+          <Property name="property">operateTableKey</Property>
+        </DataColumn>
+        <DataColumn name="operateDesc">
+          <Property name="property">operateDesc</Property>
+        </DataColumn>
+        <DataColumn name="operatePerson">
+          <Property name="property">operatePerson</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="oldData">
+          <Property name="property">oldData</Property>
+        </DataColumn>
+        <DataColumn name="newData">
+          <Property name="property">newData</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

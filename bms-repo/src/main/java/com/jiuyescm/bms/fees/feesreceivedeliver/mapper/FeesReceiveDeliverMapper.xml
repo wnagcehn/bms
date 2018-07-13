@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.fees.feesreceivedeliver.mapper.FeesReceiveDeliverMapper">
+	<resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="operationtime" property="operationtime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="forwarder_id" property="forwarderId" jdbcType="VARCHAR" />
+	    <result column="forwarder_name" property="forwarderName" jdbcType="VARCHAR" />
+	    <result column="cost_type" property="costType" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="linename" property="linename" jdbcType="VARCHAR" />
+	    <result column="orderno" property="orderno" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="originatingcity" property="originatingcity" jdbcType="VARCHAR" />
+	    <result column="originatingdistrict" property="originatingdistrict" jdbcType="VARCHAR" />
+	    <result column="targetwarehouse" property="targetwarehouse" jdbcType="VARCHAR" />
+	    <result column="targetcity" property="targetcity" jdbcType="VARCHAR" />
+	    <result column="targetdistrict" property="targetdistrict" jdbcType="VARCHAR" />
+	    <result column="temperaturetype" property="temperaturetype" jdbcType="VARCHAR" />
+	    <result column="category" property="category" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DOUBLE" />
+	    <result column="volume" property="volume" jdbcType="DOUBLE" />
+	    <result column="kilometers" property="kilometers" jdbcType="DOUBLE" />
+	    <result column="spendtime" property="spendtime" jdbcType="DOUBLE" />
+	    <result column="carmodel" property="carmodel" jdbcType="VARCHAR" />
+	    <result column="templatenum" property="templatenum" jdbcType="VARCHAR" />
+	    <result column="islight" property="islight" jdbcType="TINYINT" />
+	    <result column="unitprice" property="unitprice" jdbcType="DOUBLE" />
+	    <result column="totleprice" property="totleprice" jdbcType="DOUBLE" />
+	    <result column="accepttime" property="accepttime" jdbcType="TIMESTAMP" />
+	    <result column="signtime" property="signtime" jdbcType="TIMESTAMP" />
+	    <result column="billno" property="billno" jdbcType="VARCHAR" />
+	    <result column="ruleno" property="ruleno" jdbcType="VARCHAR" />
+	    <result column="state" property="state" jdbcType="VARCHAR" />
+	    <result column="creperson" property="creperson" jdbcType="VARCHAR" />
+	    <result column="crepersonname" property="crepersonname" jdbcType="VARCHAR" />
+	    <result column="cretime" property="cretime" jdbcType="TIMESTAMP" />
+	    <result column="modperson" property="modperson" jdbcType="VARCHAR" />
+	    <result column="modpersonname" property="modpersonname" jdbcType="VARCHAR" />
+	    <result column="modtime" property="modtime" jdbcType="TIMESTAMP" />
+	    <result column="is_receive_order" property="isReceiveOrder" jdbcType="VARCHAR" />
+	    <result column="receipt_number" property="receiptNumber" jdbcType="VARCHAR" />
+	    <result column="return_goods" property="returnGoods" jdbcType="VARCHAR" />
+	    <result column="dispatch_type" property="dispatchType" jdbcType="VARCHAR" />
+	    <result column="good_type" property="goodType" jdbcType="VARCHAR" />
+	    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+	    <result column="order_boxno" property="orderBoxno" jdbcType="VARCHAR" />
+	    <result column="product_Type" property="productType" jdbcType="VARCHAR" />
+	    <result column="receive_address" property="receiveAddress" jdbcType="VARCHAR" />
+	    <result column="send_address" property="sendAddress" jdbcType="VARCHAR" />
+	    <result column="roadbill_no" property="roadbillNo" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="extarr1" property="extarr1" jdbcType="VARCHAR" />
+	    <result column="extarr2" property="extarr2" jdbcType="VARCHAR" />
+	    <result column="extarr3" property="extarr3" jdbcType="VARCHAR" />
+	    <result column="extarr4" property="extarr4" jdbcType="VARCHAR" />
+	    <result column="extarr5" property="extarr5" jdbcType="VARCHAR" />
+	    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+	<sql id="baseColumns">
+		frt.fees_no,frt.customerid,frt.customer_name,frt.forwarder_id, frt.forwarder_name,frt.warehouse_code,frt.operationtime,
+		frt.subject_code,frt.other_subject_code,frt.cost_type,frt.linename,frt.cost_type,
+		frt.orderno,frt.waybill_no, frt.originatingcity,
+		frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+		frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+		frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.unitprice,
+		frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+		frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+		frt.modtime,frt.is_receive_order, frt.receipt_number, frt.return_goods, frt.dispatch_type, frt.good_type, frt.order_number, frt.order_boxno, frt.product_Type, frt.receive_address, frt.send_address, frt.roadbill_no, frt.external_no,
+		frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity
+	</sql>
+	<sql id="baseSelectColumns">
+		<if test="(feesNo != null and feesNo !='')" >
+				and frt.fees_no = #{feesNo}
+		</if>
+		<if test="(costType != null and costType !='')" >
+				and frt.cost_type = #{costType}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and frt.subject_code = #{subjectCode}
+		</if>
+		<if test="(customerIdList!=null and customerIdList.size()>0)">
+			 	and frt.customerid in
+			 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+	    </if>
+		<if test="(customerid != null and customerid !='')" >
+				and frt.customerid = #{customerid}
+		</if>
+		<if test="(forwarderId != null and forwarderId !='')" >
+				and frt.forwarder_id = #{forwarderId}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and frt.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(orderno != null and orderno !='')" >
+				and frt.orderno = #{orderno}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and frt.waybill_no = #{waybillNo}
+		</if>
+		<if test="(state != null and state !='')" >
+				and frt.state = #{state}
+		</if>
+		<if test="(billno != null and billno !='')" >
+				and frt.billno = #{billno}
+		</if>
+		<if test="(ruleno != null and ruleno !='')" >
+				and frt.ruleno = #{ruleno}
+		</if>
+		<if test="(crestime != null and crestime !='')" >
+			    and frt.cretime >= #{crestime}
+		</if>
+		<if test="(creetime != null and creetime !='')" >
+			    and <![CDATA[frt.cretime <= #{creetime}]]>
+		</if>
+	</sql>
+	
+	<!-- 查询出所有的运输费用数据 -->
+	<select id="query" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverQueryEntity" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_transport frt
+        where 1=1
+        <include refid="baseSelectColumns" />
+        order by frt.cretime desc
+    </select>
+    <select id="querySum" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverQueryEntity"
+        resultType="java.lang.Double">
+        select
+         sum(frt.totleprice) as totalCost
+        from fees_receive_transport frt
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+    	insert into fees_receive_transport (
+    	 	fees_no,customerid,customer_name,forwarder_id,forwarder_name,warehouse_code,operationtime,subject_code,other_subject_code,cost_type,linename,
+			orderno,waybill_no,originatingcity,originatingdistrict,targetwarehouse,targetcity,targetdistrict
+			,temperaturetype,category,weight,volume,kilometers,spendtime,carmodel,templatenum,islight,unitprice,quantity,
+			totleprice,accepttime,signtime,billno,ruleno,state,creperson,crepersonname,cretime,modperson,modpersonname,
+			modtime,is_calculated, calculate_time,is_receive_order, receipt_number, return_goods, dispatch_type, good_type, order_number, order_boxno, product_Type, receive_address, send_address, roadbill_no, external_no,
+			extarr1,extarr2,extarr3,extarr4,extarr5, del_flag
+    	)
+    	 values (
+    		#{feesNo},#{customerid},#{customerName},#{forwarderId},#{forwarderName},#{warehouseCode},#{operationtime},#{subjectCode},#{otherSubjectCode},#{costType},#{linename},
+			#{orderno},#{waybillNo},#{originatingcity},#{originatingdistrict},#{targetwarehouse},#{targetcity},#{targetdistrict},
+			#{temperaturetype},#{category},#{weight},#{volume},#{kilometers},#{spendtime},#{carmodel},#{templatenum},#{islight},#{unitprice},#{quantity},
+			#{totleprice},#{accepttime},#{signtime},#{billno},#{ruleno},#{state},#{creperson},#{crepersonname},#{cretime},#{modperson},#{modpersonname},
+			#{modtime},#{isCalculated},#{calculateTime},
+			#{isReceiveOrder},#{receiptNumber}, #{returnGoods}, #{dispatchType}, #{goodType}, #{orderNumber}, #{orderBoxno}, #{productType}, #{receiveAddress}, #{sendAddress}, #{roadbillNo}, #{externalNo},
+			#{extarr1},#{extarr2},#{extarr3},#{extarr4},#{extarr5},#{delFlag}
+    	);
+    </insert>
+    
+	<select id="queryunitPrice" parameterType="java.util.Map" resultType="java.lang.Double">
+		select d.unit_price from price_contract_info a 
+		left JOIN price_contract_item b on a.contract_code=b.contract_code and b.del_flag='0'
+		left join price_transport_template c on c.template_code=b.template_id and c.del_flag='0'
+		left join price_transport_valueadded d on c.id=d.template_id  and d.del_flag='0'
+		where a.customerId=#{customerid} and d.subject_code=#{subjectcode}
+		and a.del_flag='0' and a.contract_state='1'
+	</select>
+	
+	<update id="updateBillNo" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		update fees_receive_transport 
+		<set >
+			<if test="billno!=null">billno=#{billno},</if>
+			<if test="weight!=null">weight=#{weight},</if>
+			<if test="totleprice!=null">totleprice=#{totleprice},</if>
+			<if test="state!=null">state=#{state},</if>
+			<if test="modperson!=null">modperson=#{modperson},</if>
+			<if test="modpersonname!=null">modpersonname=#{modpersonname},</if>
+			<if test="modtime!=null">modtime=#{modtime},</if>
+		</set>
+		where fees_no=#{feesNo} and ifnull(billno,'')=''
+	</update>
+	
+	<!-- 生成账单  查询符合账单条件的费用数量-->
+	<select id="queryCountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity"  resultType="int">
+		select count(0) from fees_receive_transport frt
+        where 1=1 and frt.customerid=#{customerid}
+        	and frt.state = '0' and frt.is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and frt.cretime <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and frt.cretime <![CDATA[<=]]> #{billendtime}
+        </if>
+	</select>
+	
+	<!-- 生成账单  查询符合账单条件的费用金额-->
+	<select id="queryAmountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity"  resultType="double">
+		select sum(frt.totleprice) from fees_receive_transport frt
+        where 1=1 and frt.customerid=#{customerid}
+        	and frt.state = '0' and frt.is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and frt.cretime <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and frt.cretime <![CDATA[<=]]> #{billendtime}
+        </if>
+	</select>
+	
+	<!-- 更新符合条件的费用信息 -->
+	<update id="updateByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		update fees_receive_transport
+		set billno=#{billno},state=#{billstatus},
+			modperson=#{modperson},modpersonname=#{modpersonname},modtime=#{modtime}
+		where 1=1 and customerid=#{customerid}
+        	and state = '0' and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and cretime <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and cretime <![CDATA[<=]]> #{billendtime}
+        </if>
+	</update>
+	
+	<select id="queryDetail" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		select 
+			case
+			when frt.subject_code = 'ts_value_add_subject' then ''
+			else frt.subject_code
+			end as subject_code,
+			frt.fees_no,frt.customerid,frt.customer_name,frt.forwarder_id,frt.forwarder_name,
+			frt.warehouse_code,frt.operationtime,
+			frt.other_subject_code,frt.cost_type,frt.linename,
+			frt.orderno,frt.waybill_no, frt.originatingcity,
+			frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+			frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+			frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.unitprice,
+			frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+			frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+			frt.modtime,frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity
+        from fees_receive_transport frt
+        where 1=1 and frt.state = '0' and frt.is_calculated in ('1','5')
+        <if test="(customerid != null and customerid !='')" >
+			and frt.customerid = #{customerid}
+		</if>
+		<if test="(crestime != null and crestime !='')" >
+		    and frt.cretime <![CDATA[ >= ]]> #{crestime}
+		</if>
+		<if test="(creetime != null and creetime !='')" >
+		    and frt.cretime<![CDATA[ <= ]]>#{creetime}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and frt.fees_no = #{feesNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and frt.subject_code = #{subjectCode}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and frt.waybill_no = #{waybillNo}
+		</if>
+	</select>
+	
+	<!-- 按运输费用科目分组统计 -->
+	<select id="querywarehouseDeliverAmount"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+		select subject_code as subjectCode, billno as billNo, sum(totleprice) as amount  
+		from fees_receive_transport
+		where billno=#{billNo} and is_calculated in ('1','5')
+		GROUP BY subject_code,billno
+	</select>
+	
+	<!-- 按费用科目，账单编号查询详细 -->
+	<select id="queryDeliverDetailByWarehouseidAndBillNo"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		 select
+        	case
+			when frt.subject_code = 'ts_value_add_subject' then ''
+			else frt.subject_code
+			end as subject_code,
+			frt.fees_no,frt.customerid,frt.customer_name,frt.forwarder_id,frt.forwarder_name,frt.warehouse_code,frt.operationtime,
+			frt.other_subject_code,frt.cost_type,frt.linename,
+			frt.orderno,frt.waybill_no, frt.originatingcity,
+			frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+			frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+			frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.unitprice,
+			frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+			frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+			frt.modtime,frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity
+        from fees_receive_transport frt
+        where 1=1 and frt.billno=#{billNo} and frt.subject_code=#{subjectCode}
+        <if test="(feesNo != null and feesNo !='')" >
+			and frt.fees_no = #{feesNo}
+		</if>
+	</select>
+	
+	<!-- 按账单查询-导出 -->
+	<select id="querydeliverDetailByBillNo"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		 select
+        	case
+			when frt.subject_code = 'ts_value_add_subject' then ''
+			else frt.subject_code
+			end as subject_code,
+			frt.fees_no,frt.customerid,frt.customer_name,frt.forwarder_id,frt.forwarder_name,frt.warehouse_code,frt.operationtime,
+			frt.other_subject_code,frt.cost_type,frt.linename,
+			frt.orderno,frt.waybill_no, frt.originatingcity,
+			frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+			frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+			frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.unitprice,
+			frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+			frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+			frt.modtime,frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity
+        from fees_receive_transport frt
+        where 1=1 and frt.billno=#{billNo} 
+	</select>
+	
+	<!-- 核销账单 -->
+	<update id="confirmFeesBill" parameterType="java.util.Map">
+		update fees_receive_transport set state=#{status},modperson=#{modperson},
+		modpersonname=#{modpersonname},modtime=#{modtime} where billno=#{billNo}
+	</update>
+	
+	<!-- 删除账单 -->
+	<update id="deleteFeesBill" parameterType="java.util.Map">
+		update fees_receive_transport set state=#{status},modperson=#{modperson},
+		modpersonname=#{modpersonname},modtime=#{modtime},billno='' where billno=#{billNo}
+		<if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+	</update>
+	
+	<!-- new生成账单  查询符合账单条件的费用数量-->
+	<select id="queryCountByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"  resultType="int">
+		select count(0) from fees_receive_transport frt
+        where 1=1 and frt.customerid=#{customerId}
+        	and frt.state = '0' and frt.is_calculated in ('1','5')
+        <if test="(startTime != null and startTime !='')" >
+        	and frt.cretime <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and frt.cretime <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+	<!-- new生成账单  查询符合账单条件的费用金额-->
+	<select id="queryAmountByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"  resultType="double">
+		select sum(frt.totleprice) from fees_receive_transport frt
+        where 1=1 and frt.customerid=#{customerId}
+        	and frt.state = '0' and frt.is_calculated in ('1','5')
+        <if test="(startTime != null and startTime !='')" >
+        	and frt.cretime <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and frt.cretime <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+	<!-- new更新符合条件的费用信息 -->
+	<update id="updateByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+		update fees_receive_transport
+		set billno=#{billNo},state=#{status},
+			modpersonname=#{lastModifier},
+			modtime=#{lastModifyTime}
+		where 1=1 and customerid=#{customerId}
+        	and state = '0' and is_calculated in ('1','5')
+        <if test="(startTime != null and startTime !='')" >
+        	and cretime <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and cretime <![CDATA[<=]]> #{endTime}
+        </if>
+	</update>
+	
+	<!-- new生成账单  查询账单科目费用 -不包含理赔-->
+	<select id="queryFeesBillSubjectInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" 
+		resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select billno as billNo, sum(totleprice) as totalAmount
+		from fees_receive_transport
+        where 1=1 
+        and billno=#{billNo}
+        and subject_code != 'ts_abnormal_pay'
+        group by billno
+	</select>
+	
+	<!-- new生成账单  查询账单科目费用 -包含理赔-->
+	<select id="queryFeesBillSubjectInfoAbnormal" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" 
+		resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select billno as billNo, sum(totleprice) as totalAmount
+		from fees_receive_transport
+        where 1=1 
+        and billno=#{billNo}
+        and subject_code = 'ts_abnormal_pay'
+        group by billno
+	</select>
+	
+		<!-- 按账单查询-导出 -->
+	<select id="querydeliverDetailByBillNoNew"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		 select
+        	case
+			when frt.subject_code = 'ts_value_add_subject' then ''
+			else frt.subject_code
+			end as subject_code,
+			frt.fees_no,frt.customerid,frt.customer_name,frt.forwarder_id,frt.forwarder_name,frt.warehouse_code,frt.operationtime,
+			frt.other_subject_code,frt.cost_type,frt.linename,
+			frt.orderno,frt.waybill_no,frt.external_no,frt.roadbill_no,frt.send_address,frt.receive_address,frt.product_Type, frt.originatingcity,
+			frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+			frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+			frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.unitprice,
+			frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+			frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+			frt.modtime,frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity
+        from fees_receive_transport frt 
+        where 1=1 and frt.billno=#{billNo}
+	</select>
+	
+	<select id="queryList" resultMap="BaseResultMap">
+		select
+        <include refid="baseColumns" />
+        from fees_receive_transport frt
+        where 1=1 and state = '0' and frt.cretime like '${cretime}%'
+        and frt.waybill_no in 
+		<foreach collection="wayBillNoList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+	</select>
+	
+	<select id="sumSubjectMoney" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select sum(totleprice) as totalAmount,sum(derate_amount) as derateAmount,count(0) as num from fees_receive_transport 
+		where billno=#{billNo} and ifnull(del_flag,'0')='0' and is_calculated in ('1','5') and <![CDATA[subject_code<>'ts_abnormal_pay']]>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[cretime>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!='')">
+			and <![CDATA[cretime<=#{endTime}]]>
+		</if>                                                                                                                                                                                                                                                                               
+	</select>
+	<select id="sumAbnormalSubjectMoney" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select sum(totleprice) as totalAmount,sum(derate_amount) as derateAmount,count(0) as num from fees_receive_transport 
+		where billno=#{billNo} and ifnull(del_flag,'0')='0' and is_calculated in ('1','5') and <![CDATA[subject_code='ts_abnormal_pay']]>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[cretime>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!='')">
+			and <![CDATA[cretime<=#{endTime}]]>
+		</if>            
+	</select>
+	
+	<select id="queryFeeByGroup" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		select cretime,external_no,orderno,waybill_no,roadbill_no,customerid,customer_name,sum(totleprice) as totleprice,send_address,receive_address,'' as subjectCode,
+		forwarder_id,forwarder_name,product_Type,order_boxno,order_number,weight,volume,good_type,dispatch_type,signtime,is_receive_order,receipt_number,return_goods,billno  from fees_receive_transport
+		where billno=#{billNo} and ifnull(del_flag,'0')='0' and is_calculated in ('1','5')
+		and <![CDATA[subject_code<>'ts_abnormal_pay']]>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
+		</if>
+		<if test="(status != null and status !='')" >
+			and status = #{status}
+		</if>
+		<if test="(orderNo != null and orderNo !='')" >
+			and orderno = #{orderNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo}
+		</if>
+		<if test="(productType != null and productType !='')" >
+			and product_Type = #{productType}
+		</if>	
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[cretime>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[cretime<=#{endTime}]]>
+		</if> 
+		GROUP BY cretime,external_no,orderno,waybill_no,roadbill_no,customerid,customer_name,send_address,receive_address,
+		forwarder_id,forwarder_name,product_Type,order_boxno,order_number,weight,volume,good_type,dispatch_type,signtime,is_receive_order,receipt_number,return_goods,billno
+	</select>
+	
+	<select id="queryAbnormalFeeByGroup" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		select cretime,external_no,orderno,waybill_no,roadbill_no,customerid,customer_name,sum(totleprice) as totleprice,send_address,receive_address,'ts_abnormal_pay' as subjectCode,
+		forwarder_id,forwarder_name,product_Type,order_boxno,order_number,weight,volume,good_type,dispatch_type,signtime,is_receive_order,receipt_number,return_goods,billno  from fees_receive_transport
+		where billno=#{billNo} and ifnull(del_flag,'0')='0' and is_calculated in ('1','5')
+		and subject_code='ts_abnormal_pay'
+		GROUP BY cretime,external_no,orderno,waybill_no,roadbill_no,customerid,customer_name,send_address,receive_address,
+		forwarder_id,forwarder_name,product_Type,order_boxno,order_number,weight,volume,good_type,dispatch_type,signtime,is_receive_order,receipt_number,return_goods,billno
+	</select>
+	
+	<select id="queryFeeDetail" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		select * from fees_receive_transport where 1=1 
+		and <![CDATA[subject_code<>'ts_abnormal_pay']]>
+		<if test="(cretime != null and cretime !='')" >
+			and cretime = #{cretime}
+		</if>
+		<if test="(externalNo != null and externalNo !='')" >
+			and external_no = #{externalNo}
+		</if>
+		<if test="(orderno != null and orderno !='')" >
+			and orderno = #{orderno}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+			and customer_name = #{customerName}
+		</if>
+		<if test="(forwarderName != null and forwarderName !='')" >
+			and forwarder_name = #{forwarderName}
+		</if>
+	</select>
+	<select id="queryAbnormalFeeDetail" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		select * from fees_receive_transport where 1=1 
+		and subject_code='ts_abnormal_pay'
+		<if test="(cretime != null and cretime !='')" >
+			and cretime = #{cretime}
+		</if>
+		<if test="(externalNo != null and externalNo !='')" >
+			and external_no = #{externalNo}
+		</if>
+		<if test="(orderno != null and orderno !='')" >
+			and orderno = #{orderno}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+			and customer_name = #{customerName}
+		</if>
+		<if test="(forwarderName != null and forwarderName !='')" >
+			and forwarder_name = #{forwarderName}
+		</if>
+	</select>
+	<update id="deleteTransportBill" parameterType="Map">
+    	update fees_receive_transport
+    	set billno='',status='0',derate_amount=0
+    	where billno=#{billNo} and ifnull(del_flag,'0')='0'
+    	and <![CDATA[subject_code<>'ts_abnormal_pay']]>
+    </update>
+    <update id="deleteAbnormalTransportBill" parameterType="Map">
+    update fees_receive_transport
+    	set billno='',status='0',derate_amount=0
+    	where billno=#{billNo} and ifnull(del_flag,'0')='0'
+    	and subject_code='ts_abnormal_pay'
+    </update>
+    
+    <update id="updateFeeByParam" parameterType="java.util.Map">
+		update fees_receive_transport set billno=#{billNo},`status`=#{status} where 1=1 and ifnull(del_flag,'0')='0' and is_calculated in ('1','5')
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[cretime>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[cretime<=#{endTime}]]>
+		</if>	
+	</update>
+	
+	<select id="queryTransportPage"  parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+          select
+        <include refid="baseColumns" />
+        from  fees_receive_transport frt
+        where frt.del_flag=0 and frt.billno=#{billno}
+        <if test="startTime!=null">
+        	and <![CDATA[frt.cretime>=#{startTime}]]>
+        </if>
+        <if test="endTime!=null">
+        	and <![CDATA[frt.cretime<=#{endTime}]]>
+        </if>
+        <if test="(customerid != null and customerid !='')" >
+			and frt.customerid = #{customerid}
+		</if>
+  </select>
+  
+  <update id="derateBatchAmount" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+		update fees_receive_transport set derate_amount=#{derateAmount}
+		where fees_no=#{feesNo}
+  </update>
+  <update id="deleteBatchFees" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+	update fees_receive_transport set billno='',status=0,derate_amount=0
+    where orderno=#{orderno} and waybill_no=#{waybillNo} and customerid=#{customerid} and forwarder_id=#{forwarderId} and billno=#{billno} and cretime=#{cretime} and  weight=#{weight}
+    and <![CDATA[subject_code<>'ts_abnormal_pay']]>
+  </update>
+  
+   <update id="deleteBatchAbnormalFees" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+	update fees_receive_transport set billno='',status=0,derate_amount=0
+    where orderno=#{orderno} and waybill_no=#{waybillNo} and customerid=#{customerid} and forwarder_id=#{forwarderId} and billno=#{billno} and cretime=#{cretime} and  weight=#{weight}
+    and <![CDATA[subject_code='ts_abnormal_pay']]>
+  </update>
+  
+    <update id="updateBatchFees" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity">
+	update fees_receive_transport set billno=#{billno},status='1'
+    where orderno=#{orderno} and waybill_no=#{waybillNo} and customerid=#{customerid} and forwarder_id=#{forwarderId} and status='0' and cretime=#{cretime} and  weight=#{weight}
+  </update>
+  
+  <select id="getAllSubject" parameterType="java.util.Map" resultType="String">
+  	 select DISTINCT(subject_code) from fees_receive_transport where billno=#{billNo}
+  </select>
+</mapper>

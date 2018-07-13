@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="warehouseid">
+        <Property name="label">仓库ID</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="warehousecode">
+        <Property name="label">助记码</Property>
+      </PropertyDef>
+      <PropertyDef name="warehousename">
+        <Property name="label">仓库名称</Property>
+        <Property name="required">false</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getWarehouseAndAll&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="virtualflag">
+        <Property name="label">是否产地虚拟仓</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getOmsYesNo&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+        <Property name="defaultValue">999</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">作废标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+        <Property name="defaultValue">999</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsWarehouseEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsWarehouseEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsWarehouseEntity.data&quot;);
+datas.insert();
+view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsWarehouseEntity.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsWarehouseEntity.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要作废此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsWarehouseEntity&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要作废的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">作废</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsWarehouseEntity">
+      <Property name="dataType">[dtWarehouseEntity]</Property>
+      <Property name="dataProvider">jywarehousePR#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtCondition</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">warehouseid</Property>
+        <Property name="property">warehouseid</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehousename</Property>
+        <Property name="property">warehousename</Property>
+        <Property name="labelWidth">100</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <ClientEvent name="onClick">var data = view.get(&quot;#dsWarehouseEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsWarehouseRegionRuleEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		warehouseid:data.current.get(&quot;warehouseid&quot;)&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+      <Property name="dataSet">dsWarehouseEntity</Property>
+      <Property name="stretchColumnsMode">off</Property>
+      <Property name="readOnly">true</Property>
+      <RowNumColumn/>
+      <DataColumn name="warehouseid">
+        <Property name="property">warehouseid</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="warehousename">
+        <Property name="property">warehousename</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn id="province">
+        <Property name="name">province</Property>
+        <Property name="property">region.province</Property>
+        <Property name="visible">false</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn id="city">
+        <Property name="name">city</Property>
+        <Property name="property">region.city</Property>
+        <Property name="visible">false</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn id="district">
+        <Property name="name">district</Property>
+        <Property name="property">region.district</Property>
+        <Property name="visible">false</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="regionid">
+        <Property name="property">regionid</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="linkman">
+        <Property name="property">linkman</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="tel">
+        <Property name="property">tel</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+        <Property name="width">90</Property>
+      </DataColumn>
+      <DataColumn name="address">
+        <Property name="property">address</Property>
+        <Property name="width">240</Property>
+      </DataColumn>
+      <DataColumn name="zipcode">
+        <Property name="property">zipcode</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="virtualflag">
+        <Property name="property">virtualflag</Property>
+        <Property name="width">90</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

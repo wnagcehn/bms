@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.BizBaseFeeEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="operation_time" property="operationTime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="num" property="num" jdbcType="DOUBLE" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="fees_type" property="feesType" jdbcType="VARCHAR" />
+	    <result column="fees_type_name" property="feesTypeName" jdbcType="VARCHAR" />
+	    <result column="fees_unit" property="feesUnit" jdbcType="VARCHAR" />
+	    <result column="item" property="item" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="adjust_num" property="adjustNum" jdbcType="DOUBLE" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, operation_time, warehouse_code, warehouse_name, customerid, customer_name, num, fees_no, fees_type,fees_type_name, fees_unit, item, is_calculated, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, adjust_num,remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(startTime != null and endTime !='')" >
+			    and operation_time >= #{startTime} and  <![CDATA[operation_time <= #{endTime}]]>
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(num != null and num !='')" >
+				and num = #{num}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and fees_type = #{feesType}
+		</if>
+		<if test="(feesUnit != null and feesUnit !='')" >
+				and fees_unit = #{feesUnit}
+		</if>
+		<if test="(item != null and item !='')" >
+				and item = #{item}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(calculateTime != null and calculateTime !='')" >
+			    and calculate_time >= #{calculateTime} add <![CDATA[calculate_time <= #{calculateTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="(adjustNum != null and adjustNum !='')" >
+				and adjust_num = #{adjustNum}
+		</if>
+    </sql>
+	  
+	<sql id="reCountSelectColumns">
+		<if test="(startTime != null and endTime !='')" >
+			    and operation_time >= #{startTime} and  <![CDATA[operation_time <= #{endTime}]]>
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+		<if test="(num != null and num !='')" >
+				and num = #{num}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and fees_type = #{feesType}
+		</if>
+		<if test="(feesUnit != null and feesUnit !='')" >
+				and fees_unit = #{feesUnit}
+		</if>
+		<if test="(item != null and item !='')" >
+				and item = #{item}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_base_fee
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+     <select id="queryRecount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_base_fee
+        where 1=1
+		<include refid="reCountSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_base_fee
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        insert into biz_base_fee(operation_time, warehouse_code, warehouse_name, customerid, customer_name, num, fees_no, fees_type,fees_type_name, fees_unit, item, is_calculated, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, adjust_num)
+        values (
+#{operationTime,jdbcType=TIMESTAMP}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{warehouseName,jdbcType=VARCHAR}, 
+#{customerid,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{num,jdbcType=DOUBLE}, 
+#{feesNo,jdbcType=VARCHAR}, 
+#{feesType,jdbcType=VARCHAR}, 
+#{feesTypeName,jdbcType=VARCHAR}, 
+#{feesUnit,jdbcType=VARCHAR}, 
+#{item,jdbcType=VARCHAR}, 
+#{isCalculated,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}, 
+#{calculateTime,jdbcType=TIMESTAMP}, 
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{adjustNum,jdbcType=DOUBLE}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        update biz_base_fee 
+		<set >
+
+<if test="operationTime != null" >operation_time=#{operationTime,jdbcType=TIMESTAMP},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+<if test="feesType != null" >fees_type=#{feesType,jdbcType=VARCHAR},</if>
+<if test="feesUnit != null" >fees_unit=#{feesUnit,jdbcType=VARCHAR},</if>
+<if test="item != null" >item=#{item,jdbcType=VARCHAR},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="adjustNum != null" >adjust_num=#{adjustNum,jdbcType=DOUBLE},</if>
+<if test="remark!= null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where operation_time=#{operationTime,jdbcType=TIMESTAMP}  
+        and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+        and customerid=#{customerid,jdbcType=VARCHAR}
+        and item=#{item,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from biz_base_fee where
+        id=#{id}
+    </delete>
+    
+      <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        update biz_base_fee 
+		<set >
+		<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="adjustNum != null" >adjust_num=#{adjustNum,jdbcType=DOUBLE},</if>
+<if test="feesUnit != null" >fees_unit=#{feesUnit,jdbcType=VARCHAR},</if>
+		</set>
+        where  id=#{id}
+    </update>
+    
+    <select id="selectOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity">
+        select <include refid="baseColumns" />  from  biz_base_fee 
+        where operation_time=#{operationTime,jdbcType=TIMESTAMP}  
+        and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+        and customerid=#{customerid,jdbcType=VARCHAR}
+        and item=#{item,jdbcType=VARCHAR}
+    </select>
+</mapper>

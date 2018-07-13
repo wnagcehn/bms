@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.check.mapper.BillCheckFollowMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.bill.check.BillCheckFollowEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_check_id" property="billCheckId" jdbcType="BIGINT" />
+	    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="takes_time" property="takesTime" jdbcType="BIGINT" />
+	    <result column="appoint_man_id" property="appointManId" jdbcType="VARCHAR" />
+	    <result column="appoint_man" property="appointMan" jdbcType="VARCHAR" />
+	    <result column="appoint_dept_id" property="appointDeptId" jdbcType="VARCHAR" />
+	    <result column="appoint_dept" property="appointDept" jdbcType="VARCHAR" />
+	    <result column="follow_state" property="followState" jdbcType="VARCHAR" />
+   	    <result column="follow_man_id" property="followManId" jdbcType="VARCHAR" />
+	    <result column="follow_man" property="followMan" jdbcType="VARCHAR" />
+	    <result column="follow_dept_id" property="followDeptId" jdbcType="VARCHAR" />
+   	    <result column="follow_dept" property="followDept" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+    	id,bill_check_id,start_time,end_time,takes_time,appoint_man_id,appoint_man,appoint_dept_id,appoint_dept,follow_state,follow_man_id,follow_man,follow_dept_id,follow_dept,del_flag
+    </sql>
+	
+    <insert id="insertEntity" parameterType="com.jiuyescm.bms.bill.check.BillCheckFollowEntity" useGeneratedKeys="true" keyProperty="id">
+    	insert into bill_check_follow
+    	(
+    		bill_check_id,start_time,end_time,takes_time,appoint_man_id,appoint_man,appoint_dept_id,appoint_dept,follow_state,follow_man_id,follow_man,follow_dept_id,follow_dept,del_flag
+    	) 
+    	values
+    	(
+    		#{billCheckId},#{startTime},#{endTime},#{takesTime},#{appointManId},#{appointMan},#{appointDeptId},#{appointDept},#{followState},#{followManId},#{followMan},#{followDeptId},#{followDept},#{delFlag}
+    	)
+    </insert>
+    
+    <select id="queryList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.check.BillCheckInfoFollowEntity">
+    	select  a.*,b.id as followId,b.start_time as startTime,b.end_time as endTime,b.takes_time as takesTime,
+    	b.follow_state as followState,b.follow_man_id,b.follow_man,b.follow_dept,b.follow_dept_id
+    	 from bill_check_info a
+    	 inner join  bill_check_follow b
+    	 on a.id=b.bill_check_id and b.del_flag='0'
+    	where a.del_flag='0' and a.bill_status not in ('INVALIDATE','BAD_BILL') and a.bill_check_status not in ('CONFIRMED')
+    	<if test="(userIds!=null and userIds.size()>0)">
+    		and b.follow_man_id in
+    		<foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+    			#{item}
+    		</foreach>
+    	</if>
+    	<if test="(createMonth!=null and createMonth!='')">
+    		and a.create_month=#{createMonth}
+    	</if>
+    	<if test="(createMonthStart != null and createMonthStart !='')" >
+			and a.create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+			and a.create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+    	<if test="(invoiceName!=null and invoiceName!='')">
+    		and a.invoice_name=#{invoiceName}
+    	</if>
+    	<if test="(billName!=null and billName!='')">
+    		and a.bill_name like concat('%',#{billName},'%')
+    	</if>
+    	<if test="(followState!=null and followState!='')">
+    		and b.follow_state=#{followState}
+    	</if>
+    	<if test="(balanceName!=null and balanceName!='')">
+    		and a.balance_name=#{balanceName}
+    	</if>
+    	<if test="(followManId!=null and followManId!='')">
+    		and b.follow_man_id=#{followManId}
+    	</if>
+    	<if test="(isFinish!=null and isFinish!='')">
+    		and b.follow_state!=#{isFinish}
+    	</if>
+    	<if test="(billCheckId!=null and billCheckId!='')">
+    		and b.bill_check_id=#{billCheckId}
+    	</if>
+    </select>
+	
+	<update id="updateFollowStatus" parameterType="com.jiuyescm.bms.bill.check.BillCheckFollowEntity">
+		update bill_check_follow  set follow_state=#{followState} where id=#{id}
+	</update>
+	
+	<update id="finishFollow"  parameterType="com.jiuyescm.bms.bill.check.BillCheckFollowEntity">
+		update bill_check_follow  set follow_state=#{followState},end_time=#{endTime},takes_time=#{takesTime} where id=#{id}
+		
+	</update>
+	<select id="checkFollowManExist"  parameterType="java.lang.String" resultType="int">
+		select count(*) from bill_check_follow where follow_man_id=#{followManId} and del_flag='0'
+	</select>
+</mapper>

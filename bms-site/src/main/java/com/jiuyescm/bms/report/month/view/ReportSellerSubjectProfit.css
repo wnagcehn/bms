@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+.reportTable{
+	width:100%;
+	border-collapse:collapse;
+}
+.reportTable thead{
+	background-color:#DFDFDF;
+}
+.reportTable thead tr{
+	height:30px;
+	font-size:14px;
+}
+.reportTable thead tr td{
+	border:1px solid black;
+}
+.reportTable tbody tr:hover{
+	background-color:#B6CA87;
+}
+.reportTable tbody tr td{
+	border:1px solid #E8E8E8;
+	height:20px;
+}

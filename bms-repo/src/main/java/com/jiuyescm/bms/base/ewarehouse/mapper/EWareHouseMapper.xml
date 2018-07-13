@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.base.ewarehouse.mapper.EWareHouseMapper">
+
+	<resultMap id="AddressResultMap" type="com.jiuyescm.bms.base.address.entity.PubAddressEntity" >
+		<!-- pub_address 地址单表结果集映射字段 -->
+		<id column="addressinfoid" jdbcType="CHAR" property="addressinfoid" />
+		<result column="id" jdbcType="BIGINT" property="id"/>
+		<result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+		<result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+		<result column="level_num" jdbcType="VARCHAR" property="levelNum"/>
+		<result column="parent_area_code" jdbcType="VARCHAR" property="parentAreaCode"/>
+		<result column="region_code" jdbcType="VARCHAR" property="regionCode"/>
+		<result column="creator_code" jdbcType="VARCHAR" property="creatorCode"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="last_modifier" jdbcType="VARCHAR" property="lastModifier"/>
+		<result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime"/>
+		<result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+	</resultMap>
+	
+	<resultMap id="pubElecWarehouseMap" type="com.jiuyescm.bms.base.ewarehouse.entity.PubElecWarehouseEntity">
+		<!-- pub_elec_warehouse 电商仓库单表结果集映射字段 -->
+		<id column="warehouseid" jdbcType="CHAR" property="warehouseid" />
+		<result column="id" jdbcType="BIGINT" property="id"/>
+		<result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+		<result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+		<result column="elec_biz_code" jdbcType="VARCHAR" property="elecBizCode"/>
+		<result column="elec_biz_name" jdbcType="VARCHAR" property="elecBizName"/>
+		<result column="province_code" jdbcType="VARCHAR" property="provinceCode"/>
+		<result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
+		<result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+		<result column="city_name" jdbcType="VARCHAR" property="cityName"/>
+		<result column="district_code" jdbcType="VARCHAR" property="districtCode"/>
+		<result column="district_name" jdbcType="VARCHAR" property="districtName"/>
+		<result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
+		<result column="remark" jdbcType="VARCHAR" property="remark"/>
+		<result column="creator_code" jdbcType="VARCHAR" property="creatorCode"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="last_modifier" jdbcType="VARCHAR" property="lastModifier"/>
+		<result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime"/>
+		<result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+	</resultMap>
+	
+	
+	<sql id="columns">
+		id,warehouse_code,warehouse_name,elec_biz_code,elec_biz_name,province_code,province_name,
+		city_code,city_name,district_code,district_name,detail_address,remark,
+		creator_code,create_time,last_modifier,last_modify_time,del_flag
+	</sql>
+
+<!-- 	<select id="queryAddressProvince" parameterType="java.lang.String" resultMap="java.util.Map">
+		select area_name FROM bmsprd.pub_address where level_num='1'
+	</select> -->
+	
+	<select id="queryAll" resultMap="pubElecWarehouseMap" parameterType="java.util.Map">
+		select id, warehouse_code, warehouse_name, elec_biz_code, 
+		   elec_biz_name, province_code, province_name, city_code, city_name, 
+		   district_code, district_name, detail_address, remark, creator_code, 
+		   create_time, last_modifier, last_modify_time, del_flag
+		from pub_elec_warehouse
+		where del_flag = 0 
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code like concat('%',#{warehouseCode},'%')
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name like concat('%',#{warehouseName},'%')
+		</if>
+		<if test="(elecBizCode != null and elecBizCode !='')" >
+				and elec_biz_code like concat('%',#{elecBizCode},'%')
+		</if>
+		<if test="(elecBizName != null and elecBizName !='')" >
+				and elec_biz_name like concat('%',#{elecBizName},'%')
+		</if>
+		<if test="(provinceCode != null and provinceCode !='')" >
+				and province_code = #{provinceCode}
+		</if>
+		<if test="(provinceName != null and provinceName !='')" >
+				and province_name = #{provinceName}
+		</if>
+		<if test="(cityCode != null and cityCode !='')" >
+				and city_code = #{cityCode}
+		</if>
+		<if test="(cityName != null and cityName !='')" >
+				and city_name = #{cityName}
+		</if>
+		<if test="(districtCode != null and districtCode !='')" >
+				and district_code = #{districtCode}
+		</if>
+		<if test="(districtName != null and districtName !='')" >
+				and district_name = #{districtName}
+		</if>
+	</select>
+	
+	<!-- 获取所有的省份名称 -->
+	<select id="getAllProvinces" resultMap="AddressResultMap" parameterType="java.util.Map">
+		select distinct area_name from bmsprd.pub_address where level_num='1'
+	</select>
+	
+	<!-- 通过省份code获取所有的市 -->
+	<select id="getCitiesByProvincecode" resultMap="AddressResultMap" parameterType="java.util.Map">
+		select area_name from pub_address where parent_area_code=(select area_code from pub_address where area_name=#{province})
+	</select>
+	<!-- 通过省份code获取所有的市 -->
+	<select id="getCountysByCitycode" resultMap="AddressResultMap" parameterType="java.util.Map">
+		select area_name from pub_address where parent_area_code=(select area_code from pub_address where area_name=#{city})
+	</select>
+	
+	<!-- 删除电商仓库信息 -->
+	<delete id="removeEWareHouse" parameterType="java.lang.String">
+		delete from pub_elec_warehouse where warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 创建新的电商仓库信息 -->
+	<insert id="createEWareHouse" parameterType="com.jiuyescm.bms.base.ewarehouse.entity.PubElecWarehouseEntity">
+		insert into pub_elec_warehouse(warehouse_code, warehouse_name, elec_biz_code, elec_biz_name, 
+			province_code, province_name, city_code, city_name, district_code, district_name, detail_address, 
+			remark, creator_code, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+				#{warehouseCode,jdbcType=VARCHAR}, 
+				#{warehouseName,jdbcType=VARCHAR}, 
+				#{elecBizCode,jdbcType=VARCHAR}, 
+				#{elecBizName,jdbcType=VARCHAR}, 
+				#{provinceCode,jdbcType=VARCHAR}, 
+				#{provinceName,jdbcType=VARCHAR}, 
+				#{cityCode,jdbcType=VARCHAR}, 
+				#{cityName,jdbcType=VARCHAR}, 
+				#{districtCode,jdbcType=VARCHAR}, 
+				#{districtName,jdbcType=VARCHAR}, 
+				#{detailAddress,jdbcType=VARCHAR}, 
+				#{remark,jdbcType=VARCHAR}, 
+				#{creatorCode,jdbcType=VARCHAR}, 
+				#{createTime,jdbcType=TIMESTAMP}, 
+				#{lastModifier,jdbcType=VARCHAR}, 
+				#{lastModifyTime,jdbcType=TIMESTAMP}, 
+				#{delFlag,jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<!-- 修改电商仓库信息 -->
+	<update id="updateEWareHouse" parameterType="com.jiuyescm.bms.base.ewarehouse.entity.PubElecWarehouseEntity">
+		update pub_elec_warehouse 
+		<set >
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="elecBizCode != null" >elec_biz_code=#{elecBizCode,jdbcType=VARCHAR},</if>
+			<if test="elecBizName != null" >elec_biz_name=#{elecBizName,jdbcType=VARCHAR},</if>
+			<if test="provinceCode != null" >province_code=#{provinceCode,jdbcType=VARCHAR},</if>
+			<if test="provinceName != null" >province_name=#{provinceName,jdbcType=VARCHAR},</if>
+			<if test="cityCode != null" >city_code=#{cityCode,jdbcType=VARCHAR},</if>
+			<if test="cityName != null" >city_name=#{cityName,jdbcType=VARCHAR},</if>
+			<if test="districtCode != null" >district_code=#{districtCode,jdbcType=VARCHAR},</if>
+			<if test="districtName != null" >district_name=#{districtName,jdbcType=VARCHAR},</if>
+			<if test="detailAddress != null" >detail_address=#{detailAddress,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creatorCode != null" >creator_code=#{creatorCode,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+	<!-- 查询所有的电商平台信息 -->
+	<select id="queryAllPlayform" resultType="com.jiuyescm.bms.base.ewarehouse.entity.NewPlayForm">
+		SELECT * from system_code where type_code='PLATFORM_ID'
+	</select>
+</mapper>

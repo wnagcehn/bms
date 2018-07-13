@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.config.mapper.BmsWarehouseConfigMapper">
+	<resultMap type="com.jiuyescm.bms.base.config.BmsWarehouseConfigEntity" id="baseResultMap">
+    	<result column="warehouseCode" property="warehouseCode" jdbcType="VARCHAR" />
+		<result column="display_level" property="displayLevel" jdbcType="INTEGER" />
+		<result column="is_drop_display" property="isDropDisplay" jdbcType="INTEGER" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryAll" resultMap="baseResultMap">
+		select warehouseCode,display_level,is_drop_display,
+		creator,create_time,last_modifier,last_modify_time
+		 from bms_warehouse_config
+	</select>
+	<insert id="insertEntity" parameterType="com.jiuyescm.bms.base.config.BmsWarehouseConfigEntity">
+		insert into bms_warehouse_config 
+		(
+			warehouseCode,display_level,is_drop_display,creator,create_time,last_modifier,last_modify_time
+		) 
+		values 
+		(
+			#{warehouseCode},#{displayLevel},#{isDropDisplay},#{creator},#{createTime},#{lastModifier},#{lastModifyTime}
+		)
+	</insert>
+	<update id="updateEntity" parameterType="com.jiuyescm.bms.base.config.BmsWarehouseConfigEntity">
+		update bms_warehouse_config
+		<set>
+			is_drop_display=#{isDropDisplay},
+			<if test="(displayLevel!=null and displayLevel!='')">display_level=#{displayLevel},</if>
+			<if test="(lastModifier!=null and lastModifier!='')">last_modifier=#{lastModifier},</if>
+			<if test="(lastModifyTime!=null and lastModifyTime!='')">last_modify_time=#{lastModifyTime},</if>
+		</set>
+		where warehouseCode=#{warehouseCode}
+	</update>
+	<select id="checkConfigExist" resultType="int" parameterType="java.lang.String">
+		select count(*) from bms_warehouse_config where warehouseCode=#{warehouseCode}
+	</select>
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.file.asyn.BmsFileAsynTaskMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+	    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+	    <result column="task_rate" property="taskRate" jdbcType="INTEGER" />
+	    <result column="task_status" property="taskStatus" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="task_type" property="taskType" jdbcType="VARCHAR" />
+	    <result column="file_rows" property="fileRows" jdbcType="INTEGER" />
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+	    <result column="origin_file_name" property="originFileName" jdbcType="VARCHAR" />
+	    <result column="origin_file_path" property="originFilePath" jdbcType="VARCHAR" />
+	    <result column="result_file_name" property="resultFileName" jdbcType="VARCHAR" />
+	    <result column="result_file_path" property="resultFilePath" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, task_id, task_name, task_rate, task_status, biz_type, task_type, file_rows, creator_id, creator, create_time, finish_time, origin_file_name, origin_file_path, result_file_name, result_file_path, remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(taskId != null and taskId !='')" >
+				and task_id = #{taskId}
+		</if>
+		<if test="(taskName != null and taskName !='')" >
+				and task_name like concat('%',concat(#{taskName}, '%'))
+		</if>
+		<if test="(taskStatus != null and taskStatus !='')" >
+				and task_status = #{taskStatus}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(taskType != null and taskType !='')" >
+				and task_type = #{taskType}
+		</if>
+		<if test="(creatorId != null and creatorId !='')" >
+				and creator_id = #{creatorId}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator like concat('%',concat(#{creator}, '%'))
+		</if>
+		<if test="(beginTime != null and beginTime !='')" >
+			    and create_time <![CDATA[>=]]> #{beginTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and create_time <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="(finishTime != null and finishTime !='')" >
+			    and finish_time >= #{finishTime} and <![CDATA[finish_time <= #{finishTime}]]>
+		</if>
+		<if test="(originFileName != null and originFileName !='')" >
+				and origin_file_name = #{originFileName}
+		</if>
+		<if test="(originFilePath != null and originFilePath !='')" >
+				and origin_file_path = #{originFilePath}
+		</if>
+		<if test="(resultFileName != null and resultFileName !='')" >
+				and result_file_name like concat('%',concat(#{resultFileName}, '%'))
+		</if>
+		<if test="(resultFilePath != null and resultFilePath !='')" >
+				and result_file_path = #{resultFilePath}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from bms_file_asyn_task
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by create_time desc
+    </select>
+
+    <select id="findByTaskId" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from bms_file_asyn_task
+        where task_id=#{taskId} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity">
+        insert into bms_file_asyn_task(task_id, task_name, task_rate, task_status, biz_type, task_type, file_rows, creator_id, creator, create_time, finish_time, origin_file_name, origin_file_path, result_file_name, result_file_path, remark)
+        values (
+			#{taskId,jdbcType=VARCHAR}, 
+			#{taskName,jdbcType=VARCHAR}, 
+			#{taskRate,jdbcType=INTEGER}, 
+			#{taskStatus,jdbcType=VARCHAR}, 
+			#{bizType,jdbcType=VARCHAR}, 
+			#{taskType,jdbcType=VARCHAR}, 
+			#{fileRows,jdbcType=INTEGER}, 
+			#{creatorId,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{finishTime,jdbcType=TIMESTAMP}, 
+			#{originFileName,jdbcType=VARCHAR}, 
+			#{originFilePath,jdbcType=VARCHAR}, 
+			#{resultFileName,jdbcType=VARCHAR}, 
+			#{resultFilePath,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity">
+        update bms_file_asyn_task 
+		<set>
+			<if test="taskRate != null" >task_rate=#{taskRate,jdbcType=INTEGER},</if>
+			<if test="taskStatus != null" >task_status=#{taskStatus,jdbcType=VARCHAR},</if>
+			<if test="fileRows != null" >file_rows=#{fileRows,jdbcType=INTEGER},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
+			<if test="originFileName != null" >origin_file_name=#{originFileName,jdbcType=VARCHAR},</if>
+			<if test="originFilePath != null" >origin_file_path=#{originFilePath,jdbcType=VARCHAR},</if>
+			<if test="resultFileName != null" >result_file_name=#{resultFileName,jdbcType=VARCHAR},</if>
+			<if test="resultFilePath != null" >result_file_path=#{resultFilePath,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where task_id = #{taskId,jdbcType=VARCHAR}
+    </update>
+    
+</mapper>

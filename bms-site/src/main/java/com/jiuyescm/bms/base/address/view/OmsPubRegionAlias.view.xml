@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtRegionAlias">
+      <Property name="creationType">com.jiuyescm.mdm.customer.vo.PubRegionAliasVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parentStandardCode">
+        <Property></Property>
+        <Property name="label">父级地址标准代码</Property>
+      </PropertyDef>
+      <PropertyDef name="parentStandardName">
+        <Property></Property>
+        <Property name="label">父级地址标准名称</Property>
+      </PropertyDef>
+      <PropertyDef name="standardCode">
+        <Property></Property>
+        <Property name="label">标准地址代码</Property>
+      </PropertyDef>
+      <PropertyDef name="standardName">
+        <Property></Property>
+        <Property name="label">标准地址名称</Property>
+      </PropertyDef>
+      <PropertyDef name="alias">
+        <Property></Property>
+        <Property name="label">地址别名</Property>
+      </PropertyDef>
+      <PropertyDef name="zipcode">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">邮编</Property>
+      </PropertyDef>
+      <PropertyDef name="level">
+        <Property name="dataType">Integer</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key"></Property>
+                <Property name="value"></Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">省级</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">市级</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">区级</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">省市区级</Property>
+      </PropertyDef>
+      <PropertyDef name="sort">
+        <Property name="dataType">Long</Property>
+        <Property name="label">排序号</Property>
+      </PropertyDef>
+      <PropertyDef name="province">
+        <Property></Property>
+        <Property name="label">所属省</Property>
+      </PropertyDef>
+      <PropertyDef name="city">
+        <Property></Property>
+        <Property name="label">所属市</Property>
+      </PropertyDef>
+      <PropertyDef name="district">
+        <Property></Property>
+        <Property name="label">所属区</Property>
+      </PropertyDef>
+      <PropertyDef name="levelName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="provinceCode">
+        <Property></Property>
+        <Property name="label">所属省代码</Property>
+      </PropertyDef>
+      <PropertyDef name="cityCode">
+        <Property></Property>
+        <Property name="label">所属市代码</Property>
+      </PropertyDef>
+      <PropertyDef name="districtCode">
+        <Property></Property>
+        <Property name="label">所属区代码</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="level">
+        <Property name="dataType">Integer</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key"></Property>
+                <Property name="value"></Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">省级</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">市级</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">区级</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">省市区级</Property>
+      </PropertyDef>
+      <PropertyDef name="standardName">
+        <Property></Property>
+        <Property name="label">标准地址名称</Property>
+      </PropertyDef>
+      <PropertyDef name="parentStandardName">
+        <Property></Property>
+        <Property name="label">父级地址标准名称</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsRegionAlias">
+      <Property name="dataType">[dtRegionAlias]</Property>
+      <Property name="dataProvider">omsAddressController#queryRegionAlias</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">true</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="itemCodes">pages,pageSize</Property>
+        <Property name="dataSet">dsRegionAlias</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="search">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsRegionAlias&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="createPrivateDataSet">false</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="dataSet">dsCondition</Property>
+      <AutoFormElement>
+        <Property name="name">level</Property>
+        <Property name="property">level</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">standardName</Property>
+        <Property name="property">standardName</Property>
+        <Property name="labelWidth">100</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">parentStandardName</Property>
+        <Property name="property">parentStandardName</Property>
+        <Property name="label">父级地址名称</Property>
+        <Property name="labelWidth">100</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid id="regionAliasGrid">
+      <Property name="dataSet">dsRegionAlias</Property>
+      <Property name="selectionMode">singleRow</Property>
+      <RowNumColumn/>
+      <DataColumn name="level">
+        <Property name="property">level</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="province">
+        <Property name="property">province</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="city">
+        <Property name="property">city</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="standardName">
+        <Property name="property">standardName</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn name="alias">
+        <Property name="property">alias</Property>
+        <Property name="width">300</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

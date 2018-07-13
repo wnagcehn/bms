@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.pub.transport.mapper.PubTransportProductTypeMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.pub.transport.entity.PubTransportProductTypeEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="product_type_code" property="productTypeCode" jdbcType="VARCHAR" />
+	    <result column="product_type_name" property="productTypeName" jdbcType="VARCHAR" />
+	    <result column="short_name" property="shortName" jdbcType="VARCHAR" />
+	    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+	    <result column="priority" property="priority" jdbcType="INTEGER" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, product_type_code, product_type_name, short_name, type_name, priority,
+        creator, create_time, last_modifier, last_modify_time, del_flag, remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+			and id = #{id}
+		</if>
+		<if test="(productTypeCode != null and productTypeCode !='')" >
+			and product_type_code = #{productTypeCode}
+		</if>
+		<if test="(productTypeName != null and productTypeName !='')" >
+			and product_type_name = #{productTypeName}
+		</if>
+		<if test="(shortName != null and shortName !='')" >
+			and short_name = #{shortName}
+		</if>
+		<if test="(typeName != null and typeName !='')" >
+			and type_name = #{typeName}
+		</if>
+		<if test="(priority != null and priority !='')" >
+			and priority = #{priority}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+			and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+			and remark = #{remark}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.pub.transport.entity.PubTransportProductTypeEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_transport_product_type
+        where 1=1 and del_flag = '0'
+		<include refid="baseSelectColumns" />
+		order by priority ASC
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.pub.transport.entity.PubTransportProductTypeEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_transport_product_type
+        where del_flag = '0' and id=#{id}
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.pub.transport.entity.PubTransportProductTypeEntity">
+        insert into pub_transport_product_type(product_type_code, product_type_name, short_name, type_name,
+        	priority, creator, create_time, last_modifier, last_modify_time, del_flag, remark)
+        values (
+			#{productTypeCode,jdbcType=VARCHAR}, 
+			#{productTypeName,jdbcType=VARCHAR}, 
+			#{shortName,jdbcType=VARCHAR}, 
+			#{typeName,jdbcType=VARCHAR}, 
+			#{priority,jdbcType=INTEGER}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.pub.transport.entity.PubTransportProductTypeEntity">
+        update pub_transport_product_type 
+		<set >
+			<if test="productTypeCode != null" >product_type_code=#{productTypeCode,jdbcType=VARCHAR},</if>
+			<if test="productTypeName != null" >product_type_name=#{productTypeName,jdbcType=VARCHAR},</if>
+			<if test="shortName != null" >short_name=#{shortName,jdbcType=VARCHAR},</if>
+			<if test="typeName != null" >type_name=#{typeName,jdbcType=VARCHAR},</if>
+			<if test="priority != null" >priority=#{priority,jdbcType=INTEGER},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from pub_transport_product_type where
+        id=#{id}
+    </delete>
+    
+</mapper>

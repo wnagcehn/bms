@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeProductPalletStorage">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="dataNum">
+        <Property></Property>
+        <Property name="label">数据编号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchPR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;productPalletStorageController#getCustomerMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">托数</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="stockTime">
+        <Property name="label">库存日期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">库存日期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">——</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="label">数量</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeCondition">
+      <PropertyDef name="dataNum">
+        <Property></Property>
+        <Property name="label">数据编号:</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库:</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchPR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家:</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculatedF">
+        <Property></Property>
+        <Property name="label">状态:</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getImpStateEnum&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">库存日期:</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">——</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志:</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtResult">
+      <Property name="creationType">java.util.Map</Property>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;productPalletStorageController#getCustomerMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtResultPack">
+      <Property name="creationType">java.util.Map</Property>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;productPalletStorageController#getCustomerMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtResultMaterial">
+      <Property name="creationType">java.util.Map</Property>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;productPalletStorageController#getCustomerMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetProductPalletStorage">
+      <ClientEvent name="onReady">var palletStorageDataSet = view.get(&quot;#dataSetProductPalletStorage&quot;);&#xD;
+palletStorageDataSet.set(&quot;parameter&quot;,{&#xD;
+	delFlag: &quot;0&quot;&#xD;
+});</ClientEvent>
+      <Property name="dataType">[dtResult]</Property>
+      <Property name="dataProvider">productPalletStorageController#queryTj</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <DataSet id="dataSetCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dataSetCondition&quot;).getData().insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dataTypeCondition]</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <DataSet id="dsGroupList">
+      <Property name="dataProvider">productPalletStorageController#queryGroup</Property>
+      <Property name="dataType">[dataTypeProductPalletStorage]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsQuotaDetele">
+      <Property name="dataProvider">productPalletStorageController#queryDelete</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dataPackSet">
+      <Property name="dataProvider">bizPackStorageController#packQueryTj</Property>
+      <Property name="dataType">[dtResultPack]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">30</Property>
+    </DataSet>
+    <DataSet id="dataMaterialSet">
+      <Property name="pageSize">30</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bizOutstockPackmaterialController#queryTj</Property>
+      <Property name="dataType">[dtResultMaterial]</Property>
+    </DataSet>
+    <DataSet id="dataSetCondition1">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dataSetCondition1&quot;).getData().insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dataTypeCondition]</Property>
+    </DataSet>
+    <DataSet id="dataSetCondition2">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dataSetCondition2&quot;).getData().insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dataTypeCondition]</Property>
+    </DataSet>
+    <TabControl id="TjTab">
+      <ControlTab>
+        <Property name="caption">商品按托存储</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetProductPalletStorage</Property>
+            </DataPilot>
+            <ToolBarButton id="btnQuery">
+              <ClientEvent name="onClick">var palletStorageDataSet=view.get(&quot;#dataSetProductPalletStorage&quot;);&#xD;
+var queryForm=view.get(&quot;#queryFormProductPalletStorage&quot;);&#xD;
+var data = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+if(data.get(&quot;startTime&quot;)==&quot;&quot;||data.get(&quot;startTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;创建时间不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(data.get(&quot;endTime&quot;)==&quot;&quot;||data.get(&quot;endTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	if(data.get(&quot;startTime&quot;)>data.get(&quot;endTime&quot;)){&#xD;
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束时间!&quot;);&#xD;
+		return;&#xD;
+	} &#xD;
+queryForm.get(&quot;entity&quot;).set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+palletStorageDataSet.set(&quot;parameter&quot;, queryForm.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              <Property name="caption">查询</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="queryFormProductPalletStorage">
+            <ClientEvent name="onReady">&#xD;
+var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryFormProductPalletStorage.entity&quot;).set({&#xD;
+		startTime:firstDay,&#xD;
+		endTime:lastDay&#xD;
+	});&#xD;
+</ClientEvent>
+            <Property name="cols">*,*,*</Property>
+            <Property name="dataType">dataTypeCondition</Property>
+            <Property name="dataSet">dataSetCondition</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">warehouseCode</Property>
+              <Property name="property">warehouseCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">startTime</Property>
+              <Property name="property">startTime</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">endTime</Property>
+              <Property name="property">endTime</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">isCalculatedF</Property>
+              <Property name="property">isCalculatedF</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">delFlag</Property>
+              <Property name="property">delFlag</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="palletTj">
+            <Property name="dataSet">dataSetProductPalletStorage</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn>
+              <Property name="name">customerid</Property>
+              <Property name="property">customerid</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">耗材库存导入</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetProductPalletStorage</Property>
+            </DataPilot>
+            <ToolBarButton id="btnQuery1">
+              <ClientEvent name="onClick">var dataPackSet=view.get(&quot;#dataPackSet&quot;);&#xD;
+var queryForm=view.get(&quot;#queryFormPackStorage&quot;);&#xD;
+var data = view.get(&quot;#dataSetCondition1.data&quot;).current;&#xD;
+if(data.get(&quot;startTime&quot;)==&quot;&quot;||data.get(&quot;startTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;创建时间不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(data.get(&quot;endTime&quot;)==&quot;&quot;||data.get(&quot;endTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	if(data.get(&quot;startTime&quot;)>data.get(&quot;endTime&quot;)){&#xD;
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束时间!&quot;);&#xD;
+		return;&#xD;
+	} &#xD;
+queryForm.get(&quot;entity&quot;).set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+dataPackSet.set(&quot;parameter&quot;, queryForm.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              <Property name="caption">查询</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="queryFormPackStorage">
+            <ClientEvent name="onReady">&#xD;
+var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryFormPackStorage.entity&quot;).set({&#xD;
+		startTime:firstDay,&#xD;
+		endTime:lastDay&#xD;
+	});&#xD;
+</ClientEvent>
+            <Property name="cols">*,*,*</Property>
+            <Property name="dataType">dataTypeCondition</Property>
+            <Property name="dataSet">dataSetCondition1</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">warehouseCode</Property>
+              <Property name="property">warehouseCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">startTime</Property>
+              <Property name="property">startTime</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">endTime</Property>
+              <Property name="property">endTime</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">isCalculatedF</Property>
+              <Property name="property">isCalculatedF</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">delFlag</Property>
+              <Property name="property">delFlag</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="packTj">
+            <Property name="dataSet">dataPackSet</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn>
+              <Property name="name">customerid</Property>
+              <Property name="property">customerid</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">耗材出库明细导入</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetProductPalletStorage</Property>
+            </DataPilot>
+            <ToolBarButton id="btnQuery2">
+              <ClientEvent name="onClick">var dataPackSet=view.get(&quot;#dataMaterialSet&quot;);&#xD;
+var queryForm=view.get(&quot;#queryFormMaterial&quot;);&#xD;
+var data = view.get(&quot;#dataSetCondition2.data&quot;).current;&#xD;
+if(data.get(&quot;startTime&quot;)==&quot;&quot;||data.get(&quot;startTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;创建时间不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(data.get(&quot;endTime&quot;)==&quot;&quot;||data.get(&quot;endTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	if(data.get(&quot;startTime&quot;)>data.get(&quot;endTime&quot;)){&#xD;
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束时间!&quot;);&#xD;
+		return;&#xD;
+	} &#xD;
+queryForm.get(&quot;entity&quot;).set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+dataPackSet.set(&quot;parameter&quot;, queryForm.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              <Property name="caption">查询</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="queryFormMaterial">
+            <ClientEvent name="onReady">&#xD;
+var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryFormMaterial.entity&quot;).set({&#xD;
+		startTime:firstDay,&#xD;
+		endTime:lastDay&#xD;
+	});&#xD;
+</ClientEvent>
+            <Property name="cols">*,*,*</Property>
+            <Property name="dataType">dataTypeCondition</Property>
+            <Property name="dataSet">dataSetCondition2</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">warehouseCode</Property>
+              <Property name="property">warehouseCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">startTime</Property>
+              <Property name="property">startTime</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">endTime</Property>
+              <Property name="property">endTime</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">isCalculatedF</Property>
+              <Property name="property">isCalculatedF</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">delFlag</Property>
+              <Property name="property">delFlag</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="materialTj">
+            <Property name="dataSet">dataMaterialSet</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn>
+              <Property name="name">customerid</Property>
+              <Property name="property">customerid</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+    </TabControl>
+  </View>
+</ViewConfig>

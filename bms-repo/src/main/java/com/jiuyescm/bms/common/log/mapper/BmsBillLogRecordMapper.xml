@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.common.log.BmsBillLogRecordMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.common.log.entity.BmsBillLogRecordEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="bill_name" property="billName" jdbcType="VARCHAR" />
+	    <result column="operate" property="operate" jdbcType="VARCHAR" />
+	    <result column="approver" property="approver" jdbcType="VARCHAR" />
+	    <result column="approval_way" property="approvalWay" jdbcType="VARCHAR" />
+	    <result column="approval_time" property="approvalTime" jdbcType="TIMESTAMP" />
+	    <result column="invoce_no" property="invoceNo" jdbcType="VARCHAR" />
+	    <result column="invoce_amount" property="invoceAmount" jdbcType="DOUBLE" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <sql id="baseColumns">
+        id, bill_no, bill_name, operate, approver, approval_way, approval_time, invoce_no, invoce_amount, receipt_amount, remark, creator, create_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name = #{billName}
+		</if>
+		<if test="(operate != null and operate !='')" >
+				and operate = #{operate}
+		</if>
+		<if test="(approver != null and approver !='')" >
+				and approver = #{approver}
+		</if>
+		<if test="(approvalWay != null and approvalWay !='')" >
+				and approval_way = #{approvalWay}
+		</if>
+		<if test="(approvalTime != null and approvalTime !='')" >
+			    and approval_time >= #{approvalTime} and <![CDATA[approval_time <= #{approvalTime}]]>
+		</if>
+		<if test="(invoceNo != null and invoceNo !='')" >
+				and invoce_no = #{invoceNo}
+		</if>
+		<if test="(invoceAmount != null and invoceAmount !='')" >
+				and invoce_amount = #{invoceAmount}
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+				and receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"  resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_log_record
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.common.log.entity.BmsBillLogRecordEntity">
+        insert into bms_bill_log_record(bill_no, bill_name, operate, approver, approval_way, approval_time, invoce_no, invoce_amount, receipt_amount, remark, creator, create_time)
+        values (
+			#{billNo,jdbcType=VARCHAR}, 
+			#{billName,jdbcType=VARCHAR}, 
+			#{operate,jdbcType=VARCHAR}, 
+			#{approver,jdbcType=VARCHAR}, 
+			#{approvalWay,jdbcType=VARCHAR}, 
+			#{approvalTime,jdbcType=TIMESTAMP}, 
+			#{invoceNo,jdbcType=VARCHAR}, 
+			#{invoceAmount,jdbcType=DOUBLE}, 
+			#{receiptAmount,jdbcType=DOUBLE}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    
+</mapper>

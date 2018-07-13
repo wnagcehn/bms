@@ -1,0 +1,56 @@
+############################################################################
+#  Live Execution Job
+
+#宅配运单
+ */20 * * * * /usr/local/kettle/BmsKettle/dispatch_bill.sh
+#干线路单
+ */20 * * * * /usr/local/kettle/BmsKettle/ganxian_roadbill.sh
+#干线运单
+ */20 * * * * /usr/local/kettle/BmsKettle/ganxian_waybill.sh
+
+#入库主表(入库单每次抽取6小时数据，每两小时抽取一次;)
+ 0 */2 * * * /usr/local/kettle/BmsKettle/instock_master.sh
+#入库明细(入库单明细每次抽取1小时数据，每20分钟抽取一次;)
+ */20 * * * * /usr/local/kettle/BmsKettle/instock_detail.sh
+
+#出库主表(出库单每次抽取1小时数据，每 20分钟抽取一次；)
+ */20 * * * * /usr/local/kettle/BmsKettle/outstock_master.sh
+#出库明细(出库单明细每次抽取1小时数据，每 20分钟抽取一次；)
+ */20 * * * * /usr/local/kettle/BmsKettle/outstock_detail.sh
+#耗材出库(耗材出库每次抽取1小时数据，每20分钟抽取一次；)
+ */20 * * * * /usr/local/kettle/BmsKettle/outstock_packmaterial.sh
+
+#耗材库存(建伟说数据有问题，现在BMS没法计算，所以注释)
+# 1 0 * * * /usr/local/kettle/BmsKettle/pack_storage.sh
+
+#商品库存(库存数据按仓库抽取，目前抽取1~6仓库即可，每次抽取1天数据，每6小时抽取一次；)
+# 1 0 * * * /usr/local/kettle/BmsKettle/product_storage.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms01.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms02.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms03.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms04.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms05.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms06.sh
+
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms07.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms08.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms09.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms10.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms11.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms27.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms31.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms32.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms33.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms34.sh
+ 0 */6 * * * /usr/local/kettle/BmsKettle/product_storage_wms35.sh
+
+
+
+#客诉(客诉每次抽取1小时数据，每20分钟抽取一次；)
+ */20 * * * * /usr/local/kettle/BmsKettle/fee_abnormal.sh
+
+#运单应付(运单应付每次抽取1小时数据，每20分钟抽取一次；)
+ */20 * * * * /usr/local/kettle/BmsKettle/dispatch_pay_bill.sh
+
+
+###########################################################################

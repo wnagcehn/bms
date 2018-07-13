@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.pub.origincity.mapper.PubOriginCityElecWarehouseMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.pub.origincity.entity.PubOriginCityElecWarehouseEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+	    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="elec_biz_code" property="elecBizCode" jdbcType="VARCHAR" />
+	    <result column="elec_biz_name" property="elecBizName" jdbcType="VARCHAR" />
+	    <result column="logo" property="logo" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, province_name, city_name, warehouse_code, warehouse_name, elec_biz_code, elec_biz_name, 
+        logo, param1, param2, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+			and id = #{id}
+		</if>
+		<if test="(provinceName != null and provinceName !='')" >
+			and province_name = #{provinceName}
+		</if>
+		<if test="(cityName != null and cityName !='')" >
+			and city_name = #{cityName}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+			and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(elecBizCode != null and elecBizCode !='')" >
+			and elec_biz_code = #{elecBizCode}
+		</if>
+		<if test="(elecBizName != null and elecBizName !='')" >
+			and elec_biz_name = #{elecBizName}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+			and param1 = #{param1}
+		</if>
+		<if test="(param2 != null and param2 !='')" >
+			and param2 = #{param2}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+			and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.pub.origincity.entity.PubOriginCityElecWarehouseEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_origin_city_elec_warehouse
+        where 1=1 and del_flag = '0'
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.pub.origincity.entity.PubOriginCityElecWarehouseEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_origin_city_elec_warehouse
+        where del_flag = '0' and id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.pub.origincity.entity.PubOriginCityElecWarehouseEntity">
+        insert into pub_origin_city_elec_warehouse(province_name, city_name, warehouse_code, warehouse_name, 
+        	elec_biz_code, elec_biz_name, logo, param1, param2, creator, create_time, 
+        	last_modifier, last_modify_time, del_flag)
+        values (
+			#{provinceName,jdbcType=VARCHAR}, 
+			#{cityName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{elecBizCode,jdbcType=VARCHAR}, 
+			#{elecBizName,jdbcType=VARCHAR}, 
+			#{logo,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.pub.origincity.entity.PubOriginCityElecWarehouseEntity">
+        update pub_origin_city_elec_warehouse 
+		<set >
+			<if test="provinceName != null" >province_name=#{provinceName,jdbcType=VARCHAR},</if>
+			<if test="cityName != null" >city_name=#{cityName,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="elecBizCode != null" >elec_biz_code=#{elecBizCode,jdbcType=VARCHAR},</if>
+			<if test="elecBizName != null" >elec_biz_name=#{elecBizName,jdbcType=VARCHAR},</if>
+			<if test="logo != null" >logo=#{logo,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from pub_origin_city_elec_warehouse where
+        id=#{id}
+    </delete>
+    
+    <select id="queryElecName" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.pub.origincity.entity.PubOriginCityElecWarehouseEntity">
+        SELECT DISTINCT elec_biz_code,elec_biz_name,logo 
+		from pub_origin_city_elec_warehouse 
+		where del_flag = '0'
+		<include refid="baseSelectColumns" />
+    </select>
+</mapper>

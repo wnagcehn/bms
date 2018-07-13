@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.SystemCodeMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+	    <result column="code_name" property="codeName" jdbcType="VARCHAR" />
+	    <result column="code" property="code" jdbcType="VARCHAR" />
+	    <result column="code_desc" property="codeDesc" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+	    <result column="create_dt" property="createDt" jdbcType="TIMESTAMP" />
+	    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+	    <result column="update_dt" property="updateDt" jdbcType="TIMESTAMP" />
+	    <result column="sort_no" property="sortNo" jdbcType="BIGINT" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+	    <result column="delete_id" property="deleteId" jdbcType="VARCHAR" />
+	    <result column="delete_dt" property="deleteDt" jdbcType="TIMESTAMP" />
+	    <result column="contractNo" property="contractNo" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+        select type_code,code_name,code,extattr1 
+        from system_code where status = 0 and type_code = #{typeCode}
+		order by sort_no
+    </select>
+    
+    
+    <select id="querySysCodesMap" parameterType="java.lang.String" resultMap="baseResultMap">
+        select type_code,code_name,code,extattr1 
+        from system_code where status = 0 and type_code = #{typeCode}
+		order by sort_no
+    </select>
+    
+    
+</mapper>

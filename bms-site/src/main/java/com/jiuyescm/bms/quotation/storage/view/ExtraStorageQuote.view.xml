@@ -1,0 +1,1815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="templateCode">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="defaultValue">1008</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageType">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity</Property>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">业务类型</Property>
+        <Property name="defaultValue">STORAGE</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_valueadd_subject&quot;)}</Property>
+        </Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="billWayCode">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费方式</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模板编码</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="storageTemplateType">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;STORAGE_TEMPLATE_TYPE&quot;)}</Property>
+        </Property>
+        <Property name="defaultValue">STORAGE_EXTRA_PRICE_TEMPLATE</Property>
+        <Property name="label">仓储模板类型</Property>
+      </PropertyDef>
+      <PropertyDef name="templateType">
+        <Property></Property>
+        <Property name="label">模版类型</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+        <Property name="label">参数1</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageExtraType">
+      <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property name="label">模板Id</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_valueadd_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="feeUnitCode">
+        <Property name="label">计费单位</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getChargeUnitEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property></Property>
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property></Property>
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="operateType">
+        <Property></Property>
+        <Property name="label">操作类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;OPERATE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="priceType">
+        <Property></Property>
+        <Property name="label">报价类型</Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+        <Property name="label">B2B标识</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;B2B_FLAG&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="continuedItem">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续件价格</Property>
+      </PropertyDef>
+      <PropertyDef name="weightLower">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="weightUpper">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="numLower">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="numUpper">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="skuLower">
+        <Property name="dataType">Double</Property>
+        <Property name="label">sku下限</Property>
+      </PropertyDef>
+      <PropertyDef name="skuUpper">
+        <Property name="dataType">Double</Property>
+        <Property name="label">sku上限</Property>
+      </PropertyDef>
+      <PropertyDef name="volumeLower">
+        <Property name="dataType">Double</Property>
+        <Property name="label">体积下限</Property>
+      </PropertyDef>
+      <PropertyDef name="volumeUpper">
+        <Property name="dataType">Double</Property>
+        <Property name="label">体积上限</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine1">
+        <Property></Property>
+        <Property name="label">拓展1</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine2">
+        <Property></Property>
+        <Property name="label">拓展2</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine3">
+        <Property></Property>
+        <Property name="label">拓展3</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine4">
+        <Property></Property>
+        <Property name="label">拓展4</Property>
+      </PropertyDef>
+      <PropertyDef name="userDefine5">
+        <Property></Property>
+        <Property name="label">拓展5</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsStorageType">
+      <Property name="dataType">[dtStorageType]</Property>
+      <Property name="dataProvider">storageTemplateController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsStorageExtraType">
+      <Property name="dataProvider">stroageExtraQuoteController#query</Property>
+      <Property name="dataType">[dtStorageExtraType]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsStorageType</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsStorageType&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#afGenericTemplate&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+&#xD;
+/*&#xD;
+或者：&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsGenericTemplate&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+*/</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnNew">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#editDialog&quot;).show();</ClientEvent>
+          <Property name="caption">新增</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnModify">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageType.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#updateStorageDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+          <Property name="caption">修改</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnRemove">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除模板【&quot;+currentData.get(&quot;templateCode&quot;)+&quot;】?&quot;,function(){&#xD;
+		view.get(&quot;#removeAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;succ&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					var param = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+					with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+						set(&quot;parameter&quot;, param);&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">删除</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnCopyTemplate">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	if(!isNullOrEmpty(currentData.get(&quot;templateType&quot;)) &amp;&amp; &quot;S&quot; == currentData.get(&quot;templateType&quot;)){&#xD;
+		alertMsg(&quot;FAIL&quot;, &quot;标准模版不允许复制!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要复制此条模板?&quot;,function(){&#xD;
+		view.get(&quot;#mobanCopyAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	alertMsg(&quot;FAIL&quot;, &quot;请首先选择需要复制的模板!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">复制模板</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -280px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnDownloadProductTemplate">
+          <ClientEvent name="onClick">//var tmpFormCondition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+//alert(tmpFormCondition);&#xD;
+//var subjectId=tmpFormCondition.get(&quot;subjectId&quot;);&#xD;
+//if(undefined==subjectId || subjectId==''){&#xD;
+	//dorado.MessageBox.alert(&quot;下载模板需要选择费用科目!&quot;);&#xD;
+	//return;&#xD;
+//}&#xD;
+view.get(&quot;#downloadMoBanAction&quot;).set(&quot;parameter&quot;,{&quot;subjectId&quot;:&quot;JIUYE_DISPATCH&quot;}).execute();	&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">模板下载</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnImportTemplate">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageType.data&quot;);&#xD;
+if(data.current)&#xD;
+{&#xD;
+	var entity = data.current; &#xD;
+	view.get(&quot;#StepUploadAction&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:entity.get(&quot;id&quot;)});&#xD;
+    view.get(&quot;#StepImportDialog&quot;).show();&#xD;
+}&#xD;
+else&#xD;
+{&#xD;
+    dorado.MessageBox.alert(&quot;请选择需要导入的报价!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">导入模板</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnRemoveAll">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+dorado.MessageBox.confirm(&quot;确认作废模板【&quot;+data.get(&quot;templateCode&quot;)+&quot;】全部明细？&quot;,function(){&#xD;
+	var action=view.get(&quot;#removeAllAction&quot;);&#xD;
+	action.execute(function(result){&#xD;
+		if(result!=&quot;succ&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;作废失败,原因:&quot;+result);&#xD;
+			return;&#xD;
+		}&#xD;
+		var templateId=data.get(&quot;id&quot;);&#xD;
+		with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				templateId:templateId&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+})&#xD;
+</ClientEvent>
+          <Property name="caption">作废报价</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="afGenericTemplate">
+        <Property name="labelSeparator">:</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <AutoFormElement>
+          <Property name="property">customerId</Property>
+          <Property name="name">customerId</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateCode</Property>
+          <Property name="property">templateCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateName</Property>
+          <Property name="property">templateName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">remark</Property>
+          <Property name="property">remark</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid id="dg_QuotaList">
+        <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+if(templateId==''||templateId==null){&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId,&#xD;
+		priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="readOnly">true</Property>
+        <Property name="lazyInit">true</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="height">200</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn>
+          <Property name="property">customerName</Property>
+          <Property name="name">customerName</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="templateCode">
+          <Property name="property">templateCode</Property>
+        </DataColumn>
+        <DataColumn name="templateName">
+          <Property name="property">templateName</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">templateType</Property>
+          <Property name="name">templateType</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">storageTemplateType</Property>
+          <Property name="property">storageTemplateType</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">remark</Property>
+          <Property name="property">remark</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="editDialog">
+      <ClientEvent name="onClose">view.id(&quot;dsStorageType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">500</Property>
+      <Property name="height">260</Property>
+      <Property name="caption">新增或编辑</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		alertMsg(result.code, result.message);&#xD;
+		&#xD;
+		view.id(&quot;editDialog&quot;).hide();&#xD;
+		var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+			set(&quot;parameter&quot;, data);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsStorageType&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Container>
+          <AutoForm id="editForm">
+            <Property name="cols">*,*</Property>
+            <Property name="dataSet">dsStorageType</Property>
+            <Property name="dataType">dtStorageType</Property>
+            <AutoFormElement>
+              <Property name="name">customerName</Property>
+              <Property name="property">customerName</Property>
+              <Property name="trigger">triggerCustomer1</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">templateType</Property>
+              <Property name="property">templateType</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">templateName</Property>
+              <Property name="property">templateName</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">bizTypeCode</Property>
+              <Property name="property">bizTypeCode</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">storageTemplateType</Property>
+              <Property name="property">storageTemplateType</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Editor>
+                <TextArea/>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">storageTemplateController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="updateStorageDialog">
+      <ClientEvent name="onClose">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+			set(&quot;parameter&quot;, data);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+view.get(&quot;#dsStorageExtraType.data&quot;).clear();</ClientEvent>
+      <ClientEvent name="onHide">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+	with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+		set(&quot;parameter&quot;, data);&#xD;
+		flushAsync();&#xD;
+	}&#xD;
+view.get(&quot;#dsStorageExtraType.data&quot;).clear();</ClientEvent>
+      <Property name="caption">修改模板</Property>
+      <Property name="height">320</Property>
+      <Property name="width">380</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;editStoraeAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result == &quot;SUCCESS&quot;){&#xD;
+			view.get(&quot;#updateStorageDialog&quot;).hide();&#xD;
+			dorado.MessageBox.alert(&quot;修改成功&quot;);&#xD;
+			var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+				set(&quot;parameter&quot;, data);&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+			view.get(&quot;#dsStorageExtraType.data&quot;).clear();&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateStorageDialog&quot;).hide();&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+view.get(&quot;#dsStorageExtraType.data&quot;).clear();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="updateQuoteFrom">
+          <Property name="dataSet">dsStorageType</Property>
+          <Property name="dataType">dtStorageType</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">customerName</Property>
+            <Property name="property">customerName</Property>
+            <Property name="trigger">triggerCustomer1</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">templateType</Property>
+            <Property name="property">templateType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">templateName</Property>
+            <Property name="property">templateName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bizTypeCode</Property>
+            <Property name="property">bizTypeCode</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">storageTemplateType</Property>
+            <Property name="property">storageTemplateType</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor>
+              <TextArea/>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="editStoraeAction">
+      <Property name="dataResolver">storageTemplateController#update</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="removeAction">
+      <Property name="dataResolver">stroageExtraQuoteController#remove</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsStorageType</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <TabControl>
+      <ControlTab>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+if(templateId==''||templateId==null){&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId,&#xD;
+		priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">增值费一口价</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsStorageExtraType</Property>
+            </DataPilot>
+            <ToolBarButton id="btnQueryDelivery">
+              <ClientEvent name="onClick">var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+&#xD;
+var queryJson={&#xD;
+	templateId:currentData.get(&quot;id&quot;),&#xD;
+	priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+};&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnAddDelivery">
+              <ClientEvent name="onClick">var typeDatas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var currentData = typeDatas.current;&#xD;
+if (currentData){&#xD;
+	var datas = view.get(&quot;#dsStorageExtraType.data&quot;);	&#xD;
+	datas.insert();&#xD;
+	datas.current.set(&quot;templateId&quot;,currentData.get(&quot;id&quot;));&#xD;
+	datas.current.set(&quot;priceType&quot;,&quot;PRICE_TYPE_NORMAL&quot;);&#xD;
+	&#xD;
+	view.get(&quot;#editExtraLineDialog&quot;).show();&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnEditDelivery">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageExtraType.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#updateDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">编辑</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnRemoveDelivery">
+              <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageExtraType.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeExtraAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					&#xD;
+					var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+&#xD;
+					var queryJson={&#xD;
+						templateId:currentData.get(&quot;id&quot;),&#xD;
+						priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+					};&#xD;
+					with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+						set(&quot;parameter&quot;, queryJson);&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+					&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsStorageExtraType</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn>
+              <Property name="property">subjectId</Property>
+              <Property name="name">subjectId</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">unitPrice</Property>
+              <Property name="name">unitPrice</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">feeUnitCode</Property>
+              <Property name="property">feeUnitCode</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="editExtraLineDialog">
+            <ClientEvent name="onClose">view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">500</Property>
+            <Property name="height">300</Property>
+            <Property name="caption">新增耗材明细</Property>
+            <Buttons>
+              <Button id="btnSaveTransport">
+                <ClientEvent name="onClick">var en = view.get(&quot;#editLadderForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+if(en.get(&quot;unitPrice&quot;)==''||en.get(&quot;unitPrice&quot;)==null||isNaN(en.get(&quot;unitPrice&quot;)))&#xD;
+{&#xD;
+	dorado.MessageBox.alert(&quot;单价请输入数字&quot;);&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;extraInsertAction&quot;).execute(&#xD;
+	function(result){	&#xD;
+		if(result=='SUCCESS'){&#xD;
+			view.id(&quot;editExtraLineDialog&quot;).hide();&#xD;
+			var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+			var queryJson={&#xD;
+				templateId:currentData.get(&quot;id&quot;),&#xD;
+				priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+			};&#xD;
+			with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+				set(&quot;parameter&quot;, queryJson);&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}		&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelTransport">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editExtraLineDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="editLadderForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dsStorageExtraType</Property>
+                  <Property name="dataType">dtStorageExtraType</Property>
+                  <AutoFormElement>
+                    <Property name="name">subjectId</Property>
+                    <Property name="property">subjectId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">feeUnitCode</Property>
+                    <Property name="property">feeUnitCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="extraInsertAction">
+            <Property name="dataResolver">stroageExtraQuoteController#save</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageExtraType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <UpdateAction id="extraUpdateAction">
+            <Property name="dataResolver">stroageExtraQuoteController#update</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageExtraType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <Dialog id="updateDialog">
+            <ClientEvent name="onClose">var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+var queryJson={&#xD;
+	templateId:currentData.get(&quot;id&quot;),&#xD;
+	priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+};&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+            <ClientEvent name="onHide">var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+var queryJson={&#xD;
+	templateId:currentData.get(&quot;id&quot;),&#xD;
+	priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+};&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+            <Property name="caption">修改</Property>
+            <Property name="height">300</Property>
+            <Property name="width">500</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var en = view.get(&quot;#editLadderForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+&#xD;
+if(en.get(&quot;unitPrice&quot;)==''||en.get(&quot;unitPrice&quot;)==null||isNaN(en.get(&quot;unitPrice&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;单价请输入数字&quot;);&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;extraUpdateAction&quot;).execute(function(result){&#xD;
+	if(result=='SUCCESS'){&#xD;
+		view.id(&quot;updateDialog&quot;).hide();		&#xD;
+		var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+		var queryJson={&#xD;
+			templateId:currentData.get(&quot;id&quot;),&#xD;
+			priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+		};&#xD;
+		with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}		&#xD;
+});&#xD;
+	</ClientEvent>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateDialog&quot;).hide();&#xD;
+var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+var queryJson={&#xD;
+	templateId:currentData.get(&quot;id&quot;),&#xD;
+	priceType:&quot;PRICE_TYPE_NORMAL&quot;&#xD;
+};&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="updateQuotaFrm">
+                <Property name="dataSet">dsStorageExtraType</Property>
+                <Property name="dataType">dtStorageExtraType</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">subjectId</Property>
+                  <Property name="property">subjectId</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">unitPrice</Property>
+                  <Property name="property">unitPrice</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">feeUnitCode</Property>
+                  <Property name="property">feeUnitCode</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">remark</Property>
+                  <Property name="property">remark</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="removeExtraAction">
+            <Property name="dataResolver">stroageExtraQuoteController#delete</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageExtraType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <UpdateAction id="removeAllAction">
+            <Property name="dataResolver">stroageExtraQuoteController#removeAll</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+if(templateId==''||templateId==null){&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId,&#xD;
+		priceType:&quot;PRICE_TYPE_STEP&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">增值费阶梯</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot/>
+            <ToolBarButton id="btnQueryStep">
+              <ClientEvent name="onClick">var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+&#xD;
+var queryJson={&#xD;
+	templateId:currentData.get(&quot;id&quot;),&#xD;
+	priceType:&quot;PRICE_TYPE_STEP&quot;&#xD;
+};&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnAddStep">
+              <ClientEvent name="onClick">var typeDatas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var currentData = typeDatas.current;&#xD;
+if (currentData){&#xD;
+	var datas = view.get(&quot;#dsStorageExtraType.data&quot;);&#xD;
+	&#xD;
+	datas.insert();&#xD;
+ &#xD;
+	datas.current.set(&quot;templateId&quot;,currentData.get(&quot;id&quot;));&#xD;
+	datas.current.set(&quot;priceType&quot;,&quot;PRICE_TYPE_STEP&quot;);&#xD;
+	&#xD;
+	view.get(&quot;#editExtraStepDialog&quot;).show();&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnUpdateStep">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageExtraType.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#updateExtraStepDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">编辑</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnRemoveStep">
+              <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageExtraType.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeExtraAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					&#xD;
+					var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+&#xD;
+					var queryJson={&#xD;
+						templateId:currentData.get(&quot;id&quot;),&#xD;
+						priceType:&quot;PRICE_TYPE_STEP&quot;&#xD;
+					};&#xD;
+					with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+						set(&quot;parameter&quot;, queryJson);&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+					&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <Container>
+            <DataGrid id="stepDataGrid">
+              <Property name="dataSet">dsStorageExtraType</Property>
+              <Property name="width">2300</Property>
+              <Property name="readOnly">true</Property>
+              <RowNumColumn/>
+              <DataColumn name="subjectId">
+                <Property name="property">subjectId</Property>
+              </DataColumn>
+              <DataColumn name="b2bFlag">
+                <Property name="property">b2bFlag</Property>
+              </DataColumn>
+              <DataColumn name="temperatureTypeCode">
+                <Property name="property">temperatureTypeCode</Property>
+              </DataColumn>
+              <DataColumn name="operateType">
+                <Property name="property">operateType</Property>
+              </DataColumn>
+              <DataColumn name="unitPrice">
+                <Property name="property">unitPrice</Property>
+              </DataColumn>
+              <DataColumn name="continuedItem">
+                <Property name="property">continuedItem</Property>
+              </DataColumn>
+              <DataColumn name="weightLower">
+                <Property name="property">weightLower</Property>
+              </DataColumn>
+              <DataColumn name="weightUpper">
+                <Property name="property">weightUpper</Property>
+              </DataColumn>
+              <DataColumn name="numLower">
+                <Property name="property">numLower</Property>
+              </DataColumn>
+              <DataColumn name="numUpper">
+                <Property name="property">numUpper</Property>
+              </DataColumn>
+              <DataColumn name="skuLower">
+                <Property name="property">skuLower</Property>
+              </DataColumn>
+              <DataColumn name="skuUpper">
+                <Property name="property">skuUpper</Property>
+              </DataColumn>
+              <DataColumn name="volumeLower">
+                <Property name="property">volumeLower</Property>
+              </DataColumn>
+              <DataColumn name="volumeUpper">
+                <Property name="property">volumeUpper</Property>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+              </DataColumn>
+              <DataColumn name="userDefine1">
+                <Property name="property">userDefine1</Property>
+              </DataColumn>
+              <DataColumn name="userDefine2">
+                <Property name="property">userDefine2</Property>
+              </DataColumn>
+              <DataColumn name="userDefine3">
+                <Property name="property">userDefine3</Property>
+              </DataColumn>
+              <DataColumn name="userDefine4">
+                <Property name="property">userDefine4</Property>
+              </DataColumn>
+              <DataColumn name="userDefine5">
+                <Property name="property">userDefine5</Property>
+              </DataColumn>
+              <DataColumn name="creator">
+                <Property name="property">creator</Property>
+              </DataColumn>
+              <DataColumn name="createTime">
+                <Property name="property">createTime</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+          <Dialog id="editExtraStepDialog">
+            <ClientEvent name="onClose">view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <ClientEvent name="onHide">view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">500</Property>
+            <Property name="height">400</Property>
+            <Property name="caption">新增其他费用阶梯明细</Property>
+            <Buttons>
+              <Button id="btnSaveExtraStep">
+                <ClientEvent name="onClick">var en = view.get(&quot;#editStepForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+if(en.get(&quot;unitPrice&quot;)==''||en.get(&quot;unitPrice&quot;)==null||isNaN(en.get(&quot;unitPrice&quot;)))&#xD;
+{&#xD;
+	dorado.MessageBox.alert(&quot;单价请输入数字&quot;);&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;extraInsertAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result=='SUCCESS'){&#xD;
+			view.id(&quot;editExtraStepDialog&quot;).hide();&#xD;
+			var currentData=view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+			var queryJson={&#xD;
+				templateId:currentData.get(&quot;id&quot;),&#xD;
+				priceType:&quot;PRICE_TYPE_STEP&quot;&#xD;
+			};&#xD;
+			with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+				set(&quot;parameter&quot;, queryJson);&#xD;
+				flushAsync();&#xD;
+			}	&#xD;
+			&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}	&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelExtraStep">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editExtraStepDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="editStepForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dsStorageExtraType</Property>
+                  <Property name="dataType">dtStorageExtraType</Property>
+                  <AutoFormElement>
+                    <Property name="name">subjectId</Property>
+                    <Property name="property">subjectId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">operateType</Property>
+                    <Property name="property">operateType</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">b2bFlag</Property>
+                    <Property name="property">b2bFlag</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedItem</Property>
+                    <Property name="property">continuedItem</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightLower</Property>
+                    <Property name="property">weightLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightUpper</Property>
+                    <Property name="property">weightUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">numLower</Property>
+                    <Property name="property">numLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">numUpper</Property>
+                    <Property name="property">numUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">skuLower</Property>
+                    <Property name="property">skuLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">skuUpper</Property>
+                    <Property name="property">skuUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeLower</Property>
+                    <Property name="property">volumeLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeUpper</Property>
+                    <Property name="property">volumeUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine1</Property>
+                    <Property name="property">userDefine1</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine2</Property>
+                    <Property name="property">userDefine2</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine3</Property>
+                    <Property name="property">userDefine3</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine4</Property>
+                    <Property name="property">userDefine4</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine5</Property>
+                    <Property name="property">userDefine5</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <Dialog id="updateExtraStepDialog">
+            <ClientEvent name="onClose">view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">500</Property>
+            <Property name="height">400</Property>
+            <Property name="caption">更新其他费用阶梯明细</Property>
+            <Buttons>
+              <Button id="btnUpdateExtraStep">
+                <ClientEvent name="onClick">var en = view.get(&quot;#editStepForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+if(en.get(&quot;unitPrice&quot;)==''||en.get(&quot;unitPrice&quot;)==null||isNaN(en.get(&quot;unitPrice&quot;)))&#xD;
+{&#xD;
+	dorado.MessageBox.alert(&quot;单价请输入数字&quot;);&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;extraUpdateAction&quot;).execute(&#xD;
+	function(){&#xD;
+		view.id(&quot;updateExtraStepDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelExtraStep1">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsStorageExtraType&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;updateExtraStepDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="updateStepForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dsStorageExtraType</Property>
+                  <Property name="dataType">dtStorageExtraType</Property>
+                  <AutoFormElement>
+                    <Property name="name">subjectId</Property>
+                    <Property name="property">subjectId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">operateType</Property>
+                    <Property name="property">operateType</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">b2bFlag</Property>
+                    <Property name="property">b2bFlag</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedItem</Property>
+                    <Property name="property">continuedItem</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightLower</Property>
+                    <Property name="property">weightLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightUpper</Property>
+                    <Property name="property">weightUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">numLower</Property>
+                    <Property name="property">numLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">numUpper</Property>
+                    <Property name="property">numUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">skuLower</Property>
+                    <Property name="property">skuLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">skuUpper</Property>
+                    <Property name="property">skuUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeLower</Property>
+                    <Property name="property">volumeLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeUpper</Property>
+                    <Property name="property">volumeUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine1</Property>
+                    <Property name="property">userDefine1</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine2</Property>
+                    <Property name="property">userDefine2</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine3</Property>
+                    <Property name="property">userDefine3</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine4</Property>
+                    <Property name="property">userDefine4</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">userDefine5</Property>
+                    <Property name="property">userDefine5</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <DownloadAction id="downloadMoBanAction">
+      <Property name="fileProvider">stroageExtraQuoteController#getDispatchTemplate</Property>
+      <Property name="target">workspace</Property>
+    </DownloadAction>
+    <UploadAction id="uploadMobanAction">
+      <ClientEvent name="onFileUploaded">//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	&#xD;
+var dataSet = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=dataSet.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+}&#xD;
+if(data.validateData!=null){&#xD;
+	dorado.MessageBox.alert(&quot;不是阶梯报价类型不能导入!&quot;);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="beforeFileUpload">var entity = view.get(&quot;#dsStorageType.data&quot;).current;&#xD;
+&#xD;
+var id = entity.get(&quot;id&quot;);&#xD;
+var parameter={id:id};&#xD;
+self.set(&quot;parameter&quot;,parameter);</ClientEvent>
+      <Property name="fileResolver">stroageExtraQuoteController#importDispatchTemplate</Property>
+      <Filters>
+        <Filter>
+          <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+          <Property name="title">Excel文件</Property>
+        </Filter>
+      </Filters>
+    </UploadAction>
+    <UpdateAction id="mobanCopyAction">
+      <Property name="dataResolver">stroageExtraQuoteController#copyTemplate</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="errorProductMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="height">300</Property>
+      <Property name="width">540</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorProductMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="StepImportDialog">
+      <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">导入</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="impCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#StepImportDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="fileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="impBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">impBtn</Property>
+            <Property name="property">impBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="impBtn2">
+                <Property name="action">StepUploadAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="progressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="exportProgressBar"/>
+        <AjaxAction id="getProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">stroageStepQuoteController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="setProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">stroageStepQuoteController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="StepUploadAction">
+          <ClientEvent name="onFileUploaded">&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+var data= arg.returnValue;&#xD;
+ &#xD;
+if(data.error!=null){  &#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	var dataSet = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=dataSet.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+	&#xD;
+}&#xD;
+&#xD;
+ &#xD;
+</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName input&quot;).val(fname);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_exportProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getProgess&quot;);&#xD;
+var setAction = view.get(&quot;#setProgess&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">1MB</Property>
+          <Property name="successMessage">操作完成!</Property>
+          <Property name="fileResolver">stroageExtraQuoteController#importDispatchTemplate</Property>
+          <Filters/>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCustomer1">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer1&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer1">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer1.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsStorageType&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;),&#xD;
+		customerName:data.get(&quot;customername&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer1">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.receive.BmsBillInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="bill_name" property="billName" jdbcType="VARCHAR" />
+	    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+	    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="total_amount" property="totalAmount" jdbcType="DOUBLE" />
+	    <result column="discount_type" property="discountType" jdbcType="VARCHAR" />
+	    <result column="discount_rate" property="discountRate" jdbcType="DOUBLE" />
+	    <result column="discount_amount" property="discountAmount" jdbcType="DOUBLE" />
+	    <result column="subject_discount_amount" property="subjectDiscountAmount" jdbcType="DOUBLE" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE" />
+	    <result column="fees_discount_amount" property="feesDiscountAmount" jdbcType="DOUBLE" />
+	    <result column="receive_amount" property="receiveAmount" jdbcType="DOUBLE" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="approver" property="approver" jdbcType="VARCHAR" />
+	    <result column="approval_way" property="approvalWay" jdbcType="VARCHAR" />
+	    <result column="approval_no" property="approvalNo" jdbcType="VARCHAR" />
+	    <result column="approval_time" property="approvalTime" jdbcType="TIMESTAMP" />
+	    <result column="email" property="email" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param5" property="param5" jdbcType="VARCHAR" />
+	    <result column="version" property="version" jdbcType="INTEGER" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+       id, bill_no, bill_name,project_id,project_name, customer_id, customer_name, start_time, end_time, total_amount,discount_type, discount_rate, discount_amount,subject_discount_amount, derate_amount, fees_discount_amount, receive_amount, receipt_amount, status, approver, approval_way, approval_no, approval_time, email, remark, param1, param2, param3, param4, param5, version, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name like concat('%',#{billName},'%') 
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(startDate != null and startDate !='')" >
+			    and start_time>=#{startDate}
+		</if>
+		<if test="(endDate != null and endDate !='')" >
+			    and <![CDATA[end_time<=#{endDate}]]>
+		</if>
+		<if test="(totalAmount != null and totalAmount !='')" >
+				and total_amount = #{totalAmount}
+		</if>
+		<if test="(discountRate != null and discountRate !='')" >
+				and discount_rate = #{discountRate}
+		</if>
+		<if test="(discountAmount != null and discountAmount !='')" >
+				and discount_amount = #{discountAmount}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(feesDiscountAmount != null and feesDiscountAmount !='')" >
+				and fees_discount_amount = #{feesDiscountAmount}
+		</if>
+		<if test="(receiveAmount != null and receiveAmount !='')" >
+				and receive_amount = #{receiveAmount}
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+				and receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(status != null and status !='')" >
+				and status = #{status}
+		</if>
+		<if test="(approver != null and approver !='')" >
+				and approver = #{approver}
+		</if>
+		<if test="(approvalWay != null and approvalWay !='')" >
+				and approval_way = #{approvalWay}
+		</if>
+		<if test="(approvalNo != null and approvalNo !='')" >
+				and approval_no = #{approvalNo}
+		</if>
+		<if test="(approvalTime != null and approvalTime !='')" >
+			    and approval_time >= #{approvalTime} and <![CDATA[approval_time <= #{approvalTime}]]>
+		</if>
+		<if test="(email != null and email !='')" >
+				and email = #{email}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(param2 != null and param2 !='')" >
+				and param2 = #{param2}
+		</if>
+		<if test="(param3 != null and param3 !='')" >
+				and param3 = #{param3}
+		</if>
+		<if test="(param4 != null and param4 !='')" >
+				and param4 = #{param4}
+		</if>
+		<if test="(param5 != null and param5 !='')" >
+				and param5 = #{param5}
+		</if>
+		<if test="(version != null and version !='')" >
+				and version = #{version}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTimeBegin != null and createTimeBegin !='')" >
+			    and create_time<![CDATA[ >= ]]>#{createTimeBegin}
+		</if>
+		<if test="(createTimeEnd != null and createTimeEnd !='')" >
+			    and <![CDATA[create_time <= #{createTimeEnd}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_info
+        where 1=1 and del_flag = '0'
+		<include refid="baseSelectColumns" />
+		 order by create_time desc 
+    </select>
+    
+    <select id="queryBmsBill" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_info
+        where 1=1 and del_flag = '0'
+        <if test="createTime != null and createTime !=''">
+        	and create_time like CONCAT(DATE_FORMAT(#{createTime},'%Y-%m'),'%')
+        </if>
+         <if test="year != null and year !=''">
+        	and create_time like '${year}%'
+        </if>
+        <if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId}
+		</if>
+        <if test="endTime != null and endTime !=''">
+        	and end_time like CONCAT(DATE_FORMAT(#{endTime},'%Y-%m'),'%')
+        </if>
+    </select>
+       
+	<select id="queryEntityByBillNo" parameterType="String" resultMap="baseResultMap">
+ 		select
+        <include refid="baseColumns" />
+        from bms_bill_info
+        where 1=1 and del_flag = '0' and bill_no=#{billNo}
+	</select>
+    <select id="findById" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_info
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+        insert into bms_bill_info(bill_no, bill_name, project_id,project_name,customer_id, customer_name, start_time, end_time, total_amount,discount_type, discount_rate, discount_amount,subject_discount_amount, derate_amount, fees_discount_amount, receive_amount, receipt_amount, status, approver, approval_way, approval_no, approval_time, email, remark, param1, param2, param3, param4, param5, version, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{billNo,jdbcType=VARCHAR}, 
+			#{billName,jdbcType=VARCHAR}, 
+			#{projectId,jdbcType=VARCHAR}, 
+			#{projectName,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{startTime,jdbcType=TIMESTAMP}, 
+			#{endTime,jdbcType=TIMESTAMP}, 
+			#{totalAmount,jdbcType=DOUBLE},
+			#{discountType,jdbcType=VARCHAR},  
+			#{discountRate,jdbcType=DOUBLE}, 
+			#{discountAmount,jdbcType=DOUBLE},
+			#{subjectDiscountAmount,jdbcType=DECIMAL},  
+			#{derateAmount,jdbcType=DOUBLE}, 
+			#{feesDiscountAmount,jdbcType=DOUBLE}, 
+			#{receiveAmount,jdbcType=DOUBLE}, 
+			#{receiptAmount,jdbcType=DOUBLE}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{approver,jdbcType=VARCHAR}, 
+			#{approvalWay,jdbcType=VARCHAR}, 
+			#{approvalNo,jdbcType=VARCHAR}, 
+			#{approvalTime,jdbcType=TIMESTAMP}, 
+			#{email,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param5,jdbcType=VARCHAR}, 
+			#{version,jdbcType=INTEGER}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<update id="updateDiscountStorageBill" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+		update bms_bill_info
+		<set>
+			version=ifnull(version,0)+1,
+			<if test="totalAmount != null" >total_amount=#{totalAmount},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=VARCHAR},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DECIMAL},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="subjectDiscountAmount != null" >subject_discount_amount=#{subjectDiscountAmount,jdbcType=DECIMAL},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		</set>
+		where  bill_no=#{billNo}
+	</update>
+	
+    <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+         update bms_bill_info 
+		<set >
+			version=ifnull(version,0)+1,
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="billName != null" >bill_name=#{billName,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="startTime != null" >start_time=#{startTime,jdbcType=TIMESTAMP},</if>
+			<if test="endTime != null" >end_time=#{endTime,jdbcType=TIMESTAMP},</if>
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="feesDiscountAmount != null" >fees_discount_amount=#{feesDiscountAmount,jdbcType=DOUBLE},</if>
+			<if test="receiveAmount != null" >receive_amount=#{receiveAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="approver != null" >approver=#{approver,jdbcType=VARCHAR},</if>
+			<if test="approvalWay != null" >approval_way=#{approvalWay,jdbcType=VARCHAR},</if>
+			<if test="approvalNo != null" >approval_no=#{approvalNo,jdbcType=VARCHAR},</if>
+			<if test="approvalTime != null" >approval_time=#{approvalTime,jdbcType=TIMESTAMP},</if>
+			<if test="email != null" >email=#{email,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param5 != null" >param5=#{param5,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+        <if test="version != null and version != 0" >
+        	and version=(#{version,jdbcType=INTEGER})
+     	</if>
+    </update>
+    
+    <update id="updateByBillNo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+         update bms_bill_info 
+		<set >
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="feesDiscountAmount != null" >fees_discount_amount=#{feesDiscountAmount,jdbcType=DOUBLE},</if>
+			<if test="receiveAmount != null" >receive_amount=#{receiveAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where bill_no=#{billNo}
+        <if test="version != null and version != 0">
+        	and version=(#{version,jdbcType=INTEGER})
+     	</if>
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bms_bill_info where
+        id=#{id}
+    </delete>
+    
+    <select id="queryLastBillTime" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+		SELECT A.* FROM bms_bill_info A,
+		(SELECT customer_id, max(end_time) max_day FROM bms_bill_info 
+			where customer_id = #{customerId} and del_flag ='0' GROUP BY customer_id) B
+		WHERE A.customer_id = B.customer_id AND A.end_time = B.max_day
+		ORDER BY A.bill_no DESC
+		LIMIT 1
+	</select>
+	
+    <select id="querywarehouseAmount" parameterType="Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+   		select warehouse_code,sum(amount) as amount,billNo FROM
+		(
+		select warehouse_code,sum(amount) as amount,bill_no as billNo from fees_receive_dispatch 
+				where bill_no=#{billno} and warehouse_code is not null
+		group by warehouse_code,billNo
+		UNION all
+		select warehouse_code,sum(cost) as amount,bill_no as billNo from fees_receive_storage 
+				where bill_no=#{billno} and warehouse_code is not null
+		group by warehouse_code,billNo
+		) a group by warehouse_code,billNo
+    </select>
+    
+    <update id="deleteFeesBill" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+		update bms_bill_info set 
+		last_modifier=#{lastModifier},
+		last_modify_time=#{lastModifyTime},
+		del_flag=#{delFlag}
+		where bill_no=#{billNo}
+	</update>
+	<update id="refeshAmount" parameterType="Map">
+		update bms_bill_info a
+		inner JOIN 
+		(
+			select bill_no,sum(total_amount) as total_amount, sum(discount_amount) as discount_amount,
+		sum(derate_amount) as derate_amount from bms_bill_subject_info 
+		where bill_no=#{billNo}
+		group by bill_no
+		) b
+		on a.bill_no=b.bill_no
+		set a.total_amount=b.total_amount,a.subject_discount_amount=b.discount_amount,
+		a.derate_amount=b.derate_amount,a.receive_amount=b.total_amount-b.discount_amount-b.derate_amount-a.discount_amount,
+		a.version=ifnull(a.version,0)+1
+		where a.bill_no=#{billNo}
+	</update>
+	
+	<select id="countBill" parameterType="Map" resultType="com.jiuyescm.bms.bill.receive.vo.BmsBillCountEntityVo">
+		select CONCAT(stu.month,'-01') as countDate,stu.unConfirmed,stu.unInvoiced,stu.PARTINVOICED,stu.unReturnMoney,stu.isReturnMoney,cuso.cus_num as totalCustomerNum from
+		(select month,sum(unConfirmed) as unConfirmed,sum(unInvoiced) as unInvoiced, sum(PARTINVOICED) as PARTINVOICED,sum(unReturnMoney) as unReturnMoney,sum(isReturnMoney) as isReturnMoney from
+		(select 
+		case when status = 'UNCONFIRMED' then num else 0 end unConfirmed ,
+		case when status = 'CONFIRMED' then num else 0 end unInvoiced ,
+		case when status = 'partInvoiced' then num else 0 end PARTINVOICED ,
+		case when status = 'INVOICED' then num else 0 end unReturnMoney ,
+		case when status = 'RECEIPTED' then num else 0 end isReturnMoney ,
+		month
+		from
+		(select DATE_FORMAT(create_time,'%Y-%m') as month,status,COUNT(status) as num 
+		from bms_bill_info where del_flag='0' GROUP BY DATE_FORMAT(create_time,'%Y-%m'),status) t) t2 group by month) stu
+		left join
+		(select month,count(*) as cus_num  from
+		(select DATE_FORMAT(create_time,'%Y-%m') as month,
+		case when customer_id is null then 0 else 1 end num
+		from bms_bill_info where del_flag='0' GROUP BY DATE_FORMAT(create_time,'%Y-%m'),customer_id) cus group by month) cuso
+		
+		on stu.month =cuso.month having 1=1
+		<if test="(startTime != null and startTime !='')" >
+			and countDate <![CDATA[>= ]]>CONCAT(DATE_FORMAT(#{startTime},'%Y-%m'),'-01')
+		</if>
+		<if test="(endTime != null and endTime !='')">
+			and <![CDATA[countDate<=CONCAT(DATE_FORMAT(#{endTime},'%Y-%m'),'-01')]]>
+		</if>
+	</select>
+	
+	<select id="countCustomerBill" parameterType="Map" resultType="com.jiuyescm.bms.bill.receive.vo.BmsBillCustomerCountEntityVo">
+		select bill.customer_id as customerId,ku.countStatus as noConfirm,am.unAmount as confirmUnInvoiced,inv.invoceAmount as confirmUnNeedInvoiced FROM
+		(select customer_id from bms_bill_info where del_flag='0' and customer_id=#{customerId} GROUP BY customer_id) bill
+		LEFT JOIN
+		(select customer_id,count(`status`) countStatus from bms_bill_info where status='UNCONFIRMED' and customer_id=#{customerId}  and del_flag='0' and create_time like '${year}%' GROUP BY customer_id) ku
+		on bill.customer_id=ku.customer_id		
+		left JOIN
+		(select customer_id,sum(total_amount) unAmount from bms_bill_info where `status`='CONFIRMED' and customer_id=#{customerId} and del_flag='0' and create_time like '${year}%' GROUP BY customer_id) am
+		on bill.customer_id=am.customer_id	
+		left JOIN
+		(select a.customer_id,a.creator,sum(b.invoce_amount) invoceAmount from  bms_bill_info a 							
+		LEFT JOIN bms_bill_invoce_info b on a.bill_no=b.bill_no and a.customer_id=#{customerId} and a.del_flag='0' and b.del_flag='0' and a.create_time like '${year}%' and b.is_need_invoce='UNNEED' and b.receipt_status='UNSETTLED' GROUP BY a.customer_id) inv
+		on bill.customer_id=inv.customer_id
+	</select>	
+</mapper>

@@ -1,0 +1,1239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtOutStock">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+        <Property name="label">温度</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="resizeWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+        <Property name="label">sku数</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">预估单量</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtRepertory">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dataNum">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="curDay">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="productId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="productName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="stockPlaceCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="stockPlace">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="batchCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="aqty">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperature">
+        <Property></Property>
+        <Property name="label">温度</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="volume">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="pieceNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property></Property>
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="feeUnitCode">
+        <Property></Property>
+        <Property name="label">存储方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;STORAGE_CHARGE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPriceContractItemEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+        <Property name="label">合同编号</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">入仓服务</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">计费模板</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtInStock">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="instockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="shopperCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="shopperName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNum">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="instockType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feeAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiver">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+        <Property name="label">合同编码</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtB2bOut">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="shopper">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="logistics">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="sku">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="billNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delivery">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtMaterialStock">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="packNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="packName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="qty">
+        <Property name="dataType">double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtMaterialEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="consumerMaterialCode">
+        <Property></Property>
+        <Property name="label">耗材编号</Property>
+      </PropertyDef>
+      <PropertyDef name="consumerMaterialName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="label">重量</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtOutStockDetail">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="resizeWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property></Property>
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Property name="contentOverflow">scroll</Property>
+    <Property name="contentOverflowX">scroll</Property>
+    <Property name="contentOverflowY">scroll</Property>
+    <DataSet id="dsQuotaList">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsQuotaList&quot;).getData().insert();</ClientEvent>
+      <Property name="dataProvider">bizOutstockMasterController#query</Property>
+      <Property name="dataType">[dtOutStock]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsRepertory">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsRepertory&quot;).getData().insert();</ClientEvent>
+      <Property name="dataProvider">bizProductStorageController#query</Property>
+      <Property name="dataType">[dtRepertory]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsMasterList">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsMasterList&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtInStock]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bizInStockController#queryMaster</Property>
+    </DataSet>
+    <DataSet id="dsReturnList">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsReturnList&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtInStock]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bizInStockController#queryMaster</Property>
+    </DataSet>
+    <DataSet id="dsPriceContractItemEntity">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsPriceContractItemEntity&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtPriceContractItemEntity]</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsReturnStock">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsReturnStock&quot;).getData().insert();</ClientEvent>
+      <Property name="dataProvider">bizOutstockMasterController#query</Property>
+      <Property name="dataType">[dtOutStockDetail]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsB2bOut">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsB2bOut&quot;).getData().insert();</ClientEvent>
+      <Property name="dataProvider">bizOutstockMasterController#query</Property>
+      <Property name="dataType">[dtB2bOut]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsMaterial">
+      <Property name="dataProvider">bizPackStorageController#query</Property>
+      <Property name="dataType">[dtMaterialStock]</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsMaterialUseList">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsMaterialUseList&quot;).getData().insert();</ClientEvent>
+      <Property name="dataProvider">bizOutstockPackmaterialController#query</Property>
+      <Property name="dataType">[dtMaterialEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <Container>
+      <Property name="height">350</Property>
+      <AutoForm id="formContractItemEdit">
+        <Property name="dataSet">dsPriceContractItemEntity</Property>
+        <Property name="dataType">dtPriceContractItemEntity</Property>
+        <AutoFormElement>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#panelGeneral&quot;).show();</ClientEvent>
+          <Property name="caption">合同选择</Property>
+        </Button>
+      </AutoForm>
+      <AutoForm id="order">
+        <Property name="dataType">dtOutStock</Property>
+        <Property name="dataSet">dsQuotaList</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">订单操作费：</Property>
+          <Property name="visible">true</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">totalQuantity</Property>
+          <Property name="property">totalQuantity</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">totalWeight</Property>
+          <Property name="name">totalWeight</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">billNum</Property>
+          <Property name="property">billNum</Property>
+          <Property name="readOnly">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">totalVarieties</Property>
+          <Property name="property">totalVarieties</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">temperatureTypeCode</Property>
+          <Property name="property">temperatureTypeCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+view.get(&quot;#order.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#order.entity&quot;).set(&quot;price&quot;,'');&#xD;
+view.get(&quot;#saveAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#order.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <AutoForm id="storage">
+        <Property name="dataType">dtRepertory</Property>
+        <Property name="dataSet">dsRepertory</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">商品存储费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">feeUnitCode</Property>
+          <Property name="property">feeUnitCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">temperature</Property>
+          <Property name="property">temperature</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">weight</Property>
+          <Property name="name">weight</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">aqty</Property>
+          <Property name="property">aqty</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+view.get(&quot;#storage.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#storage.entity&quot;).set(&quot;price&quot;,'');&#xD;
+var feeUnitCode = view.get(&quot;#storage.entity&quot;).get(&quot;feeUnitCode&quot;);&#xD;
+if(feeUnitCode=='PALLETS'){&#xD;
+	view.get(&quot;#repertoryPattleAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#storage.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+	&#xD;
+}else{&#xD;
+	&#xD;
+	view.get(&quot;#repertoryAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#storage.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+			&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container id="kuozhan">
+      <Property name="visible">true</Property>
+      <AutoForm id="inStorage">
+        <Property name="dataType">dtInStock</Property>
+        <Property name="dataSet">dsMasterList</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">入仓费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">num</Property>
+          <Property name="property">num</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+view.get(&quot;#inStorage.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#InStockAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#inStorage.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <AutoForm id="returnSales">
+        <Property name="dataType">dtInStock</Property>
+        <Property name="dataSet">dsReturnList</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">退货费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">num</Property>
+          <Property name="property">num</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+view.get(&quot;#returnSales.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#ReturnSalesAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#returnSales.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <AutoForm id="returnStock">
+        <Property name="dataSet">dsReturnStock</Property>
+        <Property name="dataType">dtOutStockDetail</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">退仓费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">totalQuantity</Property>
+          <Property name="property">totalQuantity</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">totalWeight</Property>
+          <Property name="property">totalWeight</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+&#xD;
+view.get(&quot;#returnStock.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#retrunStockAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#returnStock.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <AutoForm id="b2bOut">
+        <Property name="dataSet">dsB2bOut</Property>
+        <Property name="dataType">dtB2bOut</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">B2B出库费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">totalQuantity</Property>
+          <Property name="property">totalQuantity</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">totalWeight</Property>
+          <Property name="property">totalWeight</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+&#xD;
+view.get(&quot;#b2bOut.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#btBOutAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#b2bOut.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <AutoForm id="materailStock">
+        <Property name="dataSet">dsMaterial</Property>
+        <Property name="dataType">dtMaterialStock</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">耗材存储费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">qty</Property>
+          <Property name="property">qty</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+&#xD;
+view.get(&quot;#materailStock.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#materialStockAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#materailStock.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <AutoForm id="materialUse">
+        <Property name="dataSet">dsMaterialUseList</Property>
+        <Property name="dataType">dtMaterialEntity</Property>
+        <Label layoutConstraint="colSpan:2">
+          <Property name="text">耗材使用费：</Property>
+        </Label>
+        <AutoFormElement>
+          <Property name="name">warehouseCode</Property>
+          <Property name="property">warehouseCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">consumerMaterialCode</Property>
+          <Property name="property">consumerMaterialCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">num</Property>
+          <Property name="property">num</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">weight</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">price</Property>
+          <Property name="property">price</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var contractCode = view.get(&quot;#formContractItemEdit.entity&quot;).get(&quot;contractCode&quot;);&#xD;
+&#xD;
+view.get(&quot;#materialUse.entity&quot;).set(&quot;contractCode&quot;,contractCode);&#xD;
+view.get(&quot;#materialUse.entity&quot;).set(&quot;price&quot;,'');&#xD;
+view.get(&quot;#materialAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					if(result.code == &quot;SUCCESS&quot;){&#xD;
+						view.get(&quot;#materialUse.entity&quot;).set(&quot;price&quot;,result.data);&#xD;
+					}else{&#xD;
+						dorado.MessageBox.alert(result.data);&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">试算</Property>
+        </Button>
+        <AutoFormElement>
+          <Property name="hideMode">visibility</Property>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <UpdateAction id="saveAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryOrderOperate</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsQuotaList</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="repertoryAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryRepertory</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsRepertory</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <FloatPanel id="panelGeneral">
+      <ClientEvent name="onHide">//找到触发弹出层的事件源控件；&#xD;
+//对控件赋值&#xD;
+&#xD;
+var data = this.get(&quot;#viewSelectInstock2.userData&quot;);&#xD;
+&#xD;
+if (data != null) {&#xD;
+	&#xD;
+	view.get(&quot;#formContractItemEdit.entity&quot;).set(&quot;contractCode&quot;,data.get(&quot;contractCode&quot;));&#xD;
+&#xD;
+}</ClientEvent>
+      <Property name="caption">合同模板</Property>
+      <Property name="center">true</Property>
+      <Property name="width">800</Property>
+      <Property name="height">500</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectInstock2">
+          <Property name="subView">com.jiuyescm.bms.quotation.contract.view.CustomerContractLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="InStockAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryInStorage</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsMasterList</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="ReturnSalesAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryReturnSales</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsReturnList</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="retrunStockAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryReturnStock</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsReturnStock</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="btBOutAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryBtbOut</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsB2bOut</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="materialStockAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryMaterialStock</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsMaterial</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="materialAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryMaterial</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsMaterialUseList</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="repertoryPattleAction">
+      <Property name="dataResolver">tryStorageDroolsController#tryRepertoryPallet</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsRepertory</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

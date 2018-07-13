@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="wms_id" property="wmsId" jdbcType="VARCHAR" />
+    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="consumer_material_code" property="consumerMaterialCode" jdbcType="VARCHAR" />
+    <result column="consumer_material_name" property="consumerMaterialName" jdbcType="VARCHAR" />
+    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="DOUBLE" />
+    <result column="adjust_num" property="adjustNum" jdbcType="DOUBLE" />
+    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+  	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	<result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	<result column="remark" property="remark" jdbcType="VARCHAR" />
+	<result column="weight" property="weight" jdbcType="DOUBLE" />
+	<result column="spec_desc" property="specDesc" jdbcType="VARCHAR" />
+	<result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code,
+    consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, 
+    is_calculated, creator, create_time, last_modifier, last_modify_time,write_time,calculate_time, del_flag, remark,weight,
+    spec_desc, extattr1, extattr2, extattr3, extattr4, extattr5,cost_fees_no,cost_calculate_time,cost_is_calculated,cost_remark
+  </sql>
+  
+  <sql id="baseSelectColumns">
+  		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and a.customer_id = #{customerId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and a.is_calculated = #{isCalculated}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			   and a.create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and a.consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			   and a.creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(costFeesNo!=null and costFeesNo!='')">
+			and a.cost_fees_no=#{costFeesNo}
+		</if>
+  </sql>
+  
+   <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+        select
+        <include refid="Base_Column_List" />
+        from  biz_outstock_packmaterial a
+        where del_flag = 0 
+        <include refid="baseSelectColumns" />
+	</select>
+	<update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+        update biz_outstock_packmaterial 
+		<set >
+			<if test="wmsId != null" >wms_id=#{wmsId,jdbcType=VARCHAR},</if>
+			<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="consumerMaterialCode != null" >consumer_material_code=#{consumerMaterialCode,jdbcType=VARCHAR},</if>
+			<if test="consumerMaterialName != null" >consumer_material_name=#{consumerMaterialName,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
+			<if test="adjustNum != null" >adjust_num=#{adjustNum,jdbcType=DOUBLE},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="dbname != null" >dbname=#{dbname,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP}</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+        insert into biz_outstock_packmaterial(wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr4)
+        values (
+			#{wmsId,jdbcType=VARCHAR}, 
+			#{outstockNo,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{consumerMaterialCode,jdbcType=VARCHAR}, 
+			#{consumerMaterialName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{num,jdbcType=DOUBLE}, 
+			#{adjustNum,jdbcType=DOUBLE}, 
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{dbname,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{weight,jdbcType=DOUBLE},
+		    #{specDesc,jdbcType=VARCHAR},
+		    #{extattr4,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <insert id="saveDataFromTemp" parameterType="java.util.Map">
+    	insert into biz_outstock_packmaterial (wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5)
+    	select wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5
+    	from biz_outstock_packmaterial_temp where batchNum=#{batchNum}                             
+    </insert>
+    <select id="checkDataExist" parameterType="java.util.Map" resultType="Integer">
+    	select count(*) from biz_outstock_packmaterial where waybill_no=#{waybillNo}
+    	and consumer_material_code=#{materialCode}
+    </select>
+    <select id="queryWarehouseGroupCount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+        select customer_name,warehouse_name,COUNT(DISTINCT waybill_no) as num
+        from  biz_outstock_packmaterial
+        where del_flag = 0 
+        <if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and outstock_no = #{outstockNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = #{isCalculated,jdbcType=VARCHAR}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			and create_time <![CDATA[>= ]]>#{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time<![CDATA[ <= ]]>#{endTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+			and consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
+		</if>
+		GROUP BY customer_name,warehouse_name
+	</select>
+	
+    <select id="queryPriceGroupCount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+        SELECT
+	b.*, m.unit_price AS unitPrice
+FROM
+	(
+		SELECT
+			customer_id,
+			warehouse_code,
+			consumer_material_code,
+			SUM(num) AS num
+		FROM
+			biz_outstock_packmaterial
+		WHERE
+			del_flag = '0'
+		 <if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and outstock_no = #{outstockNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = #{isCalculated,jdbcType=VARCHAR}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			and create_time <![CDATA[>= ]]>#{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time<![CDATA[ <= ]]>#{endTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+			and consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
+		</if>
+		GROUP BY
+			customer_id,
+			warehouse_code,
+			consumer_material_code
+	) b
+LEFT JOIN price_general_template p ON p.customerId = b.customer_id
+AND p.del_flag = '0'
+AND p.storage_template_type = 'STORAGE_MATERIAL_PRICE_TEMPLATE'
+LEFT JOIN price_storage_material m ON CONCAT(p.id,'') = m.template_id
+AND m.material_code = b.consumer_material_code
+AND m.warehouse_id = b.warehouse_code
+AND m.del_flag = '0'
+	</select>
+	
+	
+	
+	<select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">
+        select a.waybill_no from biz_outstock_packmaterial a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
+		where a.del_flag = 0 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+    
+    <select id="validCalcuForRetry" parameterType="java.util.Map" resultType = "String">
+       	select a.waybill_no from biz_outstock_packmaterial a
+		where a.del_flag = 0 and a.is_calculated = 1 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+	
+	<update id="retryForCalcu" parameterType="java.util.Map">
+        update biz_outstock_packmaterial a set a.is_calculated = 99 where a.del_flag = 0
+        <include refid="baseSelectColumns" />
+    </update>
+    
+     <select id="queryDelete" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+       SELECT  a.* from  biz_outstock_packmaterial a LEFT JOIN  fees_receive_storage  f on a.fees_no = f.fees_no where f.`status` = '0'
+       <include refid="baseSelectColumns" /> 
+       union 
+       SELECT  a.* from  biz_outstock_packmaterial a where a.fees_no is null 
+       <include refid="baseSelectColumns" />
+    </select>
+    
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_outstock_packmaterial where
+        id=#{id}
+    </delete>
+    
+    <delete id="deleteFees" parameterType="java.util.Map">
+       delete  f.* from biz_outstock_packmaterial a LEFT JOIN  fees_receive_storage  f on a.fees_no = f.fees_no where f.`status` = '0'
+        <include refid="baseSelectColumns" /> 
+    </delete>
+    
+     <select id="queryByMonth" parameterType="java.util.Map" resultType = "java.util.Map">
+      SELECT  b.customer_id as customerid,COUNT(*) as num from (SELECT customer_id  from  biz_outstock_packmaterial  a  where del_flag = 0   <include refid="baseSelectColumns" /> )   b  GROUP BY b.customer_id
+    </select>
+     
+     <select id="queryCustomeridF" parameterType="java.util.Map" resultType = "java.util.Map">
+      SELECT  DISTINCT b.customerid  from biz_outstock_master b  where b.del_flag = 0 and  b.create_time <![CDATA[>= ]]>#{bstartTime}  <if test="(warehouseCode != null and warehouseCode !='')" >
+				and b.warehouse_code = #{warehouseCode}
+		</if> and  b.create_time <![CDATA[<= ]]>#{bendTime} and  b.customerid not in ( SELECT  DISTINCT customer_id from biz_outstock_packmaterial  a where del_flag = 0 <include refid="baseSelectColumns" /> )
+     </select>
+	
+	<select id="queryExceptionOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	SELECT * from biz_outstock_packmaterial where del_flag='0' 
+    	<if test="(createTime != null and createTime !='')" >
+			    and create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time <= #{endTime} ]]>
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customer_id = #{customerid}
+		</if>
+    	 and is_calculated not in ('1','5') limit 1
+    </select>
+    
+    <select id="queryMaterialCodeByBillNo" parameterType="java.util.Map"
+        resultType="java.util.Map">
+		SELECT b.product_no as  code  from  (SELECT product_no from fees_receive_storage  where bill_no = #{billNo,jdbcType=VARCHAR} and subject_code = 'wh_material_use') b GROUP BY b.product_no
+    </select>
+    <select id="queryPackMaterialByOutstockNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	select * from biz_outstock_packmaterial where waybill_no in
+    	 <foreach collection="outstockNoList" index="index" item="item" open="(" separator="," close=")">
+    	 	#{item}
+    	 </foreach>
+    </select>
+    
+    <select id="queryBillWarehouse" parameterType="java.util.Map" 
+    	resultType="java.lang.String">
+      SELECT b.warehouse_code from (SELECT  *  from bms_bill_subject_info where bill_no = #{billNo})  b  GROUP BY b.warehouse_code
+    </select>
+    
+    <select id="queryAllByWaybillNoList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	SELECT * from biz_outstock_packmaterial where del_flag='0'
+    	<if test="waybillNoList!=null and waybillNoList.size()>0">
+    		and waybill_no in
+    		<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+    			#{item}
+    		</foreach>
+    	</if>
+    </select>
+    
+    <select id="queryCosthasBill" parameterType="java.util.Map" resultType="String">
+    	select CONCAT(a.waybill_no,',',a.consumer_material_code) from biz_outstock_packmaterial a
+		inner join fees_pay_storage b
+		on a.cost_fees_no=b.fees_no
+		where ifnull(b.del_flag,0)=0 and ifnull(a.del_flag,0)=0
+		and ifnull(b.`status`,0)=1
+		<if test='feesNo!=null'>
+    		and a.fees_no = #{feesNo}
+    	</if>
+    	<if test="(customerId != null and customerId !='')" >
+				and a.customer_id = #{customerId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			   and a.create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and a.consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			   and a.creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(costFeesNo!=null and costFeesNo!='')">
+			and a.cost_fees_no=#{costFeesNo}
+		</if>
+    </select>
+    <update id="updateCostIsCalculated" parameterType="java.util.Map">
+    	update biz_outstock_packmaterial set cost_is_calculated=#{costIsCalculated},cost_remark=#{costRemark}
+    	where del_flag='0'
+    	<if test='feesNo!=null'>
+    		and fees_no = #{feesNo}
+    	</if>
+    	<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			   and create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			   and creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and extattr1 = #{extattr1}
+		</if>
+		<if test="(costFeesNo!=null and costFeesNo!='')">
+			and cost_fees_no=#{costFeesNo}
+		</if>
+    </update>
+    
+    <select id="getMaterialCodeFromBizData" parameterType="Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select consumer_material_code,consumer_material_name 
+    	from biz_outstock_packmaterial where customer_id=#{customerId} and <![CDATA[create_time>=#{startTime}]]>
+    	and <![CDATA[create_time<#{endTime}]]> and del_flag=0
+    	and warehouse_code=#{warehouseCode}
+    	group by consumer_material_code,consumer_material_name
+    </select>
+    <select id="queryMaterialFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
+    	select  
+			b.warehouse_name, 
+			b.customer_name, 
+			b.waybill_no as waybillNo,
+			b.outstock_no,
+			a.totalqty,
+			a.product_detail,
+			a.external_no,
+			a.carrier_name,
+			a.create_time,
+			a.receive_name,
+			a.receive_province_id,
+			a.receive_city_id, 
+			a.receive_detail_address,
+			b.consumer_material_code as productNo, 
+			b.consumer_material_name as product_name, 
+			b.weight,
+			b.num  as quantity,
+			b.spec_desc as specDesc,
+			c.cost,
+			c.unit_price as unitPrice
+        from  biz_dispatch_bill a 
+  		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no
+  		LEFT JOIN  fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no
+		where b.create_time>=#{startTime} and <![CDATA[b.create_time<#{endTime}]]> and b.customer_id=#{customerId} and b.del_flag=0
+		and b.warehouse_code=#{warehouseCode} and a.del_flag=0
+    </select>
+    
+    <select id="queryAllWarehouseFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select warehouse_code,warehouse_name 
+    	from biz_outstock_packmaterial where customer_id=#{customerId} and <![CDATA[create_time>=#{startTime}]]>
+    	and <![CDATA[create_time<#{endTime}]]> and del_flag=0
+    	group by warehouse_code,warehouse_name
+    </select>
+    
+    <select id="queryMaterial" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select a.*
+        from biz_outstock_packmaterial a
+        LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code 
+        where 1=1 and a.waybill_no=#{waybillNo} and a.del_flag='0' and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
+    </select>
+    
+    <select id="queryWayBillNo" parameterType="java.util.Map" resultType="String">
+    	select DISTINCT(waybill_no) from biz_outstock_packmaterial where 1=1 and del_flag='0' 
+    	<if test="(startTime != null and startTime !='')" >
+			and create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+    	<if test="(customerLists != null and customerLists !='')" >
+			and customer_id in
+			<foreach collection="customerLists" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>	
+    </select>
+    
+    <select id="getMaxVolum" parameterType="java.util.Map" resultType="Double" >
+    	select MAX(c.volumn) from (
+		select b.material_type_name,sum(b.out_volume) volumn from biz_outstock_packmaterial a 
+		left JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
+		where a.del_flag='0' and a.waybill_no=#{waybillNo} and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
+		GROUP BY b.material_type_name) c
+    </select>
+    
+    <delete id="deleteAllByWayBillNo" parameterType="java.util.Map">
+    	delete from biz_outstock_packmaterial
+    	where waybill_no in
+    	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+    		#{item}
+    	</foreach>
+    </delete>
+</mapper>

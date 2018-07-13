@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.jiuyescm.framework</groupId>
+		<artifactId>jiuyescm-parent</artifactId>
+		<version>1.0.7</version>
+	</parent>
+	<groupId>com.jiuyescm.bms</groupId>
+	<artifactId>bms</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>bms-entity</module>
+		<module>bms-repo</module>
+		<module>bms-api</module>
+		<module>bms-api-impl</module>
+		<module>bms-bpi</module>
+		<module>bms-bpi-impl</module>
+		<module>bms-site</module>
+		<module>bms-rest</module>
+		<module>bms-service</module>
+		<module>bms-core</module>
+		<module>bms-job</module>
+		<module>bms-mq-import</module>
+		<module>bms-mq-correct</module>
+  </modules>
+
+	<properties>
+<!-- 		<log4j.version>1.2.17</log4j.version> -->
+<!-- 		<servlet-api.version>2.5</servlet-api.version> -->
+<!-- 		<spring.version>4.0.0.RELEASE</spring.version> -->
+<!-- 		<spring.security.version>3.1.7.RELEASE</spring.security.version> -->
+<!-- 		<cxf.version>2.7.18</cxf.version> -->
+<!-- 		<dubbo.version>2.5.3</dubbo.version> -->
+<!-- 		<zookeeper.version>3.4.8</zookeeper.version> -->
+<!-- 		<jedis.version>2.1.0</jedis.version> -->
+<!-- 		<mitreid-connect.version>1.2.5</mitreid-connect.version> -->
+<!-- 		<junit.version>4.11</junit.version> -->
+		<scm.version>1.0.1-SNAPSHOT</scm.version>
+		<scm.extension.version>1.0.1-SNAPSHOT</scm.extension.version>
+		<inv.version>1.0.1-SNAPSHOT</inv.version>
+		<wms.version>1.0.1-SNAPSHOT</wms.version>
+		<log.version>1.0.0</log.version>
+		<drools.version>6.4.0.Final</drools.version>
+		<snapshotDependencyAllowed>true</snapshotDependencyAllowed>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<dependencies>
+		<!-- slf4j -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<!-- logback -->
+		
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>datasource-security</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
+
+       <dependency>  
+		    <groupId>org.drools</groupId>  
+		    <artifactId>drools-core</artifactId>  
+		    <version>${drools.version}</version>  
+        </dependency>  
+		<dependency>  
+		    <groupId>org.drools</groupId>  
+		    <artifactId>drools-compiler</artifactId>  
+		    <version>${drools.version}</version>  
+		</dependency>  
+		<dependency>  
+		    <groupId>org.drools</groupId>  
+		    <artifactId>knowledge-api</artifactId>  
+		    <version>${drools.version}</version>  
+		</dependency>  
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>utf8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<!-- Make sure that only non-snapshot versions are used for the dependencies. 
+							Only active when property 'snapshotDependencyAllowed' is false. -->
+						<id>enforce-no-snapshots</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<skip>${snapshotDependencyAllowed}</skip>
+							<rules>
+								<requireReleaseDeps>
+									<message>No Snapshots Allowed!</message>
+								</requireReleaseDeps>
+								<requireReleaseVersion>
+									<message>No Snapshots Allowed!</message>
+								</requireReleaseVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+    <distributionManagement>
+		<repository>
+           <id>service_releases</id>
+           <url>http://nexus.sh-jiuye.com.cn/nexus/content/repositories/jiuyescm-service-api-release/</url>
+        </repository>
+        <snapshotRepository>
+           <id>service_snapshot</id>
+           <url>http://nexus.sh-jiuye.com.cn/nexus/content/repositories/jiuyescm-service-api-snapshot/</url>
+        </snapshotRepository>
+	</distributionManagement>
+	<scm>
+		<connection>scm:svn:http://svn.sh-jiuye.com.cn:36688/svn/bms/trunk</connection>
+		<developerConnection>scm:svn:http://svn.sh-jiuye.com.cn:36688/svn/bms/trunk</developerConnection>
+		<tag>http://svn.sh-jiuye.com.cn:36688/svn/bms/tags</tag>
+	</scm>
+</project>

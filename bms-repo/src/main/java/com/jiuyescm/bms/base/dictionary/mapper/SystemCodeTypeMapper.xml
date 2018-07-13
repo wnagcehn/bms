@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.dictionary.SystemCodeTypeMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+	    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+	    <result column="type_status" property="typeStatus" jdbcType="VARCHAR" />
+	    <result column="type_desc" property="typeDesc" jdbcType="VARCHAR" />
+	    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+	    <result column="create_dt" property="createDt" jdbcType="TIMESTAMP" />
+	    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+	    <result column="update_dt" property="updateDt" jdbcType="TIMESTAMP" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="delete_id" property="deleteId" jdbcType="VARCHAR" />
+	    <result column="delete_dt" property="deleteDt" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, type_name, type_code, type_status, type_desc, create_id, create_dt, update_id, update_dt, extattr1, extattr2, extattr3, delete_id, delete_dt
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if> 
+	    <if test="(typeName != null and typeName !='')" >
+				and type_name like CONCAT('%',#{typeName},'%')
+		</if>
+		<if test="(typeCode != null and typeCode !='')" >
+				and type_code like CONCAT('%',UPPER(#{typeCode}),'%')
+		</if>
+		<if test="(typeStatus != null and typeStatus !='')" >
+				and type_status = #{typeStatus}
+		</if>
+		<if test="(typeDesc != null and typeDesc !='')" >
+				and type_desc = #{typeDesc}
+		</if>
+		<if test="(createId != null and createId !='')" >
+				and create_id = #{createId}
+		</if>
+		<if test="(createDt != null and createDt !='')" >
+			    and create_dt >= #{createDt} add <![CDATA[create_dt <= #{createDt}]]>
+		</if>
+		<if test="(updateId != null and updateId !='')" >
+				and update_id = #{updateId}
+		</if>
+		<if test="(updateDt != null and updateDt !='')" >
+			    and update_dt >= #{updateDt} add <![CDATA[update_dt <= #{updateDt}]]>
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and extattr1 = #{extattr1}
+		</if>
+		<if test="(extattr2 != null and extattr2 !='')" >
+				and extattr2 = #{extattr2}
+		</if>
+		<if test="(extattr3 != null and extattr3 !='')" >
+				and extattr3 = #{extattr3}
+		</if>
+		<if test="(deleteId != null and deleteId !='')" >
+				and delete_id = #{deleteId}
+		</if>
+		<if test="(deleteDt != null and deleteDt !='')" >
+			    and delete_dt >= #{deleteDt} add <![CDATA[delete_dt <= #{deleteDt}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity">
+        select
+        <include refid="baseColumns" />
+        from system_code_type
+        where 1=1 and type_code != 'MATERIAL_CODE'
+		<include refid="baseSelectColumns" /> 
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity">
+        select
+        <include refid="baseColumns" />
+        from system_code_type
+        where id=#{id} and  type_status =0
+    </select>
+    
+    <select id="findByTypeCode" resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity">
+        select
+        <include refid="baseColumns" />
+        from system_code_type   where   type_code =UPPER(#{typeCode})  and  type_status =0
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity">
+        insert into system_code_type(type_name, type_code, type_status, type_desc, create_id, create_dt, update_id, update_dt, extattr1, extattr2, extattr3, delete_id, delete_dt)
+        values (
+
+#{typeName,jdbcType=VARCHAR}, 
+UPPER(#{typeCode,jdbcType=VARCHAR}), 
+#{typeStatus,jdbcType=VARCHAR}, 
+#{typeDesc,jdbcType=VARCHAR}, 
+#{createId,jdbcType=VARCHAR}, 
+#{createDt,jdbcType=TIMESTAMP}, 
+#{updateId,jdbcType=VARCHAR}, 
+#{updateDt,jdbcType=TIMESTAMP}, 
+#{extattr1,jdbcType=VARCHAR}, 
+#{extattr2,jdbcType=VARCHAR}, 
+#{extattr3,jdbcType=VARCHAR}, 
+#{deleteId,jdbcType=VARCHAR}, 
+#{deleteDt,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity">
+        update system_code_type 
+        <set > 
+		<if test="typeName != null" >type_name=#{typeName,jdbcType=VARCHAR},</if> 
+		<if test="typeCode != null" >type_code=UPPER(#{typeCode,jdbcType=VARCHAR}),</if> 
+		<if test="typeStatus != null" >type_status=#{typeStatus,jdbcType=VARCHAR},</if> 
+		<if test="typeDesc != null" >type_desc=#{typeDesc,jdbcType=VARCHAR},</if> 
+		<if test="createId != null" >create_id=#{createId,jdbcType=VARCHAR},</if> 
+		<if test="createDt != null" >create_dt=#{createDt,jdbcType=TIMESTAMP},</if> 
+		<if test="updateId != null" >update_id=#{updateId,jdbcType=VARCHAR},</if> 
+		<if test="updateDt != null" >update_dt=#{updateDt,jdbcType=TIMESTAMP},</if> 
+		<if test="extattr1 != null" >extattr1=#{extattr1,jdbcType=VARCHAR},</if> 
+		<if test="extattr2 != null" >extattr2=#{extattr2,jdbcType=VARCHAR},</if> 
+		<if test="extattr3 != null" >extattr3=#{extattr3,jdbcType=VARCHAR},</if> 
+		<if test="deleteId != null" >delete_id=#{deleteId,jdbcType=VARCHAR},</if> 
+		<if test="deleteDt != null" >delete_dt=#{deleteDt,jdbcType=TIMESTAMP},</if> 
+		</set>
+        where id=#{id}
+</update>
+
+    <update id="updateByParam" parameterType="java.util.Map">
+        update system_code_type 
+        <set > 
+		<if test="typeName != null" >type_name=#{typeName,jdbcType=VARCHAR},</if> 
+		<if test="typeStatus != null" >type_status=#{typeStatus,jdbcType=VARCHAR},</if> 
+		<if test="typeDesc != null" >type_desc=#{typeDesc,jdbcType=VARCHAR},</if> 
+		<if test="createId != null" >create_id=#{createId,jdbcType=VARCHAR},</if> 
+		<if test="createDt != null" >create_dt=#{createDt,jdbcType=TIMESTAMP},</if> 
+		<if test="updateId != null" >update_id=#{updateId,jdbcType=VARCHAR},</if> 
+		<if test="updateDt != null" >update_dt=#{updateDt,jdbcType=TIMESTAMP},</if> 
+		<if test="extattr1 != null" >extattr1=#{extattr1,jdbcType=VARCHAR},</if> 
+		<if test="extattr2 != null" >extattr2=#{extattr2,jdbcType=VARCHAR},</if> 
+		<if test="extattr3 != null" >extattr3=#{extattr3,jdbcType=VARCHAR},</if> 
+		<if test="deleteId != null" >delete_id=#{deleteId,jdbcType=VARCHAR},</if> 
+		<if test="deleteDt != null" >delete_dt=#{deleteDt,jdbcType=TIMESTAMP},</if> 
+		</set>
+        where type_code=#{typeCode}
+	</update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from system_code_type where
+        id=#{id}
+    </delete>
+</mapper>

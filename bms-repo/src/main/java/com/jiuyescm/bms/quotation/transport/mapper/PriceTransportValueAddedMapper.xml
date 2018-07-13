@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.transport.PriceTransportValueAddedMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.transport.entity.PriceTransportValueAddedEntity" >
+       <id column="id" property="id" jdbcType="BIGINT" />
+	   <result column="id" property="id" jdbcType="BIGINT" />
+	   <result column="quotation_no" property="quotationNo" jdbcType="VARCHAR" />
+	   <result column="car_model_code" property="carModelCode" jdbcType="VARCHAR" />
+	   <result column="weight_limit" property="weightLimit" jdbcType="DOUBLE" />
+	   <result column="fee_unit_code" property="feeUnitCode" jdbcType="VARCHAR" />
+	   <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	   <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	   <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	   <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   <result column="extra1" property="extra1" jdbcType="VARCHAR" />
+	   <result column="extra2" property="extra2" jdbcType="VARCHAR" />
+	   <result column="extra3" property="extra3" jdbcType="VARCHAR" />
+	   <result column="extra4" property="extra4" jdbcType="VARCHAR" />
+	   <result column="extra5" property="extra5" jdbcType="VARCHAR" />
+	   <result column="creator" property="creator" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, quotation_no, car_model_code, weight_limit, fee_unit_code, unit_price, subject_code, 
+        template_id, remark,extra1,extra2,extra3,extra4,extra5, creator, create_time, last_modifier, 
+        last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(quotationNo != null and quotationNo !='')" >
+				and quotation_no  = #{quotationNo}
+		</if>
+		
+		<if test="(carModelCode != null and carModelCode !='')" >
+				and car_model_code like '%${carModelCode}%'
+		</if>
+		<if test="(weightLimit != null and weightLimit !='')" >
+				and weight_limit  = #{weightLimit}
+		</if>
+		<if test="(feeUnitCode != null and feeUnitCode !='')" >
+				and fee_unit_code = #{feeUnitCode}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price  = #{unitPrice}
+		</if>
+		
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(templateId != null and templateId !='')" >
+				and template_id  = #{templateId}
+		</if>
+		
+		<if test="(remark != null and remark !='')" >
+				and remark like '%${remark}%'
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportValueAddedEntity">
+        select
+        <include refid="baseColumns" />
+        from price_transport_valueadded
+        where 1=1
+        <include refid="baseSelectColumns" />
+        order by create_time desc,id desc
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportValueAddedEntity">
+        select
+        <include refid="baseColumns" />
+        from price_transport_valueadded
+        where id=#{id}
+        order by create_time desc,id desc
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportValueAddedEntity">
+        insert into price_transport_valueadded(quotation_no, car_model_code, weight_limit, fee_unit_code, 
+        	unit_price, subject_code, template_id, remark,extra1,extra2,extra3,extra4,extra5, 
+        	creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{quotationNo,jdbcType=VARCHAR}, 
+			#{carModelCode,jdbcType=VARCHAR}, 
+			#{weightLimit,jdbcType=DOUBLE}, 
+			#{feeUnitCode,jdbcType=VARCHAR}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{templateId,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{extra1,jdbcType=VARCHAR},
+			#{extra2,jdbcType=VARCHAR},
+			#{extra3,jdbcType=VARCHAR},
+			#{extra4,jdbcType=VARCHAR},
+			#{extra5,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportValueAddedEntity">
+        update price_transport_valueadded 
+		<set >
+			<if test="quotationNo != null" >quotation_no=#{quotationNo,jdbcType=VARCHAR},</if>
+			<if test="carModelCode != null" >car_model_code=#{carModelCode,jdbcType=VARCHAR},</if>
+			<if test="weightLimit != null" >weight_limit=#{weightLimit,jdbcType=DOUBLE},</if>
+			<if test="feeUnitCode != null" >fee_unit_code=#{feeUnitCode,jdbcType=VARCHAR},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
+			<if test="extra1 != null" >extra1=#{extra1,jdbcType=VARCHAR},</if>
+			<if test="extra2 != null" >extra2=#{extra2,jdbcType=VARCHAR},</if>
+			<if test="extra3 != null" >extra3=#{extra3,jdbcType=VARCHAR},</if>
+			<if test="extra4 != null" >extra4=#{extra4,jdbcType=VARCHAR},</if>
+			<if test="extra5 != null" >extra5=#{extra5,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+					</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from price_transport_valueadded where
+        id=#{id}
+    </delete>
+    
+    <delete id="deleteBatch">
+       delete from price_transport_valueadded where template_id=#{id}
+    </delete>
+</mapper>

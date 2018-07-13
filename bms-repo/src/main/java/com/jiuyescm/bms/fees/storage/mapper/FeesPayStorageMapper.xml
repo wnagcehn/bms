@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.storage.FeesPayStorageEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.storage.entity.FeesPayStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+	    <result column="cost_type" property="costType" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="tempreture_type" property="tempretureType" jdbcType="VARCHAR" />
+	    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="external_product_no" property="externalProductNo" jdbcType="VARCHAR" />
+	    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+	    <result column="unit" property="unit" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DECIMAL" />
+	    <result column="volume" property="volume" jdbcType="DECIMAL" />
+	    <result column="varieties" property="varieties" jdbcType="INTEGER" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DECIMAL" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="cost" property="cost" jdbcType="DECIMAL" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param6" property="param6" jdbcType="VARCHAR" />
+	    <result column="rule_no" property="ruleNo" jdbcType="VARCHAR" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="biz_id" property="bizId" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code, other_subject_code, tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, calculate_time, is_calculated, biz_type, cost, param1, param2, param3, param4, param6, rule_no, bill_no, status, operate_time, biz_id, waybill_no, derate_amount, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(orderType != null and orderType !='')" >
+				and order_type = #{orderType}
+		</if>
+		<if test="(orderNo != null and orderNo !='')" >
+				and order_no = #{orderNo}
+		</if>
+		<if test="(productType != null and productType !='')" >
+				and product_type = #{productType}
+		</if>
+		<if test="(costType != null and costType !='')" >
+				and cost_type = #{costType}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(otherSubjectCode != null and otherSubjectCode !='')" >
+				and other_subject_code = #{otherSubjectCode}
+		</if>
+		<if test="(tempretureType != null and tempretureType !='')" >
+				and tempreture_type = #{tempretureType}
+		</if>
+		<if test="(productNo != null and productNo !='')" >
+				and product_no = #{productNo}
+		</if>
+		<if test="(productName != null and productName !='')" >
+				and product_name = #{productName}
+		</if>
+		<if test="(externalProductNo != null and externalProductNo !='')" >
+				and external_product_no = #{externalProductNo}
+		</if>
+		<if test="(quantity != null and quantity !='')" >
+				and quantity = #{quantity}
+		</if>
+		<if test="(unit != null and unit !='')" >
+				and unit = #{unit}
+		</if>
+		<if test="(weight != null and weight !='')" >
+				and weight = #{weight}
+		</if>
+		<if test="(volume != null and volume !='')" >
+				and volume = #{volume}
+		</if>
+		<if test="(varieties != null and varieties !='')" >
+				and varieties = #{varieties}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(continuedPrice != null and continuedPrice !='')" >
+				and continued_price = #{continuedPrice}
+		</if>
+		<if test="(calculateTime != null and calculateTime !='')" >
+			    and calculate_time >= #{calculateTime} add <![CDATA[calculate_time <= #{calculateTime}]]>
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(cost != null and cost !='')" >
+				and cost = #{cost}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(param2 != null and param2 !='')" >
+				and param2 = #{param2}
+		</if>
+		<if test="(param3 != null and param3 !='')" >
+				and param3 = #{param3}
+		</if>
+		<if test="(param4 != null and param4 !='')" >
+				and param4 = #{param4}
+		</if>
+		<if test="(param6 != null and param6 !='')" >
+				and param6 = #{param6}
+		</if>
+		<if test="(ruleNo != null and ruleNo !='')" >
+				and rule_no = #{ruleNo}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(status != null and status !='')" >
+				and status = #{status}
+		</if>
+		<if test="(operateTime != null and operateTime !='')" >
+			    and operate_time >= #{operateTime} add <![CDATA[operate_time <= #{operateTime}]]>
+		</if>
+		<if test="(bizId != null and bizId !='')" >
+				and biz_id = #{bizId}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesPayStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_pay_storage
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.fees.storage.entity.FeesPayStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_pay_storage
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesPayStorageEntity">
+        insert into fees_pay_storage(fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code, other_subject_code, tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, calculate_time, is_calculated, biz_type, cost, param1, param2, param3, param4, param6, rule_no, bill_no, status, operate_time, biz_id, waybill_no, derate_amount, del_flag)
+        values (
+
+#{feesNo,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{customerId,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{warehouseName,jdbcType=VARCHAR}, 
+#{orderType,jdbcType=VARCHAR}, 
+#{orderNo,jdbcType=VARCHAR}, 
+#{productType,jdbcType=VARCHAR}, 
+#{costType,jdbcType=VARCHAR}, 
+#{subjectCode,jdbcType=VARCHAR}, 
+#{otherSubjectCode,jdbcType=VARCHAR}, 
+#{tempretureType,jdbcType=VARCHAR}, 
+#{productNo,jdbcType=VARCHAR}, 
+#{productName,jdbcType=VARCHAR}, 
+#{externalProductNo,jdbcType=VARCHAR}, 
+#{quantity,jdbcType=INTEGER}, 
+#{unit,jdbcType=VARCHAR}, 
+#{weight,jdbcType=DECIMAL}, 
+#{volume,jdbcType=DECIMAL}, 
+#{varieties,jdbcType=INTEGER}, 
+#{unitPrice,jdbcType=DECIMAL}, 
+#{continuedPrice,jdbcType=DECIMAL}, 
+#{calculateTime,jdbcType=TIMESTAMP}, 
+#{isCalculated,jdbcType=VARCHAR}, 
+#{bizType,jdbcType=VARCHAR}, 
+#{cost,jdbcType=DECIMAL}, 
+#{param1,jdbcType=VARCHAR}, 
+#{param2,jdbcType=VARCHAR}, 
+#{param3,jdbcType=VARCHAR}, 
+#{param4,jdbcType=VARCHAR}, 
+#{param6,jdbcType=VARCHAR}, 
+#{ruleNo,jdbcType=VARCHAR}, 
+#{billNo,jdbcType=VARCHAR}, 
+#{status,jdbcType=VARCHAR}, 
+#{operateTime,jdbcType=TIMESTAMP}, 
+#{bizId,jdbcType=VARCHAR}, 
+#{waybillNo,jdbcType=VARCHAR}, 
+#{derateAmount,jdbcType=DECIMAL}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesPayStorageEntity">
+        update fees_pay_storage 
+		<set >
+
+<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="orderType != null" >order_type=#{orderType,jdbcType=VARCHAR},</if>
+<if test="orderNo != null" >order_no=#{orderNo,jdbcType=VARCHAR},</if>
+<if test="productType != null" >product_type=#{productType,jdbcType=VARCHAR},</if>
+<if test="costType != null" >cost_type=#{costType,jdbcType=VARCHAR},</if>
+<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if>
+<if test="tempretureType != null" >tempreture_type=#{tempretureType,jdbcType=VARCHAR},</if>
+<if test="productNo != null" >product_no=#{productNo,jdbcType=VARCHAR},</if>
+<if test="productName != null" >product_name=#{productName,jdbcType=VARCHAR},</if>
+<if test="externalProductNo != null" >external_product_no=#{externalProductNo,jdbcType=VARCHAR},</if>
+<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER},</if>
+<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
+<if test="weight != null" >weight=#{weight,jdbcType=DECIMAL},</if>
+<if test="volume != null" >volume=#{volume,jdbcType=DECIMAL},</if>
+<if test="varieties != null" >varieties=#{varieties,jdbcType=INTEGER},</if>
+<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
+<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
+<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
+<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
+<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+<if test="operateTime != null" >operate_time=#{operateTime,jdbcType=TIMESTAMP},</if>
+<if test="bizId != null" >biz_id=#{bizId,jdbcType=VARCHAR},</if>
+<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from fees_pay_storage where
+        id=#{id}
+    </delete>
+</mapper>

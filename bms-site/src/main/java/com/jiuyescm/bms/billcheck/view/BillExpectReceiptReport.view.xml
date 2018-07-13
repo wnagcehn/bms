@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="expireDate">
+        <Property name="label">截止日期</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthStart">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthEnd">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceStatus">
+        <Property></Property>
+        <Property name="label">开票状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+        <Property name="label">收款状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtEntity">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillExpectReceiptVo</Property>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">int</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceStatus">
+        <Property></Property>
+        <Property name="label">开票状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+        <Property name="label">收款状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">账单确认额</Property>
+      </PropertyDef>
+      <PropertyDef name="nowLastReceiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">截止日前最后一次回款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="nowReceiptMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">截止日前已回款总额</Property>
+      </PropertyDef>
+      <PropertyDef name="nowLastExpectReceiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">截止日前最后一次预计回款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="nowTbReceiptMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">截止日前剩余待回款金额</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">调整金额</Property>
+      </PropertyDef>
+      <PropertyDef name="totalConfirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalNowReceiptMoney">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalNowTbReceiptMoney">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="totalAdjustMoney">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsEntity">
+      <Property name="dataType">[dtEntity]</Property>
+      <Property name="dataProvider">billCheckReportController#queryExpectReceiptReport</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+&#xD;
+var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
+&#xD;
+var expireDate=entity.get(&quot;expireDate&quot;);&#xD;
+if(isNaN(expireDate)){&#xD;
+	dorado.MessageBox.alert(&quot;截止日期必填&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;业务月份的结束时间不能大于起始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var data= view.get(&quot;#dsEntity&quot;).getData();&#xD;
+var count = data.entityCount;&#xD;
+if(count == 0){&#xD;
+	dorado.MessageBox.alert(&quot;没有数据可以导出！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#export2ReportAction&quot;).execute();&#xD;
+</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">expireDate</Property>
+        <Property name="property">expireDate</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createMonthStart</Property>
+        <Property name="property">createMonthStart</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createMonthEnd</Property>
+        <Property name="property">createMonthEnd</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceName</Property>
+        <Property name="property">invoiceName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">billName</Property>
+        <Property name="property">billName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">billStatus</Property>
+        <Property name="property">billStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceStatus</Property>
+        <Property name="property">invoiceStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">sellerName</Property>
+        <Property name="property">sellerName</Property>
+        <Property name="trigger">triggerDeptUser</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">area</Property>
+        <Property name="property">area</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">receiptStatus</Property>
+        <Property name="property">receiptStatus</Property>
+        <Property name="visible">false</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dataList">
+        <Property name="dataSet">dsEntity</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFooter">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="createMonth">
+          <ClientEvent name="onRenderFooterCell">arg.dom.innerHTML=&quot;合计:&quot;;</ClientEvent>
+          <Property name="property">createMonth</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="invoiceName">
+          <Property name="property">invoiceName</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="billName">
+          <Property name="property">billName</Property>
+          <Property name="width">160</Property>
+        </DataColumn>
+        <DataColumn name="billStatus">
+          <Property name="property">billStatus</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="invoiceStatus">
+          <Property name="property">invoiceStatus</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="receiptStatus">
+          <Property name="property">receiptStatus</Property>
+          <Property name="width">80</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="area">
+          <Property name="property">area</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="sellerName">
+          <Property name="property">sellerName</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="confirmAmount">
+          <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsEntity.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalConfirmAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+          <Property name="property">confirmAmount</Property>
+          <Property name="width">160</Property>
+        </DataColumn>
+        <DataColumn name="nowLastReceiptDate">
+          <Property name="property">nowLastReceiptDate</Property>
+          <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="nowReceiptMoney">
+          <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsEntity.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalNowReceiptMoney&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+          <Property name="property">nowReceiptMoney</Property>
+          <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="nowLastExpectReceiptDate">
+          <Property name="property">nowLastExpectReceiptDate</Property>
+          <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="nowTbReceiptMoney">
+          <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsEntity.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalNowTbReceiptMoney&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+          <Property name="property">nowTbReceiptMoney</Property>
+          <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="adjustMoney">
+          <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsEntity.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalAdjustMoney&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+          <Property name="property">adjustMoney</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Trigger id="triggerDeptUser">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;1002&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;财务部&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+//var entity=subview.get(&quot;#dsDept.data&quot;).current;&#xD;
+&#xD;
+//entity.get(&quot;children&quot;).set(&quot;parentId&quot;,&quot;7&quot;);&#xD;
+//subview.get(&quot;#dsDept&quot;).flushAsync();&#xD;
+//subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+//var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+//dsEntity.set(&quot;deptId&quot;,&quot;1005&quot;);&#xD;
+//subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+view.get(&quot;#panelDeptUser&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptUser">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptUser.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceId&quot;,data.userId);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;sellerName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptUser">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dataList</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+  </View>
+</ViewConfig>

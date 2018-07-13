@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.dispatch.mapper.FeesReceiveDispatchMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity" >
+     <id column="id" property="id" jdbcType="BIGINT" />
+	 <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="carrierid" property="carrierid" jdbcType="VARCHAR" />
+    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+    <result column="deliveryid" property="deliveryid" jdbcType="VARCHAR" />
+    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+    <result column="unpacking" property="unpacking" jdbcType="VARCHAR" />
+    <result column="unpack_num" property="unpackNum" jdbcType="TINYINT" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="TIMESTAMP" />
+    <result column="temperature_type" property="temperatureType" jdbcType="VARCHAR" />
+    <result column="bill_type" property="billType" jdbcType="VARCHAR" />
+    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+    <result column="total_quantity" property="totalQuantity" jdbcType="DOUBLE" />
+    <result column="total_varieties" property="totalVarieties" jdbcType="DOUBLE" />
+    <result column="split_single" property="splitSingle" jdbcType="VARCHAR" />
+    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+    <result column="price_id" property="priceId" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DOUBLE" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="rule_no" property="ruleNo" jdbcType="VARCHAR" />
+    <result column="to_province_name" property="toProvinceName" jdbcType="VARCHAR" />
+    <result column="to_district_name" property="toDistrictName" jdbcType="VARCHAR" />
+    <result column="to_city_name" property="toCityName" jdbcType="VARCHAR" />
+    <result column="charged_weight" property="chargedWeight" jdbcType="DOUBLE" />
+    <result column="weight_limit" property="weightLimit" jdbcType="DOUBLE" />
+    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+    <result column="head_weight" property="headWeight" jdbcType="DOUBLE" />
+    <result column="continued_weight" property="continuedWeight" jdbcType="DOUBLE" />
+    <result column="head_price" property="headPrice" jdbcType="DOUBLE" />
+    <result column="continued_price" property="continuedPrice" jdbcType="DOUBLE" />
+    <result column="accept_time" property="acceptTime" jdbcType="TIMESTAMP" />
+    <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+    <result column="bigstatus" property="bigstatus" jdbcType="VARCHAR" />
+	<result column="smallstatus" property="smallstatus" jdbcType="VARCHAR" />
+    <result column="param1" property="param1" jdbcType="VARCHAR" />
+    <result column="param2" property="param2" jdbcType="VARCHAR" />
+    <result column="param3" property="param3" jdbcType="VARCHAR" />
+    <result column="param4" property="param4" jdbcType="VARCHAR" />
+    <result column="param5" property="param5" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR"/>
+  	<result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR"/>
+  	<result column="storageCal" property="storageCal" jdbcType="VARCHAR"/>
+  	<result column="storageRemark" property="storageRemark" jdbcType="VARCHAR"/>
+  	<result column="dispatchCal" property="dispatchCal" jdbcType="VARCHAR"/>
+  	<result column="dispatchRemark" property="dispatchRemark" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+     id, fees_no, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name,
+     customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name,subject_code,other_subject_code,
+     unpacking, unpack_num, delivery_date, temperature_type, bill_type, b2b_flag, 
+     total_weight, total_quantity, total_varieties, split_single, template_id, price_id,
+     amount, bill_no, rule_no, to_province_name, to_district_name, to_city_name, charged_weight,
+     weight_limit, unit_price, head_weight, continued_weight, head_price, continued_price,
+     accept_time, sign_time,biz_type, bigstatus, smallstatus, param1, param2, param3, param4, param5, status,
+     creator, create_time, last_modifier, last_modify_time, del_flag,amount,derate_amount
+  </sql>
+  
+  <sql id="baseSelectColumns">
+	 	<if test="(billNo != null and billNo !='')">
+			and bill_no = #{billNo}
+		</if>
+	       <if test="(deliveryid != null and deliveryid !='')" >
+			and carrierid = #{deliveryid}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+			and customerid = #{customerid}
+		</if>
+		<if test="(customerIdList!=null and customerIdList.size()>0)">
+			 	and customerid in
+			 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+		 </if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and outstock_no = #{outstockNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(status != null and status !='')" >
+			and status = #{status}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			and create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		<if test="(operatorTimeBegin != null and operatorTimeBegin !='')" >
+			and delivery_date <![CDATA[>= ]]>#{operatorTimeBegin}
+		</if>
+		<if test="(operatorTimeEnd != null and operatorTimeEnd !='')" >
+			and <![CDATA[delivery_date <= #{operatorTimeEnd}]]>
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+  </sql>
+   <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+        select
+        <include refid="Base_Column_List" />
+        from  fees_receive_dispatch
+        where del_flag = '0' 
+        <include refid="baseSelectColumns" />
+  </select>
+  
+  <select id="queryGroup" parameterType="java.util.Map" resultType="java.util.Map">
+  	select warehouse_code as warehouseCode,carrierid,
+	count(1) as count,sum(amount) as amount,sum(derate_amount) as derateAmount 
+	from fees_receive_dispatch
+    where del_flag = '0' 
+    <include refid="baseSelectColumns" />
+    group by warehouse_code,carrierid
+  </select>
+  
+  <select id="queryDispatchPage"  parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+          select
+          fee.id, fee.fees_no, fee.waybill_no, fee.outstock_no, fee.external_no, fee.warehouse_code, fee.warehouse_name,
+	     fee.customerid, fee.customer_name, fee.carrierid, fee.carrier_name, fee.deliveryid, fee.deliver_name,fee.subject_code,fee.other_subject_code,
+	     fee.unpacking, fee.unpack_num, fee.delivery_date, fee.temperature_type, fee.bill_type, fee.b2b_flag, 
+	     fee.total_weight, fee.total_quantity, fee.total_varieties, fee.split_single, fee.template_id, fee.price_id,
+	     fee.amount, fee.bill_no, fee.rule_no, fee.to_province_name, fee.to_district_name, fee.to_city_name, fee.charged_weight,
+	     fee.weight_limit, fee.unit_price, fee.head_weight, fee.continued_weight, fee.head_price, fee.continued_price,
+	     fee.accept_time, fee.sign_time,fee.biz_type, fee.bigstatus, fee.smallstatus, fee.param1, fee.param2, fee.param3, fee.param4, fee.param5, fee.status,
+        fee.creator, fee.create_time, fee.last_modifier, fee.last_modify_time, fee.del_flag,fee.amount,fee.derate_amount
+        ,ifnull(fee.amount,0)-ifnull(fee.derate_amount,0) as receipt_amount,biz.duty_type,biz.update_reason_detail
+        from  fees_receive_dispatch fee
+        LEFT JOIN biz_dispatch_carrier_change biz on fee.waybill_no=biz.waybill_no
+        where fee.del_flag=0 and fee.bill_no=#{billNo}
+        and fee.carrierid=#{subjectCode} and fee.warehouse_code=#{warehouseCode}
+        <if test="(feesnoList!=null and feesnoList.size()>0)">
+        	and fee.fees_no in
+        	 <foreach collection="feesnoList" index="index" item="item" open="(" separator="," close=")">
+        	 	#{item}
+        	 </foreach>
+        </if>
+        <if test="(waybillno!=null and waybillno!='')">
+        	and fee.waybill_no=#{waybillno}
+        </if>
+        <if test="startTime!=null">
+        	and <![CDATA[fee.create_time>=#{startTime}]]>
+        </if>
+        <if test="endTime!=null">
+        	and <![CDATA[fee.create_time<=#{endTime}]]>
+        </if>
+        <if test="(customerid != null and customerid !='')" >
+			and fee.customerid = #{customerid}
+		</if>
+  </select>
+  
+   <select id="query1" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.dispatch.vo.FeesReceiveDispatchVo">
+        select
+           fee.create_time,fee.id, fee.fees_no, fee.waybill_no, fee.outstock_no, fee.external_no, 
+			 fee.warehouse_code,fee.customer_name, fee.customerid,
+		   fee.carrier_name, fee.deliver_name,
+			 fee.delivery_date, fee.temperature_type, fee.b2b_flag,fee.total_weight as total_weight,fee.charged_weight,
+			 fee.total_quantity, fee.total_varieties, fee.template_id,
+	     fee.amount, fee.bill_no, fee.rule_no, fee.to_province_name, fee.to_district_name, 
+			 fee.to_city_name,fee.accept_time, fee.sign_time,fee.biz_type, fee.bigstatus, 
+			 fee.smallstatus, fee.param1, fee.param2, fee.param3, fee.param4, 
+			 fee.param5, fee.status,fee.weight_limit,fee.unit_price,fee.head_weight,
+			 fee.head_price,fee.continued_weight,fee.continued_price,fee.subject_code,fee.other_subject_code,
+			 biz.product_detail,cha.duty_type,cha.update_reason_detail
+        from  fees_receive_dispatch fee
+        left JOIN biz_dispatch_bill biz on fee.fees_no=biz.fees_no
+        left JOIN biz_dispatch_carrier_change cha on fee.waybill_no=cha.waybill_no
+        where fee.del_flag = '0' and biz.del_flag='0' and fee.subject_code='de_delivery_amount'
+        <if test="(billNo != null and billNo !='')">
+			and fee.bill_no = #{billNo}
+		</if>
+	       <if test="(deliveryid != null and deliveryid !='')" >
+			and fee.carrierid = #{deliveryid}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+			and fee.customerid = #{customerid}
+		</if>
+		<if test="(customerIdList!=null and customerIdList.size()>0)">
+			 	and fee.customerid in
+			 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+		 </if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and fee.fees_no = #{feesNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and fee.waybill_no = #{waybillNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and fee.outstock_no = #{outstockNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and fee.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(status != null and status !='')" >
+			and fee.status = #{status}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			and fee.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and <![CDATA[fee.create_time <= #{endTime}]]>
+		</if>
+		<if test="(operatorTimeBegin != null and operatorTimeBegin !='')" >
+			and fee.delivery_date <![CDATA[>= ]]>#{operatorTimeBegin}
+		</if>
+		<if test="(operatorTimeEnd != null and operatorTimeEnd !='')" >
+			and <![CDATA[fee.delivery_date <= #{operatorTimeEnd}]]>
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+			and fee.biz_type = #{bizType}
+		</if>
+  </select>
+  
+  
+   <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+        select
+        <include refid="Base_Column_List" />
+        from  fees_receive_dispatch
+        where del_flag = '0' 
+        <include refid="baseSelectColumns" />
+        limit 1
+  </select>
+  
+  	<select id="querySum" parameterType="java.util.Map"
+        resultType="java.lang.Double">
+        select
+        sum(amount) as totalCost
+        from  fees_receive_dispatch
+        where 1=1 and del_flag = '0' and subject_code='de_delivery_amount'
+		<include refid="baseSelectColumns" />
+    </select>
+  	
+	<select id="queryById" resultType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+	    select
+	    <include refid="Base_Column_List" />
+	    from fees_receive_dispatch
+	    where del_flag = '0' and id=#{id} 
+	</select>
+    
+    <!-- 批量插入账单数据 -->
+    <insert id="insertBatchTmp" parameterType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	insert into fees_receive_dispatch(
+    		fees_no, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name,
+    		carrierid, carrier_name, deliveryid, deliver_name,subject_code,other_subject_code, unpacking, unpack_num, delivery_date, temperature_type,
+    		bill_type, b2b_flag, total_weight, total_quantity, total_varieties, split_single, template_id,
+    		price_id, amount, bill_no, rule_no, to_province_name, to_district_name, to_city_name, charged_weight,
+    		weight_limit, unit_price, head_weight, continued_weight, head_price, continued_price, accept_time,
+    		sign_time,biz_type, bigstatus, smallstatus, param1, param2, param3, param4, param5, status, is_calculated,
+    		creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{outstockNo,jdbcType=VARCHAR}, 
+			#{externalNo,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{carrierid,jdbcType=VARCHAR}, 
+			#{carrierName,jdbcType=VARCHAR}, 
+			#{deliveryid,jdbcType=VARCHAR}, 
+			#{deliverName,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{otherSubjectCode,jdbcType=VARCHAR},
+			#{unpacking,jdbcType=VARCHAR}, 
+			#{unpackNum,jdbcType=TINYINT}, 
+			#{deliveryDate,jdbcType=TIMESTAMP}, 
+			#{temperatureType,jdbcType=VARCHAR}, 
+			#{billType,jdbcType=VARCHAR}, 
+			#{b2bFlag,jdbcType=VARCHAR}, 
+			#{totalWeight,jdbcType=DOUBLE}, 
+			#{totalQuantity,jdbcType=DOUBLE}, 
+			#{totalVarieties,jdbcType=DOUBLE}, 
+			#{splitSingle,jdbcType=VARCHAR}, 
+			#{templateId,jdbcType=VARCHAR}, 
+			#{priceId,jdbcType=VARCHAR}, 
+			#{amount,jdbcType=DOUBLE}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{ruleNo,jdbcType=VARCHAR}, 
+			#{toProvinceName,jdbcType=VARCHAR}, 
+			#{toDistrictName,jdbcType=VARCHAR}, 
+			#{toCityName,jdbcType=VARCHAR}, 
+			#{chargedWeight,jdbcType=DOUBLE}, 
+			#{weightLimit,jdbcType=DOUBLE}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{headWeight,jdbcType=DOUBLE}, 
+			#{continuedWeight,jdbcType=DOUBLE}, 
+			#{headPrice,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{acceptTime,jdbcType=TIMESTAMP}, 
+			#{signTime,jdbcType=TIMESTAMP},
+			#{bizType,jdbcType=VARCHAR}, 
+			#{bigstatus,jdbcType=VARCHAR}, 
+			#{smallstatus,jdbcType=VARCHAR},
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param5,jdbcType=VARCHAR}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+   <update id="updateBillNo" parameterType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	update fees_receive_dispatch 
+    	<set>
+    		<if test="billNo!=null">bill_no=#{billNo},</if>
+    		<if test="status!=null">status=#{status},</if>
+    		<if test="(lastModifier != null and lastModifier !='')" >
+				last_modifier=#{lastModifier},
+			</if>
+			<if test="(lastModifyTime != null and lastModifyTime !='')" >
+				last_modify_time=#{lastModifyTime},
+			</if>
+    	</set>
+    	where id=#{id}
+   </update>
+   
+   	<!-- 生成账单  查询符合账单条件的费用数量-->
+    <select id="queryCountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity" resultType="int">
+    	select count(0) from  fees_receive_dispatch
+        where del_flag = '0' and customerid=#{customerid}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and create_time <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and create_time <![CDATA[<=]]> #{billendtime}
+        </if> 
+   </select>
+   
+   <!-- 生成账单  查询符合账单条件的费用金额-->
+    <select id="queryAmountByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity" resultType="double">
+    	select sum(amount) from  fees_receive_dispatch
+        where del_flag = '0' and customerid=#{customerid}
+        	and status = '0'  and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and create_time <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and create_time <![CDATA[<=]]> #{billendtime}
+        </if> 
+   </select>
+   
+   <!-- 更新符合条件的费用信息 -->
+	<update id="updateByFeesBillInfo" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		update fees_receive_dispatch
+		set bill_no=#{billno},status=#{billstatus},
+			last_modifier=#{modpersonname},last_modify_time=#{modtime}
+		where del_flag = '0' and customerid=#{customerid}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(billstarttime != null and billstarttime !='')" >
+        	and create_time <![CDATA[>=]]> #{billstarttime}
+        </if>
+        <if test="(billendtime != null and billendtime !='')" >
+        	and create_time <![CDATA[<=]]> #{billendtime}
+        </if> 
+	</update>
+   
+   <!-- 按物流商分组统计 -->
+   <select id="querywarehouseDistributionAmount"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+   		select carrierid,bill_no as billNo,sum(amount) as amount
+		from fees_receive_dispatch
+		where del_flag = '0' and bill_no=#{billNo} and is_calculated in ('1','5')
+		group by carrierid,bill_no
+   </select>
+   
+   <!-- 按物流商，账单编号查询详细 -->
+   <select id="queryDistributionDetailByWarehouseidAndBillNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	select
+         frd.fees_no, frd.waybill_no, frd.outstock_no, frd.external_no, bd.warehouse_code, bd.warehouse_name,
+         frd.customerid, frd.customer_name, frd.carrierid, frd.carrier_name, frd.deliveryid, frd.deliver_name,frd.subject_code,frd.other_subject_code,
+     	 frd.unpacking, frd.unpack_num, frd.delivery_date, frd.temperature_type, frd.bill_type, frd.b2b_flag, 
+    	 frd.total_weight, frd.total_quantity, frd.total_varieties, frd.split_single, frd.template_id, frd.price_id,
+     	 frd.amount, frd.bill_no, frd.rule_no, frd.to_province_name, frd.to_district_name, frd.to_city_name, frd.charged_weight,
+    	 frd.weight_limit, frd.unit_price, frd.head_weight, frd.continued_weight, frd.head_price, frd.continued_price,
+   	     frd.accept_time, frd.sign_time,frd.biz_type, frd.bigstatus, frd.smallstatus, frd.param1, frd.param2, frd.param3, frd.param4, frd.param5, frd.status,
+     	 frd.creator, frd.create_time, frd.last_modifier, frd.last_modify_time, frd.del_flag,frd.amount,frd.derate_amount,bd.product_detail
+        from  fees_receive_dispatch frd
+		LEFT JOIN biz_dispatch_bill bd on frd.fees_no = bd.fees_no
+        where frd.del_flag = '0' and bd.del_flag='0' and frd.bill_no=#{billNo}
+        <if test="(warehouseid != null and warehouseid !='')" >
+			and frd.warehouse_code=#{warehouseid}
+		</if>
+        <if test="(carrierid != null and carrierid !='')" >
+			and frd.carrierid=#{carrierid}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and frd.fees_no = #{feesNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and frd.waybill_no = #{waybillNo}
+		</if>
+   </select>
+   
+   <!-- 按账单查询-导出 -->
+   <select id="querydistributionDetailByBillNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	select
+        	frd.fees_no, frd.waybill_no, bd.outstock_no, bd.external_no, bd.warehouse_code, bd.warehouse_name,
+     		frd.customerid, frd.customer_name, frd.carrierid, frd.carrier_name, frd.deliveryid, frd.deliver_name,frd.subject_code,frd.other_subject_code,
+     		frd.unpacking, frd.unpack_num, frd.delivery_date, frd.temperature_type, frd.bill_type, frd.b2b_flag, 
+     		frd.total_weight, frd.total_quantity, frd.total_varieties, frd.split_single, frd.amount, 
+     		frd.bill_no, frd.rule_no, frd.to_province_name, frd.to_district_name, frd.to_city_name, 
+     		frd.charged_weight, frd.weight_limit, frd.unit_price, frd.head_weight, frd.continued_weight, 
+     		frd.head_price, frd.continued_price, frd.create_time,
+			bd.totalqty as totalQuantity,bd.product_detail as productDetail,frd.bigstatus,frd.smallstatus,frd.biz_type, 
+			frs.cost as orderOperatorAmount,bom.bill_type_name as billTypeName,bd.receive_name,bd.zexpressnum,bdc.duty_type,bdc.update_reason_detail
+        from fees_receive_dispatch frd
+		LEFT JOIN biz_dispatch_bill bd on frd.fees_no = bd.fees_no
+		LEFT JOIN biz_outstock_master bom on frd.waybill_no = bom.waybill_no and frd.outstock_no = bom.outstock_no
+		LEFT JOIN fees_receive_storage frs ON frs.fees_no = bom.fees_no and frs.subject_code = 'wh_b2c_work'
+		LEFT JOIN biz_dispatch_carrier_change bdc on frd.waybill_no=bdc.waybill_no
+        where frd.del_flag = '0' and bd.del_flag='0' and frd.subject_code='de_delivery_amount' and frd.bill_no = #{billNo,jdbcType=VARCHAR}
+   </select>
+   
+   <select id="querydistributionDetailByBizData" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	select 
+	a.warehouse_name,
+	a.customer_name,
+	a.outstock_no,
+	a.external_no,
+	a.waybill_no,
+	a.create_time,
+	a.zexpressnum,
+	ifnull(b.total_weight,a.total_weight) total_weight,
+	a.totalqty as totalQuantity,
+	a.product_detail,
+	b.carrier_name,
+	a.receive_name,
+	b.to_province_name,
+	b.to_district_name,
+	b.to_city_name,
+	a.temperature_type_code as temperature_type,
+	b.charged_weight,
+	b.head_price,
+	b.continued_price,
+	b.amount,
+	c.cost as orderOperatorAmount,
+	e.duty_type,
+	e.update_reason_detail,
+	d.is_calculated as storageCal,
+	d.remark as storageRemark,
+	a.is_calculated as dispatchCal,
+	a.remark as dispatchRemark	
+	from biz_dispatch_bill a
+	left join fees_receive_dispatch b on a.fees_no=b.fees_no and b.del_flag='0'
+	left join biz_outstock_master d on d.waybill_no=a.waybill_no  and d.del_flag='0'
+	LEFT JOIN fees_receive_storage c ON c.fees_no = d.fees_no and c.del_flag='0'
+	LEFT JOIN biz_dispatch_carrier_change e on a.waybill_no=e.waybill_no 
+    where a.del_flag='0' and a.customerid=#{customerId} and a.create_time>=#{startTime}
+    and <![CDATA[a.create_time<#{endTime}]]>
+   </select>
+   
+   <!-- 核销账单 -->
+   <update id="confirmFeesBill" parameterType="java.util.Map">
+   		update fees_receive_dispatch set last_modifier=#{modperson},last_modify_time=#{modtime},status=#{status}
+   		where bill_no=#{billNo}
+   </update>
+   
+   <!-- 删除账单 -->
+    <update id="deleteFeesBill" parameterType="java.util.Map">
+   		update fees_receive_dispatch set last_modifier=#{modperson},last_modify_time=#{modtime},status=#{status},bill_no='',derate_amount=#{derateAmount}
+   		where bill_no=#{billNo}
+   		<if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+   </update>
+   
+   <!-- 删除账单-理赔 -->
+	<delete id="deleteFeesBillAbnormal" parameterType="java.util.Map">
+        delete from fees_receive_dispatch 
+        where bill_no=#{billNo,jdbcType=VARCHAR}
+        and subject_code in ('de_abnormal_pay','de_change')
+        <if test="(feeNos !=null and feeNos.size() > 0)">
+	 		and fees_no in
+	 		<foreach collection="feeNos" index="index" item="item" open="(" separator="," close=")">
+	 			#{item}
+	 		</foreach>
+	 	</if>
+    </delete>
+   
+   <!-- new生成账单  查询符合账单条件的费用数量-->
+    <select id="queryCountByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"
+    	resultType="int">
+    	select count(0) from  fees_receive_dispatch
+        where del_flag = '0' and customerid=#{customerId}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if> 
+   </select>
+   
+   <!-- new生成账单  查询符合账单条件的费用金额-->
+    <select id="queryAmountByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"
+    	resultType="double">
+    	select sum(amount) from  fees_receive_dispatch
+        where del_flag = '0' and customerid=#{customerId}
+        	and status = '0'  and is_calculated in ('1','5')
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if> 
+   </select>
+   
+   <!-- new更新符合条件的费用信息 -->
+	<update id="updateByBillInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity">
+		update fees_receive_dispatch
+		set bill_no=#{billNo},status=#{status},derate_amount='0',
+			last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
+		where del_flag = '0' and customerid=#{customerId}
+        	and status = '0' and is_calculated in ('1','5')
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if> 
+	</update>
+	
+	<!-- new生成账单  查询账单科目费用-->
+    <select id="queryFeesBillSubjectInfo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity"
+    	resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+    	select bill_no as billNo, warehouse_code as warehouseCode, 
+    		carrierid as subjectCode, carrier_name as subjectName,sum(amount) as totalAmount,count(0) as num
+    	from  fees_receive_dispatch
+        where del_flag = '0' and bill_no=#{billNo}
+        group by bill_no,warehouse_code,carrierid,carrier_name
+   </select>
+   
+   <update id="deleteDispatchBill" parameterType="Map">
+    	update fees_receive_dispatch
+    	set bill_no='',status='0',derate_amount=0
+    	where bill_no=#{billNo} and warehouse_code=#{warehouseCode}
+    	and carrierid=#{subjectCode} and del_flag=0
+    </update>
+    <select id="queryAllByBillSubjectInfo" parameterType="Map" resultMap="BaseResultMap">
+    	 select
+        <include refid="Base_Column_List" />
+        from  fees_receive_dispatch
+        where del_flag=0 and warehouse_code=#{warehouseCode}
+        and bill_no=#{billNo} and carrierid=#{subjectCode}
+    </select>
+    <select id="queryAllByBillSubjectCondition"  parameterType="Map" resultMap="BaseResultMap">
+     	select
+        <include refid="Base_Column_List" />
+        from  fees_receive_dispatch
+        where del_flag=0 and warehouse_code=#{warehouseCode}
+        and carrierid=#{subjectCode} and bill_no='' and customerid=${customerId}
+        <if test="(startTime!=null and startTime!='')">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>
+    </select>
+    <update id="deleteBatchFees" parameterType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	update fees_receive_dispatch set bill_no='',status=0,derate_amount=0
+    	where id=#{id}
+    </update>
+    <update id="derateBatchAmount" parameterType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	update fees_receive_dispatch set derate_amount=#{derateAmount}
+    	where id=#{id}
+    </update>
+    <update id="updateBatchFees" parameterType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	update fees_receive_dispatch set bill_no=#{billNo},status=#{status}
+    	where fees_no = #{feesNo}
+    </update>
+    <select id="sumSubjectMoney" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+		select sum(amount) as totalAmount,sum(derate_amount) as derateAmount,count(0) as num from fees_receive_dispatch 
+		where bill_no=#{billNo} and warehouse_code=#{warehouseCode} and carrierid=#{subjectCode}
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>                                                                                                                                                                                                                                                                               
+	</select>
+	<update id="updateFeeByParam" parameterType="java.util.Map">
+		update fees_receive_dispatch set bill_no=#{billNo},`status`=#{status} where warehouse_code=#{warehouseCode} and carrierid=#{subjectCode}
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[create_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!=null)">
+			and <![CDATA[create_time<=#{endTime}]]>
+		</if>	
+	</update>
+	
+	
+	<select id="queryFeesImport" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.dispatch.vo.FeesReceiveDispatchVo">
+        select
+           	fee.create_time,fee.id, fee.fees_no, fee.waybill_no, fee.outstock_no, fee.external_no, 
+			biz.warehouse_code,biz.customer_name, fee.customerid,
+		   	fee.carrier_name, fee.deliver_name,fee.subject_code,fee.other_subject_code,
+			fee.delivery_date, fee.temperature_type, fee.b2b_flag,fee.total_weight, fee.charged_weight,
+			fee.total_quantity, fee.total_varieties, fee.template_id,
+	     	fee.amount, fee.bill_no, fee.rule_no, fee.to_province_name, fee.to_district_name, 
+			fee.to_city_name,fee.accept_time, fee.sign_time,fee.biz_type, fee.bigstatus, 
+			fee.smallstatus, fee.param1, fee.param2, fee.param3, fee.param4, 
+			fee.param5, fee.status,fee.weight_limit,fee.unit_price,fee.head_weight,
+			fee.head_price,fee.continued_weight,fee.continued_price,
+			fee.is_calculated,biz.remark,biz.product_detail,cha.duty_type,cha.update_reason_detail
+        from  fees_receive_dispatch fee
+        left JOIN biz_dispatch_bill biz on fee.fees_no=biz.fees_no
+        left JOIN biz_dispatch_carrier_change cha on fee.waybill_no=cha.waybill_no
+        where fee.del_flag = '0' and biz.del_flag='0' and fee.subject_code='de_delivery_amount'
+        <if test="(billNo != null and billNo !='')">
+			and fee.bill_no = #{billNo}
+		</if>
+	       <if test="(deliveryid != null and deliveryid !='')" >
+			and fee.carrierid = #{deliveryid}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+			and fee.customerid = #{customerid}
+		</if>
+		<if test="(customerIdList!=null and customerIdList.size()>0)">
+			 	and fee.customerid in
+			 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+		 </if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and fee.fees_no = #{feesNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and fee.waybill_no = #{waybillNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and fee.outstock_no = #{outstockNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and fee.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(status != null and status !='')" >
+			and fee.status = #{status}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			and fee.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and <![CDATA[fee.create_time <= #{endTime}]]>
+		</if>
+		<if test="(operatorTimeBegin != null and operatorTimeBegin !='')" >
+			and fee.delivery_date <![CDATA[>= ]]>#{operatorTimeBegin}
+		</if>
+		<if test="(operatorTimeEnd != null and operatorTimeEnd !='')" >
+			and <![CDATA[fee.delivery_date <= #{operatorTimeEnd}]]>
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+			and fee.biz_type = #{bizType}
+		</if>
+  </select>
+	
+    
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsGroupEntity" meta="child:dataTypeBmsGroup">
+      <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeBmsGroup" parent="dtBmsGroupEntity">
+      <Reference name="children">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">bmsGroupController#loadDataByParent</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsGroup">
+      <Property name="dataType">[dataTypeBmsGroup]</Property>
+      <Property name="dataProvider">bmsGroupController#loadDataByParent</Property>
+    </DataSet>
+    <DataTree id="dataTreeGroup" layoutConstraint="left">
+      <ClientEvent name="onDataRowDoubleClick">var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+if (currentEitity != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, currentEitity); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">200</Property>
+      <Property name="dataSet">dsGroup</Property>
+      <Property name="currentNodeDataPath">currentGroup</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="childrenProperty">children</Property>
+          <Property name="labelProperty">groupName</Property>
+          <Property name="recursive">true</Property>
+          <Property name="expandLevel">10</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+  </View>
+</ViewConfig>

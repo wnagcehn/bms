@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.pub.record.mapper.PubRecordLogMapper" >
+    <insert id="addEntity" parameterType="com.jiuyescm.bms.pub.PubRecordLogEntity">
+       insert into pub_record_log (biz_type,url_name,operate_type,operate_table,operate_table_key,operate_desc,operate_person,operate_time,
+		remark,old_data,new_data) 
+		values 
+		(#{bizType},
+		#{urlName},
+		#{operateType},
+		#{operateTable},
+		#{operateTableKey},
+		#{operateDesc},
+		#{operatePerson},
+		#{operateTime},
+		#{remark},
+		#{oldData},
+		#{newData}
+		)
+    </insert>
+    <select id="queryAll" parameterType="java.util.Map" resultType="com.jiuyescm.bms.pub.PubRecordLogEntity">
+    	select id,biz_type,url_name,operate_type,operate_table,operate_table_key,operate_desc,operate_person,operate_time,
+		remark,old_data,new_data from pub_record_log 
+		where 1=1
+		<if test="(bizType!=null and bizType!='')">
+			and biz_type=#{bizType}
+		</if>
+		<if test="(urlName!=null and urlName!='')">
+			and url_name=#{urlName}
+		</if>
+		<if test="(operateType!=null and operateType!='')">
+			and operate_type=#{operateType}
+		</if>
+		<if test="(startTime!=null and startTime!='')">
+			and <![CDATA[operate_time>=#{startTime}]]>
+		</if>
+		<if test="(endTime!=null and endTime!='')">
+			and <![CDATA[operate_time<#{endTime}]]>
+		</if>
+		order by operate_time desc
+    </select>
+</mapper>

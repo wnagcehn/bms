@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper" >
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
+	    <result column="material_type" property="materialType" jdbcType="VARCHAR" />
+	    <result column="material_mark" property="materialMark" jdbcType="VARCHAR" />
+	    <result column="percent" property="percent" jdbcType="DOUBLE" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+		id, products_mark, material_type, material_mark, percent, task_id
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(productsMark != null and productsMark !='')" >
+				and products_mark = #{productsMark}
+		</if>
+		<if test="(materialType != null and materialType !='')" >
+				and material_type = #{materialType}
+		</if>
+		<if test="(materialMark != null and materialMark !='')" >
+				and material_mark = #{materialMark}
+		</if>
+		<if test="(percent != null and percent !='')" >
+				and percent = #{percent}
+		</if>
+		<if test="(taskId != null and taskId !='')" >
+				and task_id = #{taskId}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_products_material_account
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+     <select id="queyAllMax" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+		select a.products_mark, a.material_type, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
+		inner JOIN (
+			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId}
+			GROUP BY products_mark, material_type
+		) b
+		on a.products_mark=b.products_mark and a.material_type=b.material_type and a.task_id=b.task_id and a.percent=b.percent
+		GROUP BY a.products_mark,a.material_type,a.percent
+     </select>
+     
+     <select id="queyNotMax" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingMaterialEntity">
+        select DISTINCT(a.waybill_no) from bms_marking_material a 
+		inner JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+		INNER JOIN biz_outstock_packmaterial c on a.waybill_no=c.waybill_no 
+		where 1=1 and b.products_mark=#{productsMark} and a.material_type=#{materialType} and a.material_mark!=#{materialMark}
+		and c.del_flag='0' and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
+     </select>
+	
+	 <select id="queryMark" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingMaterialEntity">
+        select a.* from bms_marking_material a
+        inner JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+        where 1=1
+        <if test="(materialType != null and materialType !='')" >
+				and a.material_type = #{materialType}
+		</if>
+		<if test="(materialMark != null and materialMark !='')" >
+				and a.material_mark = #{materialMark}
+		</if>
+		<if test="(productsMark != null and productsMark !='')" >
+				and b.products_mark = #{productsMark}
+		</if>
+     </select>
+     
+     <select id="queryOneMark" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingMaterialEntity">
+     	 select a.* from bms_marking_material a
+     	 inner JOIN bms_marking_products b on a.waybill_no=b.waybill_no 
+     	 where 1=1
+        <if test="(materialType != null and materialType !='')" >
+				and a.material_type = #{materialType}
+		</if>
+		<if test="(materialMark != null and materialMark !='')" >
+				and a.material_mark = #{materialMark}
+		</if>
+		<if test="(productsMark != null and productsMark !='')" >
+				and b.products_mark = #{productsMark}
+		</if>
+		limit 1
+     </select>
+     
+     <insert id="markMaterial" parameterType="java.util.Map">
+     	INSERT INTO bms_marking_material(waybill_no, material_mark, material_type,task_id)
+        SELECT waybill_no, md, tp,#{batchNum}
+        FROM(
+            SELECT waybill_no, tp,
+                MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as md,
+				GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)
+            FROM (
+                SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time,
+                    SUBSTR(consumer_material_code, 1, LOCATE('-', consumer_material_code) - 1) as tp
+                FROM biz_outstock_packmaterial_temp where batchNum=#{batchNum}
+                    AND (consumer_material_code LIKE '%PMX%' or consumer_material_code LIKE '%ZX%')
+            ) a
+            GROUP BY waybill_no, tp
+        ) b
+        GROUP BY waybill_no
+        HAVING COUNT(tp) = 1
+     </insert>
+     
+     <select id="queyMaterialCount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+         select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2*100)/100 as percent from
+		(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num1 from bms_marking_material a 
+		LEFT JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+		INNER JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no
+		where 1=1 and c.customerid=#{customerId} and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
+		GROUP BY b.products_mark,a.material_type,a.material_mark) m
+		LEFT JOIN (select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num2 from bms_marking_material a 
+		LEFT JOIN bms_marking_products b on a.waybill_no=b.waybill_no 
+		INNER JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no 
+		where 1=1 and c.customerid=#{customerId} and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
+		GROUP BY b.products_mark,a.material_type) n
+		on m.products_mark=n.products_mark and m.material_type=n.material_type
+     </select>
+     
+     <insert id="saveList" parameterType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+     	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id)
+		        values (
+		#{productsMark,jdbcType=VARCHAR}, 
+		#{materialType,jdbcType=VARCHAR}, 
+		#{materialMark,jdbcType=VARCHAR}, 
+		#{percent,jdbcType=DOUBLE}, 
+		#{taskId,jdbcType=VARCHAR}
+		        )
+     </insert>
+     
+     <insert id="saveMaterial" parameterType="java.util.Map">
+     	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id)
+     	 select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2*100)/100 as percent,#{taskId} 
+     	 from
+			(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num1 from bms_marking_material a 
+			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+			INNER JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no
+			where 1=1 and c.del_flag='0' and c.customerid=#{customerId} and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY b.products_mark,a.material_type,a.material_mark) m
+		 LEFT JOIN 
+		 	(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num2 from bms_marking_material a 
+			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no 
+			INNER JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no 
+			where 1=1 and c.del_flag='0' and c.customerid=#{customerId} and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY b.products_mark,a.material_type) n
+		 on m.products_mark=n.products_mark and m.material_type=n.material_type
+     </insert>
+     
+     <delete id="deleteMarkMaterialByWaybillNo" parameterType="java.util.Map">
+     	delete from bms_marking_material where waybill_no in
+     	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+     		#{item}
+     	</foreach>
+     </delete>
+     
+     <update id="updateMaterialAccount" parameterType="java.util.Map">
+     	 update bms_products_material_account set waybill_no=#{waybillNo,jdbcType=VARCHAR}
+		 where 1=1 
+		 and products_mark=#{productsMark,jdbcType=VARCHAR}
+		 and material_type=#{materialType,jdbcType=VARCHAR}
+		 and material_mark=#{materialMark,jdbcType=VARCHAR}
+		 and percent=#{percent,jdbcType=DOUBLE}
+		 and task_id=#{taskId,jdbcType=VARCHAR}
+     </update>
+</mapper> 

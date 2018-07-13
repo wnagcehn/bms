@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.abnormal.FeesPayAbnormalEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fee_no" property="feeNo" jdbcType="VARCHAR" />
+	    <result column="reference" property="reference" jdbcType="VARCHAR" />
+	    <result column="expressnum" property="expressnum" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="reason_id" property="reasonId" jdbcType="SMALLINT" />
+	    <result column="reason" property="reason" jdbcType="VARCHAR" />
+	    <result column="reason_detail" property="reasonDetail" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="warehouse_id" property="warehouseId" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="create_person" property="createPerson" jdbcType="VARCHAR" />
+	    <result column="create_person_name" property="createPersonName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="ispay" property="ispay" jdbcType="BIT" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="pay_money" property="payMoney" jdbcType="DECIMAL" />
+	    <result column="amerce_amount" property="amerceAmount" jdbcType="DECIMAL" />    
+	    <result column="is_conflict" property="isConflict" jdbcType="BIT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="CHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_delivery_free" property="isDeliveryFree" jdbcType="VARCHAR" />
+	    <result column="delivery_cost" property="deliveryCost" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE"/>
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE"/>
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, fee_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money,amerce_amount, is_conflict, bill_no, is_calculated, operate_time,is_delivery_free,delivery_cost
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(feeNo != null and feeNo !='')" >
+				and fee_no = #{feeNo}
+		</if>
+		<if test="(reference != null and reference !='')" >
+				and reference = #{reference}
+		</if>
+		<if test="(expressnum != null and expressnum !='')" >
+				and expressnum = #{expressnum}
+		</if>
+		<if test="(orderNo != null and orderNo !='')" >
+				and order_no = #{orderNo}
+		</if>
+		<if test="(reasonId != null and reasonId !='')" >
+				and reason_id = #{reasonId}
+		</if>
+		<if test="(reason != null and reason !='')" >
+				and reason = #{reason}
+		</if>
+		<if test="(reasonDetail != null and reasonDetail !='')" >
+				and reason_detail = #{reasonDetail}
+		</if>
+		
+ 		<if test="(customerIdList!=null and customerIdList.size()>0)">
+			 	and customer_id in
+			 	<foreach collection="customerIdList" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+		 </if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+				and carrier_id = #{carrierId}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and carrier_name = #{carrierName}
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and deliver_id = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliver_name = #{deliverName}
+		</if>
+		<if test="(warehouseId != null and warehouseId !='')" >
+				and warehouse_id = #{warehouseId}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(createPerson != null and createPerson !='')" >
+				and create_person = #{createPerson}
+		</if>
+		<if test="(createPersonName != null and createPersonName !='')" >
+				and create_person_name = #{createPersonName}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(ispay != null and ispay !='')" >
+				and ispay = #{ispay}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and abn.create_time >= #{startTime} and <![CDATA[ abn.create_time <= #{endTime}]]>
+		</if>
+		<if test="(receive != null and receive !='')" >
+				and reason_id in (1,3,4,56)
+		</if>
+		<if test="(payment != null and payment !='')" >
+				and reason_id = 2
+		</if>
+		<if test="(payMoney != null and payMoney !='')" >
+				and pay_money = #{payMoney}
+		</if>
+		<if test="(isConflict != null and isConflict !='')" >
+				and is_conflict = #{isConflict}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+    </sql>
+	<!-- 删除账单 -->
+    <update id="deleteBill" parameterType="java.util.Map">
+   		update fees_pay_abnormal set is_calculated=#{status},bill_no='',derate_amount=#{derateAmount}
+   		where bill_no=#{billNo}
+   		<if test="(feesNo != null and feesNo !='')" >
+			and fee_no = #{feesNo}
+		</if>
+		<if test="(deliveryid != null and deliveryid !='')" >
+			and deliver_id = #{deliveryid}
+		</if>
+   </update>
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+        SELECT  abn.id,abn.fee_no,abn.reference,abn.expressnum,abn.order_no,abn.reason,abn.reason_detail,abn.carrier_name,abn.deliver_name,abn.customer_name,abn.create_person_name,abn.create_time,bill_no,
+			case abn.ispay
+			 when '0' then '否'
+			 when '1' then '是'
+			end as ispayStr,
+			abn.pay_money,
+			case abn.is_calculated
+			  when '0' then '未计算'
+			  when '1' then '已计算'
+			end as is_calculated,
+			case abn.is_conflict
+			when '0' then '否'
+			 when    '1' then '是'
+			end as isConflictStr,abn.remark,abn.warehouse_id,abn.customer_id,delivery_cost,
+			IF((ISNULL(is_delivery_free) || LENGTH(trim(is_delivery_free))<![CDATA[<]]>1),'0',is_delivery_free)
+			as isDeliveryFree
+			 from  fees_pay_abnormal abn 
+			 where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+      <select id="queryTotalPay" parameterType="java.util.Map"
+        resultType="java.lang.Double">
+      SELECT  SUM(abn.pay_money) as totalPay   from  fees_pay_abnormal abn 
+        where 1=1
+		<include refid="baseSelectColumns" />
+      </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_pay_abnormal
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+        insert into fees_pay_abnormal(fee_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, is_calculated, operate_time)
+        values (
+			#{feeNo,jdbcType=VARCHAR}, 
+			#{reference,jdbcType=VARCHAR}, 
+			#{expressnum,jdbcType=VARCHAR}, 
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{reasonId,jdbcType=SMALLINT}, 
+			#{reason,jdbcType=VARCHAR}, 
+			#{reasonDetail,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{carrierId,jdbcType=VARCHAR}, 
+			#{carrierName,jdbcType=VARCHAR}, 
+			#{deliverId,jdbcType=VARCHAR}, 
+			#{deliverName,jdbcType=VARCHAR}, 
+			#{warehouseId,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{createPerson,jdbcType=VARCHAR}, 
+			#{createPersonName,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{ispay,jdbcType=BIT}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{payMoney,jdbcType=DECIMAL}, 
+			#{isConflict,jdbcType=BIT}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=CHAR}, 
+			#{operateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+        update fees_pay_abnormal 
+		<set >
+			<if test="feeNo != null" >fee_no=#{feeNo,jdbcType=VARCHAR},</if>
+			<if test="reference != null" >reference=#{reference,jdbcType=VARCHAR},</if>
+			<if test="expressnum != null" >expressnum=#{expressnum,jdbcType=VARCHAR},</if>
+			<if test="orderNo != null" >order_no=#{orderNo,jdbcType=VARCHAR},</if>
+			<if test="reasonId != null" >reason_id=#{reasonId,jdbcType=SMALLINT},</if>
+			<if test="reason != null" >reason=#{reason,jdbcType=VARCHAR},</if>
+			<if test="reasonDetail != null" >reason_detail=#{reasonDetail,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="carrierId != null" >carrier_id=#{carrierId,jdbcType=VARCHAR},</if>
+			<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+			<if test="deliverId != null" >deliver_id=#{deliverId,jdbcType=VARCHAR},</if>
+			<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+			<if test="warehouseId != null" >warehouse_id=#{warehouseId,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="createPerson != null" >create_person=#{createPerson,jdbcType=VARCHAR},</if>
+			<if test="createPersonName != null" >create_person_name=#{createPersonName,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="ispay != null" >ispay=#{ispay,jdbcType=BIT},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="payMoney != null" >pay_money=#{payMoney,jdbcType=DECIMAL},</if>
+			<if test="isConflict != null" >is_conflict=#{isConflict,jdbcType=BIT},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=CHAR},</if>
+			<if test="operateTime != null" >operate_time=#{operateTime,jdbcType=TIMESTAMP},</if>
+			<if test="deliveryCost != null" >delivery_cost=#{deliveryCost,jdbcType=DECIMAL},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from fees_pay_abnormal where
+        id=#{id}
+    </delete>
+    
+    <select id="queryPayAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+        SELECT  id,fee_no,reference,expressnum,order_no,reason,reason_detail,customer_id,customer_name,
+    	carrier_id,carrier_name,deliver_id,deliver_name,warehouse_id,warehouse_name,
+    		bill_no,create_person_name,create_time,reason_id,
+			case ispay
+			 when '0' then '否'
+			 when '1' then '是'
+			end as ispayStr,
+			pay_money,
+			IF((ISNULL(is_delivery_free) || LENGTH(trim(is_delivery_free))<![CDATA[<]]>1),'0',is_delivery_free)
+			 as isDeliveryFree,
+			delivery_cost as deliveryCost,
+			case is_calculated
+			  when '0' then '未计算'
+			  when '1' then '已计算'
+			end as is_calculated,
+			case is_conflict
+			when '0' then '否'
+			 when    '1' then '是'
+			end as isConflictStr,remark,amerce_amount
+		from  fees_pay_abnormal
+		where 1=1 and is_calculated = '0'
+			and reason_id = '2'
+			and deliver_id in
+		<foreach collection="deliverIdList" index="index" item="item" open="(" separator="," close=")">
+              #{item}       
+       </foreach> 
+		<if test="(expressnum != null and expressnum !='')" >
+			and expressnum = #{expressnum}
+		</if>
+		<if test="(feeNo != null and feeNo !='')" >
+				and fee_no = #{feeNo}
+		</if>
+		<if test="(operatorStartTime != null and operatorStartTime !='')" >
+			and create_time <![CDATA[ >= ]]>date_sub(#{operatorStartTime}, interval 1 month)
+		</if>
+		<if test="(operatorEndTime != null and operatorEndTime !='')" >
+			and create_time<![CDATA[ <= ]]>#{operatorEndTime}
+		</if>
+    </select>
+    
+    <!-- 按客诉原因分组统计 -->
+	<select id="querywarehouseAbnormalAmount"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+   		select reason_id as reasonId, bill_no as billNo, reason, sum(pay_money+delivery_cost) as amount 
+		from fees_pay_abnormal
+		where 1=1 and bill_no=#{billNo}
+		group by reason_id,bill_no,reason
+   </select>
+   
+   <select id="queryGroupAbnormalAmountByDeliver"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+   		select reason_id as reasonId, bill_no as billNo, reason, 
+   			sum(case when reason_id = '2' and is_delivery_free = '0' then -pay_money-delivery_cost-amerce_amount 
+   				when reason_id = '2' and (is_delivery_free != '0' or is_delivery_free is NULL) then -pay_money-amerce_amount 
+   				else pay_money end) as amount ,
+   			deliver_id as deliveryid,deliver_name as deliveryName
+		from fees_pay_abnormal
+		where 1=1 and bill_no=#{billNo} and deliver_id=#{deliverid}
+		group by reason_id,bill_no,reason,deliver_id,deliver_name
+   </select>
+   
+   <select id="queryGroupAbnormalAmountSelect"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+   		select reason_id as reasonId, bill_no as billNo, reason, 
+   		sum(case when reason_id = '2' and is_delivery_free = '0' then -pay_money-delivery_cost-amerce_amount 
+   				when reason_id = '2' and (is_delivery_free != '0' or is_delivery_free is NULL) then -pay_money-amerce_amount 
+   				else pay_money end) as amount,
+   		deliver_id as deliveryid,deliver_name as deliveryName
+		from fees_pay_abnormal
+		where 1=1 and bill_no=#{billNo} and deliver_id in
+		 <foreach collection="deliverIdList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+        </foreach> 
+		group by reason_id,bill_no,reason,deliver_id,deliver_name
+   </select>
+   
+   <!-- 按客诉原因，账单编号查询详细 -->
+   <select id="queryAbnormalDetailByWarehouseidAndBillNo" parameterType="java.util.Map"
+   		resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+    	select id,fee_no,reference,expressnum,order_no,reason,reason_detail,reason_id,
+    		carrier_name,deliver_id,deliver_name,customer_name,bill_no,create_person_name,create_time,
+			case ispay
+			 when '0' then '否'
+			 when '1' then '是'
+			end as ispayStr,
+			case is_calculated
+			  when '0' then '未计算'
+			  when '1' then '已计算'
+			end as is_calculated,
+			case is_conflict
+			when '0' then '否'
+			 when    '1' then '是'
+			end as isConflictStr,
+			-pay_money as pay_money,
+			-delivery_cost as delivery_cost,
+			-amerce_amount as amerce_amount,
+			remark,warehouse_id,customer_id as customerId,ifnull(is_delivery_free,'0') as isDeliveryFree
+        from  fees_pay_abnormal 
+        where 1=1 and reason_id=#{reasonId} and bill_no=#{billNo}     
+        <if test="(deliverid != null and deliverid !='')">
+        	and deliver_id=#{deliverid}
+        </if>       
+        <if test="(feeNo != null and feeNo !='')" >
+			and fee_no = #{feeNo}
+		</if>
+		<if test="(expressnum != null and expressnum !='')" >
+			and expressnum = #{expressnum}
+		</if>
+   </select>
+	
+	 <!-- 应付 生成账单  查询符合账单条件的费用数量 and reason_id in ('2','4')-->
+   <select id="queryCountByFeesPayBillInfo" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity" resultType="int">
+		select count(0) from fees_pay_abnormal
+        where 1=1 and is_calculated = '0'
+        	and reason_id = '2'
+        	and deliver_id in	
+ 		<foreach collection="deliverList" index="index" item="item" open="(" separator="," close=")">
+              #{item.deliverid}       
+       </foreach>  
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]>date_sub(#{startTime}, interval 1 month)
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+	</select>
+	
+   <select id="queryFeeByParam" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+		select <include refid="baseColumns" /> from fees_pay_abnormal
+        where 1=1
+        	and deliver_id=#{deliveryid} 
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]>date_sub(#{startTime}, interval 1 month)
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+        <if test="(isCalculated != null and isCalculated !='')">
+        	and is_calculated=#{isCalculated}
+        </if>
+        <if test="(reasonIds!=null and reasonIds.size()>0)">
+			and reason_id in
+			<foreach collection="reasonIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="(reasonId!=null and reasonId !='')">
+			and reason_id=#{reasonId}
+		</if>
+	</select>
+	
+	
+	<!-- 应付 更新符合条件的费用信息 -->
+	<update id="updateByFeesPayBillInfo" parameterType="com.jiuyescm.bms.fees.bill.out.entity.FeesPayBillEntity">
+		update fees_pay_abnormal
+		set bill_no=#{billNo},is_calculated=#{status}
+		 where 1=1 and is_calculated = '0'
+        	and reason_id = '2'
+        	and deliver_id in
+       	<foreach collection="deliverList" index="index" item="item" open="(" separator="," close=")">
+              #{item.deliverid}
+       </foreach>
+        <if test="(startTime != null and startTime !='')" >
+        	and create_time <![CDATA[>=]]>date_sub(#{startTime}, interval 1 month)
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+	</update>
+	
+	<!-- 按账单查询-导出 -->
+	<select id="queryAbnormalDetailByBillNoAndDeliver" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+	   	select
+	       id,fee_no,reference,expressnum,order_no,reason,reason_detail,
+    		carrier_id,carrier_name,deliver_id,deliver_name,customer_id,customer_name,
+    		warehouse_id, warehouse_name,bill_no,create_person,create_person_name,create_time,operate_time,
+			case ispay
+			 when '0' then '否'
+			 when '1' then '是'
+			end as ispayStr,
+			is_delivery_free,
+			-pay_money as pay_money,
+			-delivery_cost as delivery_cost,
+			-amerce_amount as amerce_amount,
+			case is_calculated
+			  when '0' then '未计算'
+			  when '1' then '已计算'
+			end as is_calculated,
+			case is_conflict
+			when '0' then '否'
+			 when    '1' then '是'
+			end as isConflictStr,remark
+	       from  fees_pay_abnormal
+	       where 1=1 and bill_no=#{billNo} and deliver_id=#{deliverid}
+	</select>
+	
+   <!-- 按账单查询-导出 -->
+	<select id="queryAbnormalDetailBatch" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+	   	select
+	       id,fee_no,reference,expressnum,order_no,reason,reason_detail,
+    		carrier_id,carrier_name,deliver_id,deliver_name,customer_id,customer_name,
+    		warehouse_id, warehouse_name,bill_no,create_person,create_person_name,create_time,operate_time,
+			case ispay
+			 when '0' then '否'
+			 when '1' then '是'
+			end as ispayStr,
+			case is_calculated
+			  when '0' then '未计算'
+			  when '1' then '已计算'
+			end as is_calculated,
+			case is_conflict
+			when '0' then '否'
+			 when    '1' then '是'
+			end as isConflictStr,remark,	
+			is_delivery_free,
+			-pay_money as pay_money,
+			-delivery_cost as delivery_cost,
+			-amerce_amount as amerce_amount
+	       from  fees_pay_abnormal
+	       where 1=1 and bill_no=#{billNo} and deliver_id in
+	        <foreach collection="deliverIdList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+        	</foreach> 
+	</select>
+	
+	<update id="updateBillNo" parameterType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+		update fees_pay_abnormal 
+		<set >
+			<if test="billNo!=null">bill_no=#{billNo},</if>
+			<if test="isCalculated!=null">is_calculated = #{isCalculated},</if>
+		</set>
+		where fee_no=#{feeNo} and ifnull(bill_no,'')=''
+	</update>
+	
+	<!-- 核销账单 -->
+	<update id="confirmFeesBill" parameterType="java.util.Map">
+   		update fees_pay_abnormal set is_calculated=#{status}
+   		where bill_no=#{billNo}
+   </update>
+   
+   	 <!-- 应付 生成账单  查询符合账单条件的费用list-->
+   <select id="queryCountByFeesPayBillInfoData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+		select * from fees_pay_abnormal
+        where 1=1 and is_calculated = '0'
+        	and reason_id = '2'
+        <if test="(startTime != null and startTime !='')">
+        	and create_time <![CDATA[>=]]> date_sub(#{startTime}, interval 1 month)
+        </if>
+        <if test="(endTime != null and endTime !='')" >
+        	and create_time <![CDATA[<=]]> #{endTime}
+        </if>
+        <if test="(deliveryid != null and deliveryid !='')" >
+        	and deliver_id = #{deliveryid}
+        </if>
+        <if test="(deliverList != null and deliverList !='')" >
+			and deliver_id in 
+			<foreach collection="deliverList" index="index" item="item" open="(" separator="," close=")">
+					#{item.deliverid}
+			</foreach>
+		</if>
+	</select>
+	
+	<update id="deleteBatchFees" parameterType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+		update fees_pay_abnormal set bill_no='',is_calculated=0,derate_amount=0
+		where id=#{id}
+	</update>
+	
+	<update id="derateBatchAmount" parameterType="com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity">
+		update fees_pay_abnormal set  derate_amount=#{derateAmount}
+		where id=#{id}
+	</update>
+	
+</mapper>

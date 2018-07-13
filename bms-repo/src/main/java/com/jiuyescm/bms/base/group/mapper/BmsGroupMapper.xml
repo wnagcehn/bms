@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.group.mapper.BmsGroupMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.group.BmsGroupEntity" >
+    	<id column="id" property="id" jdbcType="BIGINT" />
+    	<result column="id" property="id" jdbcType="BIGINT" />
+    	<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    	<result column="group_name" property="groupName" jdbcType="VARCHAR" />
+   		<result column="group_code" property="groupCode" jdbcType="VARCHAR"/>
+    	<result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+    	<result column="creator" property="creator" jdbcType="VARCHAR" />
+    	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+    	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryAll" resultMap="baseResultMap">
+		select id,parent_id,group_name,group_code,biz_type,creator,create_time,last_modifier,last_modify_time
+		from bms_group
+	</select>
+	<select id="queryDataByParentId" parameterType="Map" resultMap="baseResultMap">
+		select id,parent_id,group_name,group_code,biz_type,creator,create_time,last_modifier,last_modify_time
+		from bms_group where parent_id=#{parentId} 
+		<if test="(parentId!=null and parentId!=0)">
+			and biz_type='bill_follow'
+		</if>
+	</select>
+	<select id="queryDataByParentIdAndBizType" parameterType="Map" resultMap="baseResultMap">
+		select id,parent_id,group_name,group_code,biz_type,creator,create_time,last_modifier,last_modify_time
+		from bms_group where parent_id=#{parentId} 
+		and biz_type=#{bizTypeCode}
+	</select>
+	<insert id="addGroup" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		insert into bms_group
+		(parent_id,group_name,group_code,biz_type,creator,create_time,last_modifier,last_modify_time)
+		values
+		(#{parentId},#{groupName},#{groupCode},#{bizType},#{creator},#{createTime},#{lastModifier},#{lastModifyTime})
+	</insert>
+	<update id="updateGroup" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		update bms_group
+		<set>
+			<if test="(parentId!=null and parentId!='')">parent_id=#{parentId},</if>
+			<if test="(groupName!=null and groupName!='')">group_name=#{groupName},</if>
+			<if test="(groupCode!=null and groupCode!='')">group_code=#{groupCode},</if>
+			<if test="(bizType!=null and bizType!='')">biz_type=#{bizType},</if>
+			<if test="(creator!=null and creator!='')">creator=#{creator},</if>
+			<if test="(createTime!=null and createTime!='')">create_time=#{createTime},</if>
+			<if test="(lastModifier!=null and lastModifier!='')">last_modifier=#{lastModifier},</if>
+			<if test="(lastModifyTime!=null and lastModifyTime!='')">last_modify_time=#{lastModifyTime},</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="deleteGroup" parameterType="int">
+		delete from bms_group where id=#{id}
+	</delete>	
+	<select id="queryChildGroupCount" parameterType="int" resultType="int">
+		select count(*) from bms_group where parent_id=#{id}
+	</select>
+	
+	<select id="queryAllGroupId" parameterType="int" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		select * from  bms_group where FIND_IN_SET(id,getBmsGroup(#{groupId}))
+	</select>
+	<select id="checkGroup" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity" resultType="int">
+		select count(*) from bms_group where group_code=#{groupCode} and biz_type=#{bizType}
+	</select>
+	<select id="queryOne" parameterType="Map" resultMap="baseResultMap">
+		select * from  bms_group where 1=1
+		<if test="(groupCode != null and groupCode !='')" >
+				and group_code = #{groupCode}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if> 
+		limit 1
+	</select>
+</mapper>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.out.transport.mapper.PriceTransportPayLineRangeEntityMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineRangeEntity" >
+
+        <id column="id" property="id" jdbcType="BIGINT" />
+	   <result column="id" property="id" jdbcType="BIGINT" />
+	   <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	   <result column="product_type_code" property="productTypeCode" jdbcType="VARCHAR" />
+	   <result column="min_weight_shipment" property="minWeightShipment" jdbcType="DOUBLE" />
+	   <result column="weight_lower_limit" property="weightLowerLimit" jdbcType="DOUBLE" />
+	   <result column="weight_upper_limit" property="weightUpperLimit" jdbcType="DOUBLE" />
+	   <result column="num_lower_limit" property="numLowerLimit" jdbcType="DOUBLE" />
+	   <result column="num_upper_limit" property="numUpperLimit" jdbcType="DOUBLE" />
+	   <result column="sku_lower_limit" property="skuLowerLimit" jdbcType="DOUBLE" />
+	   <result column="sku_upper_limit" property="skuUpperLimit" jdbcType="DOUBLE" />
+	   <result column="volume_lower_limit" property="volumeLowerLimit" jdbcType="DOUBLE" />
+	   <result column="volume_upper_limit" property="volumeUpperLimit" jdbcType="DOUBLE" />
+	   
+	   <result column="min_distance" property="minDistance" jdbcType="DOUBLE" />
+	   <result column="max_distance" property="maxDistance" jdbcType="DOUBLE" />
+	   <result column="min_time" property="minTime" jdbcType="DOUBLE" />
+	   <result column="max_time" property="maxTime" jdbcType="DOUBLE" />
+	   
+	   <result column="car_model_code" property="carModelCode" jdbcType="VARCHAR" />
+	   <result column="bubble_weight" property="bubbleWeight" jdbcType="DOUBLE" />
+	   <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	   <result column="is_light" property="isLight"  jdbcType="BOOLEAN"/>
+	   
+	   <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   <result column="extra1" property="extra1" jdbcType="VARCHAR" />
+	   <result column="extra2" property="extra2" jdbcType="VARCHAR" />
+	   <result column="extra3" property="extra3" jdbcType="VARCHAR" />
+	   <result column="extra4" property="extra4" jdbcType="VARCHAR" />
+	   <result column="extra5" property="extra5" jdbcType="VARCHAR" />
+	   <result column="line_id" property="lineId" jdbcType="VARCHAR" />
+	   <result column="creator" property="creator" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, temperature_type_code, product_type_code, min_weight_shipment,weight_lower_limit, weight_upper_limit, num_lower_limit, num_upper_limit, sku_lower_limit, sku_upper_limit, volume_lower_limit, volume_upper_limit, min_distance,max_distance,min_time,max_time,car_model_code, bubble_weight, unit_price,is_light, remark,extra1,extra2,extra3,extra4,extra5, line_id, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and temperature_type_code  = #{temperatureTypeCode}
+		</if>
+		<if test="(productTypeCode != null and productTypeCode !='')" >
+				and product_type_code = #{productTypeCode}
+		</if>
+		
+		<if test="(minWeightShipment != null and minWeightShipment !='')" >
+				and min_weight_shipment = #{minWeightShipment}
+		</if>
+		
+		<if test="(weightLowerLimit != null and weightLowerLimit !='')" >
+				and weight_lower_limit = #{weightLowerLimit}
+		</if>
+		<if test="(weightUpperLimit != null and weightUpperLimit !='')" >
+				and weight_upper_limit = #{weightUpperLimit}
+		</if>
+		
+		<if test="(numLowerLimit != null and numLowerLimit !='')" >
+				and num_lower_limit = #{numLowerLimit}
+		</if>
+	    <if test="(numUpperLimit != null and numUpperLimit !='')" >
+				and num_upper_limit = #{numUpperLimit}
+		</if>
+	    <if test="(skuLowerLimit != null and skuLowerLimit !='')" >
+				and sku_lower_limit = #{skuLowerLimit}
+		</if>
+	    <if test="(skuUpperLimit != null and skuUpperLimit !='')" >
+				and sku_upper_limit = #{skuUpperLimit}
+		</if>
+	    <if test="(volumeLowerLimit != null and volumeLowerLimit !='')" >
+				and volume_lower_limit = #{volumeLowerLimit}
+		</if>
+	    <if test="(volumeUpperLimit != null and volumeUpperLimit !='')" >
+				and volume_upper_limit = #{volumeUpperLimit}
+		</if>
+		
+		
+		<if test="(minDistance != null and minDistance !='')" >
+				and min_distance = #{minDistance}
+		</if>
+	    <if test="(maxDistance != null and maxDistance !='')" >
+				and max_distance = #{maxDistance}
+		</if>
+		
+		<if test="(minTime != null and minTime !='')" >
+				and min_time = #{minTime}
+		</if>
+	    <if test="(maxTime != null and maxTime !='')" >
+				and max_time = #{maxTime}
+		</if>
+		
+	    <if test="(carModelCode != null and carModelCode !='')" >
+				and car_model_code like '%${carModelCode}%'
+		</if>
+		<if test="(bubbleWeight != null and bubbleWeight !='')" >
+				and bubble_weight = #{bubbleWeight}
+		</if>
+	    <if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(isLight != null and isLight !='')" >
+				and is_light = #{isLight}
+		</if>
+		
+		<if test="(lineId != null and lineId !='')" >
+				and line_id = #{lineId}
+		</if>
+		
+		<if test="(remark != null and remark !='')" >
+				and remark like '%${remark}%'
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineRangeEntity">
+        select
+        <include refid="baseColumns" />
+        from price_out_transport_line_range
+        where 1=1
+        <include refid="baseSelectColumns" />
+        order by create_time desc,id desc
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineRangeEntity">
+        select
+        <include refid="baseColumns" />
+        from price_out_transport_line_range
+        where id=#{id}
+        order by create_time desc,id desc
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineRangeEntity">
+        insert into price_out_transport_line_range(temperature_type_code, product_type_code, min_weight_shipment,weight_lower_limit, weight_upper_limit, num_lower_limit, num_upper_limit, sku_lower_limit, sku_upper_limit, volume_lower_limit, volume_upper_limit,min_distance,max_distance,min_time,max_time, car_model_code, bubble_weight, unit_price,is_light, remark,extra1,extra2,extra3,extra4,extra5, line_id, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+
+#{temperatureTypeCode,jdbcType=VARCHAR}, 
+#{productTypeCode,jdbcType=VARCHAR}, 
+#{minWeightShipment,jdbcType=DOUBLE}, 
+#{weightLowerLimit,jdbcType=DOUBLE}, 
+#{weightUpperLimit,jdbcType=DOUBLE}, 
+#{numLowerLimit,jdbcType=DOUBLE}, 
+#{numUpperLimit,jdbcType=DOUBLE}, 
+#{skuLowerLimit,jdbcType=DOUBLE}, 
+#{skuUpperLimit,jdbcType=DOUBLE}, 
+#{volumeLowerLimit,jdbcType=DOUBLE}, 
+#{volumeUpperLimit,jdbcType=DOUBLE}, 
+#{minDistance,jdbcType=DOUBLE}, 
+#{maxDistance,jdbcType=DOUBLE}, 
+#{minTime,jdbcType=DOUBLE}, 
+#{maxTime,jdbcType=DOUBLE}, 
+#{carModelCode,jdbcType=VARCHAR},
+#{bubbleWeight,jdbcType=DOUBLE},
+#{unitPrice,jdbcType=DOUBLE},
+#{isLight,jdbcType=BOOLEAN},
+#{remark,jdbcType=VARCHAR}, 
+#{extra1,jdbcType=VARCHAR},
+#{extra2,jdbcType=VARCHAR},
+#{extra3,jdbcType=VARCHAR},
+#{extra4,jdbcType=VARCHAR},
+#{extra5,jdbcType=VARCHAR},
+#{lineId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineRangeEntity">
+        update price_out_transport_line_range set
+
+temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR}, 
+product_type_code=#{productTypeCode,jdbcType=VARCHAR}, 
+min_weight_shipment=#{minWeightShipment,jdbcType=DOUBLE}, 
+weight_lower_limit=#{weightLowerLimit,jdbcType=DOUBLE}, 
+weight_upper_limit=#{weightUpperLimit,jdbcType=DOUBLE}, 
+num_lower_limit=#{numLowerLimit,jdbcType=DOUBLE}, 
+num_upper_limit=#{numUpperLimit,jdbcType=DOUBLE}, 
+sku_lower_limit=#{skuLowerLimit,jdbcType=DOUBLE}, 
+sku_upper_limit=#{skuUpperLimit,jdbcType=DOUBLE}, 
+volume_lower_limit=#{volumeLowerLimit,jdbcType=DOUBLE}, 
+volume_upper_limit=#{volumeUpperLimit,jdbcType=DOUBLE}, 
+min_distance=#{minDistance,jdbcType=DOUBLE},
+max_distance=#{maxDistance,jdbcType=DOUBLE},
+min_time=#{minTime,jdbcType=DOUBLE},
+max_time=#{maxTime,jdbcType=DOUBLE},
+car_model_code=#{carModelCode,jdbcType=VARCHAR}, 
+bubble_weight=#{bubbleWeight,jdbcType=DOUBLE},
+unit_price=#{unitPrice,jdbcType=DOUBLE}, 
+is_light=#{isLight,jdbcType=BOOLEAN},
+remark=#{remark,jdbcType=VARCHAR}, 
+extra1=#{extra1,jdbcType=VARCHAR},
+extra2=#{extra2,jdbcType=VARCHAR},
+extra3=#{extra3,jdbcType=VARCHAR},
+extra4=#{extra4,jdbcType=VARCHAR},
+extra5=#{extra5,jdbcType=VARCHAR},
+line_id=#{lineId,jdbcType=VARCHAR}, 
+creator=#{creator,jdbcType=VARCHAR}, 
+create_time=#{createTime,jdbcType=TIMESTAMP}, 
+last_modifier=#{lastModifier,jdbcType=VARCHAR}, 
+last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP}, 
+del_flag=#{delFlag,jdbcType=VARCHAR}
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from price_out_transport_line_range where
+        id=#{id}
+    </delete>
+</mapper>

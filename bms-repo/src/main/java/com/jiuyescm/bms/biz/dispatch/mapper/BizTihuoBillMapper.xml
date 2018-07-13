@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.dispatch.mapper.BizTihuoBillMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="count_date" property="countDate" jdbcType="TIMESTAMP" />
+	    <result column="total_num" property="totalNum" jdbcType="DOUBLE" />
+	    <result column="deliverid" property="deliverid" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+	    <result column="extattr6" property="extattr6" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" /> 
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, count_date,fees_no, total_num, deliverid, deliver_name, is_calculated, calculate_time, creator, create_time, last_modifier, last_modify_time, del_flag, extattr1, extattr2, extattr3, extattr4, extattr5, extattr6,remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and count_date>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[count_date <= #{endTime} ]]>
+		</if>
+		<if test="(totalNum != null and totalNum !='')" >
+				and total_num = #{totalNum}
+		</if>
+		<if test="(deliverid != null and deliverid !='')" >
+				and deliverid = #{deliverid}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliver_name = #{deliverName}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(calculateTime != null and calculateTime !='')" >
+			    and calculate_time >= #{calculateTime} add <![CDATA[calculate_time <= #{calculateTime}]]>
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and extattr1 = #{extattr1}
+		</if>
+		<if test="(extattr2 != null and extattr2 !='')" >
+				and extattr2 = #{extattr2}
+		</if>
+		<if test="(extattr3 != null and extattr3 !='')" >
+				and extattr3 = #{extattr3}
+		</if>
+		<if test="(extattr4 != null and extattr4 !='')" >
+				and extattr4 = #{extattr4}
+		</if>
+		<if test="(extattr5 != null and extattr5 !='')" >
+				and extattr5 = #{extattr5}
+		</if>
+		<if test="(extattr6 != null and extattr6 !='')" >
+				and extattr6 = #{extattr6}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+    </sql>
+	  
+     <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_tihuo_bill
+        where 1=1 and del_flag='0'
+		<include refid="baseSelectColumns" />
+		
+    </select>
+	<select id="queryData"  parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity">
+		 select
+        <include refid="baseColumns" />
+        from biz_tihuo_bill
+        where 1=1 and del_flag='0'
+        <if test="(deliverid!=null and deliverid!='')">
+        	and deliverid=#{deliverid}
+        </if>
+        <if test="(isCalculated!=null and isCalculated!='')">
+        	and is_calculated = #{isCalculated}
+        </if>
+        <if test="(startTime!=null and startTime!='')">
+        	and <![CDATA[ create_time>=#{startTime} ]]>
+        </if>
+        <if test="(endTime!=null and endTime!='')">
+        	and <![CDATA[ create_time<#{endTime}]]>
+        </if>
+	</select>
+	
+    <select id="findById" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_tihuo_bill
+        where id=#{id} and del_flag='0'
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity">
+        insert into biz_tihuo_bill(count_date, total_num, deliverid, deliver_name, is_calculated, calculate_time, creator, create_time, last_modifier, last_modify_time, del_flag, extattr1, extattr2, extattr3, extattr4, extattr5, extattr6,remark,fees_no)
+        values (
+			#{countDate,jdbcType=TIMESTAMP}, 
+			#{totalNum,jdbcType=DOUBLE}, 
+			#{deliverid,jdbcType=VARCHAR}, 
+			#{deliverName,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{extattr1,jdbcType=VARCHAR}, 
+			#{extattr2,jdbcType=VARCHAR}, 
+			#{extattr3,jdbcType=VARCHAR}, 
+			#{extattr4,jdbcType=VARCHAR}, 
+			#{extattr5,jdbcType=VARCHAR}, 
+			#{extattr6,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			#{feesNo,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity">
+        update biz_tihuo_bill 
+		<set >
+			<if test="countDate != null" >count_date=#{countDate,jdbcType=TIMESTAMP},</if>
+			<if test="totalNum != null" >total_num=#{totalNum,jdbcType=DOUBLE},</if>
+			<if test="deliverid != null" >deliverid=#{deliverid,jdbcType=VARCHAR},</if>
+			<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="extattr1 != null" >extattr1=#{extattr1,jdbcType=VARCHAR},</if>
+			<if test="extattr2 != null" >extattr2=#{extattr2,jdbcType=VARCHAR},</if>
+			<if test="extattr3 != null" >extattr3=#{extattr3,jdbcType=VARCHAR},</if>
+			<if test="extattr4 != null" >extattr4=#{extattr4,jdbcType=VARCHAR},</if>
+			<if test="extattr5 != null" >extattr5=#{extattr5,jdbcType=VARCHAR},</if>
+			<if test="extattr6 != null" >extattr6=#{extattr6,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >extattr6=#{remark,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR}</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer">
+        update biz_tihuo_bill
+        <set>
+        	<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <select id="countByDate" parameterType="java.util.Map"
+        resultMap="baseResultMap">                               
+        select count(0) as total_num,DATE_FORMAT(create_time,'%Y-%m-%d') as count_date,
+        deliverid,deliver_name 
+        from biz_dispatch_pay_bill 
+        where 1=1 and deliverid=#{deliverid} 
+         <if test="(startTime!=null and startTime!='')">
+        	and  <![CDATA[create_time>=#{startTime}]]> 
+        </if>
+         <if test="(endTime!=null and endTime!='')">
+          and <![CDATA[create_time<#{endTime}]]> 
+        </if>
+        GROUP BY DATE_FORMAT(create_time,'%Y-%m-%d'),deliverid,deliver_name 
+    </select>
+    
+    <delete id="deleteBizByMap">
+    	delete from biz_tihuo_bill where deliverid=${deliverid} 
+    	<if test="(startTime!=null and startTime!='')">
+        	and  <![CDATA[count_date>=#{startTime}]]> 
+        </if>
+         <if test="(endTime!=null and endTime!='')">
+          and <![CDATA[count_date<#{endTime}]]> 
+        </if>
+    </delete>
+</mapper>

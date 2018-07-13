@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.BizPackStorageEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="wms_id" property="wmsId" jdbcType="VARCHAR" />
+	    <result column="data_num" property="dataNum" jdbcType="VARCHAR" />
+	    <result column="cur_time" property="curTime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="temperature_type_name" property="temperatureTypeName" jdbcType="VARCHAR" />
+	    <result column="pack_no" property="packNo" jdbcType="VARCHAR" />
+	    <result column="pack_name" property="packName" jdbcType="VARCHAR" />
+	    <result column="qty" property="qty" jdbcType="DOUBLE" />
+	    <result column="pallet_num" property="palletNum" jdbcType="DOUBLE" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+      	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+	    <result column="adjust_pallet_num" property="adjustPalletNum" jdbcType="DOUBLE" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, wms_id,data_num, cur_time, warehouse_code, warehouse_name, customerid, customer_name,temperature_type_code,temperature_type_name, pack_no, pack_name, qty,pallet_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time,write_time,calculate_time, del_flag, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_pallet_num
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(dataNum != null and dataNum !='')" >
+				and a.data_num = #{dataNum}
+		</if>
+		<if test="(startTime != null and startTime !='') " >
+			    and a.cur_time<![CDATA[ >= ]]> #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.cur_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and a.warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and a.customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and a.customer_name = #{customerName}
+		</if>
+		<if test="(packNo != null and packNo !='')" >
+				and a.pack_no = #{packNo}
+		</if>
+		<if test="(packName != null and packName !='')" >
+				and a.pack_name = #{packName}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and a.is_calculated = #{isCalculated}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_pack_storage a
+        where del_flag = 0 
+		<include refid="baseSelectColumns" />
+    </select>
+    <select id="queryAllBycurTime" parameterType="java.util.Map" resultMap="baseResultMap">
+    	  select
+        <include refid="baseColumns" />
+        from biz_pack_storage a
+         where del_flag = 0
+        and <![CDATA[cur_time>=#{startTime}]]>
+        and <![CDATA[cur_time<=#{endTime}]]>
+    </select>
+     <select id="queryGroup" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+       select warehouse_name,customer_name,temperature_type_name,COUNT(*) as qty from 
+       ( select warehouse_name,customer_name,temperature_type_name from biz_pack_storage a  where del_flag = 0  <include refid="baseSelectColumns" /> order by create_time desc ) q 
+       group by warehouse_name,customer_name,temperature_type_name
+    </select>
+    
+    <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_pack_storage
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+        insert into biz_pack_storage(pallet_num,adjust_pallet_num,data_num,wms_id, cur_time, warehouse_code, warehouse_name, customerid, customer_name, temperature_type_code,temperature_type_name, pack_no, pack_name, qty, fees_no, dbname, remark, creator, create_time, last_modifier, last_modify_time,write_time, is_calculated, calculate_time, del_flag)
+        values (
+			#{palletNum,jdbcType=DOUBLE}, 
+			#{adjustPalletNum,jdbcType=DOUBLE}, 
+			#{dataNum,jdbcType=VARCHAR}, 
+			#{wmsId,jdbcType=VARCHAR}, 
+			#{curTime,jdbcType=TIMESTAMP}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{temperatureTypeName,jdbcType=VARCHAR}, 
+			#{packNo,jdbcType=VARCHAR}, 
+			#{packName,jdbcType=VARCHAR}, 
+			#{qty,jdbcType=DOUBLE}, 
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{dbname,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP},
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{isCalculated,jdbcType=VARCHAR},
+			#{calculateTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+        update biz_pack_storage 
+		<set >
+<if test="dataNum != null" >data_num=#{dataNum,jdbcType=VARCHAR},</if>
+<if test="wmsId != null" >wms_id=#{wmsId,jdbcType=VARCHAR},</if>
+<if test="curTime != null" >cur_time=#{curTime,jdbcType=TIMESTAMP},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+
+<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
+<if test="temperatureTypeName != null" >temperature_type_name=#{temperatureTypeName,jdbcType=VARCHAR},</if>
+
+<if test="packNo != null" >pack_no=#{packNo,jdbcType=VARCHAR},</if>
+<if test="packName != null" >pack_name=#{packName,jdbcType=VARCHAR},</if>
+<if test="qty != null" >qty=#{qty,jdbcType=DOUBLE},</if>
+<if test="palletNum != null" >pallet_num=#{palletNum,jdbcType=DOUBLE},</if>
+<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+<if test="dbname != null" >dbname=#{dbname,jdbcType=VARCHAR},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_pack_storage where
+        id=#{id}
+    </delete>
+    
+    <select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">
+        select a.data_num from biz_pack_storage a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
+		where a.del_flag = 0 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+    
+    <select id="validCalcuForRetry" parameterType="java.util.Map" resultType = "String">
+       	select a.data_num from biz_pack_storage a
+		where a.del_flag = 0 and a.is_calculated = 1 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+    
+    <update id="retryForCalcu" parameterType="java.util.Map">
+        update biz_pack_storage a set a.is_calculated = 99 where a.del_flag = 0
+        <include refid="baseSelectColumns" />
+    </update>
+    
+    <select id="queryDelete" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+       SELECT  a.* from biz_pack_storage a LEFT JOIN  fees_receive_storage  f on a.fees_no = f.fees_no where f.`status` = '0'
+       <include refid="baseSelectColumns" /> 
+       union 
+       SELECT  a.* from biz_pack_storage a where a.fees_no is null 
+       <include refid="baseSelectColumns" />
+    </select>
+     <delete id="deleteFees" parameterType="java.util.Map">
+       delete  f.* from biz_pack_storage a LEFT JOIN  fees_receive_storage  f on a.fees_no = f.fees_no where f.`status` = '0'
+        <include refid="baseSelectColumns" /> 
+    </delete>
+    
+    <select id="queryByMonth" parameterType="java.util.Map" resultType = "java.util.Map">
+      SELECT  b.customerid,COUNT(*) as num from (SELECT customerid  from  biz_pack_storage  a  where del_flag = 0   <include refid="baseSelectColumns" /> )   b  GROUP BY b.customerid
+    </select>
+     
+     <select id="queryCustomeridF" parameterType="java.util.Map" resultType = "java.util.Map">
+       SELECT  DISTINCT b.customerid  from biz_outstock_master b  where b.del_flag = 0 and  b.create_time <![CDATA[>= ]]>#{bstartTime}  and  b.create_time <![CDATA[<= ]]>#{bendTime}  <if test="(warehouseCode != null and warehouseCode !='')" >
+				and b.warehouse_code = #{warehouseCode}
+		</if>  and  b.customerid not in ( SELECT  DISTINCT customerid from biz_pack_storage a where del_flag = 0 <include refid="baseSelectColumns" /> )
+     </select>
+     
+     <select id="queryExceptionOne" parameterType="java.util.Map" resultMap="baseResultMap">
+    	SELECT * from biz_pack_storage where del_flag='0' 
+    	<if test="(createTime != null and createTime !='')" >
+			    and create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time <= #{endTime} ]]>
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+    	 and is_calculated not in ('1','5') limit 1
+    </select>
+    
+     <select id="queryOneByParam" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+       select
+        <include refid="baseColumns" />
+        from biz_pack_storage 
+        where del_flag = '0' 
+        and warehouse_code =#{warehouseCode}
+        and customerid =#{customerid}
+        and temperature_type_code =#{temperatureTypeCode}
+        and <![CDATA[cur_time = #{curTime}]]> 
+    </select>
+    
+     <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
+        update biz_pack_storage set
+			adjust_pallet_num=#{palletNum,jdbcType=DOUBLE}
+			 where id=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtReportRegionProfitTypeQuery">
+      <PropertyDef name="regionName">
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="reportYear">
+        <Property></Property>
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="IsCheck">
+        <Property name="label">含总部管理费</Property>
+        <Property name="defaultValue">False</Property>
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="feesType">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getFeesType&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtReportRegionProfitTypeEntity">
+      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportRegionProfitEntity</Property>
+      <PropertyDef name="regionName">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="feesType">
+        <Property name="label">项目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getFeesType&quot;).getResult(&quot;All&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="amount01">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">1月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount02">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">2月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount03">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">3月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount04">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">4月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount05">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">5月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount06">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">6月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount07">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">7月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount08">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">8月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount09">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">9月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount10">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">10月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount11">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">11月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount12">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">12月</Property>
+      </PropertyDef>
+      <PropertyDef name="amountSum">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">总计</Property>
+      </PropertyDef>
+      <PropertyDef name="reportYear">
+        <Property></Property>
+        <Property name="label">年份</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="modifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady"> var date=new Date;&#xD;
+ var year=date.getFullYear(); &#xD;
+ view.get(&quot;#formCondition.entity&quot;).set(&quot;reportYear&quot;,year);</ClientEvent>
+    <DataSet id="dsReportRegionProfitEntity">
+      <Property name="dataProvider">reportRegionProfitController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="dataType">[dtReportRegionProfitTypeEntity]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsReportRegionProfitQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsReportRegionProfitQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtReportRegionProfitTypeQuery]</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtReportRegionProfitTypeQuery</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">200,200,200,200,*</Property>
+      <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsReportRegionProfitQuery</Property>
+      <AutoFormElement>
+        <Property name="name">regionName</Property>
+        <Property name="property">regionName</Property>
+        <Property name="labelWidth">60</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">reportYear</Property>
+        <Property name="property">reportYear</Property>
+        <Property name="labelWidth">60</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="property">feesType</Property>
+        <Property name="name">feesType</Property>
+        <Property name="labelWidth">60</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="editorType">CheckBox</Property>
+        <Property name="property">IsCheck</Property>
+        <Property name="name">IsCheck</Property>
+        <Editor/>
+      </AutoFormElement>
+      <Button>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsReportRegionProfitQuery.data&quot;).current;&#xD;
+var year=data.get(&quot;reportYear&quot;);&#xD;
+if(!year){&#xD;
+	year=&quot;&quot;;&#xD;
+	dorado.MessageBox.alert(&quot;请选择年份！&quot;);&#xD;
+	return;&#xD;
+}else{&#xD;
+	year=year+&quot;年&quot;;&#xD;
+}&#xD;
+this.id(&quot;lblTitle&quot;).set(&quot;text&quot;,year+&quot;区域利润报表&quot;);&#xD;
+with (view.get(&quot;#dsReportRegionProfitEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </Button>
+      <AutoFormElement layoutConstraint="colSpan:5;align:center">
+        <Property name="labelAlign">center</Property>
+        <Property name="labelPosition">top</Property>
+        <Property name="width">100%</Property>
+        <Property name="style">
+          <Property name="key"></Property>
+        </Property>
+        <Editor>
+          <Container>
+            <Label id="lblTitle">
+              <Property name="text">区域利润报表</Property>
+              <Property name="style">
+                <Property name="font-size">20px</Property>
+                <Property name="font-weight">bold</Property>
+                <Property name="font-family">微软雅黑</Property>
+              </Property>
+            </Label>
+          </Container>
+        </Editor>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsReportRegionProfitEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="groupProperty">regionName</Property>
+      <Property name="groupOnSort">false</Property>
+      <RowNumColumn/>
+      <DataColumn name="regionName">
+        <Property name="property">regionName</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="reportYear">
+        <Property name="property">reportYear</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="feesType">
+        <Property name="property">feesType</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount01">
+        <Property name="property">amount01</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount02">
+        <Property name="property">amount02</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount03">
+        <Property name="property">amount03</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount04">
+        <Property name="property">amount04</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount05">
+        <Property name="property">amount05</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount06">
+        <Property name="property">amount06</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount07">
+        <Property name="property">amount07</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount08">
+        <Property name="property">amount08</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount09">
+        <Property name="property">amount09</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount10">
+        <Property name="property">amount10</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount11">
+        <Property name="property">amount11</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount12">
+        <Property name="property">amount12</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amountSum">
+        <Property name="property">amountSum</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

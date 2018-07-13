@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBizDispatchBillEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+        <Property name="defaultValue">选择配送公司</Property>
+        <Property name="label">选择配送公司：</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getDispatchTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillList">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">包裹重量：</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVolume">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="defaultValue">选择始发仓库</Property>
+        <Property name="label">选择发货仓库：</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchPR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="serviceTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="collectMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="monthFeeCount">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendProvinceId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendProvinceName">
+        <Property name="label">配送目的地：</Property>
+      </PropertyDef>
+      <PropertyDef name="sendCityId">
+        <Property></Property>
+        <Property name="label"> </Property>
+      </PropertyDef>
+      <PropertyDef name="sendCityName">
+        <Property name="label"> </Property>
+      </PropertyDef>
+      <PropertyDef name="sendDistrictId">
+        <Property></Property>
+        <Property name="label"> </Property>
+      </PropertyDef>
+      <PropertyDef name="sendDistrictName">
+        <Property name="label"> </Property>
+      </PropertyDef>
+      <PropertyDef name="sendStreet">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendDetailAddress">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiveName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiveProvinceId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiveProvinceName">
+        <Property name="label">配送目的地：</Property>
+        <Property name="defaultValue">选择配送省</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveCityId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiveCityName">
+        <Property name="label"> </Property>
+        <Property name="defaultValue">选择配送市</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveDistrictId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiveDistrictName">
+        <Property name="label"> </Property>
+        <Property name="defaultValue">选择配送区</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveStreet">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiveDetailAddress">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="accountState">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mobanId">
+        <Property></Property>
+        <Property name="defaultValue">选择合同</Property>
+        <Property name="label">选择合同</Property>
+      </PropertyDef>
+      <PropertyDef name="moban">
+        <Property name="label"> </Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">包裹重量：</Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBizDispatchBillEntity">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsBizDispatchBillEntity&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBizDispatchBillEntity]</Property>
+    </DataSet>
+    <DataSet id="dsAllProvinces">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getAllProvinces</Property>
+    </DataSet>
+    <DataSet id="dsCities">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getCitiesByProvinceCode</Property>
+    </DataSet>
+    <DataSet id="dsDistricts">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getDistrictsByCityCode</Property>
+    </DataSet>
+    <DataSetDropDown id="ddropDownQueryProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	receiveProvinceName:arg.selectedValue.get(&quot;province&quot;),&#xD;
+	receiveProvinceId:arg.selectedValue.get(&quot;provincecode&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;receiveCityId&quot;,&quot;&quot;);&#xD;
+data.set(&quot;receiveCityName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;receiveDistrictId&quot;,&quot;&quot;);&#xD;
+data.set(&quot;receiveDistrictName&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryCity">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+var provinceId = data.get(&quot;receiveProvinceId&quot;);&#xD;
+var provinceName = data.get(&quot;receiveProvinceName&quot;);&#xD;
+&#xD;
+if(provinceName){&#xD;
+	var parameter={&#xD;
+		province:provinceName&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	receiveCityName:arg.selectedValue.get(&quot;city&quot;),&#xD;
+	receiveCityId:arg.selectedValue.get(&quot;citycode&quot;)&#xD;
+});&#xD;
+data.set(&quot;receiveDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;receiveDistrictId&quot;,&quot;&quot;);&#xD;
+arg.processDefault = false;&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+var provinceName = data.get(&quot;receiveProvinceName&quot;);&#xD;
+var cityName = data.get(&quot;receiveCityName&quot;);&#xD;
+if(cityName){&#xD;
+	var parameter={&#xD;
+		province:provinceName,city:cityName&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	receiveDistrictName:arg.selectedValue.get(&quot;district&quot;),&#xD;
+	receiveDistrictId:arg.selectedValue.get(&quot;districtcode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <UpdateAction id="calculateAction">
+      <Property name="dataResolver">tryDispatchDroolsController#tryOrderOperate</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBizDispatchBillEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerDispatch">
+      <ClientEvent name="onExecute">&#xD;
+var subview = view.get(&quot;#viewSelectDispatch&quot;).get(&quot;subView&quot;);&#xD;
+&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsGenericTemplate.data&quot;);&#xD;
+subviewData.clear();&#xD;
+var stepData=subview.get(&quot;#dsPriceMainDistribution.data&quot;);&#xD;
+stepData.clear();&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsMoBanCondition.data&quot;).current;&#xD;
+//ds.set(&quot;deliver&quot;,&quot;JIUYE_DISPATCH&quot;);&#xD;
+var carrierId=view.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;).get(&quot;carrierId&quot;);&#xD;
+//alert(logistics);&#xD;
+ds.set(&quot;deliver&quot;,carrierId);&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsGenericTemplate&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+view.get(&quot;#panelDispatch&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDispatch">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDispatch.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	&#xD;
+	//alert(&quot;加入的新数据&quot;+view.get(&quot;#formEdit.entity&quot;).get(&quot;MobanId&quot;));&#xD;
+	var data1 = view.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+	var mobanid = data.get(&quot;templateCode&quot;);&#xD;
+	data1.set(&quot;mobanId&quot;,mobanid);&#xD;
+&#xD;
+}</ClientEvent>
+      <Property name="caption">配送报价模板选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDispatch">
+          <Property name="subView">com.jiuyescm.bms.quotation.dispatch.view.DispatchLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <FieldSet layoutConstraint="center padding:25">
+      <Property name="width">900</Property>
+      <Property name="height">280</Property>
+      <Property name="collapseable">false</Property>
+      <Property name="caption">配送费用试算</Property>
+      <Property name="collapsed">false</Property>
+      <Property name="buttonAlign">center</Property>
+      <Buttons>
+        <Button id="btnCalculate">
+          <ClientEvent name="onClick">var entity=view.get(&quot;#dsBizDispatchBillEntity&quot;).getData().current;&#xD;
+//alert(&quot;此时的县&quot;+entity.get(&quot;receiveDistrictId&quot;)+entity.get(&quot;receiveDistrictName&quot;));&#xD;
+&#xD;
+view.get(&quot;#calculateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result.code == &quot;SUCCESS&quot;){&#xD;
+			dorado.MessageBox.alert(result.data);		&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">计算配送费用</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="dataType">dtBizDispatchBillEntity</Property>
+          <Property name="dataSet">dsBizDispatchBillEntity</Property>
+          <Property name="editorWidth">180</Property>
+          <Property name="cols">330,330,190</Property>
+          <Property name="rowHeight">30</Property>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">mobanId</Property>
+            <Property name="property">mobanId</Property>
+            <Property name="trigger">triggerContract</Property>
+            <Property name="labelWidth">100</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">carrierId</Property>
+            <Property name="property">carrierId</Property>
+            <Property name="labelWidth">100</Property>
+            <Property name="visible">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">warehouseCode</Property>
+            <Property name="property">warehouseCode</Property>
+            <Property name="labelWidth">100</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="receiveProvinceName">
+            <Property name="name">receiveProvinceName</Property>
+            <Property name="property">receiveProvinceName</Property>
+            <Property name="trigger">ddropDownQueryProvince</Property>
+            <Property name="showHint">false</Property>
+            <Property name="labelWidth">100</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="receiveCityName">
+            <Property name="name">receiveCityName</Property>
+            <Property name="property">receiveCityName</Property>
+            <Property name="trigger">ddropDownQueryCity</Property>
+            <Property name="showHint">false</Property>
+            <Property name="labelWidth">5</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="receiveDistrictName">
+            <Property name="name">receiveDistrictName</Property>
+            <Property name="property">receiveDistrictName</Property>
+            <Property name="trigger">ddropDownQueryDistrict</Property>
+            <Property name="showHint">false</Property>
+            <Property name="labelWidth">5</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">weight</Property>
+            <Property name="property">weight</Property>
+            <Property name="labelWidth">100</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+    </FieldSet>
+    <FieldSet layoutConstraint="center padding:25">
+      <Property name="caption">计算结果</Property>
+      <Property name="collapseable">false</Property>
+      <Property name="width">900</Property>
+      <Property name="height">200</Property>
+      <Buttons/>
+      <Children>
+        <AutoForm id="calResultForm">
+          <Property name="dataSet">dsBizDispatchBillEntity</Property>
+          <Property name="labelSeparator">:</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="dataType">dtBizDispatchBillEntity</Property>
+          <AutoFormElement>
+            <Property name="name">collectMoney</Property>
+            <Property name="property">collectMoney</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+    </FieldSet>
+    <Trigger id="triggerContract">
+      <ClientEvent name="onExecute">view.get(&quot;#panelContract&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelContract">
+      <ClientEvent name="onHide">//找到触发弹出层的事件源控件；&#xD;
+//对控件赋值&#xD;
+var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+&#xD;
+if (data != null) {&#xD;
+	var data1 = view.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+	var contractCode = data.get(&quot;contractCode&quot;);&#xD;
+	data1.set(&quot;mobanId&quot;,contractCode);&#xD;
+}</ClientEvent>
+      <Property name="width">800</Property>
+      <Property name="height">500</Property>
+      <Property name="center">true</Property>
+      <Property name="caption">合同选择</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.quotation.contract.view.CustomerContractLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

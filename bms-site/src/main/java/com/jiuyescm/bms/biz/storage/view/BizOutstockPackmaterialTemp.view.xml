@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+    <Arguments />
+    <Context />
+    <Model>
+		<!-- 查询条件Model -->
+        <DataType name="dtCondition">
+		</DataType>
+		  <DataType name="dtBizOutstockPackmaterialTempTypeQuery"> 
+				<PropertyDef name="id">
+				  <Property name="label">id</Property>
+				</PropertyDef>
+				<PropertyDef name="batchNum">
+				  <Property name="label">批次号</Property>
+				</PropertyDef>
+				<PropertyDef name="wmsId">
+				  <Property name="label">wms_id</Property>
+				</PropertyDef>
+				<PropertyDef name="outstockNo">
+				  <Property name="label">出库单号</Property>
+				</PropertyDef>
+				<PropertyDef name="waybillNo">
+				  <Property name="label">运单号</Property>
+				</PropertyDef>
+				<PropertyDef name="customerId">
+				  <Property name="label">商家id</Property>
+				</PropertyDef>
+				<PropertyDef name="customerName">
+				  <Property name="label">商家名称</Property>
+				</PropertyDef>
+				<PropertyDef name="consumerMaterialCode">
+				  <Property name="label">耗材编码</Property>
+				</PropertyDef>
+				<PropertyDef name="consumerMaterialName">
+				  <Property name="label">耗材名称</Property>
+				</PropertyDef>
+				<PropertyDef name="warehouseCode">
+				  <Property name="label">WarehouseCode</Property>
+				</PropertyDef>
+				<PropertyDef name="warehouseName">
+				  <Property name="label">WarehouseName</Property>
+				</PropertyDef>
+				<PropertyDef name="num">
+				  <Property name="label">num</Property>
+				</PropertyDef>
+				<PropertyDef name="adjustNum">
+				  <Property name="label">AdjustNum</Property>
+				</PropertyDef>
+				<PropertyDef name="feesNo">
+				  <Property name="label">费用ID</Property>
+				</PropertyDef>
+				<PropertyDef name="costFeesNo">
+				  <Property name="label">成本费用编号</Property>
+				</PropertyDef>
+				<PropertyDef name="dbname">
+				  <Property name="label">所属DB的名称</Property>
+				</PropertyDef>
+				<PropertyDef name="isCalculated">
+				  <Property name="label">是否已计算费用 0-未结算 1-已结算 2-结算异常 3-合同不存在 4-不在操作范围 5-其他</Property>
+				</PropertyDef>
+				<PropertyDef name="remark">
+				  <Property name="label">备注</Property>
+				</PropertyDef>
+				<PropertyDef name="creator">
+				  <Property name="label">创建者</Property>
+				</PropertyDef>
+				<PropertyDef name="createTime">
+				  <Property name="label">创建时间</Property>
+				  <Property name="dataType">DateTime</Property>
+				</PropertyDef>
+				<PropertyDef name="lastModifier">
+				  <Property name="label">修改者</Property>
+				</PropertyDef>
+				<PropertyDef name="lastModifyTime">
+				  <Property name="label">修改时间</Property>
+				  <Property name="dataType">DateTime</Property>
+				</PropertyDef>
+				<PropertyDef name="delFlag">
+				  <Property name="label">删除标志</Property>
+				</PropertyDef>
+				<PropertyDef name="calculateTime">
+				  <Property name="label">费用计算时间</Property>
+				  <Property name="dataType">DateTime</Property>
+				</PropertyDef>
+				<PropertyDef name="costIsCalculated">
+				  <Property name="label">成本计算状态</Property>
+				</PropertyDef>
+				<PropertyDef name="costCalculateTime">
+				  <Property name="label">成本费用计算时间</Property>
+				  <Property name="dataType">DateTime</Property>
+				</PropertyDef>
+				<PropertyDef name="writeTime">
+				  <Property name="label">写入BMS时间</Property>
+				  <Property name="dataType">DateTime</Property>
+				</PropertyDef>
+				<PropertyDef name="weight">
+				  <Property name="label">weight</Property>
+				</PropertyDef>
+				<PropertyDef name="specDesc">
+				  <Property name="label">SpecDesc</Property>
+				</PropertyDef>
+				<PropertyDef name="extattr1">
+				  <Property name="label">拓展字段1</Property>
+				</PropertyDef>
+				<PropertyDef name="extattr2">
+				  <Property name="label">拓展字段2</Property>
+				</PropertyDef>
+				<PropertyDef name="extattr3">
+				  <Property name="label">拓展字段3</Property>
+				</PropertyDef>
+				<PropertyDef name="extattr4">
+				  <Property name="label">拓展字段4</Property>
+				</PropertyDef>
+				<PropertyDef name="extattr5">
+				  <Property name="label">拓展字段5</Property>
+				</PropertyDef>
+				<PropertyDef name="costRemark">
+				  <Property name="label">成本费用计算备注</Property>
+				</PropertyDef>
+        </DataType>
+    </Model>
+    <View>
+        <ToolBar>
+            <DataPilot>
+                <Property name="dataSet">dsBizOutstockPackmaterialTempEntity</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot> 
+			<ToolBarButton id="btnQuery">
+				<Property name="caption">查询</Property>
+				<Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+				
+				<ClientEvent name="onClick">var data = view.get(&quot;#dsBizOutstockPackmaterialTempQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBizOutstockPackmaterialTempEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+			  </ToolBarButton>
+			<Separator/>
+            <ToolBarButton id="btnAdd">
+                <Property name="caption">新增</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+                <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizOutstockPackmaterialTempEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
+            </ToolBarButton>
+			<Separator/>
+            <ToolBarButton id="btnModify">
+                <Property name="caption">修改</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                <ClientEvent name="onClick">var data=view.get(&quot;#dsBizOutstockPackmaterialTempEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+            </ToolBarButton>
+            <Separator />
+            <ToolBarButton id="btnRemove">
+                <Property name="caption">删除</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+                <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizOutstockPackmaterialTempEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                with (view.get(&quot;#dsBizOutstockPackmaterialTempEntity&quot;)){&#xD;
+                                    flushAsync();&#xD;
+                                }&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+            </ToolBarButton>
+        </ToolBar>
+        <DataSet id="dsBizOutstockPackmaterialTempEntity">
+            <Property name="dataType">[dtBizOutstockPackmaterialTempEntity]</Property>
+            <Property name="dataProvider">bizOutstockPackmaterialTempController#query</Property>
+            <Property name="pageSize">20</Property>
+            <Property name="readOnly">false</Property>
+        </DataSet>
+		
+		<DataSet id="dsBizOutstockPackmaterialTempQuery">
+		  <ClientEvent name="onCreate">view.get(&quot;#dsBizOutstockPackmaterialTempQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+		  <Property name="dataType">[dtBizOutstockPackmaterialTempTypeQuery]</Property>
+		</DataSet>
+		
+        <AutoForm id="formCondition">
+            <Property name="dataType">dtBizOutstockPackmaterialTempTypeQuery</Property>
+            <Property name="createPrivateDataSet">true</Property>
+            <Property name="cols">*,*,*</Property>
+            <Property name="labelWidth">100</Property>
+			 <Property name="dataSet">dsBizOutstockPackmaterialTempQuery</Property>
+				<AutoFormElement>
+					<Property name="name">id</Property>
+					<Property name="property">id</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">batchNum</Property>
+					<Property name="property">batchNum</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">wmsId</Property>
+					<Property name="property">wmsId</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">outstockNo</Property>
+					<Property name="property">outstockNo</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">waybillNo</Property>
+					<Property name="property">waybillNo</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">customerId</Property>
+					<Property name="property">customerId</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">customerName</Property>
+					<Property name="property">customerName</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">consumerMaterialCode</Property>
+					<Property name="property">consumerMaterialCode</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">consumerMaterialName</Property>
+					<Property name="property">consumerMaterialName</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">warehouseCode</Property>
+					<Property name="property">warehouseCode</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">warehouseName</Property>
+					<Property name="property">warehouseName</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">num</Property>
+					<Property name="property">num</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">adjustNum</Property>
+					<Property name="property">adjustNum</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">feesNo</Property>
+					<Property name="property">feesNo</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">costFeesNo</Property>
+					<Property name="property">costFeesNo</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">dbname</Property>
+					<Property name="property">dbname</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">isCalculated</Property>
+					<Property name="property">isCalculated</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">remark</Property>
+					<Property name="property">remark</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">creator</Property>
+					<Property name="property">creator</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">createTime</Property>
+					<Property name="property">createTime</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">lastModifier</Property>
+					<Property name="property">lastModifier</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">lastModifyTime</Property>
+					<Property name="property">lastModifyTime</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">delFlag</Property>
+					<Property name="property">delFlag</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">calculateTime</Property>
+					<Property name="property">calculateTime</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">costIsCalculated</Property>
+					<Property name="property">costIsCalculated</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">costCalculateTime</Property>
+					<Property name="property">costCalculateTime</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">writeTime</Property>
+					<Property name="property">writeTime</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">weight</Property>
+					<Property name="property">weight</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">specDesc</Property>
+					<Property name="property">specDesc</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">extattr1</Property>
+					<Property name="property">extattr1</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">extattr2</Property>
+					<Property name="property">extattr2</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">extattr3</Property>
+					<Property name="property">extattr3</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">extattr4</Property>
+					<Property name="property">extattr4</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">extattr5</Property>
+					<Property name="property">extattr5</Property>
+					<Editor/>
+				</AutoFormElement>
+				<AutoFormElement>
+					<Property name="name">costRemark</Property>
+					<Property name="property">costRemark</Property>
+					<Editor/>
+				</AutoFormElement>
+        </AutoForm>
+        <DataGrid>
+            <Property name="dataSet">dsBizOutstockPackmaterialTempEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn />
+            <RowNumColumn />
+            <DataColumn name="id">
+                <Property name="property">id</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="batchNum">
+                <Property name="property">batchNum</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="wmsId">
+                <Property name="property">wmsId</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="outstockNo">
+                <Property name="property">outstockNo</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="waybillNo">
+                <Property name="property">waybillNo</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="customerId">
+                <Property name="property">customerId</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="customerName">
+                <Property name="property">customerName</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="consumerMaterialCode">
+                <Property name="property">consumerMaterialCode</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="consumerMaterialName">
+                <Property name="property">consumerMaterialName</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="warehouseCode">
+                <Property name="property">warehouseCode</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="warehouseName">
+                <Property name="property">warehouseName</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="num">
+                <Property name="property">num</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="adjustNum">
+                <Property name="property">adjustNum</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="feesNo">
+                <Property name="property">feesNo</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="costFeesNo">
+                <Property name="property">costFeesNo</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="dbname">
+                <Property name="property">dbname</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="isCalculated">
+                <Property name="property">isCalculated</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="remark">
+                <Property name="property">remark</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+                <Property name="property">creator</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+                <Property name="property">createTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+                <Property name="property">lastModifier</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+                <Property name="property">lastModifyTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="delFlag">
+                <Property name="property">delFlag</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="calculateTime">
+                <Property name="property">calculateTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="costIsCalculated">
+                <Property name="property">costIsCalculated</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="costCalculateTime">
+                <Property name="property">costCalculateTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="writeTime">
+                <Property name="property">writeTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="weight">
+                <Property name="property">weight</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="specDesc">
+                <Property name="property">specDesc</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="extattr1">
+                <Property name="property">extattr1</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="extattr2">
+                <Property name="property">extattr2</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="extattr3">
+                <Property name="property">extattr3</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="extattr4">
+                <Property name="property">extattr4</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="extattr5">
+                <Property name="property">extattr5</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="costRemark">
+                <Property name="property">costRemark</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+        </DataGrid>
+        <Dialog id="dialogEdit">
+            <ClientEvent name="onClose">view.id(&quot;dsBizOutstockPackmaterialTempEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="caption">数据维护</Property>
+            <Property name="center">true</Property>
+            <Property name="height">450</Property>
+            <Property name="width">800</Property>
+            <Buttons>
+                <Button id="btnSave">
+                    <Property name="caption">保存</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                    <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+							view.get(&quot;#dsBizOutstockPackmaterialTempEntity&quot;).flushAsync();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                </Button>
+                <Button id="btnCancel">
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                    <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBizOutstockPackmaterialTempEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                </Button>
+            </Buttons>
+            <Children>
+                <AutoForm id="formEdit">
+                    <Property name="cols">*,*</Property>
+                    <Property name="dataSet">dsBizOutstockPackmaterialTempEntity</Property>
+                    <Property name="dataType">dtBizOutstockPackmaterialTempEntity</Property>
+                    <Property name="labelWidth">100</Property>
+                    <AutoFormElement>
+                        <Property name="name">id</Property>
+                        <Property name="property">id</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">batchNum</Property>
+                        <Property name="property">batchNum</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">wmsId</Property>
+                        <Property name="property">wmsId</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">outstockNo</Property>
+                        <Property name="property">outstockNo</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">waybillNo</Property>
+                        <Property name="property">waybillNo</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">customerId</Property>
+                        <Property name="property">customerId</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">customerName</Property>
+                        <Property name="property">customerName</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">consumerMaterialCode</Property>
+                        <Property name="property">consumerMaterialCode</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">consumerMaterialName</Property>
+                        <Property name="property">consumerMaterialName</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">warehouseCode</Property>
+                        <Property name="property">warehouseCode</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">warehouseName</Property>
+                        <Property name="property">warehouseName</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">num</Property>
+                        <Property name="property">num</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">adjustNum</Property>
+                        <Property name="property">adjustNum</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">feesNo</Property>
+                        <Property name="property">feesNo</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">costFeesNo</Property>
+                        <Property name="property">costFeesNo</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">dbname</Property>
+                        <Property name="property">dbname</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">isCalculated</Property>
+                        <Property name="property">isCalculated</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">remark</Property>
+                        <Property name="property">remark</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">creator</Property>
+                        <Property name="property">creator</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">createTime</Property>
+                        <Property name="property">createTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">lastModifier</Property>
+                        <Property name="property">lastModifier</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">lastModifyTime</Property>
+                        <Property name="property">lastModifyTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">delFlag</Property>
+                        <Property name="property">delFlag</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">calculateTime</Property>
+                        <Property name="property">calculateTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">costIsCalculated</Property>
+                        <Property name="property">costIsCalculated</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">costCalculateTime</Property>
+                        <Property name="property">costCalculateTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">writeTime</Property>
+                        <Property name="property">writeTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">weight</Property>
+                        <Property name="property">weight</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">specDesc</Property>
+                        <Property name="property">specDesc</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">extattr1</Property>
+                        <Property name="property">extattr1</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">extattr2</Property>
+                        <Property name="property">extattr2</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">extattr3</Property>
+                        <Property name="property">extattr3</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">extattr4</Property>
+                        <Property name="property">extattr4</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">extattr5</Property>
+                        <Property name="property">extattr5</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">costRemark</Property>
+                        <Property name="property">costRemark</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                </AutoForm>
+            </Children>
+            <Tools />
+        </Dialog>
+        <UpdateAction id="updateAction">
+            <Property name="successMessage">数据保存成功！</Property>
+            <Property name="modal">true</Property>
+            <Property name="dataResolver">bizOutstockPackmaterialTempController#save</Property>
+            <UpdateItem>
+                <Property name="dataSet">dsBizOutstockPackmaterialTempEntity</Property>
+                <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+        </UpdateAction>
+        <UpdateAction id="deleteAction">
+            <Property name="successMessage">数据删除成功！</Property>
+            <Property name="dataResolver">bizOutstockPackmaterialTempController#delete</Property>
+            <UpdateItem>
+                <Property name="dataSet">dsBizOutstockPackmaterialTempEntity</Property>
+                <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+        </UpdateAction>
+    </View>
+</ViewConfig>

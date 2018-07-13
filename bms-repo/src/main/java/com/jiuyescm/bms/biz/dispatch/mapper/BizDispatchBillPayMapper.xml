@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillPayMapper">
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliverid" property="deliverid" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="waybill_num" property="waybillNum" jdbcType="DOUBLE" />
+	    <result column="waybill_list" property="waybillList" jdbcType="VARCHAR" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	    <result column="adjust_weight" property="adjustWeight" jdbcType="DOUBLE" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
+	    <result column="dispatch_type_code" property="dispatchTypeCode" jdbcType="VARCHAR" />
+	    <result column="collect_money" property="collectMoney" jdbcType="DOUBLE" />
+	    <result column="month_fee_count" property="monthFeeCount" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="send_name" property="sendName" jdbcType="VARCHAR" />
+	    <result column="send_province_id" property="sendProvinceId" jdbcType="VARCHAR" />
+	    <result column="send_city_id" property="sendCityId" jdbcType="VARCHAR" />
+	    <result column="send_district_id" property="sendDistrictId" jdbcType="VARCHAR" />
+	    <result column="send_street" property="sendStreet" jdbcType="VARCHAR" />
+	    <result column="send_detail_address" property="sendDetailAddress" jdbcType="VARCHAR" />
+	    <result column="receive_name" property="receiveName" jdbcType="VARCHAR" />
+	    <result column="receive_province_id" property="receiveProvinceId" jdbcType="VARCHAR" />
+	    <result column="receive_city_id" property="receiveCityId" jdbcType="VARCHAR" />
+	    <result column="receive_district_id" property="receiveDistrictId" jdbcType="VARCHAR" />
+	    <result column="receive_street" property="receiveStreet" jdbcType="VARCHAR" />
+	    <result column="receive_detail_address" property="receiveDetailAddress" jdbcType="VARCHAR" />
+	    <result column="receive_time" property="receiveTime" jdbcType="TIMESTAMP" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="account_state" property="accountState" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+	    <result column="accept_time" property="acceptTime" jdbcType="TIMESTAMP" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="total_volume" property="totalVolume" jdbcType="DOUBLE" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+    	<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="temperature_type_name" property="temperatureTypeName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="zexpressnum" property="zexpressnum" jdbcType="VARCHAR" />
+	    <result column="bigstatus" property="bigstatus" jdbcType="VARCHAR" />
+	    <result column="smallstatus" property="smallstatus" jdbcType="VARCHAR" />
+	    <result column="system_weight" property="systemWeight" jdbcType="DOUBLE" />
+	    <result column="totalqty" property="totalqty" jdbcType="INTEGER" />
+	    <result column="product_detail" property="productDetail" jdbcType="VARCHAR" />
+	    <result column="expresstype" property="expresstype" jdbcType="VARCHAR" />
+	    <result column="workcount" property="workcount" jdbcType="INTEGER" />
+	    <result column="sku_num" property="skuNum" jdbcType="INTEGER" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+	    <result column="adjust_deliverid" property="adjustDeliverid" jdbcType="VARCHAR" />
+	    <result column="adjust_deliver_name" property="adjustDeliverName" jdbcType="VARCHAR" />  
+	    <result column="adjust_carrier_id" property="adjustCarrierId" jdbcType="VARCHAR" />
+	    <result column="adjust_carrier_name" property="adjustCarrierName" jdbcType="VARCHAR" /> 
+	    <result column="timeliness" property="timeliness" jdbcType="VARCHAR" />   
+	    <result column="adjust_province_id" property="adjustProvinceId" jdbcType="VARCHAR" />  
+	    <result column="adjust_city_id" property="adjustCityId" jdbcType="VARCHAR" /> 
+	    <result column="adjust_district_id" property="adjustDistrictId" jdbcType="VARCHAR" />  
+    </resultMap>
+    
+    
+    <sql id="baseColumns">
+   		id, outstock_no, customerid,customer_name, carrier_id, carrier_name, deliverid, deliver_name,
+   		waybill_no, waybill_num, waybill_list, total_weight, adjust_weight, warehouse_code, 
+   		service_type_code, dispatch_type_code, collect_money, month_fee_count, is_calculated, 
+   		send_name, send_province_id, send_city_id, send_district_id, send_street, send_detail_address, 
+   		receive_name, receive_province_id, receive_city_id, receive_district_id, receive_street, 
+   		receive_detail_address, receive_time, fees_no, account_state,external_no,sign_time,accept_time, 
+   		creator, create_time, last_modifier, last_modify_time, write_time, calculate_time, del_flag, 
+   		total_volume , temperature_type_code, temperature_type_name, remark, zexpressnum, bigstatus, 
+   		smallstatus, system_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, 
+   		extattr3, extattr4, extattr5,workcount,adjust_deliverid,adjust_deliver_name,adjust_carrier_id,
+   		adjust_carrier_name,timeliness,adjust_province_id,adjust_city_id,adjust_district_id
+   	</sql>	
+	<sql id="baseSelectColumns">
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(merchantId != null and merchantId !='')" >
+				and a.customerid = #{merchantId}
+		</if>
+		<if test="(logistics != null and logistics !='')" >
+				and a.carrier_id = #{logistics}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(accountState != null and accountState !='')" >
+				and a.is_calculated =#{accountState}
+		</if>
+		<if test="(wareHousename != null and wareHousename !='')" >
+				and a.warehouse_code = #{wareHousename}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and a.remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and a.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and a.create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[a.create_time <= #{endTime} ]]>
+		</if>
+		
+		<if test="(delFlag != null and delFlag !='')" >
+				and a.del_flag = #{delFlag}
+		</if>
+		<if test="(zexpressnum != null and zexpressnum !='')" >
+				and a.zexpressnum = #{zexpressnum}
+		</if>
+		<if test="(bigstatus != null and bigstatus !='')" >
+				and a.bigstatus = #{bigstatus}
+		</if>
+		<if test="(smallstatus != null and smallstatus !='')" >
+				and a.smallstatus = #{smallstatus}
+		</if>
+		<if test="(systemWeight != null and systemWeight !='')" >
+				and a.system_weight = #{systemWeight}
+		</if>
+		<if test="(totalqty != null and totalqty !='')" >
+				and a.totalqty = #{totalqty}
+		</if>
+		<if test="(productDetail != null and productDetail !='')" >
+				and a.product_detail = #{productDetail}
+		</if>
+		<if test="(expresstype != null and expresstype !='')" >
+				and a.expresstype = #{expresstype}
+		</if>
+		<if test="(skuNum != null and skuNum !='')" >
+				and a.sku_num = #{skuNum}
+		</if>
+		<if test="(deliverid != null and deliverid !='')" >
+				and a.deliverid = #{deliverid}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(extattr2 != null and extattr2 !='')" >
+				and a.extattr2 = #{extattr2}
+		</if>
+		<if test="(extattr3 != null and extattr3 !='')" >
+				and a.extattr3 = #{extattr3}
+		</if>
+		<if test="(extattr4 != null and extattr4 !='')" >
+				and a.extattr4 = #{extattr4}
+		</if>
+		<if test="(extattr5 != null and extattr5 !='')" >
+				and a.extattr5 = #{extattr5}
+		</if>
+    </sql>
+    
+     <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_dispatch_pay_bill a
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    <update id="adjustBillPay"  parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
+    	update biz_dispatch_pay_bill 
+    	<set>
+			<if test="adjustWeight != null" >adjust_weight=#{adjustWeight,jdbcType=DOUBLE},</if>
+			<if test="isCalculated != null">is_calculated = #{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="accountState != null" >account_state=#{accountState,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="adjustProvinceId!=null">adjust_province_id=#{adjustProvinceId},</if>
+			<if test="adjustCityId!=null">adjust_city_id=#{adjustCityId},</if>
+			<if test="adjustDistrictId!=null">adjust_district_id=#{adjustDistrictId},</if>
+		</set>
+        where
+        <if test="(id !=null and id!='')">
+        	id=#{id}
+        </if>
+        <if test="(outstockNo != null and outstockNo !='')" >
+			and outstock_no = #{outstockNo}
+		</if>
+    </update>
+     <update id="updateBill" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
+         update biz_dispatch_pay_bill 
+		<set>
+			<if test="adjustWeight != null" >adjust_weight=#{adjustWeight,jdbcType=DOUBLE},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null">is_calculated = #{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="accountState != null" >account_state=#{accountState,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="receiveProvinceId != null" >receive_province_id=#{receiveProvinceId,jdbcType=VARCHAR},</if>
+			<if test="receiveCityId != null" >receive_city_id=#{receiveCityId,jdbcType=VARCHAR},</if>
+			<if test="receiveDistrictId != null" >receive_district_id=#{receiveDistrictId,jdbcType=VARCHAR},</if>
+			<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
+			<if test="temperatureTypeName != null" >temperature_type_name=#{temperatureTypeName,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="adjustDeliverid != null" >adjust_deliverid=#{adjustDeliverid,jdbcType=VARCHAR},</if>
+			<if test="adjustDeliverName != null" >adjust_deliver_name=#{adjustDeliverName,jdbcType=VARCHAR},</if>
+			<if test="adjustCarrierId != null" >adjust_carrier_id=#{adjustCarrierId,jdbcType=VARCHAR},</if>
+			<if test="adjustCarrierName != null" >adjust_carrier_name=#{adjustCarrierName,jdbcType=VARCHAR},</if>
+		</set>
+        where
+        <if test="(id !=null and id!='')">
+        	id=#{id}
+        </if>
+        <if test="(outstockNo != null and outstockNo !='')" >
+			and outstock_no = #{outstockNo}
+		</if>
+		
+    </update>
+    
+    <!-- 查询所有的分组报价 -->   
+    <select id="queryAllPrice" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
+		select a.warehouse_code as warehouseCode,a.customer_name as customerName,a.carrier_name as carrierName,a.receive_province_id as receiveProvinceId,a.receive_city_id as receiveCityId,a.receive_district_id as receiveDistrictId,count(DISTINCT a.waybill_no) as extattr1 from biz_dispatch_pay_bill a
+    	where 1=1 
+    	<include refid="baseSelectColumns" />
+		GROUP BY a.warehouse_code,a.customer_name,a.carrier_name,a.receive_province_id,a.receive_city_id,a.receive_district_id
+    </select>
+    
+    <!-- 查询所有的分组数据 -->
+    <select id="queryAllData" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
+		select a.warehouse_code as warehouseCode,a.customer_name as customerName,a.carrier_name as carrierName,count(DISTINCT a.waybill_no) as extattr1 from biz_dispatch_pay_bill a
+    	where 1=1 
+    	<include refid="baseSelectColumns" />
+		GROUP BY a.warehouse_code,a.customer_name,a.carrier_name
+    </select>
+    
+    
+    <select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">
+        select a.waybill_no from biz_dispatch_pay_bill a
+		inner join fees_pay_dispatch b on a.fees_no = b.fees_no
+		inner join fees_pay_bill c on b.bill_no = c.bill_no and c.del_flag = 0
+		where a.del_flag = 0
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+    
+    <select id="validCalcuForRetry" parameterType="java.util.Map" resultType = "String">
+       	select a.waybill_no from biz_dispatch_pay_bill a
+		where a.del_flag = 0 and a.is_calculated = 1 
+		<include refid="baseSelectColumns" />
+		LIMIT 1
+    </select>
+	
+	<update id="retryForCalcu" parameterType="java.util.Map">
+        update biz_dispatch_pay_bill a set a.is_calculated = 99 where a.del_flag = 0
+        <include refid="baseSelectColumns" />
+    </update>
+    
+     <insert id="insertBizList" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
+        insert into biz_dispatch_pay_bill(outstock_no, external_no, waybill_no, fees_no, waybill_num, waybill_list, warehouse_code, warehouse_name, customerid, customer_name, carrier_id, carrier_name, deliverid, deliver_name, total_weight, adjust_weight, total_volume, service_type_code, dispatch_type_code, collect_money, month_fee_count, send_name, send_province_id, send_city_id, send_district_id, send_street, send_detail_address, receive_name, receive_province_id, receive_city_id, receive_district_id, receive_street, receive_detail_address, account_state, sign_time, accept_time, receive_time, is_calculated, creator, create_time, last_modifier, last_modify_time, write_time, calculate_time, del_flag, temperature_type_code, temperature_type_name, remark, zexpressnum, bigstatus, smallstatus, system_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5)
+        values (
+	#{outstockNo,jdbcType=VARCHAR}, 
+	#{externalNo,jdbcType=VARCHAR}, 
+	#{waybillNo,jdbcType=VARCHAR}, 
+	#{feesNo,jdbcType=VARCHAR}, 
+	#{waybillNum,jdbcType=DOUBLE}, 
+	#{waybillList,jdbcType=VARCHAR}, 
+	#{warehouseCode,jdbcType=VARCHAR}, 
+	#{warehouseName,jdbcType=VARCHAR}, 
+	#{customerid,jdbcType=VARCHAR}, 
+	#{customerName,jdbcType=VARCHAR}, 
+	#{carrierId,jdbcType=VARCHAR}, 
+	#{carrierName,jdbcType=VARCHAR}, 
+	#{deliverid,jdbcType=VARCHAR}, 
+	#{deliverName,jdbcType=VARCHAR}, 
+	#{totalWeight,jdbcType=DOUBLE}, 
+	#{adjustWeight,jdbcType=DOUBLE}, 
+	#{totalVolume,jdbcType=DOUBLE}, 
+	#{serviceTypeCode,jdbcType=VARCHAR}, 
+	#{dispatchTypeCode,jdbcType=VARCHAR}, 
+	#{collectMoney,jdbcType=DOUBLE}, 
+	#{monthFeeCount,jdbcType=VARCHAR}, 
+	#{sendName,jdbcType=VARCHAR}, 
+	#{sendProvinceId,jdbcType=VARCHAR}, 
+	#{sendCityId,jdbcType=VARCHAR}, 
+	#{sendDistrictId,jdbcType=VARCHAR}, 
+	#{sendStreet,jdbcType=VARCHAR}, 
+	#{sendDetailAddress,jdbcType=VARCHAR}, 
+	#{receiveName,jdbcType=VARCHAR}, 
+	#{receiveProvinceId,jdbcType=VARCHAR}, 
+	#{receiveCityId,jdbcType=VARCHAR}, 
+	#{receiveDistrictId,jdbcType=VARCHAR}, 
+	#{receiveStreet,jdbcType=VARCHAR}, 
+	#{receiveDetailAddress,jdbcType=VARCHAR}, 
+	#{accountState,jdbcType=VARCHAR}, 
+	#{signTime,jdbcType=TIMESTAMP}, 
+	#{acceptTime,jdbcType=TIMESTAMP}, 
+	#{receiveTime,jdbcType=TIMESTAMP}, 
+	#{isCalculated,jdbcType=VARCHAR}, 
+	#{creator,jdbcType=VARCHAR}, 
+	#{createTime,jdbcType=TIMESTAMP}, 
+	#{lastModifier,jdbcType=VARCHAR}, 
+	#{lastModifyTime,jdbcType=TIMESTAMP}, 
+	#{writeTime,jdbcType=TIMESTAMP}, 
+	#{calculateTime,jdbcType=TIMESTAMP}, 
+	#{delFlag,jdbcType=VARCHAR}, 
+	#{temperatureTypeCode,jdbcType=VARCHAR}, 
+	#{temperatureTypeName,jdbcType=VARCHAR}, 
+	#{remark,jdbcType=VARCHAR}, 
+	#{zexpressnum,jdbcType=VARCHAR}, 
+	#{bigstatus,jdbcType=VARCHAR}, 
+	#{smallstatus,jdbcType=VARCHAR}, 
+	#{systemWeight,jdbcType=DOUBLE}, 
+	#{totalqty,jdbcType=INTEGER}, 
+	#{productDetail,jdbcType=VARCHAR}, 
+	#{expresstype,jdbcType=VARCHAR}, 
+	#{skuNum,jdbcType=INTEGER}, 
+	#{extattr1,jdbcType=VARCHAR}, 
+	#{extattr2,jdbcType=VARCHAR}, 
+	#{extattr3,jdbcType=VARCHAR}, 
+	#{extattr4,jdbcType=VARCHAR}, 
+	#{extattr5,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    
+    <select id="queryBizData" parameterType="java.util.Map" resultMap="baseResultMap">
+    	SELECT * from biz_dispatch_pay_bill where del_flag='0' and waybill_no in 
+    	<foreach collection="waybillnos" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+    </select>
+    
+    <select id="queryExceptionOne" parameterType="java.util.Map" resultMap="baseResultMap">
+    	SELECT * from biz_dispatch_pay_bill where del_flag='0' 
+    	<if test="(createTime != null and createTime !='')" >
+			    and create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time <= #{endTime} ]]>
+		</if>
+		<if test="(deliverid != null and deliverid !='')" >
+				and deliverid = #{deliverid}
+		</if>
+    	 and is_calculated not in ('1','5') limit 1
+    </select>
+    
+    <update id="updateWeight" parameterType="java.util.Map">
+         update biz_dispatch_pay_bill 
+		<set>
+			<if test="adjustWeight != null" >adjust_weight=#{adjustWeight,jdbcType=DOUBLE},</if>
+			<if test="isCalculated != null">is_calculated = #{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="adjustProvince!=null">adjust_province_id=#{adjustProvince},</if>
+			<if test="adjustCity!=null">adjust_city_id=#{adjustCity},</if>
+			<if test="adjustDistrict!=null">adjust_district_id=#{adjustDistrict},</if>
+		</set>
+        where
+          waybill_no = #{waybillNo}
+    </update>
+    <select id="queryDispatch" parameterType="java.util.Map" resultType = "java.lang.Integer">
+        SELECT  count(b.id) as num  from  biz_dispatch_pay_bill b LEFT JOIN  fees_pay_dispatch f  on  b.waybill_no = f.waybill_no  where  f.status = '1' and  b.waybill_no =  #{waybillNo}
+    </select>
+    
+</mapper>

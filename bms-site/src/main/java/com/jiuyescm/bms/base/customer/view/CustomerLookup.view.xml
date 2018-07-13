@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondLookupCustomer">
+      <PropertyDef name="customercode">
+        <Property name="label">商家助记码</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property name="label">商家简称</Property>
+      </PropertyDef>
+      <PropertyDef name="customername">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsCustomerLookup</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQueryCustomer">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsCustomerLookup&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formConditionCustomer&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnSelectCustomer">
+        <ClientEvent name="onClick">this.get(&quot;#actionSelectCustomer&quot;).execute();</ClientEvent>
+        <Property name="caption">选择</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsCustomerLookup">
+      <Property name="dataType">[dtCustomerEntity]</Property>
+      <Property name="dataProvider">customerController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <AutoForm id="formConditionCustomer">
+      <Property name="dataType">dtCondLookupCustomer</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*</Property>
+      <Property name="labelWidth">100</Property>
+      <AutoFormElement>
+        <Property name="name">shortname</Property>
+        <Property name="property">shortname</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">customername</Property>
+        <Property name="property">customername</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid id="gridCustomerLookup">
+      <ClientEvent name="onDoubleClick">this.get(&quot;#actionSelectCustomer&quot;).execute();</ClientEvent>
+      <Property name="dataSet">dsCustomerLookup</Property>
+      <Property name="stretchColumnsMode">off</Property>
+      <Property name="readOnly">true</Property>
+      <RowNumColumn/>
+      <DataColumn name="customerid">
+        <Property name="property">customerid</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="shortname">
+        <Property name="property">shortname</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="customername">
+        <Property name="property">customername</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="linkman">
+        <Property name="property">linkman</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="address">
+        <Property name="property">address</Property>
+        <Property name="width">200</Property>
+      </DataColumn>
+      <DataColumn name="tel">
+        <Property name="property">tel</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="zipcode">
+        <Property name="property">zipcode</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+        <Property name="width">240</Property>
+      </DataColumn>
+      <DataColumn name="delflag">
+        <Property name="property">delflag</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+    </DataGrid>
+    <Action id="actionSelectCustomer">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsCustomerLookup&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}&#xD;
+</ClientEvent>
+    </Action>
+  </View>
+</ViewConfig>

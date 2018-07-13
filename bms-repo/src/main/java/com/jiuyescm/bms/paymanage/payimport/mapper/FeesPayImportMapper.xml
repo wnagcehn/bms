@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.paymanage.payimport.mapper.FeesPayImportMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.paymanage.payimport.FeesPayImportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="create_month" property="createMonth" jdbcType="INTEGER" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="DECIMAL" />
+	    <result column="state" property="state" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="extarr1" property="extarr1" jdbcType="VARCHAR" />
+	    <result column="extarr2" property="extarr2" jdbcType="VARCHAR" />
+	    <result column="extarr3" property="extarr3" jdbcType="VARCHAR" />
+	    <result column="extarr4" property="extarr4" jdbcType="VARCHAR" />
+	    <result column="extarr5" property="extarr5" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, create_month, biz_type, warehouse_code, subject_code, subject_name, amount,state, del_flag, remark, extarr1, extarr2, extarr3, extarr4, extarr5, creator, create_time, last_modifier, last_modify_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>	
+		<if test="(createYear != null and createYear !='')" >
+				and create_month like '${createYear}%'
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(subjectName != null and subjectName !='')" >
+				and subject_name = #{subjectName}
+		</if>
+		<if test="(amount != null and amount !='')" >
+				and amount = #{amount}
+		</if>
+		<if test="(state != null and state !='')" >
+				and state = #{state}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(extarr1 != null and extarr1 !='')" >
+				and extarr1 = #{extarr1}
+		</if>
+		<if test="(extarr2 != null and extarr2 !='')" >
+				and extarr2 = #{extarr2}
+		</if>
+		<if test="(extarr3 != null and extarr3 !='')" >
+				and extarr3 = #{extarr3}
+		</if>
+		<if test="(extarr4 != null and extarr4 !='')" >
+				and extarr4 = #{extarr4}
+		</if>
+		<if test="(extarr5 != null and extarr5 !='')" >
+				and extarr5 = #{extarr5}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		and del_flag ='0' ORDER BY create_time desc
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from fees_pay_import
+        where 1=1
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>	
+		<if test="(createYear != null and createYear !='')" >
+				and create_month like '${createYear}%'
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(state==0 || state=='0')">
+			and state='0'
+		</if>
+		<if test="(state==1 || state=='1')">
+			and state='1'
+		</if>
+		and del_flag ='0' ORDER BY create_time desc
+    </select>
+    
+     <select id="queryOne" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from fees_pay_import
+        where 1=1
+		<include refid="baseSelectColumns" />  limit 1
+    </select>
+
+	<insert id="save" parameterType="com.jiuyescm.bms.paymanage.payimport.FeesPayImportEntity">
+	        insert into fees_pay_import(create_month, biz_type, warehouse_code, subject_code, subject_name, amount,state, del_flag, remark, extarr1, extarr2, extarr3, extarr4, extarr5, creator, create_time, last_modifier, last_modify_time)
+	        values (	
+				#{createMonth,jdbcType=INTEGER},
+				#{bizType,jdbcType=VARCHAR}, 
+				#{warehouseCode,jdbcType=VARCHAR}, 
+				#{subjectCode,jdbcType=VARCHAR}, 
+				#{subjectName,jdbcType=VARCHAR}, 
+				#{amount,jdbcType=DECIMAL}, 
+				#{state,jdbcType=VARCHAR}, 			
+				#{delFlag,jdbcType=VARCHAR}, 
+				#{remark,jdbcType=VARCHAR}, 
+				#{extarr1,jdbcType=VARCHAR}, 
+				#{extarr2,jdbcType=VARCHAR}, 
+				#{extarr3,jdbcType=VARCHAR}, 
+				#{extarr4,jdbcType=VARCHAR}, 
+				#{extarr5,jdbcType=VARCHAR}, 
+				#{creator,jdbcType=VARCHAR}, 
+				#{createTime,jdbcType=TIMESTAMP}, 
+				#{lastModifier,jdbcType=VARCHAR}, 
+				#{lastModifyTime,jdbcType=TIMESTAMP}
+	        )
+	</insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.paymanage.payimport.FeesPayImportEntity">
+        update fees_pay_import 
+		<set >
+			<if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="subjectName != null" >subject_name=#{subjectName,jdbcType=VARCHAR},</if>
+			<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+			<if test="state != null" >state=#{state,jdbcType=VARCHAR},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="extarr1 != null" >extarr1=#{extarr1,jdbcType=VARCHAR},</if>
+			<if test="extarr2 != null" >extarr2=#{extarr2,jdbcType=VARCHAR},</if>
+			<if test="extarr3 != null" >extarr3=#{extarr3,jdbcType=VARCHAR},</if>
+			<if test="extarr4 != null" >extarr4=#{extarr4,jdbcType=VARCHAR},</if>
+			<if test="extarr5 != null" >extarr5=#{extarr5,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+	<update id="updateList">
+		update fees_pay_import set del_flag='1' where id=#{id}
+	</update>
+	
+</mapper>

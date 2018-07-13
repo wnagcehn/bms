@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="delivername">
+        <Property name="label">宅配商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="delivercode">
+        <Property name="label">宅配商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property name="label">宅配商简称</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverid">
+        <Property name="label">宅配商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="label">作废标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="parentCompany">
+        <Property name="label">总公司</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsDeliveryEntity">
+      <Property name="dataType">[dtDeliverEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">deliveryController#query</Property>
+    </DataSet>
+    <Container id="Container_Main">
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsDeliveryEntity</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsDeliveryEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnSelectDeliver">
+          <ClientEvent name="onClick">this.get(&quot;#actionSelectDeliver&quot;).execute();</ClientEvent>
+          <Property name="caption">选择</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="showHint">false</Property>
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="labelWidth">75</Property>
+        <Property name="labelSpacing">0</Property>
+        <Property name="colPadding">15</Property>
+        <AutoFormElement>
+          <Property name="name">deliverid</Property>
+          <Property name="property">deliverid</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">shortname</Property>
+          <Property name="property">shortname</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">parentCompany</Property>
+          <Property name="name">parentCompany</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid id="dg_DeliveryList">
+        <ClientEvent name="onDoubleClick">this.get(&quot;#actionSelectDeliver&quot;).execute();</ClientEvent>
+        <Property name="dataSet">dsDeliveryEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <DataColumn name="deliverid">
+          <Property name="property">deliverid</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">parentCompany</Property>
+          <Property name="name">parentCompany</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="delivername">
+          <Property name="property">delivername</Property>
+        </DataColumn>
+        <DataColumn name="delivercode">
+          <Property name="property">delivercode</Property>
+        </DataColumn>
+        <DataColumn name="shortname">
+          <Property name="property">shortname</Property>
+        </DataColumn>
+        <DataColumn name="linkman">
+          <Property name="property">linkman</Property>
+        </DataColumn>
+        <DataColumn name="tel">
+          <Property name="property">tel</Property>
+        </DataColumn>
+        <DataColumn name="mobile">
+          <Property name="property">mobile</Property>
+        </DataColumn>
+        <DataColumn name="address">
+          <Property name="property">address</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Action id="actionSelectDeliver">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsDeliveryEntity&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
+  </View>
+</ViewConfig>

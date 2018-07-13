@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.receive.BmsBillSubjectInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_month" property="billMonth" jdbcType="VARCHAR" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+	    <result column="fees_type" property="feesType" jdbcType="VARCHAR" />
+	    <result column="total_amount" property="totalAmount" jdbcType="DOUBLE" />
+	    <result column="discount_type" property="discountType" jdbcType="VARCHAR" />
+	    <result column="discount_rate" property="discountRate" jdbcType="DOUBLE" />
+	    <result column="discount_amount" property="discountAmount" jdbcType="DOUBLE" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE" />
+	    <result column="num" property="num" jdbcType="DOUBLE" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param5" property="param5" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="bill_name" property="billName" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id,bill_month, bill_no, warehouse_code, subject_code, subject_name, fees_type,derate_amount, total_amount,discount_type, discount_rate, discount_amount, receipt_amount, num, status, remark, param1, param2, param3, param4, param5, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(billMonth != null and billMonth !='')" >
+				and bill_month = #{billMonth}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(subjectName != null and subjectName !='')" >
+				and subject_name = #{subjectName}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and fees_type = #{feesType}
+		</if>
+		<if test="(totalAmount != null and totalAmount !='')" >
+				and total_amount = #{totalAmount}
+		</if>
+		<if test="(discountRate != null and discountRate !='')" >
+				and discount_rate = #{discountRate}
+		</if>
+		<if test="(discountAmount != null and discountAmount !='')" >
+				and discount_amount = #{discountAmount}
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+				and receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(num != null and num !='')" >
+				and num = #{num}
+		</if>
+		<if test="(status != null and status !='')" >
+				and status = #{status}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(param2 != null and param2 !='')" >
+				and param2 = #{param2}
+		</if>
+		<if test="(param3 != null and param3 !='')" >
+				and param3 = #{param3}
+		</if>
+		<if test="(param4 != null and param4 !='')" >
+				and param4 = #{param4}
+		</if>
+		<if test="(param5 != null and param5 !='')" >
+				and param5 = #{param5}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_subject_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_subject_info
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+         insert into bms_bill_subject_info(bill_month,bill_no, warehouse_code, subject_code, subject_name, fees_type, total_amount,discount_type, discount_rate, discount_amount, receipt_amount, num, status, remark, param1, param2, param3, param4, param5, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+       	    #{billMonth,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{subjectName,jdbcType=VARCHAR}, 
+			#{feesType,jdbcType=VARCHAR}, 
+			#{totalAmount,jdbcType=DOUBLE}, 
+			#{discountType,jdbcType=DOUBLE}, 			
+			#{discountRate,jdbcType=DOUBLE}, 
+			#{discountAmount,jdbcType=DOUBLE}, 
+			#{receiptAmount,jdbcType=DOUBLE}, 
+			#{num,jdbcType=DOUBLE}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param5,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+       update bms_bill_subject_info 
+		<set >
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="subjectName != null" >subject_name=#{subjectName,jdbcType=VARCHAR},</if>
+			<if test="feesType != null" >fees_type=#{feesType,jdbcType=VARCHAR},</if>
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param5 != null" >param5=#{param5,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bms_bill_subject_info where
+        id=#{id}
+    </delete>
+    
+    <select id="queryAllByBillNoAndwarehouse" parameterType="String" resultMap="baseResultMap">
+        select a.id,a.bill_no,a.warehouse_code,a.subject_code,a.subject_name,a.fees_type,
+		ifnull(a.total_amount,0) as total_amount,a.discount_type,
+		ifnull(a.discount_rate,0) as discount_rate,ifnull(a.discount_amount,0) as discount_amount,
+		ifnull(a.derate_amount,0) as derate_amount,ifnull(a.receipt_amount,0) as receipt_amount,a.num,a.status,a.remark,a.del_flag,
+        b.bill_name,b.customer_name, b.customer_id
+        from bms_bill_subject_info a left JOIN
+		bms_bill_info b on a.bill_no=b.bill_no
+		 where a.bill_no=#{billNo} 
+		 <if test="(warehouseCode != null and warehouseCode !='')" >
+		  and a.warehouse_code=#{warehouseCode}
+		 </if>
+		 <if test="(feesType != null and feesType !='')" >
+		  and a.fees_type=#{feesType}
+		 </if>
+		 
+    </select>
+    
+    <update id="updateDiscountStorageBill" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+    	update bms_bill_subject_info 
+		<set >
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			discount_rate=#{discountRate,jdbcType=DOUBLE},
+			discount_amount=#{discountAmount,jdbcType=DOUBLE},
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <select id="querywarehouseAmount" parameterType="Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+    	select warehouse_code,sum(total_amount) as amount,bill_no as billNo
+			from bms_bill_subject_info 
+			where bill_no=#{billNo} and fees_type=#{feesType} and del_flag=0
+			group by warehouse_code,bill_no
+    </select>
+    
+    <select id="queryTotlewarehouseAmount" parameterType="Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillWareHouseEntity">
+    	select warehouse_code,sum(total_amount) as amount,sum(discount_amount) as discountAmount,sum(derate_amount) as derateAmount,sum(total_amount-discount_amount-derate_amount) as receiveAmount,bill_no as billNo
+			from bms_bill_subject_info 
+			where bill_no=#{billNo} and fees_type in ('STORAGE','DISPATCH')  and del_flag=0
+			group by warehouse_code,bill_no
+    </select>
+    
+    <update id="deleteFeesBill" parameterType="java.util.Map">
+    	update bms_bill_subject_info 
+		<set>
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where bill_no=#{billNo}
+    </update>
+    
+    <select id="queryBillSubjectStatus" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+    	select DISTINCT status
+		from bms_bill_subject_info 
+		where del_flag='0' and bill_no=#{billNo}
+    </select>
+    <update id="updateStatus" parameterType="Map">
+    	update bms_bill_subject_info set status=#{status}
+    	where bill_no=#{billNo} and warehouse_code=#{warehouseCode}
+    	and subject_code=#{subjectCode}
+    </update>  
+     <update id="updateBillSubjectDerateFee" parameterType="Map">
+    	update bms_bill_subject_info
+    	<set>
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>	
+    	where bill_no=#{billNo} and subject_code=#{subjectCode}
+    	<if test="warehouseCode != null" >
+    		and warehouse_code=#{warehouseCode}
+    	</if>
+    	<if test="feesType != null" >
+    		and fees_type=#{feesType}
+    	</if>
+    </update>
+    <update id="updateTransportBillSubject" parameterType="Map">
+    		update bms_bill_subject_info
+    	<set>
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>	
+    	where bill_no=#{billNo} and <![CDATA[ifnull(subject_code,'')<>#{subjectCode}]]>
+    	<if test="warehouseCode != null" >
+    		and warehouse_code=#{warehouseCode}
+    	</if>
+    	<if test="feesType != null" >
+    		and fees_type=#{feesType}
+    	</if>
+    </update>
+      <update id="updateAbnormalTransportBillSubject" parameterType="Map">
+    		update bms_bill_subject_info
+    	<set>
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>	
+    	where bill_no=#{billNo} and <![CDATA[subject_code=#{subjectCode}]]>
+    	<if test="warehouseCode != null" >
+    		and warehouse_code=#{warehouseCode}
+    	</if>
+    	<if test="feesType != null" >
+    		and fees_type=#{feesType}
+    	</if>
+    </update>
+    <update id="deleteSubjectBill" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+    	update bms_bill_subject_info 
+    	<set>
+    	 	total_amount=0,discount_type='',discount_rate=0,discount_amount=0,receipt_amount=0,num=0,
+	    	<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+    	</set>
+		where id=#{id}
+    </update>  
+     <update id="updateBillSubject" parameterType="java.util.Map">
+    	update bms_bill_subject_info 
+    	<set>
+    		<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+    	</set>
+		where 1=1
+			<if test="billNo != null" >and bill_no=#{billNo,jdbcType=VARCHAR}</if>
+			<if test="warehouseCode != null" >and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}</if>
+			<if test="subjectCode != null" >and subject_code=#{subjectCode,jdbcType=VARCHAR}</if>
+    </update>
+    <select id="queryBillWarehouse" parameterType="java.util.Map" 
+    	resultType="java.lang.String">
+      SELECT b.warehouse_code from (SELECT  *  from bms_bill_subject_info where bill_no = #{billNo})  b  GROUP BY b.warehouse_code
+    </select>
+    <select id="queryTransportSum" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+       SELECT  SUM(total_amount) as total_amount,SUM(discount_amount) as discount_amount,SUM(derate_amount) as derate_amount,SUM(receipt_amount) as receipt_amount,SUM(num) as num  from  bms_bill_subject_info 
+         where del_flag = '0'  and  fees_type = 'TRANSPORT'  and  bill_no=#{billNo} 
+    </select>
+    
+    <update id="updateSubjectList" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
+    	update bms_bill_subject_info 
+		<set >
+			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DOUBLE},</if>
+			<if test="discountType != null" >discount_type=#{discountType,jdbcType=DOUBLE},</if>
+			<if test="discountRate != null" >discount_rate=#{discountRate,jdbcType=DOUBLE},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DOUBLE},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="num != null" >num=#{num,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>

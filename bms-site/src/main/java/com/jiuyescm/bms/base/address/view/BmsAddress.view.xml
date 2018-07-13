@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="province">
+        <Property name="label">省</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="provinceCode"/>
+      <PropertyDef name="city">
+        <Property name="label">市</Property>
+      </PropertyDef>
+      <PropertyDef name="cityCode"/>
+      <PropertyDef name="district">
+        <Property name="label">区</Property>
+      </PropertyDef>
+      <PropertyDef name="districtCode"/>
+    </DataType>
+    <DataType name="dtAddressVo">
+      <Property name="creationType">com.jiuyescm.bms.base.address.vo.PubAddressVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="province">
+        <Property></Property>
+        <Property name="label">省</Property>
+      </PropertyDef>
+      <PropertyDef name="city">
+        <Property></Property>
+        <Property name="label">市</Property>
+      </PropertyDef>
+      <PropertyDef name="district">
+        <Property></Property>
+        <Property name="label">区</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorCode">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="provinceCode">
+        <Property></Property>
+        <Property name="label">省编号</Property>
+      </PropertyDef>
+      <PropertyDef name="cityCode">
+        <Property></Property>
+        <Property name="label">市编号</Property>
+      </PropertyDef>
+      <PropertyDef name="districtCode">
+        <Property></Property>
+        <Property name="label">区编号</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsAddressVoList">
+      <Property name="dataType">[dtAddressVo]</Property>
+      <Property name="dataProvider">bmsAddressController#query</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsAllProvinces">
+      <Property name="dataType">[dtPubAddressEntity]</Property>
+      <Property name="dataProvider">bmsAddressController#queryAllProvince</Property>
+    </DataSet>
+    <DataSet id="dsCities">
+      <Property name="dataType">[dtPubAddressEntity]</Property>
+      <Property name="dataProvider">bmsAddressController#queryCityByProvince</Property>
+    </DataSet>
+    <DataSet id="dsDistricts">
+      <Property name="dataType">[dtPubAddressEntity]</Property>
+      <Property name="dataProvider">bmsAddressController#queryDistrictByCity</Property>
+    </DataSet>
+    <DataSetDropDown id="ddropDownQueryProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	province:arg.selectedValue.get(&quot;areaName&quot;),&#xD;
+	provinceCode:arg.selectedValue.get(&quot;areaCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">areaName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryCity">
+      <ClientEvent name="beforeExecute">&#xD;
+var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var provinceCode = data.get(&quot;provinceCode&quot;);&#xD;
+var province = data.get(&quot;province&quot;);&#xD;
+&#xD;
+if(province){&#xD;
+	var parameter={&#xD;
+		province:province,provinceCode:provinceCode&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	city:arg.selectedValue.get(&quot;areaName&quot;),&#xD;
+	cityCode:arg.selectedValue.get(&quot;areaCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">areaName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var cityCode = data.get(&quot;cityCode&quot;);&#xD;
+var city = data.get(&quot;city&quot;);&#xD;
+if(cityCode){&#xD;
+	var parameter={&#xD;
+		city:city,cityCode:cityCode&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	district:arg.selectedValue.get(&quot;areaName&quot;),&#xD;
+	districtCode:arg.selectedValue.get(&quot;areaCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">areaCode=areaCode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">areaName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsAddressVoList</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <ToolBarButton id="query">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsAddressVoList&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}			</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <Property name="dataType">dtCondition</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <AutoFormElement>
+          <Property name="name">province</Property>
+          <Property name="property">province</Property>
+          <Property name="trigger">ddropDownQueryProvince</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">city</Property>
+          <Property name="property">city</Property>
+          <Property name="trigger">ddropDownQueryCity</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">district</Property>
+          <Property name="property">district</Property>
+          <Property name="trigger">ddropDownQueryDistrict</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid id="dg_AddressList">
+        <Property name="dataSet">dsAddressVoList</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="lazyInit">true</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="province">
+          <Property name="property">province</Property>
+        </DataColumn>
+        <DataColumn name="provinceCode">
+          <Property name="property">provinceCode</Property>
+        </DataColumn>
+        <DataColumn name="city">
+          <Property name="property">city</Property>
+        </DataColumn>
+        <DataColumn name="cityCode">
+          <Property name="property">cityCode</Property>
+        </DataColumn>
+        <DataColumn name="district">
+          <Property name="property">district</Property>
+        </DataColumn>
+        <DataColumn name="districtCode">
+          <Property name="property">districtCode</Property>
+        </DataColumn>
+        <DataColumn name="creatorCode">
+          <Property name="property">creatorCode</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

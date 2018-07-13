@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.file.templet.BmsTempletInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.file.templet.BmsTempletInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="templet_code" property="templetCode" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="templet_type" property="templetType" jdbcType="VARCHAR" />
+	    <result column="templet_name" property="templetName" jdbcType="VARCHAR" />
+	    <result column="url" property="url" jdbcType="VARCHAR" />
+	    <result column="excel_name" property="excelName" jdbcType="VARCHAR" />	    
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, templet_code, biz_type, templet_type, templet_name, url, excel_name,remark, creator, create_time, last_modifier, last_modify_time, del_flag, param1, param2, param3
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(templetCode != null and templetCode !='')" >
+				and templet_code = #{templetCode}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(templetType != null and templetType !='')" >
+				and templet_type = #{templetType}
+		</if>
+		<if test="(templetName != null and templetName !='')" >
+				and templet_name = #{templetName}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultType="com.jiuyescm.bms.file.templet.BmsTempletInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_templet_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.file.templet.BmsTempletInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_templet_info
+        where id=#{id} 
+    </select>
+    
+    <select id="findByCode" resultType="com.jiuyescm.bms.file.templet.BmsTempletInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_templet_info
+        where templet_code=#{templetCode} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.file.templet.BmsTempletInfoEntity">
+        insert into bms_templet_info(templet_code, biz_type, templet_type, templet_name, url,excel_name, remark, creator, create_time, last_modifier, last_modify_time, del_flag, param1, param2, param3)
+        values (
+				#{templetCode,jdbcType=VARCHAR}, 
+				#{bizType,jdbcType=VARCHAR}, 
+				#{templetType,jdbcType=VARCHAR}, 
+				#{templetName,jdbcType=VARCHAR}, 
+				#{url,jdbcType=VARCHAR}, 
+				#{excelName,jdbcType=VARCHAR}, 			
+				#{remark,jdbcType=VARCHAR}, 
+				#{creator,jdbcType=VARCHAR}, 
+				#{createTime,jdbcType=TIMESTAMP}, 
+				#{lastModifier,jdbcType=VARCHAR}, 
+				#{lastModifyTime,jdbcType=TIMESTAMP}, 
+				#{delFlag,jdbcType=VARCHAR}, 
+				#{param1,jdbcType=VARCHAR}, 
+				#{param2,jdbcType=VARCHAR}, 
+				#{param3,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.file.templet.BmsTempletInfoEntity">
+        update bms_templet_info 
+		<set >
+			<if test="templetCode != null" >templet_code=#{templetCode,jdbcType=VARCHAR},</if>
+			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="templetType != null" >templet_type=#{templetType,jdbcType=VARCHAR},</if>
+			<if test="templetName != null" >templet_name=#{templetName,jdbcType=VARCHAR},</if>
+			<if test="url != null" >url=#{url,jdbcType=VARCHAR},</if>
+			<if test="excelName != null" >excel_name=#{excelName,jdbcType=VARCHAR},</if>		
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+</mapper>

@@ -1,0 +1,2911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillStatusEnum&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTimeBegin">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createTimeEnd">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsBillInfo">
+      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">账单开始时间</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">账单结束时间</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="totalAmount">
+        <Property name="label">总金额</Property>
+        <Property name="displayFormat">#,##0.00元</Property>
+      </PropertyDef>
+      <PropertyDef name="discountRate">
+        <Property name="label">折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="discountAmount">
+        <Property name="label">账单折扣金额</Property>
+        <Property name="dataType">Double</Property>
+        <Property name="displayFormat">#,##0.00元</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">减免金额</Property>
+        <Property name="displayFormat">#,##0.00元</Property>
+      </PropertyDef>
+      <PropertyDef name="feesDiscountAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">费用折扣金额</Property>
+        <Property name="displayFormat">#,##0.00元</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveAmount">
+        <Property name="label">应收金额</Property>
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="label">实收金额</Property>
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillStatusEnum&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="approver">
+        <Property name="label">审批人</Property>
+      </PropertyDef>
+      <PropertyDef name="approvalWay">
+        <Property name="label">审批方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getApprovalWay&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="approvalNo">
+        <Property name="label">审批编号</Property>
+      </PropertyDef>
+      <PropertyDef name="approvalTime">
+        <Property name="label">审批时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="label">邮箱</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property name="label">参数1</Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property name="label">参数2</Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property name="label">参数3</Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property name="label">参数4</Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property name="label">参数5</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="version">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="projectId">
+        <Property name="label">项目ID</Property>
+      </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property></Property>
+        <Property name="label">折扣方式</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectDiscountAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">科目折扣金额</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillInvoceInfo">
+      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isNeedInvoce">
+        <Property></Property>
+        <Property name="label">需要发票</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">UNNEED</Property>
+                <Property name="value">不需要</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">NEED</Property>
+                <Property name="value">需要</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="invoceNo">
+        <Property></Property>
+        <Property name="label">发票号码</Property>
+      </PropertyDef>
+      <PropertyDef name="invoceAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">开票金额</Property>
+        <Property name="displayFormat">#,##0.0000元</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="displayFormat">#,##0.0000元</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">收款金额</Property>
+        <Property name="displayFormat">#,##0.0000元</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">UNSETTLED</Property>
+                <Property name="value">未收账</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">SETTLED</Property>
+                <Property name="value">已收账</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">收款状态</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="unReceiveAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">已开未收</Property>
+        <Property name="displayFormat">#,##0.0000元</Property>
+      </PropertyDef>
+      <PropertyDef name="unInvoceAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">未开金额</Property>
+        <Property name="displayFormat">#,##0.0000元</Property>
+      </PropertyDef>
+      <PropertyDef name="totalAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">应收金额</Property>
+        <Property name="displayFormat">#,##0.0000元</Property>
+      </PropertyDef>
+      <PropertyDef name="invoceTime">
+        <Property name="label">开票时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="discountAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">折扣金额</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptTime">
+        <Property name="label">收款时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="version">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillLogRecordEntity">
+      <Property name="creationType">com.jiuyescm.bms.common.log.entity.BmsBillLogRecordEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="approver">
+        <Property></Property>
+        <Property name="label">审批人</Property>
+      </PropertyDef>
+      <PropertyDef name="approvalWay">
+        <Property name="label">审批方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getApprovalWay&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="approvalTime">
+        <Property name="label">审批时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="invoceNo">
+        <Property></Property>
+        <Property name="label">发票号码</Property>
+      </PropertyDef>
+      <PropertyDef name="invoceAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">开票金额（元）</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">收款金额（元）</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">操作人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">操作时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="operate">
+        <Property></Property>
+        <Property name="label">步骤</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtFileExportTaskEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.file.entity.FileExportTaskEntity</Property>
+      <PropertyDef name="taskId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property></Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="taskType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="taskState">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">已创建</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">处理中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">失败</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="progress">
+        <Property name="dataType">Double</Property>
+        <Property name="label">进度</Property>
+      </PropertyDef>
+      <PropertyDef name="filePath">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtFileExportTaskCondition">
+      <PropertyDef name="taskName">
+        <Property></Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="taskType">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBmsBillInfo">
+      <Property name="dataType">[dtBmsBillInfo]</Property>
+      <Property name="dataProvider">bmsBillInfoController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillInvoceInfoList">
+      <Property name="dataType">[dtBillInvoceInfo]</Property>
+      <Property name="dataProvider">bmsBillInvoceInfoController#query</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBillInvoceInfo">
+      <Property name="dataProvider">bmsBillInvoceInfoController#queryCountInvoceInfo</Property>
+      <Property name="dataType">[dtBillInvoceInfo]</Property>
+    </DataSet>
+    <DataSet id="dsBillReceiptInfo">
+      <Property name="dataProvider">bmsBillInvoceInfoController#queryCountReceiptInfo</Property>
+      <Property name="dataType">[dtBillInvoceInfo]</Property>
+    </DataSet>
+    <DataSet id="dsBillLogRecordList">
+      <Property name="dataProvider">bmsBillLogRecordController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataType">[dtBillLogRecordEntity]</Property>
+    </DataSet>
+    <DataSet id="dsFileExportTaskList">
+      <Property name="dataType">[dtFileExportTaskEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">fileExportTaskController#query</Property>
+    </DataSet>
+    <DataSet id="dsFileExportTaskCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsFileExportTaskCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtFileExportTaskCondition]</Property>
+    </DataSet>
+    <Container id="mainContainer">
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnGener">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsBillInfo.data&quot;);
+datas.insert();
+view.id(&quot;infoContainer&quot;).set(&quot;content&quot;,&quot;&quot;);
+view.get(&quot;#timeRadio&quot;).set(&quot;value&quot;,-1);
+var nowdays = new Date();
+    var year = nowdays.getFullYear();
+    var month = nowdays.getMonth();
+    if(month==0)
+    {
+        month=12;
+        year=year-1;
+    }
+    if (month &lt; 10) {
+        month = &quot;0&quot; + month;
+    }
+   
+    var myDate = new Date(year, month, 0);
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天
+	view.get(&quot;#queryConditionFrm.entity&quot;).set({
+		endTime:lastDay
+	});
+
+view.get(&quot;#generDialog&quot;).show();</ClientEvent>
+          <Property name="caption">生成账单</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnModify">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsBillInfoEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+          <Property name="caption">修改</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+          <Property name="visible">false</Property>
+        </ToolBarButton>
+        <Separator>
+          <Property name="visible">false</Property>
+        </Separator>
+        <ToolBarButton id="btnRemove">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsBillInfoEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                with (view.get(&quot;#dsBmsBillInfoEntity&quot;)){&#xD;
+                                    flushAsync();&#xD;
+                                }&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+          <Property name="caption">删除</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+          <Property name="visible">false</Property>
+        </ToolBarButton>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var condition=view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		taskType:'recbill'&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+          <Property name="caption">账单下载</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryForm">
+        <ClientEvent name="onReady">var date = new Date();&#xD;
+var seperator1 = &quot;-&quot;;&#xD;
+var seperator2 = &quot;:&quot;;&#xD;
+var month = date.getMonth() + 1;&#xD;
+var strDate = date.getDate();&#xD;
+if (month >= 1 &amp;&amp; month &lt;= 9) {&#xD;
+    month = &quot;0&quot; + month;&#xD;
+}&#xD;
+if (strDate >= 0 &amp;&amp; strDate &lt;= 9) {&#xD;
+    strDate = &quot;0&quot; + strDate;&#xD;
+}&#xD;
+&#xD;
+var lw = new Date(date - 1000*60*60*24*30);&#xD;
+var lwmonth = lw.getMonth() + 1;&#xD;
+var lwstrDate = lw.getDate();&#xD;
+if (lwmonth >= 1 &amp;&amp; lwmonth &lt;= 9) {&#xD;
+    lwmonth = &quot;0&quot; + lwmonth;&#xD;
+}&#xD;
+if (lwstrDate >= 0 &amp;&amp; lwstrDate &lt;= 9) {&#xD;
+    lwstrDate = &quot;0&quot; + lwstrDate;&#xD;
+}&#xD;
+var startdate = lw.getFullYear() + seperator1 + lwmonth + seperator1 + lwstrDate&#xD;
+	+ &quot; &quot; + &quot;00&quot; + seperator2 + &quot;00&quot; + seperator2 + &quot;00&quot;;&#xD;
+&#xD;
+var enddate = date.getFullYear() + seperator1 + month + seperator1 + strDate&#xD;
+	+ &quot; &quot; + &quot;23&quot; + seperator2 + &quot;59&quot; + seperator2 + &quot;59&quot;;&#xD;
+&#xD;
+view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;createTimeBegin&quot;,startdate)&#xD;
+view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;createTimeEnd&quot;,enddate)</ClientEvent>
+        <Property name="createPrivateDataSet">false</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="labelWidth">100</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="labelSeparator">:</Property>
+        <AutoFormElement>
+          <Property name="name">billNo</Property>
+          <Property name="property">billNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">billName</Property>
+          <Property name="property">billName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTimeBegin</Property>
+          <Property name="property">createTimeBegin</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTimeEnd</Property>
+          <Property name="property">createTimeEnd</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">status</Property>
+          <Property name="property">status</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">creator</Property>
+          <Property name="property">creator</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsBmsBillInfo</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn>
+          <Property name="property">version</Property>
+          <Property name="width">80</Property>
+          <Property name="name">version</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var status=arg.data.get(&quot;status&quot;);&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+if(status == 'UNCONFIRMED'){&#xD;
+	//未确认(确认账单、详细、删除、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;确认账单&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#confirmBillDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;删除&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;是否确定删除&quot;+arg.data.get(&quot;billName&quot;)+&quot;？&quot;, function() {&#xD;
+					var action=view.get(&quot;#deleteBillAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+				 		alertMsg(result.code, result.message);&#xD;
+						//获取条件查询数据&#xD;
+						with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+							set(&quot;parameter&quot;, data);&#xD;
+							flush();&#xD;
+						}&#xD;
+				 	});&#xD;
+				}); &#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;详细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillLogRecordList&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billLogDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;导出&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var action=view.get(&quot;#feesDownAction&quot;);&#xD;
+				action.execute(function(result){&#xD;
+			 		dorado.MessageBox.alert(result);&#xD;
+			 	});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == 'CONFIRMED'){&#xD;
+	//已确认(详细、开票、删除、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;&amp;nbsp;开&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;票&amp;nbsp;&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					id:arg.data.get(&quot;id&quot;),&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillInvoceInfo&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#openInvoceDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;删除&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;是否确定删除&quot;+arg.data.get(&quot;billName&quot;)+&quot;？&quot;, function() {&#xD;
+					var action=view.get(&quot;#deleteBillAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+				 		alertMsg(result.code, result.message);&#xD;
+						//获取条件查询数据&#xD;
+						with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+							set(&quot;parameter&quot;, data);&#xD;
+							flush();&#xD;
+						}&#xD;
+				 	});&#xD;
+				}); &#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;详细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillLogRecordList&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billLogDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;导出&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var action=view.get(&quot;#feesDownAction&quot;);&#xD;
+				action.execute(function(result){&#xD;
+			 		dorado.MessageBox.alert(result);&#xD;
+			 	});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == 'PARTINVOICED'){&#xD;
+	//部分开票(详细、开票、收款、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;&amp;nbsp;开&amp;nbsp;&amp;nbsp;&amp;nbsp;票&amp;nbsp;&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					id:arg.data.get(&quot;id&quot;),&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillInvoceInfo&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#openInvoceDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;收款&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				with (view.get(&quot;#dsBillInvoceInfoList&quot;)){&#xD;
+					//获取条件查询数据&amp;#xD;&#xD;
+					var queryJson={&#xD;
+						billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+					};&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billInvoceListDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;详细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillLogRecordList&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billLogDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;导出&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var action=view.get(&quot;#feesDownAction&quot;);&#xD;
+				action.execute(function(result){&#xD;
+			 		dorado.MessageBox.alert(result);&#xD;
+			 	});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == 'INVOICED'){&#xD;
+	//已开票(详细、收款、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;收款&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				with (view.get(&quot;#dsBillInvoceInfoList&quot;)){&#xD;
+					//获取条件查询数据&amp;#xD;&#xD;
+					var queryJson={&#xD;
+						billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+					};&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billInvoceListDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;详细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillLogRecordList&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billLogDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;导出&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var action=view.get(&quot;#feesDownAction&quot;);&#xD;
+				action.execute(function(result){&#xD;
+			 		dorado.MessageBox.alert(result);&#xD;
+			 	});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == 'RECEIPTED'){&#xD;
+	//已收款(详细、结账、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;结账&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#settleDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;详细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillLogRecordList&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billLogDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;导出&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var action=view.get(&quot;#feesDownAction&quot;);&#xD;
+				action.execute(function(result){&#xD;
+			 		dorado.MessageBox.alert(result);&#xD;
+			 	});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == 'SETTLED'){&#xD;
+	//已结账(详细、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;详细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillLogRecordList&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#billLogDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;导出&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var action=view.get(&quot;#feesDownAction&quot;);&#xD;
+				action.execute(function(result){&#xD;
+			 		dorado.MessageBox.alert(result);&#xD;
+			 	});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}</ClientEvent>
+          <Property name="caption">操作</Property>
+          <Property name="width">180</Property>
+          <Property name="align">center</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="billNo">
+          <Property name="property">billNo</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#20%&quot;,&#xD;
+	content:arg.data.get(&quot;billName&quot;),&#xD;
+	onclick:function(){&#xD;
+		var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+		var timestamp = Date.parse(new Date()); 	&#xD;
+		var data={&#xD;
+			billNo:billNo,&#xD;
+			startTime:arg.data.get(&quot;startTime&quot;),&#xD;
+			endTime:arg.data.get(&quot;endTime&quot;),&#xD;
+			customerId:arg.data.get(&quot;customerId&quot;),&#xD;
+			customerName:arg.data.get(&quot;customerName&quot;)&#xD;
+		}&#xD;
+		view.get(&quot;#detailFrame&quot;).set(&quot;userData&quot;,data);&#xD;
+		view.get(&quot;#detailFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.view.BmsBillSubjectInfo.d?timestamp=&quot;+timestamp);&#xD;
+		var dialog=view.get(&quot;#dialogBillDetails&quot;);&#xD;
+		dialog.set(&quot;width&quot;,document.body.clientWidth-150);&#xD;
+		dialog.set(&quot;height&quot;, document.body.clientHeight);&#xD;
+		dialog.set(&quot;caption&quot;,&quot;帐单【&quot;+arg.data.get(&quot;billName&quot;)+&quot;】明细&quot;)&#xD;
+		dialog.show();&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">账单名称</Property>
+          <Property name="width">80</Property>
+          <Property name="align">center</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="billName">
+          <Property name="property">billName</Property>
+          <Property name="width">80</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="startTime">
+          <Property name="property">startTime</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="endTime">
+          <Property name="property">endTime</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="receiveAmount">
+          <Property name="property">receiveAmount</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="receiptAmount">
+          <Property name="property">receiptAmount</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="totalAmount">
+          <Property name="property">totalAmount</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="discountAmount">
+          <Property name="property">discountAmount</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="subjectDiscountAmount">
+          <Property name="property">subjectDiscountAmount</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="derateAmount">
+          <Property name="property">derateAmount</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="status">
+          <Property name="property">status</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+      </DataGrid>
+      <FloatPanel id="panelCustomer">
+        <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId: data.get(&quot;customerid&quot;)&#xD;
+    });&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="width">800</Property>
+        <Property name="height">450</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <Property name="closeable">true</Property>
+        <Property name="center">true</Property>
+        <Property name="caption">商家选择</Property>
+        <Property name="modal">true</Property>
+        <Buttons/>
+        <Children>
+          <SubViewHolder id="viewSelectCustomer">
+            <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+          </SubViewHolder>
+        </Children>
+        <Tools/>
+      </FloatPanel>
+      <Trigger id="triggerCustomer">
+        <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+        <Property name="editable">true</Property>
+      </Trigger>
+      <Dialog id="generDialog">
+        <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_billProgressBar&quot;).hide();</ClientEvent>
+        <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_billProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#billProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+</ClientEvent>
+        <Property name="caption">生成账单</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">380</Property>
+        <Property name="width">400</Property>
+        <Buttons>
+          <Button id="btnsave">
+            <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsBillInfo.data&quot;).current;&#xD;
+var billname = data.get(&quot;billName&quot;);&#xD;
+var customerid = data.get(&quot;customerId&quot;);&#xD;
+var billstarttime = data.get(&quot;startTime&quot;);&#xD;
+var billendtime = data.get(&quot;endTime&quot;);&#xD;
+var seperator = &quot;-&quot;;&#xD;
+if(isNullOrEmpty(billname)){&#xD;
+	dorado.MessageBox.alert(&quot;账单名称不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(customerid)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择商家&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(billendtime)){&#xD;
+	dorado.MessageBox.alert(&quot;结束日期不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(billstarttime)){&#xD;
+	if(billstarttime.getTime()>billendtime.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}	&#xD;
+&#xD;
+&#xD;
+//如果商家未选择开始时间，默认往前推两个月，使其取到上上月的遗漏数据&#xD;
+if(isNullOrEmpty(billstarttime)){&#xD;
+	//上月&#xD;
+	var date=new Date();&#xD;
+	var year = date.getFullYear();&#xD;
+	var month = formatMonth(date.getMonth()-1);&#xD;
+	var firstDay = year + seperator + month + seperator + &quot;01&quot;;//上个月的第一天&#xD;
+	if(new Date(firstDay).getTime() > billendtime.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;默认开始时间为(&quot;+ firstDay +&quot;)，不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	data.set(&quot;startTime&quot;,firstDay);&#xD;
+}&#xD;
+&#xD;
+//判断是否超过两个小时&#xD;
+var m=getDays(data.get(&quot;startTime&quot;),data.get(&quot;endTime&quot;));&#xD;
+if(m>62){&#xD;
+	dorado.MessageBox.alert(&quot;账单开始时间和结束时间间隔不能超过两个月!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+function getDays(strDateStart,strDateEnd){&#xD;
+  var iDays = parseInt(Math.abs(strDateEnd - strDateStart ) / 1000 / 60 / 60 /24)//把相差的毫秒数转换为天数&#xD;
+   return iDays ;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+view.id(&quot;haveExceptionAction&quot;).execute(function(result){&#xD;
+	if(result.code == &quot;SUCC&quot;){&#xD;
+		view.id(&quot;generBillAction&quot;).execute(function(result){&#xD;
+			alertMsg(result.code, result.message);&#xD;
+			view.id(&quot;generDialog&quot;).hide();&#xD;
+			var condition =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			//获取条件查询数据&#xD;
+			with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+				set(&quot;parameter&quot;, condition);&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		})&#xD;
+	}else{&#xD;
+		var arry=result.message.split(&quot;,&quot;);&#xD;
+		var re=&quot;&quot;;&#xD;
+		for (var i = 0; i &lt; arry.length; i++) {&#xD;
+			re+=arry[i] + '\n';&#xD;
+		}&#xD;
+		dorado.MessageBox.confirm(re+&quot;是否生成账单?&quot;,function(){&#xD;
+			view.id(&quot;generBillAction&quot;).execute(function(result){&#xD;
+				alertMsg(result.code, result.message);&#xD;
+				view.id(&quot;generDialog&quot;).hide();&#xD;
+				var condition =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+				//获取条件查询数据&#xD;
+				with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+					set(&quot;parameter&quot;, condition);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			})&#xD;
+		})&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_billProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#billProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getProgess&quot;);&#xD;
+var setAction = view.get(&quot;#setProgess&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#billProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+var progressJob = setInterval(getProgress, 500);&#xD;
+&#xD;
+function formatMonth(month){&#xD;
+	if(month&lt;=0) {&#xD;
+        month=12+month;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+	if (month >= 1 &amp;&amp; month &lt;= 9) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+	return month;&#xD;
+}</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btnclose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#timeRadio&quot;).set(&quot;value&quot;,-1);&#xD;
+view.get(&quot;#generDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm id="queryConditionFrm">
+            <Property name="dataSet">dsBmsBillInfo</Property>
+            <Property name="cols">*</Property>
+            <RadioGroup id="timeRadio">
+              <ClientEvent name="onClick">var currentValue= self._value;&#xD;
+var data=view.get(&quot;#dsBmsBillInfo.data&quot;).current;&#xD;
+&#xD;
+var seperator = &quot;-&quot;;&#xD;
+if(currentValue == 0){&#xD;
+	//上周&#xD;
+	var weekFirstDay = getDays()[0];//本周的第一天&#xD;
+	var preWeekFirstDay = getPreviousWeekDatas(weekFirstDay)[0];//上个周第一天&#xD;
+	var preWeekLastDay =  getPreviousWeekDatas(weekFirstDay)[6];//上个周最后一天&#xD;
+	var firstDay = preWeekFirstDay.getFullYear() + seperator + formatMonth(preWeekFirstDay.getMonth()+1) + seperator + formatDay(preWeekFirstDay.getDate());&#xD;
+	var lastDay = preWeekLastDay.getFullYear() + seperator + formatMonth(preWeekLastDay.getMonth()+1) + seperator + formatDay(preWeekLastDay.getDate());&#xD;
+	if(lastDay){&#xD;
+		view.get(&quot;#dsBmsBillInfo&quot;).getData().current.set(&quot;startTime&quot;,firstDay);&#xD;
+		view.get(&quot;#dsBmsBillInfo&quot;).getData().current.set(&quot;endTime&quot;,lastDay);&#xD;
+	}&#xD;
+	&#xD;
+}else if(currentValue == 1){&#xD;
+	//上月&#xD;
+	var date=new Date();&#xD;
+	var year = date.getFullYear();&#xD;
+	var month = formatMonth(date.getMonth());&#xD;
+	//var firstDay = year + seperator + month + seperator + &quot;01&quot;;//上个月的第一天&#xD;
+&#xD;
+	var lastDate = new Date(year, month, 0);&#xD;
+	var lastDay = year + seperator + month + seperator + lastDate.getDate();//上个月的最后一天&#xD;
+	if(lastDay){&#xD;
+		view.get(&quot;#dsBmsBillInfo&quot;).getData().current.set(&quot;startTime&quot;,&quot;&quot;);&#xD;
+		view.get(&quot;#dsBmsBillInfo&quot;).getData().current.set(&quot;endTime&quot;,lastDay);&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//取得当前日期一周内的某一天&#xD;
+function getWeek(i) {&#xD;
+	var now = new Date();&#xD;
+	var n = now.getDay();&#xD;
+	var start = new Date();&#xD;
+	start.setDate(now.getDate() - n + i);//取得一周内的第一天、第二天、第三天...&#xD;
+	return start;&#xD;
+}&#xD;
+//取得当前日期一周内的七天&#xD;
+function getDays() {&#xD;
+	var days = new Array();&#xD;
+	for(var i=1;i&lt;=7;i++) {&#xD;
+		days[i-1] = getWeek(i);&#xD;
+	}&#xD;
+	return days;&#xD;
+}&#xD;
+//取得上一周的日期数(共七天)&#xD;
+function getPreviousWeekDatas(ndt) {&#xD;
+	var days = new Array();&#xD;
+	for(var i=-7;i&lt;=-1;i++) {&#xD;
+		var dt = new Date(ndt);&#xD;
+		days[7+i] = getPreviousWeek(dt,i);&#xD;
+	}&#xD;
+	return days;&#xD;
+}&#xD;
+&#xD;
+//指定日期的上一周(前七天)&#xD;
+function getPreviousWeek(dt,i) {&#xD;
+	dt.setDate(dt.getDate()+i);&#xD;
+	return dt;&#xD;
+}&#xD;
+&#xD;
+//格式化月份&#xD;
+function formatMonth(month){&#xD;
+	if(month==0) {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+	if (month >= 1 &amp;&amp; month &lt;= 9) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+	return month;&#xD;
+}&#xD;
+//格式化天&#xD;
+function formatDay(strDate){&#xD;
+	if (strDate >= 0 &amp;&amp; strDate &lt;= 9) {&#xD;
+        strDate = &quot;0&quot; + strDate;&#xD;
+    }&#xD;
+	return strDate;&#xD;
+}</ClientEvent>
+              <Property name="visible">false</Property>
+              <RadioButton>
+                <Property name="readOnly">false</Property>
+                <Property name="text">上周</Property>
+                <Property name="value">0</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="text">上月</Property>
+                <Property name="value">1</Property>
+              </RadioButton>
+            </RadioGroup>
+            <AutoFormElement>
+              <Property name="name">startTime</Property>
+              <Property name="property">startTime</Property>
+              <Property name="label">开始日期</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">endTime</Property>
+              <Property name="property">endTime</Property>
+              <Property name="label">结束日期</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">customerId</Property>
+              <Property name="property">customerId</Property>
+              <Property name="trigger">triggerCustomer2</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">billName</Property>
+              <Property name="property">billName</Property>
+              <Editor/>
+            </AutoFormElement>
+            <HtmlContainer id="infoContainer"/>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="readOnly">false</Property>
+              <Editor>
+                <TextArea>
+                  <Property name="height">60</Property>
+                </TextArea>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+          <FloatPanel id="panelCustomer2">
+            <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+var customerid=&quot;&quot;;&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+	customerid= data.get(&quot;customerid&quot;);&#xD;
+	var endTime=entity.get(&quot;endTime&quot;).toISOString().slice(2,7);&#xD;
+    entity.set({&#xD;
+        customerId: customerid,&#xD;
+		customerName: data.get(&quot;customername&quot;),&#xD;
+		billName:&quot;九曳-&quot;+data.get(&quot;customername&quot;)+&quot;-&quot;+endTime+&quot;账单&quot;&#xD;
+    });&#xD;
+	&#xD;
+	var ajaxaction=view.get(&quot;#ajaxgettimeAction&quot;);&#xD;
+	ajaxaction.set(&quot;parameter&quot;,customerid).execute(function(result){&#xD;
+		if(result==null||result==&quot;&quot;){&#xD;
+			view.id(&quot;infoContainer&quot;).set(&quot;content&quot;,&quot;商家【&quot;+ customerid+&quot;】还未生成账单&quot;);&#xD;
+		}else{&#xD;
+			var billendtime = result.endTime.replace(&quot;T&quot;,&quot; &quot;).replace(&quot;Z&quot;,&quot;&quot;);&#xD;
+			view.id(&quot;infoContainer&quot;).set(&quot;content&quot;,&quot;商家账单【&quot;+result.billNo+&quot;】最后生成时间&lt;span style='color:red;'>&quot;+billendtime+&quot;&lt;/span>&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+            <Property name="width">800</Property>
+            <Property name="height">450</Property>
+            <Property name="contentOverflow">scroll</Property>
+            <Property name="closeable">true</Property>
+            <Property name="center">true</Property>
+            <Property name="caption">商家选择</Property>
+            <Property name="modal">true</Property>
+            <Buttons/>
+            <Children>
+              <SubViewHolder id="viewSelectCustomer2">
+                <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+              </SubViewHolder>
+            </Children>
+            <Tools/>
+          </FloatPanel>
+          <Trigger id="triggerCustomer2">
+            <ClientEvent name="onExecute">var entity = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+if(!isNullOrEmpty(entity.get(&quot;endTime&quot;))){&#xD;
+	view.get(&quot;#panelCustomer2&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择结束日期&quot;);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+            <Property name="editable">false</Property>
+          </Trigger>
+          <AjaxAction id="ajaxgettimeAction">
+            <Property name="service">bmsBillInfoController#queryLastBillTime</Property>
+          </AjaxAction>
+          <Label id="progressLabel">
+            <Property name="text">系统正在处理数据，请耐心等待...</Property>
+            <Property name="width">350</Property>
+          </Label>
+          <ProgressBar id="billProgressBar"/>
+          <AjaxAction id="getProgess">
+            <Property name="service">bmsBillInfoController#getProgress</Property>
+            <Property name="modal">false</Property>
+          </AjaxAction>
+          <AjaxAction id="setProgess">
+            <Property name="service">bmsBillInfoController#setProgress</Property>
+            <Property name="modal">false</Property>
+          </AjaxAction>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="haveExceptionAction">
+        <Property name="dataResolver">bmsBillInfoController#haveCalculException</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+          <Property name="dataPath">[#current]</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <UpdateAction id="generBillAction">
+        <ClientEvent name="onExecute">$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_exportProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getProgess&quot;);&#xD;
+var setAction = view.get(&quot;#setProgess&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+        <Property name="dataResolver">bmsBillInfoController#generBill</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+          <Property name="dataPath">[#current]</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <UpdateAction id="deleteBillAction">
+        <Property name="dataResolver">bmsBillInfoController#deleteBill</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+          <Property name="dataPath">[#current]</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="confirmBillDialog">
+        <Property name="caption">确认账单</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">440</Property>
+        <Property name="width">400</Property>
+        <Buttons>
+          <Button id="btnConfirmSave">
+            <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsBillInfo.data&quot;).current;&#xD;
+var discountAmount = data.get(&quot;discountAmount&quot;);&#xD;
+var approver = data.get(&quot;approver&quot;);&#xD;
+var approvalNo = data.get(&quot;approvalNo&quot;);&#xD;
+var approvalTime = data.get(&quot;approvalTime&quot;);&#xD;
+&#xD;
+&#xD;
+var discountType=data.get(&quot;discountType&quot;);&#xD;
+&#xD;
+if(discountType=='DISCOUNT_RATIO'){&#xD;
+	var discountRate=data.get(&quot;discountRate&quot;);&#xD;
+	if(isNullOrEmpty(discountRate)){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能为空！&quot;);&#xD;
+		return;&#xD;
+	}	&#xD;
+	if(parseFloat(discountRate)>100){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能超过百分百！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(approver)){&#xD;
+	dorado.MessageBox.alert(&quot;审批人不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(view.get(&quot;#approvalWay&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;请选择审批方式&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(view.get(&quot;#approvalWay&quot;).get(&quot;value&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;请选择审批方式&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//data.set(&quot;approvalWay&quot;,view.get(&quot;#approvalWay&quot;).get(&quot;value&quot;));&#xD;
+&#xD;
+var approvalWay = view.get(&quot;#approvalWay&quot;).get(&quot;value&quot;);&#xD;
+&#xD;
+if(approvalWay == 'DINGDING' &amp;&amp; isNullOrEmpty(approvalNo)){&#xD;
+	dorado.MessageBox.alert(&quot;审批编号不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(escape(approvalNo).indexOf(&quot;%u&quot;)>=0){ &#xD;
+	dorado.MessageBox.alert(&quot;审批编号中包含中文&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(approvalTime)){&#xD;
+	dorado.MessageBox.alert(&quot;审批时间不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+//应收金额=应收金额-账单折扣金额&#xD;
+var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+var subjectDiscountAmount=data.get(&quot;subjectDiscountAmount&quot;);&#xD;
+var receiptAmount=parseFloat(totalAmount)-parseFloat(discountAmount)-parseFloat(derateAmount)-parseFloat(subjectDiscountAmount);&#xD;
+data.set(&quot;receiveAmount&quot;,receiptAmount);&#xD;
+&#xD;
+view.id(&quot;confirmBillDialog&quot;).hide();&#xD;
+view.id(&quot;againConfirmBillDialog&quot;).show();</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btnConfirmClose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#confirmBillDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm>
+            <ClientEvent name="onReady">var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	approvalWay:'DINGDING'&#xD;
+});</ClientEvent>
+            <Property name="dataSet">dsBmsBillInfo</Property>
+            <Property name="cols">*,*</Property>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">billName</Property>
+              <Property name="property">billName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">customerName</Property>
+              <Property name="property">customerName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">totalAmount</Property>
+              <Property name="property">totalAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <Label layoutConstraint="align:left;colSpan:2">
+              <Property name="text">折扣方式</Property>
+            </Label>
+            <RadioGroup id="discountType" layoutConstraint="colSpan:2">
+              <ClientEvent name="onValueChange">var currentValue= self._value;&#xD;
+if(currentValue == 'DISCOUNT_MONEY'){&#xD;
+	view.get(&quot;#discountAmount&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#discountAmount&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.get(&quot;#discountRate&quot;).set(&quot;visible&quot;, false);&#xD;
+	view.get(&quot;#te&quot;).set(&quot;visible&quot;, false);&#xD;
+	var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_MONEY',&#xD;
+		discountRate:''&#xD;
+	});&#xD;
+}else if (currentValue == 'DISCOUNT_RATIO'){&#xD;
+	view.get(&quot;#discountAmount&quot;).set(&quot;readOnly&quot;, true);&#xD;
+	view.get(&quot;#discountRate&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#te&quot;).set(&quot;visible&quot;, true);&#xD;
+	var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_RATIO',&#xD;
+	});&#xD;
+}</ClientEvent>
+              <ClientEvent name="onReady">var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	discountType:'DISCOUNT_MONEY'&#xD;
+});</ClientEvent>
+              <Property name="layout">grid</Property>
+              <Property name="property">discountType</Property>
+              <Property name="value">DISCOUNT_MONEY</Property>
+              <RadioButton>
+                <Property name="text">折扣金额</Property>
+                <Property name="value">DISCOUNT_MONEY</Property>
+                <Property name="readOnly">false</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="text">折扣率</Property>
+                <Property name="value">DISCOUNT_RATIO</Property>
+              </RadioButton>
+            </RadioGroup>
+            <AutoFormElement id="discountRate" layoutConstraint="colSpan:1">
+              <ClientEvent name="onBlur">var data=view.get(&quot;#dsBmsBillInfo.data&quot;).current;&#xD;
+var discountRate=data.get(&quot;discountRate&quot;);&#xD;
+if(discountRate!=null&amp;&amp;discountRate!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var subjectDiscountAmount=data.get(&quot;subjectDiscountAmount&quot;);&#xD;
+	var discountAmount=(totalAmount*discountRate/100).toFixed(2);&#xD;
+	var receiptAmount=(totalAmount*100-discountAmount*100-derateAmount*100-subjectDiscountAmount*100)/100;&#xD;
+	data.set(&quot;receiveAmount&quot;,receiptAmount);&#xD;
+	data.set(&quot;discountAmount&quot;,discountAmount);&#xD;
+}</ClientEvent>
+              <Property name="name">discountRate</Property>
+              <Property name="property">discountRate</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
+              <Property name="editorWidth">60</Property>
+              <Editor/>
+            </AutoFormElement>
+            <Label id="te" layoutConstraint="align:left;colSpan:1">
+              <Property name="text">%</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
+            </Label>
+            <AutoFormElement id="discountAmount" layoutConstraint="colSpan:2">
+              <ClientEvent name="onBlur">var data=view.get(&quot;#dsBmsBillInfo.data&quot;).current;&#xD;
+var discountAmount=data.get(&quot;discountAmount&quot;);&#xD;
+if(discountAmount!=null&amp;&amp;discountAmount!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var subjectDiscountAmount=data.get(&quot;subjectDiscountAmount&quot;);&#xD;
+	var receiptAmount=parseFloat(totalAmount)-parseFloat(discountAmount)-parseFloat(derateAmount)-parseFloat(subjectDiscountAmount);&#xD;
+	data.set(&quot;receiveAmount&quot;,receiptAmount);&#xD;
+}</ClientEvent>
+              <Property name="name">discountAmount</Property>
+              <Property name="property">discountAmount</Property>
+              <Property name="readOnly">false</Property>
+              <Property name="labelWidth">80</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">subjectDiscountAmount</Property>
+              <Property name="property">subjectDiscountAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">derateAmount</Property>
+              <Property name="property">derateAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">receiveAmount</Property>
+              <Property name="property">receiveAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">approver</Property>
+              <Property name="property">approver</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <Label layoutConstraint="align:left;colSpan:2">
+              <Property name="text">审批方式</Property>
+            </Label>
+            <RadioGroup id="approvalWay" layoutConstraint="colSpan:7">
+              <ClientEvent name="onValueChange">var currentValue= self._value;&#xD;
+if(currentValue == 'DINGDING'){&#xD;
+	view.get(&quot;#approvalNo&quot;).set(&quot;visible&quot;, true);&#xD;
+	var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		approvalWay:'DINGDING'&#xD;
+	});&#xD;
+}else if (currentValue == 'EMAIL'){&#xD;
+	view.get(&quot;#approvalNo&quot;).set(&quot;visible&quot;, false);&#xD;
+	var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		approvalWay:'EMAIL'&#xD;
+	});&#xD;
+}</ClientEvent>
+              <ClientEvent name="onReady">var data = this.get(&quot;#dsBmsBillInfo&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	approvalWay:'DINGDING'&#xD;
+});</ClientEvent>
+              <Property name="layout">grid</Property>
+              <Property name="value">DINGDING</Property>
+              <Property name="property">approvalWay</Property>
+              <RadioButton>
+                <Property name="text">钉钉</Property>
+                <Property name="value">DINGDING</Property>
+                <Property name="readOnly">false</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="text">邮箱</Property>
+                <Property name="value">EMAIL</Property>
+              </RadioButton>
+            </RadioGroup>
+            <AutoFormElement id="approvalNo" layoutConstraint="colSpan:2">
+              <Property name="name">approvalNo</Property>
+              <Property name="property">approvalNo</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">approvalTime</Property>
+              <Property name="property">approvalTime</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="readOnly">false</Property>
+              <Editor>
+                <TextArea>
+                  <Property name="height">60</Property>
+                </TextArea>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="againConfirmBillDialog">
+        <Property name="caption">确认账单</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">440</Property>
+        <Property name="width">400</Property>
+        <Buttons>
+          <Button id="btn2ConfirmSave">
+            <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsBillInfo.data&quot;).current;&#xD;
+data.set(&quot;approvalWay&quot;,view.get(&quot;#approvalWay&quot;).get(&quot;value&quot;));&#xD;
+view.id(&quot;confirmBillAction&quot;).execute(function(result){&#xD;
+	view.id(&quot;againConfirmBillDialog&quot;).hide();&#xD;
+	alertMsg(result.code, result.message);&#xD;
+	var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+	//获取条件查询数据&#xD;
+	with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+		set(&quot;parameter&quot;, data);&#xD;
+		flushAsync();&#xD;
+	}&#xD;
+});</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btn2ConfirmClose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#againConfirmBillDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm>
+            <Property name="dataSet">dsBmsBillInfo</Property>
+            <Property name="cols">*</Property>
+            <AutoFormElement>
+              <Property name="name">billName</Property>
+              <Property name="property">billName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">customerName</Property>
+              <Property name="property">customerName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">totalAmount</Property>
+              <Property name="property">totalAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">derateAmount</Property>
+              <Property name="property">derateAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">discountAmount</Property>
+              <Property name="property">discountAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">subjectDiscountAmount</Property>
+              <Property name="property">subjectDiscountAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiveAmount</Property>
+              <Property name="property">receiveAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="readOnly">false</Property>
+              <Editor>
+                <TextArea>
+                  <Property name="height">60</Property>
+                </TextArea>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="confirmBillAction">
+        <Property name="dataResolver">bmsBillInfoController#confirmFeesBill</Property>
+        <UpdateItem>
+          <Property name="dataPath">[#current]</Property>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="openInvoceDialog">
+        <Property name="caption">开票</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">490</Property>
+        <Property name="width">400</Property>
+        <Buttons>
+          <Button id="btnInvoceSave">
+            <ClientEvent name="onClick">var data=view.get(&quot;#dsBillInvoceInfo.data&quot;).current;&#xD;
+var invoceAmount = data.get(&quot;invoceAmount&quot;);&#xD;
+var unInvoceAmount = data.get(&quot;unInvoceAmount&quot;);&#xD;
+var isNeedInvoce = data.get(&quot;isNeedInvoce&quot;);&#xD;
+var invoceNo = data.get(&quot;invoceNo&quot;);&#xD;
+var invoceTime = data.get(&quot;invoceTime&quot;);&#xD;
+&#xD;
+if(null == unInvoceAmount || 0.0 == unInvoceAmount){&#xD;
+	dorado.MessageBox.alert(&quot;该账单发票金额已全部开完&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(null == invoceAmount || 0.0 == invoceAmount){&#xD;
+	dorado.MessageBox.alert(&quot;开票金额不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(invoceAmount > unInvoceAmount){&#xD;
+	dorado.MessageBox.alert(&quot;开票金额不能大于未开金额1231&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(invoceAmount > 100000){&#xD;
+	dorado.MessageBox.alert(&quot;开票金额不能大于10万元&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(isNeedInvoce)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择是否需要发票&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNeedInvoce == 'NEED' &amp;&amp; isNullOrEmpty(invoceNo)){&#xD;
+	dorado.MessageBox.alert(&quot;发票号码不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(escape(invoceNo).indexOf(&quot;%u&quot;)>=0){ &#xD;
+	dorado.MessageBox.alert(&quot;发票号码中包含中文&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(invoceTime)){&#xD;
+	dorado.MessageBox.alert(&quot;开票时间不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;openInvoceAction&quot;).execute(function(result){&#xD;
+	view.id(&quot;openInvoceDialog&quot;).hide();&#xD;
+	alertMsg(result.code, result.message);&#xD;
+	&#xD;
+	var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+	with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+		set(&quot;parameter&quot;, condition);&#xD;
+		flush();&#xD;
+	}&#xD;
+});</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btnInvoceClose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#openInvoceDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm id="invoceForm">
+            <ClientEvent name="onReady">var currentData = view.get(&quot;#dsBillInvoceInfo&quot;).getData().first();&#xD;
+view.get(&quot;#invoceForm&quot;).set(&quot;entity&quot;,currentData);</ClientEvent>
+            <Property name="dataSet">dsBillInvoceInfo</Property>
+            <Property name="cols">*</Property>
+            <Property name="labelSeparator">:</Property>
+            <AutoFormElement>
+              <Property name="name">version</Property>
+              <Property name="property">version</Property>
+              <Property name="readOnly">false</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">billName</Property>
+              <Property name="property">billName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">customerName</Property>
+              <Property name="property">customerName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">totalAmount</Property>
+              <Property name="property">totalAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="label">已开未收</Property>
+              <Editor>
+                <Container layout="hbox">
+                  <TextEditor>
+                    <Property name="property">unReceiveAmount</Property>
+                    <Property name="dataSet">dsBillInvoceInfo</Property>
+                    <Property name="readOnly">true</Property>
+                  </TextEditor>
+                  <Link layoutConstraint="align:center">
+                    <ClientEvent name="onClick">var data =view.get(&quot;#dsBillInvoceInfo.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBillInvoceInfoList&quot;)){&#xD;
+	//获取条件查询数据&amp;#xD;&#xD;
+	var queryJson={&#xD;
+		billNo:data.get(&quot;billNo&quot;)&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flush();&#xD;
+}&#xD;
+view.get(&quot;#openInvoceDialog&quot;).hide();&#xD;
+view.get(&quot;#billInvoceListDialog&quot;).show();</ClientEvent>
+                    <Property name="text">查看</Property>
+                    <Property name="href">#</Property>
+                  </Link>
+                </Container>
+              </Editor>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">unInvoceAmount</Property>
+              <Property name="property">unInvoceAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiptAmount</Property>
+              <Property name="property">receiptAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">invoceAmount</Property>
+              <Property name="property">invoceAmount</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <Label layoutConstraint="align:left">
+              <Property name="text">需要发票:</Property>
+            </Label>
+            <RadioGroup id="isNeedInvoce" layoutConstraint="colSpan:7">
+              <ClientEvent name="onValueChange">var currentValue= self._value;&#xD;
+if(currentValue == 'NEED'){&#xD;
+	view.get(&quot;#invoceNo&quot;).set(&quot;visible&quot;, true);&#xD;
+	var data = this.get(&quot;#dsBillInvoceInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		isNeedInvoce:'NEED'&#xD;
+	});&#xD;
+}else if (currentValue == 'UNNEED'){&#xD;
+	view.get(&quot;#invoceNo&quot;).set(&quot;visible&quot;, false);&#xD;
+	var data = this.get(&quot;#dsBillInvoceInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		isNeedInvoce:'UNNEED'&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+              <ClientEvent name="onReady">var data = this.get(&quot;#dsBillInvoceInfo&quot;).getData(&quot;#&quot;);&#xD;
+view.get(&quot;#invoceNo&quot;).set(&quot;visible&quot;, false);&#xD;
+data.set({&#xD;
+	isNeedInvoce:'UNNEED'&#xD;
+});</ClientEvent>
+              <Property name="layout">grid</Property>
+              <Property name="value">UNNEED</Property>
+              <Property name="property">isNeedInvoce</Property>
+              <RadioButton>
+                <Property name="text">不需要</Property>
+                <Property name="value">UNNEED</Property>
+                <Property name="readOnly">false</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="text">需要</Property>
+                <Property name="value">NEED</Property>
+              </RadioButton>
+            </RadioGroup>
+            <AutoFormElement id="invoceNo">
+              <Property name="name">invoceNo</Property>
+              <Property name="property">invoceNo</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">invoceTime</Property>
+              <Property name="property">invoceTime</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="readOnly">false</Property>
+              <Editor>
+                <TextArea>
+                  <Property name="height">60</Property>
+                </TextArea>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="openInvoceAction">
+        <Property name="dataResolver">bmsBillInvoceInfoController#openInvoce</Property>
+        <UpdateItem>
+          <Property name="dataPath">[#current]</Property>
+          <Property name="dataSet">dsBillInvoceInfo</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="billInvoceListDialog">
+        <ClientEvent name="onClose">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+        <ClientEvent name="onHide">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+        <Property name="caption">发票信息</Property>
+        <Property name="width">900</Property>
+        <Property name="height">500</Property>
+        <Property name="closeable">false</Property>
+        <Buttons>
+          <Button id="btnCustomClose">
+            <ClientEvent name="onClick">view.get(&quot;#billInvoceListDialog&quot;).hide();</ClientEvent>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            <Property name="caption">关闭</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsBillInvoceInfoList</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid id="billInvoceDetailGrid">
+              <Property name="dataSet">dsBillInvoceInfoList</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="selectionMode">singleRow</Property>
+              <Property name="supportsPaging">false</Property>
+              <RowNumColumn/>
+              <DataColumn>
+                <Property name="property">id</Property>
+                <Property name="name">id</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">billNo</Property>
+                <Property name="width">100</Property>
+                <Property name="name">billNo</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">invoceNo</Property>
+                <Property name="width">100</Property>
+                <Property name="name">invoceNo</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">isNeedInvoce</Property>
+                <Property name="width">100</Property>
+                <Property name="name">isNeedInvoce</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">invoceAmount</Property>
+                <Property name="width">80</Property>
+                <Property name="name">invoceAmount</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">receiptAmount</Property>
+                <Property name="width">80</Property>
+                <Property name="name">receiptAmount</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">receiptStatus</Property>
+                <Property name="width">80</Property>
+                <Property name="name">receiptStatus</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">remark</Property>
+                <Property name="name">remark</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">creator</Property>
+                <Property name="name">creator</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">invoceTime</Property>
+                <Property name="name">invoceTime</Property>
+              </DataColumn>
+              <DataColumn>
+                <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var status=arg.data.get(&quot;receiptStatus&quot;);&#xD;
+var isNeedInvoce=arg.data.get(&quot;isNeedInvoce&quot;);&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+if(status == 'UNSETTLED'){&#xD;
+	//未确认(确认账单、详细、删除、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;收款&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				//获取条件查询数据&#xD;
+				var queryJson={&#xD;
+					id:arg.data.get(&quot;id&quot;),&#xD;
+					billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+				};&#xD;
+				with (view.get(&quot;#dsBillReceiptInfo&quot;)){&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flush();&#xD;
+				}&#xD;
+				view.get(&quot;#receiptDialog&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;删除&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var invoceNo=&quot;&quot;;&#xD;
+				if(!isNullOrEmpty(arg.data.get(&quot;invoceNo&quot;))){&#xD;
+					invoceNo=arg.data.get(&quot;invoceNo&quot;);&#xD;
+				}&#xD;
+				dorado.MessageBox.confirm(&quot;确定要删除发票&quot; &#xD;
+					+ invoceNo+&quot;？\n发票金额为：&quot; + arg.data.get(&quot;invoceAmount&quot;), function() {&#xD;
+					var action=view.get(&quot;#delInvoceAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+				 		alertMsg(result.code, result.message);&#xD;
+						//获取条件查询数据&#xD;
+						with (view.get(&quot;#dsBillInvoceInfoList&quot;)){&#xD;
+							//获取条件查询数据&amp;#xD;&#xD;
+							var queryJson={&#xD;
+								billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+							};&#xD;
+							set(&quot;parameter&quot;, queryJson);&#xD;
+							flush();&#xD;
+						}&#xD;
+				 	});&#xD;
+				}); &#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == 'SETTLED'){&#xD;
+	//已确认(详细、开票、删除、导出)&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;删除&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var invoceNo=&quot;&quot;;&#xD;
+				if(!isNullOrEmpty(arg.data.get(&quot;invoceNo&quot;))){&#xD;
+					invoceNo=arg.data.get(&quot;invoceNo&quot;);&#xD;
+				}&#xD;
+				dorado.MessageBox.confirm(&quot;确定要删除发票&quot; &#xD;
+					+ invoceNo+&quot;？\n发票金额为：&quot; + arg.data.get(&quot;invoceAmount&quot;)+&quot;元&quot;, function() {&#xD;
+					var action=view.get(&quot;#delInvoceAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+				 		alertMsg(result.code, result.message);&#xD;
+						//获取条件查询数据&#xD;
+						with (view.get(&quot;#dsBillInvoceInfoList&quot;)){&#xD;
+							//获取条件查询数据&amp;#xD;&#xD;
+							var queryJson={&#xD;
+								billNo:arg.data.get(&quot;billNo&quot;)&#xD;
+							};&#xD;
+							set(&quot;parameter&quot;, queryJson);&#xD;
+							flush();&#xD;
+						}&#xD;
+				 	});&#xD;
+				}); &#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}</ClientEvent>
+                <Property name="caption">操作</Property>
+                <Property name="width">100</Property>
+                <Property name="align">center</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="delInvoceAction">
+        <Property name="dataResolver">bmsBillInvoceInfoController#delInvoce</Property>
+        <UpdateItem>
+          <Property name="dataPath">[#current]</Property>
+          <Property name="dataSet">dsBillInvoceInfoList</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="receiptDialog">
+        <Property name="caption">收账</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">460</Property>
+        <Property name="width">400</Property>
+        <Buttons>
+          <Button id="btnReceiptSave">
+            <ClientEvent name="onClick">var data=view.get(&quot;#dsBillReceiptInfo.data&quot;).current;&#xD;
+var receiptAmount = data.get(&quot;receiptAmount&quot;);&#xD;
+var invoceAmount = data.get(&quot;invoceAmount&quot;);&#xD;
+var receiptTime = data.get(&quot;receiptTime&quot;);&#xD;
+&#xD;
+if(null == receiptAmount){&#xD;
+	dorado.MessageBox.alert(&quot;收款金额不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(receiptAmount > invoceAmount){&#xD;
+	dorado.MessageBox.alert(&quot;收款金额不能大于开票金额&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(receiptTime)){&#xD;
+	dorado.MessageBox.alert(&quot;收款时间不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;receiptAction&quot;).execute(function(result){&#xD;
+	view.id(&quot;receiptDialog&quot;).hide();&#xD;
+	alertMsg(result.code, result.message);&#xD;
+	&#xD;
+	with (view.get(&quot;#dsBillInvoceInfoList&quot;)){&#xD;
+		//获取条件查询数据&amp;#xD;&#xD;
+		var queryJson={&#xD;
+			billNo:data.get(&quot;billNo&quot;)&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flush();&#xD;
+	}&#xD;
+});</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btnReceiptClose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#receiptDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm id="receiptForm">
+            <ClientEvent name="onReady">var currentData = view.get(&quot;#dsBillInvoceInfo&quot;).getData().first();&#xD;
+view.get(&quot;#invoceForm&quot;).set(&quot;entity&quot;,currentData);</ClientEvent>
+            <Property name="dataSet">dsBillReceiptInfo</Property>
+            <Property name="cols">*</Property>
+            <Property name="labelSeparator">:</Property>
+            <AutoFormElement>
+              <Property name="name">version</Property>
+              <Property name="property">version</Property>
+              <Property name="readOnly">false</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">id</Property>
+              <Property name="property">id</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">billName</Property>
+              <Property name="property">billName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">customerName</Property>
+              <Property name="property">customerName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">totalAmount</Property>
+              <Property name="property">totalAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="label">总金额</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">discountAmount</Property>
+              <Property name="property">discountAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiveAmount</Property>
+              <Property name="property">receiveAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="label">应收金额</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">invoceNo</Property>
+              <Property name="property">invoceNo</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">invoceAmount</Property>
+              <Property name="property">invoceAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiptAmount</Property>
+              <Property name="property">receiptAmount</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiptTime</Property>
+              <Property name="property">receiptTime</Property>
+              <Property name="readOnly">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="readOnly">false</Property>
+              <Editor>
+                <TextArea>
+                  <Property name="height">60</Property>
+                </TextArea>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="receiptAction">
+        <Property name="dataResolver">bmsBillInvoceInfoController#receipt</Property>
+        <UpdateItem>
+          <Property name="dataPath">[#current]</Property>
+          <Property name="dataSet">dsBillReceiptInfo</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="settleDialog">
+        <Property name="caption">结账</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">460</Property>
+        <Property name="width">400</Property>
+        <Buttons>
+          <Button id="btnSettleSave">
+            <ClientEvent name="onClick">view.id(&quot;settleAction&quot;).execute(function(result){&#xD;
+	view.id(&quot;settleDialog&quot;).hide();&#xD;
+	alertMsg(result.code, result.message);&#xD;
+	&#xD;
+	var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+	//获取条件查询数据&#xD;
+	with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+		set(&quot;parameter&quot;, data);&#xD;
+		flush();&#xD;
+	}&#xD;
+});</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btnSettleClose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#settleDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm id="settleForm">
+            <Property name="dataSet">dsBmsBillInfo</Property>
+            <Property name="cols">*</Property>
+            <Property name="labelSeparator">:</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">version</Property>
+              <Property name="property">version</Property>
+              <Property name="readOnly">false</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">id</Property>
+              <Property name="property">id</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">billName</Property>
+              <Property name="property">billName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">customerName</Property>
+              <Property name="property">customerName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">totalAmount</Property>
+              <Property name="property">totalAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="label">总金额</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">derateAmount</Property>
+              <Property name="property">derateAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">feesDiscountAmount</Property>
+              <Property name="property">feesDiscountAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">discountAmount</Property>
+              <Property name="property">discountAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiveAmount</Property>
+              <Property name="property">receiveAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="label">应收金额</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">receiptAmount</Property>
+              <Property name="property">receiptAmount</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Property name="readOnly">false</Property>
+              <Editor>
+                <TextArea>
+                  <Property name="height">60</Property>
+                </TextArea>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="settleAction">
+        <Property name="dataResolver">bmsBillInfoController#sellteBill</Property>
+        <UpdateItem>
+          <Property name="dataPath">[#current]</Property>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="dialogBillDetails">
+        <ClientEvent name="onHide">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+        <ClientEvent name="onClose">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+        <Property name="width">600</Property>
+        <Property name="height">500</Property>
+        <Property name="center">false</Property>
+        <Property name="offsetLeft">50</Property>
+        <Buttons/>
+        <Children>
+          <IFrame id="detailFrame"/>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="billLogDialog">
+        <Property name="caption">结账</Property>
+        <Property name="closeable">false</Property>
+        <Property name="height">460</Property>
+        <Property name="width">1100</Property>
+        <Buttons>
+          <Button id="btnLogClose" layoutConstraint="padding:20">
+            <ClientEvent name="onClick">view.get(&quot;#billLogDialog&quot;).hide();&#xD;
+&#xD;
+var data =view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+//获取条件查询数据&#xD;
+with (view.get(&quot;#dsBmsBillInfo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsBillLogRecordList</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid id="billLogGrid">
+              <Property name="dataSet">dsBillLogRecordList</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="selectionMode">singleRow</Property>
+              <Property name="supportsPaging">false</Property>
+              <RowNumColumn/>
+              <DataColumn>
+                <Property name="property">operate</Property>
+                <Property name="name">operate</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">billName</Property>
+                <Property name="width">150</Property>
+                <Property name="name">billName</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">approver</Property>
+                <Property name="width">100</Property>
+                <Property name="name">approver</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">approvalWay</Property>
+                <Property name="width">100</Property>
+                <Property name="name">approvalWay</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">approvalTime</Property>
+                <Property name="width">80</Property>
+                <Property name="name">approvalTime</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">invoceAmount</Property>
+                <Property name="width">100</Property>
+                <Property name="name">invoceAmount</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">invoceNo</Property>
+                <Property name="width">80</Property>
+                <Property name="name">invoceNo</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">receiptAmount</Property>
+                <Property name="name">receiptAmount</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">remark</Property>
+                <Property name="name">remark</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">creator</Property>
+                <Property name="name">creator</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">createTime</Property>
+                <Property name="name">createTime</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="feesDownAction">
+        <Property name="dataResolver">bmsBillInfoController#asynExport</Property>
+        <UpdateItem>
+          <Property name="dataPath">[#current]</Property>
+          <Property name="dataSet">dsBmsBillInfo</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="fileExportTaskDialog">
+        <Property name="closeable">false</Property>
+        <Property name="caption">账单下载</Property>
+        <Property name="height">500</Property>
+        <Property name="width">900</Property>
+        <Buttons>
+          <Button id="btnFileExportTaskClose">
+            <ClientEvent name="onClick">var condition = view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+condition.set(&quot;taskName&quot;,null);&#xD;
+view.get(&quot;#fileExportTaskDialog&quot;).hide();</ClientEvent>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            <Property name="caption">关闭</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsFileExportTaskList</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+              </DataPilot>
+              <Separator/>
+              <ToolBarButton>
+                <ClientEvent name="onClick">var condition=view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+var taskName = &quot;&quot;;&#xD;
+if(null != condition){&#xD;
+	taskName = condition.get(&quot;taskName&quot;);&#xD;
+}&#xD;
+with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		taskType:'recbill',&#xD;
+		taskName:taskName&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+                <Property name="caption">查询</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              </ToolBarButton>
+              <Separator/>
+              <ToolBarButton>
+                <ClientEvent name="onClick">var data=view.get(&quot;#dsFileExportTaskList.data&quot;).current;&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var taskId = data.get(&quot;taskId&quot;);&#xD;
+if(isNullOrEmpty(taskId)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var action=view.get(&quot;#delExportTaskAction&quot;);&#xD;
+dorado.MessageBox.confirm(&quot;确定删除[&quot;+data.get(&quot;taskName&quot;)+&quot;]的记录?&quot;,function(){&#xD;
+	action.set(&quot;parameter&quot;,data).execute(function(){&#xD;
+		dorado.MessageBox.alert(&quot;删除成功!&quot;);&#xD;
+		with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				taskType:'recbill'&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+})&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="caption">删除</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <AutoForm id="exportTaskForm">
+              <Property name="cols">*,*,*</Property>
+              <Property name="dataSet">dsFileExportTaskCondition</Property>
+              <Property name="dataType">dtFileExportTaskCondition</Property>
+              <Property name="labelWidth">100</Property>
+              <AutoFormElement>
+                <Property name="name">taskName</Property>
+                <Property name="property">taskName</Property>
+                <Property name="editable">true</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+            <DataGrid id="fileExportTaskDetailGrid">
+              <Property name="dataSet">dsFileExportTaskList</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="selectionMode">singleRow</Property>
+              <RowNumColumn/>
+              <DataColumn>
+                <Property name="property">taskId</Property>
+                <Property name="width">150</Property>
+                <Property name="name">taskId</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">taskName</Property>
+                <Property name="width">150</Property>
+                <Property name="name">taskName</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">taskState</Property>
+                <Property name="width">80</Property>
+                <Property name="name">taskState</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">startTime</Property>
+                <Property name="name">startTime</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">endTime</Property>
+                <Property name="name">endTime</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">filePath</Property>
+                <Property name="name">filePath</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">progress</Property>
+                <Property name="name">progress</Property>
+                <Property name="displayFormat">##%</Property>
+              </DataColumn>
+              <DataColumn>
+                <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var taskState=arg.data.get(&quot;taskState&quot;);&#xD;
+if(taskState==2){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;下载&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+			  var action=view.get(&quot;#fileExportDownAction&quot;);&#xD;
+			  action.set(&quot;parameter&quot;,arg.data).execute();&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}</ClientEvent>
+                <Property name="align">center</Property>
+                <Property name="caption">操作</Property>
+                <Property name="name">operator</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <DownloadAction id="fileExportDownAction">
+        <Property name="fileProvider">fileExportTaskController#exportDetail</Property>
+        <Property name="caption">导出</Property>
+        <Property name="successMessage">操作成功!</Property>
+      </DownloadAction>
+      <UpdateAction id="delExportTaskAction">
+        <ClientEvent name="onSuccess">//账单刷新&#xD;
+var data =view.get(&quot;#dsFeesBillQuery.data&quot;);&#xD;
+with (view.get(&quot;#dsFeesBill&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+        <Property name="dataResolver">fileExportTaskController#delExportTask</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsFileExportTaskList</Property>
+          <Property name="dataPath">[#current]</Property>
+        </UpdateItem>
+      </UpdateAction>
+    </Container>
+  </View>
+</ViewConfig>

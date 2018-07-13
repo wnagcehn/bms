@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.out.transport.mapper.PriceTransportPayLineEntityMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineEntity" >
+
+        <id column="id" property="id" jdbcType="BIGINT" />
+	   <result column="id" property="id" jdbcType="BIGINT" />
+	   <result column="transport_line_no" property="transportLineNo" jdbcType="VARCHAR" />
+	   <result column="from_warehouse_id" property="fromWarehouseId" jdbcType="VARCHAR" />
+	   <result column="from_province_id" property="fromProvinceId" jdbcType="VARCHAR" />
+	   <result column="from_city_id" property="fromCityId" jdbcType="VARCHAR" />
+	   <result column="from_district_id" property="fromDistrictId" jdbcType="VARCHAR" />
+	   <result column="from_address" property="fromAddress" jdbcType="VARCHAR" />
+	   <result column="end_warehouse_id" property="endWarehouseId" jdbcType="VARCHAR" />
+	   <result column="to_province_id" property="toProvinceId" jdbcType="VARCHAR" />
+	   <result column="to_city_id" property="toCityId" jdbcType="VARCHAR" />
+	   <result column="to_district_id" property="toDistrictId" jdbcType="VARCHAR" />
+	   <result column="to_address" property="toAddress" jdbcType="VARCHAR" />
+	   <result column="send_cycle" property="sendCycle" jdbcType="VARCHAR" />
+	   <result column="timeliness" property="timeliness" jdbcType="VARCHAR" />
+	   <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	   <result column="creator" property="creator" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	   
+	   <result column="fromProvinceName" property="fromProvinceName" jdbcType="VARCHAR" />
+	   <result column="fromCityName" property="fromCityName" jdbcType="VARCHAR" />
+	   <result column="fromDistrictName" property="fromDistrictName" jdbcType="VARCHAR" />
+	   <result column="toProvinceName" property="toProvinceName" jdbcType="VARCHAR" />
+	   <result column="toCityName" property="toCityName" jdbcType="VARCHAR" />
+	   <result column="toDistrictName" property="toDistrictName" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, transport_line_no, from_warehouse_id, from_province_id,from_city_id, from_district_id, from_address, end_warehouse_id,to_province_id, to_city_id, to_district_id, to_address, send_cycle, timeliness, remark, template_id, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and line.id = #{id}
+		</if>
+	  
+		<if test="(transportLineNo != null and transportLineNo !='')" >
+				and line.transport_line_no  = #{transportLineNo}
+		</if>
+		
+		<if test="(fromWarehouseId != null and fromWarehouseId !='')" >
+				and line.from_warehouse_id = #{fromWarehouseId}
+		</if>
+		<if test="(fromProvinceId != null and fromProvinceId !='')" >
+				and line.from_province_id  = #{fromProvinceId}
+		</if>
+		<if test="(fromCityId != null and fromCityId !='')" >
+				and line.from_city_id  = #{fromCityId}
+		</if>
+		<if test="(fromDistrictId != null and fromDistrictId !='')" >
+				and line.from_district_id = #{fromDistrictId}
+		</if>
+		<if test="(fromAddress != null and fromAddress !='')" >
+				and line.from_address  = #{fromAddress}
+		</if>
+		
+		<if test="(endWarehouseId != null and endWarehouseId !='')" >
+				and line.end_warehouse_id = #{endWarehouseId}
+		</if>
+		<if test="(toProvinceId != null and toProvinceId !='')" >
+				and line.to_province_id  = #{toProvinceId}
+		</if>
+		<if test="(toCityId != null and toCityId !='')" >
+				and line.to_city_id  = #{toCityId}
+		</if>
+		<if test="(toDistrictId != null and toDistrictId !='')" >
+				and line.to_district_id = #{toDistrictId}
+		</if>
+		<if test="(toAddress != null and toAddress !='')" >
+				and line.to_address  = #{toAddress}
+		</if>
+		
+		<if test="(sendCycle != null and sendCycle !='')" >
+				and line.send_cycle = #{sendCycle}
+		</if>
+	    <if test="(timeliness != null and timeliness !='')" >
+				and line.timeliness = #{timeliness}
+		</if>
+	    <if test="(templateId != null and templateId !='')" >
+				and line.template_id = #{templateId}
+		</if>
+		
+		<if test="(remark != null and remark !='')" >
+				and line.remark like '%${remark}%'
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and line.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and line.create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and line.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and line.last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and line.del_flag = #{delFlag}
+		</if>
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineEntity">
+        select
+        
+        	line.id, line.transport_line_no, line.from_warehouse_id,line.from_province_id,line.from_city_id, line.from_district_id, line.from_address, line.end_warehouse_id,line.to_province_id, line.to_city_id, line.to_district_id, line.to_address, line.send_cycle, line.timeliness, line.remark, line.template_id, line.creator, line.create_time, line.last_modifier, line.last_modify_time, line.del_flag
+        
+        from price_out_transport_line line 
+        where 1=1
+        <include refid="baseSelectColumns" />
+        order by line.create_time desc,line.id desc
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineEntity">
+        select
+        <include refid="baseColumns" />
+        from price_out_transport_line
+        where id=#{id}
+        order by create_time desc,id desc
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineEntity">
+        insert into price_out_transport_line(transport_line_no, from_warehouse_id, from_province_id,from_city_id, from_district_id, from_address, end_warehouse_id, to_province_id,to_city_id, to_district_id, to_address, send_cycle, timeliness, remark, template_id, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+
+#{transportLineNo,jdbcType=VARCHAR}, 
+#{fromWarehouseId,jdbcType=VARCHAR},
+#{fromProvinceId,jdbcType=VARCHAR}, 
+#{fromCityId,jdbcType=VARCHAR}, 
+#{fromDistrictId,jdbcType=VARCHAR}, 
+#{fromAddress,jdbcType=VARCHAR}, 
+#{endWarehouseId,jdbcType=VARCHAR},
+#{toProvinceId,jdbcType=VARCHAR}, 
+#{toCityId,jdbcType=VARCHAR}, 
+#{toDistrictId,jdbcType=VARCHAR}, 
+#{toAddress,jdbcType=VARCHAR}, 
+#{sendCycle,jdbcType=VARCHAR}, 
+#{timeliness,jdbcType=VARCHAR}, 
+#{remark,jdbcType=VARCHAR}, 
+#{templateId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.out.transport.entity.PriceTransportPayLineEntity">
+        update price_out_transport_line set
+
+transport_line_no=#{transportLineNo,jdbcType=VARCHAR}, 
+from_warehouse_id=#{fromWarehouseId,jdbcType=VARCHAR}, 
+from_province_id=#{fromProvinceId,jdbcType=VARCHAR}, 
+from_city_id=#{fromCityId,jdbcType=VARCHAR}, 
+from_district_id=#{fromDistrictId,jdbcType=VARCHAR}, 
+from_address=#{fromAddress,jdbcType=VARCHAR}, 
+end_warehouse_id=#{endWarehouseId,jdbcType=VARCHAR}, 
+to_province_id=#{toProvinceId,jdbcType=VARCHAR}, 
+to_city_id=#{toCityId,jdbcType=VARCHAR}, 
+to_district_id=#{toDistrictId,jdbcType=VARCHAR}, 
+to_address=#{toAddress,jdbcType=VARCHAR}, 
+send_cycle=#{sendCycle,jdbcType=VARCHAR}, 
+timeliness=#{timeliness,jdbcType=VARCHAR}, 
+remark=#{remark,jdbcType=VARCHAR}, 
+template_id=#{templateId,jdbcType=VARCHAR}, 
+creator=#{creator,jdbcType=VARCHAR}, 
+create_time=#{createTime,jdbcType=TIMESTAMP}, 
+last_modifier=#{lastModifier,jdbcType=VARCHAR}, 
+last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP}, 
+del_flag=#{delFlag,jdbcType=VARCHAR}
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from price_out_transport_line where
+        id=#{id}
+    </delete>
+    
+    <!-- 通过LineNo查找对应的id -->
+	<select id="findIdByLineNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		 select
+         id
+         FROM price_out_transport_line 
+         where transport_line_no=#{lineNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

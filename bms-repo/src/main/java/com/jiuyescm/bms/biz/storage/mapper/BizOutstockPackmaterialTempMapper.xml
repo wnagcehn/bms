@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="batchNum" property="batchNum" jdbcType="VARCHAR" />
+	    <result column="wms_id" property="wmsId" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="consumer_material_code" property="consumerMaterialCode" jdbcType="VARCHAR" />
+	    <result column="consumer_material_name" property="consumerMaterialName" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="num" property="num" jdbcType="DECIMAL" />
+	    <result column="adjust_num" property="adjustNum" jdbcType="DECIMAL" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="cost_fees_no" property="costFeesNo" jdbcType="VARCHAR" />
+	    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="cost_is_calculated" property="costIsCalculated" jdbcType="VARCHAR" />
+	    <result column="cost_calculate_time" property="costCalculateTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="weight" property="weight" jdbcType="DECIMAL" />
+	    <result column="spec_desc" property="specDesc" jdbcType="VARCHAR" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+	    <result column="cost_remark" property="costRemark" jdbcType="VARCHAR" />
+	    <result column="rowExcelNo" property="rowExcelNo" jdbcType="INTEGER" />
+	    <result column="rowExcelName" property="rowExcelName" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, batchNum, wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, cost_fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, cost_is_calculated, cost_calculate_time, write_time, weight, spec_desc, 
+        extattr1, extattr2, extattr3, extattr4, extattr5, cost_remark,rowExcelNo,rowExcelName
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(batchNum != null and batchNum !='')" >
+				and batchNum = #{batchNum}
+		</if>
+		<if test="(wmsId != null and wmsId !='')" >
+				and wms_id = #{wmsId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(consumerMaterialName != null and consumerMaterialName !='')" >
+				and consumer_material_name = #{consumerMaterialName}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(num != null and num !='')" >
+				and num = #{num}
+		</if>
+		<if test="(adjustNum != null and adjustNum !='')" >
+				and adjust_num = #{adjustNum}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(costFeesNo != null and costFeesNo !='')" >
+				and cost_fees_no = #{costFeesNo}
+		</if>
+		<if test="(dbname != null and dbname !='')" >
+				and dbname = #{dbname}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(calculateTime != null and calculateTime !='')" >
+			    and calculate_time >= #{calculateTime} add <![CDATA[calculate_time <= #{calculateTime}]]>
+		</if>
+		<if test="(costIsCalculated != null and costIsCalculated !='')" >
+				and cost_is_calculated = #{costIsCalculated}
+		</if>
+		<if test="(costCalculateTime != null and costCalculateTime !='')" >
+			    and cost_calculate_time >= #{costCalculateTime} add <![CDATA[cost_calculate_time <= #{costCalculateTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="(weight != null and weight !='')" >
+				and weight = #{weight}
+		</if>
+		<if test="(specDesc != null and specDesc !='')" >
+				and spec_desc = #{specDesc}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and extattr1 = #{extattr1}
+		</if>
+		<if test="(extattr2 != null and extattr2 !='')" >
+				and extattr2 = #{extattr2}
+		</if>
+		<if test="(extattr3 != null and extattr3 !='')" >
+				and extattr3 = #{extattr3}
+		</if>
+		<if test="(extattr4 != null and extattr4 !='')" >
+				and extattr4 = #{extattr4}
+		</if>
+		<if test="(extattr5 != null and extattr5 !='')" >
+				and extattr5 = #{extattr5}
+		</if>
+		<if test="(costRemark != null and costRemark !='')" >
+				and cost_remark = #{costRemark}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_outstock_packmaterial_temp
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="querySameData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+    	select a.waybill_no,a.consumer_material_code,a.rowExcelNo,a.rowExcelName 
+    	from biz_outstock_packmaterial_temp a
+		inner join (
+		select waybill_no,consumer_material_code
+		from biz_outstock_packmaterial_temp
+		where batchNum=#{batchNum}
+		group by waybill_no,consumer_material_code 
+		having count(*)>1
+		) b
+		on a.waybill_no=b.waybill_no and a.consumer_material_code=b.consumer_material_code
+		where a.batchNum=#{batchNum}
+    </select>
+
+	<select id="queryContainsList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+		select a.waybill_no,a.consumer_material_code,a.rowExcelNo,a.rowExcelName
+		from biz_outstock_packmaterial_temp a
+		inner join biz_outstock_packmaterial b
+		on a.waybill_no=b.waybill_no and a.consumer_material_code=b.consumer_material_code
+		where a.batchNum=#{batchNum} and b.del_flag=0
+ 
+	</select>
+	<select id="queryContainsListCount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+		select a.waybill_no,a.consumer_material_code,a.rowExcelNo,a.rowExcelName
+		from biz_outstock_packmaterial_temp a
+		inner join biz_outstock_packmaterial b
+		on a.waybill_no=b.waybill_no and a.consumer_material_code=b.consumer_material_code
+		where a.batchNum=#{batchNum} and b.del_flag=0 limit #{errorCount}
+	</select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_outstock_packmaterial_temp
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="java.util.List">
+        insert into biz_outstock_packmaterial_temp(batchNum, wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, cost_fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, cost_is_calculated, cost_calculate_time, write_time, weight, spec_desc, extattr1, extattr2, extattr3, extattr4, extattr5, cost_remark,rowExcelNo,rowExcelName)
+        values 
+        <foreach item="item" index="index" collection="list" separator=",">
+            (
+			    #{item.batchNum}, 
+				#{item.wmsId}, 
+				#{item.outstockNo}, 
+				#{item.waybillNo}, 
+				#{item.customerId}, 
+				#{item.customerName}, 
+				#{item.consumerMaterialCode}, 
+				#{item.consumerMaterialName}, 
+				#{item.warehouseCode}, 
+				#{item.warehouseName}, 
+				#{item.num}, 
+				#{item.adjustNum}, 
+				#{item.feesNo}, 
+				#{item.costFeesNo}, 
+				#{item.dbname}, 
+				#{item.isCalculated}, 
+				#{item.remark}, 
+				#{item.creator}, 
+				#{item.createTime}, 
+				#{item.lastModifier}, 
+				#{item.lastModifyTime}, 
+				#{item.delFlag}, 
+				#{item.calculateTime}, 
+				#{item.costIsCalculated}, 
+				#{item.costCalculateTime}, 
+				#{item.writeTime}, 
+				#{item.weight}, 
+				#{item.specDesc}, 
+				#{item.extattr1}, 
+				#{item.extattr2}, 
+				#{item.extattr3}, 
+				#{item.extattr4}, 
+				#{item.extattr5}, 
+				#{item.costRemark},
+				#{item.rowExcelNo},
+				#{item.rowExcelName}
+            )
+        </foreach>
+        
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+        update biz_outstock_packmaterial_temp 
+		<set >
+
+<if test="batchNum != null" >batchNum=#{batchNum,jdbcType=VARCHAR},</if>
+<if test="wmsId != null" >wms_id=#{wmsId,jdbcType=VARCHAR},</if>
+<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="consumerMaterialCode != null" >consumer_material_code=#{consumerMaterialCode,jdbcType=VARCHAR},</if>
+<if test="consumerMaterialName != null" >consumer_material_name=#{consumerMaterialName,jdbcType=VARCHAR},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="num != null" >num=#{num,jdbcType=DECIMAL},</if>
+<if test="adjustNum != null" >adjust_num=#{adjustNum,jdbcType=DECIMAL},</if>
+<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+<if test="costFeesNo != null" >cost_fees_no=#{costFeesNo,jdbcType=VARCHAR},</if>
+<if test="dbname != null" >dbname=#{dbname,jdbcType=VARCHAR},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+<if test="costIsCalculated != null" >cost_is_calculated=#{costIsCalculated,jdbcType=VARCHAR},</if>
+<if test="costCalculateTime != null" >cost_calculate_time=#{costCalculateTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="weight != null" >weight=#{weight,jdbcType=DECIMAL},</if>
+<if test="specDesc != null" >spec_desc=#{specDesc,jdbcType=VARCHAR},</if>
+<if test="extattr1 != null" >extattr1=#{extattr1,jdbcType=VARCHAR},</if>
+<if test="extattr2 != null" >extattr2=#{extattr2,jdbcType=VARCHAR},</if>
+<if test="extattr3 != null" >extattr3=#{extattr3,jdbcType=VARCHAR},</if>
+<if test="extattr4 != null" >extattr4=#{extattr4,jdbcType=VARCHAR},</if>
+<if test="extattr5 != null" >extattr5=#{extattr5,jdbcType=VARCHAR},</if>
+<if test="costRemark != null" >cost_remark=#{costRemark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from biz_outstock_packmaterial_temp where
+        id=#{id}
+    </delete>
+    <delete id="deleteBybatchNum" parameterType="java.util.Map">
+    	delete from biz_outstock_packmaterial_temp where batchNum=#{batchNum}
+    </delete>
+</mapper>

@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsGroupEntity" meta="child:dataTypeBmsGroup">
+      <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+        <Property name="label">主键ID</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="groupCode">
+        <Property name="label">组编码</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeBmsGroup" parent="dtBmsGroupEntity">
+      <Reference name="children">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">bmsGroupController#loadDataByParent</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dtBmsGroupUserEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupUserVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">int</Property>
+        <Property name="label">权限组</Property>
+      </PropertyDef>
+      <PropertyDef name="userId">
+        <Property></Property>
+        <Property name="label">用户编号</Property>
+      </PropertyDef>
+      <PropertyDef name="userName">
+        <Property></Property>
+        <Property name="label">用户名称</Property>
+      </PropertyDef>
+      <PropertyDef name="administrator">
+        <Property></Property>
+        <Property name="label">是否管理员</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#isAdmin&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property name="label">权限组</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsGroupUserQueryEntity">
+      <PropertyDef name="groupId">
+        <Property name="dataType">int</Property>
+        <Property name="label">权限组</Property>
+      </PropertyDef>
+      <PropertyDef name="userId">
+        <Property></Property>
+        <Property name="label">用户编号</Property>
+      </PropertyDef>
+      <PropertyDef name="userName">
+        <Property></Property>
+        <Property name="label">用户名称</Property>
+      </PropertyDef>
+      <PropertyDef name="administrator">
+        <Property></Property>
+        <Property name="label">是否管理员</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property name="label">权限组</Property>
+      </PropertyDef>
+      <PropertyDef name="groupCode">
+        <Property name="label">组编码</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsGroupUserQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsGroupUserQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtBmsGroupUserQueryEntity]</Property>
+    </DataSet>
+    <DataSet id="dsGroupUser">
+      <Property name="dataType">[dtBmsGroupUserEntity]</Property>
+      <Property name="dataProvider">bmsGroupController#queryGroupUser</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsGroup">
+      <Property name="dataType">[dataTypeBmsGroup]</Property>
+      <Property name="dataProvider">bmsGroupController#loadDataByParent</Property>
+    </DataSet>
+    <DataTree id="dataTreeGroup" layoutConstraint="left">
+      <ClientEvent name="onContextMenu">view.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});</ClientEvent>
+      <ClientEvent name="onDataRowDoubleClick">var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
+data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));&#xD;
+view.get(&quot;#dsGroupUser&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+</ClientEvent>
+      <ClientEvent name="onDataRowClick">var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
+data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));</ClientEvent>
+      <Property name="width">200</Property>
+      <Property name="dataSet">dsGroup</Property>
+      <Property name="currentNodeDataPath">currentGroup</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="childrenProperty">children</Property>
+          <Property name="labelProperty">groupName</Property>
+          <Property name="recursive">true</Property>
+          <Property name="expandLevel">1</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsGroupUser</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+var groupId=data.get(&quot;groupId&quot;);&#xD;
+if(groupId){&#xD;
+	view.get(&quot;#dsGroupUser&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择权限组,再查询！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+var groupid=data.get(&quot;groupId&quot;);&#xD;
+if(!groupid){&#xD;
+	dorado.MessageBox.alert(&quot;请先选定权限组!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.get(&quot;#dsGroupUser&quot;).insert({&#xD;
+	groupId:groupid,&#xD;
+	groupName:data.get(&quot;groupName&quot;)&#xD;
+});&#xD;
+view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">新增用户</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUser.data&quot;).current;&#xD;
+dorado.MessageBox.confirm(&quot;确认要删除用户【&quot;+data.get(&quot;userName&quot;)+&quot;】?&quot;,function(){&#xD;
+	var action=view.get(&quot;#deleteUserAction&quot;);&#xD;
+	action.execute(function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+		var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+		data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+		data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
+		view.get(&quot;#dsGroupUser&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+	});&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">删除用户</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">view.get(&quot;#dialogGroupUserEdit2&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">设置管理员</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm>
+        <Property name="dataSet">dsGroupUserQuery</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <AutoFormElement>
+          <Property name="property">groupName</Property>
+          <Property name="name">groupName</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">groupCode</Property>
+          <Property name="name">groupCode</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">userId</Property>
+          <Property name="property">userId</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">userName</Property>
+          <Property name="property">userName</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsGroupUser</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn>
+          <Property name="property">groupName</Property>
+          <Property name="name">groupName</Property>
+        </DataColumn>
+        <DataColumn name="userId">
+          <Property name="property">userId</Property>
+        </DataColumn>
+        <DataColumn name="userName">
+          <Property name="property">userName</Property>
+        </DataColumn>
+        <DataColumn name="administrator">
+          <Property name="property">administrator</Property>
+          <Property name="editorType">CheckBox</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+        </DataColumn>
+      </DataGrid>
+      <Dialog id="dialogGroupUserEdit">
+        <Property name="width">400</Property>
+        <Property name="height">250</Property>
+        <Property name="caption">用户编辑</Property>
+        <Property name="closeable">false</Property>
+        <Buttons>
+          <Button>
+            <ClientEvent name="onClick">var action=view.get(&quot;#saveUserAction&quot;);&#xD;
+action.execute(function(result){&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+	view.get(&quot;#dialogGroupUserEdit&quot;).hide();&#xD;
+	var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+	view.get(&quot;#dsGroupUser&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+	&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="style">
+              <Property name="margin-right">30px</Property>
+            </Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button>
+            <ClientEvent name="onClick">view.get(&quot;#dsGroupUser.data&quot;).cancel();&#xD;
+view.get(&quot;#dialogGroupUserEdit&quot;).hide();&#xD;
+</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm id="editForm">
+            <Property name="dataSet">dsGroupUser</Property>
+            <Property name="cols">*</Property>
+            <AutoFormElement>
+              <Property name="name">groupName</Property>
+              <Property name="property">groupName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">userId</Property>
+              <Property name="property">userId</Property>
+              <Property name="trigger">triggerDeptUserSelect</Property>
+              <Property name="readOnly">false</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">userName</Property>
+              <Property name="property">userName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <CheckBox>
+              <Property name="dataSet">dsGroupUser</Property>
+              <Property name="property">administrator</Property>
+              <Property name="offValue">1</Property>
+              <Property name="onValue">0</Property>
+              <Property name="caption">是否管理员</Property>
+            </CheckBox>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <UpdateAction id="saveUserAction">
+        <Property name="dataResolver">bmsGroupController#saveGroupUser</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsGroupUser</Property>
+          <Property name="dataPath">[#current]</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <UpdateAction id="deleteUserAction">
+        <Property name="dataResolver">bmsGroupController#deleteGroupUser</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsGroupUser</Property>
+          <Property name="dataPath">[#current]</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <Dialog id="dialogGroupUserEdit2">
+        <Property name="width">400</Property>
+        <Property name="height">250</Property>
+        <Property name="caption">用户编辑</Property>
+        <Property name="closeable">false</Property>
+        <Buttons>
+          <Button>
+            <ClientEvent name="onClick">var action=view.get(&quot;#saveUserAction&quot;);&#xD;
+action.execute(function(result){&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+	view.get(&quot;#dialogGroupUserEdit2&quot;).hide();&#xD;
+	var data=view.get(&quot;#dsGroupUserQuery.data&quot;).current;&#xD;
+	view.get(&quot;#dsGroupUser&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+	&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="style">
+              <Property name="margin-right">30px</Property>
+            </Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button>
+            <ClientEvent name="onClick">view.get(&quot;#dialogGroupUserEdit2&quot;).hide();&#xD;
+</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm id="editForm2">
+            <Property name="dataSet">dsGroupUser</Property>
+            <Property name="cols">*</Property>
+            <AutoFormElement>
+              <Property name="name">groupName</Property>
+              <Property name="property">groupName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">userId</Property>
+              <Property name="property">userId</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">userName</Property>
+              <Property name="property">userName</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <CheckBox>
+              <Property name="dataSet">dsGroupUser</Property>
+              <Property name="property">administrator</Property>
+              <Property name="offValue">1</Property>
+              <Property name="onValue">0</Property>
+              <Property name="caption">是否管理员</Property>
+            </CheckBox>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+    </Container>
+    <Menu id="menuOperate">
+      <MenuItem>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsGroup.data&quot;);&#xD;
+var newEntity=data.insert({&#xD;
+		&quot;parentId&quot;:&quot;0&quot;,&#xD;
+		&quot;groupName&quot;:&quot;&quot;&#xD;
+	}&#xD;
+);&#xD;
+view.id(&quot;dataTreeGroup&quot;).set(&quot;currentEntity&quot;,newEntity);&#xD;
+//view.get(&quot;#groupCode&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="caption">添加根节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+        <Property name="name">addRoot</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tree=view.id(&quot;dataTreeGroup&quot;);&#xD;
+var currentNode=tree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个父节点!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var currentEntity=currentNode.get(&quot;data&quot;);&#xD;
+currentNode.expand();&#xD;
+var newEntity=currentEntity.createChild(&quot;children&quot;,{&#xD;
+	parentId:currentEntity.get(&quot;id&quot;),&#xD;
+	groupName:&quot;&quot;&#xD;
+});&#xD;
+tree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+//view.get(&quot;#groupCode&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).show();</ClientEvent>
+        <Property name="caption">添加子节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+        <Property name="name">addSub</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">//view.get(&quot;#groupCode&quot;).set(&quot;readOnly&quot;,true);&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).show();</ClientEvent>
+        <Property name="caption">更新节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+      </MenuItem>
+      <MenuItem id="del">
+        <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;确认要删除?&quot;,function(){&#xD;
+	var tree=view.id(&quot;dataTreeGroup&quot;);&#xD;
+	var entity=tree.get(&quot;currentEntity&quot;);&#xD;
+	var action=view.get(&quot;#delGroupAction&quot;);&#xD;
+	action.set(&quot;parameter&quot;,entity.get(&quot;id&quot;)).execute(function(result){&#xD;
+		if(result!=''){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}else{&#xD;
+			entity.remove();&#xD;
+			var firstNode=tree.get(&quot;firstNode&quot;);&#xD;
+			if(firstNode){&#xD;
+				tree.set(&quot;currentNode&quot;,firstNode);&#xD;
+			}&#xD;
+		}&#xD;
+	})	&#xD;
+})&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+        <Property name="name">del</Property>
+      </MenuItem>
+    </Menu>
+    <Dialog id="dialogGroupEdit">
+      <Property name="width">350</Property>
+      <Property name="height">180</Property>
+      <Property name="closeable">false</Property>
+      <Property name="caption">用户组</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=view.get(&quot;#saveGroupAction&quot;);&#xD;
+action.execute(function(){&#xD;
+	view.get(&quot;#dsGroup&quot;).flushAsync();&#xD;
+	view.get(&quot;#dialogGroupEdit&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="style">
+            <Property name="margin-right">30px</Property>
+          </Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">&#xD;
+view.get(&quot;#dsGroup&quot;).flushAsync();&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsGroup</Property>
+          <Property name="dataPath">!currentGroup</Property>
+          <Property name="labelWidth">50</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="property">id</Property>
+            <Property name="name">id</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="groupCode">
+            <Property name="property">groupCode</Property>
+            <Property name="name">groupCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">groupName</Property>
+            <Property name="name">groupName</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="saveGroupAction">
+      <Property name="dataResolver">bmsGroupController#saveGroup</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsGroup</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="delGroupAction">
+      <Property name="dataResolver">bmsGroupController#delGroup</Property>
+    </UpdateAction>
+    <Trigger id="triggerDeptUserSelect">
+      <ClientEvent name="onExecute">view.get(&quot;#dialogDeptUser&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <Dialog id="dialogDeptUser">
+      <ClientEvent name="onHide">var data=view.get(&quot;#subviewDeptUser.userData&quot;);&#xD;
+if(data!=null){&#xD;
+	view.get(&quot;#editForm.entity&quot;).set(&quot;userId&quot;,data.userId);&#xD;
+	view.get(&quot;#editForm.entity&quot;).set(&quot;userName&quot;,data.userName);&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">900</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">用户选择</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="subviewDeptUser">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

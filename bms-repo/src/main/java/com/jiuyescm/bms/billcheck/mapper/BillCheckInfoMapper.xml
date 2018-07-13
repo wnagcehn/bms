@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper" >
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillCheckInfoEntity" >
+       <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="create_month" property="createMonth" jdbcType="INTEGER" />
+	    <result column="invoice_name" property="invoiceName" jdbcType="VARCHAR" />
+	    <result column="bill_name" property="billName" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="bill_start_time" property="billStartTime" jdbcType="DATE" />
+	    <result column="first_class_name" property="firstClassName" jdbcType="VARCHAR" />
+	    <result column="biz_type_name" property="bizTypeName" jdbcType="VARCHAR" />
+	    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+	    <result column="seller_id" property="sellerId" jdbcType="VARCHAR" />
+	    <result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
+	    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+	    <result column="dept_code" property="deptCode" jdbcType="VARCHAR" />
+	    <result column="project_manager_id" property="projectManagerId" jdbcType="VARCHAR" />
+	    <result column="project_manager_name" property="projectManagerName" jdbcType="VARCHAR" />
+	    <result column="balance_id" property="balanceId" jdbcType="VARCHAR" />    
+	    <result column="balance_name" property="balanceName" jdbcType="VARCHAR" />
+	    <result column="bill_status" property="billStatus" jdbcType="VARCHAR" />
+	    <result column="bill_check_status" property="billCheckStatus" jdbcType="VARCHAR" />
+	    <result column="bill_confirm_date" property="billConfirmDate" jdbcType="DATE" />
+	    <result column="invoice_status" property="invoiceStatus" jdbcType="VARCHAR" />
+	    <result column="expect_amount" property="expectAmount" jdbcType="DECIMAL" />
+	    <result column="confirm_amount" property="confirmAmount" jdbcType="DECIMAL" />
+	    <result column="confirm_date" property="confirmDate" jdbcType="DATE" />
+	    <result column="confirm_man_id" property="confirmManId" jdbcType="VARCHAR" />
+	    <result column="confirm_man" property="confirmMan" jdbcType="VARCHAR" />
+	    <result column="isneed_invoice" property="isneedInvoice" jdbcType="VARCHAR" />
+	    <result column="isapply_bad" property="isapplyBad" jdbcType="VARCHAR" />
+	    <result column="invoice_amount" property="invoiceAmount" jdbcType="DECIMAL" />
+	    <result column="invoice_date" property="invoiceDate" jdbcType="DATE" />
+	    <result column="expect_receipt_date" property="expectReceiptDate" jdbcType="DATE" />
+	    <result column="un_receipt_amount" property="unReceiptAmount" jdbcType="DECIMAL" />
+	    <result column="confirm_un_invoice_amount" property="confirmUnInvoiceAmount" jdbcType="DECIMAL" />
+	    <result column="invoice_un_receipt_amount" property="invoiceUnReceiptAmount" jdbcType="DECIMAL" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DECIMAL" />
+	    <result column="receipt_status" property="receiptStatus" jdbcType="VARCHAR" />
+	    <result column="receipt_date" property="receiptDate" jdbcType="DATE" />
+	    <result column="area" property="area" jdbcType="VARCHAR" /> 
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="invoice_man_id" property="invoiceManId" jdbcType="VARCHAR" />
+	    <result column="invoice_man" property="invoiceMan" jdbcType="VARCHAR" />
+	    <result column="receipt_man_id" property="receiptsManId" jdbcType="VARCHAR" />
+	    <result column="receipt_man" property="receiptMan" jdbcType="VARCHAR" />
+	    <result column="bad_bill_amount" property="badBillAmount" jdbcType="DECIMAL" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="bill_excel_url" property="billExcelUrl" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, create_month, invoice_name, bill_name, customer_name, bill_start_time, first_class_name, biz_type_name, project_name,seller_id, seller_name, dept_name, dept_code,project_manager_id, project_manager_name,balance_id, balance_name, bill_status, bill_check_status, bill_confirm_date, invoice_status, expect_amount, ifnull(confirm_amount,0) as confirm_amount, confirm_date, confirm_man_id, confirm_man, isneed_invoice,isapply_bad, ifnull(invoice_amount,0) as invoice_amount, invoice_date, expect_receipt_date, ifnull(un_receipt_amount,0) as un_receipt_amount,ifnull(confirm_un_invoice_amount,0) as confirm_un_invoice_amount, ifnull(invoice_un_receipt_amount,0) as invoice_un_receipt_amount, ifnull(receipt_amount,0) as receipt_amount,receipt_status, receipt_date,area, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, invoice_man_id, invoice_man, receipt_man_id, receipt_man, bad_bill_amount, del_flag, remark, bill_excel_url
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and invoice_name  like '%${invoiceName}%'
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name like '%${billName}%'
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(billStartTime != null and billStartTime !='')" >
+				and bill_start_time = #{billStartTime}
+		</if>
+		<if test="(firstClassName != null and firstClassName !='')" >
+				and first_class_name = #{firstClassName}
+		</if>
+		<if test="(bizTypeName != null and bizTypeName !='')" >
+				and biz_type_name = #{bizTypeName}
+		</if>
+		<if test="(projectName != null and projectName !='')" >
+				and project_name = #{projectName}
+		</if>
+		<if test="(sellerId != null and sellerId !='')" >
+				and seller_id = #{sellerId}
+		</if>
+		<if test="(sellerIds != null and sellerIds!='')">
+			and seller_id in
+			<foreach collection="sellerIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>
+		<if test="(sellerName != null and sellerName !='')" >
+				and seller_name like '%${sellerName}%'
+		</if>
+		<if test="(deptName != null and deptName !='')" >
+				and dept_name like '%${deptName}%'
+		</if>
+		<if test="(deptCode != null and deptCode !='')" >
+				and dept_code = #{deptCode}
+		</if>
+		<if test="(projectManagerId != null and projectManagerId !='')" >
+				and project_manager_id = #{projectManagerId}
+		</if>
+		<if test="(projectManagerIds != null and projectManagerIds!='')">
+			and project_manager_id in
+			<foreach collection="projectManagerIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>
+		<if test="(projectManagerName != null and projectManagerName !='')" >
+				and project_manager_name = #{projectManagerName}
+		</if>
+		<if test="(balanceIds != null and balanceIds!='')">
+			and balance_id in
+			<foreach collection="balanceIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>
+		<if test="(balanceId != null and balanceId !='')" >
+				and balance_id = #{balanceId}
+		</if>
+		<if test="(balanceName != null and balanceName !='')" >
+				and balance_name = #{balanceName}
+		</if>
+		<if test="(billStatus != null and billStatus !='')" >
+				and bill_status = #{billStatus}
+		</if>
+		<if test="(billCheckStatus != null and billCheckStatus !='')" >
+				and bill_check_status = #{billCheckStatus}
+		</if>
+		<if test="(billConfirmDate != null and billConfirmDate !='')" >
+				and bill_confirm_date = #{billConfirmDate}
+		</if>
+		<if test="(invoiceStatus != null and invoiceStatus !='')" >
+				and invoice_status = #{invoiceStatus}
+		</if>
+		<if test="(expectAmount != null and expectAmount !='')" >
+				and expect_amount = #{expectAmount}
+		</if>
+		<if test="(confirmAmount != null and confirmAmount !='')" >
+				and confirm_amount = #{confirmAmount}
+		</if>
+		<if test="(invoiceAmount != null and invoiceAmount !='')" >
+				and invoice_amount = #{invoiceAmount}
+		</if>
+		<if test="(invoiceDate != null and invoiceDate !='')" >
+				and invoice_date = #{invoiceDate}
+		</if>
+		<if test="(expectReceiptDate != null and expectReceiptDate !='')" >
+				and expect_receipt_date = #{expectReceiptDate}
+		</if>
+		<if test="(expectReceiptDateStart != null and expectReceiptDateStart !='')" >
+				and expect_receipt_date >= #{expectReceiptDateStart}
+		</if>
+		<if test="(expectReceiptDateEnd != null and expectReceiptDateEnd !='')" >
+				and expect_receipt_date <![CDATA[<= #{expectReceiptDateEnd}]]>
+		</if>
+		<if test="(unReceiptAmount != null and unReceiptAmount !='')" >
+				and un_receipt_amount = #{unReceiptAmount}
+		</if>
+		<if test="(invoiceUnReceiptAmount != null and invoiceUnReceiptAmount !='')" >
+				and invoice_un_receipt_amount = #{invoiceUnReceiptAmount}
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+				and receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(receiptDate != null and receiptDate !='')" >
+				and receipt_date = #{receiptDate}
+		</if>
+		<if test="(receiptStatus != null and receiptStatus !='')" >
+				and receipt_status = #{receiptStatus}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(billExcelUrl != null and billExcelUrl !='')" >
+				and bill_excel_url = #{billExcelUrl}
+		</if>
+		<if test="(userIds != null and userIds!='')">
+			and CONCAT(seller_id,'|',project_manager_id,'|',balance_id) regexp '${userIds}'
+		</if>
+		<if test="(isapplyBad != null and isapplyBad !='')" >
+				and isapply_bad = #{isapplyBad}
+		</if>
+		<if test="(area != null and area !='')" >
+				and area like '%${area}%'
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where 1=1 and del_flag='0'
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="queryList" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where 1=1 and del_flag='0'
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month =#{createMonth}
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and invoice_name =#{invoiceName}
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name=#{billName}
+		</if>
+    </select>
+    
+     <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where 1=1 and del_flag='0' and bill_status not in ('INVALIDATE','BAD_BILL')
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and invoice_name=#{invoiceName}
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name=#{billName}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		limit 1
+    </select>
+    
+    <select id="queryBillCheck" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where 1=1 and del_flag='0'
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and invoice_name=#{invoiceName}
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name=#{billName}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		limit 1
+    </select>
+
+	 <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        insert into bill_check_info(create_month, invoice_name, bill_name, customer_name, bill_start_time, first_class_name, biz_type_name, project_name,seller_id, seller_name, dept_name, dept_code,project_manager_id, project_manager_name,balance_id, balance_name, bill_status, bill_check_status, bill_confirm_date, invoice_status, expect_amount, confirm_amount, confirm_date, confirm_man_id, confirm_man, isneed_invoice,isapply_bad, invoice_amount, invoice_date, expect_receipt_date, un_receipt_amount,confirm_un_invoice_amount, invoice_un_receipt_amount, receipt_amount, receipt_date,area, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, invoice_man_id, invoice_man, receipt_man_id, receipt_man, bad_bill_amount, del_flag, remark, bill_excel_url,overdue_date)
+        values (
+
+#{createMonth,jdbcType=INTEGER}, 
+#{invoiceName,jdbcType=VARCHAR}, 
+#{billName,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{billStartTime,jdbcType=DATE}, 
+#{firstClassName,jdbcType=VARCHAR}, 
+#{bizTypeName,jdbcType=VARCHAR}, 
+#{projectName,jdbcType=VARCHAR}, 
+#{sellerId,jdbcType=VARCHAR},
+#{sellerName,jdbcType=VARCHAR}, 
+#{deptName,jdbcType=VARCHAR}, 
+#{deptCode,jdbcType=VARCHAR}, 
+#{projectManagerId,jdbcType=VARCHAR},
+#{projectManagerName,jdbcType=VARCHAR},
+#{balanceId,jdbcType=VARCHAR}, 
+#{balanceName,jdbcType=VARCHAR}, 
+#{billStatus,jdbcType=VARCHAR}, 
+#{billCheckStatus,jdbcType=VARCHAR}, 
+#{billConfirmDate,jdbcType=DATE}, 
+#{invoiceStatus,jdbcType=VARCHAR}, 
+#{expectAmount,jdbcType=DECIMAL}, 
+#{confirmAmount,jdbcType=DECIMAL}, 
+#{confirmDate,jdbcType=DATE}, 
+#{confirmManId,jdbcType=VARCHAR}, 
+#{confirmMan,jdbcType=VARCHAR}, 
+#{isneedInvoice,jdbcType=VARCHAR}, 
+#{isapplyBad,jdbcType=VARCHAR},  
+#{invoiceAmount,jdbcType=DECIMAL}, 
+#{invoiceDate,jdbcType=DATE}, 
+#{expectReceiptDate,jdbcType=DATE}, 
+#{unReceiptAmount,jdbcType=DECIMAL},
+#{confirmUnInvoiceAmount,jdbcType=DECIMAL},
+#{invoiceUnReceiptAmount,jdbcType=DECIMAL}, 
+#{receiptAmount,jdbcType=DECIMAL}, 
+#{receiptDate,jdbcType=DATE}, 
+#{area,jdbcType=VARCHAR}, 
+#{creatorId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifierId,jdbcType=VARCHAR}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{invoiceManId,jdbcType=VARCHAR}, 
+#{invoiceMan,jdbcType=VARCHAR}, 
+#{receiptManId,jdbcType=VARCHAR}, 
+#{receiptMan,jdbcType=VARCHAR}, 
+#{badBillAmount,jdbcType=DECIMAL}, 
+#{delFlag,jdbcType=VARCHAR}, 
+#{remark,jdbcType=VARCHAR}, 
+#{billExcelUrl,jdbcType=VARCHAR},
+#{overdueDate,jdbcType=DATE}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        update bill_check_info 
+		<set >
+
+<if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>
+<if test="invoiceName != null" >invoice_name=#{invoiceName,jdbcType=VARCHAR},</if>
+<if test="billName != null" >bill_name=#{billName,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="billStartTime != null" >bill_start_time=#{billStartTime,jdbcType=DATE},</if>
+<if test="firstClassName != null" >first_class_name=#{firstClassName,jdbcType=VARCHAR},</if>
+<if test="bizTypeName != null" >biz_type_name=#{bizTypeName,jdbcType=VARCHAR},</if>
+<if test="projectName != null" >project_name=#{projectName,jdbcType=VARCHAR},</if>
+<if test="sellerId != null" >seller_id=#{sellerId,jdbcType=VARCHAR},</if>
+<if test="sellerName != null" >seller_name=#{sellerName,jdbcType=VARCHAR},</if>
+<if test="deptName != null" >dept_name=#{deptName,jdbcType=VARCHAR},</if>
+<if test="deptCode != null" >dept_code=#{deptCode,jdbcType=VARCHAR},</if>
+<if test="projectManagerId != null" >project_manager_id=#{projectManagerId,jdbcType=VARCHAR},</if>
+<if test="projectManagerName != null" >project_manager_name=#{projectManagerName,jdbcType=VARCHAR},</if>
+<if test="balanceId != null" >balance_id=#{balanceId,jdbcType=VARCHAR},</if>
+<if test="balanceName != null" >balance_name=#{balanceName,jdbcType=VARCHAR},</if>
+<if test="billStatus != null" >bill_status=#{billStatus,jdbcType=VARCHAR},</if>
+<if test="billCheckStatus != null" >bill_check_status=#{billCheckStatus,jdbcType=VARCHAR},</if>
+<if test="billConfirmDate != null" >bill_confirm_date=#{billConfirmDate,jdbcType=DATE},</if>
+<if test="invoiceStatus != null" >invoice_status=#{invoiceStatus,jdbcType=VARCHAR},</if>
+<if test="expectAmount != null" >expect_amount=#{expectAmount,jdbcType=DECIMAL},</if>
+<if test="confirmAmount != null" >confirm_amount=#{confirmAmount,jdbcType=DECIMAL},</if>
+<if test="confirmDate != null" >confirm_date=#{confirmDate,jdbcType=DATE},</if>
+<if test="confirmManId != null" >confirm_man_id=#{confirmManId,jdbcType=VARCHAR},</if>
+<if test="confirmMan != null" >confirm_man=#{confirmMan,jdbcType=VARCHAR},</if>
+<if test="isneedInvoice != null" >isneed_invoice=#{isneedInvoice,jdbcType=VARCHAR},</if>
+<if test="isapplyBad != null" >isapply_bad=#{isapplyBad,jdbcType=VARCHAR},</if>
+<if test="invoiceAmount != null" >invoice_amount=#{invoiceAmount,jdbcType=DECIMAL},</if>
+<if test="invoiceDate != null" >invoice_date=#{invoiceDate,jdbcType=DATE},</if>
+<if test="expectReceiptDate != null" >expect_receipt_date=#{expectReceiptDate,jdbcType=DATE},</if>
+<if test="unReceiptAmount != null" >un_receipt_amount=#{unReceiptAmount,jdbcType=DECIMAL},</if>
+<if test="confirmUnInvoiceAmount != null" >confirm_un_invoice_amount=#{confirmUnInvoiceAmount,jdbcType=DECIMAL},</if>
+<if test="invoiceUnReceiptAmount != null" >invoice_un_receipt_amount=#{invoiceUnReceiptAmount,jdbcType=DECIMAL},</if>
+<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DECIMAL},</if>
+<if test="receiptDate != null" >receipt_date=#{receiptDate,jdbcType=DATE},</if>
+<if test="area != null" >area=#{area,jdbcType=VARCHAR},</if>
+<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="invoiceManId != null" >invoice_man_id=#{invoiceManId,jdbcType=VARCHAR},</if>
+<if test="invoiceMan != null" >invoice_man=#{invoiceMan,jdbcType=VARCHAR},</if>
+<if test="receiptManId != null" >receipt_man_id=#{receiptManId,jdbcType=VARCHAR},</if>
+<if test="receiptMan != null" >receipt_man=#{receiptMan,jdbcType=VARCHAR},</if>
+<if test="badBillAmount != null" >bad_bill_amount=#{badBillAmount,jdbcType=DECIMAL},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+<if test="billExcelUrl != null" >bill_excel_url=#{billExcelUrl,jdbcType=VARCHAR}</if>
+		</set>
+        where id=#{id}
+    </update>
+
+
+	<select id="queryByInvoiceNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+		select
+		<include refid="baseColumns" />
+		from bill_check_info where 1=1 and del_flag='0' and id in
+		(select bill_check_id from bill_check_invoice where 1=1 and del_flag='0' and invoice_no like '%${invoiceNo}%')
+		<include refid="baseSelectColumns" />
+	</select>
+	
+	<select id="queryAdjust" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity">
+		select * from bill_check_adjust_info where bill_check_id=#{billCheckId} and del_flag='0'
+	</select>
+	
+	<insert id="saveReceiptFollow" parameterType="com.jiuyescm.bms.billcheck.BillReceiptFollowEntity">
+       insert into bill_receipt_follow(bill_check_id, receipt_time, receipt_dept_id, receipt_dept, receipt_man, receipt_man_id, expect_receipt_date, follow_type, creator, create_time, operdesc, file_name, file_url,del_flag)
+        values (
+			#{billCheckId,jdbcType=INTEGER}, 
+			#{receiptTime,jdbcType=DATE}, 
+			#{receiptDeptId,jdbcType=VARCHAR}, 
+			#{receiptDept,jdbcType=VARCHAR}, 
+			#{receiptMan,jdbcType=VARCHAR}, 
+			#{receiptManId,jdbcType=VARCHAR}, 
+			#{expectReceiptDate,jdbcType=DATE}, 
+			#{followType,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{operdesc,jdbcType=VARCHAR}, 
+			#{fileName,jdbcType=VARCHAR}, 
+			#{fileUrl,jdbcType=VARCHAR},
+			#{delFlag,jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<select id="queryReceiptFollow" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillReceiptFollowEntity">
+		select * from bill_receipt_follow where bill_check_id=#{billCheckId} and del_flag='0'
+	</select>
+	
+    <insert id="saveAjustList" parameterType="com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity">
+        insert into bill_check_adjust_info(bill_check_id, adjust_date, adjust_amount, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, del_flag, remark)
+        values (
+			#{billCheckId,jdbcType=INTEGER}, 
+			#{adjustDate,jdbcType=DATE}, 
+			#{adjustAmount,jdbcType=DECIMAL}, 
+			#{creatorId,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifierId,jdbcType=VARCHAR}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <select id="queryOneAdjust" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity">
+    	select * from bill_check_adjust_info where bill_check_id=#{billCheckId} and del_flag='0' limit 1
+    </select>
+    
+    <update id="updateAjustList" parameterType="com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity">
+    	update bill_check_adjust_info set del_flag='1' where 1=1 and id=#{id}
+    </update>
+    <select id="queryBillCheckStatus" parameterType="int" resultType="java.lang.String">
+    	select bill_status from bill_check_info where del_flag='0' and id=#{id} limit 1
+    </select>
+    <select id="queryAllByBillName" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+    	select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where del_flag='0' and bill_name in
+        <foreach collection="billNameList" index="index" item="item" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+    </select>
+    <select id="queryAllByBillCheckId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+    	select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where del_flag='0' and id in
+        <foreach collection="checkIdList" index="index" item="item" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+    </select>
+    <update id="updateInvoiceStatus" parameterType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+    	 update bill_check_info 
+		<set >
+			<if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>
+			<if test="invoiceName != null" >invoice_name=#{invoiceName,jdbcType=VARCHAR},</if>
+			<if test="billName != null" >bill_name=#{billName,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="billStartTime != null" >bill_start_time=#{billStartTime,jdbcType=DATE},</if>
+			<if test="firstClassName != null" >first_class_name=#{firstClassName,jdbcType=VARCHAR},</if>
+			<if test="bizTypeName != null" >biz_type_name=#{bizTypeName,jdbcType=VARCHAR},</if>
+			<if test="projectName != null" >project_name=#{projectName,jdbcType=VARCHAR},</if>
+			<if test="sellerName != null" >seller_name=#{sellerName,jdbcType=VARCHAR},</if>
+			<if test="deptName != null" >dept_name=#{deptName,jdbcType=VARCHAR},</if>
+			<if test="deptCode != null" >dept_code=#{deptCode,jdbcType=VARCHAR},</if>
+			<if test="projectManagerName != null" >project_manager_name=#{projectManagerName,jdbcType=VARCHAR},</if>
+			<if test="balanceName != null" >balance_name=#{balanceName,jdbcType=VARCHAR},</if>
+			<if test="billStatus != null" >bill_status=#{billStatus,jdbcType=VARCHAR},</if>
+			<if test="billCheckStatus != null" >bill_check_status=#{billCheckStatus,jdbcType=VARCHAR},</if>
+			<if test="billConfirmDate != null" >bill_confirm_date=#{billConfirmDate,jdbcType=DATE},</if>
+			<if test="invoiceStatus != null" >invoice_status=#{invoiceStatus,jdbcType=VARCHAR},</if>
+			<if test="expectAmount != null" >expect_amount=#{expectAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmAmount != null" >confirm_amount=#{confirmAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmDate != null" >confirm_date=#{confirmDate,jdbcType=DATE},</if>
+			<if test="confirmManId != null" >confirm_man_id=#{confirmManId,jdbcType=VARCHAR},</if>
+			<if test="confirmMan != null" >confirm_man=#{confirmMan,jdbcType=VARCHAR},</if>
+			<if test="isneedInvoice != null" >isneed_invoice=#{isneedInvoice,jdbcType=VARCHAR},</if>
+			<if test="invoiceAmount != null" >invoice_amount=#{invoiceAmount,jdbcType=DECIMAL},</if>
+			<if test="invoiceDate != null" >invoice_date=#{invoiceDate,jdbcType=DATE},</if>
+			<if test="expectReceiptDate != null" >expect_receipt_date=#{expectReceiptDate,jdbcType=DATE},</if>
+			<if test="unReceiptAmount != null" >un_receipt_amount=#{unReceiptAmount,jdbcType=DECIMAL},</if>
+			<if test="invoiceUnReceiptAmount != null" >invoice_un_receipt_amount=#{invoiceUnReceiptAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmUnInvoiceAmount != null" >confirm_un_invoice_amount=#{confirmUnInvoiceAmount,jdbcType=DECIMAL},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DECIMAL},</if>
+			<if test="receiptDate != null" >receipt_date=#{receiptDate,jdbcType=DATE},</if>
+			<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="invoiceManId != null" >invoice_man_id=#{invoiceManId,jdbcType=VARCHAR},</if>
+			<if test="invoiceMan != null" >invoice_man=#{invoiceMan,jdbcType=VARCHAR},</if>
+			<if test="receiptManId != null" >receipt_man_id=#{receiptManId,jdbcType=VARCHAR},</if>
+			<if test="receiptMan != null" >receipt_man=#{receiptMan,jdbcType=VARCHAR},</if>
+			<if test="badBillAmount != null" >bad_bill_amount=#{badBillAmount,jdbcType=DECIMAL},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="billExcelUrl != null" >bill_excel_url=#{billExcelUrl,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <update id="updateReceiptStatus" parameterType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+    	update bill_check_info 
+		<set >
+			<if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>
+			<if test="invoiceName != null" >invoice_name=#{invoiceName,jdbcType=VARCHAR},</if>
+			<if test="billName != null" >bill_name=#{billName,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="billStartTime != null" >bill_start_time=#{billStartTime,jdbcType=DATE},</if>
+			<if test="firstClassName != null" >first_class_name=#{firstClassName,jdbcType=VARCHAR},</if>
+			<if test="bizTypeName != null" >biz_type_name=#{bizTypeName,jdbcType=VARCHAR},</if>
+			<if test="projectName != null" >project_name=#{projectName,jdbcType=VARCHAR},</if>
+			<if test="sellerName != null" >seller_name=#{sellerName,jdbcType=VARCHAR},</if>
+			<if test="deptName != null" >dept_name=#{deptName,jdbcType=VARCHAR},</if>
+			<if test="deptCode != null" >dept_code=#{deptCode,jdbcType=VARCHAR},</if>
+			<if test="projectManagerName != null" >project_manager_name=#{projectManagerName,jdbcType=VARCHAR},</if>
+			<if test="balanceName != null" >balance_name=#{balanceName,jdbcType=VARCHAR},</if>
+			<if test="billStatus != null" >bill_status=#{billStatus,jdbcType=VARCHAR},</if>
+			<if test="billCheckStatus != null" >bill_check_status=#{billCheckStatus,jdbcType=VARCHAR},</if>
+			<if test="billConfirmDate != null" >bill_confirm_date=#{billConfirmDate,jdbcType=DATE},</if>
+			<if test="invoiceStatus != null" >invoice_status=#{invoiceStatus,jdbcType=VARCHAR},</if>
+			<if test="expectAmount != null" >expect_amount=#{expectAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmAmount != null" >confirm_amount=#{confirmAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmDate != null" >confirm_date=#{confirmDate,jdbcType=DATE},</if>
+			<if test="confirmManId != null" >confirm_man_id=#{confirmManId,jdbcType=VARCHAR},</if>
+			<if test="confirmMan != null" >confirm_man=#{confirmMan,jdbcType=VARCHAR},</if>
+			<if test="isneedInvoice != null" >isneed_invoice=#{isneedInvoice,jdbcType=VARCHAR},</if>
+			<if test="invoiceAmount != null" >invoice_amount=#{invoiceAmount,jdbcType=DECIMAL},</if>
+			<if test="invoiceDate != null" >invoice_date=#{invoiceDate,jdbcType=DATE},</if>
+			<if test="expectReceiptDate != null" >expect_receipt_date=#{expectReceiptDate,jdbcType=DATE},</if>
+			<if test="unReceiptAmount != null" >un_receipt_amount=#{unReceiptAmount,jdbcType=DECIMAL},</if>
+			<if test="invoiceUnReceiptAmount != null" >invoice_un_receipt_amount=#{invoiceUnReceiptAmount,jdbcType=DECIMAL},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DECIMAL},</if>
+			<if test="receiptStatus != null" >receipt_status=#{receiptStatus,jdbcType=VARCHAR},</if>
+			<if test="receiptDate != null" >receipt_date=#{receiptDate,jdbcType=DATE},</if>
+			<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="invoiceManId != null" >invoice_man_id=#{invoiceManId,jdbcType=VARCHAR},</if>
+			<if test="invoiceMan != null" >invoice_man=#{invoiceMan,jdbcType=VARCHAR},</if>
+			<if test="receiptManId != null" >receipt_man_id=#{receiptManId,jdbcType=VARCHAR},</if>
+			<if test="receiptMan != null" >receipt_man=#{receiptMan,jdbcType=VARCHAR},</if>
+			<if test="badBillAmount != null" >bad_bill_amount=#{badBillAmount,jdbcType=DECIMAL},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="billExcelUrl != null" >bill_excel_url=#{billExcelUrl,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+	</update>
+	
+	<select id="queryReceiptFollowOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillReceiptFollowEntity">
+		select MAX(expect_receipt_date) as expect_receipt_date from bill_receipt_follow where bill_check_id=#{id} and del_flag='0' 
+		<if test="(expectReceiptDate != null and expectReceiptDate !='')" >
+				and expect_receipt_date<![CDATA[<= #{expectReceiptDate}]]>
+		</if>	
+	</select>
+	
+	  <select id="queryReceiptDetail" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_info
+        where 1=1 and del_flag='0' and bill_status not in ('INVALIDATE','BAD_BILL')
+		<include refid="baseSelectColumns" />
+    </select>
+	
+</mapper> 

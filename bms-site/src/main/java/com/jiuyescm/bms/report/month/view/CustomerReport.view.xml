@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtReport">
+      <Property name="tags">abc</Property>
+      <Property name="creationType">com.jiuyescm.bms.report.month.vo.BmsMonthReportVo</Property>
+      <PropertyDef name="reportType">
+        <Property></Property>
+        <Property name="label">报表类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;REPORT_MONTH&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="level1Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="level1Name">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="level2Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="level2Name">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="level3Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="level3Name">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="bothType">
+        <Property name="label">收支项</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBothTypeEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="januaryAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">1月</Property>
+      </PropertyDef>
+      <PropertyDef name="februaryAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">2月</Property>
+      </PropertyDef>
+      <PropertyDef name="marchAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">3月</Property>
+      </PropertyDef>
+      <PropertyDef name="aprilAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">4月</Property>
+      </PropertyDef>
+      <PropertyDef name="mayAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">5月</Property>
+      </PropertyDef>
+      <PropertyDef name="juneAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">6月</Property>
+      </PropertyDef>
+      <PropertyDef name="julyAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">7月</Property>
+      </PropertyDef>
+      <PropertyDef name="augustAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">8月</Property>
+      </PropertyDef>
+      <PropertyDef name="septemberAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">9月</Property>
+      </PropertyDef>
+      <PropertyDef name="octoberAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">10月</Property>
+      </PropertyDef>
+      <PropertyDef name="novemberAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">11月</Property>
+      </PropertyDef>
+      <PropertyDef name="decemberAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">12月</Property>
+      </PropertyDef>
+      <PropertyDef name="reportYear">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">年份</Property>
+      </PropertyDef>
+      <PropertyDef name="sumAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">小计</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="reportYear">
+        <Property name="label">年份选择</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="reportType"/>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">view.get(&quot;#queryForm&quot;).get(&quot;entity&quot;).set(&quot;reportType&quot;,&quot;REPORT_MONTH_CUSTOMER&quot;);&#xD;
+var date=new Date;&#xD;
+var year=date.getFullYear(); &#xD;
+view.get(&quot;#queryForm&quot;).get(&quot;entity&quot;).set(&quot;reportYear&quot;,year);</ClientEvent>
+    <DataSet id="dsReport">
+      <Property name="dataType">[dtReport]</Property>
+      <Property name="dataProvider">companyReportController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">ds_report</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btn_query">
+        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+&#xD;
+with (view.get(&quot;#dsReport&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}		&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queryForm">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">reportYear</Property>
+        <Property name="property">reportYear</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">reportType</Property>
+        <Property name="property">reportType</Property>
+        <Property name="visible">false</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dgReport">
+        <Property name="dataSet">dsReport</Property>
+        <Property name="tags">foo</Property>
+        <DataColumn name="reportType">
+          <Property name="property">reportType</Property>
+        </DataColumn>
+        <DataColumn name="level1Name">
+          <Property name="property">level1Name</Property>
+        </DataColumn>
+        <DataColumn name="bothType">
+          <Property name="property">bothType</Property>
+        </DataColumn>
+        <DataColumn name="januaryAmount">
+          <Property name="property">januaryAmount</Property>
+        </DataColumn>
+        <DataColumn name="februaryAmount">
+          <Property name="property">februaryAmount</Property>
+        </DataColumn>
+        <DataColumn name="marchAmount">
+          <Property name="property">marchAmount</Property>
+        </DataColumn>
+        <DataColumn name="aprilAmount">
+          <Property name="property">aprilAmount</Property>
+        </DataColumn>
+        <DataColumn name="mayAmount">
+          <Property name="property">mayAmount</Property>
+        </DataColumn>
+        <DataColumn name="juneAmount">
+          <Property name="property">juneAmount</Property>
+        </DataColumn>
+        <DataColumn name="julyAmount">
+          <Property name="property">julyAmount</Property>
+        </DataColumn>
+        <DataColumn name="augustAmount">
+          <Property name="property">augustAmount</Property>
+        </DataColumn>
+        <DataColumn name="septemberAmount">
+          <Property name="property">septemberAmount</Property>
+        </DataColumn>
+        <DataColumn name="octoberAmount">
+          <Property name="property">octoberAmount</Property>
+        </DataColumn>
+        <DataColumn name="novemberAmount">
+          <Property name="property">novemberAmount</Property>
+        </DataColumn>
+        <DataColumn name="decemberAmount">
+          <Property name="property">decemberAmount</Property>
+        </DataColumn>
+        <DataColumn name="reportYear">
+          <Property name="property">reportYear</Property>
+        </DataColumn>
+        <DataColumn name="sumAmount">
+          <Property name="property">sumAmount</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

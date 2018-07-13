@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.customer.mapper.BillCustomerInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.bill.customer.BillCustomerInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="customer_shortname" property="customerShortname" jdbcType="VARCHAR" />
+	    <result column="sys_customer_id" property="sysCustomerId" jdbcType="VARCHAR" />
+	    <result column="sys_customer_name" property="sysCustomerName" jdbcType="VARCHAR" />
+	    <result column="linkman" property="linkman" jdbcType="VARCHAR" />
+	    <result column="address" property="address" jdbcType="VARCHAR" />
+	    <result column="tel" property="tel" jdbcType="VARCHAR" />
+	    <result column="phone" property="phone" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+    	id,customer_id,customer_name,customer_shortname,sys_customer_id,sys_customer_name,linkman,address,tel,phone,remark,del_flag,creator,create_time,last_modifier,last_modify_time
+    </sql>
+	
+    <select id="queryList" parameterType="java.util.Map"
+        resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from bill_customer_info
+        where 1=1 and del_flag = '0'
+        <if test="(sysCustomerId!=null and sysCustomerId!='')">
+			and sys_customer_id=#{sysCustomerId}
+		</if>
+		 <if test="(customerId!=null and customerId!='')">
+			and customer_id=#{customerId}
+		</if>
+		<if test="(customerName!=null and customerName!='')">
+			and customer_name like concat('%',#{customerName},'%')
+		</if>
+		<if test="(customerShortname!=null and  customerShortname!='')">
+			and customer_shortname like concat('%',#{customerShortname},'%')
+		</if>
+		<if test="(linkman!=null and linkman!='')">
+			and linkman like concat('%',#{linkman},'%')
+		</if>
+		<if test="(tel!=null and tel!='')">
+			and tel like concat('%',#{tel},'%')
+		</if>
+		<if test="(phone!=null and phone!='')">
+			and phone like concat('%',#{phone},'%')
+		</if>
+		<if test="(address!=null and address!='')">
+			and address like concat('%',#{address},'%')
+		</if>
+    </select>
+    
+    <select id="queryAll"  resultMap="baseResultMap">
+      select
+        <include refid="baseColumns" />
+        from bill_customer_info
+        where del_flag = '0'
+    </select>
+    
+    <insert id="insertEntity" parameterType="com.jiuyescm.bms.bill.customer.BillCustomerInfoEntity">
+    	insert into bill_customer_info (customer_id,customer_name,customer_shortname,sys_customer_id,sys_customer_name,linkman,address,tel,phone,remark,
+del_flag,creator,create_time,last_modifier,last_modify_time) values
+		(#{customerId},#{customerName},#{customerShortname},#{sysCustomerId},#{sysCustomerName},#{linkman},#{address},#{tel},#{phone},#{remark},#{delFlag},
+			#{creator},#{createTime},#{lastModifier},#{lastModifyTime}
+		)
+    </insert>
+	
+	<update id="updateEntity" parameterType="com.jiuyescm.bms.bill.customer.BillCustomerInfoEntity">
+		update bill_customer_info
+		<set>
+			<if test="(customerName!=null and customerName!='')">customer_name=#{customerName},</if>
+			<if test="(customerShortname!=null and customerShortname!='')">customer_shortname=#{customerShortname},</if>
+			<if test="(sysCustomerId!=null and sysCustomerId!='')">sys_customer_id=#{sysCustomerId},</if>
+			<if test="(sysCustomerName!=null and sysCustomerName!='')">sys_customer_name=#{sysCustomerName},</if>
+			<if test="(linkman!=null and linkman!='')">linkman=#{linkman},</if>
+			<if test="(address!=null and address!='')">address=#{address},</if>
+			<if test="(tel!=null and tel!='')">tel=#{tel},</if>
+			<if test="(phone!=null and phone!='')">phone=#{phone},</if>
+			<if test="(remark!=null and remark!='')">remark=#{remark},</if>
+			<if test="(creator!=null and creator!='')">creator=#{creator},</if>
+			<if test="(createTime!=null and createTime!='')">create_time=#{createTime},</if>
+			<if test="(lastModifier!=null and lastModifier!='')">last_modifier=#{lastModifier},</if>
+			<if test="(lastModifyTime!=null and lastModifyTime!='')">last_modify_time=#{lastModifyTime},</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<update id="deleteEntity"  parameterType="com.jiuyescm.bms.bill.customer.BillCustomerInfoEntity">
+		update bill_customer_info set del_flag=#{delFlag},last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
+		where id=#{id}
+	</update>
+	
+	<select id="checkSysCustomerHasBind" parameterType="java.util.Map" resultType="int">
+		select count(*) from bill_customer_info where sys_customer_id=#{sysCustomerId} and del_flag='0'
+		and <![CDATA[customer_id<>#{customerId}]]>
+	</select>
+	<select id="checkCustomerNameExist" parameterType="java.lang.String"  resultType="int">
+		select count(*) from bill_customer_info where  del_flag='0' and customer_name=#{customerName}
+	</select>
+</mapper>

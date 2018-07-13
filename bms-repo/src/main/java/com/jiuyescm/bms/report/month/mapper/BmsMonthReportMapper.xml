@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.mapper.BmsMonthReportMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.report.month.vo.BmsMonthReportVo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="report_type" property="reportType" jdbcType="VARCHAR" />
+	    <result column="level1_code" property="level1Code" jdbcType="VARCHAR" />
+	    <result column="level1_name" property="level1Name" jdbcType="VARCHAR" />
+	    <result column="level2_code" property="level2Code" jdbcType="VARCHAR" />
+	    <result column="level2_name" property="level2Name" jdbcType="VARCHAR" />
+	    <result column="level3_code" property="level3Code" jdbcType="VARCHAR" />
+	    <result column="level3_name" property="level3Name" jdbcType="VARCHAR" />
+	    <result column="both_type" property="bothType" jdbcType="INTEGER" />
+	    <result column="january_amount" property="januaryAmount" jdbcType="DECIMAL" />
+	    <result column="february_amount" property="februaryAmount" jdbcType="DECIMAL" />
+	    <result column="march_amount" property="marchAmount" jdbcType="DECIMAL" />
+	    <result column="april_amount" property="aprilAmount" jdbcType="DECIMAL" />
+	    <result column="may_amount" property="mayAmount" jdbcType="DECIMAL" />
+	    <result column="june_amount" property="juneAmount" jdbcType="DECIMAL" />
+	    <result column="july_amount" property="julyAmount" jdbcType="DECIMAL" />
+	    <result column="august_amount" property="augustAmount" jdbcType="DECIMAL" />
+	    <result column="september_amount" property="septemberAmount" jdbcType="DECIMAL" />
+	    <result column="october_amount" property="octoberAmount" jdbcType="DECIMAL" />
+	    <result column="november_amount" property="novemberAmount" jdbcType="DECIMAL" />
+	    <result column="december_amount" property="decemberAmount" jdbcType="DECIMAL" />
+	    <result column="report_year" property="reportYear" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="sum_amount" property="sumAmount" jdbcType="DECIMAL" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        report_type, level1_code, level1_name, level2_code, level2_name, level3_code, level3_name, both_type, january_amount, february_amount, march_amount, april_amount, may_amount, june_amount, july_amount, august_amount, september_amount, october_amount, november_amount, december_amount, report_year, create_time, last_modify_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(reportType != null and reportType !='')" >
+				and report_type = #{reportType}
+		</if>
+		<if test="(level1Code != null and level1Code !='')" >
+				and level1_code = #{level1Code}
+		</if>
+		<if test="(level1Name != null and level1Name !='')" >
+				and level1_name = #{level1Name}
+		</if>
+		<if test="(level2Code != null and level2Code !='')" >
+				and level2_code = #{level2Code}
+		</if>
+		<if test="(level2Name != null and level2Name !='')" >
+				and level2_name = #{level2Name}
+		</if>
+		<if test="(level3Code != null and level3Code !='')" >
+				and level3_code = #{level3Code}
+		</if>
+		<if test="(level3Name != null and level3Name !='')" >
+				and level3_name = #{level3Name}
+		</if>
+		<if test="(bothType != null and bothType !='')" >
+				and both_type = #{bothType}
+		</if>
+		<if test="(januaryAmount != null and januaryAmount !='')" >
+				and january_amount = #{januaryAmount}
+		</if>
+		<if test="(februaryAmount != null and februaryAmount !='')" >
+				and february_amount = #{februaryAmount}
+		</if>
+		<if test="(marchAmount != null and marchAmount !='')" >
+				and march_amount = #{marchAmount}
+		</if>
+		<if test="(aprilAmount != null and aprilAmount !='')" >
+				and april_amount = #{aprilAmount}
+		</if>
+		<if test="(mayAmount != null and mayAmount !='')" >
+				and may_amount = #{mayAmount}
+		</if>
+		<if test="(juneAmount != null and juneAmount !='')" >
+				and june_amount = #{juneAmount}
+		</if>
+		<if test="(julyAmount != null and julyAmount !='')" >
+				and july_amount = #{julyAmount}
+		</if>
+		<if test="(augustAmount != null and augustAmount !='')" >
+				and august_amount = #{augustAmount}
+		</if>
+		<if test="(septemberAmount != null and septemberAmount !='')" >
+				and september_amount = #{septemberAmount}
+		</if>
+		<if test="(octoberAmount != null and octoberAmount !='')" >
+				and october_amount = #{octoberAmount}
+		</if>
+		<if test="(novemberAmount != null and novemberAmount !='')" >
+				and november_amount = #{novemberAmount}
+		</if>
+		<if test="(decemberAmount != null and decemberAmount !='')" >
+				and december_amount = #{decemberAmount}
+		</if>
+		<if test="(reportYear != null and reportYear !='')" >
+				and report_year = #{reportYear}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from bms_month_report
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+</mapper>

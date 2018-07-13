@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="LanguageInfo">
+      <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.TestEntity</Property>
+      <PropertyDef name="name">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="age">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View layout="padding:50">
+    <DataSet id="dataSetTags">
+      <Property name="dataProvider">tagEditorInterceptor#getTags</Property>
+      <Property name="dataType">[LanguageInfo]</Property>
+    </DataSet>
+    <TagEditor>
+      <ClientEvent name="onTextEdit">var value = self.get(&quot;value&quot;);&#xD;
+alert(value);&#xD;
+</ClientEvent>
+      <Property name="availableTagsDataSet">dataSetTags</Property>
+      <Property name="availableTagsDataPath">.name</Property>
+    </TagEditor>
+    <RadioGroup id="radioGroup1" layoutConstraint="top:20;left:20">
+      <Property name="value">0</Property>
+      <RadioButton>
+        <Property name="text">允许</Property>
+        <Property name="value">1</Property>
+      </RadioButton>
+      <RadioButton>
+        <Property name="text">不允许</Property>
+        <Property name="value">0</Property>
+      </RadioButton>
+    </RadioGroup>
+    <FieldSet layoutConstraint="left:20;top:20;anchorTop:previous">
+      <ClientEvent name="beforeCollapsedChange" signature="self,arg,radioGroup1">var value = radioGroup1.get(&quot;value&quot;);&#xD;
+if (value==&quot;0&quot;) {&#xD;
+	dorado.MessageBox.alert(&quot;条件不满足，禁止默认操作!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+}</ClientEvent>
+      <Property name="caption">基本信息</Property>
+      <Property name="width">400</Property>
+      <Property name="height">180</Property>
+      <Buttons/>
+      <Children>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">工号</Property>
+          <Editor/>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">姓名</Property>
+          <Editor/>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">性别</Property>
+          <Property name="editorType">RadioGroup</Property>
+          <Editor>
+            <RadioGroup>
+              <Property name="value">1</Property>
+              <RadioButton>
+                <Property name="value">1</Property>
+                <Property name="text">男</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="value">0</Property>
+                <Property name="text">女</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="value">-1</Property>
+                <Property name="text">未知</Property>
+              </RadioButton>
+            </RadioGroup>
+          </Editor>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">生日</Property>
+          <Editor>
+            <TextEditor>
+              <Property name="dataType">Date</Property>
+            </TextEditor>
+          </Editor>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">工号</Property>
+          <Editor>
+            <CheckBox/>
+          </Editor>
+        </FormElement>
+      </Children>
+    </FieldSet>
+    <GroupBox>
+      <Property name="caption">分类表</Property>
+      <Buttons/>
+      <Children>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">工号</Property>
+          <Editor/>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">姓名</Property>
+          <Editor/>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">性别</Property>
+          <Property name="editorType">RadioGroup</Property>
+          <Editor>
+            <RadioGroup>
+              <Property name="value">1</Property>
+              <RadioButton>
+                <Property name="value">1</Property>
+                <Property name="text">男</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="value">0</Property>
+                <Property name="text">女</Property>
+              </RadioButton>
+              <RadioButton>
+                <Property name="value">-1</Property>
+                <Property name="text">未知</Property>
+              </RadioButton>
+            </RadioGroup>
+          </Editor>
+        </FormElement>
+        <FormElement layoutConstraint="padding:5px">
+          <Property name="label">生日</Property>
+          <Editor>
+            <TextEditor>
+              <Property name="dataType">Date</Property>
+            </TextEditor>
+          </Editor>
+        </FormElement>
+      </Children>
+    </GroupBox>
+    <CustomSpinner>
+      <Property name="pattern">[0,*].[0,999|3]</Property>
+    </CustomSpinner>
+    <Panel id="panelButtons" listener="spring:tagEditorInterceptor#onViewInit">
+      <Property name="visible">true</Property>
+      <Property name="height">200</Property>
+      <Property name="width">600</Property>
+      <Buttons/>
+      <Children/>
+      <Tools/>
+    </Panel>
+    <ToolBar id="toolBar">
+      <MenuButton id="btnTemplateDownload" listener="spring:tagEditorInterceptor#onViewInit1">
+        <Property name="caption">模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+        <MenuItem>
+          <ClientEvent name="onClick">// var parameter={templetCode:&quot;billcheck_bill_import&quot;}; &#xD;
+&#xD;
+//var parameter={&#xD;
+//	templetCode:&quot;billcheck_bill_import&quot;&#xD;
+//};&#xD;
+//view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();&#xD;
+&#xD;
+var parameter={&#xD;
+	templetCode:&quot;billcheck_bill_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
+          <Property name="caption">123</Property>
+        </MenuItem>
+        <MenuItem>
+          <Property name="caption">456</Property>
+        </MenuItem>
+      </MenuButton>
+    </ToolBar>
+    <DownloadAction id="downloadTemplateAction">
+      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

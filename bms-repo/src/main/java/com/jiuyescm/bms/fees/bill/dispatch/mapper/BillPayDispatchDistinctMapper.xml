@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.bill.dispatch.mapper.BillPayDispatchDistinctMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.bill.dispatch.entity.BillPayDispatchDistinctEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="deliveryid" property="deliveryid" jdbcType="VARCHAR" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="head_weight" property="headWeight" jdbcType="DOUBLE" />
+	    <result column="head_price" property="headPrice" jdbcType="DOUBLE" />
+	    <result column="continued_weight" property="continuedWeight" jdbcType="DOUBLE" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DOUBLE" />
+	    <result column="charged_weight" property="chargedWeight" jdbcType="DOUBLE" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	    <result column="weight_limit" property="weightLimit" jdbcType="DOUBLE" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	    <result column="amount" property="amount" jdbcType="DOUBLE" />
+	    <result column="diff_amount" property="diffAmount" jdbcType="DOUBLE" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, waybill_no, deliveryid, fees_no, bill_no, head_weight, head_price, continued_weight,
+        continued_price, charged_weight, total_weight, weight_limit, unit_price, amount,
+        diff_amount, status, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(deliveryid != null and deliveryid !='')" >
+				and deliveryid = #{deliveryid}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(headWeight != null and headWeight !='')" >
+				and head_weight = #{headWeight}
+		</if>
+		<if test="(headPrice != null and headPrice !='')" >
+				and head_price = #{headPrice}
+		</if>
+		<if test="(continuedWeight != null and continuedWeight !='')" >
+				and continued_weight = #{continuedWeight}
+		</if>
+		<if test="(continuedPrice != null and continuedPrice !='')" >
+				and continued_price = #{continuedPrice}
+		</if>
+		<if test="(chargedWeight != null and chargedWeight !='')" >
+				and charged_weight = #{chargedWeight}
+		</if>
+		<if test="(totalWeight != null and totalWeight !='')" >
+				and total_weight = #{totalWeight}
+		</if>
+		<if test="(weightLimit != null and weightLimit !='')" >
+				and weight_limit = #{weightLimit}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(amount != null and amount !='')" >
+				and amount = #{amount}
+		</if>
+		<if test="(diffAmount != null and diffAmount !='')" >
+				and diff_amount = #{diffAmount}
+		</if>
+		<if test="(status != null and status !='')" >
+				and status = #{status}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.bill.dispatch.entity.BillPayDispatchDistinctEncapEntity">
+         select * from (
+         	(select fpd.bill_no,fpd.fees_no as feeNo,fpd.waybill_no as feeWayBillNo,
+         	fpd.deliveryid as feeDeliveryId,fpd.deliver_name as feeDeliveryName,
+         	fpd.head_weight as feeHeadWeight,fpd.head_price as feeHeadPrice,
+         	fpd.continued_weight as feeContinuedWeight,fpd.continued_price as feeContinuedPrice,
+         	fpd.charged_weight as feeChargedWeight,fpd.total_weight as feeTotalWeight,
+         	fpd.amount as feeAmount,fpd.weight_limit as feeWeightLimit,fpd.unit_price as feeUnitPrice,
+         	bpd.status, bpd.id as boddid, bpd.waybill_no, bpd.head_weight,	bpd.head_price,bpd.continued_weight,
+         	bpd.continued_price, bpd.amount, bpd.diff_amount, bpd.weight_limit, bpd.unit_price,
+         	bpd.charged_weight,bpd.create_time,bpd.total_weight
+         	from fees_pay_dispatch fpd LEFT JOIN bill_pay_dispatch_distinct bpd 
+			on fpd.waybill_no=bpd.waybill_no and bpd.bill_no = #{billNo}
+			WHERE fpd.del_flag = 0 and fpd.bill_no = #{billNo}) 
+			union
+			(select bpd.bill_no, fpd.fees_no as feeNo,bpd.waybill_no as feeWayBillNo,
+			fpd.deliveryid as feeDeliveryId,fpd.deliver_name as feeDeliveryName,
+			fpd.head_weight as feeHeadWeight,fpd.head_price as feeHeadPrice,
+			fpd.continued_weight as feeContinuedWeight,fpd.continued_price as feeContinuedPrice,
+			fpd.charged_weight as feeChargedWeight,fpd.total_weight as feeTotalWeight,
+			fpd.amount as feeAmount, fpd.weight_limit as feeWeightLimit,fpd.unit_price as feeUnitPrice,
+			bpd.status, bpd.id as boddid, bpd.waybill_no, bpd.head_weight, bpd.head_price, bpd.continued_weight,
+			bpd.continued_price, bpd.amount, bpd.diff_amount, bpd.weight_limit, bpd.unit_price,
+			bpd.charged_weight, bpd.create_time, bpd.total_weight
+			from fees_pay_dispatch fpd right JOIN bill_pay_dispatch_distinct bpd 
+			on fpd.waybill_no=bpd.waybill_no and fpd.bill_no = #{billNo}
+			where bpd.del_flag = 0 and bpd.bill_no = #{billNo})
+		) as my
+			where 1=1
+        <if test="(waybillNo != null and waybillNo !='')" >
+			and my.feeWayBillNo = #{waybillNo}
+		</if>
+		<if test="(deliveryid != null and deliveryid !='')" >
+			and my.feeDeliveryId  = #{deliveryid}
+		</if>
+		<if test="(status != null and status !='')" >
+			and my.status = #{status}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			and my.create_time<![CDATA[ >= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and my.create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		ORDER BY IF(ISNULL(ABS(my.diff_amount)),0,1) DESC
+  </select>
+    
+	<select id="queryBillNoList" resultType="string">
+		select DISTINCT bill_no 
+        from bill_pay_dispatch_distinct
+		where del_flag=0
+		ORDER BY bill_no desc
+	</select>
+
+	<select id="queryListByBillNo" parameterType="string" resultType="com.jiuyescm.bms.fees.bill.dispatch.entity.BillPayDispatchDistinctEntity">
+		select 
+			<include refid="baseColumns" />
+		from bill_pay_dispatch_distinct
+		where del_flag=0
+			and bill_no = #{billNo,jdbcType=VARCHAR}
+	</select>
+  
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.bill.dispatch.entity.BillPayDispatchDistinctEntity">
+        insert into bill_pay_dispatch_distinct(waybill_no, deliveryid, fees_no, bill_no, head_weight, head_price, continued_weight, continued_price, charged_weight, total_weight, weight_limit, unit_price, amount, diff_amount, status, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{deliveryid,jdbcType=VARCHAR}, 
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{headWeight,jdbcType=DOUBLE}, 
+			#{headPrice,jdbcType=DOUBLE}, 
+			#{continuedWeight,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{chargedWeight,jdbcType=DOUBLE}, 
+			#{totalWeight,jdbcType=DOUBLE}, 
+			#{weightLimit,jdbcType=DOUBLE}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{amount,jdbcType=DOUBLE}, 
+			#{diffAmount,jdbcType=DOUBLE}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.fees.bill.dispatch.entity.BillPayDispatchDistinctEntity">
+        update bill_pay_dispatch_distinct 
+		<set >
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+			<if test="deliveryid != null" >deliveryid=#{deliveryid,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="headWeight != null" >head_weight=#{headWeight,jdbcType=DOUBLE},</if>
+			<if test="headPrice != null" >head_price=#{headPrice,jdbcType=DOUBLE},</if>
+			<if test="continuedWeight != null" >continued_weight=#{continuedWeight,jdbcType=DOUBLE},</if>
+			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DOUBLE},</if>
+			<if test="chargedWeight != null" >charged_weight=#{chargedWeight,jdbcType=DOUBLE},</if>
+			<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DOUBLE},</if>
+			<if test="weightLimit != null" >weight_limit=#{weightLimit,jdbcType=DOUBLE},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
+			<if test="amount != null" >amount=#{amount,jdbcType=DOUBLE},</if>
+			<if test="diffAmount != null" >diff_amount=#{diffAmount,jdbcType=DOUBLE},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+     <insert id="saveExistUpdate" parameterType="com.jiuyescm.bms.fees.bill.dispatch.entity.BillPayDispatchDistinctEntity">
+    insert into bill_pay_dispatch_distinct (waybill_no, deliveryid, fees_no,bill_no,total_weight, head_weight, 
+    	head_price,	continued_weight, continued_price, charged_weight, amount, diff_amount,
+        status, creator, create_time, last_modifier, last_modify_time,del_flag,weight_limit,unit_price)
+    values (
+    	#{waybillNo,jdbcType=VARCHAR}, 
+		#{deliveryid,jdbcType=VARCHAR}, 
+		#{feesNo,jdbcType=VARCHAR},
+		#{billNo,jdbcType=VARCHAR},
+		#{totalWeight,jdbcType=DOUBLE},
+		#{headWeight,jdbcType=DOUBLE}, 
+		#{headPrice,jdbcType=DOUBLE}, 
+		#{continuedWeight,jdbcType=DOUBLE}, 
+		#{continuedPrice,jdbcType=DOUBLE}, 
+		#{chargedWeight,jdbcType=DOUBLE}, 
+		#{amount,jdbcType=DOUBLE}, 
+		#{diffAmount,jdbcType=DOUBLE}, 
+		#{status,jdbcType=VARCHAR}, 
+		#{creator,jdbcType=VARCHAR}, 
+		#{createTime,jdbcType=TIMESTAMP}, 
+		#{lastModifier,jdbcType=VARCHAR}, 
+		#{lastModifyTime,jdbcType=TIMESTAMP}, 
+		#{delFlag,jdbcType=VARCHAR},
+		#{weightLimit,jdbcType=DOUBLE}, 
+		#{unitPrice,jdbcType=DOUBLE}
+	)
+	on DUPLICATE KEY update 
+		deliveryid=#{deliveryid,jdbcType=VARCHAR},
+		fees_no=#{feesNo,jdbcType=VARCHAR},
+		bill_no=#{billNo,jdbcType=VARCHAR},
+		total_weight=#{totalWeight,jdbcType=DOUBLE},
+		head_weight=#{headWeight,jdbcType=DOUBLE},
+		head_price=#{headPrice,jdbcType=DOUBLE},
+		continued_weight=#{continuedWeight,jdbcType=DOUBLE},
+		continued_price=#{continuedPrice,jdbcType=DOUBLE},
+		charged_weight=#{chargedWeight,jdbcType=DOUBLE},
+		amount=#{amount,jdbcType=DOUBLE},
+		diff_amount=0.0,
+		last_modifier=#{creator,jdbcType=VARCHAR},
+		last_modify_time=#{createTime,jdbcType=TIMESTAMP},
+		weight_limit = #{weightLimit,jdbcType=DOUBLE}, 
+		unit_price = #{unitPrice,jdbcType=DOUBLE};
+    </insert>
+</mapper>

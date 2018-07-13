@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+    <Arguments />
+    <Context />
+    <Model>
+        <DataType name="dtCondition">
+            <PropertyDef name="code">
+                <Property name="label">编号</Property>
+            </PropertyDef>
+        </DataType>
+    </Model>
+    <View>
+        <ToolBar>
+            <DataPilot>
+                <Property name="dataSet">dsBizBaseFeeEntity</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <Separator />
+            <ToolBarButton id="btnAdd">
+                <Property name="caption">新增</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+                <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizBaseFeeEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
+            </ToolBarButton>
+            <ToolBarButton id="btnModify">
+                <Property name="caption">修改</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                <ClientEvent name="onClick">var data=view.get(&quot;#dsBizBaseFeeEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+            </ToolBarButton>
+            <Separator />
+            <ToolBarButton id="btnRemove">
+                <Property name="caption">删除</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+                <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizBaseFeeEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                with (view.get(&quot;#dsBizBaseFeeEntity&quot;)){&#xD;
+                                    flushAsync();&#xD;
+                                }&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+            </ToolBarButton>
+        </ToolBar>
+        <DataSet id="dsBizBaseFeeEntity">
+            <Property name="dataType">[dtBizBaseFeeEntity]</Property>
+            <Property name="dataProvider">bizBaseFeeController#query</Property>
+            <Property name="pageSize">20</Property>
+            <Property name="readOnly">false</Property>
+        </DataSet>
+        <AutoForm id="formCondition">
+            <Property name="dataType">dtCondition</Property>
+            <Property name="createPrivateDataSet">true</Property>
+            <Property name="cols">*,*,*</Property>
+            <Property name="labelWidth">100</Property>
+        </AutoForm>
+        <DataGrid>
+            <Property name="dataSet">dsBizBaseFeeEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn />
+            <RowNumColumn />
+            <DataColumn name="id">
+                <Property name="property">id</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="operationTime">
+                <Property name="property">operationTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="warehouseCode">
+                <Property name="property">warehouseCode</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="warehouseName">
+                <Property name="property">warehouseName</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="customerid">
+                <Property name="property">customerid</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="customerName">
+                <Property name="property">customerName</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="num">
+                <Property name="property">num</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="feesNo">
+                <Property name="property">feesNo</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="feesType">
+                <Property name="property">feesType</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="feesUnit">
+                <Property name="property">feesUnit</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="item">
+                <Property name="property">item</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="isCalculated">
+                <Property name="property">isCalculated</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+                <Property name="property">creator</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+                <Property name="property">createTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+                <Property name="property">lastModifier</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+                <Property name="property">lastModifyTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="delFlag">
+                <Property name="property">delFlag</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="calculateTime">
+                <Property name="property">calculateTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="writeTime">
+                <Property name="property">writeTime</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="adjustNum">
+                <Property name="property">adjustNum</Property>
+                <Property name="width">80</Property>
+            </DataColumn>
+        </DataGrid>
+        <Dialog id="dialogEdit">
+            <ClientEvent name="onClose">view.id(&quot;dsBizBaseFeeEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="caption">数据维护</Property>
+            <Property name="center">true</Property>
+            <Property name="height">450</Property>
+            <Property name="width">800</Property>
+            <Buttons>
+                <Button id="btnSave">
+                    <Property name="caption">保存</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                    <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+							view.get(&quot;#dsBizBaseFeeEntity&quot;).flushAsync();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                </Button>
+                <Button id="btnCancel">
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                    <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBizBaseFeeEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                </Button>
+            </Buttons>
+            <Children>
+                <AutoForm id="formEdit">
+                    <Property name="cols">*,*</Property>
+                    <Property name="dataSet">dsBizBaseFeeEntity</Property>
+                    <Property name="dataType">dtBizBaseFeeEntity</Property>
+                    <Property name="labelWidth">100</Property>
+                    <AutoFormElement>
+                        <Property name="name">id</Property>
+                        <Property name="property">id</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">operationTime</Property>
+                        <Property name="property">operationTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">warehouseCode</Property>
+                        <Property name="property">warehouseCode</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">warehouseName</Property>
+                        <Property name="property">warehouseName</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">customerid</Property>
+                        <Property name="property">customerid</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">customerName</Property>
+                        <Property name="property">customerName</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">num</Property>
+                        <Property name="property">num</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">feesNo</Property>
+                        <Property name="property">feesNo</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">feesType</Property>
+                        <Property name="property">feesType</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">feesUnit</Property>
+                        <Property name="property">feesUnit</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">item</Property>
+                        <Property name="property">item</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">isCalculated</Property>
+                        <Property name="property">isCalculated</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">creator</Property>
+                        <Property name="property">creator</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">createTime</Property>
+                        <Property name="property">createTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">lastModifier</Property>
+                        <Property name="property">lastModifier</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">lastModifyTime</Property>
+                        <Property name="property">lastModifyTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">delFlag</Property>
+                        <Property name="property">delFlag</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">calculateTime</Property>
+                        <Property name="property">calculateTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">writeTime</Property>
+                        <Property name="property">writeTime</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                        <Property name="name">adjustNum</Property>
+                        <Property name="property">adjustNum</Property>
+                        <Editor/>
+                    </AutoFormElement>
+                </AutoForm>
+            </Children>
+            <Tools />
+        </Dialog>
+        <UpdateAction id="updateAction">
+            <Property name="successMessage">数据保存成功！</Property>
+            <Property name="modal">true</Property>
+            <Property name="dataResolver">bizBaseFeeController#save</Property>
+            <UpdateItem>
+                <Property name="dataSet">dsBizBaseFeeEntity</Property>
+                <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+        </UpdateAction>
+        <UpdateAction id="deleteAction">
+            <Property name="successMessage">数据删除成功！</Property>
+            <Property name="dataResolver">bizBaseFeeController#delete</Property>
+            <UpdateItem>
+                <Property name="dataSet">dsBizBaseFeeEntity</Property>
+                <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+        </UpdateAction>
+    </View>
+</ViewConfig>

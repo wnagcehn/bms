@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.storage.PackCostReportEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.storage.entity.PackCostReportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="warehouse_no" property="warehouseNo" jdbcType="VARCHAR" />
+	    <result column="year" property="year" jdbcType="INTEGER" />
+	    <result column="month_num" property="monthNum" jdbcType="INTEGER" />
+	    <result column="date_type" property="dateType" jdbcType="VARCHAR" />
+	    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+	    <result column="material_no" property="materialNo" jdbcType="VARCHAR" />
+	    <result column="material_name" property="materialName" jdbcType="VARCHAR" />
+	    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+	    <result column="material_type" property="materialType" jdbcType="VARCHAR" />
+	    <result column="material_type_name" property="materialTypeName" jdbcType="VARCHAR" />
+	    <result column="unit" property="unit" jdbcType="VARCHAR" />
+	    <result column="init_qty" property="initQty" jdbcType="DECIMAL" />
+	    <result column="in_qty" property="inQty" jdbcType="DECIMAL" />
+	    <result column="init_cost" property="initCost" jdbcType="DECIMAL" />
+	    <result column="cost" property="cost" jdbcType="DECIMAL" />
+	    <result column="init_money" property="initMoney" jdbcType="DECIMAL" />
+	    <result column="in_money" property="inMoney" jdbcType="DECIMAL" />
+	    <result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+	    <result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+	    <result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, warehouse_no, year, month_num, date_type, start_date, end_date, material_no, material_name, barcode, material_type, material_type_name, unit, init_qty, in_qty, init_cost, cost, init_money, in_money, cre_person, cre_person_id, cre_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(warehouseNo != null and warehouseNo !='')" >
+				and warehouse_no = #{warehouseNo}
+		</if>
+		<if test="(year != null and year !='')" >
+				and year = #{year}
+		</if>
+		<if test="(monthNum != null and monthNum !='')" >
+				and month_num = #{monthNum}
+		</if>
+		<if test="(dateType != null and dateType !='')" >
+				and date_type = #{dateType}
+		</if>
+		<if test="(startDate != null and startDate !='')" >
+			    and start_date >= #{startDate} add <![CDATA[start_date <= #{startDate}]]>
+		</if>
+		<if test="(endDate != null and endDate !='')" >
+			    and end_date >= #{endDate} add <![CDATA[end_date <= #{endDate}]]>
+		</if>
+		<if test="(materialNo != null and materialNo !='')" >
+				and material_no = #{materialNo}
+		</if>
+		<if test="(materialName != null and materialName !='')" >
+				and material_name = #{materialName}
+		</if>
+		<if test="(barcode != null and barcode !='')" >
+				and barcode = #{barcode}
+		</if>
+		<if test="(materialType != null and materialType !='')" >
+				and material_type = #{materialType}
+		</if>
+		<if test="(materialTypeName != null and materialTypeName !='')" >
+				and material_type_name = #{materialTypeName}
+		</if>
+		<if test="(unit != null and unit !='')" >
+				and unit = #{unit}
+		</if>
+		<if test="(initQty != null and initQty !='')" >
+				and init_qty = #{initQty}
+		</if>
+		<if test="(inQty != null and inQty !='')" >
+				and in_qty = #{inQty}
+		</if>
+		<if test="(initCost != null and initCost !='')" >
+				and init_cost = #{initCost}
+		</if>
+		<if test="(cost != null and cost !='')" >
+				and cost = #{cost}
+		</if>
+		<if test="(initMoney != null and initMoney !='')" >
+				and init_money = #{initMoney}
+		</if>
+		<if test="(inMoney != null and inMoney !='')" >
+				and in_money = #{inMoney}
+		</if>
+		<if test="(crePerson != null and crePerson !='')" >
+				and cre_person = #{crePerson}
+		</if>
+		<if test="(crePersonId != null and crePersonId !='')" >
+				and cre_person_id = #{crePersonId}
+		</if>
+		<if test="(creTime != null and creTime !='')" >
+			    and cre_time >= #{creTime} add <![CDATA[cre_time <= #{creTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.PackCostReportEntity">
+        select
+        <include refid="baseColumns" />
+        from pack_cost_report
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.fees.storage.entity.PackCostReportEntity">
+        select
+        <include refid="baseColumns" />
+        from pack_cost_report
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.storage.entity.PackCostReportEntity">
+        insert into pack_cost_report(warehouse_no, year, month_num, date_type, start_date, end_date, material_no, material_name, barcode, material_type, material_type_name, unit, init_qty, in_qty, init_cost, cost, init_money, in_money, cre_person, cre_person_id, cre_time)
+        values (
+
+#{warehouseNo,jdbcType=VARCHAR}, 
+#{year,jdbcType=INTEGER}, 
+#{monthNum,jdbcType=INTEGER}, 
+#{dateType,jdbcType=VARCHAR}, 
+#{startDate,jdbcType=TIMESTAMP}, 
+#{endDate,jdbcType=TIMESTAMP}, 
+#{materialNo,jdbcType=VARCHAR}, 
+#{materialName,jdbcType=VARCHAR}, 
+#{barcode,jdbcType=VARCHAR}, 
+#{materialType,jdbcType=VARCHAR}, 
+#{materialTypeName,jdbcType=VARCHAR}, 
+#{unit,jdbcType=VARCHAR}, 
+#{initQty,jdbcType=DECIMAL}, 
+#{inQty,jdbcType=DECIMAL}, 
+#{initCost,jdbcType=DECIMAL}, 
+#{cost,jdbcType=DECIMAL}, 
+#{initMoney,jdbcType=DECIMAL}, 
+#{inMoney,jdbcType=DECIMAL}, 
+#{crePerson,jdbcType=VARCHAR}, 
+#{crePersonId,jdbcType=VARCHAR}, 
+#{creTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.fees.storage.entity.PackCostReportEntity">
+        update pack_cost_report 
+		<set >
+
+<if test="warehouseNo != null" >warehouse_no=#{warehouseNo,jdbcType=VARCHAR},</if>
+<if test="year != null" >year=#{year,jdbcType=INTEGER},</if>
+<if test="monthNum != null" >month_num=#{monthNum,jdbcType=INTEGER},</if>
+<if test="dateType != null" >date_type=#{dateType,jdbcType=VARCHAR},</if>
+<if test="startDate != null" >start_date=#{startDate,jdbcType=TIMESTAMP},</if>
+<if test="endDate != null" >end_date=#{endDate,jdbcType=TIMESTAMP},</if>
+<if test="materialNo != null" >material_no=#{materialNo,jdbcType=VARCHAR},</if>
+<if test="materialName != null" >material_name=#{materialName,jdbcType=VARCHAR},</if>
+<if test="barcode != null" >barcode=#{barcode,jdbcType=VARCHAR},</if>
+<if test="materialType != null" >material_type=#{materialType,jdbcType=VARCHAR},</if>
+<if test="materialTypeName != null" >material_type_name=#{materialTypeName,jdbcType=VARCHAR},</if>
+<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
+<if test="initQty != null" >init_qty=#{initQty,jdbcType=DECIMAL},</if>
+<if test="inQty != null" >in_qty=#{inQty,jdbcType=DECIMAL},</if>
+<if test="initCost != null" >init_cost=#{initCost,jdbcType=DECIMAL},</if>
+<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
+<if test="initMoney != null" >init_money=#{initMoney,jdbcType=DECIMAL},</if>
+<if test="inMoney != null" >in_money=#{inMoney,jdbcType=DECIMAL},</if>
+<if test="crePerson != null" >cre_person=#{crePerson,jdbcType=VARCHAR},</if>
+<if test="crePersonId != null" >cre_person_id=#{crePersonId,jdbcType=VARCHAR},</if>
+<if test="creTime != null" >cre_time=#{creTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from pack_cost_report where
+        id=#{id}
+    </delete>
+</mapper>

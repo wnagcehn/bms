@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.quotation.dispatch.mapper.PriceDispatchMapper">
+	<resultMap id="ResultPriceDistribution" type="com.jiuyescm.bms.quotation.dispatch.entity.PriceDistributionTemplateEntity">
+		<!-- price_deliver_detail 地址单表结果集映射字段 -->
+		<id column="priceid" jdbcType="CHAR" property="priceid" />
+		<result column="id" jdbcType="BIGINT" property="id"/>
+		<result column="template_id" jdbcType="VARCHAR" property="templateId"/>
+		<result column="start_warehouse_id" jdbcType="VARCHAR" property="startWarehouseId"/>
+		<result column="province_id" jdbcType="VARCHAR" property="provinceId"/>
+		<result column="city_id" jdbcType="VARCHAR" property="cityId"/>
+		<result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+		<result column="area_type_code" jdbcType="VARCHAR" property="areaTypeCode"/>
+		<result column="timeliness" jdbcType="VARCHAR" property="timeliness"/>
+		<result column="weight_limit" jdbcType="DOUBLE" property="weightLimit"/>
+		<result column="unit_price" jdbcType="DOUBLE" property="unitPrice"/>
+		<result column="first_weight" jdbcType="DOUBLE" property="firstWeight"/>
+		<result column="first_weight_price" jdbcType="DOUBLE" property="firstWeightPrice"/>
+		<result column="continued_weight" jdbcType="DOUBLE" property="continuedWeight"/>
+		<result column="continued_price" jdbcType="DOUBLE" property="continuedPrice"/>
+		<result column="creator" jdbcType="VARCHAR" property="creator"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="last_modifier" jdbcType="VARCHAR" property="lastModifier"/>
+		<result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime"/>
+		<result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+		<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+		<result column="extra1" property="extra1" jdbcType="VARCHAR" />
+	    <result column="extra2" property="extra2" jdbcType="VARCHAR" />
+	    <result column="extra3" property="extra3" jdbcType="VARCHAR" />
+	    <result column="extra4" property="extra4" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 主数据 -->
+	<resultMap id="ResultMainPriceDistribution" type="com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchEntity">
+		<!-- price_deliver_detail 地址单表结果集映射字段 -->
+		<id column="priceid" jdbcType="CHAR" property="priceid" />
+		<result column="province" jdbcType="VARCHAR" property="provinceName"/>
+		<result column="cityName" jdbcType="VARCHAR" property="cityName"/>
+		<result column="areaname" jdbcType="VARCHAR" property="areaName"/>
+		<result column="id" jdbcType="BIGINT" property="id"/>
+		<result column="template_id" jdbcType="VARCHAR" property="templateId"/>
+		<result column="start_warehouse_id" jdbcType="VARCHAR" property="startWarehouseId"/>
+		<result column="province_id" jdbcType="VARCHAR" property="provinceId"/>	
+		<result column="city_id" jdbcType="VARCHAR" property="cityId"/>	
+		<result column="area_id" jdbcType="VARCHAR" property="areaId"/>	
+		<result column="area_type_code" jdbcType="VARCHAR" property="areaTypeCode"/>
+		<result column="timeliness" jdbcType="VARCHAR" property="timeliness"/>
+		<result column="weight_limit" jdbcType="DOUBLE" property="weightLimit"/>
+		<result column="unit_price" jdbcType="DOUBLE" property="unitPrice"/>
+		<result column="first_weight" jdbcType="DOUBLE" property="firstWeight"/>
+		<result column="first_weight_price" jdbcType="DOUBLE" property="firstWeightPrice"/>
+		<result column="continued_weight" jdbcType="DOUBLE" property="continuedWeight"/>
+		<result column="continued_price" jdbcType="DOUBLE" property="continuedPrice"/>
+		<result column="creator" jdbcType="VARCHAR" property="creator"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="last_modifier" jdbcType="VARCHAR" property="lastModifier"/>
+		<result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime"/>
+		<result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+		<result column="startWarehouseName" jdbcType="VARCHAR" property="startWarehouseName"/>
+		<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+		<result column="extra1" property="extra1" jdbcType="VARCHAR" />
+	    <result column="extra2" property="extra2" jdbcType="VARCHAR" />
+	    <result column="extra3" property="extra3" jdbcType="VARCHAR" />
+	    <result column="extra4" property="extra4" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查询主要的配送报价 -->
+	<select id="queryAll" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	SELECT d.id,d.template_id,d.start_warehouse_id,d.province_id,d.city_id,d.area_id,d.area_type_code,
+	d.timeliness,d.weight_limit,d.unit_price,d.first_weight,d.first_weight_price,d.continued_weight,
+	d.continued_price,d.creator,d.create_time,d.last_modifier,d.last_modify_time,d.del_flag,d.temperature_type_code,d.extra1, d.extra2, d.extra3, d.extra4  FROM price_dispatch_detail d 
+	where 1=1
+	<if test="(id!=null and id!='')">
+		and d.id=#{id}
+	</if>
+	<if test="(number!=null and number!='')">
+		and d.template_id=#{number,jdbcType=VARCHAR}
+	</if>
+	<if test="(startWarehouseId!=null and startWarehouseId!='')">
+		and d.start_warehouse_id=#{startWarehouseId,jdbcType=VARCHAR}
+	</if>
+	<if test="(createTime != null and createTime !='')" >
+		and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+	</if>
+	<if test="(lastModifyTime != null and lastModifyTime !='')" >
+		and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+	</if>
+	<if test="(provinceId != null and provinceId !='')" >
+		and province_id = #{provinceId,jdbcType=VARCHAR}
+	</if>
+	<if test="(cityId != null and cityId !='')" >
+		and city_id = #{cityId,jdbcType=VARCHAR}
+	</if>
+	<if test="(areaId != null and areaId !='')" >
+		and area_id = #{areaId,jdbcType=VARCHAR}
+	</if>
+	and d.del_flag='0' order by create_time desc,id desc
+	</select>
+	<select id="queryAllById" resultType="com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchEntity" parameterType="java.util.Map">
+			SELECT * FROM price_dispatch_detail d 
+			where 1=1 and d.template_id=#{templateId,jdbcType=VARCHAR} AND del_flag=0
+	</select>
+	<!-- 插入新的报价模板 -->
+	<insert id="createPriceDistribution" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.PriceDistributionTemplateEntity">
+		 insert into price_dispatch_detail(template_id, start_warehouse_id, province_id, city_id, area_id, area_type_code, timeliness, weight_limit, unit_price, first_weight, first_weight_price, continued_weight, continued_price, creator, create_time, last_modifier, last_modify_time, del_flag, temperature_type_code, extra1, extra2, extra3, extra4)
+        	values (
+			#{templateId,jdbcType=VARCHAR}, 
+			#{startWarehouseId,jdbcType=VARCHAR}, 
+			#{provinceId,jdbcType=VARCHAR}, 
+			#{cityId,jdbcType=VARCHAR}, 
+			#{areaId,jdbcType=VARCHAR}, 
+			#{areaTypeCode,jdbcType=VARCHAR}, 
+			#{timeliness,jdbcType=VARCHAR}, 
+			#{weightLimit,jdbcType=DOUBLE}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{firstWeight,jdbcType=DOUBLE}, 
+			#{firstWeightPrice,jdbcType=DOUBLE}, 
+			#{continuedWeight,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{extra1,jdbcType=VARCHAR}, 
+			#{extra2,jdbcType=VARCHAR}, 
+			#{extra3,jdbcType=VARCHAR}, 
+			#{extra4,jdbcType=VARCHAR}
+			  )
+		
+	</insert>
+	
+	<!-- 修改新的报价模板 -->
+	<update id="updatePriceDistribution">
+		update price_dispatch_detail 
+		<set >
+		<if test="startWarehouseId != null" >start_warehouse_id=#{startWarehouseId,jdbcType=VARCHAR},</if>
+		<if test="provinceId != null" >province_id=#{provinceId,jdbcType=VARCHAR},</if>
+		city_id=#{cityId,jdbcType=VARCHAR},
+		area_id=#{areaId,jdbcType=VARCHAR},
+		area_type_code=#{areaTypeCode,jdbcType=VARCHAR},
+		timeliness=#{timeliness,jdbcType=VARCHAR},
+		weight_limit=#{weightLimit,jdbcType=DOUBLE},
+		unit_price=#{unitPrice,jdbcType=DOUBLE},
+		first_weight=#{firstWeight,jdbcType=DOUBLE},
+		first_weight_price=#{firstWeightPrice,jdbcType=DOUBLE},
+		continued_weight=#{continuedWeight,jdbcType=DOUBLE},
+		continued_price=#{continuedPrice,jdbcType=DOUBLE},
+		<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+		<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+		<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+		<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
+		<if test="extra1 != null" >extra1=#{extra1,jdbcType=VARCHAR},</if>
+		<if test="extra2 != null" >extra2=#{extra2,jdbcType=VARCHAR},</if>
+		<if test="extra3 != null" >extra3=#{extra3,jdbcType=VARCHAR},</if>
+		<if test="extra4 != null" >extra4=#{extra4,jdbcType=VARCHAR}</if>
+		</set>
+		where id=#{id,jdbcType=BIGINT}
+	</update>
+	
+	<!-- 删除配送报价模板 -->
+	<delete id="deletePriceDistribution" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchEntity">
+		update price_dispatch_detail
+		<set>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			del_flag='1'
+		</set>
+		 where id=#{id,jdbcType=BIGINT}
+
+	
+		
+	</delete>
+	
+	<!-- 查询所有的电商仓库信息 -->                    
+	<!-- <select id="getAllPubWareHouse" resultType="com.jiuyescm.bms.quotation.dispatch.entity.PubWarehouseEntity">
+		SELECT * from omsprd.pub_warehouse where 1=1
+	</select> -->
+	
+	<!-- 根据电仓仓库名获取电商仓库信息 -->
+	<!-- <select id="getWareHouse" resultType="com.jiuyescm.bms.quotation.dispatch.entity.PubWarehouseEntity" parameterType="java.lang.String">
+		select * from omsprd.pub_warehouse where warehousename=#{wareHouseName,jdbcType=VARCHAR}
+	</select> -->
+	
+	<!-- 批量插入配送报价模板 -->
+	<insert id="insertBatchTemplate" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchEntity">
+		insert into price_dispatch_detail(template_id, start_warehouse_id, province_id, city_id, area_id, area_type_code, timeliness, weight_limit, unit_price, first_weight, first_weight_price, continued_weight, continued_price, creator, create_time, last_modifier, last_modify_time, del_flag, temperature_type_code, extra1, extra2, extra3, extra4)
+        	values (
+			#{templateId,jdbcType=VARCHAR}, 
+			#{startWarehouseId,jdbcType=VARCHAR}, 
+			#{provinceId,jdbcType=VARCHAR}, 
+			#{cityId,jdbcType=VARCHAR}, 
+			#{areaId,jdbcType=VARCHAR}, 
+			#{areaTypeCode,jdbcType=VARCHAR}, 
+			#{timeliness,jdbcType=VARCHAR}, 
+			#{weightLimit,jdbcType=DOUBLE}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{firstWeight,jdbcType=DOUBLE}, 
+			#{firstWeightPrice,jdbcType=DOUBLE}, 
+			#{continuedWeight,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{extra1,jdbcType=VARCHAR}, 
+			#{extra2,jdbcType=VARCHAR}, 
+			#{extra3,jdbcType=VARCHAR}, 
+			#{extra4,jdbcType=VARCHAR}
+			  )
+		
+	</insert>
+	
+	<select id="getDispatchById" resultMap="ResultMainPriceDistribution" parameterType="java.lang.String">
+		SELECT * FROM price_dispatch_detail d where 1=1 and d.template_id=#{temid,jdbcType=VARCHAR}
+		and d.del_flag='0'
+	</select>
+
+	<!-- 通过temid查找对应的id -->
+	<select id="getId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id FROM price_dispatch_template where template_code=#{temid,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 查询主要的配送报价 -->
+	<select id="queryOne" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	SELECT d.id,d.template_id,d.start_warehouse_id,d.province_id,d.city_id,d.area_id,d.area_type_code,
+	d.timeliness,d.weight_limit,d.unit_price,d.first_weight,d.first_weight_price,d.continued_weight,
+	d.continued_price,d.creator,d.create_time,d.last_modifier,d.last_modify_time,d.del_flag,d.temperature_type_code,d.extra1, d.extra2, d.extra3, d.extra4  FROM price_dispatch_detail d 
+	where 1=1
+	<if test="(id!=null and id!='')">
+		and d.id=#{id}
+	</if>
+	<if test="(number!=null and number!='')">
+		and d.template_id=#{number,jdbcType=VARCHAR}
+	</if>
+	<if test="(provinceId!=null and provinceId!='')">
+		and d.province_id=#{provinceId,jdbcType=VARCHAR}
+	</if>
+	<if test="(cityId!=null and cityId!='')">
+		and d.city_id=#{cityId,jdbcType=VARCHAR}
+	</if>
+	<if test="(cityId==null or cityId=='')">
+		and (d.city_id is null or d.city_id='')
+	</if>
+	<if test="(areaId!=null and areaId!='')">
+		and d.area_id=#{areaId,jdbcType=VARCHAR}
+	</if>
+	<if test="(areaId==null or areaId=='')">
+		and (d.area_id is null or d.area_id='')
+	</if>
+	<if test="(startWarehouseId!=null and startWarehouseId!='')">
+		and d.start_warehouse_id=#{startWarehouseId,jdbcType=VARCHAR}
+	</if>	
+	and d.del_flag='0' limit 1
+	</select>
+	
+	<update id="removeDispatchByMap" parameterType="java.util.Map">
+		update price_dispatch_detail
+		<set>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			del_flag='1'
+		</set>
+		 where template_id=#{templateId}
+	</update>
+	
+	<!-- 根据商家查询常规报价 -->
+	<select id="queryDispatchQuos" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	select * from price_dispatch_detail a 
+		where del_flag = 0 and a.template_id in 
+	(select id from  price_dispatch_template where del_flag = 0 and customerId = #{customerId} and deliver=#{subjectId})
+	</select>
+	
+	<!-- 查询标准报价 -->
+	<select id="queryStandardDispatchQuos" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	select * from price_dispatch_detail a where del_flag = '0' and 
+		a.template_id in 
+	(select concat(id) from  price_dispatch_template where del_flag = '0' and template_type=#{templateType} AND deliver = #{deliver});
+	</select>
+	
+	<select id="queryAllByTemplateId" parameterType="java.util.Map" resultMap="ResultMainPriceDistribution">
+		select * from price_dispatch_detail  
+		where 1=1 and del_flag='0'
+		and template_id in (select concat(b.id) from price_contract_item a inner JOIN price_dispatch_template b on a.template_id=b.template_code and b.del_flag=0
+		 	where a.contract_code=#{contractCode} and a.subject_id=#{subjectId} and  a.del_flag='0'
+		)
+		<if test="(wareHouseId!=null and wareHouseId!='')">
+		     and start_warehouse_id=#{wareHouseId}
+		</if>
+		<if test="(province!=null and province!='')">
+		     and province_id=#{province}
+		</if>
+	</select>
+	
+	<select id="queryShunfengDispatch" parameterType="java.util.Map" resultMap="ResultMainPriceDistribution">
+		select * from price_dispatch_detail  
+		where 1=1 and del_flag='0'
+		and template_id in (
+		select concat(id) from price_dispatch_template where template_type = 'S' and 1=1 and del_flag = '0' 
+			and deliver = #{subjectId} and customerId =#{customerId}
+		)
+		<if test="(wareHouseId!=null and wareHouseId!='')">
+		     and start_warehouse_id=#{wareHouseId}
+		</if>
+		<if test="(province!=null and province!='')">
+		     and province_id=#{province}
+		</if>
+	</select>
+	
+	<select id="queryJiuYeArea" resultType="java.lang.String" parameterType="java.util.Map">		
+		select RTRIM(province_id) from price_dispatch_detail  
+		where 1=1 and del_flag='0'
+			and template_id=(
+				select id from price_dispatch_template where template_type = 'S' and 1=1 and del_flag = '0' 
+			and deliver =#{subjectId} and customerId = #{customerId})
+		  and start_warehouse_id=#{wareHouseId}
+	</select>
+</mapper>

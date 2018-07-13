@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="startTime">
+        <Property name="label">月份</Property>
+        <Property name="dataType">Calendar</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsBillCustomerCountEntity">
+      <Property name="creationType">com.jiuyescm.bms.bill.receive.vo.BmsBillCustomerCountEntityVo</Property>
+      <PropertyDef name="customerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="jieSuanPerson">
+        <Property></Property>
+        <Property name="label">结算员</Property>
+      </PropertyDef>
+      <PropertyDef name="countDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="totalMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">合计</Property>
+      </PropertyDef>
+      <PropertyDef name="noConfirm">
+        <Property name="dataType">int</Property>
+        <Property name="label">未确认（单）</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmUnInvoiced">
+        <Property name="dataType">Double</Property>
+        <Property name="label">已确认未开票（元）</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmUnNeedInvoiced">
+        <Property name="dataType">Double</Property>
+        <Property name="label">已确认无需发票未回款（元）</Property>
+      </PropertyDef>
+      <PropertyDef name="extra1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extra2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extra3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extra4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extra5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="januaryMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">1月</Property>
+      </PropertyDef>
+      <PropertyDef name="februaryMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">2月</Property>
+      </PropertyDef>
+      <PropertyDef name="marchMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">3月</Property>
+      </PropertyDef>
+      <PropertyDef name="aprilMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">4月</Property>
+      </PropertyDef>
+      <PropertyDef name="mayMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">5月</Property>
+      </PropertyDef>
+      <PropertyDef name="juneMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">6月</Property>
+      </PropertyDef>
+      <PropertyDef name="julyMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">7月</Property>
+      </PropertyDef>
+      <PropertyDef name="augustMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">8月</Property>
+      </PropertyDef>
+      <PropertyDef name="septemberMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">9月</Property>
+      </PropertyDef>
+      <PropertyDef name="octoberMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">10月</Property>
+      </PropertyDef>
+      <PropertyDef name="novemberMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">11月</Property>
+      </PropertyDef>
+      <PropertyDef name="decemberMoney">
+        <Property name="dataType">Double</Property>
+        <Property name="label">12月</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var date=new Date;&#xD;
+var year=date.getFullYear(); &#xD;
+view.get(&quot;#formCondition&quot;).get(&quot;entity&quot;).set(&quot;year&quot;,year);&#xD;
+</ClientEvent>
+    <DataSet id="dsBmsBillCustomerCountEntity">
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsBillCountController#queryBillCustomerCountPage</Property>
+      <Property name="dataType">[dtBmsBillCustomerCountEntity]</Property>
+      <Property name="pageSize">500</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <Container id="mainContainer">
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsBmsBillCountEntity</Property>
+        </DataPilot>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsBillCustomerCountEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="formCondition">
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="cols">*,*,*,*,*</Property>
+        <AutoFormElement>
+          <Property name="name">year</Property>
+          <Property name="property">year</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <Container>
+        <DataGrid id="countDataGrid">
+          <Property name="dataSet">dsBmsBillCustomerCountEntity</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="stretchColumnsMode">allResizeableColumns</Property>
+          <Property name="width">1500</Property>
+          <DataColumn name="customerName">
+            <Property name="property">customerName</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="jieSuanPerson">
+            <Property name="property">jieSuanPerson</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="januaryMoney">
+            <Property name="property">januaryMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="februaryMoney">
+            <Property name="property">februaryMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="marchMoney">
+            <Property name="property">marchMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="aprilMoney">
+            <Property name="property">aprilMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="mayMoney">
+            <Property name="property">mayMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="juneMoney">
+            <Property name="property">juneMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="julyMoney">
+            <Property name="property">julyMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="augustMoney">
+            <Property name="property">augustMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="septemberMoney">
+            <Property name="property">septemberMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="octoberMoney">
+            <Property name="property">octoberMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="novemberMoney">
+            <Property name="property">novemberMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="decemberMoney">
+            <Property name="property">decemberMoney</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="totalMoney">
+            <Property name="property">totalMoney</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="noConfirm">
+            <Property name="property">noConfirm</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="confirmUnInvoiced">
+            <Property name="property">confirmUnInvoiced</Property>
+            <Property name="width">140</Property>
+          </DataColumn>
+          <DataColumn name="confirmUnNeedInvoiced">
+            <Property name="property">confirmUnNeedInvoiced</Property>
+            <Property name="width">220</Property>
+          </DataColumn>
+        </DataGrid>
+      </Container>
+    </Container>
+  </View>
+</ViewConfig>

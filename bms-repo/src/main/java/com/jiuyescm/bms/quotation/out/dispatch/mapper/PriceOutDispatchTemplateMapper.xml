@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.out.dispatch.mapper.PriceOutDispatchTemplateMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+	    <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+	    <result column="template_type" property="templateType" jdbcType="VARCHAR" />
+	    <result column="deliver" property="deliver" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="deliverId" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliverName" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+		id, template_code, template_name, template_type, deliverId, deliverName, deliver, 
+		remark, param1, creator, create_time, last_modifier, last_modify_time, del_flag    
+ 	</sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id like '%${id}%'
+		</if>
+		<if test="(templateCode != null and templateCode !='')" >
+				and template_code like '%${templateCode}%'
+		</if>
+		<if test="(templateName != null and templateName !='')" >
+				and template_name like '%${templateName}%'
+		</if>
+		<if test="(templateType != null and templateType !='')" >
+				and template_type = #{templateType}
+		</if>
+		<if test="(deliver != null and deliver !='')" >
+				and deliver = #{deliver}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark like '%${remark}%'
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and create_time >= #{startTime} 
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time <= #{endTime} ]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and deliverId = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliverName = #{deliverName}
+		</if>
+		and del_flag = '0'
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity">
+         select
+         <include refid="baseColumns" />
+         from price_out_dispatch_template
+         where 1=1
+		 <include refid="baseSelectColumns" />
+		 order by create_time desc
+    </select>
+	  
+    <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity">
+         select
+         <include refid="baseColumns" />
+         from price_out_dispatch_template
+         where 1=1
+		 <include refid="baseSelectColumns" />
+		 order by create_time desc
+		 limit 1
+    </select>
+
+ <select id="findById" resultType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity">
+        select
+        <include refid="baseColumns" />
+        from price_out_dispatch_template
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity">
+       insert into price_out_dispatch_template(template_code, template_name, template_type, deliver, remark, 
+       		param1, creator, create_time, last_modifier, last_modify_time, del_flag, deliverId, deliverName)
+        values (
+			#{templateCode,jdbcType=VARCHAR}, 
+			#{templateName,jdbcType=VARCHAR}, 
+			#{templateType,jdbcType=VARCHAR}, 
+			#{deliver,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{deliverId,jdbcType=VARCHAR}, 
+			#{deliverName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity">
+        update price_out_dispatch_template 
+		<set >
+			<if test="templateCode != null" >template_code=#{templateCode,jdbcType=VARCHAR},</if>
+			<if test="templateName != null" >template_name=#{templateName,jdbcType=VARCHAR},</if>
+			<if test="templateType != null" >template_type=#{templateType,jdbcType=VARCHAR},</if>
+			<if test="deliver != null" >deliver=#{deliver,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="deliverId != null" >deliverId=#{deliverId,jdbcType=VARCHAR},</if>
+			<if test="deliverName != null" >deliverName=#{deliverName,jdbcType=VARCHAR}</if>
+		</set>
+        where id=#{id}
+    </update>
+
+	<update id="delete" parameterType="com.jiuyescm.bms.quotation.out.dispatch.entity.PriceOutDispacthTemplateEntity">
+		update price_out_dispatch_template set del_flag='1'
+		<if test="lastModifier != null" >,last_modifier=#{lastModifier,jdbcType=VARCHAR}</if>
+		<if test="lastModifyTime != null" >,last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP}</if>
+	    where id=#{id}
+	</update>
+ 
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.transport.PriceTransportTemplateMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity" >
+       <id column="id" property="id" jdbcType="BIGINT" />
+	   <result column="id" property="id" jdbcType="BIGINT" />
+	   <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+	   <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+	   <result column="template_type" property="templateType" jdbcType="VARCHAR" />
+	   <result column="template_type_code" property="templateTypeCode" jdbcType="VARCHAR" />
+	   <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   <result column="customerid" property="customerId" jdbcType="VARCHAR" />
+	   <result column="customerName" property="customerName" jdbcType="VARCHAR" />
+	   <result column="param1" property="param1" jdbcType="VARCHAR" />
+	   <result column="creator" property="creator" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, template_code, template_name, template_type, customerId, customerName, remark, param1, creator, create_time,
+        last_modifier, last_modify_time, del_flag, template_type_code
+    </sql>
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(templateCode != null and templateCode !='')" >
+				and template_code like concat('%',#{templateCode},'%')
+		</if>
+		<if test="(templateName != null and templateName !='')" >
+				and template_name like concat('%',#{templateName},'%')
+		</if>
+		<if test="(templateType != null and templateType !='')" >
+				and template_type = #{templateType}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark like concat('%',#{remark},'%')
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(templateTypeCode != null and templateTypeCode !='')" >
+				and template_type_code = #{templateTypeCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		and del_flag = '0'
+		<if test="(customerId != null and customerId !='')" >
+				and customerId = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customerName = #{customerName}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity">
+        select
+ 	    <include refid="baseColumns" />
+        from price_transport_template 
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by create_time desc,id desc
+    </select>
+    
+    <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity">
+        select
+ 	    <include refid="baseColumns" />
+        from price_transport_template 
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by create_time desc,id desc
+		limit 1
+    </select>
+    
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity">
+        select
+        <include refid="baseColumns" />
+        from price_transport_template
+        where id=#{id}
+        order by create_time desc,id desc
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity">
+        insert into price_transport_template(template_code, template_name, template_type, remark, param1, creator,
+        	create_time, last_modifier, last_modify_time, del_flag, template_type_code, customerid, customerName)
+        values (
+			#{templateCode,jdbcType=VARCHAR}, 
+			#{templateName,jdbcType=VARCHAR}, 
+			#{templateType,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{templateTypeCode,jdbcType=VARCHAR},
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity">
+        update price_transport_template set
+			template_code=#{templateCode,jdbcType=VARCHAR}, 
+			template_name=#{templateName,jdbcType=VARCHAR}, 
+			template_type=#{templateType,jdbcType=VARCHAR},
+			template_type_code=#{templateTypeCode,jdbcType=VARCHAR}, 
+			customerid = #{customerId,jdbcType=VARCHAR},
+			customerName = #{customerName,jdbcType=VARCHAR},
+			remark=#{remark,jdbcType=VARCHAR}, 
+			param1=#{param1,jdbcType=VARCHAR},
+			creator=#{creator,jdbcType=VARCHAR}, 
+			create_time=#{createTime,jdbcType=TIMESTAMP}, 
+			last_modifier=#{lastModifier,jdbcType=VARCHAR}, 
+			last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			del_flag=#{delFlag,jdbcType=VARCHAR}
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from price_transport_template where
+        id=#{id}
+    </delete>
+    
+    <!-- 通过templateCode查找对应的id -->
+	<select id="findIdByTemplateCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		 select id
+         FROM price_transport_template 
+         where template_code=#{templateCode,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

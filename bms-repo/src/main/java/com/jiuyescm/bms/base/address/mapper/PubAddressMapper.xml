@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.address.PubAddressMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.address.entity.PubAddressEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+	    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+	    <result column="level_num" property="levelNum" jdbcType="VARCHAR" />
+	    <result column="parent_area_code" property="parentAreaCode" jdbcType="VARCHAR" />
+	    <result column="region_code" property="regionCode" jdbcType="VARCHAR" />
+	    <result column="creator_code" property="creatorCode" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, area_code, area_name, level_num, parent_area_code, region_code, creator_code, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(areaCode != null and areaCode !='')" >
+				and area_code = #{areaCode}
+		</if>
+		<if test="(areaName != null and areaName !='')" >
+				and area_name = #{areaName}
+		</if>
+		<if test="(levelNum != null and levelNum !='')" >
+				and level_num = #{levelNum}
+		</if>
+		<if test="(parentAreaCode != null and parentAreaCode !='')" >
+				and parent_area_code = #{parentAreaCode}
+		</if>
+		<if test="(regionCode != null and regionCode !='')" >
+				and region_code = #{regionCode}
+		</if>
+		<if test="(creatorCode != null and creatorCode !='')" >
+				and creator_code = #{creatorCode}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_address
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_address
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+        insert into pub_address(area_code, area_name, level_num, parent_area_code, region_code, creator_code, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{areaCode,jdbcType=VARCHAR}, 
+			#{areaName,jdbcType=VARCHAR}, 
+			#{levelNum,jdbcType=VARCHAR}, 
+			#{parentAreaCode,jdbcType=VARCHAR}, 
+			#{regionCode,jdbcType=VARCHAR}, 
+			#{creatorCode,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+        update pub_address 
+		<set >
+			<if test="areaCode != null" >area_code=#{areaCode,jdbcType=VARCHAR},</if>
+			<if test="areaName != null" >area_name=#{areaName,jdbcType=VARCHAR},</if>
+			<if test="levelNum != null" >level_num=#{levelNum,jdbcType=VARCHAR},</if>
+			<if test="parentAreaCode != null" >parent_area_code=#{parentAreaCode,jdbcType=VARCHAR},</if>
+			<if test="regionCode != null" >region_code=#{regionCode,jdbcType=VARCHAR},</if>
+			<if test="creatorCode != null" >creator_code=#{creatorCode,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from pub_address where
+        id=#{id}
+    </delete>
+    
+    
+    
+    <select id="queryAllProvince" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+    	select area_code,area_name 
+    		from pub_address 
+    		where level_num = 2 and del_flag = 0 order by area_code asc
+	</select> 
+	
+	<select id="queryCityByProvince" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+    	select area_code,area_name 
+    		from pub_address 
+    		where level_num = 3 and del_flag = 0 
+			<if test="(provinceCode != null and provinceCode !='')">
+				and parent_area_code = #{provinceCode,jdbcType=VARCHAR}
+			</if>
+    		order by area_code asc
+	</select> 
+	
+	<select id="queryDistrictByCity" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+    	select area_code,area_name 
+    		from pub_address 
+    		where level_num = 4 and del_flag = 0 
+    		<if test="(cityCode != null and cityCode !='')">
+				and parent_area_code = #{cityCode,jdbcType=VARCHAR}
+			</if>
+    		order by area_code asc
+	</select> 
+	
+	<select id="queryAllCityForEnum" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.entity.PubAddressEntity">
+    	select id,area_code,area_name 
+    		from pub_address 
+    		where level_num = 3 and del_flag = 0 
+			<if test="(provinceCode != null and provinceCode !='')">
+				and parent_area_code = #{provinceCode,jdbcType=VARCHAR}
+			</if>
+    		order by area_code asc
+	</select>
+	
+	
+    
+</mapper>

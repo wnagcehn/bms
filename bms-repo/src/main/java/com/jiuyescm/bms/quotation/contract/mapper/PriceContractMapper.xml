@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper">
+	<resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="contract_code" property="contractCode" jdbcType="VARCHAR" />
+	    <result column="contract_type_code" property="contractTypeCode" jdbcType="VARCHAR" />
+	    <result column="contract_state" property="contractState" jdbcType="VARCHAR" />
+	    <result column="customerId" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customerName" property="customerName" jdbcType="VARCHAR" />
+	    <result column="contract_obj" property="contractObj" jdbcType="VARCHAR" />
+	    <result column="paper_contract_no" property="paperContractNo" jdbcType="VARCHAR" />
+	    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="expire_date" property="expireDate" jdbcType="TIMESTAMP" />
+	    <result column="description" property="description" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+
+		
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(contractCode != null and contractCode !='')" >
+				and contract_code  like '%${contractCode}%'							
+		</if> 
+		<if test="(contractTypeCode != null and contractTypeCode !='')" >
+				and contract_type_code = #{contractTypeCode}
+		</if>
+		<if test="(contractState != null and contractState !='')" >
+				and contract_state = #{contractState}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customerId = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customerName = #{customerName}
+		</if>
+		<if test="(contractObj != null and contractObj !='')" >
+				and contract_obj like '%${contractObj}%'
+		</if>
+		<if test="(paperContractNo != null and paperContractNo !='')" >
+				and paper_contract_no like '%${paperContractNo}%'
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and start_date >= #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[expire_date <= #{endTime}]]>
+		</if>
+		<if test="(description != null and description !='')" >
+				and description = #{description}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		and del_flag = '0'
+    </sql>
+
+	<sql id="baseColumns">
+        id, contract_code, contract_type_code,contract_state, customerId, customerName, contract_obj, paper_contract_no, start_date, expire_date, description, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<!-- 查询出所有的商家合同 -->
+	<select id="queryAll" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumns" />
+        from price_contract_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by create_time desc
+    </select>
+	<select id="queryById" parameterType="java.util.Map" resultMap="BaseResultMap">
+	  	select
+        <include refid="baseColumns" />
+        from price_contract_info
+        where id=#{id}
+	</select>
+	<!-- 根绝条件查找对应的合同 -->
+	<select id="queryContract" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="baseColumns" />
+        from price_contract_info 
+        where 1=1
+        and <![CDATA[start_date < current_timestamp()]]>  and <![CDATA[expire_date >= current_timestamp()]]>
+       	<if test="(contractTypeCode != null and contractTypeCode !='')" >
+			and contract_type_code = #{contractTypeCode}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customerId = #{customerId}
+		</if>
+		<if test="(contractState != null and contractState !='')" >
+			and contract_state = #{contractState}
+		</if>
+		<if test="(deliveridList != null and deliveridList !='')" >
+			and customerId in 
+			<foreach collection="deliveridList" index="index" item="item" open="(" separator="," close=")">
+					#{item.deliverid}
+			</foreach>
+		</if>
+        and del_flag = 0 and contract_state='1'
+	</select>
+	<!-- 创建新的商家合同 -->
+	<insert id="createContract" parameterType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
+        insert into price_contract_info(contract_code, contract_type_code, contract_state, customerId, customerName, contract_obj, paper_contract_no, start_date, expire_date, description, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{contractCode,jdbcType=VARCHAR}, 
+			#{contractTypeCode,jdbcType=VARCHAR}, 
+			#{contractState,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{contractObj,jdbcType=VARCHAR}, 
+			#{paperContractNo,jdbcType=VARCHAR}, 
+			#{startDate,jdbcType=TIMESTAMP}, 
+			#{expireDate,jdbcType=TIMESTAMP}, 
+			#{description,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- 修改商家合同信息 -->
+    <update id="updateContract" parameterType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
+        update price_contract_info 
+		<set >
+			<if test="contractTypeCode != null" >contract_type_code=#{contractTypeCode,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customerName=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="contractObj != null" >contract_obj=#{contractObj,jdbcType=VARCHAR},</if>
+			<if test="contractState != null" >contract_state=#{contractState,jdbcType=VARCHAR},</if>
+			<if test="paperContractNo != null" >paper_contract_no=#{paperContractNo,jdbcType=VARCHAR},</if>
+			<if test="startDate != null" >start_date=#{startDate,jdbcType=TIMESTAMP},</if>
+			<if test="expireDate != null" >expire_date=#{expireDate,jdbcType=TIMESTAMP},</if>
+			<if test="description != null" >description=#{description,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    
+    <!-- 获取所有的仓储信息 -->
+   <select id="findCangchu" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity">
+        select
+         id, quotation_no, biz_type_code, subject_id, fee_unit_code, unit_price, description, remark, creator, create_time, last_modifier, last_modify_time, del_flag
+        from price_general_quotation
+        where del_flag = 0 
+		<if test="(quotationNo != null and quotationNo !='')" >
+				and quotation_no = #{quotationNo}
+		</if>
+		<if test="(bizTypeCode != null and bizTypeCode !='')" >
+				and biz_type_code = #{bizTypeCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+				and subject_id = #{subjectId}
+		</if>
+		<if test="(feeUnitCode != null and feeUnitCode !='')" >
+				and fee_unit_code = #{feeUnitCode}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+    </select>
+    
+    
+    <!-- 查询出合同信息对应下应收运输的报价 -->
+	<select id="findTransportContractItem" parameterType="java.util.Map" 
+				resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+        select
+        		item.id, item.contract_code, item.subject_id, item.template_id, item.creator, item.create_time, item.last_modifier, item.last_modify_time, item.del_flag
+        from price_contract_item item
+        LEFT JOIN system_code b on item.subject_id = b.`code`
+        LEFT JOIN price_contract_info pci on item.contract_code = pci.contract_code and pci.del_flag='0' and pci.contract_state='1'	
+        LEFT JOIN price_transport_template ptt on item.subject_id = ptt.template_code and ptt.del_flag='0'
+        <if test="(templateTypeCode != null and templateTypeCode !='')" >
+			and ptt.template_type_code = #{templateTypeCode}
+		</if>
+        where item.del_flag='0' and b.status='0'
+        <if test="(contractCode != null and contractCode !='')" >
+			and item.contract_code = #{contractCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+			and item.subject_id = #{subjectId}
+		</if>
+		
+    </select>
+     <!-- 查询出合同信息对应下应付运输的报价 -->
+	<select id="findTransportPayFeesContractItem" parameterType="java.util.Map" 
+				resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+        select
+        		item.id, item.contract_code, item.subject_id, item.template_id, item.creator, item.create_time, item.last_modifier, item.last_modify_time, item.del_flag
+        from price_contract_item item
+        LEFT JOIN system_code b on item.subject_id = b.`code`
+        LEFT JOIN price_contract_info pci on item.contract_code = pci.contract_code and pci.del_flag='0' and pci.contract_state='1'	
+        LEFT JOIN price_out_transport_template ptt on item.subject_id = ptt.template_code and ptt.del_flag='0'
+        <if test="(templateTypeCode != null and templateTypeCode !='')" >
+			and ptt.template_type_code = #{templateTypeCode}
+		</if>
+        where item.del_flag='0' and b.status='0'
+        <if test="(contractCode != null and contractCode !='')" >
+			and item.contract_code = #{contractCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+			and item.subject_id = #{subjectId}
+		</if>
+		
+    </select>
+    
+    <!-- 批量插入商家合同签约服务 -->
+    <insert id="createContractItem" parameterType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+    	insert into price_contract_item(contract_code, biz_type_code, subject_id, template_id, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{contractCode,jdbcType=VARCHAR},
+			#{bizTypeCode,jdbcType=VARCHAR},
+			#{subjectId,jdbcType=VARCHAR}, 
+			#{templateId,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+    <!-- 修改商家合同信息 -->
+    <update id="updateContractItem" parameterType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+    	update price_contract_item 
+		<set >
+		<if test="subjectId != null" >subject_id=#{subjectId,jdbcType=VARCHAR},</if>
+		<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
+		<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+		<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		<if test="delFlag!=null">del_flag=#{delFlag,jdbcType=VARCHAR}</if>
+		</set>
+		where 
+        <if test="(contractCode  !=null and contractCode !='')">
+			contract_code=#{contractCode}
+		</if>
+    </update>
+    
+    <!-- 查找所有的合同明细中的费用科目-->
+    <select id="findAllContractItem" parameterType="java.lang.String" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+		SELECT e.template_type_code transportCode,e.template_name transportName,e.remark transportRemark,d.storage_template_type storageCode,d.template_name storageName,c.remark generalStorageRemark,d.remark storageRemark,f.template_name dispatchName,f.remark dispatchRemark,a.template_id,
+		a.subject_id subjectId
+		from price_contract_item a 
+		LEFT JOIN price_general_quotation c ON a.template_id=c.quotation_no 
+		LEFT JOIN price_general_template d ON a.template_id=d.template_code
+		left JOIN price_transport_template e on a.template_id=e.template_code 
+		LEFT JOIN price_dispatch_template f ON a.template_id=f.template_code
+		where a.contract_code=#{contractId} and a.del_flag='0' 
+   </select>
+   
+   <!-- 根据map条件查询出对应的费用科目 -->
+   <select id="findAllReceiveContractDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+   		SELECT e.template_type_code transportCode,e.template_name transportName,
+		e.remark transportRemark,d.storage_template_type storageCode,
+		d.template_name storageName,c.remark generalStorageRemark,
+		d.remark storageRemark,f.template_name dispatchName,f.remark dispatchRemark,
+		a.template_id,a.subject_id subjectId,i.instruction as ruleInstruction,h.rule_no as ruleNo
+		from price_contract_item a 	
+		LEFT JOIN price_general_quotation c ON a.template_id=c.quotation_no and c.del_flag=0
+		LEFT JOIN price_general_template d ON a.template_id=d.template_code and d.del_flag=0
+		left JOIN price_transport_template e on a.template_id=e.template_code and e.del_flag=0
+		LEFT JOIN price_dispatch_template f ON a.template_id=f.template_code and f.del_flag=0
+		left join price_contract_info g on g.contract_code=a.contract_code and g.del_flag=0
+		left join pub_rule_customer_receivable h on h.customerid=g.customerId and h.subject_id=a.subject_id and h.del_flag=0
+		left join bill_rule_receive i on i.quotationNo=h.rule_no and i.del_flag=0
+		where 1=1 
+		<if test="(contractCode != null and contractCode !='')" >
+		   and a.contract_code=#{contractCode}  
+		</if>
+		<if test="(subjectId  !=null and subjectId !='')">
+			and a.subject_id=#{subjectId}
+		</if>
+		<if test="(bizTypeCode !=null and bizTypeCode!='')">
+			and a.biz_type_code=#{bizTypeCode}
+		</if>
+			and a.del_flag='0'
+   </select>
+   <select id="findAllPayContractDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+   		SELECT e.template_type_code transportCode,e.template_name transportName,
+		e.remark transportRemark,d.storage_template_type storageCode,
+		d.template_name storageName,c.remark generalStorageRemark,
+		d.remark storageRemark,f.template_name dispatchName,f.remark dispatchRemark,
+		a.template_id,a.subject_id subjectId,b.code_name codeName,b.type_code codeType,
+		b.code code,i.instruction as ruleInstruction,h.rule_no as ruleNo
+		from price_contract_item a 
+		LEFT JOIN system_code b on a.subject_id=b.`code` 
+		LEFT JOIN price_general_quotation c ON a.template_id=c.quotation_no and c.del_flag=0
+		LEFT JOIN price_general_template d ON a.template_id=d.template_code and d.del_flag=0
+		left JOIN price_transport_template e on a.template_id=e.template_code and e.del_flag=0
+		LEFT JOIN price_dispatch_template f ON a.template_id=f.template_code and f.del_flag=0
+		left join price_contract_info g on g.contract_code=a.contract_code and g.del_flag=0
+		left join pub_rule_deliver_payable h on h.deliveryid=g.customerId and h.subject_id=a.subject_id and h.del_flag=0
+		left join bill_rule_pay i on i.quotationNo=h.rule_no and i.del_flag=0
+		where 1=1 
+		<if test="(contractCode != null and contractCode !='')" >
+		   and a.contract_code=#{contractCode}  
+		</if>
+		<if test="(subjectId  !=null and subjectId !='')">
+			and a.subject_id=#{subjectId}
+		</if>
+		<if test="(bizTypeCode !=null and bizTypeCode!='')">
+			and a.biz_type_code=#{bizTypeCode}
+		</if>
+			and a.del_flag='0' and b.status='0'
+   </select>
+   <!-- 查询出合同信息对应下配送的报价 -->
+	<select id="findDispatchContractItem" parameterType="java.util.Map" 
+				resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+        select
+        		item.id, item.contract_code, item.subject_id, item.template_id, item.creator, item.create_time, item.last_modifier, item.last_modify_time, item.del_flag
+        from price_contract_item item
+        LEFT JOIN system_code b on item.subject_id = b.`code`
+        LEFT JOIN price_contract_info pci on item.contract_code = pci.contract_code and item.del_flag='0' and pci.del_flag='0'
+        where 1=1
+        <if test="(contractCode != null and contractCode !='')" >
+			and item.contract_code = #{contractCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+			and item.subject_id = #{subjectId}
+		</if>
+			and item.del_flag='0'
+			and pci.contract_state='1'
+			and b.status='0'	
+    </select>
+    
+    <!-- 查询对应的承运商和宅配商合同下的明细 -->
+    <select id="findAllPayContractItem" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+     SELECT e.template_type_code transportCode,e.template_name transportName,
+		e.remark transportRemark,d.storage_template_type storageCode,
+		d.template_name storageName,c.remark generalStorageRemark,
+		d.remark storageRemark,f.template_name dispatchName,
+		f.remark dispatchRemark,g.remark dispatchOtherRemark,
+		a.template_id,a.subject_id subjectId,
+		j.instruction as ruleInstruction,i.rule_no as ruleNo
+		from price_contract_item a  
+		LEFT JOIN price_general_quotation c ON a.template_id=c.quotation_no  and c.del_flag=0
+		LEFT JOIN price_general_template d ON a.template_id=d.template_code and d.del_flag=0
+		LEFT JOIN price_out_transport_template e on a.template_id=e.template_code and e.del_flag=0
+		LEFT JOIN price_out_dispatch_template f ON a.template_id=f.template_code  and f.del_flag=0
+		LEFT JOIN price_out_dispatch_other_template g on a.template_id=g.template_code and g.del_flag=0
+		left join price_contract_info h on h.contract_code=a.contract_code and h.del_flag=0
+		left join pub_rule_deliver_payable i on i.deliveryid=h.customerId and i.subject_id=a.subject_id and i.del_flag=0
+		left join bill_rule_pay j on j.quotationNo=i.rule_no and j.del_flag=0
+		where 1=1
+		<if test="(contractCode != null and contractCode !='')" >
+		   and a.contract_code=#{contractCode}  
+		</if>
+		<if test="(subjectId  !=null and subjectId !='')">
+			and a.subject_id=#{subjectId}
+		</if>
+		and a.del_flag='0'
+    </select>
+    
+    <select id="queryContractByCustomer" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
+        select contract_code,contract_type_code,customerId,customerName,contract_obj,paper_contract_no,del_flag 
+        from price_contract_info
+        where del_flag = 0 and <![CDATA[start_date < current_timestamp()]]>  and <![CDATA[expire_date >= current_timestamp()]]>
+        and customerid=#{customerid} and contract_type_code=#{contractTypeCode} and contract_state='1' limit 1
+    </select>
+    
+    <select id="queryContractManageEntity" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractManageEntity">
+	    select a.customerId,a.customerName,a.abnormalType,a.remark from
+		(SELECT customerId,customerName,'WILLBEEXPIRE' as abnormalType,CONCAT('生效日期为',start_date,',失效日期为',expire_date) as remark from price_contract_info where <![CDATA[(to_days(expire_date)-to_days(now()))<#{time}]]> and expire_date>now()) a
+		UNION ALL 
+		select c.customerId,c.customerName,c.abnormalType,c.remark  from
+		(SELECT customerId,customerName,'NOTCONFIGPRICE' as abnormalType,'' as remark from price_contract_info where contract_code in (select contract_code from price_contract_info where del_flag='0' and contract_code not in(select DISTINCT(contract_code) from price_contract_item where del_flag='0'))) c
+		UNION ALL
+		select b.customerId,b.customerName,b.abnormalType,b.remark from
+		(SELECT customerId,customerName,'NOTCONFIGRULE' as abnormalType,'' as remark from price_contract_info where customerId in (
+			select d.customerId from
+			(SELECT customerId from price_contract_info where 
+			customerId in (select customerId from price_contract_info where del_flag='0' and customerId 
+			not in(select DISTINCT(customerid) from pub_rule_customer_receivable where del_flag='0' and customerid is not null))) d    
+			where d.customerId not in(SELECT customerId from price_contract_info where contract_code in (select contract_code from price_contract_info where del_flag='0' and contract_code not in(select DISTINCT(contract_code) from price_contract_item where del_flag='0'))
+			))
+		) b	    
+	</select>
+    
+    <select id="queryCustomerList" resultType="String">
+    	select DISTINCT(customerid) from price_contract_info where del_flag='0'
+    </select>
+</mapper>

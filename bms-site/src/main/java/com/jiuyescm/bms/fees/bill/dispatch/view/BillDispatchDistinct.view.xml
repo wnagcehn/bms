@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtDeliveryDiff">
+      <Property name="creationType">com.jiuyescm.bms.fees.bill.dispatch.entity.BillDispatchCompareEntity</Property>
+      <PropertyDef name="feeTotalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">运单数量</Property>
+      </PropertyDef>
+      <PropertyDef name="feeAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="feeChargedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费重量</Property>
+      </PropertyDef>
+      <PropertyDef name="feeTotalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总重量</Property>
+      </PropertyDef>
+      <PropertyDef name="feeHeadWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="feeHeadPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="feeContinuedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="feeContinuedPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="feeWeightLimit">
+        <Property name="label">重量界限</Property>
+      </PropertyDef>
+      <PropertyDef name="feeUnitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryid">
+        <Property></Property>
+        <Property name="label">宅配商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCarrierIdList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+        <Property name="label">费用编号</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="headWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="chargedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费重量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总重量</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="diffAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">差额</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReconciliationStatusList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="feeWayBillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="boddid">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="weightLimit">
+        <Property name="label">重量界限</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+        <Property name="label">物流商</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+        <Property name="label">物流商</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="carrierId">
+        <Property name="label">物流商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCarrierIdList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="readOnly">false</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReconciliationStatusList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtDistribution">
+      <Property name="creationType">com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+        <Property name="label">出库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+        <Property name="label">外部单号</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库ID</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryid">
+        <Property></Property>
+        <Property name="label">宅配商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getDispatchTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="carrierid">
+        <Property></Property>
+        <Property name="label">承运商</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+        <Property name="label">是否拆箱</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryDate">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">操作时间</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureType">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+        <Property name="label">B2B标识</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总重量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总品种数</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property></Property>
+        <Property name="label">是否拆单</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="priceId">
+        <Property></Property>
+        <Property name="label">报价编号</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="billType">
+        <Property></Property>
+        <Property name="label">单据类型</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="toProvinceName">
+        <Property></Property>
+        <Property name="label">目的省</Property>
+      </PropertyDef>
+      <PropertyDef name="toCityName">
+        <Property></Property>
+        <Property name="label">目的市</Property>
+      </PropertyDef>
+      <PropertyDef name="toDistrictName">
+        <Property></Property>
+        <Property name="label">目的区县</Property>
+      </PropertyDef>
+      <PropertyDef name="chargedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="acceptTime">
+        <Property name="label">揽收时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="signTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">签收时间</Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+        <Property name="label">参数1</Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+        <Property name="label">参数2</Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+        <Property name="label">参数3</Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+        <Property name="label">参数4</Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+        <Property name="label">参数5</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getbillTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="weightLimit">
+        <Property name="label">重量界限</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillNo">
+      <PropertyDef name="billNo"/>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsDeliveryDiffList">
+      <Property name="dataType">[dtDeliveryDiff]</Property>
+      <Property name="dataProvider">billDispatchDistinctController#query</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <DataSet id="dsFeesReceiveDistribution">
+      <Property name="dataType">[dtDistribution]</Property>
+      <Property name="dataProvider">billDispatchDistinctController#queryDistributionDetailByBillNo</Property>
+    </DataSet>
+    <DataSet id="dsBillNoList">
+      <Property name="dataType">[dtBillNo]</Property>
+      <Property name="dataProvider">billDispatchDistinctController#getBillNo</Property>
+    </DataSet>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="itemCodes">pages,pageSize</Property>
+          <Property name="dataSet">dsDeliveryDiffList</Property>
+        </DataPilot>
+        <ToolBarButton id="query">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+var cre = data.get(&quot;startTime&quot;);&#xD;
+var end = data.get(&quot;endTime&quot;);&#xD;
+var billNo = data.get(&quot;billNo&quot;);&#xD;
+if(isNullOrEmpty(billNo)){&#xD;
+	dorado.MessageBox.alert(&quot;账单编号不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+with (view.get(&quot;#dsDeliveryDiffList&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="calculation">
+          <ClientEvent name="onClick">var conditionData = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+var billNo = conditionData.get(&quot;billNo&quot;);&#xD;
+if(isNullOrEmpty(billNo)){&#xD;
+	dorado.MessageBox.alert(&quot;账单编号不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.id(&quot;calculateAction&quot;).execute(&#xD;
+	function(){&#xD;
+		with (view.get(&quot;#dsDeliveryDiffList&quot;)){&#xD;
+			var queryJson={&#xD;
+				billNo:billNo,&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	}&#xD;
+);&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+          <Property name="caption">全部对账</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -280px -60px</Property>
+          <Property name="visible">true</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="cancelBill">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsDeliveryDiffList.data&quot;);&#xD;
+if(data.current){&#xD;
+	var status=data.current.get(&quot;status&quot;);&#xD;
+	if(status == '0'){&#xD;
+		if(data.current.get(&quot;boddid&quot;)){&#xD;
+			dorado.MessageBox.confirm(&quot;确定要销账吗?&quot;,function(){&#xD;
+				view.get(&quot;#updateAction&quot;).execute(&#xD;
+					function(result){&#xD;
+						if(result == &quot;SUCCESS&quot;){&#xD;
+							dorado.MessageBox.alert(&quot;销账成功&quot;);&#xD;
+							var param = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+							with (view.get(&quot;#dsDeliveryDiffList&quot;)){&#xD;
+								set(&quot;parameter&quot;, param);&#xD;
+								flushAsync();&#xD;
+							}&#xD;
+						}else{&#xD;
+							dorado.MessageBox.alert(result);&#xD;
+						}&#xD;
+					}&#xD;
+				);&#xD;
+			});&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;当前没有对账记录!&quot;);&#xD;
+		}&#xD;
+	}else if(status == '1'){&#xD;
+		dorado.MessageBox.alert(&quot;当前记录已过账!&quot;);&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;当前没有对账记录!&quot;);&#xD;
+	}&#xD;
+}&#xD;
+else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要销账的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">销账</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -180px -20px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="billDetail">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsDeliveryDiffList.data&quot;);&#xD;
+if(data.current){&#xD;
+	var billNo=data.current.get(&quot;billNo&quot;);&#xD;
+	var feesNo=data.current.get(&quot;feesNo&quot;);&#xD;
+	if(isNullOrEmpty(billNo)){&#xD;
+		dorado.MessageBox.alert(&quot;账单编号不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(isNullOrEmpty(feesNo)){&#xD;
+		dorado.MessageBox.alert(&quot;费用编号不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	with (view.get(&quot;#dsFeesReceiveDistribution&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billNo:billNo,&#xD;
+			feesNo:feesNo&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();&#xD;
+		view.get(&quot;#billDetailDialog&quot;).show();&#xD;
+	}&#xD;
+}&#xD;
+else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择要查看的记录!&quot;);&#xD;
+}&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+          <Property name="caption">查看账单</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -220px -60px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnExport">
+          <ClientEvent name="onClick">view.get(&quot;#exportReportAction&quot;).execute();</ClientEvent>
+          <Property name="caption">导出</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+          <Property name="action">exportReportAction</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <ClientEvent name="onReady">//var _startTime = new Date();  &#xD;
+//_startTime.setDate(_startTime.getDate());&#xD;
+//var _endTime = new Date();&#xD;
+//view.get(&quot;#queryConditionFrm.entity&quot;).set({ &#xD;
+//	startTime:_startTime.formatDate(&quot;Y-m-d 00:00:00&quot;),&#xD;
+//	endTime:_endTime.formatDate(&quot;Y-m-d 23:59:59&quot;)&#xD;
+//});&#xD;
+/*&#xD;
+var billNoList=view.id(&quot;dsBillNoList&quot;).getData();&#xD;
+if(!isNullOrEmpty(billNoList.first())){&#xD;
+	var billNo = billNoList.first()._data;&#xD;
+	view.get(&quot;#queryConditionFrm.entity&quot;).set({ &#xD;
+		billNo:billNo&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}&#xD;
+*/&#xD;
+</ClientEvent>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="dataType">dtCondition</Property>
+        <AutoFormElement>
+          <Property name="name">carrierId</Property>
+          <Property name="property">carrierId</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">waybillNo</Property>
+          <Property name="property">waybillNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">status</Property>
+          <Property name="property">status</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">billNo</Property>
+          <Property name="property">billNo</Property>
+          <Property name="readOnly">false</Property>
+          <Property name="editable">true</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid id="dg_DeliveryCompareList">
+        <Property name="dataSet">dsDeliveryDiffList</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="lazyInit">false</Property>
+        <Property name="fixedColumnCount">5</Property>
+        <RowNumColumn/>
+        <DataColumn>
+          <Property name="name">id</Property>
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">billNo</Property>
+          <Property name="property">billNo</Property>
+          <Property name="visible">true</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feesNo</Property>
+          <Property name="property">feesNo</Property>
+          <Property name="width">140</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">waybillNo</Property>
+          <Property name="name">waybillNo</Property>
+          <Property name="width">90</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">carrierName</Property>
+          <Property name="property">carrierName</Property>
+          <Property name="width">100</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="totalWeight">
+          <Property name="property">totalWeight</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">headWeight</Property>
+          <Property name="property">headWeight</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">headPrice</Property>
+          <Property name="property">headPrice</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">continuedWeight</Property>
+          <Property name="property">continuedWeight</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">continuedPrice</Property>
+          <Property name="property">continuedPrice</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">chargedWeight</Property>
+          <Property name="property">chargedWeight</Property>
+          <Property name="width">60</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">weightLimit</Property>
+          <Property name="property">weightLimit</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">unitPrice</Property>
+          <Property name="property">unitPrice</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">amount</Property>
+          <Property name="property">amount</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="feeTotalWeight">
+          <Property name="property">feeTotalWeight</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeTotalQuantity</Property>
+          <Property name="property">feeTotalQuantity</Property>
+          <Property name="width">60</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeHeadWeight</Property>
+          <Property name="property">feeHeadWeight</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeHeadPrice</Property>
+          <Property name="property">feeHeadPrice</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeContinuedWeight</Property>
+          <Property name="property">feeContinuedWeight</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeContinuedPrice</Property>
+          <Property name="property">feeContinuedPrice</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeChargedWeight</Property>
+          <Property name="property">feeChargedWeight</Property>
+          <Property name="width">60</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeWeightLimit</Property>
+          <Property name="property">feeWeightLimit</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeUnitPrice</Property>
+          <Property name="property">feeUnitPrice</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">feeAmount</Property>
+          <Property name="property">feeAmount</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">arg.dom.style.color = &quot;red&quot;;&#xD;
+arg.processDefault = true;&#xD;
+</ClientEvent>
+          <Property name="property">diffAmount</Property>
+          <Property name="name">diffAmount</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">status</Property>
+          <Property name="property">status</Property>
+          <Property name="width">60</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">billDispatchDistinctController#update</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsDeliveryDiffList</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="calculateAction">
+      <Property name="dataResolver">billDispatchDistinctController#calculate</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DownloadAction id="downloadAction">
+      <Property name="successMessage">导出成功！</Property>
+      <Property name="fileProvider">billDispatchDistinctController#export</Property>
+    </DownloadAction>
+    <Export2ReportAction id="exportReportAction">
+      <Property name="template">dg_DeliveryCompareList</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="maxSize">100000</Property>
+      <Property name="extension">xlsl</Property>
+    </Export2ReportAction>
+    <Dialog id="billDetailDialog">
+      <Property name="width">800</Property>
+      <Property name="height">450</Property>
+      <Property name="caption">账单明细</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="dg_distributionBillDetail">
+          <Property name="readOnly">true</Property>
+          <Property name="dataSet">dsFeesReceiveDistribution</Property>
+          <DataColumn>
+            <Property name="property">feesNo</Property>
+            <Property name="name">feesNo</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">warehouseName</Property>
+            <Property name="name">warehouseName</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">customerName</Property>
+            <Property name="name">customerName</Property>
+          </DataColumn>
+          <DataColumn name="deliveryDate">
+            <Property name="property">deliveryDate</Property>
+          </DataColumn>
+          <DataColumn name="amount">
+            <Property name="property">amount</Property>
+            <Property name="dataType">Double</Property>
+            <Property name="displayFormat">#,##0.00元</Property>
+          </DataColumn>
+          <DataColumn name="billNo">
+            <Property name="property">billNo</Property>
+          </DataColumn>
+          <DataColumn name="billType">
+            <Property name="property">billType</Property>
+          </DataColumn>
+          <DataColumn name="ruleNo">
+            <Property name="property">ruleNo</Property>
+          </DataColumn>
+          <DataColumn name="status">
+            <Property name="property">status</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

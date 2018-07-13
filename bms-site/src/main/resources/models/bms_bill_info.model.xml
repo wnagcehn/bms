@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="dtBmsBillInfoEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity</Property>
+    <PropertyDef name="id">
+      <Property name="label">id</Property>
+    </PropertyDef>
+    <PropertyDef name="billNo">
+      <Property name="label">账单编号</Property>
+    </PropertyDef>
+    <PropertyDef name="billName">
+      <Property name="label">账单名称</Property>
+    </PropertyDef>
+    <PropertyDef name="customerId">
+      <Property name="label">商家ID</Property>
+    </PropertyDef>
+    <PropertyDef name="customerName">
+      <Property name="label">商家简称</Property>
+    </PropertyDef>
+    <PropertyDef name="startTime">
+      <Property name="label">账单开始时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="endTime">
+      <Property name="label">账单结束时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="totalAmount">
+      <Property name="label">总金额</Property>
+    </PropertyDef>
+    <PropertyDef name="discountRate">
+      <Property name="label">折扣率</Property>
+    </PropertyDef>
+    <PropertyDef name="discountAmount">
+      <Property name="label">折扣金额</Property>
+    </PropertyDef>
+    <PropertyDef name="receiveAmount">
+      <Property name="label">应收金额</Property>
+    </PropertyDef>
+    <PropertyDef name="receiptAmount">
+      <Property name="label">实收金额</Property>
+    </PropertyDef>
+    <PropertyDef name="status">
+      <Property name="label">状态（unconfirmed：未确认，confirmed：已确认，part_invoiced：部分开票，invoiced：已开票，part_settled：部分结账，settled：已结账）</Property>
+    </PropertyDef>
+    <PropertyDef name="approver">
+      <Property name="label">审批人</Property>
+    </PropertyDef>
+    <PropertyDef name="approvalWay">
+      <Property name="label">审批方式</Property>
+    </PropertyDef>
+    <PropertyDef name="approvalNo">
+      <Property name="label">审批编号</Property>
+    </PropertyDef>
+    <PropertyDef name="approvalTime">
+      <Property name="label">审批时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="email">
+      <Property name="label">邮箱</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="param1">
+      <Property name="label">参数1</Property>
+    </PropertyDef>
+    <PropertyDef name="param2">
+      <Property name="label">参数2</Property>
+    </PropertyDef>
+    <PropertyDef name="param3">
+      <Property name="label">参数3</Property>
+    </PropertyDef>
+    <PropertyDef name="param4">
+      <Property name="label">参数4</Property>
+    </PropertyDef>
+    <PropertyDef name="param5">
+      <Property name="label">参数5</Property>
+    </PropertyDef>
+    <PropertyDef name="creator">
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+    <PropertyDef name="createTime">
+      <Property name="label">创建时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifier">
+      <Property name="label">修改人</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifyTime">
+      <Property name="label">修改时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="delFlag">
+      <Property name="label">删除标志（0：未删除，1：已删除）</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

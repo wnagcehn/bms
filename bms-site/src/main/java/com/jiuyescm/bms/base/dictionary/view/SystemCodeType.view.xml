@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="code">
+        <Property name="label">编号</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsSystemCodeTypeEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsSystemCodeTypeEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsSystemCodeTypeEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                	view.get(&quot;#dialogEdit&quot;).show();&#xD;
+                }else{&#xD;
+                	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsSystemCodeEntity">
+      <Property name="dataType">[dtSystemCodeEntity]</Property>
+      <Property name="dataProvider">systemCodeController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsSystemCodeTypeEntity">
+      <Property name="dataType">[dtSystemCodeTypeEntity]</Property>
+      <Property name="dataProvider">systemCodeTypeController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtSystemCodeTypeEntity</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*</Property>
+      <Property name="labelWidth">100</Property>
+    </AutoForm>
+    <DataGrid>
+      <ClientEvent name="onClick">var data = view.get(&quot;#dsSystemCodeTypeEntity.data&quot;);&#xD;
+var typeCode=data.current.get(&quot;typeCode&quot;);&#xD;
+view.get(&quot;#formCodeCondition.entity&quot;).set(&quot;typeCode&quot;,typeCode);&#xD;
+with (view.get(&quot;#dsSystemCodeEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		typeCode:typeCode&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+      <Property name="dataSet">dsSystemCodeTypeEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="height">250</Property>
+      <Property name="filterMode">serverSide</Property>
+      <Property name="showFilterBar">true</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="id">
+        <Property name="property">id</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="typeName">
+        <Property name="property">typeName</Property>
+        <Property name="width">180</Property>
+      </DataColumn>
+      <DataColumn name="typeCode">
+        <Property name="property">typeCode</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="typeStatus">
+        <Property name="property">typeStatus</Property>
+        <Property name="width">70</Property>
+      </DataColumn>
+      <DataColumn name="typeDesc">
+        <Property name="property">typeDesc</Property>
+        <Property name="visible">true</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">createId</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+        <Property name="name">createId</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">createDt</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+        <Property name="name">createDt</Property>
+      </DataColumn>
+      <DataColumn name="updateId">
+        <Property name="property">updateId</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="updateDt">
+        <Property name="property">updateDt</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="extattr1">
+        <Property name="property">extattr1</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="extattr2">
+        <Property name="property">extattr2</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="extattr3">
+        <Property name="property">extattr3</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="deleteId">
+        <Property name="property">deleteId</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="deleteDt">
+        <Property name="property">deleteDt</Property>
+        <Property name="width">80</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsSystemCodeTypeEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">250</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                    	function(){&#xD;
+                    		view.id(&quot;dialogEdit&quot;).hide();&#xD;
+							view.get(&quot;#dsSystemCodeTypeEntity&quot;).flushAsync();&#xD;
+                    	}&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                    	function(){&#xD;
+                    		view.id(&quot;dsSystemCodeTypeEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                    		view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                    	}&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsSystemCodeTypeEntity</Property>
+          <Property name="dataType">dtSystemCodeTypeEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">typeName</Property>
+            <Property name="property">typeName</Property>
+            <Property name="width">350</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">typeCode</Property>
+            <Property name="property">typeCode</Property>
+            <Property name="width">350</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">typeStatus</Property>
+            <Property name="property">typeStatus</Property>
+            <Property name="width">350</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">typeDesc</Property>
+            <Property name="property">typeDesc</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">createId</Property>
+            <Property name="property">createId</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">createDt</Property>
+            <Property name="property">createDt</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">updateId</Property>
+            <Property name="property">updateId</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">updateDt</Property>
+            <Property name="property">updateDt</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">extattr1</Property>
+            <Property name="property">extattr1</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">extattr2</Property>
+            <Property name="property">extattr2</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">extattr3</Property>
+            <Property name="property">extattr3</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deleteId</Property>
+            <Property name="property">deleteId</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deleteDt</Property>
+            <Property name="property">deleteDt</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">systemCodeTypeController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsSystemCodeTypeEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">systemCodeTypeController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsSystemCodeTypeEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <TabControl>
+      <ControlTab>
+        <Property name="caption">参数明细</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsSystemCodeEntity</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <ToolBarButton id="btnCodeAdd">
+              <ClientEvent name="onClick">var typeDatas = view.get(&quot;#dsSystemCodeTypeEntity.data&quot;);
+var currentData = typeDatas.current;
+if (currentData){
+	var datas = view.get(&quot;#dsSystemCodeEntity.data&quot;);
+	 
+	 datas.insert(); 
+ 
+	datas.current.set(&quot;typeCode&quot;,currentData.get(&quot;typeCode&quot;));
+	 
+	view.get(&quot;#codeDialogEdit&quot;).show();
+}else{
+    dorado.MessageBox.alert(&quot;请选择一条记录!&quot;);
+}
+</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnCodeModify">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsSystemCodeEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                	view.get(&quot;#codeDialogEdit&quot;).show();&#xD;
+                }else{&#xD;
+                	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="btnStepQuery">
+              <ClientEvent name="onClick">&#xD;
+var tmpDataSet=view.get(&quot;#dsSystemCodeEntity&quot;);&#xD;
+&#xD;
+var tmpFormCondition=view.get(&quot;#formCodeCondition&quot;);&#xD;
+var typeCode = tmpFormCondition.get(&quot;entity&quot;).get(&quot;typeCode&quot;);&#xD;
+var code = tmpFormCondition.get(&quot;entity&quot;).get(&quot;code&quot;);&#xD;
+var codeName = tmpFormCondition.get(&quot;entity&quot;).get(&quot;codeName&quot;);&#xD;
+&#xD;
+if(typeCode==''||typeCode==null){&#xD;
+	return false;&#xD;
+}&#xD;
+//tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+with (view.get(&quot;#dsSystemCodeEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		typeCode:typeCode,&#xD;
+		code:code,&#xD;
+		codeName:codeName&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+/*&#xD;
+或者：&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsGenericTemplate&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+*/</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="formCodeCondition">
+            <Property name="dataType">dtSystemCodeEntity</Property>
+            <Property name="createPrivateDataSet">true</Property>
+            <Property name="cols">*,*,*</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">code</Property>
+              <Property name="property">code</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">codeName</Property>
+              <Property name="property">codeName</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">typeCode</Property>
+              <Property name="property">typeCode</Property>
+              <Property name="visible">false</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="codeDataGrid">
+            <Property name="dataSet">dsSystemCodeEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="highlightHoverRow">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="typeCode">
+              <Property name="property">typeCode</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="status">
+              <Property name="property">status</Property>
+              <Property name="width">60</Property>
+            </DataColumn>
+            <DataColumn name="codeName">
+              <Property name="property">codeName</Property>
+              <Property name="width">200</Property>
+            </DataColumn>
+            <DataColumn name="code">
+              <Property name="property">code</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="sortNo">
+              <Property name="property">sortNo</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">createId</Property>
+              <Property name="width">80</Property>
+              <Property name="name">createId</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">createDt</Property>
+              <Property name="width">80</Property>
+              <Property name="name">createDt</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="updateId">
+              <Property name="property">updateId</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="updateDt">
+              <Property name="property">updateDt</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="extattr1">
+              <Property name="property">extattr1</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">true</Property>
+            </DataColumn>
+            <DataColumn name="extattr2">
+              <Property name="property">extattr2</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">true</Property>
+            </DataColumn>
+            <DataColumn name="extattr3">
+              <Property name="property">extattr3</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">true</Property>
+            </DataColumn>
+            <DataColumn name="extattr4">
+              <Property name="property">extattr4</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">true</Property>
+            </DataColumn>
+            <DataColumn name="extattr5">
+              <Property name="property">extattr5</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="codeDesc">
+              <Property name="property">codeDesc</Property>
+            </DataColumn>
+            <DataColumn name="deleteId">
+              <Property name="property">deleteId</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="deleteDt">
+              <Property name="property">deleteDt</Property>
+              <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="codeDialogEdit">
+            <ClientEvent name="onClose">view.id(&quot;dsSystemCodeEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="caption">数据维护</Property>
+            <Property name="center">true</Property>
+            <Property name="height">250</Property>
+            <Property name="width">1100</Property>
+            <Buttons>
+              <Button id="btnCodeSave">
+                <ClientEvent name="onClick">view.id(&quot;updateCodeAction&quot;).execute(&#xD;
+                    	function(){&#xD;
+                    		view.id(&quot;codeDialogEdit&quot;).hide();&#xD;
+                    		view.get(&quot;#dsSystemCodeEntity&quot;).flushAsync();&#xD;
+                    	}&#xD;
+                    );</ClientEvent>
+                <Property name="caption">保存</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button id="btnCodeCancel">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                    	function(){&#xD;
+                    		view.id(&quot;dsSystemCodeEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                    		view.id(&quot;codeDialogEdit&quot;).hide();&#xD;
+                    	}&#xD;
+                    );</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="codeFormEdit">
+                <Property name="cols">*,*</Property>
+                <Property name="dataSet">dsSystemCodeEntity</Property>
+                <Property name="dataType">dtSystemCodeEntity</Property>
+                <Property name="labelWidth">100</Property>
+                <AutoFormElement>
+                  <Property name="name">id</Property>
+                  <Property name="property">id</Property>
+                  <Property name="readOnly">false</Property>
+                  <Property name="visible">false</Property>
+                  <Property name="hideMode">display</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">typeCode</Property>
+                  <Property name="property">typeCode</Property>
+                  <Property name="visible">true</Property>
+                  <Property name="editable">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">codeName</Property>
+                  <Property name="property">codeName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">code</Property>
+                  <Property name="property">code</Property>
+                  <Property name="readOnly">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">status</Property>
+                  <Property name="property">status</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">sortNo</Property>
+                  <Property name="property">sortNo</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">createId</Property>
+                  <Property name="property">createId</Property>
+                  <Property name="visible">false</Property>
+                  <Property name="hideMode">display</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">createDt</Property>
+                  <Property name="property">createDt</Property>
+                  <Property name="visible">false</Property>
+                  <Property name="hideMode">display</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">updateId</Property>
+                  <Property name="property">updateId</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">updateDt</Property>
+                  <Property name="property">updateDt</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">extattr1</Property>
+                  <Property name="property">extattr1</Property>
+                  <Property name="visible">true</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">extattr2</Property>
+                  <Property name="property">extattr2</Property>
+                  <Property name="visible">true</Property>
+                  <Property name="hideMode">visibility</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">extattr3</Property>
+                  <Property name="property">extattr3</Property>
+                  <Property name="visible">true</Property>
+                  <Property name="hideMode">visibility</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">extattr4</Property>
+                  <Property name="property">extattr4</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">true</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">extattr5</Property>
+                  <Property name="property">extattr5</Property>
+                  <Property name="visible">false</Property>
+                  <Property name="hideMode">display</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">codeDesc</Property>
+                  <Property name="property">codeDesc</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">deleteId</Property>
+                  <Property name="property">deleteId</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">deleteDt</Property>
+                  <Property name="property">deleteDt</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="updateCodeAction">
+            <Property name="successMessage">数据保存成功！</Property>
+            <Property name="modal">true</Property>
+            <Property name="dataResolver">systemCodeController#save</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsSystemCodeEntity</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <UpdateAction id="deleteCodeAction">
+            <Property name="successMessage">数据删除成功！</Property>
+            <Property name="dataResolver">systemCodeController#delete</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsSystemCodeEntity</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+        </Container>
+      </ControlTab>
+    </TabControl>
+  </View>
+</ViewConfig>

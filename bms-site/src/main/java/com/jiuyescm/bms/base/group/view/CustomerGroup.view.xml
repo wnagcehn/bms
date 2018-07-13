@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsGroupCustomerEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+        <Property name="label">科目组</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家id</Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">序号</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property></Property>
+        <Property name="label">商家简称</Property>
+      </PropertyDef>
+      <PropertyDef name="customername">
+        <Property></Property>
+        <Property name="label">商家全称</Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property></Property>
+        <Property name="label">开票商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsGroupCustomerQueryEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+        <Property name="label">科目组</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="groupCode">
+        <Property></Property>
+        <Property name="label">组编码</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customername">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsGroupEntity" meta="child:dataTypeBmsGroup">
+      <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+        <Property name="label">主键ID</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="groupCode">
+        <Property name="label">组编码</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeBmsGroup" parent="dtBmsGroupEntity">
+      <Reference name="children">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">bmsGroupController#loadCustomerDataByParent</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBmsGroupCustomer">
+      <Property name="dataType">[dtBmsGroupCustomerEntity]</Property>
+      <Property name="pageSize">50</Property>
+      <Property name="dataProvider">bmsGroupCustomerController#queryGroupCustomer</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBmsGroupCustomerQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsGroupCustomerQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtBmsGroupCustomerQueryEntity]</Property>
+    </DataSet>
+    <DataSet id="dsGroup">
+      <Property name="dataType">[dataTypeBmsGroup]</Property>
+      <Property name="dataProvider">bmsGroupController#loadCustomerDataByParent</Property>
+    </DataSet>
+    <DataSet id="dsBmsCustomerInfoEntity">
+      <Property name="dataType">[dtCustomerEntity]</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataTree id="dataTreeGroup" layoutConstraint="left">
+      <ClientEvent name="onContextMenu">view.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});</ClientEvent>
+      <ClientEvent name="onDataRowDoubleClick">var data=view.get(&quot;#dsBmsGroupCustomerQuery.data&quot;).current;&#xD;
+var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
+data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));&#xD;
+data.set(&quot;bizType&quot;,currentEitity.get(&quot;bizType&quot;));&#xD;
+view.get(&quot;#dsBmsGroupCustomer&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+</ClientEvent>
+      <ClientEvent name="onDataRowClick">var data=view.get(&quot;#dsBmsGroupCustomerQuery.data&quot;).current;&#xD;
+var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
+data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));&#xD;
+</ClientEvent>
+      <Property name="width">280</Property>
+      <Property name="dataSet">dsGroup</Property>
+      <Property name="currentNodeDataPath">currentGroup</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="childrenProperty">children</Property>
+          <Property name="labelProperty">groupName</Property>
+          <Property name="recursive">true</Property>
+          <Property name="expandLevel">1</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsBmsGroupCustomer</Property>
+          <Property name="itemCodes">pages</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsGroupSubjectQuery.data&quot;).current;&#xD;
+view.get(&quot;#dsBmsGroupSubject&quot;).set(&quot;parameter&quot;,data).flushAsync();</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsGroupCustomerQuery.data&quot;).current;&#xD;
+var groupId=data.get(&quot;groupId&quot;);&#xD;
+var groupName=data.get(&quot;groupName&quot;);&#xD;
+if(!groupId){&#xD;
+	dorado.MessageBox.alert(&quot;请选择商家分组&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.get(&quot;#dsBmsGroupCustomer&quot;).insert({&#xD;
+	groupId:groupId,&#xD;
+	groupName:groupName&#xD;
+});&#xD;
+view.get(&quot;#dsBmsCustomerInfoEntity&quot;).clear();&#xD;
+var timestamp = Date.parse(new Date());&#xD;
+view.get(&quot;#customerFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.lookup.view.CustomerMultiLookup.d?timestamp=&quot;+timestamp);&#xD;
+view.get(&quot;#dialogCustomerInfo&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">添加商家</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;确认删除?&quot;,function(){&#xD;
+	var action=view.get(&quot;#delGroupCustomerAction&quot;);&#xD;
+	action.execute(function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		with(view.get(&quot;#dsBmsGroupCustomer&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">删除商家</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsGroupCustomer.data&quot;).current;&#xD;
+if(data){&#xD;
+	view.get(&quot;#dialogEditLevel&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择商家设置优先级&quot;);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">设置优先级</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm>
+        <Property name="dataSet">dsBmsGroupCustomerQuery</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <AutoFormElement>
+          <Property name="name">groupName</Property>
+          <Property name="property">groupName</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">groupCode</Property>
+          <Property name="name">groupCode</Property>
+          <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsBmsGroupCustomer</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="groupName">
+          <Property name="property">groupName</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="customerid">
+          <Property name="property">customerid</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="shortname">
+          <Property name="property">shortname</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="customername">
+          <Property name="property">customername</Property>
+          <Property name="width">160</Property>
+        </DataColumn>
+        <DataColumn name="mkInvoiceName">
+          <Property name="property">mkInvoiceName</Property>
+          <Property name="width">160</Property>
+        </DataColumn>
+        <DataColumn name="sortNo">
+          <Property name="property">sortNo</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Menu id="menuOperate">
+      <MenuItem>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsGroup.data&quot;);&#xD;
+var newEntity=data.insert({&#xD;
+		&quot;parentId&quot;:&quot;0&quot;,&#xD;
+		&quot;groupName&quot;:&quot;&quot;&#xD;
+	}&#xD;
+);&#xD;
+view.id(&quot;dataTreeGroup&quot;).set(&quot;currentEntity&quot;,newEntity);&#xD;
+//view.get(&quot;#groupCode&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="caption">添加根节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+        <Property name="name">addRoot</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tree=view.id(&quot;dataTreeGroup&quot;);&#xD;
+var currentNode=tree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个父节点!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var currentEntity=currentNode.get(&quot;data&quot;);&#xD;
+currentNode.expand();&#xD;
+var newEntity=currentEntity.createChild(&quot;children&quot;,{&#xD;
+	parentId:currentEntity.get(&quot;id&quot;),&#xD;
+	groupName:&quot;&quot;&#xD;
+});&#xD;
+tree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+//view.get(&quot;#groupCode&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).show();</ClientEvent>
+        <Property name="caption">添加子节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+        <Property name="name">addSub</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">//view.get(&quot;#groupCode&quot;).set(&quot;readOnly&quot;,true);&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="caption">更新节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+      </MenuItem>
+      <MenuItem id="del">
+        <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;确认要删除?&quot;,function(){&#xD;
+	var tree=view.id(&quot;dataTreeGroup&quot;);&#xD;
+	var entity=tree.get(&quot;currentEntity&quot;);&#xD;
+	var action=view.get(&quot;#delGroupAction&quot;);&#xD;
+	action.set(&quot;parameter&quot;,entity.get(&quot;id&quot;)).execute(function(result){&#xD;
+		if(result!=''){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}else{&#xD;
+			entity.remove();&#xD;
+			var firstNode=tree.get(&quot;firstNode&quot;);&#xD;
+			if(firstNode){&#xD;
+				tree.set(&quot;currentNode&quot;,firstNode);&#xD;
+			}&#xD;
+		}&#xD;
+	})	&#xD;
+})&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+        <Property name="name">del</Property>
+      </MenuItem>
+    </Menu>
+    <Dialog id="dialogGroupEdit">
+      <Property name="width">350</Property>
+      <Property name="height">180</Property>
+      <Property name="closeable">false</Property>
+      <Property name="caption">用户组</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=view.get(&quot;#saveGroupAction&quot;);&#xD;
+action.execute(function(){&#xD;
+	view.get(&quot;#dsGroup&quot;).flushAsync();&#xD;
+	view.get(&quot;#dialogGroupEdit&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="style">
+            <Property name="margin-right">30px</Property>
+          </Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dsGroup&quot;).flushAsync();&#xD;
+view.get(&quot;#dialogGroupEdit&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="groupAutoForm">
+          <Property name="dataSet">dsGroup</Property>
+          <Property name="dataPath">!currentGroup</Property>
+          <Property name="labelWidth">50</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="property">id</Property>
+            <Property name="name">id</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="groupCode">
+            <Property name="property">groupCode</Property>
+            <Property name="name">groupCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">groupName</Property>
+            <Property name="name">groupName</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="delGroupAction">
+      <Property name="dataResolver">bmsGroupController#delSubjectGroup</Property>
+    </UpdateAction>
+    <Dialog id="dialogCustomerInfo">
+      <ClientEvent name="onHide">var datas=view.get(&quot;#dialogCustomerInfo.userData&quot;);&#xD;
+if(datas!=null){&#xD;
+	var ds=view.get(&quot;#dsBmsCustomerInfoEntity.data&quot;);&#xD;
+	ds.clear();&#xD;
+	datas.each(function(item){&#xD;
+		ds.insert({&#xD;
+			customerid:item.get(&quot;customerid&quot;)&#xD;
+		});&#xD;
+	});&#xD;
+	view.get(&quot;#saveGroupCustomerAction&quot;).execute(function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		var data=view.get(&quot;#dsBmsGroupCustomerQuery.data&quot;).current;&#xD;
+		view.get(&quot;#dsBmsGroupCustomer&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+		view.get(&quot;#dialogCustomerInfo&quot;).set(&quot;userData&quot;,null);&#xD;
+	});&#xD;
+}else{&#xD;
+	view.get(&quot;#dsBmsGroupCustomer.data&quot;).cancel();&#xD;
+}</ClientEvent>
+      <Property name="width">800</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">添加商家</Property>
+      <Property name="collapsed">false</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="customerFrame">
+          <Property name="height">500</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="saveGroupAction">
+      <Property name="dataResolver">bmsGroupController#saveCustomerGroup</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsGroup</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="saveGroupCustomerAction">
+      <Property name="dataResolver">bmsGroupCustomerController#saveDataList</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsGroupCustomerQuery</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsCustomerInfoEntity</Property>
+        <Property name="dataPath">[#all]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="delGroupCustomerAction">
+      <Property name="dataResolver">bmsGroupCustomerController#deleteData</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsGroupCustomer</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogEditLevel">
+      <Property name="width">300</Property>
+      <Property name="height">150</Property>
+      <Property name="caption">设置优先级</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=view.get(&quot;#saveLevelAction&quot;);&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;保存成功!&quot;);&#xD;
+	view.get(&quot;#dialogEditLevel&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="style">
+            <Property name="margin-right">20px</Property>
+          </Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dsBmsGroupCustomer.data&quot;).cancel();&#xD;
+view.get(&quot;#dialogEditLevel&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsBmsGroupCustomer</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">sortNo</Property>
+            <Property name="property">sortNo</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="saveLevelAction">
+      <Property name="dataResolver">bmsGroupCustomerController#saveDisplayLevel</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsGroupCustomer</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

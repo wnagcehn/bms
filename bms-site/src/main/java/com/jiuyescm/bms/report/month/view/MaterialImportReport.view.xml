@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtMaterialReportVo">
+      <Property name="creationType">com.jiuyescm.bms.report.vo.MaterialImportReportVo</Property>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchNum">
+        <Property name="dataType">Long</Property>
+        <Property name="label">运单量</Property>
+      </PropertyDef>
+      <PropertyDef name="materialNum">
+        <Property name="dataType">Long</Property>
+        <Property name="label">耗材运单量</Property>
+      </PropertyDef>
+      <PropertyDef name="diffNum">
+        <Property name="dataType">Long</Property>
+        <Property name="label">差异单量</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="customerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsMaterialReportVo">
+      <Property name="dataType">[dtMaterialReportVo]</Property>
+      <Property name="dataProvider">materialImportReportController#queryImportReport</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <ToolBar>
+      <Button>
+        <ClientEvent name="onClick">var ds=view.get(&quot;#dsMaterialReportVo&quot;);&#xD;
+var data=view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+ds.set(&quot;parameter&quot;,data).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </Button>
+      <Button>
+        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+      </Button>
+    </ToolBar>
+    <AutoForm id="queryForm">
+      <ClientEvent name="onReady">    var nowdays = new Date();&#xD;
+	var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set({&#xD;
+		startTime:firstDay,&#xD;
+		endTime:lastDay&#xD;
+	});&#xD;
+</ClientEvent>
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="trigger">triggerCustomer2</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">startTime</Property>
+        <Property name="property">startTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endTime</Property>
+        <Property name="property">endTime</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsMaterialReportVo</Property>
+      <Property name="readOnly">true</Property>
+      <DataColumn>
+        <Property name="property">customerId</Property>
+        <Property name="name">customerId</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">warehouseCode</Property>
+        <Property name="name">warehouseCode</Property>
+      </DataColumn>
+      <DataColumn name="dispatchNum">
+        <Property name="property">dispatchNum</Property>
+      </DataColumn>
+      <DataColumn name="materialNum">
+        <Property name="property">materialNum</Property>
+      </DataColumn>
+      <DataColumn name="diffNum">
+        <Property name="property">diffNum</Property>
+      </DataColumn>
+    </DataGrid>
+    <FloatPanel id="panelCustomer2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId: data.get(&quot;customerid&quot;),&#xD;
+    });&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">800</Property>
+      <Property name="height">450</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="closeable">true</Property>
+      <Property name="center">true</Property>
+      <Property name="caption">商家选择</Property>
+      <Property name="modal">true</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer2">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCustomer2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer2&quot;).show();</ClientEvent>
+      <Property name="editable">true</Property>
+    </Trigger>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">materialImportReportController#export</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

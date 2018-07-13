@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper" >
+
+	<resultMap id="feesReceiveStorageMap" type="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+	    <result column="cost_type" property="costType" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="tempreture_type" property="tempretureType" jdbcType="VARCHAR" />
+	    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="external_product_no" property="externalProductNo" jdbcType="VARCHAR" />
+	    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+	    <result column="unit" property="unit" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DOUBLE" />
+	    <result column="volume" property="volume" jdbcType="DOUBLE" />
+	    <result column="varieties" property="varieties" jdbcType="INTEGER" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DOUBLE" />
+	    <result column="cost" property="cost" jdbcType="DECIMAL" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param6" property="param6" jdbcType="VARCHAR" />
+	    <result column="rule_no" property="ruleNo" jdbcType="VARCHAR" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="biz_id" property="bizId" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        insert into fees_receive_storage(fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code,other_subject_code, tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, cost,biz_type,is_calculated, calculate_time, param1, param2, param3, param4, param6, rule_no, bill_no, status, operate_time,biz_id,del_flag)
+        values (
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{orderType,jdbcType=VARCHAR}, 
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{productType,jdbcType=VARCHAR}, 
+			#{costType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{otherSubjectCode,jdbcType=VARCHAR}, 
+			#{tempretureType,jdbcType=VARCHAR}, 
+			#{productNo,jdbcType=VARCHAR}, 
+			#{productName,jdbcType=VARCHAR}, 
+			#{externalProductNo,jdbcType=VARCHAR}, 
+			#{quantity,jdbcType=INTEGER}, 
+			#{unit,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DOUBLE}, 
+			#{volume,jdbcType=DOUBLE}, 
+			#{varieties,jdbcType=INTEGER}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{cost,jdbcType=DECIMAL}, 
+			#{bizType,jdbcType=VARCHAR},
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP},
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param6,jdbcType=VARCHAR}, 
+			#{ruleNo,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{operateTime,jdbcType=TIMESTAMP},
+			#{bizId,jdbcType=VARCHAR},
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <select id="query" parameterType="java.lang.String" resultMap ="feesReceiveStorageMap">
+        select
+        id, fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, 
+        warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code, other_subject_code,
+        tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, 
+        varieties, unit_price, continued_price, cost,biz_type, param1, param2, param3, param4, param6, rule_no, 
+        bill_no, status, operate_time, biz_id,del_flag
+        from fees_receive_storage
+        where fees_no = #{feesNo}
+    </select>
+    
+    <update id="update" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        update fees_receive_storage 
+		<set >
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="orderType != null" >order_type=#{orderType,jdbcType=VARCHAR},</if>
+			<if test="orderNo != null" >order_no=#{orderNo,jdbcType=VARCHAR},</if>
+			<if test="productType != null" >product_type=#{productType,jdbcType=VARCHAR},</if>
+			<if test="costType != null" >cost_type=#{costType,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if>
+			<if test="tempretureType != null" >tempreture_type=#{tempretureType,jdbcType=VARCHAR},</if>
+			<if test="productNo != null" >product_no=#{productNo,jdbcType=VARCHAR},</if>
+			<if test="productName != null" >product_name=#{productName,jdbcType=VARCHAR},</if>
+			<if test="externalProductNo != null" >external_product_no=#{externalProductNo,jdbcType=VARCHAR},</if>
+			<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER},</if>
+			<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
+			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
+			<if test="volume != null" >volume=#{volume,jdbcType=DOUBLE},</if>
+			<if test="varieties != null" >varieties=#{varieties,jdbcType=INTEGER},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
+			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DOUBLE},</if>
+			<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
+			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="operateTime != null" >operate_time=#{operateTime,jdbcType=TIMESTAMP},</if>
+			<if test="bizId != null" >biz_id=#{bizId,jdbcType=VARCHAR},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where biz_id=#{bizId} and subject_code = #{subjectCode}
+    </update>
+    
+    <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        update fees_receive_storage  
+	        <set >
+	        	<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+	        	<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+				<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+				<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+				<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
+	        </set>
+        where fees_no = #{feesNo}
+    </update>  
+
+    <delete id="delete" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        delete from fees_receive_storage where
+        biz_id=#{bizId} and subject_code = #{subjectCode} 
+    </delete>
+    
+    <delete id="deleteBatch" parameterType="java.util.Map">
+        delete from fees_receive_storage where
+        fees_no in
+		<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+		</foreach>
+    </delete>
+    
+    <select id="ValidFeesNo" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity" resultMap ="feesReceiveStorageMap">
+        select id from fees_receive_storage where
+        biz_id=#{bizId} and subject_code = #{subjectCode} limit 1
+    </select>
+    
+    <!-- 统计日收入 -->
+    <select id="queryDailyStorageFee" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        select customer_id as customerId, other_subject_code as otherSubjectCode, 
+        	   SUM(IFNULL(cost, 0) - IFNULL(derate_amount, 0)) as cost
+        from fees_receive_storage
+        where create_time <![CDATA[>=]]> #{startTime} and create_time <![CDATA[<=]]> #{endTime}
+        GROUP BY customer_id, other_subject_code
+    </select>
+    
+</mapper>

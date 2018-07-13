@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.dispatch.mapper.BmsQuoteDispatchDetailMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+	    <result column="start_warehouse_id" property="startWarehouseId" jdbcType="VARCHAR" />
+	    <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+	    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+	    <result column="area_id" property="areaId" jdbcType="VARCHAR" />
+	    <result column="weight_down" property="weightDown" jdbcType="DECIMAL" />
+	    <result column="weight_up" property="weightUp" jdbcType="DECIMAL" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+	    <result column="first_weight" property="firstWeight" jdbcType="DECIMAL" />
+	    <result column="first_weight_price" property="firstWeightPrice" jdbcType="DECIMAL" />
+	    <result column="continued_weight" property="continuedWeight" jdbcType="DECIMAL" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DECIMAL" />
+	    <result column="weight_limit" property="weightLimit" jdbcType="DECIMAL" />
+	    <result column="timeliness" property="timeliness" jdbcType="VARCHAR" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="product_case" property="productCase" jdbcType="VARCHAR" />
+	    <result column="area_type_code" property="areaTypeCode" jdbcType="VARCHAR" />
+	    <result column="deliverid" property="deliverid" jdbcType="VARCHAR" />
+	    <result column="mark" property="mark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(templateCode != null and templateCode !='')" >
+				and template_code = #{templateCode}
+		</if>
+		<if test="(startWarehouseId != null and startWarehouseId !='')" >
+				and start_warehouse_id = #{startWarehouseId}
+		</if>
+		<if test="(provinceId != null and provinceId !='')" >
+				and province_id = #{provinceId}
+		</if>
+		<if test="(cityId != null and cityId !='')" >
+				and city_id = #{cityId}
+		</if>
+		<if test="(areaId != null and areaId !='')" >
+				and area_id = #{areaId}
+		</if>
+		<if test="(weightDown != null and weightDown !='')" >
+				and weight_down = #{weightDown}
+		</if>
+		<if test="(weightUp != null and weightUp !='')" >
+				and weight_up = #{weightUp}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and unit_price = #{unitPrice}
+		</if>
+		<if test="(firstWeight != null and firstWeight !='')" >
+				and first_weight = #{firstWeight}
+		</if>
+		<if test="(firstWeightPrice != null and firstWeightPrice !='')" >
+				and first_weight_price = #{firstWeightPrice}
+		</if>
+		<if test="(continuedWeight != null and continuedWeight !='')" >
+				and continued_weight = #{continuedWeight}
+		</if>
+		<if test="(continuedPrice != null and continuedPrice !='')" >
+				and continued_price = #{continuedPrice}
+		</if>
+		<if test="(weightLimit != null and weightLimit !='')" >
+				and weight_limit = #{weightLimit}
+		</if>
+		<if test="(timeliness != null and timeliness !='')" >
+				and timeliness = #{timeliness}
+		</if>
+		<if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and temperature_type_code = #{temperatureTypeCode}
+		</if>
+		<if test="(productCase != null and productCase !='')" >
+				and product_case = #{productCase}
+		</if>
+		<if test="(areaTypeCode != null and areaTypeCode !='')" >
+				and area_type_code = #{areaTypeCode}
+		</if>
+		<if test="(deliverid != null and deliverid !='')" >
+				and deliverid = #{deliverid}
+		</if>
+		<if test="(mark != null and mark !='')" >
+				and mark = #{mark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_quote_dispatch_detail
+        where 1=1 and del_flag = '0'
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="queryAllById" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
+		SELECT <include refid="baseColumns" /> 
+		FROM bms_quote_dispatch_detail
+		where 1=1 AND del_flag = '0' AND template_code=#{templateCode,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 通过temid查找对应的id -->
+	<select id="getId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id FROM price_dispatch_template where template_code=#{temid,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 
+	<select id="getDispatchById" parameterType="java.lang.String" resultMap="baseResultMap">
+		SELECT <include refid="baseColumns" /> 
+		FROM bms_quote_dispatch_detail 
+		where 1=1 and del_flag = '0' 
+		and template_id = #{temid,jdbcType=VARCHAR}
+	</select>
+	 -->
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
+        insert into bms_quote_dispatch_detail(template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{templateCode,jdbcType=VARCHAR}, 
+			#{startWarehouseId,jdbcType=VARCHAR}, 
+			#{provinceId,jdbcType=VARCHAR}, 
+			#{cityId,jdbcType=VARCHAR}, 
+			#{areaId,jdbcType=VARCHAR}, 
+			#{weightDown,jdbcType=DECIMAL}, 
+			#{weightUp,jdbcType=DECIMAL}, 
+			#{unitPrice,jdbcType=DECIMAL}, 
+			#{firstWeight,jdbcType=DECIMAL}, 
+			#{firstWeightPrice,jdbcType=DECIMAL}, 
+			#{continuedWeight,jdbcType=DECIMAL}, 
+			#{continuedPrice,jdbcType=DECIMAL}, 
+			#{weightLimit,jdbcType=DECIMAL}, 
+			#{timeliness,jdbcType=VARCHAR}, 
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{productCase,jdbcType=VARCHAR}, 
+			#{areaTypeCode,jdbcType=VARCHAR}, 
+			#{deliverid,jdbcType=VARCHAR}, 
+			#{mark,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
+        update bms_quote_dispatch_detail 
+		<set>
+			<if test="templateCode != null" >template_code=#{templateCode,jdbcType=VARCHAR},</if>
+			<if test="startWarehouseId != null" >start_warehouse_id=#{startWarehouseId,jdbcType=VARCHAR},</if>
+			<if test="provinceId != null" >province_id=#{provinceId,jdbcType=VARCHAR},</if>
+			city_id=#{cityId,jdbcType=VARCHAR},
+			area_id=#{areaId,jdbcType=VARCHAR},
+			<if test="weightDown != null" >weight_down=#{weightDown,jdbcType=DECIMAL},</if>
+			<if test="weightUp != null" >weight_up=#{weightUp,jdbcType=DECIMAL},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
+			<if test="firstWeight != null" >first_weight=#{firstWeight,jdbcType=DECIMAL},</if>
+			<if test="firstWeightPrice != null" >first_weight_price=#{firstWeightPrice,jdbcType=DECIMAL},</if>
+			<if test="continuedWeight != null" >continued_weight=#{continuedWeight,jdbcType=DECIMAL},</if>
+			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
+			<if test="weightLimit != null" >weight_limit=#{weightLimit,jdbcType=DECIMAL},</if>
+			<if test="timeliness != null" >timeliness=#{timeliness,jdbcType=VARCHAR},</if>
+			<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
+			<if test="productCase != null" >product_case=#{productCase,jdbcType=VARCHAR},</if>
+			<if test="areaTypeCode != null" >area_type_code=#{areaTypeCode,jdbcType=VARCHAR},</if>
+			<if test="deliverid != null" >deliverid=#{deliverid,jdbcType=VARCHAR},</if>
+			<if test="mark != null" >mark=#{mark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+	<!-- 删除配送报价模板 -->
+	<delete id="deletePriceDistribution" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
+		update bms_quote_dispatch_detail
+		<set>
+			<if test="lastModifier != null">last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null">last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			del_flag = '1'
+		</set>
+		where id = #{id, jdbcType=BIGINT}
+	</delete>
+	
+	<update id="removeDispatchByMap" parameterType="java.util.Map">
+		update bms_quote_dispatch_detail
+		<set>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			del_flag = '1'
+		</set>
+		 where template_code = #{templateCode,jdbcType=VARCHAR}
+	</update>
+	
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bms_quote_dispatch_detail where
+        id=#{id}
+    </delete>
+    
+</mapper>

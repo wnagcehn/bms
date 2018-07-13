@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.contract.mapper.PriceContractItemMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="contract_code" property="contractCode" jdbcType="VARCHAR" />
+	    <result column="biz_type_code" property="bizTypeCode" jdbcType="VARCHAR" />
+	    <result column="subject_id" property="subjectId" jdbcType="VARCHAR" />
+	    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, contract_code, biz_type_code, subject_id, template_id, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(contractCode != null and contractCode !='')" >
+				and contract_code = #{contractCode}
+		</if>
+		<if test="(bizTypeCode != null and bizTypeCode !='')" >
+				and biz_type_code = #{bizTypeCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+				and subject_id = #{subjectId}
+		</if>
+		<if test="(templateId != null and templateId !='')" >
+				and template_id = #{templateId}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumns" />
+        from price_contract_item
+        where del_flag = 0 
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+        select
+        <include refid="baseColumns" />
+        from price_contract_item
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+        insert into price_contract_item(contract_code, biz_type_code, subject_id, template_id, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+				#{contractCode,jdbcType=VARCHAR}, 
+				#{bizTypeCode,jdbcType=VARCHAR}, 
+				#{subjectId,jdbcType=VARCHAR}, 
+				#{templateId,jdbcType=VARCHAR}, 
+				#{creator,jdbcType=VARCHAR}, 
+				#{createTime,jdbcType=TIMESTAMP}, 
+				#{lastModifier,jdbcType=VARCHAR}, 
+				#{lastModifyTime,jdbcType=TIMESTAMP}, 
+				#{delFlag,jdbcType=VARCHAR}
+			)
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+        update price_contract_item 
+		<set >
+			<if test="contractCode != null" >contract_code=#{contractCode,jdbcType=VARCHAR},</if>
+			<if test="bizTypeCode != null" >biz_type_code=#{bizTypeCode,jdbcType=VARCHAR},</if>
+			<if test="subjectId != null" >subject_id=#{subjectId,jdbcType=VARCHAR},</if>
+			<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from price_contract_item where
+        id=#{id}
+    </delete>
+</mapper>

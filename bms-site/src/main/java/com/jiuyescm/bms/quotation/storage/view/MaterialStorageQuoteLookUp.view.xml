@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtMCondition">
+      <PropertyDef name="templateCode">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="defaultValue">wh_material_use</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageType">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity</Property>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">业务类型</Property>
+        <Property name="defaultValue">STORAGE</Property>
+        <Property name="readOnly">true</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="billWayCode">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费方式</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模板编码</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="storageTemplateType">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;STORAGE_TEMPLATE_TYPE&quot;)}</Property>
+        </Property>
+        <Property name="defaultValue">STORAGE_MATERIAL_PRICE_TEMPLATE</Property>
+        <Property name="label">仓储模板类型</Property>
+      </PropertyDef>
+      <PropertyDef name="templateType">
+        <Property></Property>
+        <Property name="label">模版类型</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+        <Property name="label">参数1</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageMaterialType">
+      <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property name="label">模板Id</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property name="label">耗材类型</Property>
+      </PropertyDef>
+      <PropertyDef name="materialCode">
+        <Property name="label">耗材编码</Property>
+      </PropertyDef>
+      <PropertyDef name="specName">
+        <Property name="label">规格名称</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="outsideDiameter">
+        <Property name="label">外径</Property>
+      </PropertyDef>
+      <PropertyDef name="innerDiameter">
+        <Property name="label">内径</Property>
+      </PropertyDef>
+      <PropertyDef name="wallThickness">
+        <Property name="label">壁厚</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseId">
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property></Property>
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property></Property>
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStepCondition">
+      <PropertyDef name="materialType">
+        <Property name="label">耗材类型</Property>
+      </PropertyDef>
+      <PropertyDef name="materialCode">
+        <Property name="label">耗材编码</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property name="label">模板Id</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseId">
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsMCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsMCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtMCondition]</Property>
+    </DataSet>
+    <DataSet id="dsStorageType">
+      <Property name="dataType">[dtStorageType]</Property>
+      <Property name="dataProvider">storageTemplateController#queryMaterial</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <DataSet id="dsStorageMaterialType">
+      <Property name="dataProvider">stroageMaterialQuoteController#query</Property>
+      <Property name="dataType">[dtStorageMaterialType]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <DataSet id="dsStepCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsStepCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtStepCondition]</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="afGenericTemplate">
+        <Property name="labelSeparator">:</Property>
+        <Property name="cols">*,*,*</Property>
+        <Property name="dataSet">dsMCondition</Property>
+        <Property name="dataType">dtMCondition</Property>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateCode</Property>
+          <Property name="property">templateCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateName</Property>
+          <Property name="property">templateName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsStorageType</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsStorageType&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#afGenericTemplate&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+&#xD;
+/*&#xD;
+或者：&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsGenericTemplate&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+*/</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="select">
+          <ClientEvent name="onClick">this.get(&quot;#actionSelect&quot;).execute();</ClientEvent>
+          <Property name="caption">选择</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <DataGrid id="dg_QuotaList">
+        <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+if(templateId==''||templateId==null){&#xD;
+	return false;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#materialLineSearch.entity&quot;).set(&quot;templateId&quot;,templateId);&#xD;
+&#xD;
+&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="readOnly">true</Property>
+        <Property name="lazyInit">true</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="height">200</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn>
+          <Property name="property">customerName</Property>
+          <Property name="name">customerName</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="templateCode">
+          <Property name="property">templateCode</Property>
+        </DataColumn>
+        <DataColumn name="templateName">
+          <Property name="property">templateName</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">templateType</Property>
+          <Property name="name">templateType</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">storageTemplateType</Property>
+          <Property name="property">storageTemplateType</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">remark</Property>
+          <Property name="property">remark</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <TabControl>
+      <ControlTab>
+        <Property name="caption">耗材明细</Property>
+        <Container>
+          <AutoForm id="materialLineSearch">
+            <Property name="labelSeparator">:</Property>
+            <Property name="cols">260,260,*,*</Property>
+            <Property name="dataType">dtStepCondition</Property>
+            <Property name="dataSet">dsStepCondition</Property>
+            <AutoFormElement>
+              <Property name="name">warehouseId</Property>
+              <Property name="property">warehouseId</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">materialCode</Property>
+              <Property name="property">materialCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">materialType</Property>
+              <Property name="property">materialType</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">templateId</Property>
+              <Property name="property">templateId</Property>
+              <Property name="visible">false</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsStorageMaterialType</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton id="btnStepQuery">
+              <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsStorageMaterialType&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#materialLineSearch&quot;);&#xD;
+var templateId = tmpFormCondition.get(&quot;entity&quot;).get(&quot;templateId&quot;);&#xD;
+if(templateId==''||templateId==null){&#xD;
+	return false;&#xD;
+}&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+&#xD;
+/*&#xD;
+或者：&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsGenericTemplate&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+*/</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsStorageMaterialType</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn>
+              <Property name="property">materialCode</Property>
+              <Property name="name">materialCode</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">materialType</Property>
+              <Property name="name">materialType</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">warehouseId</Property>
+              <Property name="property">warehouseId</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">specName</Property>
+              <Property name="name">specName</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">outsideDiameter</Property>
+              <Property name="property">outsideDiameter</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">unitPrice</Property>
+              <Property name="name">unitPrice</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">wallThickness</Property>
+              <Property name="property">wallThickness</Property>
+              <Property name="readOnly">true</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <Action id="actionSelect">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsStorageType&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsMCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

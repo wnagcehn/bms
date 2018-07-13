@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.fees.bill.mapper.FeesBillMapper">
+	<resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.entity.FeesBillEntity" >
+	 <id column="billno" property="billno" jdbcType="VARCHAR" />
+	    <result column="billno" property="billno" jdbcType="VARCHAR" />
+	    <result column="billname" property="billname" jdbcType="VARCHAR" />
+	    <result column="billstarttime" property="billstarttime" jdbcType="TIMESTAMP" />
+	    <result column="billendtime" property="billendtime" jdbcType="TIMESTAMP" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="totleprice" property="totleprice" jdbcType="DOUBLE" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE" />
+	    <result column="billstatus" property="billstatus" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="delflag" property="delflag" jdbcType="TINYINT" />
+	    <result column="creperson" property="creperson" jdbcType="VARCHAR" />
+	    <result column="crepersonname" property="crepersonname" jdbcType="VARCHAR" />
+	    <result column="cretime" property="cretime" jdbcType="TIMESTAMP" />
+	    <result column="modperson" property="modperson" jdbcType="VARCHAR" />
+	    <result column="modpersonname" property="modpersonname" jdbcType="VARCHAR" />
+	    <result column="modtime" property="modtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="baseColumns">
+		fees_bill.billno,fees_bill.billname,fees_bill.billstarttime,fees_bill.billendtime,
+		fees_bill.customerid,fees_bill.customer_name,fees_bill.totleprice,fees_bill.receipt_amount,
+		fees_bill.billstatus,fees_bill.delflag,fees_bill.remark,fees_bill.creperson,fees_bill.crepersonname,
+		fees_bill.cretime,fees_bill.modperson,fees_bill.modpersonname,fees_bill.modtime
+	</sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(billno != null and billno !='')" >
+				and fees_bill.billno = #{billno}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and fees_bill.customerid = #{customerid}
+		</if>
+		<if test="(billstatus != null and billstatus !=-1)" >
+				and fees_bill.billstatus = #{billstatus}
+		</if>
+		<if test="(crestime != null and crestime !='')" >
+			    and fees_bill.cretime >= #{crestime}
+		</if>
+		<if test="(creetime != null and creetime !='')" >
+			    and <![CDATA[fees_bill.cretime <= #{creetime}]]>
+		</if>	
+	</sql>
+	
+	<select id="query" parameterType="com.jiuyescm.bms.fees.entity.FeesBillQueryEntity" resultMap="BaseResultMap">
+		 select
+        <include refid="baseColumns" />
+        from fees_bill 
+        where fees_bill.delflag=0
+        <include refid="baseSelectColumns" />
+        order by fees_bill.cretime desc
+	</select>
+	
+	<select id="getlastBillTime" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		SELECT A.* FROM fees_bill A,
+		(SELECT customerid, max(billendtime) max_day FROM fees_bill 
+			where customerid = #{customerid} and delflag=0 GROUP BY customerid) B
+		WHERE A.customerid = B.customerid AND A.billendtime = B.max_day
+		ORDER BY A.billno DESC
+	</select>
+	
+	<insert id="save" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		insert into fees_bill
+		(
+		billno,billname,billstarttime,billendtime,customerid,customer_name,totleprice,receipt_amount,
+		billstatus,remark,delflag,creperson,
+		crepersonname,cretime,modperson,modpersonname,modtime
+		)
+		 values
+		(
+		#{billno},#{billname},#{billstarttime},#{billendtime},#{customerid},#{customerName},
+		#{totleprice},#{receiptAmount},#{billstatus},#{remark},#{delflag},#{creperson},
+		#{crepersonname},#{cretime},#{modperson},#{modpersonname},#{modtime}
+		)
+	</insert>
+	
+	<update id="confirmFeesBill" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		update fees_bill set 
+		billstatus=#{billstatus},
+		receipt_amount=#{receiptAmount},
+		remark=#{remark},
+		modperson=#{modperson},
+		modpersonname=#{modpersonname},
+		modtime=#{modtime}
+		where 
+		billno=#{billno} and billstatus=0
+	</update>
+	
+	<update id="deleteFeesBill" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		update fees_bill set 
+		billstatus=#{billstatus},
+		modperson=#{modperson},
+		modpersonname=#{modpersonname},
+		modtime=#{modtime},
+		delflag=#{delflag}
+		where 
+		billno=#{billno} and billstatus=0 and delflag=0
+	</update>
+	
+	<update id="update" parameterType="com.jiuyescm.bms.fees.entity.FeesBillEntity">
+		update fees_bill set 
+		totleprice=#{totleprice},
+		modperson=#{modperson},
+		modpersonname=#{modpersonname},
+		modtime=#{modtime}
+		where 
+		billno=#{billno} and billstatus=0 and delflag=0
+	</update>
+	
+</mapper>

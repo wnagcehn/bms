@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.address.PubAddressVoMapper" >
+
+    <select id="queryVo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.vo.PubAddressVo">
+    	select 	t4.id,
+			t2.area_name province,t2.area_code provinceCode,
+			t3.area_name city,t3.area_code cityCode, 
+			t4.area_name district,t4.area_code districtCode,
+			t4.creator_code,t4.create_time,t4.last_modifier,t4.last_modify_time,t4.del_flag
+		from pub_address t4 
+			left join pub_address t3 on t4.parent_area_code = t3.area_code
+			left join pub_address t2 on t3.parent_area_code = t2.area_code
+		where t4.level_num = 4 
+			<if test="(provinceCode != null and provinceCode !='')" >
+					and t2.area_code = #{provinceCode}
+			</if>
+			<if test="(cityCode != null and cityCode !='')" >
+					and t3.area_code = #{cityCode}
+			</if>
+			<if test="(districtCode != null and districtCode !='')" >
+					and t4.area_code = #{districtCode}
+			</if>
+		order by t4.area_code asc
+    </select>
+    
+    <select id="findAddressByMap" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.address.vo.PubAddressVo">
+    	select 	t4.id,
+			t2.area_name province,t2.area_code provinceCode,
+			t3.area_name city,t3.area_code cityCode, 
+			t4.area_name district,t4.area_code districtCode,
+			t4.creator_code,t4.create_time,t4.last_modifier,t4.last_modify_time,t4.del_flag
+		from pub_address t4 
+			left join pub_address t3 on t4.parent_area_code = t3.area_code
+			left join pub_address t2 on t3.parent_area_code = t2.area_code
+		where 1=1
+			<if test="(provinceCode != null and provinceCode !='')" >
+					and t2.area_code = #{provinceCode}
+			</if>
+			<if test="(provinceName != null and provinceName !='')" >
+					and t2.area_name = #{provinceName}
+			</if>
+			<if test="(cityCode != null and cityCode !='')" >
+					and t3.area_code = #{cityCode}
+			</if>
+			<if test="(cityName != null and cityName !='')" >
+					and t3.area_name = #{cityName}
+			</if>
+			<if test="(districtCode != null and districtCode !='')" >
+					and t4.area_code = #{districtCode}
+			</if>
+			<if test="(districtName != null and districtName !='')" >
+					and t4.area_name = #{districtName}
+			</if>
+		order by t4.area_code asc
+    </select>
+</mapper>

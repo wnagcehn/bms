@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.payable.transport.mapper.BizGanxianRoadBillMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity" >
+
+        <id column="id" property="id" jdbcType="INTEGER" />
+	   <result column="id" property="id" jdbcType="BIGINT" />
+	   <result column="tms_id" property="tmsId" jdbcType="VARCHAR" />
+	   <result column="roadbill_no" property="roadbillNo" jdbcType="VARCHAR" />
+	   <result column="roadbill_name" property="roadbillName" jdbcType="VARCHAR" />
+	   <result column="roadbill_type" property="roadbillType" jdbcType="VARCHAR" />
+	   <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	   <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	   <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	   <result column="send_province_id" property="sendProvinceId" jdbcType="VARCHAR" />
+	   <result column="send_city_id" property="sendCityId" jdbcType="VARCHAR" />
+	   <result column="send_district_id" property="sendDistrictId" jdbcType="VARCHAR" />
+	   <result column="receiver_province_id" property="receiverProvinceId" jdbcType="VARCHAR" />
+	   <result column="receiver_city_id" property="receiverCityId" jdbcType="VARCHAR" />
+	   <result column="receiver_district_id" property="receiverDistrictId" jdbcType="VARCHAR" />
+	   <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+	   <result column="receiver_telephone" property="receiverTelephone" jdbcType="VARCHAR" />
+	   <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	   <result column="is_light" property="isLight" jdbcType="VARCHAR" />
+	   <result column="vehicle_no" property="vehicleNo" jdbcType="VARCHAR" />
+	   <result column="car_model" property="carModel" jdbcType="VARCHAR" />
+	   <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+	   <result column="waybill_num" property="waybillNum" jdbcType="DOUBLE" />
+	   <result column="total_box" property="totalBox" jdbcType="DOUBLE" />
+	   <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	   <result column="adjust_weight" property="adjustWeight" jdbcType="DOUBLE" />
+	   <result column="total_volume" property="totalVolume" jdbcType="DOUBLE" />
+	   <result column="send_person" property="sendPerson" jdbcType="VARCHAR" />
+	   <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+	   <result column="finished_time" property="finishedTime" jdbcType="TIMESTAMP" />
+	   <result column="remark" property="remark" jdbcType="VARCHAR" />
+	   <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	   <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	   <result column="creator" property="creator" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	   <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	   <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, tms_id, roadbill_no, roadbill_name, roadbill_type, carrier_id,carrier_name, warehouse_code, send_province_id, send_city_id, send_district_id, receiver_province_id, receiver_city_id, receiver_district_id, receiver, receiver_telephone, temperature_type_code, is_light, vehicle_no, car_model, transport_type, waybill_num, total_box, total_weight, adjust_weight, total_volume, send_person, send_time, finished_time, remark, fees_no, is_calculated, creator, create_time, last_modifier, last_modify_time,write_time, calculate_time, del_flag
+    </sql>
+
+
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+	  
+		<if test="(roadbillNo != null and roadbillNo !='')" >
+				and roadbill_no = #{roadbillNo}
+		</if>
+
+	    <if test="(roadbillName != null and roadbillName !='')" >
+				and roadbill_name like '%${roadbillName}%'
+		</if>
+
+	    <if test="(roadbillType != null and roadbillType !='')" >
+				and roadbill_type = #{roadbillType}
+		</if>
+
+	    <if test="(carrierId != null and carrierId !='')" >
+				and carrier_id = #{carrierId}
+		</if>
+
+		<if test="(carrierName != null and carrierName !='')" >
+				and carrier_name like '%${carrierName}%'
+		</if>
+		
+	    <if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+
+	    <if test="(sendProvinceId != null and sendProvinceId !='')" >
+				and send_province_id = #{sendProvinceId}
+		</if>
+
+	    <if test="(sendCityId != null and sendCityId !='')" >
+				and send_city_id = #{sendCityId}
+		</if>
+
+	    <if test="(sendDistrictId != null and sendDistrictId !='')" >
+				and send_district_id = #{sendDistrictId}
+		</if>
+
+	    <if test="(receiverProvinceId != null and receiverProvinceId !='')" >
+				and receiver_province_id = #{receiverProvinceId}
+		</if>
+
+	    <if test="(receiverCityId != null and receiverCityId !='')" >
+				and receiver_city_id = #{receiverCityId}
+		</if>
+
+	    <if test="(receiverDistrictId != null and receiverDistrictId !='')" >
+				and receiver_district_id = #{receiverDistrictId}
+		</if>
+
+	    <if test="(receiver != null and receiver !='')" >
+				and receiver = #{receiver}
+		</if>
+
+	    <if test="(receiverTelephone != null and receiverTelephone !='')" >
+				and receiver_telephone = #{receiverTelephone}
+		</if>
+
+	    <if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and temperature_type_code = #{temperatureTypeCode}
+		</if>
+
+	    <if test="(isLight != null and isLight !='')" >
+				and is_light = #{isLight}
+		</if>
+
+	    <if test="(vehicleNo != null and vehicleNo !='')" >
+				and vehicle_no = #{vehicleNo}
+		</if>
+
+	    <if test="(carModel != null and carModel !='')" >
+				and car_model = #{carModel}
+		</if>
+		<if test="(transportType != null and transportType !='')" >
+				and transport_type = #{transportType}
+		</if>
+
+	    <if test="(waybillNum != null and waybillNum !='')" >
+				and waybill_num = #{waybillNum}
+		</if>
+
+	    <if test="(totalBox != null and totalBox !='')" >
+				and total_box = #{totalBox}
+		</if>
+
+	    <if test="(totalWeight != null and totalWeight !='')" >
+				and total_weight = #{totalWeight}
+		</if>
+		
+		<if test="(adjustWeight != null and adjustWeight !='')" >
+				and adjust_weight = #{adjustWeight}
+		</if>
+
+	    <if test="(totalVolume != null and totalVolume !='')" >
+				and total_volume = #{totalVolume}
+		</if>
+
+	    <if test="(sendPerson != null and sendPerson !='')" >
+				and send_person = #{sendPerson}
+		</if>
+
+	    <if test="(sendTime != null and sendTime !='')" >
+				and send_time = #{sendTime}
+		</if>
+
+	    <if test="(finishedTime != null and finishedTime !='')" >
+				and finished_time = #{finishedTime}
+		</if>
+		
+		<if test="(remark != null and remark !='')" >
+				and remark like '%${remark}%'
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and send_time >= #{startTime} and <![CDATA[send_time <= #{endTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		
+		<if test="writeTime != null and writeTime !=''" >
+				and write_time >= #{writeTime} and <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="calculateTime != null and calculateTime !=''" >
+				and calculate_time >= #{calculateTime} and <![CDATA[calculate_time <= #{calculateTime}]]>
+		</if>
+			
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_ganxian_roadbill
+        where 1=1
+        <include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity">
+        select
+        <include refid="baseColumns" />
+        from biz_ganxian_roadbill
+        where id=#{id}
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity">
+        insert into biz_ganxian_roadbill(tms_id,roadbill_no, roadbill_name, roadbill_type, carrier_id,carrier_name, warehouse_code, send_province_id, send_city_id, send_district_id, receiver_province_id, receiver_city_id, receiver_district_id, receiver, receiver_telephone, temperature_type_code, is_light, vehicle_no, car_model, transport_type, waybill_num, total_box, total_weight, adjust_weight, total_volume, send_person, send_time, finished_time, remark, fees_no, is_calculated, creator, create_time, last_modifier, last_modify_time,write_time, calculate_time, del_flag)
+        values (
+#{tmsId,jdbcType=VARCHAR},
+#{roadbillNo,jdbcType=VARCHAR}, 
+#{roadbillName,jdbcType=VARCHAR}, 
+#{roadbillType,jdbcType=VARCHAR}, 
+#{carrierId,jdbcType=VARCHAR}, 
+#{carrierName,jdbcType=VARCHAR}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{sendProvinceId,jdbcType=VARCHAR}, 
+#{sendCityId,jdbcType=VARCHAR}, 
+#{sendDistrictId,jdbcType=VARCHAR}, 
+#{receiverProvinceId,jdbcType=VARCHAR}, 
+#{receiverCityId,jdbcType=VARCHAR}, 
+#{receiverDistrictId,jdbcType=VARCHAR}, 
+#{receiver,jdbcType=VARCHAR}, 
+#{receiverTelephone,jdbcType=VARCHAR}, 
+#{temperatureTypeCode,jdbcType=VARCHAR}, 
+#{isLight,jdbcType=VARCHAR}, 
+#{vehicleNo,jdbcType=VARCHAR}, 
+#{carModel,jdbcType=VARCHAR}, 
+#{transportType,jdbcType=VARCHAR},
+#{waybillNum,jdbcType=DOUBLE}, 
+#{totalBox,jdbcType=DOUBLE}, 
+#{totalWeight,jdbcType=DOUBLE}, 
+#{adjustWeight,jdbcType=DOUBLE}, 
+#{totalVolume,jdbcType=DOUBLE}, 
+#{sendPerson,jdbcType=VARCHAR}, 
+#{sendTime,jdbcType=TIMESTAMP}, 
+#{finishedTime,jdbcType=TIMESTAMP}, 
+#{remark,jdbcType=VARCHAR}, 
+#{feesNo,jdbcType=VARCHAR}, 
+#{isCalculated,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP},
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{calculateTime,jdbcType=TIMESTAMP},
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity">
+        update biz_ganxian_roadbill set
+tms_id=#{tmsId,jdbcType=VARCHAR}, 
+roadbill_no=#{roadbillNo,jdbcType=VARCHAR}, 
+roadbill_name=#{roadbillName,jdbcType=VARCHAR}, 
+roadbill_type=#{roadbillType,jdbcType=VARCHAR}, 
+carrier_id=#{carrierId,jdbcType=VARCHAR}, 
+carrier_name=#{carrierName,jdbcType=VARCHAR}, 
+warehouse_code=#{warehouseCode,jdbcType=VARCHAR}, 
+send_province_id=#{sendProvinceId,jdbcType=VARCHAR}, 
+send_city_id=#{sendCityId,jdbcType=VARCHAR}, 
+send_district_id=#{sendDistrictId,jdbcType=VARCHAR}, 
+receiver_province_id=#{receiverProvinceId,jdbcType=VARCHAR}, 
+receiver_city_id=#{receiverCityId,jdbcType=VARCHAR}, 
+receiver_district_id=#{receiverDistrictId,jdbcType=VARCHAR}, 
+receiver=#{receiver,jdbcType=VARCHAR}, 
+receiver_telephone=#{receiverTelephone,jdbcType=VARCHAR}, 
+temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR}, 
+is_light=#{isLight,jdbcType=VARCHAR}, 
+vehicle_no=#{vehicleNo,jdbcType=VARCHAR}, 
+car_model=#{carModel,jdbcType=VARCHAR},
+transport_type=#{transportType,jdbcType=VARCHAR},  
+waybill_num=#{waybillNum,jdbcType=DOUBLE}, 
+total_box=#{totalBox,jdbcType=DOUBLE}, 
+total_weight=#{totalWeight,jdbcType=DOUBLE}, 
+adjust_weight=#{adjustWeight,jdbcType=DOUBLE},
+total_volume=#{totalVolume,jdbcType=DOUBLE}, 
+send_person=#{sendPerson,jdbcType=VARCHAR}, 
+send_time=#{sendTime,jdbcType=TIMESTAMP}, 
+finished_time=#{finishedTime,jdbcType=TIMESTAMP}, 
+remark=#{remark,jdbcType=VARCHAR}, 
+fees_no=#{feesNo,jdbcType=VARCHAR},
+is_calculated=#{isCalculated,jdbcType=VARCHAR},
+creator=#{creator,jdbcType=VARCHAR}, 
+create_time=#{createTime,jdbcType=TIMESTAMP}, 
+last_modifier=#{lastModifier,jdbcType=VARCHAR}, 
+last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP}, 
+write_time=#{writeTime,jdbcType=TIMESTAMP},
+calculate_time=#{calculateTime,jdbcType=TIMESTAMP},
+del_flag=#{delFlag,jdbcType=VARCHAR}
+        where id=#{id}
+    </update>
+
+	<update id="updateList" parameterType="com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity">
+        update biz_ganxian_roadbill set
+        	<if test="(adjustWeight != null and adjustWeight !='')" >
+				adjust_weight = #{adjustWeight,jdbcType=DOUBLE}
+			</if>
+			<if test="(adjustWeight == null)" >
+				adjust_weight = 0.0
+			</if>
+			
+			<if test="(feesNo != null and feesNo !='')" >
+				,fees_no = #{feesNo,jdbcType=VARCHAR}
+			</if>
+			<if test="(isCalculated != null and isCalculated !='')" >
+				,is_calculated = #{isCalculated,jdbcType=VARCHAR}
+			</if>
+			<if test="(lastModifier != null and lastModifier !='')" >
+				,last_modifier = #{lastModifier,jdbcType=VARCHAR}
+			</if>
+			<if test="(lastModifyTime != null and lastModifyTime !='')" >
+				,last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="writeTime != null" >
+				,write_time=#{writeTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="calculateTime != null" >
+				,calculate_time=#{calculateTime,jdbcType=TIMESTAMP}
+			</if>
+        where id=#{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from biz_ganxian_roadbill where
+        id=#{id}
+    </delete>
+    
+    
+    <select id="querybizGanxianRoadBill" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select  
+            id, tms_id, roadbill_no, roadbill_name, roadbill_type, carrier_id,carrier_name, warehouse_code, 
+            send_province_id, send_city_id, send_district_id, 
+            receiver_province_id, receiver_city_id, receiver_district_id, receiver, receiver_telephone, 
+            temperature_type_code, IFNULL(is_light,0) as is_light, vehicle_no, car_model, transport_type, 
+            waybill_num, total_box, total_weight, IFNULL(adjust_weight,0) as adjust_weight, total_volume, 
+            send_person, send_time, finished_time, remark, fees_no, is_calculated, 
+            creator, create_time, last_modifier, last_modify_time,
+            write_time, calculate_time, del_flag
+        from biz_ganxian_roadbill
+        where  del_flag = 0
+        <if test="(beginTime != null and beginTime !='')" >
+			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+			and carrier_id = #{carrierId,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = #{isCalculated,jdbcType=VARCHAR}
+		</if>
+		LIMIT #{num}
+    </select>
+
+	<update id="updatebizGanxianRoadBill" parameterType="com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity">
+        update biz_ganxian_roadbill 
+		<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP}</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+</mapper>

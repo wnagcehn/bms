@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="dtBizOutstockPackmaterialTempEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity</Property>
+    <PropertyDef name="id">
+      <Property name="label">id</Property>
+    </PropertyDef>
+    <PropertyDef name="batchNum">
+      <Property name="label">批次号</Property>
+    </PropertyDef>
+    <PropertyDef name="wmsId">
+      <Property name="label">wms_id</Property>
+    </PropertyDef>
+    <PropertyDef name="outstockNo">
+      <Property name="label">出库单号</Property>
+    </PropertyDef>
+    <PropertyDef name="waybillNo">
+      <Property name="label">运单号</Property>
+    </PropertyDef>
+    <PropertyDef name="customerId">
+      <Property name="label">商家id</Property>
+    </PropertyDef>
+    <PropertyDef name="customerName">
+      <Property name="label">商家名称</Property>
+    </PropertyDef>
+    <PropertyDef name="consumerMaterialCode">
+      <Property name="label">耗材编码</Property>
+    </PropertyDef>
+    <PropertyDef name="consumerMaterialName">
+      <Property name="label">耗材名称</Property>
+    </PropertyDef>
+    <PropertyDef name="warehouseCode">
+      <Property name="label">WarehouseCode</Property>
+    </PropertyDef>
+    <PropertyDef name="warehouseName">
+      <Property name="label">WarehouseName</Property>
+    </PropertyDef>
+    <PropertyDef name="num">
+      <Property name="label">num</Property>
+    </PropertyDef>
+    <PropertyDef name="adjustNum">
+      <Property name="label">AdjustNum</Property>
+    </PropertyDef>
+    <PropertyDef name="feesNo">
+      <Property name="label">费用ID</Property>
+    </PropertyDef>
+    <PropertyDef name="costFeesNo">
+      <Property name="label">成本费用编号</Property>
+    </PropertyDef>
+    <PropertyDef name="dbname">
+      <Property name="label">所属DB的名称</Property>
+    </PropertyDef>
+    <PropertyDef name="isCalculated">
+      <Property name="label">是否已计算费用 0-未结算 1-已结算 2-结算异常 3-合同不存在 4-不在操作范围 5-其他</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="creator">
+      <Property name="label">创建者</Property>
+    </PropertyDef>
+    <PropertyDef name="createTime">
+      <Property name="label">创建时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifier">
+      <Property name="label">修改者</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifyTime">
+      <Property name="label">修改时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="delFlag">
+      <Property name="label">删除标志</Property>
+    </PropertyDef>
+    <PropertyDef name="calculateTime">
+      <Property name="label">费用计算时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="costIsCalculated">
+      <Property name="label">成本计算状态</Property>
+    </PropertyDef>
+    <PropertyDef name="costCalculateTime">
+      <Property name="label">成本费用计算时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="writeTime">
+      <Property name="label">写入BMS时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="weight">
+      <Property name="label">weight</Property>
+    </PropertyDef>
+    <PropertyDef name="specDesc">
+      <Property name="label">SpecDesc</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr1">
+      <Property name="label">拓展字段1</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr2">
+      <Property name="label">拓展字段2</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr3">
+      <Property name="label">拓展字段3</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr4">
+      <Property name="label">拓展字段4</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr5">
+      <Property name="label">拓展字段5</Property>
+    </PropertyDef>
+    <PropertyDef name="costRemark">
+      <Property name="label">成本费用计算备注</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

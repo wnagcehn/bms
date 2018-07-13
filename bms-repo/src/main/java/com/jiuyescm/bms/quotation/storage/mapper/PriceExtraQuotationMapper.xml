@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.storage.PriceExtraQuotationMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+    <result column="subject_id" property="subjectId" jdbcType="VARCHAR" />
+    <result column="fee_unit_code" property="feeUnitCode" jdbcType="VARCHAR" />
+    <result column="unit_price"  property="unitPrice" jdbcType="DOUBLE"/>
+    <result column="operate_type" property="operateType" jdbcType="VARCHAR" />
+    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+    <result column="price_type" property="priceType" jdbcType="VARCHAR" />
+    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+    <result column="continued_item" property="continuedItem" jdbcType="DOUBLE" />
+    <result column="weight_lower" property="weightLower" jdbcType="DOUBLE" />
+    <result column="weight_upper" property="weightUpper" jdbcType="DOUBLE" />
+    <result column="num_lower" property="numLower" jdbcType="DOUBLE" />
+    <result column="num_upper" property="numUpper" jdbcType="DOUBLE" />
+    <result column="sku_lower" property="skuLower" jdbcType="DOUBLE" />
+    <result column="sku_upper" property="skuUpper" jdbcType="DOUBLE" />
+    <result column="volume_lower" property="volumeLower" jdbcType="DOUBLE" />
+    <result column="volume_upper" property="volumeUpper" jdbcType="DOUBLE" />
+    <result column="user_define1" property="userDefine1" jdbcType="VARCHAR" />
+    <result column="user_define2" property="userDefine2" jdbcType="VARCHAR" />
+    <result column="user_define3" property="userDefine3" jdbcType="VARCHAR" />
+    <result column="user_define4" property="userDefine4" jdbcType="VARCHAR" />
+    <result column="user_define5" property="userDefine5" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, template_id, subject_id, fee_unit_code,unit_price, operate_type, temperature_type_code, price_type, b2b_flag, continued_item, weight_lower, weight_upper, num_lower, num_upper, sku_lower, sku_upper, volume_lower, volume_upper, user_define1, user_define2, user_define3, user_define4, user_define5
+    , remark, creator, create_time, last_modifier, 
+    last_modify_time, del_flag
+  </sql>
+  <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity">
+        select
+        <include refid="Base_Column_List" />
+        from price_storage_extra
+        where del_flag = '0' 
+		<if test="(templateId != null and templateId !='')" >
+				and template_id = #{templateId}
+		</if>
+		
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		<if test="(priceType != null and priceType !='')" >
+				and price_type = #{priceType}
+		</if>
+		order by id
+  </select>
+
+  <insert id="insert" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity" >
+    insert into price_storage_extra (id, template_id, subject_id,unit_price,
+      fee_unit_code, operate_type, temperature_type_code, price_type, b2b_flag, continued_item, weight_lower, weight_upper, num_lower, num_upper, sku_lower, sku_upper, volume_lower, volume_upper, user_define1, user_define2, user_define3, user_define4, user_define5
+      , remark, creator, 
+      create_time, last_modifier, last_modify_time, 
+      del_flag)
+    values (#{id,jdbcType=BIGINT}, #{templateId,jdbcType=VARCHAR}, #{subjectId,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DOUBLE},
+      #{feeUnitCode,jdbcType=VARCHAR},#{operateType,jdbcType=VARCHAR}, 
+	  #{temperatureTypeCode,jdbcType=VARCHAR}, #{priceType,jdbcType=VARCHAR}, #{b2bFlag,jdbcType=VARCHAR}, 
+	  #{continuedItem,jdbcType=DOUBLE}, #{weightLower,jdbcType=DOUBLE}, #{weightUpper,jdbcType=DOUBLE}, 
+      #{numLower,jdbcType=DOUBLE}, #{numUpper,jdbcType=DOUBLE}, #{skuLower,jdbcType=DOUBLE}, #{skuUpper,jdbcType=DOUBLE}, 
+      #{volumeLower,jdbcType=DOUBLE}, #{volumeUpper,jdbcType=DOUBLE}, #{userDefine1,jdbcType=VARCHAR}, 
+	  #{userDefine2,jdbcType=VARCHAR}, #{userDefine3,jdbcType=VARCHAR}, #{userDefine4,jdbcType=VARCHAR}, 
+	  #{userDefine5,jdbcType=VARCHAR},  #{remark,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastModifier,jdbcType=VARCHAR}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <update id="update" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity" >
+    update price_storage_extra
+    <set >
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null" >
+        subject_id = #{subjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="feeUnitCode != null" >
+        fee_unit_code = #{feeUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null" >
+        unit_price = #{unitPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="operateType != null" >
+        operate_type=#{operateType,jdbcType=VARCHAR},
+      </if>
+	  <if test="temperatureTypeCode != null" >
+	    temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},
+	    </if>
+	  <if test="priceType != null" >
+	    price_type=#{priceType,jdbcType=VARCHAR},
+	  </if>
+	  <if test="b2bFlag != null" >
+	    b2b_flag=#{b2bFlag,jdbcType=VARCHAR},
+	  </if>
+	  <if test="continuedItem != null" >
+	    continued_item=#{continuedItem,jdbcType=DOUBLE},
+	  </if>
+	  <if test="weightLower != null" >
+	    weight_lower=#{weightLower,jdbcType=DOUBLE},
+	  </if>
+	  <if test="weightUpper != null" >
+	    weight_upper=#{weightUpper,jdbcType=DOUBLE},
+	  </if>
+	  <if test="numLower != null" >
+	    num_lower=#{numLower,jdbcType=DOUBLE},
+	  </if>
+	  <if test="numUpper != null" >
+	    num_upper=#{numUpper,jdbcType=DOUBLE},
+	  </if>
+	  <if test="skuLower != null" >
+	    sku_lower=#{skuLower,jdbcType=DOUBLE},
+	  </if>
+	  <if test="skuUpper != null" >
+	    sku_upper=#{skuUpper,jdbcType=DOUBLE},
+	  </if>
+	  <if test="volumeLower != null" >
+	    volume_lower=#{volumeLower,jdbcType=DOUBLE},
+	  </if>
+	  <if test="volumeUpper != null" >
+	    volume_upper=#{volumeUpper,jdbcType=DOUBLE},
+	  </if>
+	  <if test="userDefine1 != null" >
+	    user_define1=#{userDefine1,jdbcType=VARCHAR},
+	  </if>
+	  <if test="userDefine2 != null" >
+	    user_define2=#{userDefine2,jdbcType=VARCHAR},
+	  </if>
+	  <if test="userDefine3 != null" >
+	    user_define3=#{userDefine3,jdbcType=VARCHAR},
+	  </if>
+	  <if test="userDefine4 != null" >
+	    user_define4=#{userDefine4,jdbcType=VARCHAR},
+	  </if>
+	  <if test="userDefine5 != null" >
+	    user_define5=#{userDefine5,jdbcType=VARCHAR},
+	  </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifier != null" >
+        last_modifier = #{lastModifier,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeAll" parameterType="java.util.Map">
+  		update price_storage_extra set last_modifier=#{lastModifier},
+  		last_modify_time=#{lastModifyTime},del_flag=1 where template_id=#{templateId,jdbcType=VARCHAR} and price_type=#{priceType,jdbcType=VARCHAR} and del_flag='0'
+  </update>
+  
+  <select id="queryPrice" parameterType="java.util.Map" resultMap="BaseResultMap">
+       select * from price_storage_extra  where template_id=#{templateId} and del_flag='0'
+  </select>
+  
+  <select id="queryPriceByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+       select * from price_storage_extra where template_id=#{templateId} and subject_id=#{subjectId} and del_flag='0'
+       <if test="priceType != null" >
+       	  and price_type!=#{priceType}
+      </if>
+  </select>
+</mapper>

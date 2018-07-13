@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.pub.transport.mapper.PubTransportOriginCityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.pub.transport.entity.PubTransportOriginCityEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="origin_province" property="originProvince" jdbcType="VARCHAR" />
+	    <result column="origin_city" property="originCity" jdbcType="VARCHAR" />
+	    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, origin_province, origin_city, type_name, creator, create_time, 
+        last_modifier, last_modify_time, del_flag, remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(originProvince != null and originProvince !='')" >
+				and origin_province = #{originProvince}
+		</if>
+		<if test="(originCity != null and originCity !='')" >
+				and origin_city = #{originCity}
+		</if>
+		<if test="(typeName != null and typeName !='')" >
+				and type_name = #{typeName}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.pub.transport.entity.PubTransportOriginCityEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_transport_origin_city
+        where 1=1 and del_flag = '0'
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.pub.transport.entity.PubTransportOriginCityEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_transport_origin_city
+        where del_flag = '0' and id=#{id}
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.pub.transport.entity.PubTransportOriginCityEntity">
+        insert into pub_transport_origin_city(origin_province, origin_city, type_name, creator, 
+        	create_time, last_modifier, last_modify_time, del_flag, remark)
+        values (
+			#{originProvince,jdbcType=VARCHAR}, 
+			#{originCity,jdbcType=VARCHAR}, 
+			#{typeName,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.pub.transport.entity.PubTransportOriginCityEntity">
+        update pub_transport_origin_city 
+		<set >
+			<if test="originProvince != null" >origin_province=#{originProvince,jdbcType=VARCHAR},</if>
+			<if test="originCity != null" >origin_city=#{originCity,jdbcType=VARCHAR},</if>
+			<if test="typeName != null" >type_name=#{typeName,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from pub_transport_origin_city where
+        id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtProject">
+      <Property name="creationType">com.jiuyescm.mdm.customer.vo.ProjectVo</Property>
+      <PropertyDef name="projectid">
+        <Property></Property>
+        <Property name="label">项目ID</Property>
+      </PropertyDef>
+      <PropertyDef name="projectcode">
+        <Property></Property>
+        <Property name="label">助记码</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property></Property>
+        <Property name="label">项目简称</Property>
+      </PropertyDef>
+      <PropertyDef name="projectname">
+        <Property></Property>
+        <Property name="label">项目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property></Property>
+        <Property name="label">联系人</Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property></Property>
+        <Property name="label">电话</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property></Property>
+        <Property name="label">手机</Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property></Property>
+        <Property name="label">地址</Property>
+      </PropertyDef>
+      <PropertyDef name="zipcode">
+        <Property></Property>
+        <Property name="label">邮编</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">int</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;projectController#getInvalidflag&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">作废标记</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonid">
+        <Property></Property>
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonid">
+        <Property></Property>
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="newconfigflag">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="proshortname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtProjectQuery">
+      <Property name="creationType">com.jiuyescm.mdm.customer.vo.ProjectQueryVo</Property>
+      <PropertyDef name="projectid">
+        <Property></Property>
+        <Property name="label">项目ID</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property></Property>
+        <Property name="label">项目简称</Property>
+      </PropertyDef>
+      <PropertyDef name="projectcode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="projectname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="zipcode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">int</Property>
+        <Property name="label">作废标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;projectController#getInvalidflag&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">-1</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsProjectQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsProjectQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtProjectQuery]</Property>
+    </DataSet>
+    <DataSet id="dsProject">
+      <Property name="dataType">[dtProject]</Property>
+      <Property name="dataProvider">projectLookupPR#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">lazy</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsProject</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data =view.get(&quot;#dsProjectQuery.data&quot;);//获取条件查询数据&#xD;
+with (view.get(&quot;#dsProject&quot;)){&#xD;
+	set(&quot;parameter&quot;, data.current);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnSelect">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsProject.data&quot;).current;&#xD;
+if (data != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, data); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+        <Property name="caption">选择</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm>
+      <Property name="dataSet">dsProjectQuery</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">projectid</Property>
+        <Property name="property">projectid</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">shortname</Property>
+        <Property name="property">shortname</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <ClientEvent name="onDoubleClick">var data = view.get(&quot;#dsProject.data&quot;).current;&#xD;
+if (data != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, data); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+      <Property name="dataSet">dsProject</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="width">1500</Property>
+      <RowNumColumn/>
+      <DataColumn name="projectid">
+        <Property name="property">projectid</Property>
+      </DataColumn>
+      <DataColumn name="projectcode">
+        <Property name="property">projectcode</Property>
+      </DataColumn>
+      <DataColumn name="shortname">
+        <Property name="property">shortname</Property>
+      </DataColumn>
+      <DataColumn name="projectname">
+        <Property name="property">projectname</Property>
+      </DataColumn>
+      <DataColumn name="linkman">
+        <Property name="property">linkman</Property>
+      </DataColumn>
+      <DataColumn name="tel">
+        <Property name="property">tel</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+      </DataColumn>
+      <DataColumn name="address">
+        <Property name="property">address</Property>
+      </DataColumn>
+      <DataColumn name="zipcode">
+        <Property name="property">zipcode</Property>
+      </DataColumn>
+      <DataColumn name="delflag">
+        <Property name="property">delflag</Property>
+      </DataColumn>
+      <DataColumn name="crepersonid">
+        <Property name="property">crepersonid</Property>
+      </DataColumn>
+      <DataColumn name="creperson">
+        <Property name="property">creperson</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">cretime</Property>
+        <Property name="name">cretime</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="modpersonid">
+        <Property name="property">modpersonid</Property>
+      </DataColumn>
+      <DataColumn name="modperson">
+        <Property name="property">modperson</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">modtime</Property>
+        <Property name="name">modtime</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

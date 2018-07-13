@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="createMonth">
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">收款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthStart">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthEnd">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDateStart">
+        <Property name="label">收款日期</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDateEnd">
+        <Property name="label">-</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckReceipt">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckReceiptVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">收款日期</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">收款金额</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="totalPrice">
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建日期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">int</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckReceipt">
+      <Property name="dataType">[dtBillCheckReceipt]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">billCheckReportController#queryReceiptReport</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBillCheckReceipt</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBillCheckReceipt&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
+if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;业务月份的结束时间不能大于起始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="action">export2ReportAction</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">*,*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">createMonthStart</Property>
+        <Property name="property">createMonthStart</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createMonthEnd</Property>
+        <Property name="property">createMonthEnd</Property>
+        <Property name="labelWidth">10</Property>
+        <Property name="editorWidth">100</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceName</Property>
+        <Property name="property">invoiceName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">billName</Property>
+        <Property name="property">billName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">receiptDateStart</Property>
+        <Property name="property">receiptDateStart</Property>
+        <Property name="editorWidth">150</Property>
+        <Property name="labelWidth">70</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">receiptDateEnd</Property>
+        <Property name="property">receiptDateEnd</Property>
+        <Property name="editorWidth">100</Property>
+        <Property name="labelWidth">10</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">sellerName</Property>
+        <Property name="property">sellerName</Property>
+        <Property name="trigger">triggerDeptUser</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">area</Property>
+        <Property name="property">area</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dataList">
+        <Property name="dataSet">dsBillCheckReceipt</Property>
+        <Property name="showFooter">true</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+        </DataColumn>
+        <DataColumn name="invoiceName">
+          <Property name="property">invoiceName</Property>
+          <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="billName">
+          <Property name="property">billName</Property>
+          <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="area">
+          <Property name="property">area</Property>
+        </DataColumn>
+        <DataColumn name="sellerName">
+          <Property name="property">sellerName</Property>
+        </DataColumn>
+        <DataColumn name="receiptAmount">
+          <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckReceipt.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalPrice&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;合计: &lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>元&quot;;</ClientEvent>
+          <Property name="property">receiptAmount</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="receiptDate">
+          <Property name="property">receiptDate</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dataList</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+    <Trigger id="triggerDeptUser">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;1002&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;财务部&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+//var entity=subview.get(&quot;#dsDept.data&quot;).current;&#xD;
+&#xD;
+//entity.get(&quot;children&quot;).set(&quot;parentId&quot;,&quot;7&quot;);&#xD;
+//subview.get(&quot;#dsDept&quot;).flushAsync();&#xD;
+//subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+//var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+//dsEntity.set(&quot;deptId&quot;,&quot;1005&quot;);&#xD;
+//subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+view.get(&quot;#panelDeptUser&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptUser">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptUser.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceId&quot;,data.userId);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;sellerName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptUser">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

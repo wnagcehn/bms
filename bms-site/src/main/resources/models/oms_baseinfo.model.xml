@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="dtUomEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.pub.info.entity.UomEntity</Property>
+    <PropertyDef name="uomid">
+      <Property name="label">度量单位ID</Property>
+    </PropertyDef>
+    <PropertyDef name="uomname">
+      <Property name="label">度量单位名称</Property>
+      <Property name="required">true</Property>
+      <Validator name="validator1" type="ajax">
+        <Property name="service">uomPR#validator1</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="uomabbvr">
+      <Property name="label">度量单位缩写</Property>
+      <Validator name="validator1" type="ajax">
+        <Property name="service">uomPR#validator2</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtStockPlaceTypeEntity" meta="x:180;y:15">
+    <Property name="matchType">com.jiuyescm.bms.pub.info.entity.StockPlaceTypeEntity</Property>
+    <PropertyDef name="stockplacetypeid">
+      <Property name="label">库存地类型ID</Property>
+    </PropertyDef>
+    <PropertyDef name="stockplacetypecode">
+      <Property name="label">助记码</Property>
+    </PropertyDef>
+    <PropertyDef name="stockplacetypename">
+      <Property name="label">名称</Property>
+    </PropertyDef>
+    <PropertyDef name="ctrlcode">
+      <Property name="label">控制代码</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="delflag">
+      <Property name="dataType">Integer</Property>
+      <Property name="label">作废标记</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="crepersonid">
+      <Property name="label">创建者ID</Property>
+    </PropertyDef>
+    <PropertyDef name="creperson">
+      <Property name="label">创建者</Property>
+    </PropertyDef>
+    <PropertyDef name="cretime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="modpersonid">
+      <Property name="label">修改者ID</Property>
+    </PropertyDef>
+    <PropertyDef name="modperson">
+      <Property name="label">修改者</Property>
+    </PropertyDef>
+    <PropertyDef name="modtime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+      <Property name="label">修改时间</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtRegionEntity" meta="x:480;y:195">
+    <Property name="matchType">com.jiuyescm.bms.pub.info.entity.RegionEntity</Property>
+    <PropertyDef name="regionid">
+      <Property name="dataType">String</Property>
+      <Property name="label">区域ID</Property>
+    </PropertyDef>
+    <PropertyDef name="regionno">
+      <Property name="label">区域编码</Property>
+      <Property name="required">false</Property>
+    </PropertyDef>
+    <PropertyDef name="regioncode">
+      <Property name="label">区域助记码</Property>
+      <Property name="required">false</Property>
+    </PropertyDef>
+    <PropertyDef name="province">
+      <Property name="label">省</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="city">
+      <Property name="label">市</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="district">
+      <Property name="label">区（县）</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="town">
+      <Property name="label">乡（镇）</Property>
+    </PropertyDef>
+    <PropertyDef name="delflag">
+      <Property name="dataType">Integer</Property>
+      <Property name="label">作废标记</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="crepersonid">
+      <Property name="label">创建者ID</Property>
+    </PropertyDef>
+    <PropertyDef name="creperson">
+      <Property name="label">创建者</Property>
+    </PropertyDef>
+    <PropertyDef name="cretime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="modpersonid">
+      <Property name="label">修改者ID</Property>
+    </PropertyDef>
+    <PropertyDef name="modperson">
+      <Property name="label">修改者</Property>
+    </PropertyDef>
+    <PropertyDef name="modtime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+      <Property name="label">修改时间</Property>
+    </PropertyDef>
+    <PropertyDef name="provincecode">
+      <Property></Property>
+      <Property name="label">省代码</Property>
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="citycode">
+      <Property></Property>
+      <Property name="label">市代码</Property>
+    </PropertyDef>
+    <PropertyDef name="districtcode">
+      <Property></Property>
+      <Property name="label">区(县)代码</Property>
+    </PropertyDef>
+    <PropertyDef name="towncode">
+      <Property></Property>
+      <Property name="label">乡(镇)代码</Property>
+    </PropertyDef>
+    <PropertyDef name="warehouseid"/>
+    <PropertyDef name="warehouse">
+      <Property name="dataType">dtWarehouseEntity</Property>
+    </PropertyDef>
+    <PropertyDef name="carrierid">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="deliverid">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="areaText">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="areaTextInfo">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="jianpin">
+      <Property></Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtPlatformEntity" meta="x:255;y:315">
+    <Property name="matchType">com.jiuyescm.bms.pub.info.entity.PlatformEntity</Property>
+    <PropertyDef name="platformid">
+      <Property name="dataType">String</Property>
+      <Property name="label">平台ID</Property>
+    </PropertyDef>
+    <PropertyDef name="platformcode">
+      <Property name="label">平台编码</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="platformname">
+      <Property name="label">平台名称</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="crepersonid">
+      <Property name="label">创建者ID</Property>
+    </PropertyDef>
+    <PropertyDef name="creperson">
+      <Property name="label">创建者</Property>
+    </PropertyDef>
+    <PropertyDef name="cretime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="modpersonid">
+      <Property name="label">修改者ID</Property>
+    </PropertyDef>
+    <PropertyDef name="modperson">
+      <Property name="label">修改者</Property>
+    </PropertyDef>
+    <PropertyDef name="modtime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+      <Property name="label">修改时间</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtPrintConfigEntity">
+    <Property name="matchType">com.jiuyescm.bms.pub.printconfig.entity.PrintConfigEntity</Property>
+    <PropertyDef name="id">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="usercode">
+      <Property></Property>
+      <Property name="label">用户编号</Property>
+      <Property name="required">false</Property>
+    </PropertyDef>
+    <PropertyDef name="ip_port">
+      <Property></Property>
+      <Property name="label">IP地址</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="macaddress">
+      <Property></Property>
+      <Property name="label">mac地址</Property>
+    </PropertyDef>
+    <PropertyDef name="printtype">
+      <Property></Property>
+      <Property name="label">打印机类型</Property>
+      <Property name="required">true</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getPrintType&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="printname">
+      <Property></Property>
+      <Property name="label">打印机名称</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="expressprintstyle">
+      <Property></Property>
+      <Property name="label">面单样式</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getOmsPrintStyle&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtDeliverServerEntity">
+    <Property name="creationType">com.jiuyescm.bms.pub.deliverserver.entity.DeliverServerEntity</Property>
+    <PropertyDef name="id">
+      <Property></Property>
+      <Property name="label">主键</Property>
+    </PropertyDef>
+    <PropertyDef name="deliverid">
+      <Property></Property>
+      <Property name="label">宅配商ID</Property>
+    </PropertyDef>
+    <PropertyDef name="delivercode">
+      <Property></Property>
+      <Property name="label">宅配商Code</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="state">
+      <Property name="dataType">int</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getDeliverServerflag&quot;).getResult()}</Property>
+      </Property>
+      <Property name="label">状态</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="receiveurl">
+      <Property></Property>
+      <Property name="label">接口地址</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="mkeys">
+      <Property></Property>
+      <Property name="label">mkeys</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property></Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtSystemCodeTypeEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity</Property>
+    <PropertyDef name="id">
+      <Property name="label">id</Property>
+    </PropertyDef>
+    <PropertyDef name="typeName">
+      <Property name="label">类型名称</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="typeCode">
+      <Property name="label">类型编码</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="typeStatus">
+      <Property name="label">状态</Property>
+      <Property name="required">true</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">0</Property>
+              <Property name="value">启用</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">禁用</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="typeDesc">
+      <Property name="label">描述</Property>
+    </PropertyDef>
+    <PropertyDef name="createId">
+      <Property name="label">创建人ID</Property>
+    </PropertyDef>
+    <PropertyDef name="createDt">
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="updateId">
+      <Property name="label">修改人ID</Property>
+    </PropertyDef>
+    <PropertyDef name="updateDt">
+      <Property name="label">修改时间</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr1">
+      <Property name="label">扩展字段1</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr2">
+      <Property name="label">扩展字段2</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr3">
+      <Property name="label">扩展字段3</Property>
+    </PropertyDef>
+    <PropertyDef name="deleteId">
+      <Property name="label">删除人</Property>
+    </PropertyDef>
+    <PropertyDef name="deleteDt">
+      <Property name="label">删除时间</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtSystemCodeEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+    <PropertyDef name="id">
+      <Property name="label">id</Property>
+    </PropertyDef>
+    <PropertyDef name="typeCode">
+      <Property name="label">类型编码</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="codeName">
+      <Property name="label">名称</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="code">
+      <Property name="label">编码</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="codeDesc">
+      <Property name="label">描述</Property>
+    </PropertyDef>
+    <PropertyDef name="status">
+      <Property name="label">状态</Property>
+      <Property name="required">true</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">0</Property>
+              <Property name="value">启用</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">禁用</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="createId">
+      <Property name="label">创建人ID</Property>
+      <Property name="required">false</Property>
+    </PropertyDef>
+    <PropertyDef name="createDt">
+      <Property name="label">创建时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="updateId">
+      <Property name="label">修改人ID</Property>
+    </PropertyDef>
+    <PropertyDef name="updateDt">
+      <Property name="label">修改时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="sortNo">
+      <Property name="label">序号</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr1">
+      <Property name="label">扩展字段1</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr2">
+      <Property name="label">扩展字段2</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr3">
+      <Property name="label">扩展字段3</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr4">
+      <Property name="label">扩展字段4</Property>
+    </PropertyDef>
+    <PropertyDef name="extattr5">
+      <Property name="label">扩展字段5</Property>
+    </PropertyDef>
+    <PropertyDef name="deleteId">
+      <Property name="label">删除人</Property>
+    </PropertyDef>
+    <PropertyDef name="deleteDt">
+      <Property name="label">删除时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="contractNo"/>
+  </DataType>
+  <DataType name="dtPubElecWarehouseEntity">
+    <Property name="creationType">com.jiuyescm.bms.base.ewarehouse.entity.PubElecWarehouseEntity</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+      <Property name="label">主键ID</Property>
+    </PropertyDef>
+    <PropertyDef name="warehouseCode">
+      <Property></Property>
+      <Property name="label">仓库编号</Property>
+    </PropertyDef>
+    <PropertyDef name="warehouseName">
+      <Property></Property>
+      <Property name="label">仓库名称</Property>
+    </PropertyDef>
+    <PropertyDef name="elecBizCode">
+      <Property></Property>
+      <Property name="label">电商编号</Property>
+    </PropertyDef>
+    <PropertyDef name="elecBizName">
+      <Property></Property>
+      <Property name="label">电商名称</Property>
+    </PropertyDef>
+    <PropertyDef name="provinceCode">
+      <Property></Property>
+      <Property name="label">省份编号</Property>
+    </PropertyDef>
+    <PropertyDef name="provinceName">
+      <Property></Property>
+      <Property name="label">省份名称</Property>
+    </PropertyDef>
+    <PropertyDef name="cityCode">
+      <Property></Property>
+      <Property name="label">城市编号</Property>
+    </PropertyDef>
+    <PropertyDef name="cityName">
+      <Property></Property>
+      <Property name="label">城市名称</Property>
+    </PropertyDef>
+    <PropertyDef name="districtCode">
+      <Property></Property>
+      <Property name="label">地区编号</Property>
+    </PropertyDef>
+    <PropertyDef name="districtName">
+      <Property></Property>
+      <Property name="label">地区名称</Property>
+    </PropertyDef>
+    <PropertyDef name="detailAddress">
+      <Property></Property>
+      <Property name="label">详细地址</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property></Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="creatorCode">
+      <Property></Property>
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifier">
+      <Property></Property>
+      <Property name="label">修改人</Property>
+    </PropertyDef>
+    <PropertyDef name="last_modify_time">
+      <Property name="label">修改时间</Property>
+    </PropertyDef>
+    <PropertyDef name="delFlag">
+      <Property></Property>
+      <Property name="label">删除标志</Property>
+    </PropertyDef>
+    <PropertyDef name="createTime">
+      <Property name="dataType">DateTime</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dtPubAddressEntity">
+    <Property name="creationType">com.jiuyescm.bms.base.address.entity.PubAddressEntity</Property>
+  </DataType>
+  <DataType name="dtRegionVoEntity">
+    <Property name="creationType">com.jiuyescm.mdm.customer.vo.RegionVo</Property>
+    <PropertyDef name="alias">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="regionid">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="regionno">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="regioncode">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="province">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="city">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="district">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="town">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="delflag">
+      <Property name="dataType">int</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="crepersonid">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="creperson">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="modpersonid">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="modperson">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="provincecode">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="citycode">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="districtcode">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="towncode">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="jianpin">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="pinyin">
+      <Property></Property>
+    </PropertyDef>
+  </DataType>
+</Model>

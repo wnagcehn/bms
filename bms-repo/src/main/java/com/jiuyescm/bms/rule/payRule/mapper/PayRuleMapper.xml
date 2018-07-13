@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.rule.payRule.mapper.PayRuleMapper">
+	 <resultMap id="baseResultMap" type="com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="quotationNo" property="quotationNo" jdbcType="VARCHAR" />
+	    <result column="quotationName" property="quotationName" jdbcType="VARCHAR" />
+	    <result column="biz_type_code" property="bizTypeCode" jdbcType="VARCHAR" />
+	    <result column="subject_id" property="subjectId" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="instruction" property="instruction" jdbcType="VARCHAR" /> 
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="rule" property="rule" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, quotationNo, quotationName, biz_type_code, subject_id, remark,instruction, creator, create_time, last_modifier, last_modify_time, del_flag, rule
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(quotationNo != null and quotationNo !='')" >
+				and a.quotationNo = #{quotationNo}
+		</if>
+		<if test="(quotationName != null and quotationName !='')" >
+				and a.quotationName = #{quotationName}
+		</if>
+		<if test="(bizTypeCode != null and bizTypeCode !='')" >
+				and a.biz_type_code = #{bizTypeCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+				and a.subject_id = #{subjectId}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and a.remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and a.creator = #{creator}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time >= #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[a.create_time <= #{endTime} ]]>
+		</if>
+		
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and a.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(rule != null and rule !='')" >
+				and a.rule = #{rule}
+		</if>
+		and a.del_flag = '0'
+    </sql>
+	
+	<!-- 查询计费规则 -->
+    <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity">
+        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId,a.subject_id subjectName, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction 
+        from bill_rule_pay a LEFT JOIN system_code b ON a.subject_id=b.`code` where 1=1 and b.status='0'
+		<include refid="baseSelectColumns" />
+    </select>
+
+	<!-- 查询单个计费规则 -->
+    <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity">
+        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule ,instruction
+        from bill_rule_pay a LEFT JOIN system_code b ON a.subject_id=b.`code` where 1=1 and b.status='0' limit 1
+		<include refid="baseSelectColumns" />
+    </select>
+
+	<!-- 创建新的计费规则 -->
+	<insert id="saveRule" parameterType="com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity">
+        insert into bill_rule_pay(quotationNo, quotationName, biz_type_code, subject_id, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction)
+        values (
+		#{quotationNo,jdbcType=VARCHAR}, 
+		#{quotationName,jdbcType=VARCHAR}, 
+		#{bizTypeCode,jdbcType=VARCHAR}, 
+		#{subjectId,jdbcType=VARCHAR}, 
+		#{remark,jdbcType=VARCHAR}, 
+		#{creator,jdbcType=VARCHAR}, 
+		#{createTime,jdbcType=TIMESTAMP}, 
+		#{lastModifier,jdbcType=VARCHAR}, 
+		#{lastModifyTime,jdbcType=TIMESTAMP}, 
+		#{delFlag,jdbcType=VARCHAR}, 
+		#{rule,jdbcType=VARCHAR},
+		#{instruction,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- 更新计费规则 -->
+     <update id="updateRule" parameterType="com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity">
+        update bill_rule_pay 
+		<set >
+		<if test="quotationName != null" >quotationName=#{quotationName,jdbcType=VARCHAR},</if>
+		<if test="bizTypeCode != null" >biz_type_code=#{bizTypeCode,jdbcType=VARCHAR},</if>
+		<if test="subjectId != null" >subject_id=#{subjectId,jdbcType=VARCHAR},</if>
+		<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+		<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+		<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+		<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+		<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		<if test="rule != null" >rule=#{rule,jdbcType=VARCHAR},</if>
+		<if test="instruction != null" >instruction=#{instruction,jdbcType=VARCHAR}</if>
+		</set>
+        where id=#{id}
+    </update>
+    <!-- 删除计费规则 -->
+    <update id="removeRule" parameterType="java.lang.String">
+    	update bill_rule_pay set del_flag='1' where id=#{ruleId}
+    </update>
+    
+     <!-- 查询计费规则和商家关联 -->
+    <select id="queryByCustomer" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity">
+ select a.id id, a.quotationNo, a.quotationName, a.biz_type_code, b.code_name subjectId, a.remark, a.rule,a.instruction
+        from bill_rule_pay a LEFT JOIN system_code b ON a.subject_id=b.`code` LEFT JOIN pub_rule_deliver_payable re on re.rule_no = a.quotationNo where 1=1
+		and a.biz_type_code = #{bizTypeCode}
+		and a.subject_id = #{subjectId}
+		and re.deliveryid  in  (SELECT  customerid  from price_contract_info where contract_code = #{contractCode} and del_flag = '0')
+		and a.del_flag = '0'
+		and re.del_flag = '0'
+    </select>
+         <!-- 通过商家id查询计费规则和商家关联 -->
+    <select id="queryByDeliverId" parameterType="java.util.Map" resultMap="baseResultMap">
+ 		select * from bill_rule_pay a LEFT JOIN pub_rule_deliver_payable re on re.rule_no = a.quotationNo where 1=1
+		and a.subject_id = #{subjectId}
+		and re.deliveryid = #{deliveryid}
+		and a.del_flag = '0'
+		and re.del_flag = '0'
+    </select>
+</mapper>

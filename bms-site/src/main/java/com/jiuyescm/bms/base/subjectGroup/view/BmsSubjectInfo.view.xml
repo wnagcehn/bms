@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition"/>
+    <DataType name="dtBmsSubjectInfoTypeQuery">
+      <PropertyDef name="inOutTypecode">
+        <Property name="label">收支类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getInOutTypeCode&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypecode">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getBizTypeCode&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目编码</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">是否作废</Property>
+        <Property name="dataType">boolean</Property>
+        <Property name="defaultValue">False</Property>
+      </PropertyDef>
+      <PropertyDef name="feesType">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getFeesTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsSubjectInfoQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsSubjectInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsSubjectInfoEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsSubjectInfoEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsSubjectInfoEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                with (view.get(&quot;#dsBmsSubjectInfoEntity&quot;)){&#xD;
+                                    flushAsync();&#xD;
+                                }&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsSubjectInfoEntity">
+      <Property name="dataType">[dtBmsSubjectInfoEntity]</Property>
+      <Property name="dataProvider">bmsSubjectInfoController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBmsSubjectInfoQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsSubjectInfoQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtBmsSubjectInfoTypeQuery]</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtBmsSubjectInfoTypeQuery</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsBmsSubjectInfoQuery</Property>
+      <AutoFormElement>
+        <Property name="name">inOutTypecode</Property>
+        <Property name="property">inOutTypecode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bizTypecode</Property>
+        <Property name="property">bizTypecode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">subjectName</Property>
+        <Property name="property">subjectName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">subjectCode</Property>
+        <Property name="property">subjectCode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">delFlag</Property>
+        <Property name="property">delFlag</Property>
+        <Property name="editorType">CheckBox</Property>
+        <Property name="labelWidth">60</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">feesType</Property>
+        <Property name="property">feesType</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="fixedColumnCount">6</Property>
+        <RowNumColumn/>
+        <DataColumn name="inOutTypecode">
+          <Property name="property">inOutTypecode</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="bizTypecode">
+          <Property name="property">bizTypecode</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="feesType">
+          <Property name="property">feesType</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="subjectName">
+          <Property name="property">subjectName</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="subjectCode">
+          <Property name="property">subjectCode</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+          <Property name="width">400</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsSubjectInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+var data = view.get(&quot;#dsBmsSubjectInfoQuery.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsSubjectInfoEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onHide">var data = view.get(&quot;#dsBmsSubjectInfoQuery.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBmsSubjectInfoEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">300</Property>
+      <Property name="width">400</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity=view.get(&quot;#dsBmsSubjectInfoEntity.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;inOutTypecode&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;收支类型为必填项!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;bizTypecode&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;业务类型为必填项!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;subjectName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;费用科目名称为必填项!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;subjectCode&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;费用科目编码为必填项!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateAction&quot;).execute(&#xD;
+    function(result){&#xD;
+		if(result=='SUCESS'){&#xD;
+			dorado.MessageBox.alert(&quot;保存成功&quot;);&#xD;
+	        view.id(&quot;dialogEdit&quot;).hide();&#xD;
+			var data = view.get(&quot;#dsBmsSubjectInfoQuery.data&quot;).current;&#xD;
+			with (view.get(&quot;#dsBmsSubjectInfoEntity&quot;)){&#xD;
+				set(&quot;parameter&quot;, data);&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+    }&#xD;
+);</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBmsSubjectInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+          <Property name="dataType">dtBmsSubjectInfoEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">inOutTypecode</Property>
+            <Property name="property">inOutTypecode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bizTypecode</Property>
+            <Property name="property">bizTypecode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">feesType</Property>
+            <Property name="property">feesType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectName</Property>
+            <Property name="property">subjectName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectCode</Property>
+            <Property name="property">subjectCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="width">382</Property>
+            <Property name="height">60</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bmsSubjectInfoController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">bmsSubjectInfoController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsCorrectAsynTaskTypeQuery">
+      <PropertyDef name="taskId">
+        <Property name="label">任务ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="taskStatus">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsCorrectAsynTaskController#getStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsCorrectAsynTaskTypeEntity">
+      <Property name="creationType">com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo</Property>
+      <PropertyDef name="taskId">
+        <Property name="label">任务ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">开始时间</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="endDate">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">Date</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="taskStatus">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsCorrectAsynTaskController#getStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="taskRate">
+        <Property name="label">任务进度</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="finishTime">
+        <Property name="label">完成时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="taskProcess">
+        <Property name="label">任务进度</Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsCorrectAsynTaskQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsCorrectAsynTaskEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogTask&quot;).show();</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsCorrectAsynTaskEntity">
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="dataType">[dtBmsCorrectAsynTaskTypeEntity]</Property>
+      <Property name="dataProvider">bmsCorrectAsynTaskController#query</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBmsCorrectAsynTaskQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsCorrectAsynTaskQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtBmsCorrectAsynTaskTypeQuery]</Property>
+    </DataSet>
+    <AutoForm id="queryForm">
+      <Property name="dataSet">dsBmsCorrectAsynTaskQuery</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">year</Property>
+        <Property name="property">year</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">month</Property>
+        <Property name="property">month</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">taskId</Property>
+        <Property name="property">taskId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="trigger">triggerCus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">taskStatus</Property>
+        <Property name="property">taskStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="taskId">
+          <Property name="property">taskId</Property>
+          <Property name="width">230</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">taskName</Property>
+          <Property name="name">taskName</Property>
+          <Property name="width">150</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+          <Property name="width">200</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">startDate</Property>
+          <Property name="property">startDate</Property>
+          <Property name="width">150</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">endDate</Property>
+          <Property name="property">endDate</Property>
+          <Property name="width">150</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">taskStatus</Property>
+          <Property name="name">taskStatus</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">taskProcess</Property>
+          <Property name="name">taskProcess</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">creator</Property>
+          <Property name="name">creator</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">createTime</Property>
+          <Property name="name">createTime</Property>
+          <Property name="width">200</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">finishTime</Property>
+          <Property name="name">finishTime</Property>
+          <Property name="width">200</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">remark</Property>
+          <Property name="property">remark</Property>
+          <Property name="width">250</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogTask">
+      <Property name="width">400</Property>
+      <Property name="height">200</Property>
+      <Property name="closeable">false</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#saveAction&quot;).execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;保存成功&quot;);&#xD;
+	var parameter=view.get(&quot;#dsBmsCorrectAsynTaskQuery.data&quot;).current;&#xD;
+	with(view.get(&quot;#dsBmsCorrectAsynTaskEntity&quot;)){&#xD;
+		set(&quot;parameter&quot;,parameter);&#xD;
+		flushAsync();&#xD;
+	}&#xD;
+	view.id(&quot;dialogTask&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dsBmsCorrectAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogTask&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
+          <Property name="cols">*,*</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="property">taskName</Property>
+            <Property name="name">taskName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">year</Property>
+            <Property name="property">year</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">month</Property>
+            <Property name="property">month</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">customerId</Property>
+            <Property name="property">customerId</Property>
+            <Property name="trigger">triggerCus2</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerCus">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCus&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCus">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCus2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCus2&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCus2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;).current.set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer2">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="saveAction">
+      <Property name="dataResolver">bmsCorrectAsynTaskController#save</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

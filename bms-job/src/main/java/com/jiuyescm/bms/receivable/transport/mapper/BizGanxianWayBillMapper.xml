@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.transport.mapper.BizGanxianWayBillMapper" >
+    <resultMap id="bizGanxianWayBillMap" type="com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity" >
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="tms_id" property="tmsId" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="ganxian_no" property="ganxianNo" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="biz_type_code" property="bizTypeCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="send_province_id" property="sendProvinceId" jdbcType="VARCHAR" />
+	    <result column="send_city_id" property="sendCityId" jdbcType="VARCHAR" />
+	    <result column="send_district_id" property="sendDistrictId" jdbcType="VARCHAR" />
+	    <result column="receiver_province_id" property="receiverProvinceId" jdbcType="VARCHAR" />
+	    <result column="receiver_city_id" property="receiverCityId" jdbcType="VARCHAR" />
+	    <result column="receiver_district_id" property="receiverDistrictId" jdbcType="VARCHAR" />
+	    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+	    <result column="receiver_telephone" property="receiverTelephone" jdbcType="VARCHAR" />
+	    <result column="start_station" property="startStation" jdbcType="VARCHAR" />
+	    <result column="end_station" property="endStation" jdbcType="VARCHAR" />
+	    <result column="total_box" property="totalBox" jdbcType="DOUBLE" />
+	    <result column="total_package" property="totalPackage" jdbcType="DOUBLE" />
+	    <result column="total_varieties" property="totalVarieties" jdbcType="DOUBLE" />
+	    <result column="total_volume" property="totalVolume" jdbcType="DOUBLE" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	    <result column="adjust_weight" property="adjustWeight" jdbcType="DOUBLE" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="is_light" property="isLight" jdbcType="VARCHAR" />
+	    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+	    <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+	    <result column="car_model" property="carModel" jdbcType="VARCHAR" />
+	    <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="account_state" property="accountState" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    
+    <select id="querybizGanxianWayBill" parameterType="java.util.Map" resultMap="bizGanxianWayBillMap">
+        select
+	        id, tms_id, customerid, customer_name, order_no, ganxian_no, waybill_no, biz_type_code, 
+			warehouse_code, warehouse_name, is_calculated, send_province_id, send_city_id, send_district_id, 
+			receiver_province_id, receiver_city_id, receiver_district_id, receiver, receiver_telephone, 
+			start_station, end_station, total_box, total_package, total_varieties, 
+			total_volume, total_weight, IFNULL(adjust_weight,0) as adjust_weight, temperature_type_code, 
+			IFNULL(is_light,0) as is_light, send_time, sign_time,  
+			car_model, transport_type, remark, fees_no, account_state, creator, create_time, last_modifier, 
+			last_modify_time, del_flag, calculate_time, write_time
+        from biz_ganxian_waybill
+        where del_flag = 0
+        <if test="(beginTime != null and beginTime !='')" >
+			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated =concat(${isCalculated})
+		</if>
+		LIMIT #{num}
+    </select>
+
+	<update id="updatebizGanxianWayBill" parameterType="com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity">
+        update biz_ganxian_waybill 
+		<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>

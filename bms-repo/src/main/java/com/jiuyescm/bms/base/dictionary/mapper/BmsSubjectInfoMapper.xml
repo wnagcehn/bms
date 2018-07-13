@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="in_out_typecode" property="inOutTypecode" jdbcType="VARCHAR" />
+	    <result column="biz_typecode" property="bizTypecode" jdbcType="VARCHAR" />
+	    <result column="fees_type" property="feesType" jdbcType="VARCHAR" />
+	    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="dimen1_code" property="dimen1Code" jdbcType="VARCHAR" />
+	    <result column="dimen1_sortno" property="dimen1Sortno" jdbcType="INTEGER" />
+	    <result column="dimen2_code" property="dimen2Code" jdbcType="VARCHAR" />
+	    <result column="dimen2_sortno" property="dimen2Sortno" jdbcType="INTEGER" />
+	    <result column="dimen3_code" property="dimen3Code" jdbcType="VARCHAR" />
+	    <result column="dimen3_sortno" property="dimen3Sortno" jdbcType="INTEGER" />
+	    <result column="dimen4_code" property="dimen4Code" jdbcType="VARCHAR" />
+	    <result column="dimen4_sortno" property="dimen4Sortno" jdbcType="INTEGER" />
+	    <result column="dimen5_code" property="dimen5Code" jdbcType="VARCHAR" />
+	    <result column="dimen5_sortno" property="dimen5Sortno" jdbcType="INTEGER" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id,in_out_typecode, biz_typecode,fees_type, subject_name, subject_code, dimen1_code, dimen1_sortno, dimen2_code, dimen2_sortno, dimen3_code, dimen3_sortno, dimen4_code, dimen4_sortno, dimen5_code, dimen5_sortno, creator, create_time, last_modifier, last_modify_time, del_flag,remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(inOutTypecode != null and inOutTypecode !='')" >
+				and in_out_typecode = #{inOutTypecode}
+		</if>
+		<if test="(bizTypecode != null and bizTypecode !='')" >
+				and biz_typecode = #{bizTypecode}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and fees_type = #{feesType}
+		</if>
+		<if test="(subjectName != null and subjectName !='')" >
+				and subject_name = #{subjectName}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(dimen1Code != null and dimen1Code !='')" >
+				and dimen1_code = #{dimen1Code}
+		</if>
+		<if test="(dimen1Sortno != null and dimen1Sortno !='')" >
+				and dimen1_sortno = #{dimen1Sortno}
+		</if>
+		<if test="(dimen2Code != null and dimen2Code !='')" >
+				and dimen2_code = #{dimen2Code}
+		</if>
+		<if test="(dimen2Sortno != null and dimen2Sortno !='')" >
+				and dimen2_sortno = #{dimen2Sortno}
+		</if>
+		<if test="(dimen3Code != null and dimen3Code !='')" >
+				and dimen3_code = #{dimen3Code}
+		</if>
+		<if test="(dimen3Sortno != null and dimen3Sortno !='')" >
+				and dimen3_sortno = #{dimen3Sortno}
+		</if>
+		<if test="(dimen4Code != null and dimen4Code !='')" >
+				and dimen4_code = #{dimen4Code}
+		</if>
+		<if test="(dimen4Sortno != null and dimen4Sortno !='')" >
+				and dimen4_sortno = #{dimen4Sortno}
+		</if>
+		<if test="(dimen5Code != null and dimen5Code !='')" >
+				and dimen5_code = #{dimen5Code}
+		</if>
+		<if test="(dimen5Sortno != null and dimen5Sortno !='')" >
+				and dimen5_sortno = #{dimen5Sortno}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null)" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_subject_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by dimen1_sortno asc
+    </select>
+    <select id="queryAllSubejct"  resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+    	select subject_code,subject_name from bms_subject_info
+    	where del_flag='0'
+    </select>
+    <select id="queryAll" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+    	 select
+        <include refid="baseColumns" />
+        from bms_subject_info
+        where ifnull(del_flag,0)=0
+        <if test="(inOutTypeCode!=null and inOutTypeCode!='')">
+        	and in_out_typecode = #{inOutTypeCode}
+        </if>
+        <if test="(bizTypeCode != null and bizTypeCode !='')" >
+			and biz_typecode = #{bizTypeCode}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+			and fees_type = #{feesType}
+		</if>
+		<if test="(dimen1Code!=null and dimen1Code!='')">
+			and dimen1_code=#{dimen1Code} 
+		</if>
+		<if test="(dimen2Code!=null and dimen2Code!='')">
+			and dimen2_code=#{dimen2Code}
+		</if>
+		order by dimen1_sortno asc
+    </select>
+    
+    <select id="queryOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+     select
+        <include refid="baseColumns" />
+        from bms_subject_info
+        where ifnull(del_flag,0)=0 and in_out_typecode = #{inOutTypeCode} and biz_typecode = #{bizTypeCode} and subject_code=#{subjectCode}
+    </select>
+
+
+    <insert id="save" parameterType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+        insert into bms_subject_info(in_out_typecode, biz_typecode,fees_type, subject_name, subject_code, dimen1_code, dimen1_sortno, dimen2_code, dimen2_sortno, dimen3_code, dimen3_sortno, dimen4_code, dimen4_sortno, dimen5_code, dimen5_sortno, creator, create_time, last_modifier, last_modify_time, del_flag,remark)
+        values (
+#{inOutTypecode,jdbcType=VARCHAR}, 
+#{bizTypecode,jdbcType=VARCHAR},
+#{feesType,jdbcType=VARCHAR}, 
+#{subjectName,jdbcType=VARCHAR}, 
+#{subjectCode,jdbcType=VARCHAR}, 
+#{dimen1Code,jdbcType=VARCHAR}, 
+#{dimen1Sortno,jdbcType=INTEGER}, 
+#{dimen2Code,jdbcType=VARCHAR}, 
+#{dimen2Sortno,jdbcType=INTEGER}, 
+#{dimen3Code,jdbcType=VARCHAR}, 
+#{dimen3Sortno,jdbcType=INTEGER}, 
+#{dimen4Code,jdbcType=VARCHAR}, 
+#{dimen4Sortno,jdbcType=INTEGER}, 
+#{dimen5Code,jdbcType=VARCHAR}, 
+#{dimen5Sortno,jdbcType=INTEGER}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR},
+#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+        update bms_subject_info 
+		<set >
+<if test="inOutTypecode != null" >in_out_typecode=#{inOutTypecode,jdbcType=VARCHAR},</if>
+<if test="bizTypecode != null" >biz_typecode=#{bizTypecode,jdbcType=VARCHAR},</if>
+<if test="feesType != null" >fees_type=#{feesType,jdbcType=VARCHAR},</if>
+<if test="subjectName != null" >subject_name=#{subjectName,jdbcType=VARCHAR},</if>
+<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+<if test="dimen1Code != null" >dimen1_code=#{dimen1Code,jdbcType=VARCHAR},</if>
+<if test="dimen1Sortno != null" >dimen1_sortno=#{dimen1Sortno,jdbcType=INTEGER},</if>
+<if test="dimen2Code != null" >dimen2_code=#{dimen2Code,jdbcType=VARCHAR},</if>
+<if test="dimen2Sortno != null" >dimen2_sortno=#{dimen2Sortno,jdbcType=INTEGER},</if>
+<if test="dimen3Code != null" >dimen3_code=#{dimen3Code,jdbcType=VARCHAR},</if>
+<if test="dimen3Sortno != null" >dimen3_sortno=#{dimen3Sortno,jdbcType=INTEGER},</if>
+<if test="dimen4Code != null" >dimen4_code=#{dimen4Code,jdbcType=VARCHAR},</if>
+<if test="dimen4Sortno != null" >dimen4_sortno=#{dimen4Sortno,jdbcType=INTEGER},</if>
+<if test="dimen5Code != null" >dimen5_code=#{dimen5Code,jdbcType=VARCHAR},</if>
+<if test="dimen5Sortno != null" >dimen5_sortno=#{dimen5Sortno,jdbcType=INTEGER},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR}</if>
+		</set>
+        where id=#{id}
+    </update>
+
+	<select id="querySubject" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+	 	select <include refid="baseColumns" />
+        from bms_subject_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+	</select>
+   
+    <select id="queryByEntity" parameterType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity" resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+    	select <include refid="baseColumns" />
+        from bms_subject_info
+        where 1=1
+		<if test="(inOutTypecode != null and inOutTypecode !='')" >
+				and in_out_typecode = #{inOutTypecode}
+		</if>
+		<if test="(bizTypecode != null and bizTypecode !='')" >
+				and biz_typecode = #{bizTypecode}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and fees_type = #{feesType}
+		</if>
+		<if test="(subjectName != null and subjectName !='')" >
+				and subject_name = #{subjectName}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		and fees_type!='APP' and del_flag='0'
+    </select>
+</mapper>

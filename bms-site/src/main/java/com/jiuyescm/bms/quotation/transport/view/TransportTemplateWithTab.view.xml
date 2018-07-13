@@ -1,0 +1,4005 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeTransportTemplate">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="templateTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportTemplateTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">运输模板类型</Property>
+        <Property name="required">true</Property>
+        <Property name="defaultValue">ts_base_subject</Property>
+      </PropertyDef>
+      <PropertyDef name="templateType">
+        <Property></Property>
+        <Property name="label">模版类型</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+        <Property name="label">参数1</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeCondition">
+      <PropertyDef name="templateCode">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="transportTypeCode">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportProductTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="templateTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportTemplateTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">运输模板类型</Property>
+        <Property name="required">true</Property>
+        <Property name="visible">false</Property>
+        <Property name="defaultValue">ts_base_subject</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家id</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeTransportLine">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity</Property>
+      <PropertyDef name="transportLineNo">
+        <Property></Property>
+        <Property name="label">线路编号</Property>
+      </PropertyDef>
+      <PropertyDef name="fromWarehouseId">
+        <Property></Property>
+        <Property name="label">始发仓</Property>
+        <Property name="required">false</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;transportTemplateController#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="fromProvinceId">
+        <Property></Property>
+        <Property name="visible">true</Property>
+        <Property name="label">始发省份</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromProvinceName">
+        <Property></Property>
+        <Property name="label">始发省份</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromCityId">
+        <Property></Property>
+        <Property name="label">始发城市</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromCityName">
+        <Property></Property>
+        <Property name="label">始发城市</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromDistrictId">
+        <Property></Property>
+        <Property name="label">始发地区</Property>
+      </PropertyDef>
+      <PropertyDef name="fromDistrictName">
+        <Property></Property>
+        <Property name="label">始发地区</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromAddress">
+        <Property></Property>
+        <Property name="label">始发地址</Property>
+      </PropertyDef>
+      <PropertyDef name="endWarehouseId">
+        <Property></Property>
+        <Property name="label">目的仓</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchPR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toProvinceId">
+        <Property></Property>
+        <Property name="visible">true</Property>
+        <Property name="label">目的省份</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toProvinceName">
+        <Property></Property>
+        <Property name="label">目的省份</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toCityId">
+        <Property></Property>
+        <Property name="label">目的城市</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toCityName">
+        <Property></Property>
+        <Property name="label">目的城市</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toDistrictId">
+        <Property></Property>
+        <Property name="label">目的地区</Property>
+      </PropertyDef>
+      <PropertyDef name="toDistrictName">
+        <Property></Property>
+        <Property name="label">目的地区</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toAddress">
+        <Property></Property>
+        <Property name="label">目的地址</Property>
+      </PropertyDef>
+      <PropertyDef name="sendCycle">
+        <Property></Property>
+        <Property name="label">发车周期</Property>
+      </PropertyDef>
+      <PropertyDef name="timeliness">
+        <Property></Property>
+        <Property name="label">时效</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getDispatchTime&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierCode">
+        <Property></Property>
+        <Property name="label">承运商</Property>
+      </PropertyDef>
+      <PropertyDef name="transportLineName">
+        <Property></Property>
+        <Property name="label">路线名称</Property>
+      </PropertyDef>
+      <PropertyDef name="serviceTypeCode">
+        <Property></Property>
+        <Property name="label">服务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;SERVICE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="sendTime">
+        <Property name="label">发车时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAging">
+        <Property name="dataType">Double</Property>
+        <Property name="label">回单时效 </Property>
+      </PropertyDef>
+      <PropertyDef name="businessTime">
+        <Property name="label">营业时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="orderAcceptAging">
+        <Property name="dataType">Double</Property>
+        <Property name="label">订单受理时效(天)</Property>
+      </PropertyDef>
+      <PropertyDef name="orderDeadLine">
+        <Property name="label">截单时间点</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="selfPickedAging">
+        <Property name="dataType">Double</Property>
+        <Property name="label">到站自提时效(天)</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryAging">
+        <Property name="dataType">Double</Property>
+        <Property name="label">到站派送时效(天)</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+        <Property name="label">承运商</Property>
+      </PropertyDef>
+      <PropertyDef name="w2bubbleRatio">
+        <Property name="label">重泡比</Property>
+      </PropertyDef>
+      <PropertyDef name="startStation">
+        <Property name="label">始发站点</Property>
+      </PropertyDef>
+      <PropertyDef name="endStation">
+        <Property name="label">目的站点</Property>
+      </PropertyDef>
+      <PropertyDef name="transportTypeCode">
+        <Property></Property>
+        <Property name="label">产品类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportProductTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="elecWarehouseCode">
+        <Property></Property>
+        <Property name="visible">true</Property>
+        <Property name="label">电商仓库</Property>
+        <Property name="required">false</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getEWareHouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="airPort">
+        <Property></Property>
+        <Property name="visible">true</Property>
+        <Property name="label">机场</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="valueRatio">
+        <Property></Property>
+        <Property name="label">货值占比</Property>
+      </PropertyDef>
+      <PropertyDef name="elecWarehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="fromWarehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="endWarehouseName">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeTransportLineCondition">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity</Property>
+      <PropertyDef name="transportLineNo">
+        <Property></Property>
+        <Property name="label">线路编号</Property>
+      </PropertyDef>
+      <PropertyDef name="fromWarehouseId">
+        <Property></Property>
+        <Property name="label">始发仓</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchPR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="fromAddress">
+        <Property></Property>
+        <Property name="label">始发地址</Property>
+      </PropertyDef>
+      <PropertyDef name="endWarehouseId">
+        <Property></Property>
+        <Property name="label">目的仓</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchPR#getPubWareHouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="toAddress">
+        <Property></Property>
+        <Property name="label">目的地址</Property>
+      </PropertyDef>
+      <PropertyDef name="sendCycle">
+        <Property></Property>
+        <Property name="label">发车周期</Property>
+      </PropertyDef>
+      <PropertyDef name="timeliness">
+        <Property></Property>
+        <Property name="label">时效</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getDispatchTime&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="fromProvinceId">
+        <Property></Property>
+        <Property name="visible">true</Property>
+        <Property name="label">始发省份</Property>
+      </PropertyDef>
+      <PropertyDef name="fromProvinceName">
+        <Property></Property>
+        <Property name="label">始发省份</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromCityId">
+        <Property></Property>
+        <Property name="label">始发城市</Property>
+      </PropertyDef>
+      <PropertyDef name="fromCityName">
+        <Property></Property>
+        <Property name="label">始发城市</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="fromDistrictId">
+        <Property></Property>
+        <Property name="label">始发地区</Property>
+      </PropertyDef>
+      <PropertyDef name="fromDistrictName">
+        <Property></Property>
+        <Property name="label">始发地区</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toProvinceId">
+        <Property></Property>
+        <Property name="visible">true</Property>
+        <Property name="label">目的省份</Property>
+      </PropertyDef>
+      <PropertyDef name="toProvinceName">
+        <Property></Property>
+        <Property name="label">目的省份</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toCityId">
+        <Property></Property>
+        <Property name="label">目的城市</Property>
+      </PropertyDef>
+      <PropertyDef name="toCityName">
+        <Property></Property>
+        <Property name="label">目的城市</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="toDistrictId">
+        <Property></Property>
+        <Property name="label">目的地区</Property>
+      </PropertyDef>
+      <PropertyDef name="toDistrictName">
+        <Property></Property>
+        <Property name="label">目的地区</Property>
+        <Property name="required">false</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="startStation">
+        <Property name="label">始发站点</Property>
+      </PropertyDef>
+      <PropertyDef name="endStation">
+        <Property name="label">目的站点</Property>
+      </PropertyDef>
+      <PropertyDef name="transportTypeCode">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportProductTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeTransportLineRange">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineRangeEntity</Property>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="productTypeCode">
+        <Property></Property>
+        <Property name="label">品类</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getProductCategoryTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="weightLowerLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="weightUpperLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="numLowerLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="numUpperLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="skuLowerLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">SKU下限</Property>
+      </PropertyDef>
+      <PropertyDef name="skuUpperLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">SKU上限</Property>
+      </PropertyDef>
+      <PropertyDef name="volumeLowerLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">体积下限</Property>
+      </PropertyDef>
+      <PropertyDef name="volumeUpperLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">体积上限</Property>
+      </PropertyDef>
+      <PropertyDef name="carModelCode">
+        <Property></Property>
+        <Property name="label">车型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCarModelList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">单价</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="lineId">
+        <Property></Property>
+        <Property name="label">对应线路</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="extra1">
+        <Property></Property>
+        <Property name="label">扩展字段1</Property>
+      </PropertyDef>
+      <PropertyDef name="extra2">
+        <Property></Property>
+        <Property name="label">扩展字段2</Property>
+      </PropertyDef>
+      <PropertyDef name="extra3">
+        <Property></Property>
+        <Property name="label">扩展字段3</Property>
+      </PropertyDef>
+      <PropertyDef name="extra4">
+        <Property></Property>
+        <Property name="label">扩展字段4</Property>
+      </PropertyDef>
+      <PropertyDef name="extra5">
+        <Property></Property>
+        <Property name="label">扩展字段5</Property>
+      </PropertyDef>
+      <PropertyDef name="minWeightShipment">
+        <Property name="dataType">Double</Property>
+        <Property name="label">最低起运量(kg)</Property>
+      </PropertyDef>
+      <PropertyDef name="minDistance">
+        <Property name="dataType">Double</Property>
+        <Property name="label">距离下限</Property>
+      </PropertyDef>
+      <PropertyDef name="maxDistance">
+        <Property name="dataType">Double</Property>
+        <Property name="label">距离上限</Property>
+      </PropertyDef>
+      <PropertyDef name="minTime">
+        <Property name="dataType">Double</Property>
+        <Property name="label">时间下限</Property>
+      </PropertyDef>
+      <PropertyDef name="maxTime">
+        <Property name="dataType">Double</Property>
+        <Property name="label">时间上限</Property>
+      </PropertyDef>
+      <PropertyDef name="isLight">
+        <Property name="dataType">Boolean</Property>
+        <Property name="label">是否轻货</Property>
+      </PropertyDef>
+      <PropertyDef name="minPriceShipment">
+        <Property name="label">最低起运价（元）</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="productTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carModelName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="boxShipment">
+        <Property name="dataType">Double</Property>
+        <Property name="label">起运箱数</Property>
+      </PropertyDef>
+      <PropertyDef name="boxLowerLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">箱数下限</Property>
+      </PropertyDef>
+      <PropertyDef name="boxUpperLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">箱数上限</Property>
+      </PropertyDef>
+      <PropertyDef name="pointShipment">
+        <Property name="dataType">Double</Property>
+        <Property name="label">起运点数</Property>
+      </PropertyDef>
+      <PropertyDef name="pointLowerLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">点数下限</Property>
+      </PropertyDef>
+      <PropertyDef name="pointUpperLimit">
+        <Property name="dataType">Double</Property>
+        <Property name="label">点数上限</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBizGanxianWayBillEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity</Property>
+      <PropertyDef name="orderNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="tmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="ganxianNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendProvinceId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendCityId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendDistrictId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverProvinceId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverCityId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverDistrictId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiver">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverTelephone">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="startStation">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="endStation">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalBox">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalPackage">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+        <Property name="label">品类</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVolume">
+        <Property name="dataType">Double</Property>
+        <Property name="label">体积</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="isLight">
+        <Property></Property>
+        <Property name="label">是否轻货</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="accountState">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="transportTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="transportTemplateCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendProvinceName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendCityName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sendDistrictName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverProvinceName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverCityName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="receiverDistrictName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="calResult">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="calMethod">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carModel">
+        <Property></Property>
+        <Property name="label">车型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCarModelList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="transportType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="validProvince">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="priceList">
+        <Property name="dataType">[dataTypeTransportLine]</Property>
+      </Reference>
+      <PropertyDef name="productType">
+        <Property></Property>
+        <Property name="label">产品类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportProductType&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetTransportTemplate">
+      <ClientEvent name="onReady">var templateDataSet = view.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+templateDataSet.set(&quot;parameter&quot;,{&#xD;
+	delFlag: &quot;0&quot;,&#xD;
+	templateTypeCode:&quot;ts_base_subject&quot;&#xD;
+});</ClientEvent>
+      <Property name="dataType">[dataTypeTransportTemplate]</Property>
+      <Property name="dataProvider">transportTemplateController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <DataSet id="dataSetCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dataSetCondition&quot;).getData().insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dataTypeCondition]</Property>
+    </DataSet>
+    <DataSet id="dataSetTransportLine">
+      <ClientEvent name="onReady">var lineDataSet = view.get(&quot;#dataSetTransportLine&quot;);&#xD;
+lineDataSet.set(&quot;parameter&quot;,{&#xD;
+	delFlag: &quot;0&quot;&#xD;
+});</ClientEvent>
+      <Property name="dataProvider">transportLineController#query</Property>
+      <Property name="dataType">[dataTypeTransportLine]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetTransportLineCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dataSetTransportLineCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataProvider">transportLineController#query</Property>
+      <Property name="dataType">[dataTypeTransportLineCondition]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetTransportLineRange">
+      <ClientEvent name="onReady">var lineRangeDataSet = view.get(&quot;#dataSetTransportLineRange&quot;);&#xD;
+lineRangeDataSet.set(&quot;parameter&quot;,{&#xD;
+	delFlag: &quot;0&quot;&#xD;
+});</ClientEvent>
+      <Property name="dataProvider">transportLineRangeController#query</Property>
+      <Property name="dataType">[dataTypeTransportLineRange]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <DataSet id="dsAllProvinces">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getAllProvinces</Property>
+    </DataSet>
+    <DataSet id="dsCities">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getCitiesByProvinceCode</Property>
+    </DataSet>
+    <DataSet id="dsDistricts">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getDistrictsByCityCode</Property>
+    </DataSet>
+    <DataSet id="dsBizGanxianWayBillEntity">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBizGanxianWayBillEntity]</Property>
+    </DataSet>
+    <DataSetDropDown id="ddropDownQueryProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+//把名字赋给ID&#xD;
+data.set({&#xD;
+	fromProvinceId:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;fromCityName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;fromCityId&quot;,&quot;&quot;);&#xD;
+&#xD;
+data.set(&quot;fromDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;fromDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryCity">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	fromCityId: arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;fromDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;fromDistrictId&quot;,&quot;&quot;);&#xD;
+arg.processDefault = false;</ClientEvent>
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+var fromProvinceName = data.get(&quot;fromProvinceId&quot;);&#xD;
+&#xD;
+if(fromProvinceName){&#xD;
+	var parameter={&#xD;
+		province:fromProvinceName&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">provincecode=provincecode</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+var fromProvinceName = data.get(&quot;fromProvinceId&quot;);&#xD;
+var fromCityName = data.get(&quot;fromCityId&quot;);&#xD;
+if(fromProvinceName &amp;&amp; fromCityName){&#xD;
+	var parameter={&#xD;
+		province:fromProvinceName,city:fromCityName&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	fromDistrictId:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryToProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	toProvinceId:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;toCityName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;toCityId&quot;,&quot;&quot;);&#xD;
+&#xD;
+data.set(&quot;toDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;toDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryToCity">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	toCityId: arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;toDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;toDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+var toProvinceName = data.get(&quot;toProvinceId&quot;);&#xD;
+&#xD;
+if(toProvinceName){&#xD;
+	var parameter={&#xD;
+		province:toProvinceName&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">provincecode=provincecode</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryToDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+var toProvinceName = data.get(&quot;toProvinceId&quot;);&#xD;
+var toCityName = data.get(&quot;toCityId&quot;);&#xD;
+if(toProvinceName &amp;&amp; toCityName){&#xD;
+	var parameter={&#xD;
+		province:toProvinceName,city:toCityName&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	toDistrictId:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+    </DataSetDropDown>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dataSetTransportTemplate</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var templateDataSet=view.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+var queryEntity=view.get(&quot;#queryTransportTemplateForm&quot;).get(&quot;entity&quot;);&#xD;
+var cre=queryEntity.get(&quot;startTime&quot;);&#xD;
+var end=queryEntity.get(&quot;endTime&quot;);&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+queryEntity.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+templateDataSet.set(&quot;parameter&quot;, queryEntity).flushAsync();&#xD;
+&#xD;
+//清空TransportLine显示&#xD;
+var transportLineData = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+transportLineData.clear();&#xD;
+//清空TransportLineRange显示&#xD;
+var transportLineRangeData = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+transportLineRangeData.clear();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnNew">
+        <ClientEvent name="onClick">//Template中插入一条空行,如果取消时记得同时取消&#xD;
+var datas = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+datas.insert();&#xD;
+&#xD;
+//打开运输模板新增编辑窗口时,设置里面的Form中的默认值&#xD;
+var editTemplateFormEntity = view.get(&quot;#editTransportTemplateForm.entity&quot;);&#xD;
+editTemplateFormEntity.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+&#xD;
+//然后弹出新增编辑窗口&#xD;
+view.get(&quot;#editTransportTemplateDialog&quot;).show();</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+if(data.current){&#xD;
+	//打开运输模板新增编辑窗口时,设置里面的Form中的默认值&#xD;
+	var editTemplateFormEntity = view.get(&quot;#editTransportTemplateForm.entity&quot;);&#xD;
+	editTemplateFormEntity.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+	&#xD;
+	//然后弹出新增编辑窗口&#xD;
+	view.get(&quot;#editTransportTemplateDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+        <Property name="caption">修改</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条【运输费报价模板】记录?删除【运输费报价模板】的同时会删除相关的【运输路线】和【运输梯度报价】！&quot;,function(){&#xD;
+		view.get(&quot;#removeTransportTemplateAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					var param = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+					param.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+					param.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+					with (view.get(&quot;#dataSetTransportTemplate&quot;)){&#xD;
+						set(&quot;parameter&quot;, param);&#xD;
+						flushAsync();&#xD;
+						//清空TransportLine显示&#xD;
+						var transportLineData = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+						transportLineData.clear();&#xD;
+						//清空TransportLineRange显示&#xD;
+						var transportLineRangeData = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+						transportLineRangeData.clear();&#xD;
+					}&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnCopy">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	if(!isNullOrEmpty(currentData.get(&quot;templateType&quot;)) &amp;&amp; &#xD;
+		&quot;S&quot; == currentData.get(&quot;templateType&quot;)){&#xD;
+		alertMsg(&quot;FAIL&quot;, &quot;标准模版不允许复制!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要复制此模板?&quot;,function(){&#xD;
+		view.get(&quot;#copyTransportTemplateAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				var param = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+				param.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+				param.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+				with (view.get(&quot;#dataSetTransportTemplate&quot;)){&#xD;
+					flushAsync();&#xD;
+					//清空TransportLine显示&#xD;
+					var transportLineData = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+					transportLineData.clear();&#xD;
+					//清空TransportLineRange显示&#xD;
+					var transportLineRangeData = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+					transportLineRangeData.clear();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	alertMsg(&quot;FAIL&quot;, &quot;请先选择需要复制的运输模板!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -280px -120px</Property>
+        <Property name="caption">复制模板</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnLineTemplateDownload">
+        <ClientEvent name="onClick">//var tmpFormCondition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+//var deliver=tmpFormCondition.get(&quot;deliver&quot;);&#xD;
+//view.get(&quot;#downloadMoBanAction&quot;).set(&quot;parameter&quot;,{&quot;deliver&quot;:deliver}).execute();	&#xD;
+&#xD;
+view.get(&quot;#downloadLineTemplateAction&quot;).execute();	&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnLineTemplateImport">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+/*&#xD;
+var entity = view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+var id = entity.get(&quot;id&quot;);&#xD;
+var parameter={id:id};&#xD;
+self.set(&quot;parameter&quot;,parameter);&#xD;
+*/&#xD;
+if(data.current){&#xD;
+	var entity = data.current; &#xD;
+	view.get(&quot;#uploadLineAction&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:entity.get(&quot;id&quot;),&quot;customerId&quot;:entity.get(&quot;customerId&quot;)});&#xD;
+    view.get(&quot;#ImportLineDialog&quot;).show();&#xD;
+}&#xD;
+else&#xD;
+{&#xD;
+    dorado.MessageBox.alert(&quot;请先选择运输报价!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        <Property name="caption">导入模版</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnCancelQuatation">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要作废此模板下的报价记录?会同事删除相关的【运输路线】和【运输梯度报价】！&quot;,function(){&#xD;
+		view.get(&quot;#cancelQuatationAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					var param = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+					param.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+					param.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+					with (view.get(&quot;#dataSetTransportTemplate&quot;)){&#xD;
+						set(&quot;parameter&quot;, param);&#xD;
+						flushAsync();&#xD;
+						//清空TransportLine显示&#xD;
+						var transportLineData = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+						transportLineData.clear();&#xD;
+						//清空TransportLineRange显示&#xD;
+						var transportLineRangeData = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+						transportLineRangeData.clear();&#xD;
+					}&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要作废的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">作废报价</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queryTransportTemplateForm">
+      <ClientEvent name="onReady">/*&#xD;
+var en = view.get(&quot;#queryTransportTemplateForm.entity&quot;);&#xD;
+en.set(&quot;bizTypeCode&quot;,&quot;TRANSPORT&quot;);&#xD;
+en.set(&quot;subjectId&quot;,&quot;2001&quot;);&#xD;
+*/</ClientEvent>
+      <Property name="labelSeparator">:</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="dataType">dataTypeCondition</Property>
+      <Property name="dataSet">dataSetCondition</Property>
+      <AutoFormElement>
+        <Property name="name">templateCode</Property>
+        <Property name="property">templateCode</Property>
+        <Property name="visible">true</Property>
+        <Property name="readOnly">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">templateName</Property>
+        <Property name="property">templateName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="trigger">triggerCustomer1</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">startTime</Property>
+        <Property name="property">startTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endTime</Property>
+        <Property name="property">endTime</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid id="dataGridTransportTemplate">
+      <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dataSetTransportLine&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId,&#xD;
+		delFlag:&quot;0&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+//清空LineRange&#xD;
+var data = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+data.clear();&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="onDataRowDoubleClick">//var data=view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+//if(data.current){&#xD;
+//	var en = view.get(&quot;#queryTransportTemplateForm.entity&quot;);&#xD;
+//	en.set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+//	view.get(&quot;#editTransportTemplateDialog&quot;).show();&#xD;
+//}else{&#xD;
+//	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+//}</ClientEvent>
+      <Property name="dataSet">dataSetTransportTemplate</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="showFilterBar">false</Property>
+      <Property name="height">200</Property>
+      <Property name="selectionMode">singleRow</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="templateCode">
+        <Property name="property">templateCode</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="templateName">
+        <Property name="property">templateName</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">templateType</Property>
+        <Property name="name">templateType</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="customerName">
+        <Property name="property">customerName</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+      <DataColumn name="creator">
+        <Property name="property">creator</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="createTime">
+        <Property name="property">createTime</Property>
+        <Property name="width">130</Property>
+      </DataColumn>
+      <DataColumn name="templateTypeCode">
+        <Property name="property">templateTypeCode</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="editTransportTemplateDialog">
+      <ClientEvent name="onClose">view.id(&quot;dataSetTransportTemplate&quot;).getData(&quot;#&quot;).cancel();&#xD;
+</ClientEvent>
+      <Property name="width">600</Property>
+      <Property name="height">260</Property>
+      <Property name="caption">新增或编辑</Property>
+      <Buttons>
+        <Button id="btnSaveTransportTemplate">
+          <ClientEvent name="onClick">view.id(&quot;updateTransportTemplateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(!isNullOrEmpty(result)){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+		view.id(&quot;editTransportTemplateDialog&quot;).hide();&#xD;
+		var tmpDataSet=view.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+		var tmpFormCondition=view.get(&quot;#queryTransportTemplateForm&quot;);&#xD;
+		tmpFormCondition.get(&quot;entity&quot;).set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+		tmpFormCondition.get(&quot;entity&quot;).set(&quot;templateTypeCode&quot;,&quot;ts_base_subject&quot;);&#xD;
+		tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+		//清空TransportLine显示&#xD;
+		var transportLineData = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+		transportLineData.clear();&#xD;
+		//清空TransportLineRange显示&#xD;
+		var transportLineRangeData = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+		transportLineRangeData.clear();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTransportTemplate&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editTransportTemplateDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Container>
+          <AutoForm id="editTransportTemplateForm">
+            <Property name="cols">*</Property>
+            <Property name="dataSet">dataSetTransportTemplate</Property>
+            <Property name="dataType">dataTypeTransportTemplate</Property>
+            <Property name="labelSeparator">:</Property>
+            <Property name="labelWidth">120</Property>
+            <AutoFormElement>
+              <Property name="name">templateType</Property>
+              <Property name="property">templateType</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">customerId</Property>
+              <Property name="property">customerId</Property>
+              <Property name="trigger">triggerCustomer</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">templateName</Property>
+              <Property name="property">templateName</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Editor>
+                <TextArea/>
+              </Editor>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">templateTypeCode</Property>
+              <Property name="property">templateTypeCode</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="editable">false</Property>
+              <Property name="visible">false</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateTransportTemplateAction">
+      <Property name="dataResolver">transportTemplateController#saveAll</Property>
+      <Property name="executingMessage">正在保存中...</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTransportTemplate</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="removeTransportTemplateAction">
+      <Property name="dataResolver">transportTemplateController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTransportTemplate</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="copyTransportTemplateAction">
+      <Property name="dataResolver">transportTemplateController#copyTransportTemplate</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTransportTemplate</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DownloadAction id="downloadLineTemplateAction">
+      <Property name="fileProvider">transportTemplateController#accquireTransportLineTemplate</Property>
+      <Property name="target">workspace</Property>
+    </DownloadAction>
+    <Dialog id="errorProductMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="height">300</Property>
+      <Property name="width">540</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorProductMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="ImportLineDialog">
+      <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_importProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_importProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">导入</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="importCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#ImportLineDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="fileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="importBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">importBtn</Property>
+            <Property name="property">importBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="importBtn2">
+                <Property name="action">uploadLineAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="progressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="importProgressBar"/>
+        <AjaxAction id="getProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">transportTemplateController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="setProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">transportTemplateController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="uploadLineAction">
+          <ClientEvent name="onFileUploaded">view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+&#xD;
+//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	&#xD;
+	var data = view.get(&quot;#dataSetTransportTemplate&quot;).getData();&#xD;
+	with (view.get(&quot;#dataSetTransportLine&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			templateId:data.current.get(&quot;id&quot;)&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName input&quot;).val(fname);&#xD;
+view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+&#xD;
+var entity = view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+var id = entity.get(&quot;id&quot;);&#xD;
+var parameter={id:id,customerName:entity.get(&quot;customerName&quot;),customerId:entity.get(&quot;customerId&quot;)};&#xD;
+self.set(&quot;parameter&quot;,parameter);</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_importProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getProgess&quot;);&#xD;
+var setAction = view.get(&quot;#setProgess&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <Property name="fileResolver">transportTemplateController#importTransportLineAll</Property>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">10MB</Property>
+          <Property name="successMessage">导入完成!</Property>
+          <Filters>
+            <Filter>
+              <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+              <Property name="title">Excel文件</Property>
+            </Filter>
+          </Filters>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <TabControl id="transportTemplateTab">
+      <ClientEvent name="onTabChange">/*&#xD;
+console.log(arg.newTab);&#xD;
+console.log(arg.oldTab);&#xD;
+var oldTab = arg.oldTab;&#xD;
+console.log(oldTab);&#xD;
+&#xD;
+//查看当前Active的Tab&#xD;
+var currentTab = view.get(&quot;#transportTemplateTab&quot;).get(&quot;currentTab&quot;);&#xD;
+&#xD;
+//如果currentTab已经切换到lineTab,则将lineRangeTab禁用,直到下次双击运输路线数据从新激活lineRangeTab.&#xD;
+if(arg.newTab == currentTab){&#xD;
+	console.log(&quot;disabled&quot;);&#xD;
+	//view.get(&quot;#lineRangeTab&quot;).set(&quot;disabled&quot;,true);&#xD;
+	//view.get(&quot;#lineRangeTab&quot;).set(&quot;caption&quot;,&quot;UnKnow梯度报价&quot;);&#xD;
+	//view.get(&quot;#transportTemplateTab&quot;).set(&quot;currentTab&quot;,view.get(&quot;#lineTab&quot;));&#xD;
+}&#xD;
+*/</ClientEvent>
+      <ClientEvent name="beforeTabChange">//查看当前Active的Tab&#xD;
+var currentTab = view.get(&quot;#transportTemplateTab&quot;).get(&quot;currentTab&quot;);&#xD;
+&#xD;
+//如果currentTab已经切换到lineTab,则将lineRangeTab禁用,直到下次双击运输路线数据从新激活lineRangeTab.&#xD;
+if(currentTab){&#xD;
+	var currentTabId = currentTab._id;&#xD;
+	if(currentTabId.trim() == &quot;lineRangeTab&quot;){&#xD;
+		console.log(&quot;Current Tab Id:&quot;+ currentTabId);&#xD;
+		//view.get(&quot;#lineRangeTab&quot;).set(&quot;disabled&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+ &#xD;
+</ClientEvent>
+      <ControlTab id="lineTab">
+        <Property name="caption">运输路线和运输阶梯报价</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetTransportLine</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <ToolBarButton id="btnLineQuery">
+              <ClientEvent name="onClick">/*&#xD;
+var data = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+if(templateId){&#xD;
+	with (view.get(&quot;#dataSetTransportLine&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId,&#xD;
+		delFlag:&quot;0&quot;,&#xD;
+		fromCityId:queryLineForm.get(&quot;entity&quot;).get(&quot;fromCityId&quot;),&#xD;
+		fromDistinctId:queryLineForm.get(&quot;entity&quot;).get(&quot;fromDistinctId&quot;),&#xD;
+		toCityId:queryLineForm.get(&quot;entity&quot;).get(&quot;toCityId&quot;),&#xD;
+		toDistinctId:queryLineForm.get(&quot;entity&quot;).get(&quot;toDistinctId&quot;)&#xD;
+	};&#xD;
+	console.log(queryJson);&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先指定一条运输报价模板再查询!&quot;);&#xD;
+}&#xD;
+*/&#xD;
+var typeDatas = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var currentData = typeDatas.current;&#xD;
+if(!currentData){&#xD;
+	dorado.MessageBox.alert(&quot;请先选择运输报价模板再查询!&quot;);&#xD;
+}&#xD;
+var lineDataSet=view.get(&quot;#dataSetTransportLine&quot;);&#xD;
+&#xD;
+var queryLineForm=view.get(&quot;#queryFormTransportLine&quot;);&#xD;
+queryLineForm.get(&quot;entity&quot;).set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+queryLineForm.get(&quot;entity&quot;).set(&quot;templateId&quot;,currentData.get(&quot;id&quot;));&#xD;
+lineDataSet.set(&quot;parameter&quot;, queryLineForm.get(&quot;entity&quot;)).flushAsync();&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnAddLine">
+              <ClientEvent name="onClick">var typeDatas = view.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+var currentData = typeDatas.current;&#xD;
+if (currentData){&#xD;
+	var datas = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+	datas.insert();&#xD;
+ &#xD;
+	datas.current.set(&quot;templateId&quot;,currentData.get(&quot;id&quot;));&#xD;
+	 &#xD;
+	view.get(&quot;#saveTransportLineDialog&quot;).show();&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请先选择一条运输报价模板,再新增运输路线!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnEditLine">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#editTransportLineDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">编辑</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnRemoveLine">
+              <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条【运输路线】记录?确定删除【运输路线】同时会删除其下所有【运输梯度报价】!&quot;,function(){&#xD;
+		view.get(&quot;#removeTransportLineAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;succ&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					&#xD;
+					var queryJson={&#xD;
+						templateId:currentData.get(&quot;templateId&quot;)&#xD;
+					};&#xD;
+					with (view.get(&quot;#dataSetTransportLine&quot;)){&#xD;
+						set(&quot;parameter&quot;, queryJson);&#xD;
+						flushAsync();&#xD;
+						//清空TransportLineRange显示&#xD;
+						var transportLineRangeData = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+						transportLineRangeData.clear();&#xD;
+					}&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要删除的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="btnRangeTemplateDownload">
+              <ClientEvent name="onClick">//var tmpFormCondition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+//var deliver=tmpFormCondition.get(&quot;deliver&quot;);&#xD;
+//view.get(&quot;#downloadRangeTemplateAction&quot;).set(&quot;parameter&quot;,{&quot;deliver&quot;:deliver}).execute();	&#xD;
+view.get(&quot;#downloadRangeTemplateAction&quot;).execute();	&#xD;
+</ClientEvent>
+              <Property name="caption">模板下载</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+              <Property name="visible">false</Property>
+            </ToolBarButton>
+            <ToolBarButton id="btnRangeTemplateImport">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+if(data.current){&#xD;
+	var entity = data.current; &#xD;
+	view.get(&quot;#uploadLineRangeAction&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:entity.get(&quot;id&quot;)});&#xD;
+    view.get(&quot;#ImportLineRangeDialog&quot;).show();&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请先选择路线!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+              <Property name="caption">导入模板</Property>
+              <Property name="visible">false</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="deleteSelect">
+              <ClientEvent name="onClick">var action=view.get(&quot;#updateActionDelete&quot;);&#xD;
+//选中的记录&#xD;
+var selectData = view.get(&quot;#dataGridTransportLine&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+if(selectData.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择需要删除的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+dorado.MessageBox.confirm(&quot;是否确定删除?&quot;,function(){&#xD;
+	action.execute(function(result){&#xD;
+		&#xD;
+		with (view.get(&quot;#dataSetTransportLine&quot;)){&#xD;
+								flushAsync();&#xD;
+						}&#xD;
+					&#xD;
+		&#xD;
+	});&#xD;
+});</ClientEvent>
+              <Property name="caption">选择删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -100px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="btnCalculate">
+              <ClientEvent name="onClick">//获取报价&#xD;
+var dataPrice = view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+if(dataPrice){&#xD;
+	//获取此时的报价&#xD;
+	var dataSetTransportTemplate=view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+	var customerId=dataSetTransportTemplate.get(&quot;customerId&quot;);&#xD;
+	var customerName=dataSetTransportTemplate.get(&quot;customerName&quot;);&#xD;
+	view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().insert();&#xD;
+	view.get(&quot;#dsBizGanxianWayBillEntity.data&quot;).current.set(&quot;customerName&quot;,customerName);&#xD;
+	view.get(&quot;#dsBizGanxianWayBillEntity.data&quot;).current.set(&quot;customerId&quot;,customerId);&#xD;
+	&#xD;
+	//获取此时的报价类型&#xD;
+	var price=view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+	var bizTypeCode=price.get(&quot;transportTypeCode&quot;);&#xD;
+	if(&quot;CJ&quot;==bizTypeCode){&#xD;
+		view.get(&quot;#CJTab&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#TCTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#DSZLTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#HXDTab&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else if(&quot;TC&quot;==bizTypeCode){&#xD;
+		view.get(&quot;#TCTab&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#CJTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#DSZLTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#HXDTab&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else if(&quot;DSZL&quot;==bizTypeCode){&#xD;
+		view.get(&quot;#DSZLTab&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#CJTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#TCTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#HXDTab&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else if(&quot;HXD&quot;==bizTypeCode){&#xD;
+		view.get(&quot;#HXDTab&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#CJTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#TCTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#DSZLTab&quot;).set(&quot;visible&quot;,false);&#xD;
+		&#xD;
+	}&#xD;
+	&#xD;
+	view.get(&quot;#calculateDialog&quot;).show();	&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择需要试算的报价!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">试算</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="queryFormTransportLine">
+            <Property name="dataType">dataTypeTransportLineCondition</Property>
+            <Property name="dataSet">dataSetTransportLineCondition</Property>
+            <Property name="cols">*,*,*,*,*</Property>
+            <Property name="labelSeparator">:</Property>
+            <AutoFormElement>
+              <Property name="name">transportTypeCode</Property>
+              <Property name="property">transportTypeCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">transportLineNo</Property>
+              <Property name="property">transportLineNo</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">fromProvinceId</Property>
+              <Property name="property">fromProvinceId</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="trigger">ddropDownQueryProvinceLine</Property>
+              <Property name="visible">true</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">fromCityId</Property>
+              <Property name="property">fromCityId</Property>
+              <Property name="visible">true</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="trigger">ddropDownQueryCityLine</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">fromDistrictId</Property>
+              <Property name="property">fromDistrictId</Property>
+              <Property name="visible">true</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="trigger">ddropDownQueryDistrictLine</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">delFlag</Property>
+              <Property name="property">delFlag</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">toProvinceId</Property>
+              <Property name="property">toProvinceId</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">true</Property>
+              <Property name="trigger">ddropDownQueryToProvinceLine</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">toCityId</Property>
+              <Property name="property">toCityId</Property>
+              <Property name="visible">true</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="trigger">ddropDownQueryToCityLine</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">toDistrictId</Property>
+              <Property name="property">toDistrictId</Property>
+              <Property name="visible">true</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="trigger">ddropDownQueryToDistrictLine</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">fromProvinceName</Property>
+              <Property name="property">fromProvinceName</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">fromCityName</Property>
+              <Property name="property">fromCityName</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">fromDistrictName</Property>
+              <Property name="property">fromDistrictName</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">toProvinceName</Property>
+              <Property name="property">toProvinceName</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">toCityName</Property>
+              <Property name="property">toCityName</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">toDistrictName</Property>
+              <Property name="property">toDistrictName</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">templateId</Property>
+              <Property name="property">templateId</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">startStation</Property>
+              <Property name="property">startStation</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">endStation</Property>
+              <Property name="property">endStation</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataSetDropDown id="ddropDownQueryProvinceLine">
+            <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	fromProvinceId:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;fromCityName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;fromCityId&quot;,&quot;&quot;);&#xD;
+&#xD;
+data.set(&quot;fromDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;fromDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+            <Property name="autoOpen">true</Property>
+            <Property name="dataSet">dsAllProvinces</Property>
+            <Property name="displayProperty">province</Property>
+            <Property name="editable">false</Property>
+            <Property name="useEmptyItem">true</Property>
+          </DataSetDropDown>
+          <DataSetDropDown id="ddropDownQueryCityLine">
+            <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	fromCityId: arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+data.set(&quot;fromDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;fromDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+            <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+var fromProvinceName = data.get(&quot;fromProvinceId&quot;);&#xD;
+&#xD;
+if(fromProvinceName){&#xD;
+	var parameter={&#xD;
+		province:fromProvinceName&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+            <Property name="autoOpen">true</Property>
+            <Property name="dataSet">dsCities</Property>
+            <Property name="displayProperty">city</Property>
+            <Property name="editable">false</Property>
+            <Property name="useEmptyItem">true</Property>
+            <Property name="assignmentMap">provincecode=provincecode</Property>
+          </DataSetDropDown>
+          <DataSetDropDown id="ddropDownQueryDistrictLine">
+            <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+var fromProvinceName = data.get(&quot;fromProvinceId&quot;);&#xD;
+var fromCityName = data.get(&quot;fromCityId&quot;);&#xD;
+if(fromProvinceName &amp;&amp; fromCityName){&#xD;
+	var parameter={&#xD;
+		province:fromProvinceName,city:fromCityName&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+</ClientEvent>
+            <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	fromDistrictId:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+            <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+            <Property name="autoOpen">true</Property>
+            <Property name="dataSet">dsDistricts</Property>
+            <Property name="displayProperty">district</Property>
+            <Property name="editable">false</Property>
+            <Property name="useEmptyItem">true</Property>
+          </DataSetDropDown>
+          <DataSetDropDown id="ddropDownQueryToProvinceLine">
+            <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	toProvinceId:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;toCityName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;toCityId&quot;,&quot;&quot;);&#xD;
+&#xD;
+data.set(&quot;toDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;toDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+            <Property name="autoOpen">true</Property>
+            <Property name="dataSet">dsAllProvinces</Property>
+            <Property name="displayProperty">province</Property>
+            <Property name="editable">false</Property>
+            <Property name="useEmptyItem">true</Property>
+          </DataSetDropDown>
+          <DataSetDropDown id="ddropDownQueryToCityLine">
+            <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	toCityId: arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+data.set(&quot;toDistrictName&quot;,&quot;&quot;);&#xD;
+data.set(&quot;toDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+            <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+var toProvinceName = data.get(&quot;toProvinceId&quot;);&#xD;
+&#xD;
+if(toProvinceName){&#xD;
+	var parameter={&#xD;
+		province:toProvinceName&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+            <Property name="autoOpen">true</Property>
+            <Property name="dataSet">dsCities</Property>
+            <Property name="displayProperty">city</Property>
+            <Property name="editable">false</Property>
+            <Property name="useEmptyItem">true</Property>
+            <Property name="assignmentMap">provincecode=provincecode</Property>
+          </DataSetDropDown>
+          <DataSetDropDown id="ddropDownQueryToDistrictLine">
+            <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+var toProvinceName = data.get(&quot;toProvinceId&quot;);&#xD;
+var toCityName = data.get(&quot;toCityId&quot;);&#xD;
+if(toProvinceName &amp;&amp; toCityName){&#xD;
+	var parameter={&#xD;
+		province:toProvinceName,city:toCityName&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+</ClientEvent>
+            <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTransportLineCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	toDistrictId:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+            <Property name="autoOpen">true</Property>
+            <Property name="dataSet">dsDistricts</Property>
+            <Property name="displayProperty">district</Property>
+            <Property name="editable">false</Property>
+            <Property name="useEmptyItem">true</Property>
+            <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+          </DataSetDropDown>
+          <Container>
+            <DataGrid id="dataGridTransportLine">
+              <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+var lineId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dataSetTransportLineRange&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		lineId:lineId,&#xD;
+		delFlag:&quot;0&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+	&#xD;
+	view.get(&quot;#lineRangeTab&quot;).set(&quot;caption&quot;,data.current.get(&quot;transportLineNo&quot;)+&quot; 梯度报价&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <ClientEvent name="onDataRowDoubleClick">/*&#xD;
+//原始代码：&#xD;
+var data=view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#editTransportLineDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+*/&#xD;
+&#xD;
+var data = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+var lineId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dataSetTransportLineRange&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		lineId:lineId,&#xD;
+		delFlag:&quot;0&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+	&#xD;
+	&#xD;
+	view.get(&quot;#lineRangeTab&quot;).set(&quot;disabled&quot;,false);&#xD;
+	view.get(&quot;#lineRangeTab&quot;).set(&quot;caption&quot;,data.current.get(&quot;transportLineNo&quot;)+&quot; 梯度报价&quot;);&#xD;
+	view.get(&quot;#transportTemplateTab&quot;).set(&quot;currentTab&quot;,view.get(&quot;#lineRangeTab&quot;));&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dataSetTransportLine</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="width">2800</Property>
+              <Property name="selectionMode">multiRows</Property>
+              <RowNumColumn/>
+              <RowSelectorColumn/>
+              <DataColumn name="carrierCode">
+                <Property name="property">carrierCode</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="carrierName">
+                <Property name="property">carrierName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="transportLineNo">
+                <Property name="property">transportLineNo</Property>
+              </DataColumn>
+              <DataColumn name="transportLineName">
+                <Property name="property">transportLineName</Property>
+              </DataColumn>
+              <DataColumn name="transportTypeCode">
+                <Property name="property">transportTypeCode</Property>
+              </DataColumn>
+              <DataColumn name="fromWarehouseId">
+                <Property name="property">fromWarehouseId</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">startStation</Property>
+                <Property name="property">startStation</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="fromProvinceId">
+                <Property name="property">fromProvinceId</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="fromProvinceName">
+                <Property name="property">fromProvinceName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="fromCityId">
+                <Property name="property">fromCityId</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="fromCityName">
+                <Property name="property">fromCityName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="fromDistrictId">
+                <Property name="property">fromDistrictId</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="fromDistrictName">
+                <Property name="property">fromDistrictName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="fromAddress">
+                <Property name="property">fromAddress</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="endWarehouseId">
+                <Property name="property">endWarehouseId</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">endStation</Property>
+                <Property name="property">endStation</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="toProvinceId">
+                <Property name="property">toProvinceId</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="toProvinceName">
+                <Property name="property">toProvinceName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="toCityId">
+                <Property name="property">toCityId</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="toCityName">
+                <Property name="property">toCityName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="toDistrictId">
+                <Property name="property">toDistrictId</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="toDistrictName">
+                <Property name="property">toDistrictName</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="toAddress">
+                <Property name="property">toAddress</Property>
+              </DataColumn>
+              <DataColumn name="serviceTypeCode">
+                <Property name="property">serviceTypeCode</Property>
+              </DataColumn>
+              <DataColumn name="sendCycle">
+                <Property name="property">sendCycle</Property>
+              </DataColumn>
+              <DataColumn name="timeliness">
+                <Property name="property">timeliness</Property>
+              </DataColumn>
+              <DataColumn name="w2bubbleRatio">
+                <Property name="property">w2bubbleRatio</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="valueRatio">
+                <Property name="property">valueRatio</Property>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+              </DataColumn>
+              <DataColumn name="templateId">
+                <Property name="property">templateId</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="id">
+                <Property name="property">id</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="delFlag">
+                <Property name="property">delFlag</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="creator">
+                <Property name="property">creator</Property>
+              </DataColumn>
+              <DataColumn name="createTime">
+                <Property name="property">createTime</Property>
+                <Property name="width">150</Property>
+              </DataColumn>
+              <DataColumn name="lastModifier">
+                <Property name="property">lastModifier</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="lastModifyTime">
+                <Property name="property">lastModifyTime</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+          <Dialog id="calculateDialog">
+            <ClientEvent name="onHide">view.get(&quot;#dsBizGanxianWayBillEntity&quot;).clear();&#xD;
+</ClientEvent>
+            <Property name="caption">试算</Property>
+            <Property name="width">380</Property>
+            <Property name="height">350</Property>
+            <Buttons/>
+            <Children>
+              <TabControl>
+                <ControlTab id="CJTab">
+                  <Property name="caption">城际试算</Property>
+                  <Property name="visible">false</Property>
+                  <AutoForm id="formCJCalculate">
+                    <Property name="dataSet">dsBizGanxianWayBillEntity</Property>
+                    <Property name="dataType">dtBizGanxianWayBillEntity</Property>
+                    <Property name="editorWidth">180</Property>
+                    <Property name="labelAlign">left</Property>
+                    <Property name="colPadding">60</Property>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">customerName</Property>
+                      <Property name="property">customerName</Property>
+                      <Property name="editable">false</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">productType</Property>
+                      <Property name="property">productType</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <Label layoutConstraint="colSpan:3">
+                      <Property name="text">是否泡货</Property>
+                    </Label>
+                    <RadioGroup id="selectRadio">
+                      <ClientEvent name="onValueChange">var entity=view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().current;&#xD;
+var currentValue= self._value;&#xD;
+if(currentValue == 'Y'){&#xD;
+	entity.set(&quot;isLight&quot;,&quot;Y&quot;);&#xD;
+	view.get(&quot;#totalVolume1&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#totalWeight1&quot;).set(&quot;visible&quot;,false);&#xD;
+}else{&#xD;
+	entity.set(&quot;isLight&quot;,&quot;N&quot;);&#xD;
+	view.get(&quot;#totalVolume1&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#totalWeight1&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                      <Property name="value">Y</Property>
+                      <RadioButton>
+                        <Property name="text">是</Property>
+                        <Property name="value">Y</Property>
+                      </RadioButton>
+                      <RadioButton>
+                        <Property name="text">否</Property>
+                        <Property name="value">N</Property>
+                      </RadioButton>
+                    </RadioGroup>
+                    <AutoFormElement id="totalVolume1" layoutConstraint="colSpan:3">
+                      <Property name="name">totalVolume</Property>
+                      <Property name="property">totalVolume</Property>
+                      <Property name="hideMode">display</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="totalWeight1" layoutConstraint="colSpan:3">
+                      <Property name="name">totalWeight</Property>
+                      <Property name="property">totalWeight</Property>
+                      <Property name="visible">false</Property>
+                      <Property name="hideMode">display</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">temperatureTypeCode</Property>
+                      <Property name="property">temperatureTypeCode</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <Button id="btnCalculateFeeCJ">
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().current;&#xD;
+//获取模板&#xD;
+var dsGenericTemplate= view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+//获取报价&#xD;
+var dataPrice = view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+var jsonObj=JSON.parse(JSON.stringify(dataPrice));&#xD;
+entity.set(&quot;sendProvinceId&quot;,dataPrice.get(&quot;fromProvinceId&quot;));&#xD;
+entity.set(&quot;sendCityId&quot;,dataPrice.get(&quot;fromCityId&quot;));&#xD;
+entity.set(&quot;receiverProvinceId&quot;,dataPrice.get(&quot;toProvinceId&quot;));&#xD;
+entity.set(&quot;receiverCityId&quot;,dataPrice.get(&quot;toCityId&quot;));&#xD;
+entity.set(&quot;bizTypeCode&quot;,dataPrice.get(&quot;transportTypeCode&quot;));&#xD;
+entity.set(&quot;priceList&quot;,jsonObj);&#xD;
+if(isNullOrEmpty(entity.get(&quot;isLight&quot;))){&#xD;
+	entity.set(&quot;isLight&quot;,&quot;Y&quot;);&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#calculateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result.code == &quot;SUCCESS&quot;){&#xD;
+			dorado.MessageBox.alert(result.data);		&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+                      <Property name="caption">计算配送费用</Property>
+                    </Button>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">calResult</Property>
+                      <Property name="property">calResult</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </ControlTab>
+                <ControlTab id="TCTab">
+                  <Property name="caption">同城试算</Property>
+                  <Property name="visible">false</Property>
+                  <AutoForm id="formTCCalculate">
+                    <Property name="dataSet">dsBizGanxianWayBillEntity</Property>
+                    <Property name="dataType">dtBizGanxianWayBillEntity</Property>
+                    <Property name="editorWidth">180</Property>
+                    <Property name="labelAlign">left</Property>
+                    <Property name="colPadding">60</Property>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">customerName</Property>
+                      <Property name="property">customerName</Property>
+                      <Property name="editable">false</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">carModel</Property>
+                      <Property name="property">carModel</Property>
+                      <Property name="editorWidth">180</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">temperatureTypeCode</Property>
+                      <Property name="property">temperatureTypeCode</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <Button id="btnCalculateFeeTC">
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().current;&#xD;
+//获取模板&#xD;
+var dsGenericTemplate= view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+//获取报价&#xD;
+var dataPrice = view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+//获取阶梯报价&#xD;
+var dataPriceList=view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+&#xD;
+var jsonObj=JSON.parse(JSON.stringify(dataPrice));&#xD;
+&#xD;
+entity.set(&quot;sendProvinceId&quot;,dataPrice.get(&quot;fromProvinceId&quot;));&#xD;
+entity.set(&quot;sendCityId&quot;,dataPrice.get(&quot;fromCityId&quot;));&#xD;
+entity.set(&quot;receiverProvinceId&quot;,dataPrice.get(&quot;toProvinceId&quot;));&#xD;
+entity.set(&quot;receiverCityId&quot;,dataPrice.get(&quot;toCityId&quot;));&#xD;
+entity.set(&quot;bizTypeCode&quot;,dataPrice.get(&quot;transportTypeCode&quot;));&#xD;
+entity.set(&quot;priceList&quot;,jsonObj);&#xD;
+&#xD;
+view.get(&quot;#calculateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result.code == &quot;SUCCESS&quot;){&#xD;
+			dorado.MessageBox.alert(result.data);		&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+                      <Property name="caption">计算配送费用</Property>
+                    </Button>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">calResult</Property>
+                      <Property name="property">calResult</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </ControlTab>
+                <ControlTab id="DSZLTab">
+                  <Property name="caption">电商专列试算</Property>
+                  <Property name="visible">false</Property>
+                  <AutoForm id="formDSZLCalculate">
+                    <Property name="dataSet">dsBizGanxianWayBillEntity</Property>
+                    <Property name="dataType">dtBizGanxianWayBillEntity</Property>
+                    <Property name="editorWidth">180</Property>
+                    <Property name="labelAlign">left</Property>
+                    <Property name="colPadding">60</Property>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">customerName</Property>
+                      <Property name="property">customerName</Property>
+                      <Property name="editable">false</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">carModel</Property>
+                      <Property name="property">carModel</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">temperatureTypeCode</Property>
+                      <Property name="property">temperatureTypeCode</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <Button id="btnCalculateFeeDSZL">
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().current;&#xD;
+//获取模板&#xD;
+var dsGenericTemplate= view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+//获取报价&#xD;
+var dataPrice = view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+//获取阶梯报价&#xD;
+var dataPriceList=view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+&#xD;
+var jsonObj=JSON.parse(JSON.stringify(dataPrice));&#xD;
+&#xD;
+entity.set(&quot;warehouseCode&quot;,dataPrice.get(&quot;fromWarehouseId&quot;));&#xD;
+entity.set(&quot;endStation&quot;,dataPrice.get(&quot;endStation&quot;));&#xD;
+entity.set(&quot;bizTypeCode&quot;,dataPrice.get(&quot;transportTypeCode&quot;));&#xD;
+entity.set(&quot;priceList&quot;,jsonObj);&#xD;
+&#xD;
+view.get(&quot;#calculateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result.code == &quot;SUCCESS&quot;){&#xD;
+			dorado.MessageBox.alert(result.data);		&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+                      <Property name="caption">计算配送费用</Property>
+                    </Button>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">calResult</Property>
+                      <Property name="property">calResult</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </ControlTab>
+                <ControlTab id="HXDTab">
+                  <Property name="caption">航鲜达试算</Property>
+                  <Property name="visible">false</Property>
+                  <AutoForm id="formHXDCalculate">
+                    <Property name="dataSet">dsBizGanxianWayBillEntity</Property>
+                    <Property name="dataType">dtBizGanxianWayBillEntity</Property>
+                    <Property name="editorWidth">180</Property>
+                    <Property name="labelAlign">left</Property>
+                    <Property name="colPadding">60</Property>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">customerName</Property>
+                      <Property name="property">customerName</Property>
+                      <Property name="editable">false</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">carModel</Property>
+                      <Property name="property">carModel</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">totalWeight</Property>
+                      <Property name="property">totalWeight</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">temperatureTypeCode</Property>
+                      <Property name="property">temperatureTypeCode</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <Button id="btnCalculateFeeHXD" layoutConstraint="colSpan:3">
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBizGanxianWayBillEntity&quot;).getData().current;&#xD;
+//获取模板&#xD;
+var dsGenericTemplate= view.get(&quot;#dataSetTransportTemplate.data&quot;).current;&#xD;
+//获取报价&#xD;
+var dataPrice = view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+&#xD;
+var jsonObj=JSON.parse(JSON.stringify(dataPrice));&#xD;
+&#xD;
+//获取阶梯报价&#xD;
+var dataPriceList=view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+entity.set(&quot;receiverProvinceId&quot;,dataPrice.get(&quot;toProvinceId&quot;));&#xD;
+entity.set(&quot;receiverCityId&quot;,dataPrice.get(&quot;toCityId&quot;));&#xD;
+entity.set(&quot;startStation&quot;,dataPrice.get(&quot;startStation&quot;));&#xD;
+entity.set(&quot;bizTypeCode&quot;,dataPrice.get(&quot;transportTypeCode&quot;));&#xD;
+entity.set(&quot;priceList&quot;,jsonObj);&#xD;
+&#xD;
+view.get(&quot;#calculateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result.code == &quot;SUCCESS&quot;){&#xD;
+			dorado.MessageBox.alert(result.data);		&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+                      <Property name="caption">计算配送费用</Property>
+                    </Button>
+                    <AutoFormElement layoutConstraint="colSpan:3">
+                      <Property name="name">calResult</Property>
+                      <Property name="property">calResult</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </ControlTab>
+              </TabControl>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <Trigger id="triggerCarrier1">
+            <ClientEvent name="onExecute">view.get(&quot;#panelCarrier1&quot;).show();</ClientEvent>
+          </Trigger>
+          <FloatPanel id="panelCarrier1">
+            <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCarrier1.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dataSetTransportLine&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        carrierCode:data.get(&quot;deliverid&quot;),&#xD;
+		carrierName:data.get(&quot;delivername&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+            <Property name="caption">承运商选择</Property>
+            <Property name="center">true</Property>
+            <Property name="closeable">true</Property>
+            <Property name="contentOverflow">scroll</Property>
+            <Property name="height">450</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">800</Property>
+            <Buttons/>
+            <Children>
+              <SubViewHolder id="viewSelectCarrier1">
+                <Property name="subView">com.jiuyescm.bms.base.delivery.view.DeliveryLookUp</Property>
+              </SubViewHolder>
+            </Children>
+            <Tools/>
+          </FloatPanel>
+          <Dialog id="saveTransportLineDialog">
+            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">1000</Property>
+            <Property name="height">500</Property>
+            <Property name="caption">新增【运输路线表】</Property>
+            <Buttons>
+              <Button id="btnSaveLine">
+                <ClientEvent name="onClick">view.id(&quot;saveTransportLineAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(&quot;succ&quot; == result){&#xD;
+			dorado.MessageBox.alert(&quot;操作成功！&quot;);&#xD;
+			view.id(&quot;saveTransportLineDialog&quot;).hide();&#xD;
+			view.get(&quot;#dataSetTransportLine&quot;).flushAsync();&#xD;
+		}else{&#xD;
+			var spiltArray = new Array();&#xD;
+			var spiltResult = &quot;&quot;;&#xD;
+			if(result.indexOf(&quot;!&quot;) != -1){&#xD;
+				spiltArray = result.split(&quot;!&quot;);&#xD;
+			}&#xD;
+			for(var i=0;i &lt; spiltArray.length-1; i++){&#xD;
+				spiltResult += spiltArray[i];&#xD;
+				spiltResult += &quot;!\n&quot;;&#xD;
+			}&#xD;
+			dorado.MessageBox.alert(spiltResult);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+);&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCloseLine">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;saveTransportLineDialog&quot;).hide();&#xD;
+		view.get(&quot;#dataSetTransportLine&quot;).flushAsync();&#xD;
+	}&#xD;
+);&#xD;
+</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="saveTransportLineForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dataSetTransportLine</Property>
+                  <Property name="dataType">dataTypeTransportLine</Property>
+                  <Property name="labelWidth">120</Property>
+                  <Property name="labelSeparator">:</Property>
+                  <AutoFormElement>
+                    <Property name="name">transportTypeCode</Property>
+                    <Property name="property">transportTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">carrierCode</Property>
+                    <Property name="property">carrierCode</Property>
+                    <Property name="trigger">triggerCarrier1</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">transportLineNo</Property>
+                    <Property name="property">transportLineNo</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">transportLineName</Property>
+                    <Property name="property">transportLineName</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromWarehouseId</Property>
+                    <Property name="property">fromWarehouseId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromProvinceId</Property>
+                    <Property name="property">fromProvinceId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryProvince</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromProvinceName</Property>
+                    <Property name="property">fromProvinceName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromCityId</Property>
+                    <Property name="property">fromCityId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryCity</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromCityName</Property>
+                    <Property name="property">fromCityName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromDistrictId</Property>
+                    <Property name="property">fromDistrictId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryDistrict</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromDistrictName</Property>
+                    <Property name="property">fromDistrictName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">startStation</Property>
+                    <Property name="property">startStation</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">airPort</Property>
+                    <Property name="property">airPort</Property>
+                    <Property name="visible">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">fromAddress</Property>
+                    <Property name="property">fromAddress</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">endWarehouseId</Property>
+                    <Property name="property">endWarehouseId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toProvinceId</Property>
+                    <Property name="property">toProvinceId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryToProvince</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toProvinceName</Property>
+                    <Property name="property">toProvinceName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toCityId</Property>
+                    <Property name="property">toCityId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryToCity</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toCityName</Property>
+                    <Property name="property">toCityName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toDistrictId</Property>
+                    <Property name="property">toDistrictId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryToDistrict</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toDistrictName</Property>
+                    <Property name="property">toDistrictName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">endStation</Property>
+                    <Property name="property">endStation</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">toAddress</Property>
+                    <Property name="property">toAddress</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">elecWarehouseCode</Property>
+                    <Property name="property">elecWarehouseCode</Property>
+                    <Property name="visible">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">serviceTypeCode</Property>
+                    <Property name="property">serviceTypeCode</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">sendCycle</Property>
+                    <Property name="property">sendCycle</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">sendTime</Property>
+                    <Property name="property">sendTime</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">timeliness</Property>
+                    <Property name="property">timeliness</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">w2bubbleRatio</Property>
+                    <Property name="property">w2bubbleRatio</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">valueRatio</Property>
+                    <Property name="property">valueRatio</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">templateId</Property>
+                    <Property name="property">templateId</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="saveTransportLineAction">
+            <Property name="dataResolver">transportLineController#save</Property>
+            <Property name="executingMessage">正在处理中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetTransportLine</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <Dialog id="editTransportLineDialog">
+            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">1000</Property>
+            <Property name="height">500</Property>
+            <Property name="caption">编辑【运输路线表】</Property>
+            <Buttons>
+              <Button id="btnUpdateLine">
+                <ClientEvent name="onClick">view.id(&quot;updateTransportLineAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(&quot;succ&quot; == result){&#xD;
+			view.id(&quot;editTransportLineDialog&quot;).hide();&#xD;
+			dorado.MessageBox.alert(&quot;操作成功！&quot;);&#xD;
+			view.get(&quot;#dataSetTransportLine&quot;).flushAsync();&#xD;
+		}else{&#xD;
+			var spiltArray = new Array();&#xD;
+			var spiltResult = &quot;&quot;;&#xD;
+			if(result.indexOf(&quot;!&quot;) != -1){&#xD;
+				spiltArray = result.split(&quot;!&quot;);&#xD;
+			}&#xD;
+			for(var i=0;i &lt; spiltArray.length-1; i++){&#xD;
+				spiltResult += spiltArray[i];&#xD;
+				spiltResult += &quot;!\n&quot;;&#xD;
+			}&#xD;
+			dorado.MessageBox.alert(spiltResult);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+);&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelLine">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editTransportLineDialog&quot;).hide();&#xD;
+		view.get(&quot;#dataSetTransportLine&quot;).flushAsync();&#xD;
+	}&#xD;
+);&#xD;
+</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="editTransportLineForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dataSetTransportLine</Property>
+                  <Property name="dataType">dataTypeTransportLine</Property>
+                  <Property name="labelWidth">120</Property>
+                  <Property name="labelSeparator">:</Property>
+                  <AutoFormElement>
+                    <Property name="name">transportTypeCode</Property>
+                    <Property name="property">transportTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">carrierCode</Property>
+                    <Property name="property">carrierCode</Property>
+                    <Property name="trigger">triggerCarrier1</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">transportLineNo</Property>
+                    <Property name="property">transportLineNo</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">transportLineName</Property>
+                    <Property name="property">transportLineName</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromWarehouseId</Property>
+                    <Property name="property">fromWarehouseId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromProvinceId</Property>
+                    <Property name="property">fromProvinceId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryProvince</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromProvinceName</Property>
+                    <Property name="property">fromProvinceName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromCityId</Property>
+                    <Property name="property">fromCityId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryCity</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromCityName</Property>
+                    <Property name="property">fromCityName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromDistrictId</Property>
+                    <Property name="property">fromDistrictId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryDistrict</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">fromDistrictName</Property>
+                    <Property name="property">fromDistrictName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">startStation</Property>
+                    <Property name="property">startStation</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">airPort</Property>
+                    <Property name="property">airPort</Property>
+                    <Property name="visible">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">fromAddress</Property>
+                    <Property name="property">fromAddress</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">endWarehouseId</Property>
+                    <Property name="property">endWarehouseId</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toProvinceId</Property>
+                    <Property name="property">toProvinceId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryToProvince</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toProvinceName</Property>
+                    <Property name="property">toProvinceName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toCityId</Property>
+                    <Property name="property">toCityId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryToCity</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toCityName</Property>
+                    <Property name="property">toCityName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toDistrictId</Property>
+                    <Property name="property">toDistrictId</Property>
+                    <Property name="visible">true</Property>
+                    <Property name="trigger">ddropDownQueryToDistrict</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">toDistrictName</Property>
+                    <Property name="property">toDistrictName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">endStation</Property>
+                    <Property name="property">endStation</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">toAddress</Property>
+                    <Property name="property">toAddress</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">elecWarehouseCode</Property>
+                    <Property name="property">elecWarehouseCode</Property>
+                    <Property name="visible">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">serviceTypeCode</Property>
+                    <Property name="property">serviceTypeCode</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">sendCycle</Property>
+                    <Property name="property">sendCycle</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">sendTime</Property>
+                    <Property name="property">sendTime</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">timeliness</Property>
+                    <Property name="property">timeliness</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">w2bubbleRatio</Property>
+                    <Property name="property">w2bubbleRatio</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">valueRatio</Property>
+                    <Property name="property">valueRatio</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">templateId</Property>
+                    <Property name="property">templateId</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="updateTransportLineAction">
+            <Property name="dataResolver">transportLineController#update</Property>
+            <Property name="executingMessage">正在处理中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetTransportLine</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <UpdateAction id="removeTransportLineAction">
+            <Property name="dataResolver">transportLineController#delete</Property>
+            <Property name="executingMessage">正在处理中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetTransportLine</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <DownloadAction id="downloadRangeTemplateAction">
+            <Property name="fileProvider">transportLineController#accquireTransportLineRangeTemplate</Property>
+            <Property name="target">workspace</Property>
+          </DownloadAction>
+          <Dialog id="ImportLineRangeDialog">
+            <ClientEvent name="onShow">$(&quot;#d_progressRangeLabel&quot;).hide();&#xD;
+$(&quot;#d_importRangeProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressRangeLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#importRangeProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#importRangeCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#importRangeBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+            <ClientEvent name="onClose">$(&quot;#d_progressRangeLabel&quot;).hide();&#xD;
+$(&quot;#d_importRangeProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#importRangeBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+            <Property name="caption">导入</Property>
+            <Property name="closeable">false</Property>
+            <Property name="height">180</Property>
+            <Property name="width">460</Property>
+            <Buttons>
+              <Button id="importRangeCloseBtn">
+                <ClientEvent name="onClick">view.get(&quot;#ImportLineRangeDialog&quot;).hide();</ClientEvent>
+                <Property name="caption">关闭</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <AutoFormElement id="rangeFileName">
+                  <Property name="label">文件名称</Property>
+                  <Property name="hintWidth">0</Property>
+                  <Property name="name">rangeFileName</Property>
+                  <Property name="property">rangeFileName</Property>
+                  <Property name="readOnly">true</Property>
+                  <Property name="showHint">false</Property>
+                  <Property name="width">300</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement id="importRangeBtn" layoutConstraint="align:right">
+                  <Property name="hintWidth">0</Property>
+                  <Property name="name">importRangeBtn</Property>
+                  <Property name="property">importRangeBtn</Property>
+                  <Property name="showHint">false</Property>
+                  <Property name="showLabel">false</Property>
+                  <Property name="width">80</Property>
+                  <Editor>
+                    <Button id="importRangeBtn2">
+                      <Property name="action">uploadLineRangeAction</Property>
+                      <Property name="caption">导入</Property>
+                    </Button>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+              <Label id="progressRangeLabel">
+                <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+                <Property name="width">350</Property>
+              </Label>
+              <ProgressBar id="importRangeProgressBar"/>
+              <AjaxAction id="getRangeProgress">
+                <Property name="modal">false</Property>
+                <Property name="service">transportLineController#getRangeProgress</Property>
+              </AjaxAction>
+              <AjaxAction id="setRangeProgress">
+                <Property name="modal">false</Property>
+                <Property name="service">transportLineController#setRangeProgress</Property>
+              </AjaxAction>
+              <UploadAction id="uploadLineRangeAction">
+                <ClientEvent name="onFileUploaded">view.get(&quot;#importRangeBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#importRangeCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+&#xD;
+//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	var data = view.get(&quot;#dataSetTransportLine&quot;).getData();&#xD;
+	with (view.get(&quot;#dataSetTransportLineRange&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			lineId:data.current.get(&quot;id&quot;)&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();&#xD;
+		&#xD;
+		view.get(&quot;#lineRangeTab&quot;).set(&quot;disabled&quot;,false);&#xD;
+		view.get(&quot;#lineRangeTab&quot;).set(&quot;caption&quot;,data.current.get(&quot;transportLineNo&quot;)+&quot; 梯度报价&quot;);&#xD;
+		view.get(&quot;#transportTemplateTab&quot;).set(&quot;currentTab&quot;,view.get(&quot;#lineRangeTab&quot;));&#xD;
+	&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+                <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName input&quot;).val(fname);&#xD;
+view.get(&quot;#importRangeBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#importRangeCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+&#xD;
+var entity = view.get(&quot;#dataSetTransportLine.data&quot;).current;&#xD;
+var id = entity.get(&quot;id&quot;);&#xD;
+var parameter={id:id};&#xD;
+self.set(&quot;parameter&quot;,parameter);</ClientEvent>
+                <ClientEvent name="onFilesAdded">$(&quot;#d_progressRangeLabel&quot;).show();&#xD;
+$(&quot;#d_importRangeProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressRangeLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#importRangeProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getRangeProgress&quot;);&#xD;
+var setAction = view.get(&quot;#setRangeProgress&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getRangeProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#importRangeProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#importRangeCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressRangeLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#importRangeCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressRangeLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getRangeProgress, 500);</ClientEvent>
+                <Property name="fileResolver">transportLineController#importTransportLineRange</Property>
+                <Filters>
+                  <Filter>
+                    <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+                    <Property name="title">Excel文件</Property>
+                  </Filter>
+                </Filters>
+              </UploadAction>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </ControlTab>
+      <ControlTab id="lineRangeTab">
+        <Property name="caption">运输阶梯报价</Property>
+        <Property name="disabled">true</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetTransportLineRange</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton id="btnAddLineRange">
+              <ClientEvent name="onClick">var typeDatas = view.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+var currentData = typeDatas.current;&#xD;
+if (currentData){&#xD;
+	var datas = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+	datas.insert();&#xD;
+	datas.current.set(&quot;lineId&quot;,currentData.get(&quot;id&quot;));&#xD;
+	view.get(&quot;#saveTransportLineRangeDialog&quot;).show();&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请先选择一条运输路线!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnEditLineRange">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#editTransportLineRangeDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">编辑</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnRemoveLineRange">
+              <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeLineRange&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					var queryJson={&#xD;
+						lineId:currentData.get(&quot;lineId&quot;)&#xD;
+					};&#xD;
+					with (view.get(&quot;#dataSetTransportLineRange&quot;)){&#xD;
+						set(&quot;parameter&quot;, queryJson);&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <Container>
+            <DataGrid id="dataGridTransportLineRange">
+              <ClientEvent name="onDataRowDoubleClick">var data=view.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#editTransportLineRangeDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dataSetTransportLineRange</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="stretchColumnsMode">auto</Property>
+              <Property name="width">2500</Property>
+              <RowNumColumn/>
+              <DataColumn name="temperatureTypeCode">
+                <Property name="property">temperatureTypeCode</Property>
+              </DataColumn>
+              <DataColumn name="productTypeCode">
+                <Property name="property">productTypeCode</Property>
+              </DataColumn>
+              <DataColumn name="isLight">
+                <Property name="property">isLight</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="carModelCode">
+                <Property name="property">carModelCode</Property>
+              </DataColumn>
+              <DataColumn name="minWeightShipment">
+                <Property name="property">minWeightShipment</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">minPriceShipment</Property>
+                <Property name="property">minPriceShipment</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="weightLowerLimit">
+                <Property name="property">weightLowerLimit</Property>
+              </DataColumn>
+              <DataColumn name="weightUpperLimit">
+                <Property name="property">weightUpperLimit</Property>
+              </DataColumn>
+              <DataColumn name="volumeLowerLimit">
+                <Property name="property">volumeLowerLimit</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="volumeUpperLimit">
+                <Property name="property">volumeUpperLimit</Property>
+                <Property name="visible">true</Property>
+              </DataColumn>
+              <DataColumn name="unitPrice">
+                <Property name="property">unitPrice</Property>
+              </DataColumn>
+              <DataColumn name="boxShipment">
+                <Property name="property">boxShipment</Property>
+              </DataColumn>
+              <DataColumn name="boxLowerLimit">
+                <Property name="property">boxLowerLimit</Property>
+              </DataColumn>
+              <DataColumn name="boxUpperLimit">
+                <Property name="property">boxUpperLimit</Property>
+              </DataColumn>
+              <DataColumn name="pointShipment">
+                <Property name="property">pointShipment</Property>
+              </DataColumn>
+              <DataColumn name="pointLowerLimit">
+                <Property name="property">pointLowerLimit</Property>
+              </DataColumn>
+              <DataColumn name="pointUpperLimit">
+                <Property name="property">pointUpperLimit</Property>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+              </DataColumn>
+              <DataColumn name="lineId">
+                <Property name="property">lineId</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="creator">
+                <Property name="property">creator</Property>
+              </DataColumn>
+              <DataColumn name="createTime">
+                <Property name="property">createTime</Property>
+                <Property name="width">150</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+          <Dialog id="saveTransportLineRangeDialog">
+            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLineRange&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">800</Property>
+            <Property name="height">400</Property>
+            <Property name="caption">新增【运输阶梯报价】</Property>
+            <Buttons>
+              <Button id="btnSaveLineRange">
+                <ClientEvent name="onClick">view.id(&quot;saveLineRangeAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(&quot;succ&quot; == result){&#xD;
+			view.id(&quot;saveTransportLineRangeDialog&quot;).hide();&#xD;
+			dorado.MessageBox.alert(&quot;操作成功！&quot;);&#xD;
+			view.get(&quot;#dataSetTransportLineRange&quot;).flushAsync();&#xD;
+		}else{&#xD;
+			var spiltArray = new Array();&#xD;
+			var spiltResult = &quot;&quot;;&#xD;
+			if(result.indexOf(&quot;!&quot;) != -1){&#xD;
+				spiltArray = result.split(&quot;!&quot;);&#xD;
+			}&#xD;
+			for(var i=0;i &lt; spiltArray.length-1; i++){&#xD;
+				spiltResult += spiltArray[i];&#xD;
+				spiltResult += &quot;!\n&quot;;&#xD;
+			}&#xD;
+			dorado.MessageBox.alert(spiltResult);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+);&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCloseLineRange">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTransportLineRange&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;saveTransportLineRangeDialog&quot;).hide();&#xD;
+		view.get(&quot;#dataSetTransportLineRange&quot;).flushAsync();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="saveTransportLineRangeForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dataSetTransportLineRange</Property>
+                  <Property name="dataType">dataTypeTransportLineRange</Property>
+                  <Property name="labelSeparator">:</Property>
+                  <Property name="labelWidth">100</Property>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">carModelCode</Property>
+                    <Property name="property">carModelCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">productTypeCode</Property>
+                    <Property name="property">productTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">minWeightShipment</Property>
+                    <Property name="property">minWeightShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">minPriceShipment</Property>
+                    <Property name="property">minPriceShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightLowerLimit</Property>
+                    <Property name="property">weightLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightUpperLimit</Property>
+                    <Property name="property">weightUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeLowerLimit</Property>
+                    <Property name="property">volumeLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeUpperLimit</Property>
+                    <Property name="property">volumeUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">boxShipment</Property>
+                    <Property name="property">boxShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">boxLowerLimit</Property>
+                    <Property name="property">boxLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">boxUpperLimit</Property>
+                    <Property name="property">boxUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">pointShipment</Property>
+                    <Property name="property">pointShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">pointLowerLimit</Property>
+                    <Property name="property">pointLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">pointUpperLimit</Property>
+                    <Property name="property">pointUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">lineId</Property>
+                    <Property name="property">lineId</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">isLight</Property>
+                    <Property name="property">isLight</Property>
+                    <Property name="hideMode">display</Property>
+                    <Property name="visible">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="saveLineRangeAction">
+            <Property name="dataResolver">transportLineRangeController#save</Property>
+            <Property name="executingMessage">正在处理中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetTransportLineRange</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <Dialog id="editTransportLineRangeDialog">
+            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLineRange&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">800</Property>
+            <Property name="height">300</Property>
+            <Property name="caption">新增或编辑【运输阶梯报价】</Property>
+            <Buttons>
+              <Button id="btnUpdateLineRange">
+                <ClientEvent name="onClick">view.id(&quot;updateLineRangeAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(&quot;succ&quot; == result){&#xD;
+			view.id(&quot;editTransportLineRangeDialog&quot;).hide();&#xD;
+			dorado.MessageBox.alert(&quot;操作成功！&quot;);&#xD;
+			view.get(&quot;#dataSetTransportLineRange&quot;).flushAsync();&#xD;
+		}else{&#xD;
+			var spiltArray = new Array();&#xD;
+			var spiltResult = &quot;&quot;;&#xD;
+			if(result.indexOf(&quot;!&quot;) != -1){&#xD;
+				spiltArray = result.split(&quot;!&quot;);&#xD;
+			}&#xD;
+			for(var i=0;i &lt; spiltArray.length-1; i++){&#xD;
+				spiltResult += spiltArray[i];&#xD;
+				spiltResult += &quot;!\n&quot;;&#xD;
+			}&#xD;
+			dorado.MessageBox.alert(spiltResult);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
+);&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelLineRange">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTransportLineRange&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editTransportLineRangeDialog&quot;).hide();&#xD;
+		view.get(&quot;#dataSetTransportLineRange&quot;).flushAsync();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="editTransportLineRangeForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dataSetTransportLineRange</Property>
+                  <Property name="dataType">dataTypeTransportLineRange</Property>
+                  <Property name="labelSeparator">:</Property>
+                  <Property name="labelWidth">100</Property>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">carModelCode</Property>
+                    <Property name="property">carModelCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">productTypeCode</Property>
+                    <Property name="property">productTypeCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">minWeightShipment</Property>
+                    <Property name="property">minWeightShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">minPriceShipment</Property>
+                    <Property name="property">minPriceShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightLowerLimit</Property>
+                    <Property name="property">weightLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightUpperLimit</Property>
+                    <Property name="property">weightUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeLowerLimit</Property>
+                    <Property name="property">volumeLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">volumeUpperLimit</Property>
+                    <Property name="property">volumeUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">boxShipment</Property>
+                    <Property name="property">boxShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">boxLowerLimit</Property>
+                    <Property name="property">boxLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">boxUpperLimit</Property>
+                    <Property name="property">boxUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">pointShipment</Property>
+                    <Property name="property">pointShipment</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">pointLowerLimit</Property>
+                    <Property name="property">pointLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">pointUpperLimit</Property>
+                    <Property name="property">pointUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">lineId</Property>
+                    <Property name="property">lineId</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="hideMode">display</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">isLight</Property>
+                    <Property name="property">isLight</Property>
+                    <Property name="hideMode">display</Property>
+                    <Property name="visible">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="updateLineRangeAction">
+            <Property name="dataResolver">transportLineRangeController#update</Property>
+            <Property name="executingMessage">正在处理中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetTransportLineRange</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <UpdateAction id="removeLineRange">
+            <Property name="dataResolver">transportLineRangeController#delete</Property>
+            <Property name="executingMessage">正在处理中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetTransportLineRange</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <UpdateAction id="removeTransportTemplateActionBatch">
+      <Property name="dataResolver">transportTemplateController#deleteBatch</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTransportTemplate</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateActionDelete">
+      <ClientEvent name="onGetUpdateData">//获得选中提交的数据&#xD;
+arg.data=view.get(&quot;#dataGridTransportLine&quot;).get(&quot;selection&quot;);</ClientEvent>
+      <Property name="dataResolver">transportLineController#deleteBatchList</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTransportLine</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dataSetTransportTemplate&quot;).getData(&quot;#&quot;);&#xD;
+	var templateType=entity.get(&quot;templateType&quot;);&#xD;
+	var value=&quot;&quot;;&#xD;
+	if(templateType==&quot;S&quot;){&#xD;
+		value=&quot;标准模板&quot;;&#xD;
+	}else{&#xD;
+		value=&quot;常规模板&quot;;&#xD;
+	}&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;),&#xD;
+		customerName:data.get(&quot;customername&quot;),&#xD;
+		templateName:data.get(&quot;customername&quot;)+'-'+value&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCustomer1">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer1&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer1">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer1.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dataSetCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;),&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer1">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="cancelQuatationAction">
+      <Property name="dataResolver">transportTemplateController#cancelQuatation</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dataSetTransportTemplate</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="calculateAction">
+      <Property name="dataResolver">transportLineController#calculate</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBizGanxianWayBillEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

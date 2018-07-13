@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.receive.BmsBillInvoceInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />	    
+	    <result column="is_need_invoce" property="isNeedInvoce" jdbcType="VARCHAR" />
+	    <result column="invoce_no" property="invoceNo" jdbcType="VARCHAR" />
+	    <result column="invoce_time" property="invoceTime" jdbcType="TIMESTAMP" />
+	    <result column="invoce_amount" property="invoceAmount" jdbcType="DOUBLE" />
+	    <result column="receive_amount" property="receiveAmount" jdbcType="DOUBLE" />
+	    <result column="receipt_time" property="receiptTime" jdbcType="TIMESTAMP" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE" />
+	    <result column="receipt_status" property="receiptStatus" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param5" property="param5" jdbcType="VARCHAR" />
+	    <result column="version" property="version" jdbcType="INTEGER" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, bill_no, is_need_invoce, invoce_no, invoce_time, invoce_amount, receive_amount, receipt_time, receipt_amount, receipt_status, remark, param1, param2, param3, param4, param5, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(isNeedInvoce != null and isNeedInvoce !='')" >
+				and is_need_invoce = #{isNeedInvoce}
+		</if>
+		<if test="(invoceNo != null and invoceNo !='')" >
+				and invoce_no = #{invoceNo}
+		</if>
+		<if test="(invoceTime != null and invoceTime !='')" >
+			    and invoce_time >= #{invoceTime} add <![CDATA[invoce_time <= #{invoceTime}]]>
+		</if>
+		<if test="(invoceAmount != null and invoceAmount !='')" >
+				and invoce_amount = #{invoceAmount}
+		</if>
+		<if test="(receiveAmount != null and receiveAmount !='')" >
+				and receive_amount = #{receiveAmount}
+		</if>
+		<if test="(receiptTime != null and receiptTime !='')" >
+			    and receipt_time >= #{receiptTime} add <![CDATA[receipt_time <= #{receiptTime}]]>
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+				and receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(receiptStatus != null and receiptStatus !='')" >
+				and receipt_status = #{receiptStatus}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(param1 != null and param1 !='')" >
+				and param1 = #{param1}
+		</if>
+		<if test="(param2 != null and param2 !='')" >
+				and param2 = #{param2}
+		</if>
+		<if test="(param3 != null and param3 !='')" >
+				and param3 = #{param3}
+		</if>
+		<if test="(param4 != null and param4 !='')" >
+				and param4 = #{param4}
+		</if>
+		<if test="(param5 != null and param5 !='')" >
+				and param5 = #{param5}
+		</if>
+		<if test="(version != null and version !='')" >
+				and version = #{version}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_invoce_info
+        where 1=1
+        and del_flag = '0'
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_bill_invoce_info
+        where del_flag = '0' and id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity">
+        insert into bms_bill_invoce_info(bill_no, is_need_invoce, invoce_no, invoce_time, invoce_amount, receive_amount, receipt_time, receipt_amount, receipt_status, remark, param1, param2, param3, param4, param5, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+			#{billNo,jdbcType=VARCHAR}, 
+			#{isNeedInvoce,jdbcType=VARCHAR}, 
+			#{invoceNo,jdbcType=VARCHAR}, 
+			#{invoceTime,jdbcType=TIMESTAMP}, 
+			#{invoceAmount,jdbcType=DOUBLE}, 
+			#{receiveAmount,jdbcType=DOUBLE}, 
+			#{receiptTime,jdbcType=TIMESTAMP}, 
+			#{receiptAmount,jdbcType=DOUBLE}, 
+			#{receiptStatus,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param5,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity">
+        update bms_bill_invoce_info 
+		<set >
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="isNeedInvoce != null" >is_need_invoce=#{isNeedInvoce,jdbcType=VARCHAR},</if>
+			<if test="invoceNo != null" >invoce_no=#{invoceNo,jdbcType=VARCHAR},</if>
+			<if test="invoceTime != null" >invoce_time=#{invoceTime,jdbcType=TIMESTAMP},</if>
+			<if test="invoceAmount != null" >invoce_amount=#{invoceAmount,jdbcType=DOUBLE},</if>
+			<if test="receiveAmount != null" >receive_amount=#{receiveAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptTime != null" >receipt_time=#{receiptTime,jdbcType=TIMESTAMP},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptStatus != null" >receipt_status=#{receiptStatus,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param5 != null" >param5=#{param5,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bms_bill_invoce_info where
+        id=#{id}
+    </delete>
+    
+    <select id="queryCountInvoceInfo" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity">
+		SELECT A.bill_no,A.invoceAmount,A.receiptAmount,B.unReceiveAmount
+		FROM (SELECT bill_no, SUM(invoce_amount) as invoceAmount ,SUM(receipt_amount) as receiptAmount
+		FROM bms_bill_invoce_info
+		WHERE del_flag = '0' and bill_no = #{billNo}) A
+		INNER JOIN (
+		SELECT bill_no, SUM(invoce_amount) as unReceiveAmount
+		from bms_bill_invoce_info
+		where del_flag = '0' and bill_no = #{billNo}
+		<if test="(status!=null and status!='')">
+			and receipt_status = #{status}
+		</if>	
+		) B
+		ON A.bill_no = B.bill_no
+    </select>
+    
+    <select id="queryCountReceiptInfo" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity">
+		SELECT bbi.bill_name as billName, bbi.bill_no as billNo,bbi.customer_name as customerName,bbi.version,
+			bbi.total_amount as totalAmount,bbi.discount_amount as discountAmount,bbi.receive_amount as receiveAmount,
+			bbii.id, bbii.invoce_no as invoceNo,bbii.invoce_amount as invoceAmount
+		from bms_bill_info bbi LEFT JOIN bms_bill_invoce_info bbii
+		on bbi.bill_no = bbii.bill_no
+		where bbi.bill_no = #{billNo}
+		AND bbii.receipt_status = #{receiptStatus}
+		AND bbii.id = #{id}
+    </select>
+    
+    <update id="deleteFeesBill" parameterType="java.util.Map">
+    	update bms_bill_invoce_info 
+		<set>
+			<if test="isNeedInvoce != null" >is_need_invoce=#{isNeedInvoce,jdbcType=VARCHAR},</if>
+			<if test="invoceNo != null" >invoce_no=#{invoceNo,jdbcType=VARCHAR},</if>
+			<if test="invoceTime != null" >invoce_time=#{invoceTime,jdbcType=TIMESTAMP},</if>
+			<if test="invoceAmount != null" >invoce_amount=#{invoceAmount,jdbcType=DOUBLE},</if>
+			<if test="receiveAmount != null" >receive_amount=#{receiveAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptTime != null" >receipt_time=#{receiptTime,jdbcType=TIMESTAMP},</if>
+			<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DOUBLE},</if>
+			<if test="receiptStatus != null" >receipt_status=#{receiptStatus,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where bill_no=#{billNo}
+    </update>
+</mapper>

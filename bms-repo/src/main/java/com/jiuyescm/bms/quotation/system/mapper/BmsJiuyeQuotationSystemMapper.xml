@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.system.BmsJiuyeQuotationSystemEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.system.entity.BmsJiuyeQuotationSystemEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="version_code" property="versionCode" jdbcType="VARCHAR" />
+	    <result column="version_name" property="versionName" jdbcType="VARCHAR" />
+	    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="short_name" property="shortname" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, version_code, version_name, type_name, creator, create_time, last_modifier, last_modify_time, remark,short_name
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(versionCode != null and versionCode !='')" >
+				and version_code = #{versionCode}
+		</if>
+		<if test="(versionName != null and versionName !='')" >
+				and version_name like '%${versionName}%'
+		</if>
+		<if test="(typeName != null and typeName !='')" >
+				and type_name = #{typeName}
+		</if>
+		<if test="(shortname != null and shortname !='')" >
+				and short_name like  '%${shortname}%'
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.system.entity.BmsJiuyeQuotationSystemEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_jiuye_quotation_system
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.quotation.system.entity.BmsJiuyeQuotationSystemEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_jiuye_quotation_system
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.system.entity.BmsJiuyeQuotationSystemEntity">
+        insert into bms_jiuye_quotation_system(version_code, version_name, type_name, short_name,creator, create_time, last_modifier, last_modify_time, remark)
+        values (
+
+#{versionCode,jdbcType=VARCHAR}, 
+#{versionName,jdbcType=VARCHAR}, 
+#{typeName,jdbcType=VARCHAR}, 
+#{shortname,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.system.entity.BmsJiuyeQuotationSystemEntity">
+        update bms_jiuye_quotation_system 
+		<set >
+
+<if test="versionCode != null" >version_code=#{versionCode,jdbcType=VARCHAR},</if>
+<if test="versionName != null" >version_name=#{versionName,jdbcType=VARCHAR},</if>
+<if test="typeName != null" >type_name=#{typeName,jdbcType=VARCHAR},</if>
+<if test="shortname != null" >short_name=#{shortname,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_jiuye_quotation_system where
+        id=#{id}
+    </delete>
+</mapper>

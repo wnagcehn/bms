@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.rule.receiveRule.mapper.PubRuleCustomerReceivableMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.chargerule.receiverule.entity.PubRuleCustomerReceivableEntity" >
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="rule_no" property="ruleNo" jdbcType="VARCHAR" />
+	    <result column="subject_id" property="subjectId" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+       id, customerid, customer_name, rule_no, subject_id, remark, creator, create_time,
+       last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(ruleNo != null and ruleNo !='')" >
+				and rule_no = #{ruleNo}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+				and subject_id = #{subjectId}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} and <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.chargerule.receiverule.entity.PubRuleCustomerReceivableEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_rule_customer_receivable
+        where 1=1 and del_flag = 0
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.chargerule.receiverule.entity.PubRuleCustomerReceivableEntity">
+        select prcr.id, prcr.customerid, prcr.customer_name, prcr.rule_no, b.code_name as subjectId, 
+        	prcr.remark, prcr.creator, prcr.create_time, prcr.last_modifier, prcr.last_modify_time, prcr.del_flag
+        from pub_rule_customer_receivable prcr
+        LEFT JOIN system_code b ON prcr.subject_id=b.`code`
+        where prcr.del_flag = 0 and b.status = 0 
+        <if test="(customerid != null and customerid !='')" >
+			and prcr.customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+			and prcr.customer_name = #{customerName}
+		</if>
+		<if test="(ruleNo != null and ruleNo !='')" >
+			and prcr.rule_no = #{ruleNo}
+		</if>
+		<if test="(subjectId != null and subjectId !='')" >
+			and prcr.subject_id = #{subjectId}
+		</if>
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.chargerule.receiverule.entity.PubRuleCustomerReceivableEntity">
+        insert into pub_rule_customer_receivable(customerid, customer_name, rule_no, subject_id, remark, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+		#{customerid,jdbcType=VARCHAR}, 
+		#{customerName,jdbcType=VARCHAR}, 
+		#{ruleNo,jdbcType=VARCHAR}, 
+		#{subjectId,jdbcType=VARCHAR}, 
+		#{remark,jdbcType=VARCHAR}, 
+		#{creator,jdbcType=VARCHAR}, 
+		#{createTime,jdbcType=TIMESTAMP}, 
+		#{lastModifier,jdbcType=VARCHAR}, 
+		#{lastModifyTime,jdbcType=TIMESTAMP}, 
+		#{delFlag,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.chargerule.receiverule.entity.PubRuleCustomerReceivableEntity">
+        update pub_rule_customer_receivable 
+		<set >
+			<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="subjectId != null" >subject_id=#{subjectId,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=INTEGER},</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>

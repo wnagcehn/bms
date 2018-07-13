@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCustomerDailyIncomeReport">
+      <Property name="creationType">com.jiuyescm.bms.report.vo.ReportCustomerDailyIncomeVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="regionId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="regionName">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="seller">
+        <Property></Property>
+        <Property name="label">项目销售人员</Property>
+      </PropertyDef>
+      <PropertyDef name="manager">
+        <Property></Property>
+        <Property name="label">项目管理人员</Property>
+      </PropertyDef>
+      <PropertyDef name="settleOfficer">
+        <Property></Property>
+        <Property name="label">项目结算人员</Property>
+      </PropertyDef>
+      <PropertyDef name="feesDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">日期</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;customerDailyIncomeReportController#getSubjectMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">总费用</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="materialAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">耗材费</Property>
+      </PropertyDef>
+      <PropertyDef name="storageAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">仓储费</Property>
+      </PropertyDef>
+      <PropertyDef name="transportAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">运输费</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">配送费</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtQueryCondition">
+      <PropertyDef name="startDate">
+        <Property name="label">日期</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="endDate">
+        <Property name="label">-</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="manager">
+        <Property name="label">项目管理人员</Property>
+      </PropertyDef>
+      <PropertyDef name="seller">
+        <Property name="label">项目销售人员</Property>
+      </PropertyDef>
+      <PropertyDef name="settleOfficer">
+        <Property name="label">项目结算人员</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCustomerDailyIncomeReportDetail">
+      <Property name="dataType">[dtCustomerDailyIncomeReport]</Property>
+      <Property name="dataProvider">customerDailyIncomeReportController#queryDetail</Property>
+    </DataSet>
+    <DataSet id="dsCustomerDailyIncomeReport">
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dtCustomerDailyIncomeReport]</Property>
+      <Property name="dataProvider">customerDailyIncomeReportController#queryGroup</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtQueryCondition]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsCustomerDailyIncomeReport</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnSearch">
+        <ClientEvent name="onClick">var parameter=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+with(view.get(&quot;#dsCustomerDailyIncomeReport&quot;)){&#xD;
+	set(&quot;parameter&quot;,parameter);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var condition = view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="visible">true</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm>
+      <Property name="dataSet">dsQuery</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="labelWidth">120</Property>
+      <AutoFormElement>
+        <Property name="name">startDate</Property>
+        <Property name="property">startDate</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endDate</Property>
+        <Property name="property">endDate</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="trigger">triggerCustomer2</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">manager</Property>
+        <Property name="property">manager</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">seller</Property>
+        <Property name="property">seller</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">settleOfficer</Property>
+        <Property name="property">settleOfficer</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsCustomerDailyIncomeReport</Property>
+        <Property name="readOnly">true</Property>
+        <DataColumn name="feesDate">
+          <Property name="property">feesDate</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">customerName</Property>
+          <Property name="name">customerName</Property>
+        </DataColumn>
+        <DataColumn name="regionName">
+          <Property name="property">regionName</Property>
+        </DataColumn>
+        <DataColumn name="seller">
+          <Property name="property">seller</Property>
+        </DataColumn>
+        <DataColumn name="manager">
+          <Property name="property">manager</Property>
+        </DataColumn>
+        <DataColumn name="settleOfficer">
+          <Property name="property">settleOfficer</Property>
+        </DataColumn>
+        <DataColumn name="storageAmount">
+          <ClientEvent name="onRenderCell">var storageAmount=arg.data.get(&quot;storageAmount&quot;);&#xD;
+jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#20%&quot;,&#xD;
+	content:storageAmount.toString(),&#xD;
+	onclick:function(){&#xD;
+		var parameter={&#xD;
+			feesDate:arg.data.get(&quot;feesDate&quot;),&#xD;
+			customerId:arg.data.get(&quot;customerId&quot;),&#xD;
+			groupCode:'sale_storage'&#xD;
+		}&#xD;
+		with(view.get(&quot;#dsCustomerDailyIncomeReportDetail&quot;)){&#xD;
+			set(&quot;parameter&quot;,parameter);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.get(&quot;#dialogCustomerDailyIncomeReportDetail&quot;).show();&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="property">storageAmount</Property>
+        </DataColumn>
+        <DataColumn name="transportAmount">
+          <ClientEvent name="onRenderCell">var transportAmount=arg.data.get(&quot;transportAmount&quot;);&#xD;
+jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#20%&quot;,&#xD;
+	content:transportAmount.toString(),&#xD;
+	onclick:function(){&#xD;
+		var parameter={&#xD;
+			feesDate:arg.data.get(&quot;feesDate&quot;),&#xD;
+			customerId:arg.data.get(&quot;customerId&quot;),&#xD;
+			groupCode:'sale_transport'&#xD;
+		};&#xD;
+		with(view.get(&quot;#dsCustomerDailyIncomeReportDetail&quot;)){&#xD;
+			set(&quot;parameter&quot;,parameter);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.get(&quot;#dialogCustomerDailyIncomeReportDetail&quot;).show();&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="property">transportAmount</Property>
+        </DataColumn>
+        <DataColumn name="deliverAmount">
+          <ClientEvent name="onRenderCell">var deliverAmount=arg.data.get(&quot;deliverAmount&quot;);&#xD;
+jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#20%&quot;,&#xD;
+	content:deliverAmount.toString(),&#xD;
+	onclick:function(){&#xD;
+		var parameter={&#xD;
+			feesDate:arg.data.get(&quot;feesDate&quot;),&#xD;
+			customerId:arg.data.get(&quot;customerId&quot;),&#xD;
+			groupCode:'sale_deliver'&#xD;
+		}&#xD;
+		with(view.get(&quot;#dsCustomerDailyIncomeReportDetail&quot;)){&#xD;
+			set(&quot;parameter&quot;,parameter);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.get(&quot;#dialogCustomerDailyIncomeReportDetail&quot;).show();&#xD;
+	}&#xD;
+});</ClientEvent>
+          <Property name="property">deliverAmount</Property>
+        </DataColumn>
+        <DataColumn name="materialAmount">
+          <ClientEvent name="onRenderCell">var materialAmount=arg.data.get(&quot;materialAmount&quot;);&#xD;
+jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#20%&quot;,&#xD;
+	content:materialAmount.toString(),&#xD;
+	onclick:function(){&#xD;
+		var parameter={&#xD;
+			feesDate:arg.data.get(&quot;feesDate&quot;),&#xD;
+			customerId:arg.data.get(&quot;customerId&quot;),&#xD;
+			groupCode:'sale_material'&#xD;
+		}&#xD;
+		with(view.get(&quot;#dsCustomerDailyIncomeReportDetail&quot;)){&#xD;
+			set(&quot;parameter&quot;,parameter);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.get(&quot;#dialogCustomerDailyIncomeReportDetail&quot;).show();&#xD;
+	}&#xD;
+});</ClientEvent>
+          <Property name="property">materialAmount</Property>
+        </DataColumn>
+        <DataColumn name="amount">
+          <Property name="property">amount</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <FloatPanel id="panelCustomer2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsQuery&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId: data.get(&quot;customerid&quot;),&#xD;
+    });&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">800</Property>
+      <Property name="height">450</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="closeable">true</Property>
+      <Property name="center">true</Property>
+      <Property name="caption">商家选择</Property>
+      <Property name="modal">true</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer2">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCustomer2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer2&quot;).show();</ClientEvent>
+      <Property name="editable">true</Property>
+    </Trigger>
+    <Dialog id="dialogCustomerDailyIncomeReportDetail">
+      <Property name="width">450</Property>
+      <Property name="height">500</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid>
+          <Property name="dataSet">dsCustomerDailyIncomeReportDetail</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn name="feesDate">
+            <Property name="property">feesDate</Property>
+          </DataColumn>
+          <DataColumn name="customerName">
+            <Property name="property">customerName</Property>
+          </DataColumn>
+          <DataColumn name="subjectCode">
+            <Property name="property">subjectCode</Property>
+          </DataColumn>
+          <DataColumn name="amount">
+            <Property name="property">amount</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">customerDailyIncomeReportController#export</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

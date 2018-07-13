@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.storage.PriceMaterialQuotationMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+    <result column="material_type" property="materialType" jdbcType="VARCHAR" />
+    <result column="material_code" property="materialCode" jdbcType="VARCHAR" />
+    <result column="spec_name" property="specName" jdbcType="VARCHAR" />
+    <result column="outside_diameter" property="outsideDiameter" jdbcType="VARCHAR" />
+    <result column="inner_diameter" property="innerDiameter" jdbcType="VARCHAR" />
+    <result column="wall_thickness" property="wallThickness" jdbcType="DOUBLE" />
+    <result column="warehouse_id" property="warehouseId" jdbcType="VARCHAR" />
+    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="baseColumns" >
+    id, template_id, material_type, material_code, spec_name, outside_diameter, 
+    inner_diameter, wall_thickness, warehouse_id, unit_price, remark, creator, create_time, 
+    last_modifier, last_modify_time, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="baseColumns" />
+    from price_storage_material
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from price_storage_material
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity" >
+    insert into price_storage_material (id, template_id, material_type, 
+      material_code, spec_name, outside_diameter, 
+      inner_diameter, wall_thickness, warehouse_id, 
+      unit_price, remark, creator, 
+      create_time, last_modifier, last_modify_time, 
+      del_flag)
+    values (#{id,jdbcType=BIGINT}, #{templateId,jdbcType=VARCHAR}, #{materialType,jdbcType=VARCHAR}, 
+      #{materialCode,jdbcType=VARCHAR}, #{specName,jdbcType=VARCHAR}, #{outsideDiameter,jdbcType=VARCHAR}, 
+      #{innerDiameter,jdbcType=VARCHAR}, #{wallThickness,jdbcType=DOUBLE}, #{warehouseId,jdbcType=VARCHAR}, 
+      #{unitPrice,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastModifier,jdbcType=VARCHAR}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=VARCHAR})
+  </insert>
+   <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity">
+        select
+        <include refid="baseColumns" />
+        from price_storage_material
+        where del_flag = 0 
+		<if test="(templateId != null and templateId !='')" >
+				and template_id = #{templateId}
+		</if>
+		
+		<if test="(materialCode != null and materialCode !='')" >
+				and material_code like '%${materialCode}%' 
+        </if>
+        
+        <if test="(remark != null and remark !='')" >
+				and remark like '%${remark}%' 
+        </if>
+        
+        <if test="(materialType != null and materialType !='')" >
+				and material_type like '%${materialType}%' 
+        </if>
+        <if test="(warehouseId != null and warehouseId !='')" >
+				and warehouse_id = #{warehouseId}
+        </if>
+        
+		
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} add <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		order by id
+    </select>
+  <insert id="insertSelective" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity" >
+    insert into price_storage_material
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="materialType != null" >
+        material_type,
+      </if>
+      <if test="materialCode != null" >
+        material_code,
+      </if>
+      <if test="specName != null" >
+        spec_name,
+      </if>
+      <if test="outsideDiameter != null" >
+        outside_diameter,
+      </if>
+      <if test="innerDiameter != null" >
+        inner_diameter,
+      </if>
+      <if test="wallThickness != null" >
+        wall_thickness,
+      </if>
+      <if test="warehouseId != null" >
+        warehouse_id,
+      </if>
+      <if test="unitPrice != null" >
+        unit_price,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifier != null" >
+        last_modifier,
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="materialType != null" >
+        #{materialType,jdbcType=VARCHAR},
+      </if>
+      <if test="materialCode != null" >
+        #{materialCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specName != null" >
+        #{specName,jdbcType=VARCHAR},
+      </if>
+      <if test="outsideDiameter != null" >
+        #{outsideDiameter,jdbcType=VARCHAR},
+      </if>
+      <if test="innerDiameter != null" >
+        #{innerDiameter,jdbcType=VARCHAR},
+      </if>
+      <if test="wallThickness != null" >
+        #{wallThickness,jdbcType=DOUBLE},
+      </if>
+      <if test="warehouseId != null" >
+        #{warehouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifier != null" >
+        #{lastModifier,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null" >
+        #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity" >
+    update price_storage_material
+    set 
+        template_id = #{templateId,jdbcType=VARCHAR},
+        material_type = #{materialType,jdbcType=VARCHAR},
+        material_code = #{materialCode,jdbcType=VARCHAR},
+        spec_name = #{specName,jdbcType=VARCHAR},
+        outside_diameter = #{outsideDiameter,jdbcType=VARCHAR},
+        inner_diameter = #{innerDiameter,jdbcType=VARCHAR},
+        wall_thickness = #{wallThickness,jdbcType=DOUBLE},
+        warehouse_id = #{warehouseId,jdbcType=VARCHAR},
+        unit_price = #{unitPrice,jdbcType=DOUBLE},
+        remark = #{remark,jdbcType=VARCHAR},
+        creator = #{creator,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        last_modifier = #{lastModifier,jdbcType=VARCHAR},
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+        del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeDetail" parameterType="Map">
+  		update price_storage_material set 
+  		del_flag=1,
+  		last_modifier = #{lastModifier},
+      last_modify_time = #{lastModifyTime}
+      where template_id=#{templateId} and del_flag=0
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity" >
+    update price_storage_material
+    set template_id = #{templateId,jdbcType=VARCHAR},
+      material_type = #{materialType,jdbcType=VARCHAR},
+      material_code = #{materialCode,jdbcType=VARCHAR},
+      spec_name = #{specName,jdbcType=VARCHAR},
+      outside_diameter = #{outsideDiameter,jdbcType=VARCHAR},
+      inner_diameter = #{innerDiameter,jdbcType=VARCHAR},
+      wall_thickness = #{wallThickness,jdbcType=DOUBLE},
+      warehouse_id = #{warehouseId,jdbcType=VARCHAR},
+      unit_price = #{unitPrice,jdbcType=DOUBLE},
+      remark = #{remark,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modifier = #{lastModifier,jdbcType=VARCHAR},
+      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+    <select id="queryMaterialStep" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity">
+		select ps.* from price_storage_material ps,
+		(SELECT pg.id from  price_general_template pg LEFT JOIN price_contract_item pi on pi.template_id = pg.template_code 
+     LEFT JOIN  price_contract_info  con on con.contract_code = pi.contract_code
+		where pi.contract_code = #{contractCode} and con.contract_state = '1' and pi.del_flag = 0 and pg.del_flag = 0 ) px where px.id = ps.template_id and ps.del_flag = 0
+	</select>
+	<select id="queryAllById" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity">
+		 select
+        <include refid="baseColumns" />
+        from price_storage_material
+        where del_flag = '0'  and  template_id=#{templateId} 
+	</select>
+	<select id="queryOneMaterial" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity">
+		select ps.* from price_storage_material ps,
+		(SELECT pg.id from  price_general_template pg LEFT JOIN price_contract_item pi on pi.template_id = pg.template_code 
+     LEFT JOIN  price_contract_info  con on con.contract_code = pi.contract_code
+		where pi.contract_code = #{contractCode} and con.contract_state = '1' and pi.del_flag = 0 and pg.del_flag = 0 ) px where px.id = ps.template_id and ps.del_flag = 0
+		<if test="materialCode != null" >
+			and ps.material_code=#{materialCode}
+		</if>
+		<if test="warehouseId !=null">
+			and ps.warehouse_id=#{warehouseId}
+		</if>
+		limit 1
+	</select>
+	
+	<!-- 查询标准报价 -->
+	<select id="queryStandardMaterial" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select ps.* 
+		from price_storage_material ps
+		inner JOIN price_general_template pg on pg.id = ps.template_id and pg.del_flag = 0
+		where pg.template_type = 'S'  and ps.del_flag = 0
+		
+		<if test="(storageTemplateType != null and storageTemplateType !='')" >
+			and pg.storage_template_type = #{storageTemplateType}
+		</if>
+		<if test="(materialCode != null and materialCode !='')" >
+			and ps.material_code=#{materialCode}
+		</if>
+		<if test="(warehouseId != null and warehouseId !='')">
+			and ps.warehouse_id=#{warehouseId}
+		</if>
+		<if test="(customerId != null and customerId !='')">
+			and pg.customerId=#{customerId}
+		</if>
+	</select>
+	<select id="queryMaterialQuatationByContract" parameterType="Map" resultMap="BaseResultMap">
+		select c.* from price_contract_item a
+		inner join price_general_template b on a.template_id=b.template_code and b.del_flag=0
+    	inner join price_storage_material c on concat(b.id)=c.template_id and c.del_flag=0
+		where a.del_flag=0 
+		<if test="(contractCode != null and contractCode !='')">
+			and a.contract_code=#{contractCode}
+		</if>
+		<if test="(subjectId != null and subjectId !='')">
+			and a.subject_id=#{subjectId}
+		</if>
+		<if test="(warehouseId != null and warehouseId !='')">
+			and c.warehouse_id=#{warehouseId}
+		</if>
+		<if test="(materialCode != null and materialCode !='')">
+			and c.material_code=#{materialCode}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillRuleReceiveEntity">
+      <Property name="creationType">com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="quotationNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="quotationName">
+        <Property></Property>
+        <Property name="label">规则名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="label">费用类型：</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目：</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="rule">
+        <Property></Property>
+        <Property name="label">计费规则</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目：</Property>
+      </PropertyDef>
+      <PropertyDef name="instruction">
+        <Property></Property>
+        <Property name="label">说明</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPayCondition">
+      <PropertyDef name="quotationNo">
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property name="label">费用类型：</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessPayTypeList&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目：</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间：</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property name="label">费用科目：</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtSystemCodeEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="typeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="updateId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deleteId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractNo">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtRuleCustomerPayableEntity">
+      <Property name="creationType">com.jiuyescm.bms.chargerule.payrule.entity.PubRuleDeliverPayableEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryid">
+        <Property></Property>
+        <Property name="label">宅配商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryName">
+        <Property></Property>
+        <Property name="label">宅配商名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtRuleCustomerPayableCondition">
+      <PropertyDef name="ruleNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryid">
+        <Property></Property>
+        <Property name="label">宅配商ID</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBillRuleReceiveEntity">
+      <Property name="dataType">[dtBillRuleReceiveEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">payBillRuleController#queryAll</Property>
+    </DataSet>
+    <DataSet id="dsPayCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsPayCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtPayCondition]</Property>
+    </DataSet>
+    <DataSet id="dsSystemCodeEntity">
+      <Property name="dataType">[dtSystemCodeEntity]</Property>
+      <Property name="dataProvider">payBillRuleController#queryAllService</Property>
+    </DataSet>
+    <DataSet id="dsRuleCustomerPayableEntity">
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dtRuleCustomerPayableEntity]</Property>
+      <Property name="dataProvider">payBillRuleController#queryRuleCustomerPayable</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsRuleCustomerPayableCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsRuleCustomerPayableCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtRuleCustomerPayableCondition]</Property>
+    </DataSet>
+    <DataSetDropDown id="ddropDowmQuerySubject">
+      <ClientEvent name="beforeExecute">//var bizTypeCode=view.get(&quot;#bizTypeCode&quot;);&#xD;
+//alert(bizTypeCode);&#xD;
+var data = view.get(&quot;#dsPayCondition&quot;).getData(&quot;#&quot;).get(&quot;bizTypeCode&quot;);&#xD;
+//var entity=view.get(&quot;#dsSystemCodeEntity&quot;).getData(&quot;#&quot;);&#xD;
+var parameter={&#xD;
+		typeCode:data&#xD;
+	};&#xD;
+view.get(&quot;#dsSystemCodeEntity&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsPayCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set(&quot;subjectName&quot;,arg.selectedValue.get(&quot;codeName&quot;));&#xD;
+data.set(&quot;subjectId&quot;,arg.selectedValue.get(&quot;code&quot;));&#xD;
+&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsSystemCodeEntity</Property>
+      <Property name="displayProperty">codeName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropFormQueryMoban">
+      <ClientEvent name="beforeExecute">//var bizTypeCode=view.get(&quot;#bizTypeCode&quot;);&#xD;
+//alert(bizTypeCode);&#xD;
+var data = view.get(&quot;#dsBillRuleReceiveEntity&quot;).getData(&quot;#&quot;).get(&quot;bizTypeCode&quot;);&#xD;
+//var entity=view.get(&quot;#dsSystemCodeEntity&quot;).getData(&quot;#&quot;);&#xD;
+var parameter={&#xD;
+		typeCode:data&#xD;
+	};&#xD;
+view.get(&quot;#dsSystemCodeEntity&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBillRuleReceiveEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set(&quot;subjectName&quot;,arg.selectedValue.get(&quot;code&quot;));&#xD;
+data.set(&quot;subjectId&quot;,arg.selectedValue.get(&quot;codeName&quot;));&#xD;
+&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsSystemCodeEntity</Property>
+      <Property name="displayProperty">codeName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="itemCodes">pages,pageSize</Property>
+          <Property name="dataSet">dsBillRuleReceiveEntity</Property>
+        </DataPilot>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBillRuleReceiveEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btn_customer">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsBillRuleReceiveEntity.data&quot;).current;&#xD;
+if(data){&#xD;
+	var datas = view.get(&quot;#dsRuleCustomerPayableEntity.data&quot;);&#xD;
+	datas.insert();&#xD;
+	var entity = datas.current;&#xD;
+	entity.set(&quot;ruleNo&quot;,data.get(&quot;quotationNo&quot;));&#xD;
+	entity.set(&quot;subjectId&quot;,data.get(&quot;subjectName&quot;));&#xD;
+	view.get(&quot;#maintainRuleCustomer&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要维护的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">维护宅配商</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -260px -120px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="formCondition">
+        <Property name="dataSet">dsPayCondition</Property>
+        <Property name="cols">*,*,*,*,*</Property>
+        <Property name="dataType">dtPayCondition</Property>
+        <AutoFormElement>
+          <Property name="property">quotationNo</Property>
+          <Property name="name">quotationNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">bizTypeCode</Property>
+          <Property name="property">bizTypeCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectName</Property>
+          <Property name="property">subjectName</Property>
+          <Property name="trigger">ddropDowmQuerySubject</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Property name="labelWidth">5</Property>
+          <Property name="width">160</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBillRuleReceiveEntity.data&quot;).current;&#xD;
+if(!isNullOrEmpty(data.get(&quot;instruction&quot;))){&#xD;
+	view.get(&quot;#instructionText&quot;).set(&quot;text&quot;,data.get(&quot;instruction&quot;));&#xD;
+}else{&#xD;
+	view.get(&quot;#instructionText&quot;).set(&quot;text&quot;,&quot;&quot;);&#xD;
+}&#xD;
+with (view.get(&quot;#dsRuleCustomerPayableEntity&quot;)){&#xD;
+	var queryJson={&#xD;
+		ruleNo:data.get(&quot;quotationNo&quot;)&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flush();&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dsBillRuleReceiveEntity</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="height">200</Property>
+        <DataColumn name="quotationNo">
+          <Property name="property">quotationNo</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="bizTypeCode">
+          <Property name="property">bizTypeCode</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="subjectId">
+          <Property name="property">subjectId</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Container layout="hbox">
+      <TabControl>
+        <Property name="width">350</Property>
+        <ControlTab>
+          <Property name="caption">规则说明</Property>
+          <TextArea id="instructionText">
+            <Property name="width">350</Property>
+            <Property name="editable">false</Property>
+          </TextArea>
+        </ControlTab>
+      </TabControl>
+      <TabControl>
+        <Property name="width">800</Property>
+        <ControlTab>
+          <Property name="caption">商家映射关系</Property>
+          <Container>
+            <ToolBar>
+              <AutoForm id="priceFormCondition">
+                <Property name="cols">220,220,200,200</Property>
+                <Property name="dataSet">dsRuleCustomerPayableCondition</Property>
+                <Property name="dataType">dtRuleCustomerPayableCondition</Property>
+                <DataPilot>
+                  <Property name="itemCodes">pages,pageSize</Property>
+                  <Property name="dataSet">dsRuleCustomerPayableEntity</Property>
+                </DataPilot>
+                <AutoFormElement>
+                  <Property name="name">deliveryid</Property>
+                  <Property name="property">deliveryid</Property>
+                  <Property name="editorWidth">140</Property>
+                  <Property name="trigger">triggerDeliver2</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+              <Separator/>
+              <ToolBarButton id="btnQuery1">
+                <ClientEvent name="onClick">var data = view.get(&quot;#dsBillRuleReceiveEntity.data&quot;).current;&#xD;
+var ruleNo = data.get(&quot;quotationNo&quot;);&#xD;
+if(isNullOrEmpty(ruleNo)){&#xD;
+	dorado.MessageBox.alert(&quot;请先选择规则!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var condition = this.get(&quot;#dsRuleCustomerPayableCondition&quot;).getData(&quot;#&quot;);&#xD;
+condition.set({&#xD;
+    ruleNo: ruleNo&#xD;
+});&#xD;
+with (view.get(&quot;#dsRuleCustomerPayableEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, condition);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="caption">查询</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              </ToolBarButton>
+              <Separator/>
+              <ToolBarButton id="btnRemove1">
+                <ClientEvent name="onClick">var data = view.get(&quot;#dsBillRuleReceiveEntity.data&quot;).current;&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选择规则!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var ruleNo = data.get(&quot;quotationNo&quot;);&#xD;
+if(isNullOrEmpty(ruleNo)){&#xD;
+	dorado.MessageBox.alert(&quot;请先选择规则!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var ruleData = view.get(&quot;#dsRuleCustomerPayableEntity.data&quot;).current;&#xD;
+if(!ruleData){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(ruleData.get(&quot;id&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var action=view.get(&quot;#delRuleCustomerAction&quot;);&#xD;
+dorado.MessageBox.confirm(&quot;确定删除该记录?&quot;,function(){&#xD;
+	action.set(&quot;parameter&quot;,ruleData).execute(function(){&#xD;
+		dorado.MessageBox.alert(&quot;删除成功!&quot;);&#xD;
+		var condition = this.get(&quot;#dsRuleCustomerPayableCondition&quot;).getData(&quot;#&quot;);&#xD;
+		condition.set({&#xD;
+		    ruleNo: ruleNo&#xD;
+		});&#xD;
+		with (view.get(&quot;#dsRuleCustomerPayableEntity&quot;)){&#xD;
+			set(&quot;parameter&quot;, condition);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+})&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+                <Property name="caption">删除</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <DataGrid>
+              <Property name="readOnly">true</Property>
+              <Property name="dataSet">dsRuleCustomerPayableEntity</Property>
+              <RowNumColumn>
+                <Property name="width">60</Property>
+              </RowNumColumn>
+              <DataColumn>
+                <Property name="property">id</Property>
+                <Property name="visible">false</Property>
+                <Property name="name">id</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">deliveryid</Property>
+                <Property name="visible">true</Property>
+                <Property name="name">deliveryid</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">deliveryName</Property>
+                <Property name="visible">true</Property>
+                <Property name="name">deliveryName</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">ruleNo</Property>
+                <Property name="name">ruleNo</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">subjectId</Property>
+                <Property name="visible">true</Property>
+                <Property name="name">subjectId</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">remark</Property>
+                <Property name="name">remark</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">creator</Property>
+                <Property name="name">creator</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">createTime</Property>
+                <Property name="name">createTime</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">lastModifier</Property>
+                <Property name="name">lastModifier</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">lastModifyTime</Property>
+                <Property name="name">lastModifyTime</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </ControlTab>
+      </TabControl>
+    </Container>
+    <Dialog id="dialogRuleEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBillRuleReceiveEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">600</Property>
+      <Property name="height">450</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity = view.get(&quot;#formRuleEdit&quot;).get(&quot;entity&quot;);	&#xD;
+&#xD;
+var quotationName = entity.get(&quot;quotationName&quot;);&#xD;
+if(isNullOrEmpty(quotationName)){&#xD;
+	dorado.MessageBox.alert(&quot;规则名称不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var bizTypeCode=entity.get(&quot;bizTypeCode&quot;);&#xD;
+if(isNullOrEmpty(bizTypeCode)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择费用类型!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var subjectId=entity.get(&quot;subjectId&quot;);&#xD;
+if(isNullOrEmpty(subjectId)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择费用科目!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var remark = entity.get(&quot;remark&quot;);&#xD;
+if(isNullOrEmpty(remark)){&#xD;
+	dorado.MessageBox.alert(&quot;备注不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var rule = entity.get(&quot;rule&quot;);&#xD;
+if(isNullOrEmpty(rule)){&#xD;
+	dorado.MessageBox.alert(&quot;计费规则不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateRuleAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dsBillRuleReceiveEntity&quot;)){&#xD;
+				//定义查询条件json结构&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		view.id(&quot;dialogRuleEdit&quot;).hide();&#xD;
+		//if(result==&quot;FALSE&quot;){&#xD;
+		//	dorado.MessageBox.alert(&quot;该业务类型对应的费用科目已存在&quot;);	&#xD;
+		//}	&#xD;
+	}&#xD;
+);&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsBillRuleReceiveEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogRuleEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formRuleEdit">
+          <Property name="dataSet">dsBillRuleReceiveEntity</Property>
+          <Property name="dataType">dtBillRuleReceiveEntity</Property>
+          <Property name="rowHeight">40</Property>
+          <AutoFormElement>
+            <Property name="name">quotationNo</Property>
+            <Property name="property">quotationNo</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">quotationName</Property>
+            <Property name="property">quotationName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bizTypeCode</Property>
+            <Property name="property">bizTypeCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectId</Property>
+            <Property name="property">subjectId</Property>
+            <Property name="trigger">ddropFormQueryMoban</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">60</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">instruction</Property>
+            <Property name="property">instruction</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">80</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">rule</Property>
+            <Property name="property">rule</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">140</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateRuleAction">
+      <Property name="dataResolver">payBillRuleController#saveRule</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillRuleReceiveEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="removeRuleAction">
+      <Property name="dataResolver">payBillRuleController#removeRule</Property>
+      <Property name="executingMessage">数据删除中</Property>
+      <Property name="successMessage">数据删除成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillRuleReceiveEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="maintainRuleCustomer">
+      <Property name="caption">维护商家</Property>
+      <Property name="height">300</Property>
+      <Property name="width">400</Property>
+      <Property name="closeable">false</Property>
+      <Buttons>
+        <Button id="btnRuleCustomerSave">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsRuleCustomerPayableEntity.data&quot;).current;&#xD;
+var ruleNo = data.get(&quot;ruleNo&quot;);&#xD;
+var deliveryid =data.get(&quot;deliveryid&quot;);&#xD;
+var subjectId =data.get(&quot;subjectId&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(ruleNo)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择规则!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(deliveryid)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择宅配商!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(subjectId)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择费用科目!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;saveRuleCustomerAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		view.id(&quot;maintainRuleCustomer&quot;).hide();&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		with (view.get(&quot;#dsRuleCustomerPayableEntity&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				ruleNo:ruleNo&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	}&#xD;
+);&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnRuleCustomerCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定关闭此操作？&quot;, function() {&#xD;
+	var data=view.get(&quot;#dsRuleCustomerPayableEntity&quot;).getData();&#xD;
+	data.cancel();&#xD;
+	view.get(&quot;#maintainRuleCustomer&quot;).hide();&#xD;
+}); </ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="maintainRuleCustomerForm">
+          <Property name="rowHeight">40</Property>
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsRuleCustomerPayableEntity</Property>
+          <AutoFormElement>
+            <Property name="name">ruleNo</Property>
+            <Property name="property">ruleNo</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectId</Property>
+            <Property name="property">subjectId</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deliveryid</Property>
+            <Property name="property">deliveryid</Property>
+            <Property name="trigger">triggerDeliver1</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor>
+              <TextArea>
+                <Property name="maxLength">100</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="saveRuleCustomerAction">
+      <Property name="dataResolver">payBillRuleController#saveRuleCustomerPayable</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsRuleCustomerPayableEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="delRuleCustomerAction">
+      <Property name="dataResolver">payBillRuleController#delRuleCustomerPayable</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsRuleCustomerPayableEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerDeliver1">
+      <ClientEvent name="onExecute">view.get(&quot;#panelDeliver1&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeliver1">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeliver1.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsRuleCustomerPayableEntity&quot;).getData(&quot;#&quot;);&#xD;
+	entity.set({&#xD;
+        deliveryid: data.get(&quot;deliverid&quot;),&#xD;
+		deliveryName: data.get(&quot;shortname&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">宅配商选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeliver1">
+          <Property name="subView">com.jiuyescm.bms.base.delivery.view.DeliveryLookUp1</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerDeliver2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelDeliver2&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeliver2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeliver2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsRuleCustomerPayableCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        deliveryid:data.get(&quot;deliverid&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">宅配商选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeliver2">
+          <Property name="subView">com.jiuyescm.bms.base.delivery.view.DeliveryLookUp1</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

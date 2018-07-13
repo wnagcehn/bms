@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.storage.BizOutstockMasterMapper" >
+    <resultMap id="baseMasterResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity" >
+    
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="oms_id" property="omsId" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="chyun_code" property="chyunCode" jdbcType="VARCHAR" />
+	    <result column="chyun_name" property="chyunName" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="unpacking" property="unpacking" jdbcType="VARCHAR" />
+	    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="temperature_type_name" property="temperatureTypeName" jdbcType="VARCHAR" />
+	    <result column="bill_type_code" property="billTypeCode" jdbcType="VARCHAR" />
+	    <result column="bill_type_name" property="billTypeName" jdbcType="VARCHAR" />
+	    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	    <result column="resize_weight" property="resizeWeight" jdbcType="DOUBLE" />
+	    <result column="total_quantity" property="totalQuantity" jdbcType="DOUBLE" />
+	    <result column="total_varieties" property="totalVarieties" jdbcType="DOUBLE" />
+	    <result column="split_single" property="splitSingle" jdbcType="DOUBLE" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="resize_num" property="resizeNum" jdbcType="DOUBLE" />
+	    <result column="product_detail" property="productDetail" jdbcType="VARCHAR" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <resultMap id="baseChildResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="oms_id" property="omsId" jdbcType="VARCHAR" />
+	    <result column="oms_item_id" property="omsItemId" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="external_product_code" property="externalProductCode" jdbcType="VARCHAR" />
+	    <result column="product_category_code" property="productCategoryCode" jdbcType="VARCHAR" />
+	    <result column="product_category_name" property="productCategoryName" jdbcType="VARCHAR" />
+	    <result column="temperature_code" property="temperatureCode" jdbcType="VARCHAR" />
+	    <result column="temperature_name" property="temperatureName" jdbcType="VARCHAR" />
+	    <result column="num" property="num" jdbcType="DOUBLE" />
+	    <result column="resize_num" property="resizeNum" jdbcType="DOUBLE" />
+	    <result column="unit_code" property="unitCode" jdbcType="VARCHAR" />
+	    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+	  
+    <select id="queryCalculate" parameterType="java.util.Map" resultMap="baseMasterResultMap">
+         select  id,outstock_no,warehouse_code,warehouse_name,customerid,customer_name,temperature_type_code,waybill_no,
+				bill_type_code,bill_type_name,b2b_flag,fees_no,
+				total_weight,total_quantity,total_varieties,IFNULL(resize_weight,0) as resize_weight,
+				create_time,IFNULL(resize_num,0) as resize_num,product_detail, extattr1, extattr2, extattr3, extattr4, extattr5,
+				carrier_id,carrier_name,deliver_id,deliver_name,boxnum,adjust_boxnum
+		from biz_outstock_master where del_flag = 0 
+		<if test="(beginTime != null and beginTime !='')" >
+			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+			and carrier_id = #{carrierId,jdbcType=VARCHAR}
+		</if>
+		<if test="(deliveryId != null and deliveryId !='')" >
+			and deliver_id = #{deliveryId,jdbcType=VARCHAR}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = concat(${isCalculated})
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		LIMIT #{num}
+    </select>
+
+    <update id="updateCalculate" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        update biz_outstock_master 
+		<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <!-- 查询出库单字表 -->
+    <select id="queryOutStockDetail" parameterType="java.lang.String" resultMap="baseChildResultMap">
+        select id,outstock_no,product_code,product_name,temperature_code,num,resize_num 
+        from biz_outstock_detail 
+        	where outstock_no = #{outstockNo};
+    </select>
+    
+    <select id="querySysCode" parameterType="java.lang.String" resultType="java.util.Map">
+       SELECT   code,code_name,extattr1  from  system_code  where type_code =  #{type}
+    </select>
+    
+    <select id="queryAllWarehouseId" parameterType="Map" resultType="java.lang.String">
+    	select warehouse_code from biz_outstock_master where customerid=#{customerId}
+    	and create_time>=#{startDate} and <![CDATA[create_time<#{endDate}]]>
+		and del_flag=0 group by  warehouse_code 
+    </select>
+    
+</mapper>

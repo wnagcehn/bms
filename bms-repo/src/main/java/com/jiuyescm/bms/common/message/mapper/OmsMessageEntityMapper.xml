@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.common.message.entity.OmsMessageEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.common.message.entity.OmsMessageEntity" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="request" property="request" jdbcType="VARCHAR" />
+    <result column="response" property="response" jdbcType="VARCHAR" />
+    <result column="operperson" property="operperson" jdbcType="VARCHAR" />
+    <result column="opertime" property="opertime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, request, response, operperson, opertime
+  </sql>
+ 
+  <insert id="insert" parameterType="com.jiuyescm.bms.common.message.entity.OmsMessageEntity" >
+    insert into oms_message (id, request, response, operperson, opertime)
+    values (#{id,jdbcType=VARCHAR}, #{request,jdbcType=VARCHAR}, #{response,jdbcType=VARCHAR}, 
+      #{operperson,jdbcType=VARCHAR}, #{opertime,jdbcType=TIMESTAMP})
+  </insert>
+ 
+</mapper>

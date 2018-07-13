@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtPackCostReportTypeQuery">
+      <PropertyDef name="warehouseNo">
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="label">年</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="monthNum">
+        <Property name="label">月</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="dateType">
+        <Property name="label">时间类型：年(Y)月（M）季度(S)</Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="label">开始日期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endDate">
+        <Property name="label">结束日期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="materialNo">
+        <Property name="label">耗材编号</Property>
+      </PropertyDef>
+      <PropertyDef name="barcode">
+        <Property name="label">耗材条码</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPackCostReportTypeEntity">
+      <Property name="creationType">com.jiuyescm.bms.fees.storage.entity.PackCostReportEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseNo">
+        <Property/>
+        <Property name="label">仓库编号</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">年份</Property>
+      </PropertyDef>
+      <PropertyDef name="monthNum">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">月份</Property>
+      </PropertyDef>
+      <PropertyDef name="dateType">
+        <Property/>
+        <Property name="label">时间类型</Property>
+      </PropertyDef>
+      <PropertyDef name="materialNo">
+        <Property/>
+        <Property name="label">耗材编码</Property>
+      </PropertyDef>
+      <PropertyDef name="materialName">
+        <Property/>
+        <Property name="label">耗材名称</Property>
+      </PropertyDef>
+      <PropertyDef name="barcode">
+        <Property/>
+        <Property name="label">耗材条码</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property/>
+        <Property name="label">耗材类型</Property>
+      </PropertyDef>
+      <PropertyDef name="materialTypeName">
+        <Property/>
+        <Property name="label">耗材类型名称</Property>
+      </PropertyDef>
+      <PropertyDef name="unit">
+        <Property/>
+        <Property name="label">单位</Property>
+      </PropertyDef>
+      <PropertyDef name="initQty">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">期初数量</Property>
+      </PropertyDef>
+      <PropertyDef name="inQty">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">入库数量</Property>
+      </PropertyDef>
+      <PropertyDef name="initCost">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">期初成本</Property>
+      </PropertyDef>
+      <PropertyDef name="cost">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">成本</Property>
+      </PropertyDef>
+      <PropertyDef name="initMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">期初金额</Property>
+      </PropertyDef>
+      <PropertyDef name="inMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">入库金额</Property>
+      </PropertyDef>
+      <PropertyDef name="crePerson">
+        <Property/>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="label">开始日期</Property>
+      </PropertyDef>
+      <PropertyDef name="endDate">
+        <Property name="label">结束日期</Property>
+      </PropertyDef>
+      <PropertyDef name="creTime">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="crePersonId">
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPackCostReportEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsPackCostReportQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsPackCostReportEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsPackCostReportEntity">
+      <Property name="dataProvider">packCostReportController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="dataType">[dtPackCostReportTypeEntity]</Property>
+    </DataSet>
+    <DataSet id="dsPackCostReportQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsPackCostReportQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtPackCostReportTypeQuery]</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtPackCostReportTypeQuery</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">200,150,150,200,200</Property>
+      <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsPackCostReportQuery</Property>
+      <AutoFormElement>
+        <Property name="name">warehouseNo</Property>
+        <Property name="property">warehouseNo</Property>
+        <Property name="labelWidth">40</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">year</Property>
+        <Property name="property">year</Property>
+        <Property name="labelWidth">20</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">monthNum</Property>
+        <Property name="property">monthNum</Property>
+        <Property name="labelWidth">20</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">materialNo</Property>
+        <Property name="property">materialNo</Property>
+        <Property name="labelWidth">60</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">barcode</Property>
+        <Property name="property">barcode</Property>
+        <Property name="labelWidth">60</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsPackCostReportEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="warehouseNo">
+        <Property name="property">warehouseNo</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="year">
+        <Property name="property">year</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="monthNum">
+        <Property name="property">monthNum</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="dateType">
+        <Property name="property">dateType</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="startDate">
+        <Property name="property">startDate</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="endDate">
+        <Property name="property">endDate</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="materialNo">
+        <Property name="property">materialNo</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="materialName">
+        <Property name="property">materialName</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="barcode">
+        <Property name="property">barcode</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="materialType">
+        <Property name="property">materialType</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="materialTypeName">
+        <Property name="property">materialTypeName</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="unit">
+        <Property name="property">unit</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="initQty">
+        <Property name="property">initQty</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="inQty">
+        <Property name="property">inQty</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="initCost">
+        <Property name="property">initCost</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="cost">
+        <Property name="property">cost</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="initMoney">
+        <Property name="property">initMoney</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="inMoney">
+        <Property name="property">inMoney</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="crePerson">
+        <Property name="property">crePerson</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="crePersonId">
+        <Property name="property">crePersonId</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="creTime">
+        <Property name="property">creTime</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

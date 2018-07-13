@@ -1,0 +1,53 @@
+package com.jiuyescm.bms.biz.transport.entity;
+import java.util.List;
+import java.math.BigDecimal;
+import com.jiuyescm.bms.common.entity.CalculateVo;
+import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
+import com.jiuyescm.bms.quotation.transport.entity.PriceTransportTemplateEntity;
+import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity;
+import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineRangeEntity;
+import function com.jiuyescm.common.utils.drools.Utility.helper;
+import function com.jiuyescm.common.utils.drools.Utility.help;
+import org.apache.commons.lang.StringUtils;
+
+rule "transportFee2carModel:SSQ"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="GXZC" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isNotEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isNotEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),fromDistrictId==data.getSendDistrictId(),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),toDistrictId==data.getReceiverDistrictId()) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(carModelCode==data.getCarModel(),temperatureTypeCode==data.getTemperatureTypeCode()) from $line.child;	
+then
+	$parent.setPrice(new BigDecimal($lineRange.getUnitPrice())); 
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市区]规则transportFee2carModel:SSQ 按车型["+ data.getCarModel() +"]试算.");
+end;
+
+rule "transportFee2carModel:SS"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="GXZC" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isNotEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isNotEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),fromCityId==data.getSendCityId(),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),toCityId==data.getReceiverCityId(),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(carModelCode==data.getCarModel(),temperatureTypeCode==data.getTemperatureTypeCode()) from $line.child;	
+then
+	$parent.setPrice(new BigDecimal($lineRange.getUnitPrice())); 
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省市]规则transportFee2carModel:SS 按车型["+ data.getCarModel() +"]试算.");
+end;
+
+
+
+rule "transportFee2carModel:S"	
+when
+	$parent:CalculateVo();
+	data : BizGanxianWayBillEntity(transportType=="GXZC" && StringUtils.isNotEmpty(sendProvinceId) && StringUtils.isEmpty(sendCityId) && StringUtils.isEmpty(sendDistrictId) && StringUtils.isNotEmpty(receiverProvinceId) && StringUtils.isEmpty(receiverCityId) && StringUtils.isEmpty(receiverDistrictId)) from $parent.obj;
+	$transportTemplate : PriceTransportTemplateEntity();
+	$line : PriceTransportLineEntity(fromProvinceId==data.getSendProvinceId(),StringUtils.isEmpty(fromCityId),StringUtils.isEmpty(fromDistrictId),toProvinceId==data.getReceiverProvinceId(),StringUtils.isEmpty(toCityId),StringUtils.isEmpty(toDistrictId)) from $transportTemplate.child
+	$lineRange : PriceTransportLineRangeEntity(carModelCode==data.getCarModel(),temperatureTypeCode==data.getTemperatureTypeCode()) from $line.child;	
+then
+	$parent.setPrice(new BigDecimal($lineRange.getUnitPrice())); 
+	$parent.setUnitPrice($lineRange.getUnitPrice());
+	help(drools, "[省]规则transportFee2carModel:S 按车型["+ data.getCarModel() +"]试算.");
+end;
+

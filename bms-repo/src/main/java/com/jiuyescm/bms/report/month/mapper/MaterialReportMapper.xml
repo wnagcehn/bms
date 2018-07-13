@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.report.month.mapper.MaterialReportMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.report.month.entity.MaterialImportReportEntity" >
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+    	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+    	<result column="dispatchNum" property="dispatchNum" jdbcType="BIGINT" />
+    	<result column="materialNum" property="materialNum" jdbcType="BIGINT" />
+    	<result column="diffNum" property="diffNum" jdbcType="BIGINT" />
+    </resultMap>
+  
+    
+    <!-- 统计应收运单中仓库->商家->单量    cjw 2018-03-28 -->
+    <!-- <select id="dispatchNumReport" parameterType="java.util.Map" resultMap="baseResultMap">
+    	select a.warehouse_code,a.warehouse_name,a.customer_id,a.customer_name,a.dispatchNum,b.materialNum,ifnull(a.dispatchNum,0)-ifnull(b.materialNum,0) as diffNum from
+    	(
+    	select warehouse_code,warehouse_name,customerid as customer_id,customer_name,count(*) as dispatchNum 
+    	from biz_dispatch_bill 
+			where del_flag = 0 
+			<if test="(startTime != null and startTime !='')" >
+			    and create_time <![CDATA[>= ]]>#{startTime}
+			</if>
+			<if test="(endTime != null and endTime !='')" >
+			   and create_time<![CDATA[ < ]]>#{endTime}
+			</if>
+			<if test="(customerId != null and customerId !='')" >
+				and customerid = #{customerId}
+			</if>
+			<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+			</if>
+			group by warehouse_code,warehouse_name,customerid,customer_name
+			) a out join
+			(
+			select warehouse_code,customer_id,count(*) as materialNum from 
+			(
+			select warehouse_code,customer_id,waybill_no
+    		from biz_outstock_packmaterial 
+			where del_flag = 0 
+			<if test="(startTime != null and startTime !='')" >
+			    and create_time <![CDATA[>= ]]>#{startTime}
+			</if>
+			<if test="(endTime != null and endTime !='')" >
+			   and create_time<![CDATA[ < ]]>#{endTime}
+			</if>
+			<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+			</if>
+			<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+			</if>
+			group by warehouse_code,customer_id,waybill_no ) c
+			group by warehouse_code,customer_id
+			) b on a.warehouse_code=b.warehouse_code and a.customer_id=b.customer_id
+    </select> -->
+    
+    <select id="materialNumReport" parameterType="java.util.Map" resultMap="baseResultMap">
+    	select a.warehouse_code,a.customer_id,count(distinct a.waybill_no) as materialNum,0 as dispatchNum
+		from biz_outstock_packmaterial a 
+		LEFT JOIN biz_outstock_master b on a.waybill_no=b.waybill_no
+		where a.del_flag = '0' and b.b2b_flag='0' 
+		<if test="(startTime != null and startTime !='')" >
+		    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+		   and a.create_time<![CDATA[ < ]]>#{endTime}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and a.customer_id = #{customerId}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and a.warehouse_code = #{warehouseCode}
+		</if>
+		group by a.warehouse_code,a.customer_id
+    </select>
+    
+    
+    <select id="dispatchNumReport" parameterType="java.util.Map" resultMap="baseResultMap">
+    	select a.warehouse_code,a.customerid as customer_id,count(a.waybill_no) as dispatchNum,0 as materialNum
+    	from biz_dispatch_bill a 
+		LEFT JOIN biz_outstock_master b on a.waybill_no=b.waybill_no 
+		where a.del_flag = '0' and b.b2b_flag='0'
+		<if test="(startTime != null and startTime !='')" >
+		    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+		    and a.create_time<![CDATA[ < ]]>#{endTime}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and a.customerid = #{customerId}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and a.warehouse_code = #{warehouseCode}
+		</if>
+		group by a.warehouse_code,a.customerid
+    </select>
+    
+</mapper>

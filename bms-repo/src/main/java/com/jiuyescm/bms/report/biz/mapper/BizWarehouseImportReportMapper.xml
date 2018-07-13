@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.biz.mapper.BizWarehouseImportReportMapper" >
+	  
+    <select id="query" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseImportReportEntity">
+		SELECT warehouse_code as warehouseCode, importDate, biz_type as bizType, 
+			SUM(CASE WHEN import_type = 'THEORY' then 1 else 0 end) as theoryNum,
+			SUM(CASE WHEN import_type = 'ACTUAL' then 1 else 0 end) as actualNum,
+			(SUM(CASE WHEN import_type = 'THEORY' then 1 else 0 end) - 
+			SUM(CASE WHEN import_type = 'ACTUAL' then 1 else 0 end)) as minusNum
+		FROM(
+			SELECT warehouse_code, import_date as importDate,
+	    		biz_type, import_type, customer_id
+			FROM report_warehouse_biz_import
+			WHERE del_flag = '0'
+				AND import_date = #{importDate}
+			GROUP BY warehouse_code, import_date, biz_type, import_type, customer_id) a
+		GROUP BY warehouse_code, importDate,biz_type
+		ORDER BY warehouse_code, biz_type DESC
+    </select>
+    
+</mapper>

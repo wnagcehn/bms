@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.ReportSellerSubjectProfitEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.report.month.entity.ReportSellerSubjectProfitEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="seller_id" property="sellerId" jdbcType="VARCHAR" />
+	    <result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
+	    <result column="business_code" property="businessCode" jdbcType="VARCHAR" />
+	    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+	    <result column="fees_type" property="feesType" jdbcType="BIT" />
+	    <result column="amount_01" property="amount01" jdbcType="DECIMAL" />
+	    <result column="amount_02" property="amount02" jdbcType="DECIMAL" />
+	    <result column="amount_03" property="amount03" jdbcType="DECIMAL" />
+	    <result column="amount_04" property="amount04" jdbcType="DECIMAL" />
+	    <result column="amount_05" property="amount05" jdbcType="DECIMAL" />
+	    <result column="amount_06" property="amount06" jdbcType="DECIMAL" />
+	    <result column="amount_07" property="amount07" jdbcType="DECIMAL" />
+	    <result column="amount_08" property="amount08" jdbcType="DECIMAL" />
+	    <result column="amount_09" property="amount09" jdbcType="DECIMAL" />
+	    <result column="amount_10" property="amount10" jdbcType="DECIMAL" />
+	    <result column="amount_11" property="amount11" jdbcType="DECIMAL" />
+	    <result column="amount_12" property="amount12" jdbcType="DECIMAL" />
+	    <result column="amount_sum" property="amountSum" jdbcType="DECIMAL" />
+	    <result column="report_year" property="reportYear" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        seller_id, seller_name, business_code, business_name, subject_code, subject_name, fees_type,ROUND(ifnull(amount_01,0),2) amount_01, ROUND(ifnull(amount_02,0),2) amount_02, ROUND(ifnull(amount_03,0),2) amount_03, 
+        ROUND(ifnull(amount_04,0),2) amount_04, ROUND(ifnull(amount_05,0),2) amount_05, ROUND(ifnull(amount_06,0),2) amount_06, ROUND(ifnull(amount_07,0),2) amount_07,
+        ROUND(ifnull(amount_08,0),2) amount_08, ROUND(ifnull(amount_09,0),2) amount_09, ROUND(ifnull(amount_10,0),2) amount_10, ROUND(ifnull(amount_11,0),2) amount_11,
+        ROUND(ifnull(amount_12,0),2) amount_12, ROUND(ifnull(amount_sum,0),2) amount_sum, report_year, create_time, modify_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(sellerId != null and sellerId !='')" >
+				and seller_id = #{sellerId}
+		</if>
+		<if test="(businessCode != null and businessCode !='')" >
+				and business_code = #{businessCode}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(reportYear != null and reportYear !='')" >
+				and report_year = #{reportYear}
+		</if>
+    </sql>
+	  
+    <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportSellerSubjectProfitEntity">
+		select business_code,business_name,subject_code,subject_name,fees_type,report_year,
+			   ROUND(sum(amount_01),2) amount_01, ROUND(sum(amount_02),2) amount_02, ROUND(sum(amount_03),2) amount_03,
+			   ROUND(sum(amount_04),2) amount_04, ROUND(sum(amount_05),2) amount_05, ROUND(sum(amount_06),2) amount_06,
+			   ROUND(sum(amount_07),2) amount_07, ROUND(sum(amount_08),2) amount_08, ROUND(sum(amount_09),2) amount_09,
+			   ROUND(sum(amount_10),2) amount_10, ROUND(sum(amount_11),2) amount_11, ROUND(sum(amount_12),2) amount_12,
+			   ROUND(sum(amount_sum),2) amount_sum
+		from report_seller_subject_profit
+		where 1=1
+		<include refid="baseSelectColumns" />
+		group by business_code,business_name,subject_code,subject_name,fees_type,report_year
+		
+    </select>
+    
+    <select id="queryAllCP" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportSellerSubjectProfitEntity">
+		select business_code,business_name,subject_code,subject_name,fees_type,report_year,
+			   ROUND(sum(amount_01),2) amount_01, ROUND(sum(amount_02),2) amount_02, ROUND(sum(amount_03),2) amount_03,
+			   ROUND(sum(amount_04),2) amount_04, ROUND(sum(amount_05),2) amount_05, ROUND(sum(amount_06),2) amount_06,
+			   ROUND(sum(amount_07),2) amount_07, ROUND(sum(amount_08),2) amount_08, ROUND(sum(amount_09),2) amount_09,
+			   ROUND(sum(amount_10),2) amount_10, ROUND(sum(amount_11),2) amount_11, ROUND(sum(amount_12),2) amount_12,
+			   ROUND(sum(amount_sum),2) amount_sum
+		from report_seller_subject_profit_cp
+		where 1=1
+		<include refid="baseSelectColumns" />
+		group by business_code,business_name,subject_code,subject_name,fees_type,report_year
+    </select>
+
+</mapper>

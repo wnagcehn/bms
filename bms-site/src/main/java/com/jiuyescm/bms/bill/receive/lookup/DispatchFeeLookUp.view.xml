@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtDistribution">
+      <Property name="creationType">com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+        <Property name="label">出库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+        <Property name="label">外部单号</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="label">减免</Property>
+        <Property name="dataType">double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="label">实收金额</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryid">
+        <Property></Property>
+        <Property name="label">宅配商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsDeliveryList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="carrierid">
+        <Property></Property>
+        <Property name="label">物流商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+        <Property name="label">是否拆箱</Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryDate">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">操作时间</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureType">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+        <Property name="label">B2B标识</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总重量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总品种数</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property></Property>
+        <Property name="label">是否拆单</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="priceId">
+        <Property></Property>
+        <Property name="label">报价编号</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="billType">
+        <Property></Property>
+        <Property name="label">单据类型</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="toProvinceName">
+        <Property></Property>
+        <Property name="label">目的省</Property>
+      </PropertyDef>
+      <PropertyDef name="toCityName">
+        <Property></Property>
+        <Property name="label">目的市</Property>
+      </PropertyDef>
+      <PropertyDef name="toDistrictName">
+        <Property></Property>
+        <Property name="label">目的区县</Property>
+      </PropertyDef>
+      <PropertyDef name="chargedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="acceptTime">
+        <Property name="label">揽收时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="signTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">签收时间</Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+        <Property name="label">参数1</Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+        <Property name="label">参数2</Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+        <Property name="label">数据类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDataStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+        <Property name="label">参数4</Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+        <Property name="label">参数5</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getbillTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="weightLimit">
+        <Property name="label">重量界限</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="checked">
+        <Property name="label">State</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+        <Property name="label">物流商</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpackNum">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="bigstatus">
+        <Property></Property>
+        <Property name="label">大状态</Property>
+      </PropertyDef>
+      <PropertyDef name="smallstatus">
+        <Property></Property>
+        <Property name="label">小状态</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDataStateEnum&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">数据类型</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="label">主键</Property>
+      </PropertyDef>
+      <PropertyDef name="projectId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="projectName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="billTypeName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="dispatchSmallStatus">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="productDetail">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="orderOperatorAmount">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="totalCost">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="receiveProvinceId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="receiveCityId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="receiveDistrictId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="zexpressnum">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="otherSubjectCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="dutyType">
+        <Property/>
+        <Property name="label">责任方</Property>
+      </PropertyDef>
+      <PropertyDef name="updateReasonDetail">
+        <Property/>
+        <Property name="label">原因详情</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtQuery">
+      <PropertyDef name="feesno">
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillno">
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">操作日期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtDispatchEdit">
+      <Property name="creationType">com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="label">减免</Property>
+        <Property name="dataType">double</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+        <Property name="label">出库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtQuery]</Property>
+    </DataSet>
+    <DataSet id="dsFeesReceiveDistribution">
+      <Property name="dataType">[dtDistribution]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bmsBillFeesController#queryDispatchPage</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsFeesReceiveDistribution</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var myframe= window.parent.$id(&quot;myframe&quot;).objects[0];&#xD;
+var userData=myframe.get(&quot;userData&quot;);&#xD;
+var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+var parameter={&#xD;
+	billNo:&quot;&quot;,&#xD;
+	customerid:userData.customerId,&#xD;
+	warehouseCode:userData.warehouseCode,&#xD;
+	subjectCode:userData.subjectCode,&#xD;
+	startTime:userData.startTime,&#xD;
+	endTime:userData.endTime&#xD;
+}&#xD;
+view.get(&quot;#dsFeesReceiveDistribution&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnAddFee">
+          <ClientEvent name="onClick">var myframe= window.parent.$id(&quot;myframe&quot;).objects[0];&#xD;
+var userData=myframe.get(&quot;userData&quot;);&#xD;
+//费用科目&#xD;
+subjectCode=userData.subjectCode;&#xD;
+var data={&#xD;
+	isChoose:&quot;1&quot;,&#xD;
+	customerId:userData.customerId,&#xD;
+	warehouseCode:userData.warehouseCode,&#xD;
+	subjectCode:subjectCode,&#xD;
+	startTime:userData.startTime,&#xD;
+	endTime:userData.endTime,&#xD;
+	billNo:userData.billNo&#xD;
+};&#xD;
+&#xD;
+var iframe=view.get(&quot;#myframe&quot;);&#xD;
+iframe.set(&quot;userData&quot;,data);&#xD;
+var timestamp = Date.parse(new Date()); 	&#xD;
+if(subjectCode==&quot;Abnormal_Dispatch&quot;){&#xD;
+	iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+}else{	&#xD;
+	iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.DispatchLookUp.d?timestamp=&quot;+timestamp);	&#xD;
+}&#xD;
+&#xD;
+var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+dialog.set(&quot;caption&quot;,&quot;费用&quot;);&#xD;
+dialog.show();</ClientEvent>
+          <Property name="caption">添加费用</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+          <Property name="visible">false</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnDelFee">
+          <ClientEvent name="onClick">var tableData = view.get(&quot;#distributionDetailGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(tableData==null || tableData==''|| tableData==undefined){&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的数据！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;确认剔除选中的费用?&quot;,function(){&#xD;
+	var action=view.get(&quot;#deleteFeeAction&quot;);&#xD;
+	action.execute(function(){&#xD;
+		query();&#xD;
+		dorado.MessageBox.alert(&quot;剔除费用成功!&quot;);&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
+function query(){&#xD;
+	var myframe= window.parent.$id(&quot;myframe&quot;).objects[0];&#xD;
+	var userData=myframe.get(&quot;userData&quot;);&#xD;
+	var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+	var parameter={&#xD;
+		billNo:userData.billNo,&#xD;
+		warehouseCode:userData.warehouseCode,&#xD;
+		subjectCode:userData.subjectCode,&#xD;
+		feesno:data.get(&quot;feesno&quot;),&#xD;
+		waybillno:data.get(&quot;waybillno&quot;),&#xD;
+		startTime:data.get(&quot;startTime&quot;),&#xD;
+		endTime:data.get(&quot;endTime&quot;)&#xD;
+	}&#xD;
+	view.get(&quot;#dsFeesReceiveDistribution&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">剔除费用</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+          <Property name="visible">false</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnDerateFee">
+          <ClientEvent name="onClick">var tableData=view.get(&quot;#distributionDetailGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(tableData.length>0){&#xD;
+	var dataSet=view.get(&quot;#dsFeesReceiveDistributionEdit&quot;);&#xD;
+	dataSet.clear();&#xD;
+	tableData.each(function(item){&#xD;
+		dataSet.insert({&#xD;
+			id:item.get(&quot;id&quot;),&#xD;
+			feesNo:item.get(&quot;feesNo&quot;),&#xD;
+			derateAmount:item.get(&quot;derateAmount&quot;),&#xD;
+			outstockNo:item.get(&quot;outstockNo&quot;),&#xD;
+			amount:item.get(&quot;amount&quot;)&#xD;
+		});&#xD;
+	});&#xD;
+	view.get(&quot;#dialogDerate&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">批量减免</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+          <Property name="visible">false</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnSelect">
+          <ClientEvent name="onClick">var tableData = view.get(&quot;#distributionDetailGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(tableData==null || tableData==''|| tableData==undefined){&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要添加的数据！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var myframe= window.parent.$id(&quot;myframe&quot;).objects[0];&#xD;
+var userData=myframe.get(&quot;userData&quot;);&#xD;
+&#xD;
+tableData.each(function(item){&#xD;
+	item.set(&quot;billNo&quot;,userData.billno);&#xD;
+	item.set(&quot;status&quot;,&quot;1&quot;);&#xD;
+});&#xD;
+&#xD;
+dorado.MessageBox.confirm(&quot;确认新增选中的费用?&quot;,function(){&#xD;
+	var action=view.get(&quot;#addFeeAction&quot;);&#xD;
+	action.execute(function(){&#xD;
+		dorado.MessageBox.alert(&quot;新增费用成功!&quot;);	&#xD;
+		var parameter={&#xD;
+			billno:&quot;&quot;,&#xD;
+			customerId:userData.customerId,&#xD;
+			warehouseCode:userData.warehouseCode,&#xD;
+			subjectCode:userData.subjectCode,&#xD;
+			startTime:userData.startTime,&#xD;
+			endTime:userData.endTime&#xD;
+		}&#xD;
+		view.get(&quot;#dsFeesReceiveDistribution&quot;).set(&quot;parameter&quot;,parameter).flushAsync();	&#xD;
+	});&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">选择</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <Container>
+        <DataGrid id="distributionDetailGrid">
+          <Property name="readOnly">true</Property>
+          <Property name="dataSet">dsFeesReceiveDistribution</Property>
+          <Property name="selectionMode">multiRows</Property>
+          <RowSelectorColumn/>
+          <RowNumColumn/>
+          <DataColumn>
+            <Property name="name">deliveryDate</Property>
+            <Property name="property">deliveryDate</Property>
+            <Property name="width">120</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">feesNo</Property>
+            <Property name="property">feesNo</Property>
+            <Property name="width">100</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">warehouseCode</Property>
+            <Property name="name">warehouseCode</Property>
+            <Property name="width">80</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">amount</Property>
+            <Property name="property">amount</Property>
+            <Property name="width">100</Property>
+            <Property name="dataType">Double</Property>
+            <Property name="displayFormat">#,##0.00元</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">derateAmount</Property>
+            <Property name="name">derateAmount</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">receiptAmount</Property>
+            <Property name="name">receiptAmount</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">customerid</Property>
+            <Property name="property">customerid</Property>
+            <Property name="width">80</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">carrierName</Property>
+            <Property name="property">carrierName</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">outstockNo</Property>
+            <Property name="property">outstockNo</Property>
+            <Property name="width">100</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">externalNo</Property>
+            <Property name="property">externalNo</Property>
+            <Property name="width">100</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">waybillNo</Property>
+            <Property name="name">waybillNo</Property>
+            <Property name="width">100</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">toProvinceName</Property>
+            <Property name="property">toProvinceName</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">toCityName</Property>
+            <Property name="property">toCityName</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">toDistrictName</Property>
+            <Property name="property">toDistrictName</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">totalWeight</Property>
+            <Property name="property">totalWeight</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="unitPrice">
+            <Property name="property">unitPrice</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="weightLimit">
+            <Property name="property">weightLimit</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">headWeight</Property>
+            <Property name="property">headWeight</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">headPrice</Property>
+            <Property name="property">headPrice</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">continuedWeight</Property>
+            <Property name="property">continuedWeight</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">continuedPrice</Property>
+            <Property name="property">continuedPrice</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">templateId</Property>
+            <Property name="property">templateId</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="temperatureType">
+            <Property name="property">temperatureType</Property>
+            <Property name="width">50</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">acceptTime</Property>
+            <Property name="property">acceptTime</Property>
+            <Property name="width">120</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">signTime</Property>
+            <Property name="name">signTime</Property>
+            <Property name="width">120</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="bigstatus">
+            <Property name="property">bigstatus</Property>
+            <Property name="width">80</Property>
+          </DataColumn>
+          <DataColumn name="smallstatus">
+            <Property name="property">smallstatus</Property>
+            <Property name="width">80</Property>
+          </DataColumn>
+          <DataColumn name="bizType">
+            <Property name="property">bizType</Property>
+            <Property name="width">80</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">billNo</Property>
+            <Property name="name">billNo</Property>
+            <Property name="width">90</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">status</Property>
+            <Property name="property">status</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">createTime</Property>
+            <Property name="property">createTime</Property>
+            <Property name="width">120</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="dutyType">
+            <Property name="property">dutyType</Property>
+            <Property name="width">100</Property>
+          </DataColumn>
+          <DataColumn name="updateReasonDetail">
+            <Property name="property">updateReasonDetail</Property>
+            <Property name="width">100</Property>
+          </DataColumn>
+        </DataGrid>
+      </Container>
+      <Dialog id="dialogDerate">
+        <Property name="caption">费用减免</Property>
+        <Property name="width">500</Property>
+        <Property name="height">400</Property>
+        <Buttons>
+          <Button id="btnSave">
+            <ClientEvent name="onClick">var action=view.get(&quot;#derateAmountAction&quot;);&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;保存成功&quot;);&#xD;
+	view.get(&quot;#dialogDerate&quot;).hide();&#xD;
+	query();&#xD;
+});&#xD;
+function query(){&#xD;
+	var myframe= window.parent.$id(&quot;myframe&quot;).objects[0];&#xD;
+	var userData=myframe.get(&quot;userData&quot;);&#xD;
+	var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+	var parameter={&#xD;
+		billNo:userData.billNo,&#xD;
+		warehouseCode:userData.warehouseCode,&#xD;
+		subjectCode:userData.subjectCode,&#xD;
+		feesno:data.get(&quot;feesno&quot;),&#xD;
+		waybillno:data.get(&quot;waybillno&quot;),&#xD;
+		startTime:data.get(&quot;startTime&quot;),&#xD;
+		endTime:data.get(&quot;endTime&quot;)&#xD;
+	}&#xD;
+	view.get(&quot;#dsFeesReceiveDistribution&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button id="btnCancel">
+            <ClientEvent name="onClick">view.get(&quot;#dialogDerate&quot;).hide();&#xD;
+</ClientEvent>
+            <Property name="caption">关闭</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <Container>
+            <DataGrid>
+              <Property name="dataSet">dsFeesReceiveDistributionEdit</Property>
+              <DataColumn name="id">
+                <Property name="property">id</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="feesNo">
+                <Property name="property">feesNo</Property>
+                <Property name="readOnly">true</Property>
+              </DataColumn>
+              <DataColumn name="outstockNo">
+                <Property name="property">outstockNo</Property>
+                <Property name="readOnly">true</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">amount</Property>
+                <Property name="name">amount</Property>
+                <Property name="readOnly">true</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="derateAmount">
+                <Property name="property">derateAmount</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </Children>
+        <Tools/>
+      </Dialog>
+    </Container>
+    <DataSet id="dsFeesReceiveDistributionEdit">
+      <Property name="dataType">[dtDistribution]</Property>
+    </DataSet>
+    <UpdateAction id="derateAmountAction">
+      <Property name="dataResolver">bmsBillFeesController#derateDispatchBatchAmount&#xD;
+</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsFeesReceiveDistributionEdit</Property>
+        <Property name="dataPath">[#all]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteFeeAction">
+      <ClientEvent name="onGetUpdateData">var selectData = view.get(&quot;#distributionDetailGrid&quot;).get(&quot;selection&quot;);&#xD;
+arg.data=selectData;</ClientEvent>
+      <Property name="caption">剔除费用</Property>
+      <Property name="dataResolver">bmsBillFeesController#deleteDispatchBatchFees</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsFeesReceiveDistribution</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="addFeeAction">
+      <ClientEvent name="onGetUpdateData">var selectData = view.get(&quot;#distributionDetailGrid&quot;).get(&quot;selection&quot;);&#xD;
+arg.data=selectData;</ClientEvent>
+      <Property name="caption">新增费用</Property>
+      <Property name="dataResolver">bmsBillFeesController#addDispatchBatchFees</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsFeesReceiveDistribution</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

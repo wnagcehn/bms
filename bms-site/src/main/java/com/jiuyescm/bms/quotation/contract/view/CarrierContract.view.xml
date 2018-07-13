@@ -1,0 +1,1192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtMyCondition">
+      <PropertyDef name="contractObj">
+        <Property name="label">合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="contractState">
+        <Property></Property>
+        <Property name="label">审核状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;customerContractController#getCheckedState&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="paperContractNo">
+        <Property name="label">纸质编号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">有效期</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">-</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">承运商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property name="label">合同编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">承运商</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPriceContractInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+        <Property name="label">合同编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">承运商Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">承运商名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="contractObj">
+        <Property></Property>
+        <Property name="label">合同名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="paperContractNo">
+        <Property></Property>
+        <Property name="label">纸质编号</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="label">生效日期</Property>
+        <Property name="dataType">DateTime</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="expireDate">
+        <Property name="label">失效日期</Property>
+        <Property name="dataType">DateTime</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="description">
+        <Property></Property>
+        <Property name="label">合同描述</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="contractState">
+        <Property></Property>
+        <Property name="label">审核状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;customerContractController#getCheckedState&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPriceContractItemEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">入仓服务</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">计费模板</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtContractDetail">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity</Property>
+      <PropertyDef name="transportCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="transportName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="storageCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="storageName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="template_id">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property></Property>
+        <Property name="label">服务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="theLastName">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchName">
+        <Property></Property>
+        <Property name="label">服务报价</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="transportRemark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="storageRemark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="templateId">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchRemark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleInstruction">
+        <Property name="label">规则说明</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleNo">
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtTransportSystemCode">
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="typeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="updateId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deleteId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCheck">
+        <Property name="label">类型</Property>
+      </PropertyDef>
+      <PropertyDef name="templateId"/>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsMyCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsMyCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtMyCondition]</Property>
+    </DataSet>
+    <DataSet id="dsPriceContractInfoEntity">
+      <Property name="dataType">[dtPriceContractInfoEntity]</Property>
+      <Property name="dataProvider">carrierContractController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsPriceContractItemEntity">
+      <Property name="dataType">[dtPriceContractItemEntity]</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsContractDetail">
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dtContractDetail]</Property>
+    </DataSet>
+    <DataSet id="dsContractDetailTransport">
+      <Property name="dataProvider">carrierContractController#queryTranslate</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataType">[dtContractDetail]</Property>
+    </DataSet>
+    <DataSet id="dsTransportSystemCode">
+      <Property name="dataType">[dtTransportSystemCode]</Property>
+      <Property name="dataProvider">carrierContractController#queryTransportService</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="itemCodes">pages,pageSize</Property>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsPriceContractInfoEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+&#xD;
+var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;startTime&quot;);&#xD;
+var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;endTime&quot;);&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+//清空下面的签约服务&#xD;
+&#xD;
+var transportData=view.get(&quot;#dsContractDetailTransport.data&quot;);&#xD;
+if(!isNullOrEmpty(transportData)){&#xD;
+	transportData.clear();&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsPriceContractInfoEntity.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogContractEdit&quot;).show();</ClientEvent>
+        <Property name="caption">新增合同</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnUpdate">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsPriceContractInfoEntity.data&quot;);&#xD;
+if(data.current){	&#xD;
+	var status=data.current.get(&quot;contractState&quot;);	&#xD;
+	//审核过的无法修改合同&#xD;
+	if(status=='1'){&#xD;
+		dorado.MessageBox.alert(&quot;该合同已审核，无法编辑!&quot;);&#xD;
+		return;&#xD;
+	}	&#xD;
+	//判断该合同是否已失效&#xD;
+	var nowTime = new Date(); &#xD;
+	&#xD;
+	//获取失效日期&#xD;
+	var expireDate=data.current.get(&quot;expireDate&quot;);&#xD;
+	&#xD;
+	var oDate2 = new Date(expireDate);&#xD;
+	//已过期的合同不能修改&#xD;
+	if(nowTime.getTime() > oDate2.getTime()){&#xD;
+	    dorado.MessageBox.alert(&quot;该合同已过期，无法编辑!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	view.get(&quot;#dialogContractEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">编辑合同</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsPriceContractInfoEntity.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeContractAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsPriceContractInfoEntity&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">删除合同</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAddDetail">
+        <ClientEvent name="onClick">//对应的运输服务&#xD;
+var transport=view.get(&quot;#dsContractDetailTransport.data&quot;).current;&#xD;
+&#xD;
+//获取此时的审核状态&#xD;
+var contractstate= view.get(&quot;#dsPriceContractInfoEntity&quot;).getData().current.get(&quot;contractState&quot;);&#xD;
+if(contractstate=='1'){&#xD;
+	dorado.MessageBox.alert(&quot;该合同已审核，无法进行编辑!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//获取此时的运输报价&#xD;
+var transportData = view.get(&quot;#dsTransportSystemCode.data&quot;);&#xD;
+&#xD;
+//先清空&#xD;
+transportData.each(function(entity){&#xD;
+	entity.set(&quot;isCheck&quot;,false);&#xD;
+	entity.set(&quot;templateId&quot;,&quot;&quot;);&#xD;
+});&#xD;
+&#xD;
+if(undefined==transport || transport==''){&#xD;
+	var datas = view.get(&quot;#dsPriceContractItemEntity.data&quot;);&#xD;
+	datas.insert();&#xD;
+	view.get(&quot;#dialogContractItemEdit&quot;).show();	&#xD;
+}else{&#xD;
+	var datas = view.get(&quot;#dsPriceContractItemEntity.data&quot;);&#xD;
+	datas.insert();&#xD;
+	//dorado.MessageBox.alert(&quot;该合同已签约，无法继续签约!&quot;);&#xD;
+	//进入编辑页面&#xD;
+	//获取当前的合同id&#xD;
+	var contract= view.get(&quot;#dsPriceContractInfoEntity&quot;).getData().current;&#xD;
+	&#xD;
+	var ajaxaction=view.get(&quot;#queryContractItemAction&quot;);&#xD;
+	&#xD;
+	//仓储&#xD;
+	ajaxaction.set(&quot;parameter&quot;,contract).execute(function(result){&#xD;
+		var strs= new Array(); //定义一数组 &#xD;
+		result=result.substring(0,result.length-1);&#xD;
+		strs=result.split(&quot;,&quot;); //字符分割 &#xD;
+	    transportData.each(function(entity){  &#xD;
+		  for(var i=0;i&lt;strs.length;i++){&#xD;
+			 	//传入进来的code值&#xD;
+				if(strs[i].indexOf(&quot;&amp;&quot;)!=-1){&#xD;
+					var dataCode=strs[i].substring(0,strs[i].indexOf(&quot;&amp;&quot;));&#xD;
+					var datatemplate=strs[i].substring(strs[i].indexOf(&quot;&amp;&quot;)+1);	&#xD;
+					//alert(&quot;此时的数据code&quot;+dataCode+&quot;自身的code&quot;+entity.get(&quot;code&quot;));			&#xD;
+				 	if(dataCode!='TRANSPORT_VALUEADDED'){&#xD;
+						if(entity.get(&quot;code&quot;)==dataCode){&#xD;
+						//alert(&quot;进来&quot;);&#xD;
+						entity.set(&quot;isCheck&quot;,true);&#xD;
+			   			entity.set(&quot;templateId&quot;,datatemplate);		&#xD;
+						}&#xD;
+						&#xD;
+					}else{&#xD;
+						if(entity.get(&quot;codeName&quot;)=='运输增值服务'){&#xD;
+							entity.set(&quot;isCheck&quot;,true);&#xD;
+			   				entity.set(&quot;templateId&quot;,datatemplate);	&#xD;
+						}&#xD;
+					}&#xD;
+				&#xD;
+			}&#xD;
+			&#xD;
+		 }&#xD;
+	});&#xD;
+		&#xD;
+	});&#xD;
+	view.get(&quot;#dialogContractItemEdit&quot;).show();		&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">签约服务</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -200px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnCheck">
+        <ClientEvent name="onClick">//对应的运输服务&#xD;
+var transport=view.get(&quot;#dsContractDetailTransport.data&quot;).current;&#xD;
+//获取此时的审核状态&#xD;
+var contractstate= view.get(&quot;#dsPriceContractInfoEntity&quot;).getData().current.get(&quot;contractState&quot;);&#xD;
+if(contractstate=='1'){&#xD;
+	dorado.MessageBox.alert(&quot;该合同已审核，无法进行编辑!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+if(undefined==transport || transport==''){&#xD;
+	dorado.MessageBox.alert(&quot;该合同还未签约服务，请先签约再审核!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data=view.get(&quot;#dsPriceContractInfoEntity.data&quot;);&#xD;
+if(data.current){&#xD;
+	&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要审核该合同?&quot;,function(){&#xD;
+		view.get(&quot;#checkContractAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsPriceContractInfoEntity&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">审核</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -220px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnunaudit">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsPriceContractInfoEntity.data&quot;).current;&#xD;
+var contractstate= data.get(&quot;contractState&quot;);&#xD;
+if(contractstate=='0'){&#xD;
+	dorado.MessageBox.alert(&quot;该合同未审核，无需反审核!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(data){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定反审核该合同【&quot;+data.get(&quot;contractCode&quot;)+&quot;】?&quot;,function(){&#xD;
+		view.get(&quot;#uncheckContractAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsPriceContractInfoEntity&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">反审核</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -220px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <Container>
+      <AutoForm id="formCondition">
+        <Property name="dataSet">dsMyCondition</Property>
+        <Property name="cols">240,240,240,240</Property>
+        <Property name="dataType">dtMyCondition</Property>
+        <AutoFormElement>
+          <Property name="name">contractCode</Property>
+          <Property name="property">contractCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">contractObj</Property>
+          <Property name="property">contractObj</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">paperContractNo</Property>
+          <Property name="property">paperContractNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">contractState</Property>
+          <Property name="property">contractState</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCarrier1</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Property name="labelWidth">3</Property>
+          <Property name="width">170</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid>
+        <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsContractDetailTransport&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}				 &#xD;
+//view.get(&quot;#panelContainer&quot;).refresh();&#xD;
+//view.get(&quot;#panelContainer&quot;).set(&quot;tags&quot;,&quot;123&quot;);&#xD;
+//view.get(&quot;#panelContainer&quot;).set(&quot;listener&quot;,&quot;spring:customerContractController#onViewInit&quot;);&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="height">200</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="fixedColumnCount">3</Property>
+        <RowNumColumn/>
+        <DataColumn name="contractCode">
+          <Property name="property">contractCode</Property>
+          <Property name="width">100</Property>
+          <Property name="align">center</Property>
+        </DataColumn>
+        <DataColumn name="paperContractNo">
+          <Property name="property">paperContractNo</Property>
+          <Property name="width">200</Property>
+        </DataColumn>
+        <DataColumn name="contractObj">
+          <Property name="property">contractObj</Property>
+          <Property name="width">200</Property>
+        </DataColumn>
+        <DataColumn name="description">
+          <Property name="property">description</Property>
+          <Property name="width">200</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+          <Property name="width">200</Property>
+        </DataColumn>
+        <DataColumn name="startDate">
+          <Property name="property">startDate</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+        <DataColumn name="expireDate">
+          <Property name="property">expireDate</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+        <DataColumn name="contractState">
+          <Property name="property">contractState</Property>
+          <Property name="width">100</Property>
+          <Property name="align">center</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogContractEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">400</Property>
+      <Property name="height">500</Property>
+      <Buttons>
+        <Button id="btnContractSave">
+          <ClientEvent name="onClick">var entity = view.get(&quot;#formContractEdit&quot;).get(&quot;entity&quot;);	&#xD;
+//获取生效日期&#xD;
+var startTime=entity.get(&quot;startDate&quot;);&#xD;
+//获取失效日期&#xD;
+var expireDate=entity.get(&quot;expireDate&quot;);&#xD;
+var oDate1 = new Date(startTime);&#xD;
+var oDate2 = new Date(expireDate);&#xD;
+&#xD;
+if(oDate1.getTime() > oDate2.getTime()){&#xD;
+    dorado.MessageBox.alert(&quot;失效日期必须大于生效日期!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateContractAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dsPriceContractInfoEntity&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		&#xD;
+		view.id(&quot;dialogContractEdit&quot;).hide();&#xD;
+		&#xD;
+		if(result==&quot;isExit&quot;){&#xD;
+			 dorado.MessageBox.alert(&quot;新合同的生效日期在必须大于原存在合同的失效日期&quot;);&#xD;
+		}&#xD;
+		&#xD;
+		var subData=view.get(&quot;#dsContractDetailTransport.data&quot;);&#xD;
+		subData.clear();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnContractCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogContractEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formContractEdit">
+          <Property name="dataSet">dsPriceContractInfoEntity</Property>
+          <Property name="dataType">dtPriceContractInfoEntity</Property>
+          <Property name="rowHeight">40</Property>
+          <Property name="editorWidth">200</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">paperContractNo</Property>
+            <Property name="property">paperContractNo</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">contractObj</Property>
+            <Property name="property">contractObj</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">customerName</Property>
+            <Property name="property">customerName</Property>
+            <Property name="trigger">triggerCarrier2</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">startDate</Property>
+            <Property name="property">startDate</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">expireDate</Property>
+            <Property name="property">expireDate</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">description</Property>
+            <Property name="property">description</Property>
+            <Editor>
+              <TextArea/>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateContractAction">
+      <Property name="dataResolver">carrierContractController#saveContract</Property>
+      <Property name="executingMessage">数据保存中</Property>
+      <Property name="successMessage">数据保存成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="removeContractAction">
+      <Property name="dataResolver">carrierContractController#removeContract</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogContractItemEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Buttons>
+        <Button id="btnContractItemSave">
+          <ClientEvent name="onClick">&#xD;
+var contract= view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
+&#xD;
+//获取此时的合同编号&#xD;
+var contractCode=contract.current.get(&quot;contractCode&quot;);&#xD;
+&#xD;
+//获取此时的审核状态&#xD;
+var contractState=contract.current.get(&quot;contractState&quot;);&#xD;
+//用户判断是否退出循环&#xD;
+var qwe='';&#xD;
+&#xD;
+//此时的数据&#xD;
+var result='';&#xD;
+//获取此时的运输报价&#xD;
+var transportData = view.get(&quot;#dsTransportSystemCode.data&quot;);&#xD;
+&#xD;
+transportData.each(function(entity){  &#xD;
+	  if(entity.get(&quot;isCheck&quot;)==true){&#xD;
+	  	 if(entity.get(&quot;templateId&quot;)==''){&#xD;
+		 	 dorado.MessageBox.alert(&quot;您已选择&quot;+entity.get(&quot;codeName&quot;)+&quot;,请选择报价模板&quot;);&#xD;
+			 qwe='1';&#xD;
+			 return false;&#xD;
+		 }else{&#xD;
+			result+='TRANSPORT@'+entity.get(&quot;code&quot;)+'#'+entity.get(&quot;templateId&quot;)+'&amp;';&#xD;
+		 }&#xD;
+	  }&#xD;
+});&#xD;
+&#xD;
+&#xD;
+//有空时退出&#xD;
+if(qwe=='1'){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var entity = this.get(&quot;#dsPriceContractItemEntity&quot;).getData().current;&#xD;
+//var entity = view.get(&quot;#dsPriceContractItemEntity&quot;);&#xD;
+//alert(&quot;结果&quot;+result);&#xD;
+//alert(&quot;实体类&quot;+entity);&#xD;
+entity.set(&quot;subjectId&quot;,result);&#xD;
+//获取合同编号&#xD;
+entity.set(&quot;contractCode&quot;,contractCode);&#xD;
+&#xD;
+view.id(&quot;updateContractItemAction&quot;).execute(&#xD;
+	function(){&#xD;
+		//with (view.get(&quot;#dsPriceContractInfoEntity&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+		//	flushAsync();&#xD;
+		//}&#xD;
+		view.id(&quot;dialogContractItemEdit&quot;).hide();&#xD;
+		var data = view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
+		with (view.get(&quot;#dsContractDetailTransport&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();	&#xD;
+		}	&#xD;
+	}&#xD;
+);&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnContractItemCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogContractItemEdit&quot;).hide();&#xD;
+		&#xD;
+		//对应的仓储服务&#xD;
+		var storage=view.get(&quot;#dsContactDetailStorage.data&quot;);&#xD;
+		storage.clear();&#xD;
+		//对应的运输服务&#xD;
+		var transport=view.get(&quot;#dsContractDetailTransport.data&quot;);&#xD;
+		transport.clear();&#xD;
+		//对应的配送服务&#xD;
+		var dispatch=view.get(&quot;#dsContractDetailDispatch.data&quot;);&#xD;
+		dispatch.clear();	&#xD;
+}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">运输服务</Property>
+            <DataGrid id="transportGrid">
+              <ClientEvent name="onDataRowClick">var entity= view.get(&quot;#dsTransportSystemCode&quot;).getData();&#xD;
+&#xD;
+//获取此时的合同编号&#xD;
+var isCheck=entity.current.get(&quot;isCheck&quot;);&#xD;
+if(isCheck==false){&#xD;
+	//alert(&quot;此时的值&quot;+entity.current.get(&quot;templateId&quot;).get(&quot;readOnly&quot;));&#xD;
+	entity.current.set(&quot;templateId&quot;,&quot;&quot;);&#xD;
+}else{&#xD;
+	//entity.current.set(&quot;readOnly&quot;,true);&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dsTransportSystemCode</Property>
+              <Property name="height">100</Property>
+              <Property name="showHeader">false</Property>
+              <DataColumn name="isCheck">
+                <Property name="property">isCheck</Property>
+                <Property name="editorType">CheckBox</Property>
+                <Property name="renderer">dorado.widget.grid.CheckBoxCellRenderer</Property>
+                <Property name="align">center</Property>
+                <Property name="width">40</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="codeName">
+                <Property name="property">codeName</Property>
+                <Property name="readOnly">true</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">templateId</Property>
+                <Property name="trigger">triggerTransport</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+        </TabControl>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateContractItemAction">
+      <Property name="dataResolver">carrierContractController#saveContractItem</Property>
+      <Property name="successMessage">数据保存成功</Property>
+      <Property name="executingMessage">数据保存中</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPriceContractItemEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerCarrier1">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCarrier1&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCarrier1">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCarrier1.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;forwardId&quot;));&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;name&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCarrier1">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.ForwarderLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerTransport">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsTransportSystemCode&quot;).getData();&#xD;
+var codeName=data.current.get(&quot;codeName&quot;);&#xD;
+&#xD;
+if(codeName==&quot;运输增值费&quot;){&#xD;
+	var subview = view.get(&quot;#viewSelectPanelTransportAdd&quot;).get(&quot;subView&quot;);&#xD;
+	//清空&#xD;
+	var subviewData=subview.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+	subviewData.clear();&#xD;
+	var stepData=subview.get(&quot;#dataSetTransportValueAdded.data&quot;);&#xD;
+	stepData.clear();&#xD;
+	//调用方法直接查询&#xD;
+	var templateDataSet=subview.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+	var ds = subview.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+	ds.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+	ds.set(&quot;templateTypeCode&quot;,&quot;TRANSPORT_VALUEADDED&quot;);&#xD;
+	templateDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+	view.get(&quot;#panelTransportAdd&quot;).show();&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//此处为仓储通用报价模板的选择&#xD;
+var code=data.current.get(&quot;code&quot;);&#xD;
+var subview = view.get(&quot;#viewSelectTransport&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+subviewData.clear();&#xD;
+var stepData=subview.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+stepData.clear();&#xD;
+var sData=subview.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+sData.clear();&#xD;
+//直接调用方法查询&#xD;
+var ds = subview.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+var templateDataSet=subview.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+ds.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+ds.set(&quot;templateTypeCode&quot;,&quot;TRANSPORT_FEE&quot;);&#xD;
+ds.set(&quot;transportTypeCode&quot;,code);&#xD;
+templateDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+view.get(&quot;#panelTransport&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelTransport">
+      <ClientEvent name="onHide">var sysdata = view.get(&quot;#dsTransportSystemCode&quot;).getData().current;&#xD;
+var data = this.get(&quot;#viewSelectTransport.userData&quot;);&#xD;
+&#xD;
+if (data != null) {&#xD;
+	&#xD;
+	sysdata.set(&quot;templateId&quot;,data.get(&quot;templateCode&quot;));&#xD;
+	if(data.get(&quot;templateCode&quot;)!=null){&#xD;
+		sysdata.set(&quot;isCheck&quot;,true);&#xD;
+	}&#xD;
+	&#xD;
+	this.get(&quot;#viewSelectTransport&quot;).set(&quot;userData&quot;, null);&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="caption">运输报价模板选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectTransport">
+          <ClientEvent name="onCreate">var subview = view.get(&quot;#viewSelectTransport&quot;).get(&quot;subView&quot;);&#xD;
+var ds = subview.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+ds.set(&quot;transportTypeCode&quot;,&quot;城际专列&quot;);</ClientEvent>
+          <Property name="subView">com.jiuyescm.bms.quotation.out.transport.view.TransportPayTemplateWithTabLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <FloatPanel id="panelTransportAdd">
+      <ClientEvent name="onHide">var sysdata = view.get(&quot;#dsTransportSystemCode&quot;).getData().current;&#xD;
+&#xD;
+var data = this.get(&quot;#viewSelectPanelTransportAdd.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formContractItemEdit.entity&quot;).set(&quot;subjectId13&quot;,data.get(&quot;transportTypeCode&quot;));&#xD;
+	sysdata.set(&quot;templateId&quot;,data.get(&quot;templateCode&quot;));&#xD;
+	if(data.get(&quot;templateCode&quot;)!=null){&#xD;
+		sysdata.set(&quot;isCheck&quot;,true);&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="caption">运输增值报价模板选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectPanelTransportAdd">
+          <Property name="subView">com.jiuyescm.bms.quotation.out.transport.view.TransportPayValueAddedLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Container>
+      <TabControl>
+        <ControlTab>
+          <Property name="caption">运输服务</Property>
+          <Container>
+            <DataGrid>
+              <ClientEvent name="onDataRowDoubleClick">var data = view.get(&quot;#dsContractDetailTransport&quot;).getData();&#xD;
+var codeName=data.current.get(&quot;theLastName&quot;);&#xD;
+var code=data.current.get(&quot;templateId&quot;);&#xD;
+if(codeName==&quot;运输增值费&quot;){&#xD;
+	var subview = view.get(&quot;#viewSelectPanelTransportGeneralAdd&quot;).get(&quot;subView&quot;);&#xD;
+	//清空&#xD;
+	var subviewData=subview.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+	subviewData.clear();&#xD;
+	var stepData=subview.get(&quot;#dataSetTransportValueAdded.data&quot;);&#xD;
+	stepData.clear();&#xD;
+	//直接调用方法查询&#xD;
+	var ds = subview.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+	var templateDataSet=subview.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+	ds.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+	ds.set(&quot;templateTypeCode&quot;,&quot;TRANSPORT_VALUEADDED&quot;);&#xD;
+	ds.set(&quot;templateCode&quot;,code);&#xD;
+	templateDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+	&#xD;
+	//获取到选择按钮&#xD;
+	var btn=subview.get(&quot;#select&quot;);&#xD;
+	btn.set(&quot;visible&quot;,false);&#xD;
+	&#xD;
+	view.get(&quot;#panelTransportGeneralAdd&quot;).show();&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//此处为仓储通用报价模板的选择&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectTransportGeneral&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dataSetTransportTemplate.data&quot;);&#xD;
+subviewData.clear();&#xD;
+var stepData=subview.get(&quot;#dataSetTransportLine.data&quot;);&#xD;
+stepData.clear();&#xD;
+var sData=subview.get(&quot;#dataSetTransportLineRange.data&quot;);&#xD;
+sData.clear();&#xD;
+//获取到选择按钮&#xD;
+var btn=subview.get(&quot;#select&quot;);&#xD;
+btn.set(&quot;visible&quot;,false);&#xD;
+//直接调用方法查询&#xD;
+var templateDataSet=subview.get(&quot;#dataSetTransportTemplate&quot;);&#xD;
+var ds=subview.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+ds.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+ds.set(&quot;templateTypeCode&quot;,&quot;TRANSPORT_FEE&quot;);&#xD;
+ds.set(&quot;templateCode&quot;,code);&#xD;
+templateDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+view.get(&quot;#panelTransportGeneral&quot;).show();</ClientEvent>
+              <Property name="dataSet">dsContractDetailTransport</Property>
+              <Property name="readOnly">true</Property>
+              <RowNumColumn/>
+              <DataColumn name="theLastName">
+                <Property name="property">theLastName</Property>
+                <Property name="align">center</Property>
+                <Property name="width">200</Property>
+              </DataColumn>
+              <DataColumn name="templateId">
+                <Property name="property">templateId</Property>
+                <Property name="align">center</Property>
+                <Property name="width">200</Property>
+              </DataColumn>
+              <DataColumn>
+                <ClientEvent name="onRenderCell">var ruleInstruction=arg.data.get(&quot;ruleInstruction&quot;);&#xD;
+var ruleNo=arg.data.get(&quot;ruleNo&quot;);&#xD;
+jQuery(arg.dom).empty();&#xD;
+if(ruleNo&amp;&amp;ruleNo!=''){&#xD;
+	jQuery(arg.dom).xCreate({&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;查看规则&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#msgAutoForm&quot;).getElement(&quot;msgElement&quot;).set(&quot;text&quot;,ruleInstruction);&#xD;
+				view.get(&quot;#msgAutoForm&quot;).getElement(&quot;lblRuleNo&quot;).set(&quot;text&quot;,&quot;规则编号: &quot;+ruleNo);&#xD;
+		       	view.get(&quot;#ruleDialog&quot;).show();&#xD;
+	    	}&#xD;
+		}&#xD;
+	);&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="property">ruleInstruction</Property>
+                <Property name="name">ruleInstruction</Property>
+                <Property name="align">center</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+                <Property name="align">center</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </ControlTab>
+      </TabControl>
+    </Container>
+    <Trigger id="triggerCarrier2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCarrier2&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCarrier2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCarrier2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsPriceContractInfoEntity&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;forwardId&quot;),&#xD;
+		customerName:data.get(&quot;name&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCarrier2">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.ForwarderLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <AjaxAction id="queryContractItemAction">
+      <Property name="service">carrierContractController#queryAllContractItem</Property>
+    </AjaxAction>
+    <UpdateAction id="checkContractAction">
+      <Property name="dataResolver">carrierContractController#checkContract</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <FloatPanel id="panelTransportGeneral">
+      <Property name="caption">运输报价模板选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectTransportGeneral">
+          <Property name="subView">com.jiuyescm.bms.quotation.out.transport.view.TransportPayTemplateWithTabLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <FloatPanel id="panelTransportGeneralAdd">
+      <Property name="caption">运输增值报价模板选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectPanelTransportGeneralAdd">
+          <Property name="subView">com.jiuyescm.bms.quotation.out.transport.view.TransportPayValueAddedLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="uncheckContractAction">
+      <Property name="dataResolver">customerContractController#uncheckContract</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPriceContractInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="ruleDialog">
+      <Property name="height">350</Property>
+      <Property name="width">500</Property>
+      <Property name="caption">规则说明</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#ruleDialog&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="msgAutoForm">
+          <Property name="cols">*</Property>
+          <Label id="lblRuleNo"/>
+          <Label>
+            <Property name="text">规则说明</Property>
+          </Label>
+          <TextArea id="msgElement">
+            <Property name="height">200</Property>
+            <Property name="readOnly">false</Property>
+          </TextArea>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

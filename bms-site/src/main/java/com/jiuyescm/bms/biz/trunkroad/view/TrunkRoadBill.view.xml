@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeTrunkRoadBill">
+      <Property name="creationType">com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity</Property>
+      <PropertyDef name="roadbillNo">
+        <Property></Property>
+        <Property name="label">路单号</Property>
+      </PropertyDef>
+      <PropertyDef name="roadbillName">
+        <Property></Property>
+        <Property name="label">路单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="roadbillType">
+        <Property></Property>
+        <Property name="label">路单类型</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="sendProvinceId">
+        <Property></Property>
+        <Property name="label">发货省</Property>
+      </PropertyDef>
+      <PropertyDef name="sendCityId">
+        <Property></Property>
+        <Property name="label">发货市</Property>
+      </PropertyDef>
+      <PropertyDef name="sendDistrictId">
+        <Property></Property>
+        <Property name="label">发货区县</Property>
+      </PropertyDef>
+      <PropertyDef name="receiverProvinceId">
+        <Property></Property>
+        <Property name="label">收货省</Property>
+      </PropertyDef>
+      <PropertyDef name="receiverCityId">
+        <Property></Property>
+        <Property name="label">收货市</Property>
+      </PropertyDef>
+      <PropertyDef name="receiverDistrictId">
+        <Property></Property>
+        <Property name="label">收货区县</Property>
+      </PropertyDef>
+      <PropertyDef name="receiver">
+        <Property></Property>
+        <Property name="label">收件人</Property>
+      </PropertyDef>
+      <PropertyDef name="receiverTelephone">
+        <Property></Property>
+        <Property name="label">收件人电话</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+      </PropertyDef>
+      <PropertyDef name="isLight">
+        <Property></Property>
+        <Property name="label">是否轻货</Property>
+      </PropertyDef>
+      <PropertyDef name="vehicleNo">
+        <Property></Property>
+        <Property name="label">车牌号</Property>
+      </PropertyDef>
+      <PropertyDef name="carModel">
+        <Property></Property>
+        <Property name="label">车型</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">运单数</Property>
+      </PropertyDef>
+      <PropertyDef name="totalBox">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总箱数</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总重量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVolume">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总体积</Property>
+      </PropertyDef>
+      <PropertyDef name="sendPerson">
+        <Property></Property>
+        <Property name="label">发运人</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="sendTime">
+        <Property name="label">发车时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="finishedTime">
+        <Property name="label">完成时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="tmsId">
+        <Property></Property>
+        <Property name="label">tmsId</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+        <Property name="label">承运商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCarrierMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+        <Property name="label">承运商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">调整重量</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeCondition">
+      <PropertyDef name="carrierId">
+        <Property></Property>
+        <Property name="label">承运商:</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCarrierMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="roadbillNo">
+        <Property></Property>
+        <Property name="label">路单号:</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库:</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间:</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">——</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志:</Property>
+        <Property name="defaultValue">0</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">状态:</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;BIZ_CALCULATE_STATE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetTrunkRoadBill">
+      <ClientEvent name="onReady">var roadBillDataSet = view.get(&quot;#dataSetTrunkRoadBill&quot;);&#xD;
+roadBillDataSet.set(&quot;parameter&quot;,{&#xD;
+	delFlag: &quot;0&quot;&#xD;
+});</ClientEvent>
+      <Property name="dataType">[dataTypeTrunkRoadBill]</Property>
+      <Property name="dataProvider">trunkRoadBillController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <DataSet id="dataSetCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dataSetCondition&quot;).getData().insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dataTypeCondition]</Property>
+    </DataSet>
+    <DataSet id="dsAllProvinces">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getAllProvinces</Property>
+    </DataSet>
+    <DataSet id="dsCities">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getCitiesByProvinceCode</Property>
+    </DataSet>
+    <DataSet id="dsDistricts">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getDistrictsByCityCode</Property>
+    </DataSet>
+    <DataSetDropDown id="ddropDownQueryProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+//把名字赋给ID&#xD;
+data.set({&#xD;
+	sendProvinceId:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;sendCityId&quot;,&quot;&quot;);&#xD;
+data.set(&quot;sendDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryCity">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	sendCityId: arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;sendDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+var sendProvinceId = data.get(&quot;sendProvinceId&quot;);&#xD;
+&#xD;
+if(sendProvinceId){&#xD;
+	var parameter={&#xD;
+		province:sendProvinceId&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">provincecode=provincecode</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+var sendProvinceId = data.get(&quot;sendProvinceId&quot;);&#xD;
+var sendCityId = data.get(&quot;sendCityId&quot;);&#xD;
+if(sendProvinceId &amp;&amp; sendCityId){&#xD;
+	var parameter={&#xD;
+		province:sendProvinceId,city:sendCityId&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	sendDistrictId:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryToProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	receiverProvinceId:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;receiverCityId&quot;,&quot;&quot;);&#xD;
+data.set(&quot;receiverDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryToCity">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	receiverCityId: arg.selectedValue.get(&quot;city&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;receiverDistrictId&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+var receiverProvinceId = data.get(&quot;receiverProvinceId&quot;);&#xD;
+&#xD;
+if(receiverProvinceId){&#xD;
+	var parameter={&#xD;
+		province:receiverProvinceId&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">provincecode=provincecode</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryToDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+var receiverProvinceId = data.get(&quot;receiverProvinceId&quot;);&#xD;
+var receiverCityId = data.get(&quot;receiverCityId&quot;);&#xD;
+if(receiverProvinceId &amp;&amp; receiverCityId){&#xD;
+	var parameter={&#xD;
+		province:receiverProvinceId,city:receiverCityId&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	receiverDistrictId:arg.selectedValue.get(&quot;district&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+    </DataSetDropDown>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dataSetTrunkRoadBill</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var roadBillDataSet=view.get(&quot;#dataSetTrunkRoadBill&quot;);&#xD;
+var queryEntity=view.get(&quot;#queryRoadBillForm&quot;).get(&quot;entity&quot;);&#xD;
+var cre=queryEntity.get(&quot;startTime&quot;);&#xD;
+var end=queryEntity.get(&quot;endTime&quot;);&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+queryEntity.set(&quot;delFlag&quot;,&quot;0&quot;);&#xD;
+roadBillDataSet.set(&quot;parameter&quot;, queryEntity).flushAsync();&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnSaveAll">
+        <ClientEvent name="onClick">/*&#xD;
+view.id(&quot;saveAllUpdateAction&quot;).execute(&#xD;
+	function(){}&#xD;
+);&#xD;
+*/&#xD;
+var data=view.get(&quot;#dataSetTrunkRoadBill.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogBillEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnUpdate">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dataSetTrunkRoadBill.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogAdjustWeightEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">调整重量</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queryRoadBillForm">
+      <ClientEvent name="onReady">&#xD;
+var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryRoadBillForm.entity&quot;).set({&#xD;
+		startTime:firstDay,&#xD;
+		endTime:lastDay&#xD;
+	});&#xD;
+</ClientEvent>
+      <Property name="cols">*,*,*</Property>
+      <Property name="dataType">dataTypeCondition</Property>
+      <Property name="dataSet">dataSetCondition</Property>
+      <Property name="labelWidth">100</Property>
+      <AutoFormElement>
+        <Property name="name">carrierId</Property>
+        <Property name="property">carrierId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">roadbillNo</Property>
+        <Property name="property">roadbillNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">isCalculated</Property>
+        <Property name="property">isCalculated</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">startTime</Property>
+        <Property name="property">startTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endTime</Property>
+        <Property name="property">endTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">delFlag</Property>
+        <Property name="property">delFlag</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dataGridTrunkRoadBill">
+        <Property name="dataSet">dataSetTrunkRoadBill</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="showFilterBar">false</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="width">2000</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="tmsId">
+          <Property name="property">tmsId</Property>
+          <Property name="visible">false</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">warehouseCode</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="name">warehouseCode</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">carrierId</Property>
+          <Property name="visible">true</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="name">carrierId</Property>
+        </DataColumn>
+        <DataColumn name="carrierName">
+          <Property name="property">carrierName</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="roadbillNo">
+          <Property name="property">roadbillNo</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="roadbillName">
+          <Property name="property">roadbillName</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="roadbillType">
+          <Property name="property">roadbillType</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="sendProvinceId">
+          <Property name="property">sendProvinceId</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="sendCityId">
+          <Property name="property">sendCityId</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="sendDistrictId">
+          <Property name="property">sendDistrictId</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="receiverProvinceId">
+          <Property name="property">receiverProvinceId</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="receiverCityId">
+          <Property name="property">receiverCityId</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="receiverDistrictId">
+          <Property name="property">receiverDistrictId</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="temperatureTypeCode">
+          <Property name="property">temperatureTypeCode</Property>
+          <Property name="visible">false</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="vehicleNo">
+          <Property name="property">vehicleNo</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="carModel">
+          <Property name="property">carModel</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="waybillNum">
+          <Property name="property">waybillNum</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="totalBox">
+          <Property name="property">totalBox</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="totalVolume">
+          <Property name="property">totalVolume</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="totalWeight">
+          <Property name="property">totalWeight</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="adjustWeight">
+          <ClientEvent name="onRenderHeaderCell">arg.dom.style.background = &quot;#fcc5c5&quot;;&#xD;
+arg.dom.style.color = &quot;blue&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+          <ClientEvent name="onRenderCell">arg.dom.style.background = &quot;#fcc5c5&quot;;&#xD;
+arg.dom.style.color = &quot;blue&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+          <Property name="property">adjustWeight</Property>
+          <Property name="readOnly">true</Property>
+        </DataColumn>
+        <DataColumn name="sendTime">
+          <Property name="property">sendTime</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="finishedTime">
+          <Property name="property">finishedTime</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">feesNo</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="name">feesNo</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">isCalculated</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="name">isCalculated</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <UpdateAction id="saveAllUpdateAction">
+      <Property name="dataResolver">trunkRoadBillController#save</Property>
+      <Property name="executingMessage">正在保存中...</Property>
+      <Property name="successMessage">数据保存成功！</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTrunkRoadBill</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateBillAction">
+      <Property name="dataResolver">trunkRoadBillController#adjustWeight</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTrunkRoadBill</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogAdjustWeightEdit">
+      <ClientEvent name="onClose">view.id(&quot;dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">300</Property>
+      <Property name="height">300</Property>
+      <Property name="caption">调整重量</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity = view.get(&quot;#billEditForm&quot;).get(&quot;entity&quot;);	&#xD;
+&#xD;
+var adjustWeight = entity.get(&quot;adjustWeight&quot;);&#xD;
+&#xD;
+var bizEntity = view.get(&quot;#dataSetTrunkRoadBill.data&quot;);&#xD;
+var totalWeight = bizEntity.current.get(&quot;totalWeight&quot;);&#xD;
+&#xD;
+if(undefined==adjustWeight || adjustWeight=='' &amp;&amp; adjustWeight!='0'){&#xD;
+	dorado.MessageBox.alert(&quot;请填写调整重量!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if (isNaN(adjustWeight)) {&#xD;
+	dorado.MessageBox.alert(&quot;调整重量必须为数字!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var sum = totalWeight + adjustWeight;&#xD;
+//dorado.MessageBox.alert(sum);&#xD;
+if(isNaN(sum) || sum &lt;=0){&#xD;
+	dorado.MessageBox.alert(&quot;调整重量后,重量将小于或等于0,禁止调整!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateBillAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dataSetTrunkRoadBill&quot;)){&#xD;
+				//定义查询条件json结构s&#xD;
+				flushAsync();&#xD;
+		}&#xD;
+		view.id(&quot;dialogAdjustWeightEdit&quot;).hide();&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogAdjustWeightEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="billEditForm">
+          <Property name="dataSet">dataSetTrunkRoadBill</Property>
+          <Property name="dataType">dataTypeTrunkRoadBill</Property>
+          <Property name="editorWidth">200</Property>
+          <Property name="rowHeight">40</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">adjustWeight</Property>
+            <Property name="property">adjustWeight</Property>
+            <Property name="editorWidth">200</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogBillEdit">
+      <ClientEvent name="onClose">view.id(&quot;dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">800</Property>
+      <Property name="height">300</Property>
+      <Property name="caption">修改</Property>
+      <Buttons>
+        <Button id="btnSave2">
+          <ClientEvent name="onClick">view.id(&quot;saveAllUpdateAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dataSetTrunkRoadBill&quot;)){&#xD;
+				//定义查询条件json结构s&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		view.id(&quot;dialogBillEdit&quot;).hide();&#xD;
+		//dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button id="btnCancel2">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dataSetTrunkRoadBill&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogBillEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="roadEditForm">
+          <Property name="dataSet">dataSetTrunkRoadBill</Property>
+          <Property name="dataType">dataTypeTrunkRoadBill</Property>
+          <Property name="editorWidth">300</Property>
+          <Property name="rowHeight">40</Property>
+          <Property name="cols">*,*,*</Property>
+          <AutoFormElement>
+            <Property name="name">sendProvinceId</Property>
+            <Property name="property">sendProvinceId</Property>
+            <Property name="trigger">ddropDownQueryProvince</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">sendCityId</Property>
+            <Property name="property">sendCityId</Property>
+            <Property name="trigger">ddropDownQueryCity</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">sendDistrictId</Property>
+            <Property name="property">sendDistrictId</Property>
+            <Property name="trigger">ddropDownQueryDistrict</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiverProvinceId</Property>
+            <Property name="property">receiverProvinceId</Property>
+            <Property name="trigger">ddropDownQueryToProvince</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiverCityId</Property>
+            <Property name="property">receiverCityId</Property>
+            <Property name="trigger">ddropDownQueryToCity</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiverDistrictId</Property>
+            <Property name="property">receiverDistrictId</Property>
+            <Property name="trigger">ddropDownQueryToDistrict</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiver</Property>
+            <Property name="property">receiver</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiverTelephone</Property>
+            <Property name="property">receiverTelephone</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">temperatureTypeCode</Property>
+            <Property name="property">temperatureTypeCode</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">isLight</Property>
+            <Property name="property">isLight</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">vehicleNo</Property>
+            <Property name="property">vehicleNo</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">carModel</Property>
+            <Property name="property">carModel</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">waybillNum</Property>
+            <Property name="property">waybillNum</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">totalBox</Property>
+            <Property name="property">totalBox</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">totalWeight</Property>
+            <Property name="property">totalWeight</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">totalVolume</Property>
+            <Property name="property">totalVolume</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">sendPerson</Property>
+            <Property name="property">sendPerson</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">creator</Property>
+            <Property name="property">creator</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">lastModifier</Property>
+            <Property name="property">lastModifier</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">delFlag</Property>
+            <Property name="property">delFlag</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">sendTime</Property>
+            <Property name="property">sendTime</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">finishedTime</Property>
+            <Property name="property">finishedTime</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">createTime</Property>
+            <Property name="property">createTime</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">lastModifyTime</Property>
+            <Property name="property">lastModifyTime</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">tmsId</Property>
+            <Property name="property">tmsId</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">carrierId</Property>
+            <Property name="property">carrierId</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">carrierName</Property>
+            <Property name="property">carrierName</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustWeight</Property>
+            <Property name="property">adjustWeight</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">feesNo</Property>
+            <Property name="property">feesNo</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">isCalculated</Property>
+            <Property name="property">isCalculated</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

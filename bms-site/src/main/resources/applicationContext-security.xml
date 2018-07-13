@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+
+		<!-- Inject the UserInfo into the current context -->
+<!-- 	<mvc:interceptors> -->
+<!-- 		<bean id="userInfoInterceptor" class="org.mitre.openid.connect.web.UserInfoInterceptor" /> -->
+<!-- 	</mvc:interceptors> -->
+	
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+<!-- 	<security:global-method-security pre-post-annotations="enabled" proxy-target-class="true" authentication-manager-ref="bdf2.authenticationManager"/> -->
+
+<!-- 	<bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider"> -->
+<!-- 		<property name="authoritiesMapper"> -->
+<!-- 			<bean class="org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper"> -->
+<!-- 				<property name="admins" ref="namedAdmins" /> -->
+<!-- 			</bean> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+<!-- 	<bean id="retrievePreAuthenticatedUserHandler" class="com.jiuyescm.security.handler.RetrievePreAuthenticatedUserHandler" /> -->
+
+<!-- 	<util:set id="namedAdmins" value-type="org.mitre.openid.connect.client.SubjectIssuerGrantedAuthority"> -->
+<!-- 		<bean class="org.mitre.openid.connect.client.SubjectIssuerGrantedAuthority"> -->
+<!-- 			<constructor-arg name="subject" value="901102.ASDFJWFA" /> -->
+<!-- 			<constructor-arg name="issuer" value="http://passport.dev.sh-jiuye.com.cn:8080" /> -->
+<!-- 		</bean> -->
+<!-- 	</util:set> -->
+
+<!-- 	<bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter"> -->
+<!-- 		<property name="authenticationManager" ref="bdf2.authenticationManager" /> -->
+
+<!-- 		<property name="issuerService" ref="hybridIssuerService" /> -->
+<!-- 		<property name="serverConfigurationService" ref="dynamicServerConfigurationService" /> -->
+<!-- 		<property name="clientConfigurationService" ref="dynamicClientConfigurationService" /> -->
+<!-- 		<property name="authRequestOptionsService" ref="staticAuthRequestOptionsService" /> -->
+<!-- 		<property name="authRequestUrlBuilder" ref="plainAuthRequestUrlBuilder" /> -->
+<!-- 		<property name="authenticationSuccessHandler" ref="bdf2.savedRequestAwareAuthenticationSuccessHandler" /> -->
+<!--         <property name="authenticationFailureHandler" ref="bdf2.authenticationFailureHandler" /> -->
+		
+<!-- 	</bean> -->
+
+    <!-- Issue service -->
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.ThirdPartyIssuerService"> -->
+<!-- 	  <property name="accountChooserUrl" value="http://localhost/account-chooser/" /> -->
+<!-- 	</bean> -->
+	
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.HybridIssuerService" id="hybridIssuerService"> -->
+<!-- 		<property name="loginPageUrl" value="com.jiuyescm.bms.system.view.Login.d" /> -->
+<!-- 		<property name="forceHttps" value="false" /> -->
+<!-- 	</bean> -->
+	
+	<!-- Server configuration -->
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService" id="dynamicServerConfigurationService" /> -->
+
+	<!-- Client Configuration -->
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService" id="dynamicClientConfigurationService"> -->
+<!-- 		<property name="template"> -->
+<!-- 			<bean class="org.mitre.oauth2.model.RegisteredClient"> -->
+<!-- 				<property name="clientName" value="oms Site" /> -->
+<!-- 				<property name="scope"> -->
+<!-- 					<set value-type="java.lang.String"> -->
+<!-- 						<value>openid</value> -->
+<!-- 						<value>email</value> -->
+<!-- 						<value>address</value> -->
+<!-- 						<value>profile</value> -->
+<!-- 						<value>phone</value> -->
+<!-- 					</set> -->
+<!-- 				</property> -->
+<!-- 				<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" /> -->
+<!-- 				<property name="redirectUris"> -->
+<!-- 					<set> -->
+<!-- 						<value>http://localhost:8080/oms-site/openid_connect_login</value> -->
+<!-- 					</set> -->
+<!-- 				</property> -->
+<!-- 				for signed requests -->
+<!-- 				<property name="requestObjectSigningAlg" value="RS256" /> -->
+<!-- 				<property name="jwksUri" value="http://localhost:8080/oms-site/jwk" /> -->
+<!-- 			</bean> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+	<!-- Auth request options service -->
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.StaticAuthRequestOptionsService" id="staticAuthRequestOptionsService"> -->
+<!-- 		<property name="options"> -->
+<!-- 			<map> -->
+				<!-- Entries in this map are sent as key-value parameters to the auth request -->
+				<!-- 
+				<entry key="display" value="page" />
+				<entry key="max_age" value="30" />
+				<entry key="prompt" value="none" />
+				-->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+	<!-- Authorization URL Builders -->
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" id="plainAuthRequestUrlBuilder" /> -->
+	
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.SignedAuthRequestUrlBuilder" id="signedAuthRequestUrlBuilder"> -->
+<!-- 	  <property name="signingAndValidationService" ref="defaultSignerService" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.EncryptedAuthRequestUrlBuilder" id="encryptedAuthRequestUrlBuilder"> -->
+<!-- 	  <property name="encrypterService" ref="validatorCache" /> -->
+<!-- 	    <property name="alg"> -->
+<!-- 	      <util:constant static-field="com.nimbusds.jose.JWEAlgorithm.RSA1_5"/> -->
+<!-- 	    </property> -->
+<!-- 	    <property name="enc"> -->
+<!-- 	      <util:constant static-field="com.nimbusds.jose.EncryptionMethod.A128GCM"/> -->
+<!-- 	    </property> -->
+<!-- 	</bean> -->
+
+
+	<!-- Utility beans for the above classes -->
+<!-- 	<bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetCacheService" /> -->
+	
+<!-- 	<bean id="defaultSignerService" class="org.mitre.jwt.signer.service.impl.DefaultJWTSigningAndValidationService"> -->
+<!-- 		<constructor-arg name="keyStore"> -->
+<!-- 			<bean id="defaultKeyStore" class="org.mitre.jose.keystore.JWKSetKeyStore"> -->
+<!-- 				<property name="location" value="classpath:keystore.jwks" /> -->
+<!-- 			</bean> -->
+<!-- 		</constructor-arg> -->
+<!-- 		<property name="defaultSignerKeyId" value="rsa1" /> -->
+<!--  		<property name="defaultSigningAlgorithmName" value="RS256" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="clientKeyPublisher" class="org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher"> -->
+<!--  		<property name="jwkPublishUrl" value="jwk" /> -->
+<!--  		<property name="signingAndValidationService" ref="defaultSignerService" /> -->
+<!--  	</bean> -->
+ 		 
+</beans>

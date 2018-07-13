@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="templateCode">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageType">
+      <Property name="creationType">com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity</Property>
+      <PropertyDef name="templateName">
+        <Property></Property>
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;STORAGE_PRICE_SUBJECT&quot;)}</Property>
+        </Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="billWayCode">
+        <Property name="dataType">Double</Property>
+        <Property name="label">计费方式</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模板编码</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtStorageLadderType">
+      <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.PriceLadderQuotationEntity</Property>
+      <PropertyDef name="templateId">
+        <Property name="label">模板Id</Property>
+      </PropertyDef>
+      <PropertyDef name="weightLowerLimit">
+        <Property name="label">重量下限</Property>
+      </PropertyDef>
+      <PropertyDef name="weightUpperLimit">
+        <Property name="label">重量上限</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property></Property>
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">最后修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property></Property>
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标志</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsStorageType">
+      <Property name="dataType">[dtStorageType]</Property>
+      <Property name="dataProvider">storageTemplateController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsStorageLadderType">
+      <Property name="dataProvider">stroageLadderQuoteController#query</Property>
+      <Property name="dataType">[dtStorageLadderType]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="afGenericTemplate">
+        <Property name="labelSeparator">:</Property>
+        <Property name="cols">260,260,*,*</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <AutoFormElement>
+          <Property name="name">templateCode</Property>
+          <Property name="property">templateCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateName</Property>
+          <Property name="property">templateName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsStorageType</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsStorageType&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#afGenericTemplate&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+&#xD;
+/*&#xD;
+或者：&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsGenericTemplate&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+*/</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnNew">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#editDialog&quot;).show();</ClientEvent>
+          <Property name="caption">新增</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnModify">
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageType.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#updateStorageDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+          <Property name="caption">修改</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="btnRemove">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					var param = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+					with (view.get(&quot;#dsStorageType&quot;)){&#xD;
+						set(&quot;parameter&quot;, param);&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">删除</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <DataGrid id="dg_QuotaList">
+        <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var templateId=data.current.get(&quot;id&quot;);&#xD;
+&#xD;
+with (view.get(&quot;#dsStorageLadderType&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateId:templateId&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="readOnly">true</Property>
+        <Property name="lazyInit">true</Property>
+        <Property name="selectionMode">singleRow</Property>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="height">200</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="templateCode">
+          <Property name="property">templateCode</Property>
+        </DataColumn>
+        <DataColumn name="templateName">
+          <Property name="property">templateName</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="editDialog">
+      <ClientEvent name="onClose">view.id(&quot;dsGenericTemplate&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">500</Property>
+      <Property name="height">260</Property>
+      <Property name="caption">新增或编辑</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+	function(){&#xD;
+		view.id(&quot;editDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsGenericTemplate&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Container>
+          <AutoForm id="editForm">
+            <Property name="cols">*,*</Property>
+            <Property name="dataSet">dsStorageType</Property>
+            <Property name="dataType">dtStorageType</Property>
+            <AutoFormElement>
+              <Property name="name">templateName</Property>
+              <Property name="property">templateName</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">bizTypeCode</Property>
+              <Property name="property">bizTypeCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">subjectId</Property>
+              <Property name="property">subjectId</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">billWayCode</Property>
+              <Property name="property">billWayCode</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">remark</Property>
+              <Property name="property">remark</Property>
+              <Editor>
+                <TextArea/>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">storageTemplateController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <TabControl>
+      <ControlTab>
+        <Property name="caption">存储费重量阶梯报价</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetDelivery</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton id="btnAddDelivery">
+              <ClientEvent name="onClick">var typeDatas = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+var currentData = typeDatas.current;&#xD;
+if (currentData){&#xD;
+	var datas = view.get(&quot;#dsStorageLadderType.data&quot;);&#xD;
+	&#xD;
+	datas.insert();&#xD;
+ &#xD;
+	datas.current.set(&quot;templateId&quot;,currentData.get(&quot;id&quot;));&#xD;
+	&#xD;
+	view.get(&quot;#editLadderLineDialog&quot;).show();&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnEditDelivery">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsStorageLadderType.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#updateDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">编辑</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnRemoveDelivery">
+              <ClientEvent name="onClick">var datas = view.get(&quot;#dsStorageLadderType.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#removeLadderAction&quot;).execute(&#xD;
+		    function(result){&#xD;
+				if(result == &quot;SUCCESS&quot;){&#xD;
+					dorado.MessageBox.alert(&quot;删除成功&quot;);&#xD;
+					&#xD;
+					var queryJson={&#xD;
+						templateId:currentData.get(&quot;templateId&quot;)&#xD;
+					};&#xD;
+					with (view.get(&quot;#dsStorageLadderType&quot;)){&#xD;
+						set(&quot;parameter&quot;, queryJson);&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+					&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsStorageLadderType</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn>
+              <Property name="property">temperatureTypeCode</Property>
+              <Property name="name">temperatureTypeCode</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">weightLowerLimit</Property>
+              <Property name="name">weightLowerLimit</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">weightUpperLimit</Property>
+              <Property name="name">weightUpperLimit</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">unitPrice</Property>
+              <Property name="name">unitPrice</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="editLadderLineDialog">
+            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">500</Property>
+            <Property name="height">260</Property>
+            <Property name="caption">新增或编辑【存储费重量阶梯报价】</Property>
+            <Buttons>
+              <Button id="btnSaveTransport">
+                <ClientEvent name="onClick">view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
+	function(){&#xD;
+		view.id(&quot;editLadderLineDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelTransport">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsStorageLadderType&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;editLadderLineDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="editLadderForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dsStorageLadderType</Property>
+                  <Property name="dataType">dtStorageLadderType</Property>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Property name="readOnly">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightLowerLimit</Property>
+                    <Property name="property">weightLowerLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">weightUpperLimit</Property>
+                    <Property name="property">weightUpperLimit</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="ladderInsertAction">
+            <Property name="dataResolver">stroageLadderQuoteController#save</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageLadderType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <UpdateAction id="ladderUpdateAction">
+            <Property name="dataResolver">stroageLadderQuoteController#update</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageLadderType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <Dialog id="updateDialog">
+            <Property name="caption">修改</Property>
+            <Property name="height">280</Property>
+            <Property name="width">380</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
+	function(){&#xD;
+		view.id(&quot;updateDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateDialog&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="updateQuotaFrm">
+                <Property name="dataSet">dsStorageLadderType</Property>
+                <Property name="dataType">dtStorageLadderType</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">temperatureTypeCode</Property>
+                  <Property name="property">temperatureTypeCode</Property>
+                  <Property name="readOnly">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">weightLowerLimit</Property>
+                  <Property name="property">weightLowerLimit</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">weightUpperLimit</Property>
+                  <Property name="property">weightUpperLimit</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">unitPrice</Property>
+                  <Property name="property">unitPrice</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">remark</Property>
+                  <Property name="property">remark</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="removeLadderAction">
+            <Property name="dataResolver">stroageLadderQuoteController#delete</Property>
+            <UpdateItem>
+              <Property name="dataSet">dsStorageLadderType</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <Dialog id="updateStorageDialog">
+      <Property name="caption">修改模板</Property>
+      <Property name="height">280</Property>
+      <Property name="width">380</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;editStoraeAction&quot;).execute(&#xD;
+	function(){&#xD;
+		view.id(&quot;updateStorageDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateStorageDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="updateQuoteFrom">
+          <Property name="dataSet">dsStorageType</Property>
+          <Property name="dataType">dtStorageType</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">templateName</Property>
+            <Property name="property">templateName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bizTypeCode</Property>
+            <Property name="property">bizTypeCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectId</Property>
+            <Property name="property">subjectId</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">billWayCode</Property>
+            <Property name="property">billWayCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor>
+              <TextArea/>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="editStoraeAction">
+      <Property name="dataResolver">storageTemplateController#update</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsStorageType</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="removeAction">
+      <Property name="dataResolver">storageTemplateController#delete</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsStorageType</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

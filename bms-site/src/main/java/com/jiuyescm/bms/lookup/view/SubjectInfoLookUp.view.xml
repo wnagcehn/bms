@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition"/>
+    <DataType name="dtBmsSubjectInfoTypeQuery">
+      <PropertyDef name="inOutTypecode">
+        <Property name="label">收支类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getInOutTypeCode&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypecode">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getBizTypeCode&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目编码</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">是否作废</Property>
+        <Property name="dataType">boolean</Property>
+        <Property name="defaultValue">False</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsSubjectInfoQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsSubjectInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnSelect">
+        <ClientEvent name="onClick">var tmpSelectData = view.get(&quot;#dsBmsSubjectInfoEntity&quot;).get(&quot;selection&quot;);&#xD;
+if(tmpSelectData.length>0){&#xD;
+	view.get(&quot;#actionSelect&quot;).execute();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">选择</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsSubjectInfoEntity">
+      <Property name="dataType">[dtBmsSubjectInfoEntity]</Property>
+      <Property name="dataProvider">bmsSubjectInfoController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsBmsSubjectInfoQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsSubjectInfoQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtBmsSubjectInfoTypeQuery]</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtBmsSubjectInfoTypeQuery</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsBmsSubjectInfoQuery</Property>
+      <AutoFormElement>
+        <Property name="name">inOutTypecode</Property>
+        <Property name="property">inOutTypecode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bizTypecode</Property>
+        <Property name="property">bizTypecode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">subjectName</Property>
+        <Property name="property">subjectName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">subjectCode</Property>
+        <Property name="property">subjectCode</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dataList">
+        <Property name="dataSet">dsBmsSubjectInfoEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="selectionMode">multiRows</Property>
+        <RowSelectorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="inOutTypecode">
+          <Property name="property">inOutTypecode</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="bizTypecode">
+          <Property name="property">bizTypecode</Property>
+          <Property name="width">80</Property>
+        </DataColumn>
+        <DataColumn name="subjectName">
+          <Property name="property">subjectName</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="subjectCode">
+          <Property name="property">subjectCode</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Action id="actionSelect">
+      <ClientEvent name="onExecute">var tmpSelectData = view.get(&quot;#dsBmsSubjectInfoEntity&quot;).get(&quot;selection&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
+  </View>
+</ViewConfig>

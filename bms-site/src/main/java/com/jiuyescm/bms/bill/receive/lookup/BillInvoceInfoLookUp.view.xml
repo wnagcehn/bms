@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillInvoceInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BmsBillInvoceInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isNeedInvoce">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="invoceNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="invoceAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">view.get(&quot;#dsBillSubjectInfo&quot;).set(&quot;parameter&quot;,&quot;Z00000001&quot;).flushAsync();&#xD;
+</ClientEvent>
+    <DataSet id="dsBillInvoceInfo">
+      <Property name="dataType">[dtBillInvoceInfoEntity]</Property>
+      <Property name="dataProvider">bmsBillSubjectInfoController#queryAllByBillNo</Property>
+    </DataSet>
+    <Container>
+      <Property name="height">150</Property>
+      <Label id="lblBillNo">
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+      </Label>
+      <DataGrid id="mainGrid">
+        <ClientEvent name="onDoubleClick">var data=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var subjectCode=data.get(&quot;subjectCode&quot;);&#xD;
+view.get(&quot;#lblBillNo&quot;).set(&quot;text&quot;,data.get(&quot;billNo&quot;));&#xD;
+var tab={};&#xD;
+tab.$type = &quot;IFrame&quot;;&#xD;
+tab.closeable = true;&#xD;
+switch(subjectCode){&#xD;
+	case &quot;wh_product_storage&quot;:&#xD;
+	case &quot;wh_product_pallet_storage&quot;:&#xD;
+	tab.name=&quot;商品存储费&quot;;&#xD;
+	tab.caption=&quot;商品存储费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.ProductStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_material_storage&quot;:&#xD;
+	tab.name=&quot;耗材存储费&quot;;&#xD;
+	tab.caption=&quot;耗材存储费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.PackStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_b2c_work&quot;:&#xD;
+	tab.name=&quot;订单操作费&quot;;&#xD;
+	tab.caption=&quot;订单操作费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.OutStockLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_material_use&quot;:&#xD;
+	tab.name=&quot;耗材报价&quot;;&#xD;
+	tab.caption=&quot;耗材报价&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.MaterialLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_value_add_subject&quot;:&#xD;
+	tab.name=&quot;增值报价&quot;;&#xD;
+	tab.caption=&quot;增值报价&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.OtherStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+}&#xD;
+if(tab.path){&#xD;
+	 with (view.get(&quot;#tabControl&quot;)){&#xD;
+	 	var currentTab = getTab(tab.name);&#xD;
+        if (currentTab) {&#xD;
+            tab = currentTab;&#xD;
+        } else {&#xD;
+            // 获取ID为tabControl的对象，并添加一个新的Tab&#xD;
+            // 设定ID为tabControl的对象的当前Tab为新创建的Tab&#xD;
+            tab = addTab(tab);&#xD;
+        }&#xD;
+        // 设定当前的Tab为制定的tab&#xD;
+        set(&quot;currentTab&quot;, tab);&#xD;
+	 }&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="readOnly">true</Property>
+        <DataColumn name="billNo">
+          <Property name="property">billNo</Property>
+        </DataColumn>
+        <DataColumn name="subjectCode">
+          <Property name="property">subjectCode</Property>
+        </DataColumn>
+        <DataColumn name="totalAmount">
+          <Property name="property">totalAmount</Property>
+        </DataColumn>
+        <DataColumn name="discountAmount">
+          <Property name="property">discountAmount</Property>
+        </DataColumn>
+        <DataColumn name="receiptAmount">
+          <Property name="property">receiptAmount</Property>
+        </DataColumn>
+        <DataColumn name="num">
+          <Property name="property">num</Property>
+        </DataColumn>
+        <DataColumn name="status">
+          <Property name="property">status</Property>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;折扣&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogDiscount&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;删除&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;对账&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+		      &#xD;
+	    	}&#xD;
+		}&#xD;
+	]);</ClientEvent>
+          <Property name="caption">操作</Property>
+          <Property name="align">center</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogDiscount">
+      <Property name="height">400</Property>
+      <Property name="width">400</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=view.get(&quot;#discountAction&quot;);&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;操作成功&quot;);&#xD;
+	view.get(&quot;#dialogDiscount&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dialogDiscount&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsBillSubjectInfo</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">billNo</Property>
+            <Property name="property">billNo</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">billName</Property>
+            <Property name="name">billName</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">customerName</Property>
+            <Property name="name">customerName</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectCode</Property>
+            <Property name="property">subjectCode</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">totalAmount</Property>
+            <Property name="property">totalAmount</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <ClientEvent name="onBlur">var data=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var discountAmount=data.get(&quot;discountAmount&quot;);&#xD;
+if(discountAmount!=null&amp;&amp;discountAmount!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var receiptAmount=parseFloat(totalAmount)-parseFloat(discountAmount);&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="name">discountAmount</Property>
+            <Property name="property">discountAmount</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiptAmount</Property>
+            <Property name="property">receiptAmount</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">num</Property>
+            <Property name="property">num</Property>
+            <Property name="editorType">Label</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <TabControl id="tabControl"/>
+    <UpdateAction id="discountAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#discountBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

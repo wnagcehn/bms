@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bdf="http://www.bstek.com/bdf/schema"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.bstek.com/bdf/schema http://www.bstek.com/dorado/schema/bdf2.0.xsd 
+	 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+	<bean id="bdf2.jdbcTransactionManager"
+		class="com.bstek.bdf2.core.orm.transaction.JdbcTransactionManager">
+		<property name="dataSource" ref="bdfDataSource" />
+	</bean>
+
+	<tx:annotation-driven proxy-target-class="true"
+		transaction-manager="bdf2.jdbcTransactionManager" />
+
+	<bean parent="bdf2.dataSourceRegister">
+		<property name="dataSource" ref="bdfDataSource" />
+		<property name="name" value="oms" />
+		<property name="asDefault" value="true" />
+	</bean>
+	
+	
+
+	<bean id="sessionFactory" parent="bdf2.sessionFactory">
+		<property name="dataSourceName" value="oms" />
+		<property name="entityInterceptor" ref="bdf2.unByteCodeProxyInterceptor" />
+		<property name="useTransactionAwareDataSource" value="true" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">none</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bdf:anonymous-url urlPattern="/index.jsp" />
+    <bdf:anonymous-url urlPattern="/images/*.*" />
+	<bdf:anonymous-url urlPattern="/images/**/*.*" />
+	<bdf:anonymous-url urlPattern="/favicon.ico" />
+	<bdf:anonymous-url urlPattern="/jyws/**"  />
+	<aop:aspectj-autoproxy />
+
+</beans>

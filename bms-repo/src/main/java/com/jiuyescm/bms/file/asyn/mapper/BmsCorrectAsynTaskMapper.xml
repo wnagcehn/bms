@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+	    <result column="create_month" property="createMonth" jdbcType="VARCHAR" />
+	    <result column="customerId" property="customerId" jdbcType="DECIMAL" />
+	    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+	    <result column="task_rate" property="taskRate" jdbcType="INTEGER" />
+	    <result column="task_status" property="taskStatus" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(taskId != null and taskId !='')" >
+				and task_id  like concat('%',#{taskId},'%') 
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customerId = #{customerId}
+		</if>
+		<if test="(taskName != null and taskName !='')" >
+				and task_name = #{taskName}
+		</if>
+		<if test="(taskRate != null and taskRate !='')" >
+				and task_rate = #{taskRate}
+		</if>
+		<if test="(taskStatus != null and taskStatus !='')" >
+				and task_status = #{taskStatus}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="startDate != null" >
+			    and <![CDATA[startDate <= #{startDate}]]>
+		</if>
+		<if test="endDate != null" >
+			    and endDate >= #{endDate}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_correct_asyn_task
+        where 1=1
+		<include refid="baseSelectColumns" />
+		order by create_time desc
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_correct_asyn_task
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
+        insert into bms_correct_asyn_task(task_id, create_month, customerId, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark)
+        values (
+
+#{taskId,jdbcType=VARCHAR}, 
+#{createMonth,jdbcType=VARCHAR}, 
+#{customerId,jdbcType=VARCHAR}, 
+#{taskName,jdbcType=VARCHAR}, 
+#{taskRate,jdbcType=INTEGER}, 
+#{taskStatus,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{finishTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR},
+#{startDate},#{endDate},#{remark}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
+        update bms_correct_asyn_task 
+		<set >
+			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
+			<if test="createMonth != null" >create_month=#{createMonth,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="taskName != null" >task_name=#{taskName,jdbcType=VARCHAR},</if>
+			<if test="taskRate != null" >task_rate=#{taskRate,jdbcType=INTEGER},</if>
+			<if test="taskStatus != null" >task_status=#{taskStatus,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR}</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bms_correct_asyn_task where
+        id=#{id}
+    </delete>
+    
+    <select id="existTask" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity" resultType="int">
+    		select count(*) from bms_correct_asyn_task where del_flag='0' and
+    		customerId=#{customerId} and startDate=#{startDate} and endDate=#{endDate}
+    		and task_status in ('WAIT','PROCESS')
+    </select>
+    
+    <select id="queryCorrectCustomerList" parameterType="java.util.Map" resultType="String">
+    	select DISTINCT customerid from biz_dispatch_bill where del_flag=0 
+			and create_time>=#{startDate} and <![CDATA[create_time<#{endDate} ]]>
+			and customerid is not null
+    </select>
+</mapper>

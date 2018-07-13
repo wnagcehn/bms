@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="import_date" property="importDate" jdbcType="DATE" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="import_type" property="importType" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(importDate != null and importDate !='')" >
+				and import_date = #{importDate}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(importType != null and importType !='')" >
+				and import_type = #{importType}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} and <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+        select
+        <include refid="baseColumns" />
+        from report_warehouse_biz_import
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <insert id="upsertPalletStorage" parameterType="java.util.Map" >
+        insert into report_warehouse_biz_import(import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag)
+        SELECT importDate, warehouseCode, biz_type, importType, customerId, 
+        	#{createTime,jdbcType=TIMESTAMP}, #{delFlag}
+		FROM 
+		(SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
+			customerid as customerId, 'THEORY' as importType, 'PALLET' as biz_type
+		FROM biz_product_storage
+		WHERE del_flag = '0'
+			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
+		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'), customerid
+		
+		UNION ALL
+		
+		SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
+			customerid as customerId, 'ACTUAL' as importType, 'PALLET' as biz_type
+		FROM biz_product_pallet_storage
+		WHERE del_flag = '0'
+			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
+		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'),customerid) a
+		
+        on DUPLICATE KEY update
+        create_time=#{createTime,jdbcType=TIMESTAMP};
+    </insert>
+    
+    <insert id="upsertPackMaterial" parameterType="java.util.Map" >
+        insert into report_warehouse_biz_import(import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag)
+        SELECT importDate, warehouseCode, biz_type, importType, customerId, 
+        	#{createTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}
+		FROM 
+		(SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
+			customerid as customerId, 'THEORY' as importType, 'MATERIAL' as biz_type
+		FROM biz_outstock_master
+		WHERE del_flag = '0'
+			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
+			AND b2b_flag = '0'
+		GROUP BY warehouse_code, DATE_FORMAT(create_time, '%Y-%m'), customerid
+		
+		UNION ALL
+		
+		SELECT bop.warehouse_code as warehouseCode, DATE_FORMAT(bop.create_time, '%Y-%m') as importDate, 
+			bop.customer_id as customerId, 'ACTUAL' as importType, 'MATERIAL' as biz_type
+		FROM biz_outstock_packmaterial bop
+		LEFT JOIN biz_outstock_master bom
+			ON bop.waybill_no = bom.waybill_no
+		WHERE bop.del_flag = '0'
+			AND bop.create_time <![CDATA[>=]]> #{startTime} AND bop.create_time <![CDATA[<]]> #{endTime}
+			AND bom.b2b_flag = '0'
+		GROUP BY bop.warehouse_code, DATE_FORMAT(bop.create_time, '%Y-%m'), bop.customer_id) a
+		
+        on DUPLICATE KEY update
+        create_time=#{createTime,jdbcType=TIMESTAMP};
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+        update report_warehouse_biz_import 
+		<set >
+			<if test="importDate != null" >import_date=#{importDate,jdbcType=DATE},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="importType != null" >import_type=#{importType,jdbcType=VARCHAR},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+</mapper>

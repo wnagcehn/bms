@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billcheck.mapper.BillCheckInvoiceMapper" >
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity" >
+         <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_check_id" property="billCheckId" jdbcType="INTEGER" />
+	    <result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+	    <result column="invoice_no" property="invoiceNo" jdbcType="VARCHAR" />
+	    <result column="invoice_amount" property="invoiceAmount" jdbcType="DECIMAL" />
+	    <result column="invoice_date" property="invoiceDate" jdbcType="DATE" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="invoice_days" property="invoiceDays" jdbcType="INTEGER" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, bill_check_id, sort_no, invoice_no, invoice_amount, invoice_date, waybill_no, invoice_days, remark, creator_id,creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billCheckId != null and billCheckId !='')" >
+				and bill_check_id = #{billCheckId}
+		</if>
+		<if test="(sortNo != null and sortNo !='')" >
+				and sort_no = #{sortNo}
+		</if>
+		<if test="(invoiceNo != null and invoiceNo !='')" >
+				and invoice_no = #{invoiceNo}
+		</if>
+		<if test="(invoiceAmount != null and invoiceAmount !='')" >
+				and invoice_amount = #{invoiceAmount}
+		</if>
+		<if test="(invoiceDate != null and invoiceDate !='')" >
+				and invoice_date = #{invoiceDate}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(invoiceDays != null and invoiceDays !='')" >
+				and invoice_days = #{invoiceDays}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_invoice
+        where 1=1 and del_flag='0'
+		<include refid="baseSelectColumns" />
+		ORDER BY invoice_date desc
+    </select>
+    
+    <select id="queryReport" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.entity.BillInvoiceEntity">
+        select a.id, a.bill_check_id, a.sort_no, a.invoice_no, a.invoice_amount, a.invoice_date, a.waybill_no, a.invoice_days, a.remark, a.creator_id,a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.del_flag,
+		b.create_month,b.invoice_name,b.bill_name,b.seller_name,b.area
+		from bill_check_invoice a inner JOIN bill_check_info b on a.bill_check_id=b.id
+        and a.del_flag='0' and b.del_flag='0' and b.bill_status not in ('INVALIDATE','BAD_BILL')
+        <if test="(invoiceNo != null and invoiceNo !='')" >
+				and a.invoice_no like '%${invoiceNo}%'
+		</if>
+		<if test="(invoiceDate != null and invoiceDate !='')" >
+				and a.invoice_date = #{invoiceDate,jdbcType=DATE}
+		</if>
+		<if test="(invoiceDateStart != null and invoiceDateStart !='')" >
+				and a.invoice_date >= #{invoiceDateStart,jdbcType=DATE}
+		</if>
+		<if test="(invoiceDateEnd != null and invoiceDateEnd !='')" >
+				and a.invoice_date <![CDATA[<= #{invoiceDateEnd,jdbcType=DATE}]]>
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and b.create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and b.create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no like '%${waybillNo}%'
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and b.create_month = #{createMonth}
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and b.invoice_name  like '%${invoiceName}%'
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and b.bill_name like '%${billName}%'
+		</if>
+		<if test="(sellerName != null and sellerName !='')" >
+				and b.seller_name like '%${sellerName}%'
+		</if>
+		<if test="(area != null and area !='')" >
+				and b.area like '%${area}%'
+		</if>
+    </select>
+
+    <select id="querySum" parameterType="java.util.Map"
+        resultType="java.math.BigDecimal">
+        select sum(a.invoice_amount) as totalPrice
+		from bill_check_invoice a inner JOIN bill_check_info b on a.bill_check_id=b.id
+        and a.del_flag='0' and b.del_flag='0' and b.bill_status not in ('INVALIDATE','BAD_BILL')
+        <if test="(invoiceNo != null and invoiceNo !='')" >
+				and a.invoice_no like '%${invoiceNo}%'
+		</if>
+		<if test="(invoiceDate != null and invoiceDate !='')" >
+				and a.invoice_date = #{invoiceDate,jdbcType=DATE}
+		</if>
+		<if test="(invoiceDateStart != null and invoiceDateStart !='')" >
+				and a.invoice_date >= #{invoiceDateStart,jdbcType=DATE}
+		</if>
+		<if test="(invoiceDateEnd != null and invoiceDateEnd !='')" >
+				and a.invoice_date <![CDATA[<= #{invoiceDateEnd,jdbcType=DATE}]]>
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no like '%${waybillNo}%'
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and b.create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and b.create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and b.create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and b.invoice_name  like '%${invoiceName}%'
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and b.bill_name like '%${billName}%'
+		</if>
+		<if test="(sellerName != null and sellerName !='')" >
+				and b.seller_name like '%${sellerName}%'
+		</if>
+		<if test="(area != null and area !='')" >
+				and b.area like '%${area}%'
+		</if>
+    </select>
+
+
+	<select id="queryInvoice" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity">
+        select MAX(invoice_date) as invoice_date,sum(invoice_amount) as invoice_amount from bill_check_invoice where bill_check_id=#{id} and del_flag='0'
+    </select>
+    
+    <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity">
+        insert into bill_check_invoice(bill_check_id, sort_no, invoice_no, invoice_amount, invoice_date, waybill_no, invoice_days, remark,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+
+#{billCheckId,jdbcType=INTEGER}, 
+#{sortNo,jdbcType=INTEGER}, 
+#{invoiceNo,jdbcType=VARCHAR}, 
+#{invoiceAmount,jdbcType=DECIMAL}, 
+#{invoiceDate,jdbcType=DATE}, 
+#{waybillNo,jdbcType=VARCHAR}, 
+#{invoiceDays,jdbcType=INTEGER}, 
+#{remark,jdbcType=VARCHAR}, 
+#{creatorId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity">
+        update bill_check_invoice 
+		<set >
+<if test="billCheckId != null" >bill_check_id=#{billCheckId,jdbcType=INTEGER},</if>
+<if test="sortNo != null" >sort_no=#{sortNo,jdbcType=INTEGER},</if>
+<if test="invoiceNo != null" >invoice_no=#{invoiceNo,jdbcType=VARCHAR},</if>
+<if test="invoiceAmount != null" >invoice_amount=#{invoiceAmount,jdbcType=DECIMAL},</if>
+<if test="invoiceDate != null" >invoice_date=#{invoiceDate,jdbcType=DATE},</if>
+<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+<if test="invoiceDays != null" >invoice_days=#{invoiceDays,jdbcType=INTEGER},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    <select id="queryAllBillInvoice" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity">
+    	select
+        <include refid="baseColumns" />
+        from bill_check_invoice where  bill_check_id in
+        <foreach collection="checkIdList" index="index" item="item" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+    </select>
+</mapper>

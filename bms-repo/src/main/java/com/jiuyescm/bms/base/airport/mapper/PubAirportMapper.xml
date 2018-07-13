@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.airport.mapper.PubAirportMapper" >
+
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.airport.entity.PubAirportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="airport_id" property="airportId" jdbcType="VARCHAR" />
+	    <result column="airport_name" property="airportName" jdbcType="VARCHAR" />
+	    <result column="province" property="province" jdbcType="VARCHAR" />
+	    <result column="city" property="city" jdbcType="VARCHAR" />
+	    <result column="district" property="district" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, airport_id, airport_name, province, city, district, creator, create_time, last_modifier, last_modify_time, del_flag,remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(airportId != null and airportId !='')" >
+				and airport_id = #{airportId}
+		</if>
+		<if test="(airportName != null and airportName !='')" >
+				and airport_name = #{airportName}
+		</if>
+		<if test="(province != null and province !='')" >
+				and province = #{province}
+		</if>
+		<if test="(city != null and city !='')" >
+				and city = #{city}
+		</if>
+		<if test="(district != null and district !='')" >
+				and district = #{district}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.airport.entity.PubAirportEntity">
+        select
+        <include refid="baseColumns" />
+        from pub_airport
+        where del_flag = 0 
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <insert id="save" parameterType="com.jiuyescm.bms.base.airport.entity.PubAirportEntity">
+        insert into pub_airport(airport_id, airport_name, province, city, district, creator, create_time, last_modifier, last_modify_time, del_flag,remark)
+        values (
+			#{airportId,jdbcType=VARCHAR}, 
+			#{airportName,jdbcType=VARCHAR}, 
+			#{province,jdbcType=VARCHAR}, 
+			#{city,jdbcType=VARCHAR}, 
+			#{district,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.base.airport.entity.PubAirportEntity">
+        update pub_airport 
+		<set >
+			<if test="airportId != null" >airport_id=#{airportId,jdbcType=VARCHAR},</if>
+			<if test="airportName != null" >airport_name=#{airportName,jdbcType=VARCHAR},</if>
+			<if test="province != null" >province=#{province,jdbcType=VARCHAR},</if>
+			<if test="city != null" >city=#{city,jdbcType=VARCHAR},</if>
+			<if test="district != null" >district=#{district,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+</mapper>

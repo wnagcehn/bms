@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuyescm.bms.general.mapper.PriceDispatchMapper">
+	<!-- 主数据 -->
+	<resultMap id="ResultMainPriceDistribution" type="com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchEntity">
+		<!-- price_deliver_detail 地址单表结果集映射字段 -->
+		<id column="priceid" jdbcType="CHAR" property="priceid" />
+		<result column="province" jdbcType="VARCHAR" property="provinceName"/>
+		<result column="cityName" jdbcType="VARCHAR" property="cityName"/>
+		<result column="areaname" jdbcType="VARCHAR" property="areaName"/>
+		<result column="id" jdbcType="BIGINT" property="id"/>
+		<result column="template_id" jdbcType="VARCHAR" property="templateId"/>
+		<result column="start_warehouse_id" jdbcType="VARCHAR" property="startWarehouseId"/>
+		<result column="province_id" jdbcType="VARCHAR" property="provinceId"/>	
+		<result column="city_id" jdbcType="VARCHAR" property="cityId"/>	
+		<result column="area_id" jdbcType="VARCHAR" property="areaId"/>	
+		<result column="area_type_code" jdbcType="VARCHAR" property="areaTypeCode"/>
+		<result column="timeliness" jdbcType="VARCHAR" property="timeliness"/>
+		<result column="weight_limit" jdbcType="DOUBLE" property="weightLimit"/>
+		<result column="unit_price" jdbcType="DOUBLE" property="unitPrice"/>
+		<result column="first_weight" jdbcType="DOUBLE" property="firstWeight"/>
+		<result column="first_weight_price" jdbcType="DOUBLE" property="firstWeightPrice"/>
+		<result column="continued_weight" jdbcType="DOUBLE" property="continuedWeight"/>
+		<result column="continued_price" jdbcType="DOUBLE" property="continuedPrice"/>
+		<result column="creator" jdbcType="VARCHAR" property="creator"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="last_modifier" jdbcType="VARCHAR" property="lastModifier"/>
+		<result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime"/>
+		<result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+		<result column="startWarehouseName" jdbcType="VARCHAR" property="startWarehouseName"/>
+		<result column="extra1" property="extra1" jdbcType="VARCHAR" />
+	    <result column="extra2" property="extra2" jdbcType="VARCHAR" />
+	    <result column="extra3" property="extra3" jdbcType="VARCHAR" />
+	    <result column="extra4" property="extra4" jdbcType="VARCHAR" />
+	</resultMap>
+
+	 <resultMap id="baseResultMap" type="com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	    <result column="start_warehouse_id" property="startWarehouseId" jdbcType="VARCHAR" />
+	    <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+	    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+	    <result column="area_id" property="areaId" jdbcType="VARCHAR" />
+	    <result column="weight_down" property="weightDown" jdbcType="DECIMAL" />
+	    <result column="weight_up" property="weightUp" jdbcType="DECIMAL" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+	    <result column="first_weight" property="firstWeight" jdbcType="DECIMAL" />
+	    <result column="first_weight_price" property="firstWeightPrice" jdbcType="DECIMAL" />
+	    <result column="continued_weight" property="continuedWeight" jdbcType="DECIMAL" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DECIMAL" />
+	    <result column="weight_limit" property="weightLimit" jdbcType="DECIMAL" />
+	    <result column="timeliness" property="timeliness" jdbcType="VARCHAR" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="product_case" property="productCase" jdbcType="VARCHAR" />
+	    <result column="area_type_code" property="areaTypeCode" jdbcType="VARCHAR" />
+	    <result column="deliverid" property="deliverid" jdbcType="VARCHAR" />
+	    <result column="mark" property="mark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+    
+	<!-- 查询主要的应收配送报价 -->
+	<select id="queryOne" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	SELECT d.id,d.template_id,d.start_warehouse_id,d.province_id,d.city_id,d.area_id,d.area_type_code,
+	d.timeliness,d.weight_limit,d.unit_price,d.first_weight,d.first_weight_price,d.continued_weight,
+	d.continued_price,d.creator,d.create_time,d.last_modifier,d.last_modify_time,d.del_flag,d.extra1, d.extra2, d.extra3, d.extra4 FROM price_dispatch_detail d 
+	where 1=1
+	<if test="(id!=null and id!='')">
+		and d.id=#{id}
+	</if>
+	<if test="(number!=null and number!='')">
+		and d.template_id=#{number,jdbcType=VARCHAR}
+	</if>
+	<if test="(createTime != null and createTime !='')" >
+		and d.create_time >= #{createTime} add <![CDATA[d.create_time <= #{createTime}]]>
+	</if>
+	<if test="(lastModifyTime != null and lastModifyTime !='')" >
+		and d.last_modify_time >= #{lastModifyTime} add <![CDATA[d.last_modify_time <= #{lastModifyTime}]]>
+	</if>
+	and d.del_flag='0' limit 1
+	</select>
+	
+	
+	<select id="queryNewOne" resultMap="baseResultMap" parameterType="java.util.Map">
+		select id, template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag
+		from bms_quote_dispatch_detail
+		where 1=1
+		<if test="(id!=null and id!='')">
+			and id=#{id}
+		</if>
+		and del_flag='0' limit 1
+	</select>
+	
+	<!-- 查询主要的应付配送报价 -->
+	<select id="queryPayOne" resultMap="ResultMainPriceDistribution" parameterType="java.util.Map">
+	SELECT d.id,d.template_id,d.start_warehouse_id,d.province_id,d.city_id,d.area_id,d.area_type_code,
+	d.timeliness,d.weight_limit,d.unit_price,d.first_weight,d.first_weight_price,d.continued_weight,
+	d.continued_price,d.creator,d.create_time,d.last_modifier,d.last_modify_time,d.del_flag,d.extra1, d.extra2, d.extra3, d.extra4 FROM price_out_dispatch_detail d 
+	where 1=1
+	<if test="(id!=null and id!='')">
+		and d.id=#{id}
+	</if>
+	<if test="(number!=null and number!='')">
+		and d.template_id=#{number,jdbcType=VARCHAR}
+	</if>
+	<if test="(createTime != null and createTime !='')" >
+		and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+	</if>
+	<if test="(lastModifyTime != null and lastModifyTime !='')" >
+		and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+	</if>
+	and d.del_flag='0' limit 1
+	</select>
+		
+	<select id="queryTemplateId" resultType="Int" parameterType="java.util.Map">
+		select b.id from price_contract_item a
+		inner JOIN price_dispatch_template b
+		on a.template_id=b.template_code and b.del_flag=0
+		 where a.contract_code=#{contractCode} and  a.subject_id=#{subjectId}
+		and  a.del_flag='0'
+	</select>
+	
+	
+	<select id="queryStandardTemplateId" resultType="Int" parameterType="java.util.Map">
+		select id from price_dispatch_template where template_type = 'S' and del_flag = '0' 
+		and deliver = #{subjectId} and customerId = #{customerId}
+	</select>
+	
+	<select id="queryOneTemplate" resultType="Int" parameterType="java.util.Map">
+		select id from price_dispatch_template where template_type = 'S' and 1=1 and del_flag = '0' 
+		and deliver = #{subjectId} and customerId = #{customerId}
+	</select>
+	
+	<select id="queryJiuYeArea" resultType="java.lang.String" parameterType="java.util.Map">		
+		select RTRIM(province_id) from price_dispatch_detail  
+		where 1=1 and del_flag='0'
+			and template_id=(
+				select id from price_dispatch_template where template_type = 'S' and 1=1 and del_flag = '0' 
+			and deliver =#{subjectId} and customerId = #{customerId})
+		  and start_warehouse_id=#{wareHouseId}
+	</select>
+	
+	<select id="queryAllByTemplateId" parameterType="java.util.Map" resultMap="baseResultMap">
+		select * from bms_quote_dispatch_detail
+		where 1=1 and del_flag='0'
+		and template_code=(select concat(b.template_code) from price_contract_item a inner JOIN price_dispatch_template b on a.template_id=b.template_code and b.del_flag=0
+		 	where a.contract_code=#{contractCode} and a.subject_id=#{subjectId} and  a.del_flag='0'
+		)
+		<if test="(wareHouseId!=null and wareHouseId!='')">
+		     and start_warehouse_id=#{wareHouseId}
+		</if>
+		<if test="(province!=null and province!='')">
+		     and province_id=#{province}
+		</if>
+		<if test="(weight!=null and weight!='')">
+			and weight_down<![CDATA[<=#{weight}]]> and weight_up>#{weight}
+		</if>
+	</select>
+	
+	<select id="queryShunfengDispatch" parameterType="java.util.Map" resultMap="baseResultMap">
+		select * from bms_quote_dispatch_detail  
+		where 1=1 and del_flag='0'
+		and template_code in (
+		select concat(template_code) from price_dispatch_template where template_type = 'S' and 1=1 and del_flag = '0' 
+			and deliver = #{subjectId} and customerId =#{customerId}
+		)
+		<if test="(wareHouseId!=null and wareHouseId!='')">
+		     and start_warehouse_id=#{wareHouseId}
+		</if>
+		<if test="(province!=null and province!='')">
+		     and province_id=#{province}
+		</if>
+		<if test="(weight!=null and weight!='')">
+			and weight_down<![CDATA[<=#{weight}]]> and weight_up>#{weight}
+		</if>
+	</select>
+	
+	<select id="queryPriceType" parameterType="java.util.Map" resultType="java.lang.String">
+		select b.price_type from price_contract_item a inner JOIN price_dispatch_template b on a.template_id=b.template_code and b.del_flag=0
+		 where a.contract_code=#{contractCode} and a.subject_id=#{subjectId} and  a.del_flag='0' limit 1
+	</select>
+	
+	<select id="queryShunfengPriceType" parameterType="java.util.Map" resultType="java.lang.String">
+		select price_type from price_dispatch_template
+		 where customerId=#{customerId} and deliver=#{subjectId} and template_type = 'S' and del_flag='0'
+	</select>	
+</mapper>

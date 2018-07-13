@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billcheck.mapper.BillCheckReceiptMapper" >
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_check_id" property="billCheckId" jdbcType="INTEGER" />
+	    <result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+	    <result column="receipt_date" property="receiptDate" jdbcType="DATE" />
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DECIMAL" />
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, bill_check_id, sort_no, receipt_date,receipt_amount,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag, remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billCheckId != null and billCheckId !='')" >
+				and bill_check_id = #{billCheckId}
+		</if>
+		<if test="(sortNo != null and sortNo !='')" >
+				and sort_no = #{sortNo}
+		</if>
+		<if test="(receiptDate != null and receiptDate !='')" >
+				and receipt_date = #{receiptDate}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_receipt
+        where 1=1 and del_flag='0'
+		<include refid="baseSelectColumns" />
+		ORDER BY receipt_date desc
+    </select>
+    
+    <select id="queryReport" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.entity.BillReceiptEntity">
+        select a.id, a.bill_check_id, a.sort_no, a.receipt_date,a.receipt_amount,a.creator_id, a.creator, a.create_time, a.last_modifier, a.last_modify_time, a.del_flag, a.remark,
+        b.create_month,b.invoice_name,b.bill_name,b.seller_name,b.area
+ 		from bill_check_receipt a inner JOIN bill_check_info b on a.bill_check_id=b.id
+ 		and a.del_flag='0' and b.del_flag='0' and b.bill_status not in ('INVALIDATE','BAD_BILL')
+		<if test="(receiptDate != null and receiptDate !='')" >
+				and a.receipt_date = #{receiptDate,jdbcType=DATE}
+		</if>
+		<if test="(receiptDateStart != null and receiptDateStart !='')" >
+				and a.receipt_date >= #{receiptDateStart,jdbcType=DATE}
+		</if>
+		<if test="(receiptDateEnd != null and receiptDateEnd !='')" >
+				and a.receipt_date <![CDATA[<= #{receiptDateEnd,jdbcType=DATE}]]>
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and b.create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and b.create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and b.create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and b.invoice_name  like '%${invoiceName}%'
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and b.bill_name like '%${billName}%'
+		</if>
+		<if test="(sellerName != null and sellerName !='')" >
+				and b.seller_name like '%${sellerName}%'
+		</if>
+		<if test="(area != null and area !='')" >
+				and b.area like '%${area}%'
+		</if>
+    </select>
+    
+    <select id="querySum" parameterType="java.util.Map"
+        resultType="java.math.BigDecimal">
+        select sum(a.receipt_amount) as totalPrice
+ 		from bill_check_receipt a inner JOIN bill_check_info b on a.bill_check_id=b.id
+ 		and a.del_flag='0' and b.del_flag='0' and b.bill_status not in ('INVALIDATE','BAD_BILL')
+		<if test="(receiptDate != null and receiptDate !='')" >
+				and a.receipt_date = #{receiptDate,jdbcType=DATE}
+		</if>
+		<if test="(receiptDateStart != null and receiptDateStart !='')" >
+				and a.receipt_date >= #{receiptDateStart,jdbcType=DATE}
+		</if>
+		<if test="(receiptDateEnd != null and receiptDateEnd !='')" >
+				and a.receipt_date <![CDATA[<= #{receiptDateEnd,jdbcType=DATE}]]>
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and b.create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and b.create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and b.create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and b.invoice_name  like '%${invoiceName}%'
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and b.bill_name like '%${billName}%'
+		</if>
+		<if test="(sellerName != null and sellerName !='')" >
+				and b.seller_name like '%${sellerName}%'
+		</if>
+		<if test="(area != null and area !='')" >
+				and b.area like '%${area}%'
+		</if>
+    </select>
+    
+	<select id="queyReceipt" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity">
+		select MAX(receipt_date) as receipt_date,sum(receipt_amount) as receipt_amount from bill_check_receipt where bill_check_id=#{id} and del_flag='0'
+	  	<if test="(receiptDate != null and receiptDate !='')" >
+				and receipt_date<![CDATA[<= #{receiptDate}]]>
+		</if>
+	</select>
+	
+	<insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity">
+        insert into bill_check_receipt(bill_check_id, sort_no, receipt_date, receipt_amount,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag, remark)
+        values (
+
+#{billCheckId,jdbcType=INTEGER}, 
+#{sortNo,jdbcType=INTEGER}, 
+#{receiptDate,jdbcType=DATE}, 
+#{receiptAmount,jdbcType=DECIMAL}, 
+#{creatorId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}, 
+#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity">
+        update bill_check_receipt 
+		<set >
+
+<if test="billCheckId != null" >bill_check_id=#{billCheckId,jdbcType=INTEGER},</if>
+<if test="sortNo != null" >sort_no=#{sortNo,jdbcType=INTEGER},</if>
+<if test="receiptDate != null" >receipt_date=#{receiptDate,jdbcType=DATE},</if>
+<if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DECIMAL},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+	
+</mapper>

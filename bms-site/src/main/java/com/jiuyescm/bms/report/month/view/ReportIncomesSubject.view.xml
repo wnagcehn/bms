@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtReportIncomesSubjectTypeQuery">
+      <PropertyDef name="sellerId">
+        <Property name="label">商家编号</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="businessCode">
+        <Property name="label">业务</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">科目</Property>
+      </PropertyDef>
+      <PropertyDef name="reportYear">
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtReportIncomesSubjectTypeEntity">
+      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportIncomesSubjectEntity</Property>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="businessCode">
+        <Property></Property>
+        <Property name="label">业务编码</Property>
+      </PropertyDef>
+      <PropertyDef name="businessName">
+        <Property></Property>
+        <Property name="label">业务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">科目</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property></Property>
+        <Property name="label">科目</Property>
+      </PropertyDef>
+      <PropertyDef name="reportYear">
+        <Property></Property>
+        <Property name="label">年份</Property>
+      </PropertyDef>
+      <PropertyDef name="amount01">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">1月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount02">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">2月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount03">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">3月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount04">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">4月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount05">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">5月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount06">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">6月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount07">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">7月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount08">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">8月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount09">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">9月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount10">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">10月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount11">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">11月</Property>
+      </PropertyDef>
+      <PropertyDef name="amount12">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">12月</Property>
+      </PropertyDef>
+      <PropertyDef name="amountSum">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">总计</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady"> var date=new Date;&#xD;
+ var year=date.getFullYear(); &#xD;
+ view.get(&quot;#formCondition.entity&quot;).set(&quot;reportYear&quot;,year);</ClientEvent>
+    <DataSet id="dsReportIncomesSubjectEntity">
+      <Property name="dataProvider">reportIncomesSubjectController#queryAll</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="dataType">[dtReportIncomesSubjectTypeEntity]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsReportIncomesSubjectQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsReportIncomesSubjectQuery&quot;).getData().insert();&#xD;
+		  </ClientEvent>
+      <Property name="dataType">[dtReportIncomesSubjectTypeQuery]</Property>
+    </DataSet>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtReportIncomesSubjectTypeQuery</Property>
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">220,220,220,220,*</Property>
+      <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsReportIncomesSubjectQuery</Property>
+      <AutoFormElement>
+        <Property name="name">sellerId</Property>
+        <Property name="property">sellerId</Property>
+        <Property name="labelWidth">80</Property>
+        <Property name="trigger">triggerCustomer2</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
+        <Property name="labelWidth">80</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">reportYear</Property>
+        <Property name="property">reportYear</Property>
+        <Property name="labelWidth">80</Property>
+        <Editor/>
+      </AutoFormElement>
+      <Button>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsReportIncomesSubjectQuery.data&quot;).current;&#xD;
+var year=data.get(&quot;reportYear&quot;);&#xD;
+if(!year){&#xD;
+	year=&quot;&quot;;&#xD;
+	dorado.MessageBox.alert(&quot;请选择年份！&quot;);&#xD;
+	return;&#xD;
+}else{&#xD;
+	year=year+&quot;年 &quot;;&#xD;
+}&#xD;
+var sellerName=data.get(&quot;sellerName&quot;);&#xD;
+var sellerId=data.get(&quot;sellerId&quot;);&#xD;
+if(!sellerName){&#xD;
+	sellerName=&quot;&quot;;&#xD;
+}else{&#xD;
+	if(sellerId!=&quot;&quot;){&#xD;
+		sellerName=sellerName+&quot; &quot;;&#xD;
+	}else{&#xD;
+		sellerName=&quot;&quot;;&#xD;
+	}&#xD;
+}&#xD;
+var wareHouseCode=data.get(&quot;warehouseCode&quot;);&#xD;
+if(!wareHouseCode){&#xD;
+	wareHouseCode=&quot;&quot;;&#xD;
+}else{&#xD;
+	wareHouseCode=wareHouseCode+&quot; &quot;;&#xD;
+}&#xD;
+&#xD;
+this.id(&quot;lblTitle&quot;).set(&quot;text&quot;,year+sellerName+wareHouseCode+&quot;收入科目分析&quot;);&#xD;
+with (view.get(&quot;#dsReportIncomesSubjectEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </Button>
+      <AutoFormElement layoutConstraint="colSpan:5;align:center">
+        <Property name="labelAlign">center</Property>
+        <Property name="labelPosition">top</Property>
+        <Property name="width">100%</Property>
+        <Property name="style">
+          <Property name="key"></Property>
+        </Property>
+        <Editor>
+          <Container>
+            <Label id="lblTitle">
+              <Property name="text">收入科目分析</Property>
+              <Property name="style">
+                <Property name="font-size">20px</Property>
+                <Property name="font-weight">bold</Property>
+                <Property name="font-family">微软雅黑</Property>
+              </Property>
+            </Label>
+          </Container>
+        </Editor>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsReportIncomesSubjectEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="groupProperty">businessCode</Property>
+      <Property name="groupOnSort">false</Property>
+      <RowNumColumn/>
+      <DataColumn name="businessCode">
+        <Property name="property">businessCode</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="businessName">
+        <Property name="property">businessName</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="subjectName">
+        <Property name="property">subjectName</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount01">
+        <Property name="property">amount01</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount02">
+        <Property name="property">amount02</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount03">
+        <Property name="property">amount03</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount04">
+        <Property name="property">amount04</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount05">
+        <Property name="property">amount05</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount06">
+        <Property name="property">amount06</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount07">
+        <Property name="property">amount07</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount08">
+        <Property name="property">amount08</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount09">
+        <Property name="property">amount09</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount10">
+        <Property name="property">amount10</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount11">
+        <Property name="property">amount11</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amount12">
+        <Property name="property">amount12</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="amountSum">
+        <Property name="property">amountSum</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+    </DataGrid>
+    <FloatPanel id="panelCustomer2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsReportIncomesSubjectQuery&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        sellerId: data.get(&quot;customerid&quot;),&#xD;
+		sellerName:data.get(&quot;customername&quot;)&#xD;
+    });&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">800</Property>
+      <Property name="height">450</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="closeable">true</Property>
+      <Property name="center">true</Property>
+      <Property name="caption">商家选择</Property>
+      <Property name="modal">true</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer2">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCustomer2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer2&quot;).show();</ClientEvent>
+      <Property name="editable">true</Property>
+    </Trigger>
+  </View>
+</ViewConfig>

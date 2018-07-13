@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtPubMaterial">
+      <Property name="creationType">com.jiuyescm.mdm.customer.vo.PubMaterialSupplierVo</Property>
+      <PropertyDef name="supplierId">
+        <Property name="dataType">Long</Property>
+        <Property name="label">供应商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierCode">
+        <Property/>
+        <Property name="label">供应商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierShortName">
+        <Property/>
+        <Property name="label">供应商简称</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierName">
+        <Property/>
+        <Property name="label">供应商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property/>
+        <Property name="label">联系人姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property/>
+        <Property name="label">供应商联系手机</Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property/>
+        <Property name="label">供应商电话</Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property/>
+        <Property name="label">供应商地址</Property>
+      </PropertyDef>
+      <PropertyDef name="zipCode">
+        <Property/>
+        <Property name="label">邮编</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="dataType">Long</Property>
+        <Property name="label">作废标记</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property/>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="version">
+        <Property/>
+        <Property name="label">版本号</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonid">
+        <Property/>
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property/>
+        <Property name="label">创建人姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonid">
+        <Property/>
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property/>
+        <Property name="label">修改人姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="label">更新时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtQuery">
+      <PropertyDef name="supplierId">
+        <Property name="dataType">Long</Property>
+        <Property name="label">供应商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierCode">
+        <Property/>
+        <Property name="label">供应商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierShortName">
+        <Property/>
+        <Property name="label">供应商简称</Property>
+      </PropertyDef>
+      <PropertyDef name="supplierName">
+        <Property/>
+        <Property name="label">供应商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property/>
+        <Property name="label">联系人姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property/>
+        <Property name="label">供应商联系手机</Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property/>
+        <Property name="label">供应商电话</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtQuery]</Property>
+    </DataSet>
+    <DataSet id="dsPubMaterial">
+      <Property name="dataProvider">pubMaterialSupplierController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="dataType">[dtPubMaterial]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPubMaterial</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data =view.get(&quot;#dsQuery.data&quot;);//获取条件查询数据&#xD;
+with (view.get(&quot;#dsPubMaterial&quot;)){&#xD;
+	set(&quot;parameter&quot;, data.current);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm>
+      <Property name="dataSet">dsQuery</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="dataType">dtQuery</Property>
+      <AutoFormElement>
+        <Property name="name">supplierId</Property>
+        <Property name="property">supplierId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">supplierCode</Property>
+        <Property name="property">supplierCode</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">supplierShortName</Property>
+        <Property name="property">supplierShortName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">supplierName</Property>
+        <Property name="property">supplierName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">linkman</Property>
+        <Property name="property">linkman</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">phone</Property>
+        <Property name="property">phone</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">tel</Property>
+        <Property name="property">tel</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <ClientEvent name="onDoubleClick">var data=view.get(&quot;#dsProject.data&quot;).current;&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;projectid&quot;,data.get(&quot;projectid&quot;));</ClientEvent>
+        <Property name="dataSet">dsPubMaterial</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="dataType">dtPubMaterial</Property>
+        <Property name="width">2000</Property>
+        <Property name="selectionMode">multiRows</Property>
+        <DataColumn name="supplierId">
+          <Property name="property">supplierId</Property>
+        </DataColumn>
+        <DataColumn name="supplierCode">
+          <Property name="property">supplierCode</Property>
+        </DataColumn>
+        <DataColumn name="supplierShortName">
+          <Property name="property">supplierShortName</Property>
+        </DataColumn>
+        <DataColumn name="supplierName">
+          <Property name="property">supplierName</Property>
+        </DataColumn>
+        <DataColumn name="linkman">
+          <Property name="property">linkman</Property>
+        </DataColumn>
+        <DataColumn name="phone">
+          <Property name="property">phone</Property>
+        </DataColumn>
+        <DataColumn name="tel">
+          <Property name="property">tel</Property>
+        </DataColumn>
+        <DataColumn name="address">
+          <Property name="property">address</Property>
+        </DataColumn>
+        <DataColumn name="zipCode">
+          <Property name="property">zipCode</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="version">
+          <Property name="property">version</Property>
+        </DataColumn>
+        <DataColumn name="crepersonid">
+          <Property name="property">crepersonid</Property>
+        </DataColumn>
+        <DataColumn name="creperson">
+          <Property name="property">creperson</Property>
+        </DataColumn>
+        <DataColumn name="cretime">
+          <Property name="property">cretime</Property>
+        </DataColumn>
+        <DataColumn name="modpersonid">
+          <Property name="property">modpersonid</Property>
+        </DataColumn>
+        <DataColumn name="modperson">
+          <Property name="property">modperson</Property>
+        </DataColumn>
+        <DataColumn name="modtime">
+          <Property name="property">modtime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

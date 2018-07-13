@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtDeptEntity" meta="child:dataTypeDept">
+      <Property name="creationType">com.jiuyescm.bms.base.group.web.DeptVoEntity</Property>
+      <PropertyDef name="id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeDept" parent="dtDeptEntity">
+      <Reference name="children">
+        <Property name="dataProvider">deptGroupController#loadDataByParent</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dtUserEntity">
+      <Property name="creationType">com.jiuyescm.iaccount.vo.UserVO</Property>
+      <PropertyDef name="username">
+        <Property/>
+        <Property name="label">用户ID</Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property/>
+        <Property name="label">地址</Property>
+      </PropertyDef>
+      <PropertyDef name="administrator">
+        <Property name="dataType">Boolean</Property>
+        <Property name="label">管理员</Property>
+      </PropertyDef>
+      <PropertyDef name="cname">
+        <Property/>
+        <Property name="label">姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="companyid">
+        <Property/>
+        <Property name="label">公司ID</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property/>
+        <Property name="label">Email</Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property name="dataType">Boolean</Property>
+        <Property name="label">启用</Property>
+      </PropertyDef>
+      <PropertyDef name="ename">
+        <Property/>
+        <Property name="label">英文名称</Property>
+      </PropertyDef>
+      <PropertyDef name="male">
+        <Property name="dataType">Boolean</Property>
+        <Property name="label">性别</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="true">男</Property>
+              </Entity>
+              <Entity>
+                <Property name="false">女</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property/>
+        <Property name="label">手机号码</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtUserQueryEntity">
+      <PropertyDef name="deptId">
+        <Property name="label">部门Id</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="userId">
+        <Property name="label">用户ID</Property>
+      </PropertyDef>
+      <PropertyDef name="userName">
+        <Property name="label">姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="label">手机号码</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsDept">
+      <Property name="dataProvider">deptGroupController#loadDataByParent</Property>
+      <Property name="dataType">[dataTypeDept]</Property>
+    </DataSet>
+    <DataSet id="dsUserQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsUserQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtUserQueryEntity]</Property>
+    </DataSet>
+    <DataSet id="dsUser">
+      <Property name="dataType">[dtUserEntity]</Property>
+      <Property name="dataProvider">deptGroupController#queryAllUserByDept</Property>
+    </DataSet>
+    <DataTree id="dataTreeDept" layoutConstraint="left">
+      <ClientEvent name="onDataRowDoubleClick">var currentEitity = view.get(&quot;#dataTreeDept&quot;).get(&quot;currentEntity&quot;);&#xD;
+var data=view.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+data.set(&quot;deptName&quot;,currentEitity.get(&quot;deptName&quot;));&#xD;
+data.set(&quot;deptId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+var ds=view.get(&quot;#dsUser&quot;);&#xD;
+ds.set(&quot;parameter&quot;,data).flushAsync();</ClientEvent>
+      <Property name="dataSet">dsDept</Property>
+      <Property name="currentNodeDataPath">currentDept</Property>
+      <Property name="width">200</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="labelProperty">deptName</Property>
+          <Property name="childrenProperty">children</Property>
+          <Property name="expandLevel">3</Property>
+          <Property name="recursive">true</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+    <AutoForm>
+      <Property name="dataSet">dsUserQuery</Property>
+      <Property name="cols">200,200,200,200,*</Property>
+      <AutoFormElement>
+        <Property name="name">deptName</Property>
+        <Property name="property">deptName</Property>
+        <Property name="editable">false</Property>
+        <Property name="readOnly">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">userId</Property>
+        <Property name="property">userId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">userName</Property>
+        <Property name="property">userName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <Button>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+var ds=view.get(&quot;#dsUser&quot;);&#xD;
+ds.set(&quot;parameter&quot;,data).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+      </Button>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsUser</Property>
+      <Property name="readOnly">true</Property>
+      <DataColumn name="username">
+        <Property name="property">username</Property>
+      </DataColumn>
+      <DataColumn name="address">
+        <Property name="property">address</Property>
+      </DataColumn>
+      <DataColumn name="administrator">
+        <Property name="property">administrator</Property>
+      </DataColumn>
+      <DataColumn name="cname">
+        <Property name="property">cname</Property>
+      </DataColumn>
+      <DataColumn name="companyid">
+        <Property name="property">companyid</Property>
+      </DataColumn>
+      <DataColumn name="email">
+        <Property name="property">email</Property>
+      </DataColumn>
+      <DataColumn name="enabled">
+        <Property name="property">enabled</Property>
+      </DataColumn>
+      <DataColumn name="ename">
+        <Property name="property">ename</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

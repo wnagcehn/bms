@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.group.BmsGroupUserEntity" >
+    	<id column="id" property="id" jdbcType="BIGINT" />
+    	<result column="id" property="id" jdbcType="BIGINT" />
+    	<result column="group_id" property="groupId" jdbcType="BIGINT" />
+    	<result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    	<result column="user_id" property="userId" jdbcType="VARCHAR" />
+    	<result column="user_name" property="userName" jdbcType="VARCHAR" />
+    	<result column="administrator" property="administrator" jdbcType="VARCHAR" />
+    	<result column="creator" property="creator" jdbcType="VARCHAR" />
+    	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+    	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryAll" resultMap="baseResultMap">
+		select id,group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time
+		from bms_group_user
+	</select>
+	<select id="queryUserGroupName" parameterType="java.lang.String" resultType="java.lang.String">
+		select b.group_name from bms_group_user a
+		inner join bms_group b
+		on a.group_id=b.id
+		where a.user_id=#{userId} limit 1
+	</select>
+	<select id="queryUserCountByGroupId" parameterType="int" resultType="int">
+		select count(*) from bms_group_user where group_id=#{groupId}
+	</select>
+	<select id="queryEntityByUserId" parameterType="java.lang.String" resultMap="baseResultMap">
+		select id,group_id,user_id,user_name,administrator,
+			creator,create_time,last_modifier,last_modify_time
+		from  bms_group_user where user_id=#{userId} limit 1
+	</select>
+	<select id="queryAllByGroupId" parameterType="java.util.Map" resultMap="baseResultMap">
+		select id,group_id,user_id,user_name,administrator,
+			creator,create_time,last_modifier,last_modify_time
+		from  bms_group_user where group_id in
+		<foreach collection="groupIds" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
+		select a.id,a.group_id,a.user_id,a.user_name,a.administrator,
+		a.creator,a.create_time,a.last_modifier,a.last_modify_time,b.group_name
+		from bms_group_user a
+		left join bms_group b on a.group_id=b.id
+		where 1=1
+		<if test="(groupId!=null and groupId!='')">
+			and group_id=#{groupId}
+		</if>
+		<if test="(userId!=null and userId!='')">
+			and user_id=#{userId}
+		</if>
+		<if test="(userName!=null and userName!='')">
+			and user_name like contcat('%',#{userName},'%')
+		</if>
+	</select>
+	<insert id="addGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		insert into bms_group_user
+		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time)
+		values
+		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime})
+	</insert>
+	<update id="updateGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		update bms_group_user
+		<set>
+			<if test="(groupId!=null and groupId!='')">group_id=#{groupId},</if>
+			<if test="(userId!=null and userId!='')">user_id=#{userId},</if>
+			<if test="(userName!=null and userName!='')">user_name=#{userName},</if>
+			<if test="(administrator!=null and administrator!='')">administrator=#{administrator},</if>
+			<if test="(creator!=null and creator!='')">creator=#{creator},</if>
+			<if test="(createTime!=null and createTime!='')">create_time=#{createTime},</if>
+			<if test="(lastModifier!=null and lastModifier!='')">last_modifier=#{lastModifier},</if>
+			<if test="(lastModifyTime!=null and lastModifyTime!='')">last_modify_time=#{lastModifyTime},</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="deleteGroupUser" parameterType="int">
+		delete from bms_group_user where id=#{id}
+	</delete>	
+</mapper>

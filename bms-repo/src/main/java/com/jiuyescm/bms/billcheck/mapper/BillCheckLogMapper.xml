@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billcheck.mapper.BillCheckLogMapper" >
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillCheckLogEntity" >
+          <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="bill_check_id" property="billCheckId" jdbcType="INTEGER" />
+   	    <result column="bill_follow_id" property="billFollowId" jdbcType="INTEGER" />
+   		<result column="bill_follow_state" property="billFollowState" jdbcType="VARCHAR" />
+	    <result column="bill_status_code" property="billStatusCode" jdbcType="VARCHAR" />
+	    <result column="dept_id" property="deptId" jdbcType="VARCHAR" />
+	    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+	    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+	    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+	    <result column="operate_desc" property="operateDesc" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+   	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+   	    <result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="log_type" property="logType" jdbcType="INTEGER" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, bill_check_id,bill_follow_id,bill_follow_state, bill_status_code, dept_id, dept_name, file_name, file_url, operate_desc, del_flag, creator, create_time, last_modifier, last_modify_time, log_type
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billCheckId != null and billCheckId !='')" >
+				and bill_check_id = #{billCheckId}
+		</if>
+		<if test="(billFollowId!=null and billFollowId!='')">
+			and bill_follow_id=#{billFollowId}
+		</if>
+		<if test="(billStatusCode != null and billStatusCode !='')" >
+				and bill_status_code = #{billStatusCode}
+		</if>
+		<if test="(deptId != null and deptId !='')" >
+				and dept_id = #{deptId}
+		</if>
+		<if test="(deptName != null and deptName !='')" >
+				and dept_name = #{deptName}
+		</if>
+		<if test="(fileName != null and fileName !='')" >
+				and file_name = #{fileName}
+		</if>
+		<if test="(fileUrl != null and fileUrl !='')" >
+				and file_url = #{fileUrl}
+		</if>
+		<if test="(operateDesc != null and operateDesc !='')" >
+				and operate_desc = #{operateDesc}
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(logType != null and logType !='')" >
+				and log_type = #{logType}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckLogEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_check_log
+        where 1=1
+		<include refid="baseSelectColumns" />
+		ORDER BY create_time DESC
+    </select>
+
+	<insert id="addCheckLog" parameterType="com.jiuyescm.bms.billcheck.BillCheckLogEntity">
+		insert into bill_check_log
+		(
+			bill_check_id,bill_follow_id,bill_follow_state,bill_status_code,dept_id,dept_name,file_name,file_url,operate_desc,del_flag,creator_id,creator,create_time,last_modifier_id,last_modifier,last_modify_time,log_type
+		)
+		values
+		(
+			#{billCheckId},#{billFollowId},#{billFollowState},#{billStatusCode},#{deptId},#{deptName},#{fileName},#{fileUrl},#{operateDesc},#{delFlag},#{creatorId},#{creator},#{createTime},#{lastModifierId},#{lastModifier},#{lastModifyTime},#{logType}
+		)
+	</insert>
+</mapper>

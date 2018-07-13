@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="dtBmsBillSubjectInfoEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity</Property>
+    <PropertyDef name="id">
+      <Property name="label">id</Property>
+    </PropertyDef>
+    <PropertyDef name="billNo">
+      <Property name="label">账单编号</Property>
+    </PropertyDef>
+    <PropertyDef name="subjectCode">
+      <Property name="label">费用科目</Property>
+    </PropertyDef>
+    <PropertyDef name="totalAmount">
+      <Property name="label">总金额</Property>
+    </PropertyDef>
+    <PropertyDef name="discountRate">
+      <Property name="label">折扣率</Property>
+    </PropertyDef>
+    <PropertyDef name="discountAmount">
+      <Property name="label">折扣金额</Property>
+    </PropertyDef>
+    <PropertyDef name="receiptAmount">
+      <Property name="label">实收金额</Property>
+    </PropertyDef>
+    <PropertyDef name="num">
+      <Property name="label">数量（订单数，托数等）</Property>
+    </PropertyDef>
+    <PropertyDef name="status">
+      <Property name="label">状态（ungenerated:未生成，generated:已生成）</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="param1">
+      <Property name="label">参数1</Property>
+    </PropertyDef>
+    <PropertyDef name="param2">
+      <Property name="label">参数2</Property>
+    </PropertyDef>
+    <PropertyDef name="param3">
+      <Property name="label">参数3</Property>
+    </PropertyDef>
+    <PropertyDef name="param4">
+      <Property name="label">参数4</Property>
+    </PropertyDef>
+    <PropertyDef name="param5">
+      <Property name="label">参数5</Property>
+    </PropertyDef>
+    <PropertyDef name="creator">
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+    <PropertyDef name="createTime">
+      <Property name="label">创建时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifier">
+      <Property name="label">修改人</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifyTime">
+      <Property name="label">修改时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="delFlag">
+      <Property name="label">删除标志（0：未删除，1：已删除）</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

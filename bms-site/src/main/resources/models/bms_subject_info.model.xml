@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="dtBmsSubjectInfoEntity" meta="x:15;y:15">
+    <Property name="matchType">com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity</Property>
+    <PropertyDef name="inOutTypecode">
+      <Property name="label">收支类型</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getInOutTypeCode&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="bizTypecode">
+      <Property name="label">业务类型</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getBizTypeCode&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="subjectName">
+      <Property name="label">费用科目名称</Property>
+    </PropertyDef>
+    <PropertyDef name="subjectCode">
+      <Property name="label">费用科目编码</Property>
+    </PropertyDef>
+    <PropertyDef name="creator">
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+    <PropertyDef name="createTime">
+      <Property name="label">创建时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifier">
+      <Property name="label">修改人</Property>
+    </PropertyDef>
+    <PropertyDef name="lastModifyTime">
+      <Property name="label">修改时间</Property>
+      <Property name="dataType">DateTime</Property>
+    </PropertyDef>
+    <PropertyDef name="delFlag">
+      <Property name="label">作废标识</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getDelFlag&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="dimen1Code">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="dimen1Sortno">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="dimen2Code">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="dimen2Sortno">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="dimen3Code">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="dimen3Sortno">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="dimen4Code">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="dimen4Sortno">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="dimen5Code">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="dimen5Sortno">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="feesType">
+      <Property></Property>
+      <Property name="label">费用类型</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getFeesTypeMap&quot;).getResult()}</Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property></Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

@@ -1,0 +1,3015 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtQuery">
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtWarehouseGroup">
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库编码</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">总金额</Property>
+      </PropertyDef>
+      <PropertyDef name="reasonId">
+        <Property name="label">客诉原因</Property>
+      </PropertyDef>
+      <PropertyDef name="reason">
+        <Property></Property>
+        <Property name="label">客诉原因</Property>
+      </PropertyDef>
+      <PropertyDef name="discountAmount">
+        <Property name="label">折扣金额</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="label">减免金额</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveAmount">
+        <Property name="label">应收金额</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillSubjectInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="totalAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">总金额</Property>
+      </PropertyDef>
+      <PropertyDef name="discountRate">
+        <Property name="dataType">Double</Property>
+        <Property name="label">折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="discountAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">折扣金额</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="label">应收金额</Property>
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsBillSubjectInfoController#getBmsBillSubjectStatus&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库ID</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="label">减免</Property>
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property></Property>
+        <Property name="label">折扣方式</Property>
+        <Property name="defaultValue">DISCOUNT_MONEY</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCompareDiffVo">
+      <PropertyDef name="status">
+        <Property name="label">状态</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="label">总重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headWeight">
+        <Property name="label">首重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="headPrice">
+        <Property name="label">首重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedWeight">
+        <Property name="label">续重重量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedPrice">
+        <Property name="label">续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="weightLimit">
+        <Property name="label">重量界限</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">金额</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtFeesReceiveTransport">
+      <Property name="creationType">com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity</Property>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;productPalletStorageController#getCustomerMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="costType">
+        <Property></Property>
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportTemplateTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_bill_transport_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="feessubjectname">
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="linename">
+        <Property></Property>
+        <Property name="label">线路名称</Property>
+      </PropertyDef>
+      <PropertyDef name="originatingcity">
+        <Property></Property>
+        <Property name="label">始发市</Property>
+      </PropertyDef>
+      <PropertyDef name="originatingdistrict">
+        <Property></Property>
+        <Property name="label">始发区</Property>
+      </PropertyDef>
+      <PropertyDef name="targetwarehouse">
+        <Property></Property>
+        <Property name="label">目的仓</Property>
+      </PropertyDef>
+      <PropertyDef name="targetcity">
+        <Property></Property>
+        <Property name="label">目的市</Property>
+      </PropertyDef>
+      <PropertyDef name="targetdistrict">
+        <Property></Property>
+        <Property name="label">目的区</Property>
+      </PropertyDef>
+      <PropertyDef name="temperaturetype">
+        <Property></Property>
+        <Property name="label">温度类型</Property>
+      </PropertyDef>
+      <PropertyDef name="category">
+        <Property></Property>
+        <Property name="label">品类</Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="volume">
+        <Property name="dataType">double</Property>
+        <Property name="label">体积</Property>
+      </PropertyDef>
+      <PropertyDef name="kilometers">
+        <Property name="dataType">double</Property>
+        <Property name="label">公里数</Property>
+      </PropertyDef>
+      <PropertyDef name="spendtime">
+        <Property name="dataType">double</Property>
+        <Property name="label">花费时间</Property>
+      </PropertyDef>
+      <PropertyDef name="carmodel">
+        <Property></Property>
+        <Property name="label">车型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCarModelList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="templatenum">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="islight">
+        <Property name="dataType">int</Property>
+        <Property name="label">是否泡货</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">否</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">是</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="unitprice">
+        <Property name="dataType">double</Property>
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="totleprice">
+        <Property name="dataType">double</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="billno">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleno">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="state">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getbillTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property></Property>
+        <Property name="label">创建人id</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonname">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property></Property>
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonname">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="extarr1">
+        <Property></Property>
+        <Property name="label">扩展字段</Property>
+      </PropertyDef>
+      <PropertyDef name="extarr2">
+        <Property></Property>
+        <Property name="label">扩展字段</Property>
+      </PropertyDef>
+      <PropertyDef name="extarr3">
+        <Property></Property>
+        <Property name="label">扩展字段</Property>
+      </PropertyDef>
+      <PropertyDef name="extarr4">
+        <Property></Property>
+        <Property name="label">扩展字段</Property>
+      </PropertyDef>
+      <PropertyDef name="extarr5">
+        <Property></Property>
+        <Property name="label">扩展字段</Property>
+      </PropertyDef>
+      <PropertyDef name="operationtime">
+        <Property name="label">操作时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="accepttime">
+        <Property name="label">揽收时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="signtime">
+        <Property name="label">签收时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="quantity">
+        <Property name="dataType">int</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="otherSubjectCode">
+        <Property></Property>
+        <Property name="label">增值费科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportSubjectTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="totalCost">
+        <Property name="dataType">double</Property>
+      </PropertyDef>
+      <PropertyDef name="projectId">
+        <Property name="label">项目ID</Property>
+      </PropertyDef>
+      <PropertyDef name="projectName">
+        <Property name="label">项目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="forwarderId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="forwarderName">
+        <Property></Property>
+        <Property name="label">承运商名称</Property>
+      </PropertyDef>
+      <PropertyDef name="originProvince">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="targetProvince">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVolume">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalPackage">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="productType">
+        <Property></Property>
+        <Property name="label">产品</Property>
+      </PropertyDef>
+      <PropertyDef name="totalBox">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="isReceiveOrder">
+        <Property></Property>
+        <Property name="label">有无回单</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptNumber">
+        <Property></Property>
+        <Property name="label">实收件数</Property>
+      </PropertyDef>
+      <PropertyDef name="returnGoods">
+        <Property></Property>
+        <Property name="label">退货</Property>
+      </PropertyDef>
+      <PropertyDef name="dispatchType">
+        <Property></Property>
+        <Property name="label">配送类型</Property>
+      </PropertyDef>
+      <PropertyDef name="goodType">
+        <Property></Property>
+        <Property name="label">货物类型</Property>
+      </PropertyDef>
+      <PropertyDef name="orderNumber">
+        <Property></Property>
+        <Property name="label">订单件数</Property>
+      </PropertyDef>
+      <PropertyDef name="orderBoxno">
+        <Property></Property>
+        <Property name="label">订单箱数</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveAddress">
+        <Property></Property>
+        <Property name="label">到达地</Property>
+      </PropertyDef>
+      <PropertyDef name="sendAddress">
+        <Property></Property>
+        <Property name="label">发货地</Property>
+      </PropertyDef>
+      <PropertyDef name="roadbillNo">
+        <Property></Property>
+        <Property name="label">路单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+        <Property name="label">外部订单号</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="orderno">
+        <Property></Property>
+        <Property name="label">订单号</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="signTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">签收时间</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtTransportQuery">
+      <PropertyDef name="orderno">
+        <Property></Property>
+        <Property name="label">订单号</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="productType">
+        <Property></Property>
+        <Property name="label">产品</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportProductTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+if(!isNullOrEmpty(myframe)){&#xD;
+	var userData=myframe.get(&quot;userData&quot;);&#xD;
+	if(userData){&#xD;
+		var billno=userData;&#xD;
+		var ds=view.get(&quot;#dsWarehouseGroup&quot;);&#xD;
+		ds.set(&quot;parameter&quot;,billno).flush();//不能用异步刷新&#xD;
+		var datas=view.get(&quot;#dsWarehouseGroup.data&quot;);&#xD;
+		var amount=0;&#xD;
+		datas.each(function(item){&#xD;
+			amount=addNum(amount,item.get(&quot;amount&quot;));&#xD;
+		});&#xD;
+		var tab=view.get(&quot;#storagedispatchTab&quot;);&#xD;
+		tab.set(&quot;caption&quot;,&quot;仓储配送( &quot;+amount+&quot; )&quot;);&#xD;
+		//异常费用 &#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;账单编号为空&quot;);&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+    <DataSet id="dsQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtQuery]</Property>
+    </DataSet>
+    <DataSet id="dsWarehouseGroup">
+      <Property name="dataType">[dtWarehouseGroup]</Property>
+      <Property name="dataProvider">bmsBillFeesController#querywarehouseAmount</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillSubjectInfo">
+      <Property name="dataType">[dtBillSubjectInfoEntity]</Property>
+      <Property name="dataProvider">bmsBillSubjectInfoController#queryAllByBillNo</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsDispatchWarehouseGroup">
+      <Property name="dataType">[dtWarehouseGroup]</Property>
+      <Property name="dataProvider">bmsBillFeesController#querywarehouseDispatchAmount</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsDispathBillSubjectInfo">
+      <Property name="dataProvider">bmsBillSubjectInfoController#queryAllByBillNo</Property>
+      <Property name="dataType">[dtBillSubjectInfoEntity]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsTransportBillSubjectInfo">
+      <Property name="dataProvider">bmsBillSubjectInfoController#queryAllByBillNo</Property>
+      <Property name="dataType">[dtBillSubjectInfoEntity]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsimportCompareVo">
+      <Property name="dataType">[dtCompareDiffVo]</Property>
+    </DataSet>
+    <DataSet id="dsFeesReceiveTransport">
+      <Property name="dataType">[dtFeesReceiveTransport]</Property>
+      <Property name="dataProvider">bmsBillFeesController#queryTransportFeePage</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsFeesReceiveTransportDetail">
+      <Property name="dataType">[dtFeesReceiveTransport]</Property>
+      <Property name="dataProvider">bmsBillFeesController#queryTransportFeeDetail</Property>
+    </DataSet>
+    <DataSet id="dsTransportQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsTransportQuery&quot;).insert();</ClientEvent>
+      <Property name="dataType">[dtTransportQuery]</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <Container>
+      <Label id="lblInfo">
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+      </Label>
+      <AutoForm>
+        <Property name="dataSet">dsQuery</Property>
+        <Property name="dataType">dtQuery</Property>
+        <Property name="cols">250,*</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <AutoFormElement>
+          <Property name="property">billNo</Property>
+          <Property name="name">billNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <Button>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+var billno=data.get(&quot;billNo&quot;);&#xD;
+if(billno){&#xD;
+	var ds=view.get(&quot;#dsWarehouseGroup&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,billno).flush();//不能用异步刷新&#xD;
+	var datas=view.get(&quot;#dsWarehouseGroup.data&quot;);&#xD;
+	var amount=0;&#xD;
+	datas.each(function(item){&#xD;
+		amount=addNum(amount,item.get(&quot;amount&quot;));&#xD;
+	});&#xD;
+	var tab=view.get(&quot;#storagedispatchTab&quot;);&#xD;
+	tab.set(&quot;caption&quot;,&quot;仓储配送( &quot;+amount+&quot; )&quot;);&#xD;
+	//异常费用 &#xD;
+	var dsAbnormal=view.get(&quot;#dsAbnormalWareHouseBill&quot;);&#xD;
+	dsAbnormal.set(&quot;parameter&quot;,billno).flush();//不能用异步刷新&#xD;
+	var abnormalAmount=0;&#xD;
+	var abnormalData=view.get(&quot;#dsAbnormalWareHouseBill.data&quot;);&#xD;
+	abnormalData.each(function(item){&#xD;
+		abnormalAmount=addNum(abnormalAmount,item.get(&quot;amount&quot;));&#xD;
+	});&#xD;
+	var abnormalTab=view.get(&quot;#abnormalTab&quot;);&#xD;
+	abnormalTab.set(&quot;caption&quot;,&quot;理赔( &quot;+abnormalAmount+&quot; )&quot;);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请输入账单编号&quot;);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+        </Button>
+      </AutoForm>
+      <AjaxAction id="ajaxGetBillAction"/>
+    </Container>
+    <TabControl>
+      <ControlTab id="storagedispatchTab">
+        <Property name="caption">仓储配送</Property>
+        <Property name="width">200</Property>
+        <Container>
+          <Property name="height">150</Property>
+          <DataGrid id="warehouseGroupGrid">
+            <ClientEvent name="onDoubleClick">var data=view.get(&quot;#dsWarehouseGroup.data&quot;).current;&#xD;
+if(data){&#xD;
+	var parameter={&#xD;
+		billNo:data.get(&quot;billNo&quot;),&#xD;
+		warehouseCode:data.get(&quot;warehouseCode&quot;),&#xD;
+		feesType:&quot;STORAGE&quot;&#xD;
+	}&#xD;
+	var ds=view.get(&quot;#dsBillSubjectInfo&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	&#xD;
+	var parameter={&#xD;
+		billNo:data.get(&quot;billNo&quot;),&#xD;
+		warehouseCode:data.get(&quot;warehouseCode&quot;),&#xD;
+		feesType:&quot;DISPATCH&quot;&#xD;
+	}&#xD;
+	var ds=view.get(&quot;#dsDispathBillSubjectInfo&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	&#xD;
+	var storageTab=view.get(&quot;#storageTab&quot;);&#xD;
+	var storagedatas=view.get(&quot;#dsBillSubjectInfo.data&quot;);&#xD;
+	var amount=0;&#xD;
+	storagedatas.each(function(item){&#xD;
+		amount=addNum(amount,item.get(&quot;totalAmount&quot;));&#xD;
+	});&#xD;
+	storageTab.set(&quot;caption&quot;,&quot;仓储( &quot;+amount+&quot; )&quot;);&#xD;
+	var dispatchTab=view.get(&quot;#dispatchTab&quot;);&#xD;
+	var dispatchDatas=view.get(&quot;#dsDispathBillSubjectInfo.data&quot;);&#xD;
+	var amountd=0;&#xD;
+	dispatchDatas.each(function(item){&#xD;
+		amountd=addNum(amountd,item.get(&quot;totalAmount&quot;));&#xD;
+	});&#xD;
+	dispatchTab.set(&quot;caption&quot;,&quot;配送( &quot;+amountd+&quot; )&quot;);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+function addNum (num1, num2) {&#xD;
+	 var sq1,sq2,m;&#xD;
+	 try {&#xD;
+	  sq1 = num1.toString().split(&quot;.&quot;)[1].length;&#xD;
+	 }&#xD;
+	 catch (e) {&#xD;
+	  sq1 = 0;&#xD;
+	 }&#xD;
+	 try {&#xD;
+	  sq2 = num2.toString().split(&quot;.&quot;)[1].length;&#xD;
+	 }&#xD;
+	 catch (e) {&#xD;
+	  sq2 = 0;&#xD;
+	 }&#xD;
+	 m = Math.pow(10,Math.max(sq1, sq2));&#xD;
+	 return (num1 * m + num2 * m) / m;&#xD;
+}</ClientEvent>
+            <Property name="dataSet">dsWarehouseGroup</Property>
+            <Property name="width">600</Property>
+            <Property name="height">150</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="billNo">
+              <Property name="property">billNo</Property>
+            </DataColumn>
+            <DataColumn name="warehouseName">
+              <Property name="property">warehouseName</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">amount</Property>
+              <Property name="name">amount</Property>
+            </DataColumn>
+            <DataColumn name="discountAmount">
+              <Property name="property">discountAmount</Property>
+            </DataColumn>
+            <DataColumn name="derateAmount">
+              <Property name="property">derateAmount</Property>
+            </DataColumn>
+            <DataColumn name="receiveAmount">
+              <Property name="property">receiveAmount</Property>
+            </DataColumn>
+          </DataGrid>
+          <TabControl>
+            <ControlTab id="storageTab">
+              <Property name="caption">仓储</Property>
+              <Property name="width">300</Property>
+              <Container id="containerTop">
+                <Container>
+                  <DataGrid id="mainGrid">
+                    <ClientEvent name="onDoubleClick">var data=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var subjectCode=data.get(&quot;subjectCode&quot;);&#xD;
+view.get(&quot;#lblBillNo&quot;).set(&quot;text&quot;,data.get(&quot;billNo&quot;));&#xD;
+var tab={};&#xD;
+tab.$type = &quot;IFrame&quot;;&#xD;
+tab.closeable = true;&#xD;
+switch(subjectCode){&#xD;
+	case &quot;wh_product_storage&quot;:&#xD;
+	case &quot;wh_product_pallet_storage&quot;:&#xD;
+	tab.name=&quot;商品存储费&quot;;&#xD;
+	tab.caption=&quot;商品存储费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.ProductStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_material_storage&quot;:&#xD;
+	tab.name=&quot;耗材存储费&quot;;&#xD;
+	tab.caption=&quot;耗材存储费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.PackStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_b2c_work&quot;:&#xD;
+	tab.name=&quot;订单操作费&quot;;&#xD;
+	tab.caption=&quot;订单操作费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.OutStockLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_material_use&quot;:&#xD;
+	tab.name=&quot;耗材报价&quot;;&#xD;
+	tab.caption=&quot;耗材报价&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.MaterialLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_value_add_subject&quot;:&#xD;
+	tab.name=&quot;增值报价&quot;;&#xD;
+	tab.caption=&quot;增值报价&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.OtherStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+}&#xD;
+if(tab.path){&#xD;
+	 with (view.get(&quot;#tabControl&quot;)){&#xD;
+	 	var currentTab = getTab(tab.name);&#xD;
+        if (currentTab) {&#xD;
+            tab = currentTab;&#xD;
+        } else {&#xD;
+            // 获取ID为tabControl的对象，并添加一个新的Tab&#xD;
+            // 设定ID为tabControl的对象的当前Tab为新创建的Tab&#xD;
+            tab = addTab(tab);&#xD;
+        }&#xD;
+        // 设定当前的Tab为制定的tab&#xD;
+        set(&quot;currentTab&quot;, tab);&#xD;
+	 }&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="readOnly">true</Property>
+                    <Property name="dataSet">dsBillSubjectInfo</Property>
+                    <DataColumn>
+                      <Property name="property">subjectName</Property>
+                      <Property name="name">subjectName</Property>
+                    </DataColumn>
+                    <DataColumn name="totalAmount">
+                      <Property name="property">totalAmount</Property>
+                    </DataColumn>
+                    <DataColumn name="discountAmount">
+                      <Property name="property">discountAmount</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <Property name="property">derateAmount</Property>
+                      <Property name="name">derateAmount</Property>
+                      <Editor/>
+                    </DataColumn>
+                    <DataColumn name="receiptAmount">
+                      <Property name="property">receiptAmount</Property>
+                    </DataColumn>
+                    <DataColumn name="num">
+                      <Property name="property">num</Property>
+                    </DataColumn>
+                    <DataColumn name="status">
+                      <Property name="property">status</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <ClientEvent name="onRenderCell">var detailFrame= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+var detailData=detailFrame.get(&quot;userData&quot;);&#xD;
+var billsatus=&#xD;
+jQuery(arg.dom).empty();&#xD;
+var status=arg.data.get(&quot;status&quot;);&#xD;
+var timestamp = Date.parse(new Date());&#xD;
+switch(status){&#xD;
+	case &quot;DELETE&quot;://已删除&#xD;
+	createDeleteLink();&#xD;
+	break;&#xD;
+	case &quot;GENERATED&quot;://已生成&#xD;
+	createGeneratedLink();&#xD;
+	break;&#xD;
+	case &quot;UPDATE&quot;://重新生成&#xD;
+	createUpdateLink();&#xD;
+	break;&#xD;
+	case &quot;CONFIRM&quot;:&#xD;
+	createConfirmLink();&#xD;
+	break;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+function flush(){&#xD;
+	var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+	if(!isNullOrEmpty(myframe)){&#xD;
+		var userData=myframe.get(&quot;userData&quot;);&#xD;
+		if(userData){&#xD;
+			var billno=userData;&#xD;
+			var ds=view.get(&quot;#dsWarehouseGroup&quot;);&#xD;
+			ds.set(&quot;parameter&quot;,billno).flush();//不能用异步刷新&#xD;
+			var datas=view.get(&quot;#dsWarehouseGroup.data&quot;);&#xD;
+			var amount=0;&#xD;
+			datas.each(function(item){&#xD;
+				amount=addNum(amount,item.get(&quot;amount&quot;));&#xD;
+			});&#xD;
+			var tab=view.get(&quot;#storagedispatchTab&quot;);&#xD;
+			tab.set(&quot;caption&quot;,&quot;仓储配送( &quot;+amount+&quot; )&quot;);&#xD;
+			//异常费用 &#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;账单编号为空&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+function createConfirmLink(){&#xD;
+	jQuery(arg.dom).xCreate(&#xD;
+	{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var parameter={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;STORAGE&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				switch(subjectCode){&#xD;
+					case &quot;wh_product_storage&quot;://商品存储费&#xD;
+					case &quot;wh_product_pallet_storage&quot;:&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.ProductStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_material_storage&quot;://耗材存储费&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.PackStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_b2c_work&quot;://订单操作费&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.OutStockLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_material_use&quot;://耗材报价&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.MaterialLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_value_add_subject&quot;://耗材报价&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.OtherStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;Abnormal_Storage&quot;://理赔费用&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					default:&#xD;
+					iframe.set(&quot;path&quot;,&quot;&quot;);&#xD;
+					break;&#xD;
+				}&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		}&#xD;
+	);&#xD;
+}&#xD;
+function createUpdateLink(){&#xD;
+	jQuery(arg.dom).xCreate([{&#xD;
+		  tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;重新计算&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要重新计算【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+					if(subjectCode==&quot;Abnormal_Storage&quot;)&#xD;
+					{&#xD;
+						var action=view.get(&quot;#reStorageAbnormalAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+					else&#xD;
+					{&#xD;
+						var action=view.get(&quot;#reStorageBillAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+					&#xD;
+				});&#xD;
+	    	}&#xD;
+	},{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var parameter={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;STORAGE&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				switch(subjectCode){&#xD;
+					case &quot;wh_product_storage&quot;://商品存储费&#xD;
+					case &quot;wh_product_pallet_storage&quot;:&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.ProductStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_material_storage&quot;://耗材存储费&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.PackStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_b2c_work&quot;://订单操作费&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.OutStockLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_material_use&quot;://耗材报价&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.MaterialLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_value_add_subject&quot;://耗材报价&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.OtherStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;Abnormal_Storage&quot;://理赔费用&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					default:&#xD;
+					iframe.set(&quot;path&quot;,&quot;&quot;);&#xD;
+					break;&#xD;
+				}&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createGeneratedLink(){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;折扣&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogDiscount&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var parameter={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;STORAGE&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				switch(subjectCode){&#xD;
+					case &quot;wh_product_storage&quot;://商品存储费&#xD;
+					case &quot;wh_product_pallet_storage&quot;:&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.ProductStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_material_storage&quot;://耗材存储费&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.PackStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_b2c_work&quot;://订单操作费&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.OutStockLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_material_use&quot;://耗材报价&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.MaterialLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;wh_value_add_subject&quot;://耗材报价&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.OtherStorageLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					case &quot;Abnormal_Storage&quot;://理赔费用&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+					break;&#xD;
+					default:&#xD;
+					iframe.set(&quot;path&quot;,&quot;&quot;);&#xD;
+					break;&#xD;
+				}&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;清空账单&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要清空【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+					if(subjectCode==&quot;Abnormal_Storage&quot;){&#xD;
+						var action=view.get(&quot;#deleteStorageAbnormalAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}else{&#xD;
+						var action=view.get(&quot;#deleteStorageBillAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+				});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createDeleteLink(){&#xD;
+	jQuery(arg.dom).xCreate({&#xD;
+		  tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;重新计算&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要重新计算【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+					if(subjectCode==&quot;Abnormal_Storage&quot;)&#xD;
+					{&#xD;
+						var action=view.get(&quot;#reStorageAbnormalAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+					else&#xD;
+					{&#xD;
+						var action=view.get(&quot;#reStorageBillAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+					&#xD;
+				});&#xD;
+	    	}&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+                      <Property name="caption">操作</Property>
+                      <Property name="align">center</Property>
+                      <Property name="width">300</Property>
+                      <Editor/>
+                    </DataColumn>
+                  </DataGrid>
+                </Container>
+                <Dialog id="dialogDiscount">
+                  <Property name="width">400</Property>
+                  <Property name="height">400</Property>
+                  <Property name="caption">折扣费用</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var action=view.get(&quot;#discountAction&quot;);&#xD;
+&#xD;
+var entity=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var discountType=entity.get(&quot;discountType&quot;);&#xD;
+&#xD;
+if(discountType=='DISCOUNT_RATIO'){&#xD;
+	var discountRate=entity.get(&quot;discountRate&quot;);&#xD;
+	if(isNullOrEmpty(discountRate)){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能为空！&quot;);&#xD;
+		return;&#xD;
+	}	&#xD;
+	if(parseFloat(discountRate)>100){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能超过百分百！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;操作成功&quot;);&#xD;
+	view.get(&quot;#dsWarehouseGroup&quot;).flush();&#xD;
+	view.get(&quot;#dialogDiscount&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+                      <Property name="caption">确认</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">view.get(&quot;#dialogDiscount&quot;).hide();&#xD;
+</ClientEvent>
+                      <Property name="caption">关闭</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <Property name="dataSet">dsBillSubjectInfo</Property>
+                      <Property name="cols">*,*</Property>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">billNo</Property>
+                        <Property name="property">billNo</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="property">billName</Property>
+                        <Property name="name">billName</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="property">customerName</Property>
+                        <Property name="name">customerName</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">subjectName</Property>
+                        <Property name="property">subjectName</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">totalAmount</Property>
+                        <Property name="property">totalAmount</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <Label layoutConstraint="align:left;colSpan:2">
+                        <Property name="text">折扣方式</Property>
+                      </Label>
+                      <RadioGroup id="discountType" layoutConstraint="colSpan:2">
+                        <ClientEvent name="onValueChange">var currentValue= self._value;&#xD;
+if(currentValue == 'DISCOUNT_MONEY'){&#xD;
+	view.get(&quot;#discountAmount&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#discountAmount&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.get(&quot;#discountRate&quot;).set(&quot;visible&quot;, false);&#xD;
+	view.get(&quot;#te&quot;).set(&quot;visible&quot;, false);&#xD;
+	var data = this.get(&quot;#dsBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_MONEY',&#xD;
+		discountRate:''&#xD;
+	});&#xD;
+}else if (currentValue == 'DISCOUNT_RATIO'){&#xD;
+	view.get(&quot;#discountAmount&quot;).set(&quot;readOnly&quot;, true);&#xD;
+	view.get(&quot;#discountRate&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#te&quot;).set(&quot;visible&quot;, true);&#xD;
+	var data = this.get(&quot;#dsBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_RATIO',&#xD;
+	});&#xD;
+}</ClientEvent>
+                        <ClientEvent name="onReady">var data = this.get(&quot;#dsBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	discountType:'DISCOUNT_MONEY'&#xD;
+});</ClientEvent>
+                        <Property name="layout">grid</Property>
+                        <Property name="property">discountType</Property>
+                        <Property name="value">DISCOUNT_MONEY</Property>
+                        <RadioButton>
+                          <Property name="text">折扣金额</Property>
+                          <Property name="value">DISCOUNT_MONEY</Property>
+                          <Property name="readOnly">false</Property>
+                        </RadioButton>
+                        <RadioButton>
+                          <Property name="text">折扣率</Property>
+                          <Property name="value">DISCOUNT_RATIO</Property>
+                        </RadioButton>
+                      </RadioGroup>
+                      <AutoFormElement id="discountRate" layoutConstraint="colSpan:1">
+                        <ClientEvent name="onBlur">var data=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var discountRate=data.get(&quot;discountRate&quot;);&#xD;
+if(discountRate!=null&amp;&amp;discountRate!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var discountAmount=accSub(totalAmount,(totalAmount*discountRate/100).toFixed(2));&#xD;
+	var receiptAmount=accSub(totalAmount,addNum(derateAmount,discountAmount));&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+	data.set(&quot;discountAmount&quot;,discountAmount);&#xD;
+}</ClientEvent>
+                        <Property name="name">discountRate</Property>
+                        <Property name="property">discountRate</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="editorWidth">60</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <Label id="te" layoutConstraint="align:left;colSpan:1">
+                        <Property name="text">%</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                      </Label>
+                      <AutoFormElement id="discountAmount" layoutConstraint="colSpan:2">
+                        <ClientEvent name="onBlur">var data=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var discountAmount=data.get(&quot;discountAmount&quot;);&#xD;
+if(discountAmount!=null&amp;&amp;discountAmount!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var receiptAmount=accSub(totalAmount,addNum(derateAmount,discountAmount));	&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+}&#xD;
+</ClientEvent>
+                        <Property name="name">discountAmount</Property>
+                        <Property name="property">discountAmount</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="property">derateAmount</Property>
+                        <Property name="name">derateAmount</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">receiptAmount</Property>
+                        <Property name="property">receiptAmount</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">num</Property>
+                        <Property name="property">num</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <Dialog id="dialogAcountDetail">
+                  <ClientEvent name="onClose">var data=view.get(&quot;#dsWarehouseGroup.data&quot;).current;&#xD;
+if(data){&#xD;
+	var parameter={&#xD;
+		billNo:data.get(&quot;billNo&quot;),&#xD;
+		warehouseCode:data.get(&quot;warehouseCode&quot;),&#xD;
+		feesType:&quot;STORAGE&quot;&#xD;
+	}&#xD;
+	var ds=view.get(&quot;#dsBillSubjectInfo&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	&#xD;
+	var parameter={&#xD;
+		billNo:data.get(&quot;billNo&quot;),&#xD;
+		warehouseCode:data.get(&quot;warehouseCode&quot;),&#xD;
+		feesType:&quot;DISPATCH&quot;&#xD;
+	}&#xD;
+	var ds=view.get(&quot;#dsDispathBillSubjectInfo&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,parameter).flush();	&#xD;
+	&#xD;
+	view.get(&quot;#dsWarehouseGroup&quot;).flush();&#xD;
+	&#xD;
+	var storageTab=view.get(&quot;#storageTab&quot;);&#xD;
+	var storagedatas=view.get(&quot;#dsBillSubjectInfo.data&quot;);&#xD;
+	var amount=0;&#xD;
+	storagedatas.each(function(item){&#xD;
+		amount=addNum(amount,item.get(&quot;totalAmount&quot;));&#xD;
+	});&#xD;
+	storageTab.set(&quot;caption&quot;,&quot;仓储( &quot;+amount+&quot; )&quot;);&#xD;
+	var dispatchTab=view.get(&quot;#dispatchTab&quot;);&#xD;
+	var dispatchDatas=view.get(&quot;#dsDispathBillSubjectInfo.data&quot;);&#xD;
+	var amountd=0;&#xD;
+	dispatchDatas.each(function(item){&#xD;
+		amountd=addNum(amountd,item.get(&quot;totalAmount&quot;));&#xD;
+	});&#xD;
+	dispatchTab.set(&quot;caption&quot;,&quot;配送( &quot;+amountd+&quot; )&quot;);&#xD;
+}</ClientEvent>
+                  <ClientEvent name="onHide">var data=view.get(&quot;#dsWarehouseGroup.data&quot;).current;&#xD;
+if(data){&#xD;
+	var parameter={&#xD;
+		billNo:data.get(&quot;billNo&quot;),&#xD;
+		warehouseCode:data.get(&quot;warehouseCode&quot;),&#xD;
+		feesType:&quot;STORAGE&quot;&#xD;
+	}&#xD;
+	var ds=view.get(&quot;#dsBillSubjectInfo&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	&#xD;
+	var parameter={&#xD;
+		billNo:data.get(&quot;billNo&quot;),&#xD;
+		warehouseCode:data.get(&quot;warehouseCode&quot;),&#xD;
+		feesType:&quot;DISPATCH&quot;&#xD;
+	}&#xD;
+	var ds=view.get(&quot;#dsDispathBillSubjectInfo&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+&#xD;
+	view.get(&quot;#dsWarehouseGroup&quot;).flush();&#xD;
+&#xD;
+	var storageTab=view.get(&quot;#storageTab&quot;);&#xD;
+	var storagedatas=view.get(&quot;#dsBillSubjectInfo.data&quot;);&#xD;
+	var amount=0;&#xD;
+	storagedatas.each(function(item){&#xD;
+		amount=addNum(amount,item.get(&quot;totalAmount&quot;));&#xD;
+	});&#xD;
+	storageTab.set(&quot;caption&quot;,&quot;仓储( &quot;+amount+&quot; )&quot;);&#xD;
+	var dispatchTab=view.get(&quot;#dispatchTab&quot;);&#xD;
+	var dispatchDatas=view.get(&quot;#dsDispathBillSubjectInfo.data&quot;);&#xD;
+	var amountd=0;&#xD;
+	dispatchDatas.each(function(item){&#xD;
+		amountd=addNum(amountd,item.get(&quot;totalAmount&quot;));&#xD;
+	});&#xD;
+	dispatchTab.set(&quot;caption&quot;,&quot;配送( &quot;+amountd+&quot; )&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="caption">费用明细</Property>
+                  <Property name="width">830</Property>
+                  <Property name="height">480</Property>
+                  <Buttons/>
+                  <Children>
+                    <IFrame id="myframe"/>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+              </Container>
+            </ControlTab>
+            <ControlTab id="dispatchTab">
+              <Property name="caption">配送</Property>
+              <Property name="width">300</Property>
+              <Container>
+                <Container>
+                  <DataGrid id="dispatchGroupGrid">
+                    <ClientEvent name="onDoubleClick">var data=view.get(&quot;#dsBillSubjectInfo.data&quot;).current;&#xD;
+var subjectCode=data.get(&quot;subjectCode&quot;);&#xD;
+view.get(&quot;#lblBillNo&quot;).set(&quot;text&quot;,data.get(&quot;billNo&quot;));&#xD;
+var tab={};&#xD;
+tab.$type = &quot;IFrame&quot;;&#xD;
+tab.closeable = true;&#xD;
+switch(subjectCode){&#xD;
+	case &quot;wh_product_storage&quot;: &#xD;
+	case &quot;wh_product_pallet_storage&quot;:&#xD;
+	tab.name=&quot;商品存储费&quot;;&#xD;
+	tab.caption=&quot;商品存储费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.ProductStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_material_storage&quot;:&#xD;
+	tab.name=&quot;耗材存储费&quot;;&#xD;
+	tab.caption=&quot;耗材存储费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.PackStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_b2c_work&quot;:&#xD;
+	tab.name=&quot;订单操作费&quot;;&#xD;
+	tab.caption=&quot;订单操作费&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.OutStockLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_material_use&quot;:&#xD;
+	tab.name=&quot;耗材报价&quot;;&#xD;
+	tab.caption=&quot;耗材报价&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.MaterialLookUp.d&quot;;&#xD;
+	break;&#xD;
+	case &quot;wh_value_add_subject&quot;:&#xD;
+	tab.name=&quot;增值报价&quot;;&#xD;
+	tab.caption=&quot;增值报价&quot;;&#xD;
+	tab.path=&quot;com.jiuyescm.bms.bill.receive.lookup.OtherStorageLookUp.d&quot;;&#xD;
+	break;&#xD;
+}&#xD;
+if(tab.path){&#xD;
+	 with (view.get(&quot;#tabControl&quot;)){&#xD;
+	 	var currentTab = getTab(tab.name);&#xD;
+        if (currentTab) {&#xD;
+            tab = currentTab;&#xD;
+        } else {&#xD;
+            // 获取ID为tabControl的对象，并添加一个新的Tab&#xD;
+            // 设定ID为tabControl的对象的当前Tab为新创建的Tab&#xD;
+            tab = addTab(tab);&#xD;
+        }&#xD;
+        // 设定当前的Tab为制定的tab&#xD;
+        set(&quot;currentTab&quot;, tab);&#xD;
+	 }&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="readOnly">true</Property>
+                    <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+                    <DataColumn>
+                      <Property name="property">subjectName</Property>
+                      <Property name="name">subjectName</Property>
+                    </DataColumn>
+                    <DataColumn name="totalAmount">
+                      <Property name="property">totalAmount</Property>
+                    </DataColumn>
+                    <DataColumn name="discountAmount">
+                      <Property name="property">discountAmount</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <Property name="property">derateAmount</Property>
+                      <Property name="name">derateAmount</Property>
+                      <Editor/>
+                    </DataColumn>
+                    <DataColumn name="receiptAmount">
+                      <Property name="property">receiptAmount</Property>
+                    </DataColumn>
+                    <DataColumn name="num">
+                      <Property name="property">num</Property>
+                    </DataColumn>
+                    <DataColumn name="status">
+                      <Property name="property">status</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <ClientEvent name="onRenderCell">var detailFrame= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+var detailData=detailFrame.get(&quot;userData&quot;);&#xD;
+jQuery(arg.dom).empty();&#xD;
+var status=arg.data.get(&quot;status&quot;);&#xD;
+switch(status){&#xD;
+	case &quot;DELETE&quot;://已删除&#xD;
+	createDeleteLink();&#xD;
+	break;&#xD;
+	case &quot;GENERATED&quot;://已生成&#xD;
+	createGeneratedLink();&#xD;
+	break;&#xD;
+	case &quot;UPDATE&quot;:&#xD;
+	createUpdateLink();&#xD;
+	break;&#xD;
+	case &quot;CONFIRM&quot;:&#xD;
+	createConfirmLink()&#xD;
+	break;&#xD;
+}&#xD;
+&#xD;
+function flush(){&#xD;
+	var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+	if(!isNullOrEmpty(myframe)){&#xD;
+		var userData=myframe.get(&quot;userData&quot;);&#xD;
+		if(userData){&#xD;
+			var billno=userData;&#xD;
+			var ds=view.get(&quot;#dsWarehouseGroup&quot;);&#xD;
+			ds.set(&quot;parameter&quot;,billno).flush();//不能用异步刷新&#xD;
+			var datas=view.get(&quot;#dsWarehouseGroup.data&quot;);&#xD;
+			var amount=0;&#xD;
+			datas.each(function(item){&#xD;
+				amount=addNum(amount,item.get(&quot;amount&quot;));&#xD;
+			});&#xD;
+			var tab=view.get(&quot;#storagedispatchTab&quot;);&#xD;
+			tab.set(&quot;caption&quot;,&quot;仓储配送( &quot;+amount+&quot; )&quot;);&#xD;
+			//异常费用 &#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;账单编号为空&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+function createConfirmLink(){&#xD;
+	jQuery(arg.dom).xCreate(&#xD;
+	{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var data={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;DISPATCH&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,data);&#xD;
+				var timestamp = Date.parse(new Date());&#xD;
+				if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}else{&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.DispatchLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}&#xD;
+				&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		}&#xD;
+	);&#xD;
+}&#xD;
+function createUpdateLink(){&#xD;
+	jQuery(arg.dom).xCreate([{&#xD;
+		  tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;重新计算&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要重新计算【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+						if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;)&#xD;
+						{&#xD;
+							var action=view.get(&quot;#reDispatchAbnormalAction&quot;);&#xD;
+							action.execute(function(){&#xD;
+								dorado.MessageBox.alert(&quot;重新生成账单成功!&quot;);&#xD;
+								flush();&#xD;
+							});	&#xD;
+						}&#xD;
+						else&#xD;
+						{&#xD;
+							var action=view.get(&quot;#reDispatchAction&quot;);&#xD;
+							action.execute(function(){&#xD;
+								dorado.MessageBox.alert(&quot;重新生成账单成功!&quot;);&#xD;
+								flush();&#xD;
+							});	&#xD;
+						}&#xD;
+				});&#xD;
+	    	}&#xD;
+	},{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var data={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;DISPATCH&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,data);&#xD;
+				var timestamp = Date.parse(new Date());&#xD;
+				if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}else{&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.DispatchLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createAbnormalGeneratedLink(){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;折扣&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogDiscountDispatch&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var data={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;DISPATCH&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,data);&#xD;
+				var timestamp = Date.parse(new Date());&#xD;
+				if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}else{&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.DispatchLookUp.d？timestamp=&quot;+timestamp);&#xD;
+				}&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;清空账单&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要清空【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+					if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+						var action=view.get(&quot;#deleteDispatchAbnormalAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}else{&#xD;
+						var action=view.get(&quot;#deleteDispatchBillAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+				});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createGeneratedLink(){&#xD;
+	var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+	if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+		createAbnormalGeneratedLink();&#xD;
+		return;&#xD;
+	}&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;折扣&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogDiscountDispatch&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;费用详情&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				var status=arg.data.get(&quot;status&quot;);&#xD;
+				var billNo=arg.data.get(&quot;billNo&quot;);&#xD;
+				var warehouseCode=arg.data.get(&quot;warehouseCode&quot;);&#xD;
+				var customerId=arg.data.get(&quot;customerId&quot;);&#xD;
+				var data={&#xD;
+					billno:billNo,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					status:status,&#xD;
+					subjectCode:subjectCode,&#xD;
+					feesType:&quot;DISPATCH&quot;,&#xD;
+					customerId:customerId,&#xD;
+					customerName:detailData.customerName,&#xD;
+					startTime:detailData.startTime,&#xD;
+					endTime:detailData.endTime&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#myframe&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,data);&#xD;
+				var timestamp = Date.parse(new Date());&#xD;
+				if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.AbnormalLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}else{&#xD;
+					iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.DispatchLookUp.d?timestamp=&quot;+timestamp);&#xD;
+				}&#xD;
+				var dialog=view.get(&quot;#dialogAcountDetail&quot;);&#xD;
+				dialog.set(&quot;caption&quot;,&quot;【&quot;+subjectName+&quot;】费用明细&quot;);&#xD;
+				dialog.show();&#xD;
+				&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;清空账单&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要清空【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+					if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+						var action=view.get(&quot;#deleteDispatchAbnormalAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}else{&#xD;
+						var action=view.get(&quot;#deleteDispatchBillAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+				});&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+			 tagName: &quot;A&quot;,&#xD;
+			 href:&quot;#20%&quot;,&#xD;
+			 content:&quot;对账&quot;,&#xD;
+			 style:&quot;margin-left:10px;&quot;,&#xD;
+			 onclick:function(){&#xD;
+				var action=view.get(&quot;#uploadImportCompareAction&quot;);&#xD;
+				var parameterData={&#xD;
+					&quot;billNo&quot;:arg.data.get(&quot;billNo&quot;),&#xD;
+					&quot;warehouseCode&quot;:arg.data.get(&quot;warehouseCode&quot;),&#xD;
+					&quot;subjectCode&quot;:arg.data.get(&quot;subjectCode&quot;)&#xD;
+				}&#xD;
+				action.set(&quot;parameter&quot;,parameterData);&#xD;
+				&#xD;
+			    //view.get(&quot;#uploadImportCompareAction&quot;).set(&quot;parameter&quot;,{&quot;templateId&quot;:entity.get(&quot;id&quot;)});&#xD;
+			 	//view.get(&quot;#uploadImportCompareAction&quot;),set(&quot;parameter&quot;,paramater);&#xD;
+			 	view.get(&quot;#importCompareDialog&quot;).show();&#xD;
+			 }&#xD;
+		},&#xD;
+		{&#xD;
+			 tagName: &quot;A&quot;,&#xD;
+			 href:&quot;#20%&quot;,&#xD;
+			 content:&quot;对账模板下载&quot;,&#xD;
+			 style:&quot;margin-left:10px;&quot;,&#xD;
+			 onclick:function(){&#xD;
+				view.get(&quot;#downloadTemplateAction&quot;).execute();&#xD;
+			 }&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createDeleteLink(){&#xD;
+	jQuery(arg.dom).xCreate({&#xD;
+		  tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;重新生成&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var subjectName=arg.data.get(&quot;subjectName&quot;);&#xD;
+				var subjectCode=arg.data.get(&quot;subjectCode&quot;);&#xD;
+				dorado.MessageBox.confirm(&quot;确认要重新计算【&quot;+subjectName+&quot;】账单&quot;,function(){&#xD;
+					if(subjectCode==&quot;Abnormal_Dispatch&quot;||subjectCode==&quot;Abnormal_DisChange&quot;){&#xD;
+						var action=view.get(&quot;#reDispatchAbnormalAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}else{&#xD;
+						var action=view.get(&quot;#reDispatchAction&quot;);&#xD;
+						action.execute(function(){&#xD;
+							dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+							flush();&#xD;
+						});&#xD;
+					}&#xD;
+					&#xD;
+				});&#xD;
+	    	}&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+                      <Property name="caption">操作</Property>
+                      <Property name="align">center</Property>
+                      <Property name="width">300</Property>
+                      <Editor/>
+                    </DataColumn>
+                  </DataGrid>
+                </Container>
+                <Dialog id="dialogDiscountDispatch">
+                  <Property name="width">400</Property>
+                  <Property name="height">400</Property>
+                  <Property name="caption">折扣费用</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var action=view.get(&quot;#discountDispatchAction&quot;);&#xD;
+&#xD;
+var entity=view.get(&quot;#dsDispathBillSubjectInfo.data&quot;).current;&#xD;
+var discountType=entity.get(&quot;discountType&quot;);&#xD;
+&#xD;
+if(discountType=='DISCOUNT_RATIO'){&#xD;
+	var discountRate=entity.get(&quot;discountRate&quot;);&#xD;
+	if(isNullOrEmpty(discountRate)){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能为空！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(parseFloat(discountRate)>100){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能超过百分百！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;操作成功&quot;);&#xD;
+	view.get(&quot;#dsWarehouseGroup&quot;).flush();&#xD;
+	view.get(&quot;#dialogDiscountDispatch&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+                      <Property name="caption">确认</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">view.get(&quot;#dialogDiscountDispatch&quot;).hide();&#xD;
+</ClientEvent>
+                      <Property name="caption">关闭</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm id="dispatchForm">
+                      <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+                      <Property name="cols">*,*</Property>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">billNo</Property>
+                        <Property name="property">billNo</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="property">billName</Property>
+                        <Property name="name">billName</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="property">customerName</Property>
+                        <Property name="name">customerName</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">subjectName</Property>
+                        <Property name="property">subjectName</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">totalAmount</Property>
+                        <Property name="property">totalAmount</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <Label layoutConstraint="align:left;colSpan:2">
+                        <Property name="text">折扣方式</Property>
+                      </Label>
+                      <RadioGroup id="discountType1" layoutConstraint="colSpan:2">
+                        <ClientEvent name="onValueChange">var currentValue= self._value;&#xD;
+if(currentValue == 'DISCOUNT_MONEY'){&#xD;
+	view.get(&quot;#discountAmount1&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#discountAmount1&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.get(&quot;#discountRate1&quot;).set(&quot;visible&quot;, false);&#xD;
+	view.get(&quot;#te1&quot;).set(&quot;visible&quot;, false);&#xD;
+	var data = this.get(&quot;#dsDispathBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_MONEY',&#xD;
+		discountRate:''&#xD;
+	});&#xD;
+}else if (currentValue == 'DISCOUNT_RATIO'){&#xD;
+	view.get(&quot;#discountAmount1&quot;).set(&quot;readOnly&quot;, true);&#xD;
+	view.get(&quot;#discountRate1&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#te1&quot;).set(&quot;visible&quot;, true);&#xD;
+	var data = this.get(&quot;#dsDispathBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_RATIO',&#xD;
+	});&#xD;
+}</ClientEvent>
+                        <ClientEvent name="onReady">var data = this.get(&quot;#dsDispathBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	discountType:'DISCOUNT_MONEY'&#xD;
+});</ClientEvent>
+                        <Property name="layout">grid</Property>
+                        <Property name="property">discountType</Property>
+                        <Property name="value">DISCOUNT_MONEY</Property>
+                        <RadioButton>
+                          <Property name="text">折扣金额</Property>
+                          <Property name="value">DISCOUNT_MONEY</Property>
+                          <Property name="readOnly">false</Property>
+                        </RadioButton>
+                        <RadioButton>
+                          <Property name="text">折扣率</Property>
+                          <Property name="value">DISCOUNT_RATIO</Property>
+                        </RadioButton>
+                      </RadioGroup>
+                      <AutoFormElement id="discountRate1" layoutConstraint="colSpan:1">
+                        <ClientEvent name="onBlur">var data=view.get(&quot;#dsDispathBillSubjectInfo.data&quot;).current;&#xD;
+var discountRate=data.get(&quot;discountRate&quot;);&#xD;
+if(discountRate!=null&amp;&amp;discountRate!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);	&#xD;
+	var discountAmount=accSub(totalAmount,(totalAmount*discountRate/100).toFixed(2));&#xD;
+	var receiptAmount=accSub(totalAmount,addNum(derateAmount,discountAmount));	&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+	data.set(&quot;discountAmount&quot;,discountAmount);&#xD;
+}</ClientEvent>
+                        <Property name="name">discountRate</Property>
+                        <Property name="property">discountRate</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="editorWidth">60</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <Label id="te1" layoutConstraint="align:left;colSpan:1">
+                        <Property name="text">%</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                      </Label>
+                      <AutoFormElement id="discountAmount1" layoutConstraint="colSpan:2">
+                        <ClientEvent name="onBlur">var data=view.get(&quot;#dsDispathBillSubjectInfo.data&quot;).current;&#xD;
+var discountAmount=data.get(&quot;discountAmount&quot;);&#xD;
+if(discountAmount!=null&amp;&amp;discountAmount!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var receiptAmount=accSub(totalAmount,addNum(derateAmount,discountAmount));	&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+}&#xD;
+</ClientEvent>
+                        <Property name="name">discountAmount</Property>
+                        <Property name="property">discountAmount</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="property">derateAmount</Property>
+                        <Property name="name">derateAmount</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">receiptAmount</Property>
+                        <Property name="property">receiptAmount</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">num</Property>
+                        <Property name="property">num</Property>
+                        <Property name="editorType">Label</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <Dialog id="importCompareDialog">
+                  <ClientEvent name="onShow">$(&quot;#d_progressLabel2&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar2&quot;).hide();&#xD;
+$(&quot;#d_fileName2 input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel2&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#impCloseBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impBtn4&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+                  <ClientEvent name="onClose">$(&quot;#d_progressLabel2&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar2&quot;).hide();&#xD;
+$(&quot;#d_fileName2 input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#impBtn4&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+                  <Property name="caption">导入</Property>
+                  <Property name="closeable">false</Property>
+                  <Property name="height">180</Property>
+                  <Property name="width">460</Property>
+                  <Buttons>
+                    <Button id="impCloseBtn2">
+                      <ClientEvent name="onClick">view.get(&quot;#importCompareDialog&quot;).hide();</ClientEvent>
+                      <Property name="caption">关闭</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <AutoFormElement id="fileName2">
+                        <Property name="label">文件名称</Property>
+                        <Property name="hintWidth">0</Property>
+                        <Property name="name">fileName2</Property>
+                        <Property name="property">fileName2</Property>
+                        <Property name="readOnly">true</Property>
+                        <Property name="showHint">false</Property>
+                        <Property name="width">300</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement id="impBtn3" layoutConstraint="align:right">
+                        <Property name="hintWidth">0</Property>
+                        <Property name="name">impBtn3</Property>
+                        <Property name="property">impBtn3</Property>
+                        <Property name="showHint">false</Property>
+                        <Property name="showLabel">false</Property>
+                        <Property name="width">80</Property>
+                        <Editor>
+                          <Button id="impBtn4">
+                            <ClientEvent name="onClick">&#xD;
+</ClientEvent>
+                            <Property name="caption">导入</Property>
+                            <Property name="action">uploadImportCompareAction</Property>
+                          </Button>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Label id="progressLabel2">
+                      <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+                      <Property name="width">350</Property>
+                    </Label>
+                    <ProgressBar id="exportProgressBar2"/>
+                    <AjaxAction id="getProgess2">
+                      <Property name="modal">false</Property>
+                      <Property name="service">dispatchFeesComparePR#getProgress</Property>
+                    </AjaxAction>
+                    <AjaxAction id="setProgess2">
+                      <Property name="modal">false</Property>
+                      <Property name="service">dispatchFeesComparePR#setProgress</Property>
+                    </AjaxAction>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <Dialog id="compareMsgDialog">
+                  <Property name="height">400</Property>
+                  <Property name="width">1000</Property>
+                  <Property name="caption">比对结果</Property>
+                  <Buttons/>
+                  <Children>
+                    <Export2ReportAction id="export2ReportAction">
+                      <Property name="template">compareDiffGrid</Property>
+                      <Property name="maxSize">99999</Property>
+                    </Export2ReportAction>
+                    <Container>
+                      <Property name="width">1500</Property>
+                      <ToolBar>
+                        <ToolBarButton>
+                          <Property name="caption">导出</Property>
+                          <Property name="action">export2ReportAction</Property>
+                          <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+                        </ToolBarButton>
+                      </ToolBar>
+                      <DataGrid id="compareDiffGrid">
+                        <Property name="readOnly">true</Property>
+                        <Property name="width">1500</Property>
+                        <Property name="height">340</Property>
+                        <Property name="dataSet">dsimportCompareVo</Property>
+                        <DataColumn name="status">
+                          <Property name="property">status</Property>
+                        </DataColumn>
+                        <DataColumn name="waybillNo">
+                          <Property name="property">waybillNo</Property>
+                        </DataColumn>
+                        <DataColumn name="totalWeight">
+                          <Property name="property">totalWeight</Property>
+                        </DataColumn>
+                        <DataColumn name="headWeight">
+                          <Property name="property">headWeight</Property>
+                        </DataColumn>
+                        <DataColumn name="headPrice">
+                          <Property name="property">headPrice</Property>
+                        </DataColumn>
+                        <DataColumn name="continuedWeight">
+                          <Property name="property">continuedWeight</Property>
+                        </DataColumn>
+                        <DataColumn name="continuedPrice">
+                          <Property name="property">continuedPrice</Property>
+                        </DataColumn>
+                        <DataColumn name="weightLimit">
+                          <Property name="property">weightLimit</Property>
+                        </DataColumn>
+                        <DataColumn name="unitPrice">
+                          <Property name="property">unitPrice</Property>
+                        </DataColumn>
+                        <DataColumn name="amount">
+                          <Property name="property">amount</Property>
+                        </DataColumn>
+                      </DataGrid>
+                    </Container>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+              </Container>
+            </ControlTab>
+          </TabControl>
+        </Container>
+      </ControlTab>
+      <ControlTab id="transportTab">
+        <ClientEvent name="onClick">var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+if(!isNullOrEmpty(myframe)){&#xD;
+	var userData=myframe.get(&quot;userData&quot;);&#xD;
+	if(userData){&#xD;
+		var parameter={&#xD;
+			billNo:userData.billNo,&#xD;
+			startTime:userData.startTime,&#xD;
+			endTime:userData.userData,&#xD;
+			feesType:&quot;TRANSPORT&quot;&#xD;
+		}&#xD;
+		var ds=view.get(&quot;#dsTransportBillSubjectInfo&quot;);&#xD;
+		ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	}&#xD;
+}</ClientEvent>
+        <Property name="caption">干线</Property>
+        <Property name="width">200</Property>
+        <Container>
+          <DataGrid id="mainTransportGrid">
+            <ClientEvent name="onDoubleClick">var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+var dataTransport=view.get(&quot;#dsTransportBillSubjectInfo.data&quot;).current;&#xD;
+if(!isNullOrEmpty(myframe)){&#xD;
+	var userData=myframe.get(&quot;userData&quot;);&#xD;
+	if(userData){&#xD;
+		var parameter={&#xD;
+			billNo:userData.billNo,&#xD;
+			subjectCode:dataTransport.get(&quot;subjectCode&quot;)&#xD;
+		}&#xD;
+		//alert(dataTransport.get(&quot;subjectCode&quot;));&#xD;
+		view.id(&quot;txtSubjectCode&quot;).set(&quot;text&quot;,dataTransport.get(&quot;subjectCode&quot;));&#xD;
+		//alert(view.id(&quot;txtSubjectCode&quot;).get(&quot;text&quot;));&#xD;
+		var ds=view.get(&quot;#dsFeesReceiveTransport&quot;);&#xD;
+		ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	}&#xD;
+}</ClientEvent>
+            <Property name="readOnly">true</Property>
+            <Property name="dataSet">dsTransportBillSubjectInfo</Property>
+            <Property name="height">150</Property>
+            <DataColumn>
+              <Property name="property">subjectName</Property>
+              <Property name="name">subjectName</Property>
+            </DataColumn>
+            <DataColumn name="totalAmount">
+              <Property name="property">totalAmount</Property>
+            </DataColumn>
+            <DataColumn name="discountAmount">
+              <Property name="property">discountAmount</Property>
+            </DataColumn>
+            <DataColumn name="receiptAmount">
+              <Property name="property">receiptAmount</Property>
+            </DataColumn>
+            <DataColumn name="num">
+              <Property name="property">num</Property>
+            </DataColumn>
+            <DataColumn name="status">
+              <Property name="property">status</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var detailFrame= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+var detailData=detailFrame.get(&quot;userData&quot;);&#xD;
+var billsatus=&#xD;
+jQuery(arg.dom).empty();&#xD;
+var status=arg.data.get(&quot;status&quot;);&#xD;
+var timestamp = Date.parse(new Date());&#xD;
+switch(status){&#xD;
+	case &quot;DELETE&quot;://已删除&#xD;
+	createDeleteLink();&#xD;
+	break;&#xD;
+	case &quot;GENERATED&quot;://已生成&#xD;
+	createGeneratedLink();&#xD;
+	break;&#xD;
+	case &quot;UPDATE&quot;://重新生成&#xD;
+	createUpdateLink();&#xD;
+	break;&#xD;
+}&#xD;
+&#xD;
+function createUpdateLink(){&#xD;
+	jQuery(arg.dom).xCreate([{&#xD;
+		  tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;重新计算&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;确认要重新计算运输账单&quot;,function(){&#xD;
+					var action=view.get(&quot;#reTransportBillAction&quot;);&#xD;
+					action.execute(function(){&#xD;
+						dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+					});&#xD;
+					&#xD;
+				});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createGeneratedLink(){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;折扣&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogTransportDiscount&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;清空账单&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;确认要清空运输账单&quot;,function(){			&#xD;
+					var action=view.get(&quot;#deleteTransportBillAction&quot;);&#xD;
+					action.execute(function(){&#xD;
+						dorado.MessageBox.alert(&quot;清空账单成功!&quot;);&#xD;
+						&#xD;
+						var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+						if(!isNullOrEmpty(myframe)){&#xD;
+								view.get(&quot;#dsFeesReceiveTransport&quot;).flush();&#xD;
+						}&#xD;
+						&#xD;
+					});				&#xD;
+				});&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+function createDeleteLink(){&#xD;
+	jQuery(arg.dom).xCreate({&#xD;
+		  tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;重新计算&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;确认要重新计算运输账单&quot;,function(){				&#xD;
+					var action=view.get(&quot;#reTransportBillAction&quot;);&#xD;
+					action.execute(function(){&#xD;
+						dorado.MessageBox.alert(&quot;重新计算账单成功!&quot;);&#xD;
+					});&#xD;
+				});&#xD;
+	    	}&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">操作</Property>
+              <Property name="align">center</Property>
+              <Property name="width">300</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogTransportDiscount">
+            <Property name="width">400</Property>
+            <Property name="height">400</Property>
+            <Property name="caption">折扣费用</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var action=view.get(&quot;#discountTransportAction&quot;);&#xD;
+&#xD;
+var entity=view.get(&quot;#dsTransportBillSubjectInfo.data&quot;).current;&#xD;
+var discountType=entity.get(&quot;discountType&quot;);&#xD;
+&#xD;
+if(discountType=='DISCOUNT_RATIO'){&#xD;
+	var discountRate=entity.get(&quot;discountRate&quot;);&#xD;
+	if(isNullOrEmpty(discountRate)){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能为空！&quot;);&#xD;
+		return;&#xD;
+	}	&#xD;
+	if(parseFloat(discountRate)>100){&#xD;
+		dorado.MessageBox.alert(&quot;折扣率不能超过百分百！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;操作成功&quot;);&#xD;
+	view.get(&quot;#dialogTransportDiscount&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">确认</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#dialogTransportDiscount&quot;).hide();&#xD;
+</ClientEvent>
+                <Property name="caption">关闭</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsTransportBillSubjectInfo</Property>
+                <Property name="cols">*,*</Property>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">billNo</Property>
+                  <Property name="property">billNo</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="property">billName</Property>
+                  <Property name="name">billName</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="property">customerName</Property>
+                  <Property name="name">customerName</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">totalAmount</Property>
+                  <Property name="property">totalAmount</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <Label layoutConstraint="align:left;colSpan:2">
+                  <Property name="text">折扣方式</Property>
+                </Label>
+                <RadioGroup id="discountTransportType" layoutConstraint="colSpan:2">
+                  <ClientEvent name="onValueChange">var currentValue= self._value;&#xD;
+if(currentValue == 'DISCOUNT_MONEY'){&#xD;
+	view.get(&quot;#discountTransportAmount&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#discountTransportAmount&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.get(&quot;#discountTransportRate&quot;).set(&quot;visible&quot;, false);&#xD;
+	view.get(&quot;#te&quot;).set(&quot;visible&quot;, false);&#xD;
+	var data = this.get(&quot;#dsTransportBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_MONEY',&#xD;
+		discountRate:''&#xD;
+	});&#xD;
+}else if (currentValue == 'DISCOUNT_RATIO'){&#xD;
+	view.get(&quot;#discountTransportAmount&quot;).set(&quot;readOnly&quot;, true);&#xD;
+	view.get(&quot;#discountTransportRate&quot;).set(&quot;visible&quot;, true);&#xD;
+	view.get(&quot;#te&quot;).set(&quot;visible&quot;, true);&#xD;
+	var data = this.get(&quot;#dsTransportBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+	data.set({&#xD;
+		discountType:'DISCOUNT_RATIO',&#xD;
+	});&#xD;
+}</ClientEvent>
+                  <ClientEvent name="onReady">var data = this.get(&quot;#dsTransportBillSubjectInfo&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	discountType:'DISCOUNT_MONEY'&#xD;
+});</ClientEvent>
+                  <Property name="layout">grid</Property>
+                  <Property name="property">discountType</Property>
+                  <Property name="value">DISCOUNT_MONEY</Property>
+                  <RadioButton>
+                    <Property name="text">折扣金额</Property>
+                    <Property name="value">DISCOUNT_MONEY</Property>
+                    <Property name="readOnly">false</Property>
+                  </RadioButton>
+                  <RadioButton>
+                    <Property name="text">折扣率</Property>
+                    <Property name="value">DISCOUNT_RATIO</Property>
+                  </RadioButton>
+                </RadioGroup>
+                <AutoFormElement id="discountTransportRate" layoutConstraint="colSpan:1">
+                  <ClientEvent name="onBlur">var data=view.get(&quot;#dsTransportBillSubjectInfo.data&quot;).current;&#xD;
+var discountRate=data.get(&quot;discountRate&quot;);&#xD;
+if(discountRate!=null&amp;&amp;discountRate!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var discountAmount=(totalAmount*discountRate/100).toFixed(2);&#xD;
+	var receiptAmount=(totalAmount*100-discountAmount*100-derateAmount*100)/100;&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+	data.set(&quot;discountAmount&quot;,discountAmount);&#xD;
+}</ClientEvent>
+                  <Property name="name">discountRate</Property>
+                  <Property name="property">discountRate</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Property name="editorWidth">60</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <Label id="teTransport" layoutConstraint="align:left;colSpan:1">
+                  <Property name="text">%</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                </Label>
+                <AutoFormElement id="discountTransportAmount" layoutConstraint="colSpan:2">
+                  <ClientEvent name="onBlur">var data=view.get(&quot;#dsTransportBillSubjectInfo.data&quot;).current;&#xD;
+var discountAmount=data.get(&quot;discountAmount&quot;);&#xD;
+if(discountAmount!=null&amp;&amp;discountAmount!=&quot;&quot;){&#xD;
+	var totalAmount=data.get(&quot;totalAmount&quot;);&#xD;
+	var derateAmount=data.get(&quot;derateAmount&quot;);&#xD;
+	var receiptAmount=(totalAmount*10000-discountAmount*10000-derateAmount*10000)/10000;&#xD;
+	data.set(&quot;receiptAmount&quot;,receiptAmount);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="name">discountAmount</Property>
+                  <Property name="property">discountAmount</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="property">derateAmount</Property>
+                  <Property name="name">derateAmount</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">receiptAmount</Property>
+                  <Property name="property">receiptAmount</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">num</Property>
+                  <Property name="property">num</Property>
+                  <Property name="editorType">Label</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <TabControl>
+            <ControlTab id="transportGroupTab">
+              <Property name="caption">干线明细</Property>
+              <Property name="width">300</Property>
+              <Container id="containerTransport">
+                <ToolBar>
+                  <DataPilot>
+                    <Property name="dataSet">dsFeesReceiveTransport</Property>
+                    <Property name="itemCodes">pages,pageSize</Property>
+                  </DataPilot>
+                  <Separator/>
+                  <ToolBarButton id="btnQueryFee">
+                    <ClientEvent name="onClick">var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+if(!isNullOrEmpty(myframe)){&#xD;
+	var userData=myframe.get(&quot;userData&quot;);&#xD;
+	var data=view.get(&quot;#dsTransportQuery.data&quot;).current;&#xD;
+	if(userData){&#xD;
+		var parameter={&#xD;
+			billNo:userData.billNo,&#xD;
+			startTime:userData.startTime,&#xD;
+			endTime:userData.userData,&#xD;
+			orderNo:data.get(&quot;orderno&quot;),&#xD;
+			waybillNo:data.get(&quot;waybillNo&quot;),&#xD;
+			productType:data.get(&quot;productType&quot;)&#xD;
+		}&#xD;
+		var ds=view.get(&quot;#dsFeesReceiveTransport&quot;);&#xD;
+		ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                    <Property name="caption">查询</Property>
+                  </ToolBarButton>
+                  <ToolBarButton id="btnDelFee">
+                    <ClientEvent name="onClick">var tableData = view.get(&quot;#transportFeeGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(tableData==null || tableData==''|| tableData==undefined){&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的数据！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;确认剔除选中的费用?&quot;,function(){&#xD;
+	var action=view.get(&quot;#deleteTransportFeeAction&quot;);&#xD;
+	action.execute(function(){&#xD;
+		dorado.MessageBox.alert(&quot;剔除费用成功!&quot;);&#xD;
+		var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+		if(!isNullOrEmpty(myframe)){&#xD;
+			var userData=myframe.get(&quot;userData&quot;);&#xD;
+			var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+			if(userData){&#xD;
+				var parameter={&#xD;
+					billNo:userData.billNo,&#xD;
+					startTime:userData.startTime,&#xD;
+					endTime:userData.userData,&#xD;
+					orderNo:data.get(&quot;orderno&quot;),&#xD;
+					waybillNo:data.get(&quot;waybillNo&quot;),&#xD;
+					productType:data.get(&quot;productType&quot;)&#xD;
+				}&#xD;
+				var ds=view.get(&quot;#dsFeesReceiveTransport&quot;);&#xD;
+				ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+			}&#xD;
+			&#xD;
+			var parameter={&#xD;
+				billNo:userData.billNo,&#xD;
+				startTime:userData.startTime,&#xD;
+				endTime:userData.userData,&#xD;
+				feesType:&quot;TRANSPORT&quot;&#xD;
+			}&#xD;
+			var ds=view.get(&quot;#dsTransportBillSubjectInfo&quot;);&#xD;
+			ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+			&#xD;
+			&#xD;
+		}&#xD;
+		&#xD;
+		&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+                    <Property name="caption">剔除费用</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+                    <Property name="hideMode">display</Property>
+                  </ToolBarButton>
+                  <ToolBarButton id="btnAddFee">
+                    <ClientEvent name="onClick">var detailFrame= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+var detailData=detailFrame.get(&quot;userData&quot;);&#xD;
+var data={&#xD;
+	customerid:detailData.customerId,&#xD;
+	startTime:detailData.startTime,&#xD;
+	endTime:detailData.endTime,&#xD;
+	billno:detailData.billNo,&#xD;
+	subjectCode:view.id(&quot;txtSubjectCode&quot;).get(&quot;text&quot;)&#xD;
+};&#xD;
+var iframe=view.get(&quot;#myTransportframe&quot;);&#xD;
+iframe.set(&quot;userData&quot;,data);&#xD;
+var timestamp = Date.parse(new Date());&#xD;
+iframe.set(&quot;path&quot;,&quot;com.jiuyescm.bms.bill.receive.lookup.TransportFeeLookUp.d?timestamp=&quot;+timestamp);	&#xD;
+&#xD;
+var dialog=view.get(&quot;#dialogTransportDetail&quot;);&#xD;
+dialog.set(&quot;caption&quot;,&quot;费用&quot;);&#xD;
+dialog.show();</ClientEvent>
+                    <Property name="caption">新增费用</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+                    <Property name="hideMode">display</Property>
+                  </ToolBarButton>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var dsFeesReceiveStorageEntity = view.get(&quot;#dsStorageDetail&quot;).getData();&#xD;
+var myframe= window.parent.$id(&quot;myframe&quot;).objects[0];&#xD;
+var userData=myframe.get(&quot;userData&quot;);&#xD;
+var count = dsFeesReceiveStorageEntity.entityCount;&#xD;
+if(count == 0){&#xD;
+	dorado.MessageBox.alert(&quot;没有数据可以导出！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data={&#xD;
+	customerName:userData.customerName,&#xD;
+	customerId:userData.customerId,&#xD;
+	warehouseCode:userData.warehouseCode,&#xD;
+	subjectCode:'wh_material_storage',&#xD;
+	createTimeBegin:userData.startTime,&#xD;
+	createTimeEnd:userData.endTime,&#xD;
+	billNo:userData.billno,&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#feesDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
+	function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+}&#xD;
+);</ClientEvent>
+                    <Property name="caption">导出</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+                    <Property name="visible">false</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <TextEditor id="txtSubjectCode">
+                  <Property name="visible">false</Property>
+                  <Property name="hideMode">display</Property>
+                </TextEditor>
+                <AutoForm id="transportQuery">
+                  <Property name="dataSet">dsTransportQuery</Property>
+                  <Property name="dataType">dtTransportQuery</Property>
+                  <Property name="cols">*,*,*,*</Property>
+                  <AutoFormElement>
+                    <Property name="name">orderno</Property>
+                    <Property name="property">orderno</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">waybillNo</Property>
+                    <Property name="property">waybillNo</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">productType</Property>
+                    <Property name="property">productType</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+                <DataGrid id="transportFeeGrid">
+                  <ClientEvent name="onDataRowDoubleClick">var entity=view.get(&quot;#dsFeesReceiveTransport.data&quot;).current;&#xD;
+&#xD;
+var param={&#xD;
+	cretime:entity.get(&quot;cretime&quot;),&#xD;
+	externalNo:entity.get(&quot;externalNo&quot;),&#xD;
+	orderno:entity.get(&quot;orderno&quot;),&#xD;
+	waybillNo:entity.get(&quot;waybillNo&quot;),&#xD;
+	customerName:entity.get(&quot;customerName&quot;),&#xD;
+	forwarderName:entity.get(&quot;forwarderName&quot;),&#xD;
+	subjectCode:entity.get(&quot;subjectCode&quot;)&#xD;
+};&#xD;
+&#xD;
+var ds=view.get(&quot;#dsFeesReceiveTransportDetail&quot;);&#xD;
+ds.set(&quot;parameter&quot;,param).flush();&#xD;
+view.get(&quot;#TransportFeeDetailDialog&quot;).show();</ClientEvent>
+                  <Property name="dataSet">dsFeesReceiveTransport</Property>
+                  <Property name="dataType">dtFeesReceiveTransport</Property>
+                  <Property name="readOnly">true</Property>
+                  <Property name="selectionMode">multiRows</Property>
+                  <RowSelectorColumn/>
+                  <RowNumColumn/>
+                  <DataColumn name="cretime">
+                    <Property name="property">cretime</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="externalNo">
+                    <Property name="property">externalNo</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="orderno">
+                    <Property name="property">orderno</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn>
+                    <Property name="property">waybillNo</Property>
+                    <Property name="name">waybillNo</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="roadbillNo">
+                    <Property name="property">roadbillNo</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="customerName">
+                    <Property name="property">customerName</Property>
+                    <Property name="visible">false</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="totleprice">
+                    <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsFeesReceiveDeliver.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalCost&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;合计: &lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>元&quot;;</ClientEvent>
+                    <Property name="property">totleprice</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="sendAddress">
+                    <Property name="property">sendAddress</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="receiveAddress">
+                    <Property name="property">receiveAddress</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="forwarderName">
+                    <Property name="property">forwarderName</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="productType">
+                    <Property name="property">productType</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="signTime">
+                    <Property name="property">signTime</Property>
+                    <Property name="width">150</Property>
+                  </DataColumn>
+                  <DataColumn name="orderBoxno">
+                    <Property name="property">orderBoxno</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="orderNumber">
+                    <Property name="property">orderNumber</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="weight">
+                    <Property name="property">weight</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="volume">
+                    <Property name="property">volume</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="goodType">
+                    <Property name="property">goodType</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="dispatchType">
+                    <Property name="property">dispatchType</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="isReceiveOrder">
+                    <Property name="property">isReceiveOrder</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="receiptNumber">
+                    <Property name="property">receiptNumber</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="returnGoods">
+                    <Property name="property">returnGoods</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                  <DataColumn name="billno">
+                    <Property name="property">billno</Property>
+                    <Property name="width">100</Property>
+                  </DataColumn>
+                </DataGrid>
+                <Dialog id="TransportFeeDetailDialog">
+                  <Property name="caption">费用详情</Property>
+                  <Property name="width">400</Property>
+                  <Property name="height">300</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">view.get(&quot;#TransportFeeDetailDialog&quot;).hide();&#xD;
+</ClientEvent>
+                      <Property name="caption">关闭</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <DataGrid>
+                      <Property name="dataSet">dsFeesReceiveTransportDetail</Property>
+                      <Property name="readOnly">true</Property>
+                      <DataColumn name="feesNo">
+                        <Property name="property">feesNo</Property>
+                      </DataColumn>
+                      <DataColumn name="subjectCode">
+                        <Property name="property">subjectCode</Property>
+                      </DataColumn>
+                      <DataColumn name="totleprice">
+                        <Property name="property">totleprice</Property>
+                      </DataColumn>
+                    </DataGrid>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <Dialog id="dialogTransportDetail">
+                  <ClientEvent name="onClose">var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+		if(!isNullOrEmpty(myframe)){&#xD;
+			var userData=myframe.get(&quot;userData&quot;);&#xD;
+			var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+			if(userData){&#xD;
+				var parameter={&#xD;
+					billNo:userData.billNo,&#xD;
+					startTime:userData.startTime,&#xD;
+					endTime:userData.userData,&#xD;
+					orderNo:data.get(&quot;orderno&quot;),&#xD;
+					waybillNo:data.get(&quot;waybillNo&quot;),&#xD;
+					productType:data.get(&quot;productType&quot;)&#xD;
+				}&#xD;
+				var ds=view.get(&quot;#dsFeesReceiveTransport&quot;);&#xD;
+				ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+			}&#xD;
+			&#xD;
+			var parameter={&#xD;
+				billNo:userData.billNo,&#xD;
+				startTime:userData.startTime,&#xD;
+				endTime:userData.userData,&#xD;
+				feesType:&quot;TRANSPORT&quot;&#xD;
+			}&#xD;
+			var ds=view.get(&quot;#dsTransportBillSubjectInfo&quot;);&#xD;
+			ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+			&#xD;
+			&#xD;
+		}</ClientEvent>
+                  <ClientEvent name="onHide">var myframe= window.parent.$id(&quot;detailFrame&quot;).objects[0];&#xD;
+		if(!isNullOrEmpty(myframe)){&#xD;
+			var userData=myframe.get(&quot;userData&quot;);&#xD;
+			var data=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+			if(userData){&#xD;
+				var parameter={&#xD;
+					billNo:userData.billNo,&#xD;
+					startTime:userData.startTime,&#xD;
+					endTime:userData.userData,&#xD;
+					orderNo:data.get(&quot;orderno&quot;),&#xD;
+					waybillNo:data.get(&quot;waybillNo&quot;),&#xD;
+					productType:data.get(&quot;productType&quot;)&#xD;
+				}&#xD;
+				var ds=view.get(&quot;#dsFeesReceiveTransport&quot;);&#xD;
+				ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+			}&#xD;
+			&#xD;
+			var parameter={&#xD;
+				billNo:userData.billNo,&#xD;
+				startTime:userData.startTime,&#xD;
+				endTime:userData.userData,&#xD;
+				feesType:&quot;TRANSPORT&quot;&#xD;
+			}&#xD;
+			var ds=view.get(&quot;#dsTransportBillSubjectInfo&quot;);&#xD;
+			ds.set(&quot;parameter&quot;,parameter).flush();&#xD;
+			&#xD;
+			&#xD;
+		}</ClientEvent>
+                  <Property name="caption">费用明细</Property>
+                  <Property name="width">830</Property>
+                  <Property name="height">480</Property>
+                  <Buttons/>
+                  <Children>
+                    <IFrame id="myTransportframe"/>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+              </Container>
+            </ControlTab>
+          </TabControl>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">航空</Property>
+        <Property name="width">200</Property>
+      </ControlTab>
+    </TabControl>
+    <UpdateAction id="discountAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#discountBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteStorageBillAction">
+      <Property name="caption">清空仓储账单</Property>
+      <Property name="dataResolver">bmsBillSubjectInfoController#deleteStorageBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="reStorageBillAction">
+      <Property name="caption">重新生成仓储账单</Property>
+      <Property name="dataResolver">bmsBillSubjectInfoController#reCountStorageBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="discountTransportAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#discountTransportBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsTransportBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteTransportBillAction">
+      <Property name="caption">清空运输账单</Property>
+      <Property name="dataResolver">bmsBillSubjectInfoController#deleteTransportBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsTransportBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="reTransportBillAction">
+      <Property name="caption">重新生成运输账单</Property>
+      <Property name="dataResolver">bmsBillSubjectInfoController#reCountTransportBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsTransportBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="discountDispatchAction">
+      <Property name="caption">配送折扣</Property>
+      <Property name="dataResolver">bmsBillSubjectInfoController#discountDispatchBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteDispatchBillAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#deleteDispatchBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="reDispatchAction">
+      <Property name="caption">重新生成配送账单</Property>
+      <Property name="dataResolver">bmsBillSubjectInfoController#reCountDispatchBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteDispatchAbnormalAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#deleteAbnormalBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteStorageAbnormalAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#deleteAbnormalBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="reDispatchAbnormalAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#reCountAbnormalBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsDispathBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="reStorageAbnormalAction">
+      <Property name="dataResolver">bmsBillSubjectInfoController#reCountAbnormalBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillSubjectInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UploadAction id="uploadImportCompareAction">
+      <ClientEvent name="onFileUploaded">&#xD;
+view.get(&quot;#impBtn4&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impCloseBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+var data= arg.returnValue;&#xD;
+if(data.error){&#xD;
+	dorado.MessageBox.alert(data.error);&#xD;
+	return;&#xD;
+}&#xD;
+if(data.succ){&#xD;
+	view.get(&quot;#compareMsgDialog&quot;).show();&#xD;
+	view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 100);&#xD;
+	view.get(&quot;#progressLabel2&quot;).set(&quot;text&quot;,&quot;比较成功！&quot;);&#xD;
+	var dataSet=view.get(&quot;#dsimportCompareVo&quot;);&#xD;
+    dataSet.setData(data.succ);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onFilesAdded">$(&quot;#d_progressLabel2&quot;).show();&#xD;
+$(&quot;#d_exportProgressBar2&quot;).show();&#xD;
+view.get(&quot;#progressLabel2&quot;).set(&quot;text&quot;, &quot;正在处理数据，请耐心等待...&quot;);&#xD;
+&#xD;
+var action = view.get(&quot;#getProgess2&quot;);&#xD;
+//var setaction=view.get(&quot;#setProgress2&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {	&#xD;
+		oldVal = res;&#xD;
+		var mes=&quot;&quot;;&#xD;
+		if(oldVal==0){&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 10);&#xD;
+			mes=&quot;开始处理&quot;;&#xD;
+		}&#xD;
+		else if(oldVal==1)&#xD;
+		{&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 20);&#xD;
+			mes=&quot;验证模板&quot;;&#xD;
+		}&#xD;
+		else if(oldVal==2)&#xD;
+		{&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 30);&#xD;
+			mes=&quot;读取Excel&quot;;&#xD;
+		}&#xD;
+		else if(oldVal==3)&#xD;
+		{&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 40);&#xD;
+			mes=&quot;读取系统数据&quot;;&#xD;
+		}&#xD;
+		else if(oldVal==4)&#xD;
+		{&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 80);&#xD;
+			mes=&quot;开始比较数据&quot;;&#xD;
+		}&#xD;
+		else if(oldVal==5)&#xD;
+		{&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			//setaction.execute(function (res) {  });&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 100);&#xD;
+			mes=&quot;比较结束&quot;;&#xD;
+		}&#xD;
+		else if(oldVal==6)&#xD;
+		{&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			//setaction.execute(function (res) {  });&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 99);&#xD;
+			mes=&quot;比较异常&quot;;&#xD;
+		}&#xD;
+		else&#xD;
+		{&#xD;
+			view.get(&quot;#exportProgressBar2&quot;).set(&quot;value&quot;, 0);&#xD;
+			mes=&quot;&quot;;&#xD;
+		}	&#xD;
+		view.get(&quot;#progressLabel2&quot;).set(&quot;text&quot;,mes);&#xD;
+	});&#xD;
+};&#xD;
+var progressJob = setInterval(getProgress, 1000);</ClientEvent>
+      <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName2 input&quot;).val(fname);&#xD;
+view.get(&quot;#impBtn4&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#impCloseBtn2&quot;).set(&quot;disabled&quot;,true);</ClientEvent>
+      <Property name="fileResolver">dispatchFeesComparePR#importCompareFileDiff</Property>
+      <Filters/>
+    </UploadAction>
+    <DownloadAction id="downloadTemplateAction">
+      <Property name="fileProvider">bmsBillSubjectInfoController#downloadTemplate</Property>
+    </DownloadAction>
+    <UpdateAction id="deleteTransportFeeAction">
+      <ClientEvent name="onGetUpdateData">var selectData = view.get(&quot;#transportFeeGrid&quot;).get(&quot;selection&quot;);&#xD;
+arg.data=selectData;</ClientEvent>
+      <Property name="caption">剔除费用</Property>
+      <Property name="dataResolver">bmsBillFeesController#deleteTransportBatchFees</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsStorageDetail</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

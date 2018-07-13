@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.mapper.BmsProductsWeightMapper" >
+	<resultMap id="baseResultMap" type="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DECIMAL" />
+	    <result column="percent" property="percent" jdbcType="DOUBLE" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, products_mark, weight, percent, task_id
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(productsMark != null and productsMark !='')" >
+				and products_mark = #{productsMark}
+		</if>
+		<if test="(weight != null and weight !='')" >
+				and weight = #{weight}
+		</if>
+		<if test="(percent != null and percent !='')" >
+				and percent = #{percent}
+		</if>
+		<if test="(taskId != null and taskId !='')" >
+				and task_id = #{taskId}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_products_weight_account
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+     <select id="queyAllMax" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
+		select a.products_mark,a.percent,GROUP_CONCAT(a.weight) as weightList from bms_products_weight_account a
+		INNER JOIN (
+			select max(percent) percent,products_mark,task_id from bms_products_weight_account where percent!=1 and task_id=#{taskId}
+			GROUP BY products_mark
+		) b
+		on a.products_mark=b.products_mark and a.task_id=b.task_id and a.percent=b.percent
+		GROUP BY a.products_mark,a.percent
+     </select>
+		
+	 <select id="queryMark" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+        select a.* from bms_marking_products a 
+		INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
+		where 1=1 and a.products_mark=#{productsMark} and a.weight!=#{weight} and b.del_flag='0' and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+     </select>
+     
+     <select id="queryMarkVo" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+        select id, waybill_no as waybillNo, products_mark as productsMark, weight, correct_weight as correctWeight from bms_marking_products where 1=1 and waybill_no=#{waybillNo}
+     </select>
+     
+     <update id="update" parameterType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+        update bms_marking_products set correct_weight=#{correctWeight,jdbcType=DECIMAL} where id=#{id}
+    </update>
+    
+    <update id="updateMark" parameterType="java.util.Map">
+        update bms_marking_products set correct_weight=#{weight,jdbcType=DECIMAL} where products_mark=#{productsMark}
+    </update>
+    
+    <select id="queyWeightCount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">	
+		select a.products_mark,a.weight,ROUND(a.num1/b.num2*100)/100 as percent from (
+		select m1.products_mark,m1.weight,count(m1.weight) as num1 from bms_marking_products m1
+		INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
+		where 1=1 and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<#{endTime}]]>
+		GROUP BY products_mark,weight) a 
+		LEFT JOIN (select m1.products_mark,COUNT(m1.weight) as num2 from bms_marking_products m1
+		INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
+		where 1=1 and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<#{endTime}]]>
+		GROUP BY products_mark) b
+		on a.products_mark=b.products_mark	
+    </select>
+    
+    <insert id="saveList" parameterType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
+    	insert into bms_products_weight_account(products_mark, weight, percent, task_id)
+        values (
+			#{productsMark,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DECIMAL}, 
+			#{percent,jdbcType=DOUBLE}, 
+			#{taskId,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <insert id="saveWeight" parameterType="java.util.Map">
+   		 insert into bms_products_weight_account(products_mark, weight, percent, task_id)
+   		 select a.products_mark,a.weight,ROUND(a.num1/b.num2*100)/100 as percent,#{taskId} 
+   		  from (
+			select m1.products_mark,m1.weight,count(m1.weight) as num1 from bms_marking_products m1
+			INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
+			where 1=1 and n1.del_flag='0' and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY products_mark,weight
+			) a 
+			LEFT JOIN (
+			select m1.products_mark,COUNT(m1.weight) as num2 from bms_marking_products m1
+			INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
+			where 1=1 and n1.del_flag='0' and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY products_mark
+			) b
+		 on a.products_mark=b.products_mark	
+    </insert>
+</mapper> 
