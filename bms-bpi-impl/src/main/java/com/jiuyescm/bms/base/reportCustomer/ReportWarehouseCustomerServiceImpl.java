@@ -80,5 +80,37 @@ public class ReportWarehouseCustomerServiceImpl implements IReportWarehouseCusto
 		return 0;
 		
 	}
+	@Override
+	public int saveList(List<ReportWarehouseCustomerVo> list) {
+		// TODO Auto-generated method stub
+		List<ReportWarehouseCustomerEntity> entityList=new ArrayList<ReportWarehouseCustomerEntity>();
+		try{			
+			for(ReportWarehouseCustomerVo vo:list){
+				ReportWarehouseCustomerEntity entity=new ReportWarehouseCustomerEntity();
+				PropertyUtils.copyProperties(entity,vo);
+				entityList.add(entity);
+			}
+			return reportWarehouseCustomerRepository.saveList(entityList);
+		}catch(Exception e){
+			logger.error("saveList:",e);
+		}
+		return 0;
+	}
+	@Override
+	public ReportWarehouseCustomerVo queryOne(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		ReportWarehouseCustomerVo vo=new ReportWarehouseCustomerVo();
+		try{			
+			ReportWarehouseCustomerEntity entity=reportWarehouseCustomerRepository.queryOne(map);
+			if(entity==null){
+				return null;
+			}
+			PropertyUtils.copyProperties(vo,entity);				
+			return vo;
+		}catch(Exception e){
+			logger.error("queryOne:",e);
+		}
+		return vo;
+	}
 
 }

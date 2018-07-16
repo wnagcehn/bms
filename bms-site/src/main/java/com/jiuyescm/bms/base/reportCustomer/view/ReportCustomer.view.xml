@@ -85,6 +85,24 @@
       <PropertyDef name="bizType">
         <Property></Property>
         <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;CUSTOMER_BIZTYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCopyEntity">
+      <PropertyDef name="year">
+        <Property></Property>
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -98,8 +116,14 @@
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
     </DataSet>
+    <DataSet id="dsCopyEntity">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCopyEntity&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCopyEntity]</Property>
+    </DataSet>
     <ToolBar>
-      <DataPilot/>
+      <DataPilot>
+        <Property name="dataSet">dsEntity</Property>
+      </DataPilot>
       <Separator/>
       <ToolBarButton id="btnQuery">
         <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
@@ -132,32 +156,47 @@ tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
       <ToolBarButton id="btnAdd">
         <ClientEvent name="onClick">var datas = view.get(&quot;#dsEntity.data&quot;);&#xD;
 datas.insert();&#xD;
+var date=new Date;&#xD;
+var year=date.getFullYear(); &#xD;
+var month=date.getMonth()+1;&#xD;
+datas.current.set(&quot;year&quot;,year);&#xD;
+datas.current.set(&quot;month&quot;,month+&quot;&quot;);&#xD;
 view.get(&quot;#addDialog&quot;).show();</ClientEvent>
         <Property name="caption">新增</Property>
         <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnUpdate">
-        <ClientEvent name="onClick">var data=view.get(&quot;#dsEntity.data&quot;).current;&#xD;
-if(data){&#xD;
-							&#xD;
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){	&#xD;
+	//修改，只能选择一条&#xD;
+	var data=selectDatas[0];&#xD;
+			&#xD;
 	var createMonth=data.get(&quot;createMonth&quot;);&#xD;
+	&#xD;
+	alert(createMonth);&#xD;
 	&#xD;
 	var dates = createMonth.split('-')&#xD;
 	&#xD;
 	var year=dates[0];&#xD;
 	var month=dates[1];&#xD;
-	&#xD;
+&#xD;
 	if(month.indexOf(&quot;0&quot;) == 0){&#xD;
 	   month=month.slice(1);&#xD;
 	}&#xD;
 &#xD;
 	data.set(&quot;year&quot;, year);&#xD;
 	data.set(&quot;month&quot;, month);&#xD;
+	&#xD;
+	alert(year);&#xD;
+	alert(month);&#xD;
 &#xD;
 	view.get(&quot;#updateDialog&quot;).show();&#xD;
-}else{&#xD;
-	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条数据!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条数据!&quot;);&#xD;
 }</ClientEvent>
         <Property name="caption">修改</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
@@ -168,11 +207,10 @@ if(data){&#xD;
 var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
 &#xD;
 &#xD;
-if(selectData.length&lt;1){&#xD;
+if(selectDatas.length&lt;1){&#xD;
 	dorado.MessageBox.alert(&quot;请选择需要删除的数据!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;是否确定要删除数据?&quot;,function(){&#xD;
 		view.get(&quot;#deleteAction&quot;).execute({&#xD;
@@ -187,6 +225,16 @@ dorado.MessageBox.confirm(&quot;是否确定要删除数据?&quot;,function(){&#
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnCopy">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+&#xD;
+if(selectDatas.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要复制的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#copyDialog&quot;).show();</ClientEvent>
         <Property name="caption">复制</Property>
         <Property name="icon">url(>skin>common/icons.gif) -280px -120px</Property>
       </ToolBarButton>
@@ -194,6 +242,7 @@ dorado.MessageBox.confirm(&quot;是否确定要删除数据?&quot;,function(){&#
       <ToolBarButton id="btnExport">
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="queryForm">
@@ -247,6 +296,11 @@ dorado.MessageBox.confirm(&quot;是否确定要删除数据?&quot;,function(){&#
       </DataGrid>
     </Container>
     <Dialog id="addDialog">
+      <ClientEvent name="onClose">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+</ClientEvent>
+      <ClientEvent name="onHide">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();</ClientEvent>
       <Buttons>
         <Button id="btnAddSave">
           <ClientEvent name="onClick">var entity=view.get(&quot;#addForm&quot;).get(&quot;entity&quot;);&#xD;
@@ -258,29 +312,41 @@ if(isNullOrEmpty(year)){&#xD;
 	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
+&#xD;
 if(isNullOrEmpty(month)){&#xD;
 	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
 if(!isNullOrEmpty(month)){&#xD;
+	alert(&quot;长度&quot;+month.length);&#xD;
 	if(month.length==1){&#xD;
 		month='0'+month;&#xD;
 	}&#xD;
 }&#xD;
+&#xD;
+//商家必填&#xD;
+if(isNullOrEmpty(entity.get(&quot;customerName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;商家必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+//业务类型必填&#xD;
+if(isNullOrEmpty(entity.get(&quot;bizType&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;业务类型必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
 entity.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
 &#xD;
 view.id(&quot;addAction&quot;).execute(&#xD;
-	function(result){	&#xD;
+	function(result){&#xD;
+		alertMsg(result.code, result.message);		&#xD;
 		if(&quot;SUCC&quot; == result.code){&#xD;
-			alertMsg(result.code, result.message);		&#xD;
 			view.id(&quot;addDialog&quot;).hide();		&#xD;
 			with (view.get(&quot;#dsEntity&quot;)){&#xD;
 				flushAsync();&#xD;
 			}&#xD;
-		}else{&#xD;
-			dorado.MessageBox.alert(&quot;操作失败!&quot;);&#xD;
-			return;&#xD;
 		}&#xD;
 	}&#xD;
 );</ClientEvent>
@@ -336,6 +402,12 @@ view.id(&quot;addAction&quot;).execute(&#xD;
       <Tools/>
     </Dialog>
     <Dialog id="updateDialog">
+      <ClientEvent name="onClose">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+</ClientEvent>
+      <ClientEvent name="onHide">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+</ClientEvent>
       <Buttons>
         <Button id="btnUpdateSave">
           <ClientEvent name="onClick">var entity=view.get(&quot;#editForm&quot;).get(&quot;entity&quot;);&#xD;
@@ -359,17 +431,25 @@ if(!isNullOrEmpty(month)){&#xD;
 }&#xD;
 entity.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
 &#xD;
+//商家必填&#xD;
+if(isNullOrEmpty(entity.get(&quot;customerName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;商家必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+//业务类型必填&#xD;
+if(isNullOrEmpty(entity.get(&quot;bizType&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;业务类型必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
 view.id(&quot;updateAction&quot;).execute(&#xD;
 	function(result){	&#xD;
+		alertMsg(result.code, result.message);&#xD;
 		if(&quot;SUCC&quot; == result.code){	&#xD;
-			alertMsg(result.code, result.message);&#xD;
 			view.id(&quot;updateDialog&quot;).hide();		&#xD;
 			with (view.get(&quot;#dsEntity&quot;)){&#xD;
 				flushAsync();&#xD;
 			}&#xD;
-		}else{&#xD;
-			alertMsg(result.code, result.message);&#xD;
-			return;&#xD;
 		}&#xD;
 	}&#xD;
 );</ClientEvent>
@@ -379,7 +459,7 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
           <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
 	function(){&#xD;
 		view.id(&quot;dsEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
-		view.id(&quot;addDialog&quot;).hide();&#xD;
+		view.id(&quot;updateDialog&quot;).hide();&#xD;
 	}&#xD;
 );</ClientEvent>
           <Property name="caption">取消</Property>
@@ -466,10 +546,107 @@ if (data != null) {&#xD;
       <Tools/>
     </FloatPanel>
     <UpdateAction id="deleteAction">
+      <ClientEvent name="onGetUpdateData">//获得选中提交的数据&#xD;
+arg.data=view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);</ClientEvent>
       <Property name="dataResolver">reportCustomerController#updateList</Property>
       <UpdateItem>
         <Property name="dataSet">dsEntity</Property>
+        <Property name="dataPath">[#all]</Property>
       </UpdateItem>
     </UpdateAction>
+    <Dialog id="copyDialog">
+      <ClientEvent name="onHide">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+</ClientEvent>
+      <ClientEvent name="onClose">var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+</ClientEvent>
+      <Buttons>
+        <Button id="btnCopySelect">
+          <ClientEvent name="onClick">var entity=view.get(&quot;#copyForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(year)){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(month)){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(!isNullOrEmpty(month)){&#xD;
+	if(month.length==1){&#xD;
+		month='0'+month;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+&#xD;
+selectDatas.each(function(item){&#xD;
+	item.set(&quot;createMonth&quot;,year + &quot;-&quot; +month);&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#copyAction&quot;).execute(function(result){&#xD;
+		if(&quot;SUCC&quot; == result){&#xD;
+			dorado.MessageBox.alert(&quot;复制成功！&quot;);				&#xD;
+			view.id(&quot;copyDialog&quot;).hide();		&#xD;
+			var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+			tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;存在重复数据！&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">复制</Property>
+        </Button>
+        <Button id="btnCopyCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsCopyEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;copyDialog&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="copyForm">
+          <Property name="dataSet">dsCopyEntity</Property>
+          <Property name="dataType">dtCopyEntity</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">year</Property>
+            <Property name="property">year</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">month</Property>
+            <Property name="property">month</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="copyAction">
+      <ClientEvent name="onGetUpdateData">//获得选中提交的数据&#xD;
+arg.data=view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);</ClientEvent>
+      <Property name="dataResolver">reportCustomerController#copyList</Property>
+      <UpdateItem>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+        <Property name="dataSet">dsEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dsDataGrid</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+      <Property name="userData"></Property>
+    </Export2ReportAction>
   </View>
 </ViewConfig>

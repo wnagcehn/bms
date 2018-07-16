@@ -45,4 +45,16 @@ public class ReportWarehouseCustomerRepositoryImpl extends MyBatisDao<ReportWare
 		return updateBatch("com.jiuyescm.bms.base.reportCustomer.mapper.ReportWarehouseCustomerMapper.update", list);
 	}
 
+	@Override
+	public int saveList(List<ReportWarehouseCustomerEntity> list) {
+		// TODO Auto-generated method stub
+		return insertBatch("com.jiuyescm.bms.base.reportCustomer.mapper.ReportWarehouseCustomerMapper.save", list);
+	}
+
+	@Override
+	public ReportWarehouseCustomerEntity queryOne(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (ReportWarehouseCustomerEntity) selectOne("com.jiuyescm.bms.base.reportCustomer.mapper.ReportWarehouseCustomerMapper.queryOne", map);
+	}
+
 }
