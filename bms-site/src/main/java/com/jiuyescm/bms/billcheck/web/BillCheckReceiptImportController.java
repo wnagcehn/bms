@@ -116,7 +116,7 @@ public class BillCheckReceiptImportController extends HttpNewImport<BillCheckRec
 */		for(BillCheckInfoVo checkVo:billCheckVoList){
 			if(checkVo.getBillName().equals(receiptVo.getBillName())){//验证账单名称
 				billNameFlag=true;
-				if(checkVo.getInvoiceName().equals(receiptVo.getInvoiceName())){//验证开票名称
+				if(checkVo.getInvoiceName().equals(receiptVo.getInvoiceName())){//验证商家合同名称
 					invoiceFlag=true;
 					if(checkVo.getCreateMonth()==receiptVo.getCreateMonth()){
 						createMonthFlag=true;
@@ -153,11 +153,11 @@ public class BillCheckReceiptImportController extends HttpNewImport<BillCheckRec
 			return errorMsg;
 		}
 		if(!invoiceFlag){
-			errorMsg+="账单【"+receiptVo.getBillName()+"】无此开票名称【"+receiptVo.getInvoiceName()+"】;";
+			errorMsg+="账单【"+receiptVo.getBillName()+"】无此商家合同名称【"+receiptVo.getInvoiceName()+"】;";
 			return errorMsg;
 		}
 		if(!createMonthFlag){
-			errorMsg+="账单【"+receiptVo.getBillName()+"】,开票名称【"+receiptVo.getInvoiceName()+"】无此开票月份【"+receiptVo.getCreateMonth()+"】;";
+			errorMsg+="账单【"+receiptVo.getBillName()+"】,商家合同名称【"+receiptVo.getInvoiceName()+"】无此开票月份【"+receiptVo.getCreateMonth()+"】;";
 			return errorMsg;
 		}
 		if(!isBadBill){
@@ -204,12 +204,12 @@ public class BillCheckReceiptImportController extends HttpNewImport<BillCheckRec
 				mes+="业务月份格式不对;";
 			}
 			
-			//开票名称验证
+			//商家合同名称验证
 			if(StringUtils.isNotBlank(vo.getInvoiceName())){
 				mes+=checkReceiptVo(billCheckVoList,vo);
 				
 			}else{
-				mes+="开票名称不能为空;";
+				mes+="商家合同名称不能为空;";
 			}
 			
 			//首款金额判断保留两位小数

@@ -29,7 +29,7 @@
       </PropertyDef>
       <PropertyDef name="invoiceName">
         <Property></Property>
-        <Property name="label">开票名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="createMonthStart">
         <Property name="dataType">Integer</Property>
@@ -105,7 +105,7 @@
       </PropertyDef>
       <PropertyDef name="invoiceName">
         <Property></Property>
-        <Property name="label">开票名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="createMonth">
         <Property name="dataType">int</Property>
@@ -187,6 +187,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
       <AutoFormElement>
         <Property name="name">invoiceName</Property>
         <Property name="property">invoiceName</Property>
+        <Property name="labelWidth">85</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>

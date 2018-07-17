@@ -72,5 +72,12 @@ public interface ISystemCodeRepository {
 
 	public List<SystemCodeEntity> queryValueAddList(
 			Map<String, Object> mapCondition);
+	
+	/**
+	 * 根据新建时间去排序
+	 * @param param
+	 * @return
+	 */
+	List<SystemCodeEntity> queryBycreateDt(Map<String, Object> param);
 
 }
