@@ -157,7 +157,7 @@
 		     and province_id=#{province}
 		</if>
 		<if test="(weight!=null and weight!='')">
-			and weight_down<![CDATA[<=#{weight}]]> and weight_up>#{weight}
+			and weight_down<![CDATA[<#{weight}]]> and weight_up>=#{weight}
 		</if>
 	</select>
 	
