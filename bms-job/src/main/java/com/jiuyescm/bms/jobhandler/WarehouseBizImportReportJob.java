@@ -87,6 +87,9 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			reportWarehouseBizImportService.upsertPalletStorage(param);
 			// 统计耗材
 			reportWarehouseBizImportService.upsertPackMaterial(param);
+			
+			//批量删除已经设置的商家仓库
+			reportWarehouseBizImportService.updateReport(param);
 		}
         
         current = System.currentTimeMillis();

@@ -42,5 +42,11 @@ public class ReportWarehouseBizImportServiceImpl  extends MyBatisDao implements 
 	public int upsertPackMaterial(Map<String, Object> param) {
 		return insert("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.upsertPackMaterial", param);
 	}
+
+	@Override
+	public int updateReport(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return update("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.updateReport",param);
+	}
 	
 }

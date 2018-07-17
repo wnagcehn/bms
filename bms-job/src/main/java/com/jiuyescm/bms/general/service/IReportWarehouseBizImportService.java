@@ -34,5 +34,12 @@ public interface IReportWarehouseBizImportService {
      * @return
      */
     int upsertPackMaterial(Map<String, Object> param);
+    
+    /**
+     * 删除已经设置了的商家仓库
+     * @param param
+     * @return
+     */
+    int updateReport(Map<String, Object> param);
 
 }

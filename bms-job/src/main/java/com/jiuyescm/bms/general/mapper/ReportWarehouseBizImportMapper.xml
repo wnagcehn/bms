@@ -121,4 +121,14 @@
         where id=#{id}
     </update>
     
+    <update id="updateReport" parameterType="java.util.Map">
+    	update report_warehouse_biz_import a 
+		inner JOIN report_warehouse_customer b 
+		on a.import_date=b.create_month and a.biz_type=b.biz_type and a.customer_id=b.customer_id 
+		set a.del_flag='1'
+		where a.import_date=DATE_FORMAT(#{startTime}, '%Y-%m')
+		<if test="b.warehouse_code != null" >
+			 and a.warehouse_code=b.warehouse_code;
+		</if>	
+    </update>
 </mapper>
