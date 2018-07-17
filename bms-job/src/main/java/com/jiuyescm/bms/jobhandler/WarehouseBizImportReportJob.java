@@ -5,12 +5,14 @@ package com.jiuyescm.bms.jobhandler;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity;
 import com.jiuyescm.bms.common.DateUtil;
 import com.jiuyescm.bms.general.service.IReportWarehouseBizImportService;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -65,6 +67,8 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		int factor = 5;
 		int loop = days / factor;
 		Timestamp createTime = JAppContext.currentTimestamp();
+		//插入的行数
+		int num = 0;
 		for (int i = 1; i <= loop; i++) {
 			String beginDate = DateUtil.getSpecifyDate(curDate, (i-1) * factor);
 			String endDate = DateUtil.getSpecifyDate(curDate, i * factor);
@@ -84,14 +88,19 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			param.put("endTime", endDate);
 			
 			// 统计商品托数
-			reportWarehouseBizImportService.upsertPalletStorage(param);
+			num+=reportWarehouseBizImportService.upsertPalletStorage(param);
 			// 统计耗材
-			reportWarehouseBizImportService.upsertPackMaterial(param);
-			
-			//批量删除已经设置的商家仓库
-			reportWarehouseBizImportService.updateReport(param);
+			num+=reportWarehouseBizImportService.upsertPackMaterial(param);
 		}
         
+		//查询已经设置的商家仓库
+		if(num>0){
+			List<ReportWarehouseCustomerEntity> list=reportWarehouseBizImportService.queryWareList(param);
+			if(list.size()>0){
+				reportWarehouseBizImportService.updateReport(list);
+			}		
+		}
+		
         current = System.currentTimeMillis();
         XxlJobLogger.log("各仓业务数据导入统计,耗时："+ (current - btime) + "毫秒");
         return ReturnT.SUCCESS;
