@@ -4,8 +4,10 @@
  */
 package com.jiuyescm.bms.general.service;
 
+import java.util.List;
 import java.util.Map;
 
+import com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity;
 import com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity;
 
 /**
@@ -34,5 +36,13 @@ public interface IReportWarehouseBizImportService {
      * @return
      */
     int upsertPackMaterial(Map<String, Object> param);
+    
+    List<ReportWarehouseCustomerEntity> queryWareList(Map<String, Object> param);
+    /**
+     * 删除已经设置了的商家仓库
+     * @param param
+     * @return
+     */
+    int updateReport(List<ReportWarehouseCustomerEntity> list);
 
 }

@@ -73,16 +73,30 @@ public class ReportCustomerController {
 				if(vo!=null){
 					return new ResponseVo(ResponseVo.FAIL, "商家仓库当前月份已存在");
 				}
+				
+				condition=new HashMap<String,Object>();
+				condition.put("createMonth", entity.getCreateMonth());
+				condition.put("customerId", entity.getCustomerId());
+				condition.put("warehouseCode", "");
+				condition.put("bizType", entity.getBizType());
+				ReportWarehouseCustomerVo vo2=reportWarehouseCustomerService.queryOne(condition);
+				if(vo2!=null){
+					return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+				}
 			}
-			Map<String,Object> condition=new HashMap<String,Object>();
-			condition.put("createMonth", entity.getCreateMonth());
-			condition.put("customerId", entity.getCustomerId());
-			condition.put("warehouseCode", "");
-			condition.put("bizType", entity.getBizType());
-			ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
-			if(vo!=null){
-				return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+			
+			if(StringUtils.isBlank(entity.getWarehouseCode())){
+				Map<String,Object> condition=new HashMap<String,Object>();
+				condition.put("createMonth", entity.getCreateMonth());
+				condition.put("customerId", entity.getCustomerId());
+				condition.put("bizType", entity.getBizType());
+				ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
+				if(vo!=null){
+					return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+				}
 			}
+			
+			
 			//不根据仓库匹配			
 			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
@@ -93,9 +107,9 @@ public class ReportCustomerController {
 			
 		}catch(Exception e){
 			logger.error("新增失败,失败原因:"+e.getMessage());
-			return new ResponseVo(ResponseVo.FAIL, MessageConstant.OPERATOR_FAIL_MSG);
+			return new ResponseVo(ResponseVo.FAIL, "新增失败");
 		}
-		return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
+		return new ResponseVo(ResponseVo.SUCCESS, "新增成功");
 	}
 	
 	/**
@@ -141,9 +155,9 @@ public class ReportCustomerController {
 			
 		}catch(Exception e){
 			logger.error("更新失败,失败原因:"+e.getMessage());
-			return new ResponseVo(ResponseVo.FAIL, MessageConstant.OPERATOR_FAIL_MSG);
+			return new ResponseVo(ResponseVo.FAIL, "更新失败");
 		}
-		return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);	
+		return new ResponseVo(ResponseVo.SUCCESS, "更新成功");	
 	}
 	
 	/**
@@ -169,9 +183,9 @@ public class ReportCustomerController {
 			
 		}catch(Exception e){
 			logger.error("批量删除失败,失败原因:"+e.getMessage());
-			return new ResponseVo(ResponseVo.FAIL, MessageConstant.OPERATOR_FAIL_MSG);
+			return new ResponseVo(ResponseVo.FAIL, "批量删除失败");
 		}
-		return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
+		return new ResponseVo(ResponseVo.SUCCESS, "批量删除成功");
 	}
 	
 	/**
