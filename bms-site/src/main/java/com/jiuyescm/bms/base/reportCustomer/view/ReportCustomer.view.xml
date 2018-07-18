@@ -345,9 +345,8 @@ view.id(&quot;addAction&quot;).execute(&#xD;
 		alertMsg(result.code, result.message);		&#xD;
 		if(&quot;SUCC&quot; == result.code){&#xD;
 			view.id(&quot;addDialog&quot;).hide();		&#xD;
-			with (view.get(&quot;#dsEntity&quot;)){&#xD;
-				flushAsync();&#xD;
-			}&#xD;
+			var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+			tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
 		}&#xD;
 	}&#xD;
 );</ClientEvent>
