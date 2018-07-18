@@ -676,7 +676,7 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="templateCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">模版编号</Property>
       </PropertyDef>
       <PropertyDef name="startWarehouseId">
@@ -791,16 +791,16 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="startWarehouseName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="provinceName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="cityName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="areaName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -1035,6 +1035,10 @@ view.get(&quot;#downloadMoBanAction&quot;).set(&quot;parameter&quot;,{&quot;deli
 if(data.current)&#xD;
 {&#xD;
 	var entity = data.current; &#xD;
+	if(isNullOrEmpty(entity.get(&quot;priceType&quot;))){&#xD;
+		dorado.MessageBox.alert(&quot;请选择模板报价形式!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
 	view.get(&quot;#StepUploadAction&quot;).set(&quot;parameter&quot;,{&quot;templateCode&quot;:entity.get(&quot;templateCode&quot;),&quot;customerId&quot;:entity.get(&quot;customerId&quot;)});&#xD;
     view.get(&quot;#StepImportDialog&quot;).show();&#xD;
 }&#xD;
@@ -2299,6 +2303,7 @@ var entity = view.get(&quot;#dsGenericTemplate.data&quot;).current;&#xD;
 var id = entity.get(&quot;id&quot;);&#xD;
 var parameter={&#xD;
 	id:id,&#xD;
+	templateCode:entity.get(&quot;templateCode&quot;),&#xD;
 	customerName:entity.get(&quot;customerName&quot;),&#xD;
 	customerId:entity.get(&quot;customerId&quot;),&#xD;
 	priceType:entity.get(&quot;priceType&quot;)&#xD;

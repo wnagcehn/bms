@@ -51,6 +51,20 @@ public class HttpCommanExport {
         InputStream is = new FileInputStream(path+File.separator+voEntity.getTitleName()+".xls");
 		return new DownloadFile(""+voEntity.getTitleName()+".xls", is);
 	}
+	
+	public DownloadFile exportXFile(ExportDataVoEntity voEntity) throws FileNotFoundException{
+		try {
+        	POIUtil poiUtil = new POIUtil();
+        	HSSFWorkbook hssfWorkbook = poiUtil.getHSSFWorkbook();
+        	this.appendExcelSheet(poiUtil,hssfWorkbook,path+File.separator+voEntity.getTitleName()+".xlsx",voEntity);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+        InputStream is = new FileInputStream(path+File.separator+voEntity.getTitleName()+".xlsx");
+		return new DownloadFile(""+voEntity.getTitleName()+".xlsx", is);
+	}
 
 	public DownloadFile exportFile(String fileName,List<ExportDataVoEntity> exportDataList) throws FileNotFoundException{
 		try {

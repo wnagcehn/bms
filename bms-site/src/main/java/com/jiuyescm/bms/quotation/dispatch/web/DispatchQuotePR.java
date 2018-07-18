@@ -384,14 +384,13 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		//获取当前的id
 		String templateCode = (String)parameter.get("templateCode");
 		String priceType = (String)parameter.get("priceType");
-		if (StringUtils.isBlank(priceType)) {
+		if(StringUtils.isBlank(priceType)){
 			errorVo = new ErrorMessageVo();
 			errorVo.setMsg("报价形式不能为空!");
 			infoList.add(errorVo);
 			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			return map;
 		}
-		
 		// 导入成功返回模板信息
 		List<BmsQuoteDispatchDetailVo> templateList = new ArrayList<BmsQuoteDispatchDetailVo>();
 		// 当期时间

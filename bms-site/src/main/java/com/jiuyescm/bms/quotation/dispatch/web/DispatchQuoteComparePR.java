@@ -223,7 +223,7 @@ public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDisp
 			voEntity.setTitleName(templateName);
 			voEntity.setBaseType(new DispatchQuoteCompareDataType());
 			voEntity.setDataList(getDataList(parameter));
-			return commanExport.exportFile(voEntity);
+			return commanExport.exportXFile(voEntity);
 		}catch(Exception e){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
