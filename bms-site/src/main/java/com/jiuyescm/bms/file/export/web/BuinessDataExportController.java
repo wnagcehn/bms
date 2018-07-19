@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,8 +74,7 @@ import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 @Controller("buinessDataExportController")
 public class BuinessDataExportController extends BaseController {
 
-	private static final Logger logger = Logger
-			.getLogger(BuinessDataExportController.class.getName());
+	private static final Logger logger = Logger.getLogger(BuinessDataExportController.class.getName());
 	@Resource
 	private IFileExportTaskService fileExportTaskService;
 
@@ -112,8 +113,7 @@ public class BuinessDataExportController extends BaseController {
 	 * @throws Exception
 	 */
 	@DataProvider
-	public void queryTask(Page<FileExportTaskEntity> page,
-			Map<String, Object> param) throws Exception {
+	public void queryTask(Page<FileExportTaskEntity> page, Map<String, Object> param) throws Exception {
 		if (param == null) {
 			param = Maps.newHashMap();
 		}
@@ -132,8 +132,8 @@ public class BuinessDataExportController extends BaseController {
 			param.put("startDate", startDate);
 			param.put("endDate", endDate);
 		}
-		PageInfo<FileExportTaskEntity> pageInfo = fileExportTaskService
-				.queryBillTask(param, page.getPageNo(), page.getPageSize());
+		PageInfo<FileExportTaskEntity> pageInfo = fileExportTaskService.queryBillTask(param, page.getPageNo(),
+				page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
@@ -161,24 +161,20 @@ public class BuinessDataExportController extends BaseController {
 			queryEntity.put("endTime", endTime);
 			param.put("startTime", startTime);
 			param.put("endTime", endTime);
-			queryEntity
-					.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
+			queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
 			if (checkFileHasDownLoad(queryEntity)) {
 				return MessageConstant.BILL_FILE_ISEXIST_MSG;
 			}
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM");
 			String path = getPath();
-			String filePath = path + FileConstant.SEPARATOR
-					+ param.get("customerName").toString() + "-"
+			String filePath = path + FileConstant.SEPARATOR + param.get("customerName").toString() + "-"
 					+ sdf.format(startDate) + "-预账单" + FileConstant.SUFFIX_XLSX;
 			FileExportTaskEntity entity = new FileExportTaskEntity();
 
-			entity.setTaskName(param.get("customerName").toString() + "-"
-					+ sdf.format(startDate) + "-预账单");
+			entity.setTaskName(param.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
 			entity.setBillNo("");
 			entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
-			entity.setEndTime(Timestamp.valueOf(format.format(date)
-					+ " 00:00:00"));
+			entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
 			entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
 			entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
 			entity.setProgress(0d);
@@ -199,16 +195,12 @@ public class BuinessDataExportController extends BaseController {
 					try {
 						export(condition, taskId, path2, filepath);
 					} catch (Exception e) {
-						fileExportTaskService.updateExportTask(taskId,
-								FileTaskStateEnum.FAIL.getCode(), 0);
-						logger.error(
-								ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG,
-								e);
+						fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+						logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
 						// 写入日志
 						BmsErrorLogInfoEntity bmsErrorLogInfoEntity = new BmsErrorLogInfoEntity(
 								this.getClass().getSimpleName(),
-								Thread.currentThread().getStackTrace()[1]
-										.getMethodName(), "", e.toString());
+								Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 						bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
 					}
 				};
@@ -216,10 +208,8 @@ public class BuinessDataExportController extends BaseController {
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			// 写入日志
-			BmsErrorLogInfoEntity bmsErrorLogInfoEntity = new BmsErrorLogInfoEntity(
-					this.getClass().getSimpleName(), Thread.currentThread()
-							.getStackTrace()[1].getMethodName(), "启动线程失败",
-					e.toString());
+			BmsErrorLogInfoEntity bmsErrorLogInfoEntity = new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),
+					Thread.currentThread().getStackTrace()[1].getMethodName(), "启动线程失败", e.toString());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
 			return ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG;
 		}
@@ -228,19 +218,19 @@ public class BuinessDataExportController extends BaseController {
 
 	/**
 	 * 预账单导出
+	 * 
 	 * @param condition
 	 * @param taskId
 	 * @param path
 	 * @param filePath
 	 * @throws Exception
 	 */
-	protected void export(Map<String, Object> condition, String taskId,
-			String path, String filePath) throws Exception {
+	protected void export(Map<String, Object> condition, String taskId, String path, String filePath) throws Exception {
 		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 10);
-		
-		//初始化参数
+
+		// 初始化参数
 		init();
-		
+
 		File storeFolder = new File(path);
 		// 如果存放上传文件的目录不存在就新建
 		if (!storeFolder.isDirectory()) {
@@ -250,34 +240,30 @@ public class BuinessDataExportController extends BaseController {
 		POISXSSUtil poiUtil = new POISXSSUtil();
 		SXSSFWorkbook xssfWorkbook = poiUtil.getXSSFWorkbook();
 		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 20);
-		logger.info("====预账单导出：" + "["
-				+ condition.get("customerName").toString() + "]"
-				+ "写入Excel begin.");
+		logger.info("====预账单导出：" + "[" + condition.get("customerName").toString() + "]" + "写入Excel begin.");
 
 		// 配送费
 		handDispatch(xssfWorkbook, poiUtil, condition, filePath);
 		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 50);
-		
-		List<String>  warehouseList = queryPreBillWarehouse(condition);
+
+		List<String> warehouseList = queryPreBillWarehouse(condition);
 		// 存储费
 		handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
-		
+
 		// 耗材费
 		handMaterial(xssfWorkbook, poiUtil, condition, filePath);
-		
+
 		// 增值
-    	handAdd(xssfWorkbook, poiUtil, condition, filePath);
-    	
-    	// 理赔
-    	handAbnormal(xssfWorkbook, poiUtil, condition, filePath);
-    	//改地址和退件费
-    	handAbnormalChange(xssfWorkbook, poiUtil, condition, filePath);
+		handAdd(xssfWorkbook, poiUtil, condition, filePath);
+
+		// 理赔
+		handAbnormal(xssfWorkbook, poiUtil, condition, filePath);
+		// 改地址和退件费
+		handAbnormalChange(xssfWorkbook, poiUtil, condition, filePath);
 
 		poiUtil.write2FilePath(xssfWorkbook, filePath);
 		updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), 100);
-		logger.info("====预账单导出：" + "["
-				+ condition.get("customerName").toString() + "]"
-				+ "写入Excel end.==总耗时："
+		logger.info("====预账单导出：" + "[" + condition.get("customerName").toString() + "]" + "写入Excel end.==总耗时："
 				+ (System.currentTimeMillis() - beginTime));
 	}
 
@@ -289,13 +275,13 @@ public class BuinessDataExportController extends BaseController {
 		return dt1;
 	}
 
-	private Map<String,String> mapWarehouse;
-	private void init(){
-		mapWarehouse=getwarehouse();
+	private Map<String, String> mapWarehouse;
+
+	private void init() {
+		mapWarehouse = getwarehouse();
 	}
-	
-	private Map<String, String> getHeadMap(List<String> materialCodeList,
-			List<PubMaterialInfoVo> materialInfoList) {
+
+	private Map<String, String> getHeadMap(List<String> materialCodeList, List<PubMaterialInfoVo> materialInfoList) {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("warehouseName", "仓库");
 		map.put("customerName", "商家名称");
@@ -309,32 +295,65 @@ public class BuinessDataExportController extends BaseController {
 		map.put("receiveProvinceId", "收件人省");
 		map.put("receiveCityId", "收件人市");
 		map.put("receiveDetailAddress", "收件人地址");
+
+		// 按新增时间获取systemCode表中的类别并排序
+		Map<String, Object> param = new HashMap<>();
+		param.put("typeCode", "PACKMAGERIAL_SORT");
+		List<SystemCodeEntity> entityList = systemCodeService.queryBycreateDt(param);
+		final List<String> orderList = new ArrayList<>();
+		for (SystemCodeEntity entity : entityList) {
+			orderList.add(entity.getCodeName());
+		}
+
 		List<String> materialTypeList = new ArrayList<String>();
+		HashMap<String, Object> codeMap = new HashMap<>();
 		for (String code : materialCodeList) {
 			String marterialType = getMaterialType(materialInfoList, code);
+
 			if (!materialTypeList.contains(marterialType)) {
 				materialTypeList.add(marterialType);
-				map.put(marterialType + "_name", marterialType);
-				map.put(marterialType + "_code", "编码");
-				map.put(marterialType + "_type", "规格");
-				if (code.contains("GB")) {
-					map.put(marterialType + "_count", "重量");
-				} else {
-					map.put(marterialType + "_count", "数量");
-				}
-				map.put(marterialType + "_unitprice", "单价");
-				map.put(marterialType + "_cost", "金额");
+				codeMap.put(marterialType, code);
 			}
+		}
+
+		// 按上述list进行排序
+		Collections.sort(materialTypeList, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				
+		    	if (orderList.indexOf(o1) >= 0 && orderList.indexOf(o2) >= 0) {
+					return orderList.indexOf(o1)-orderList.indexOf(o2);
+				}else if (orderList.indexOf(o1) >= 0 && orderList.indexOf(o2) <= 0) {
+					return -1;
+				}else if (orderList.indexOf(o1) <= 0 && orderList.indexOf(o2) >= 0) {
+					return 1;
+				}else {
+					return 0;
+				}
+			}
+		});
+
+		// 遍历输出
+		for (String marterialTypeDetail : materialTypeList) {
+			map.put(marterialTypeDetail + "_name", marterialTypeDetail);
+			map.put(marterialTypeDetail + "_code", "编码");
+			map.put(marterialTypeDetail + "_type", "规格");
+			if (((String) codeMap.get(marterialTypeDetail)).contains("GB")) {
+				map.put(marterialTypeDetail + "_count", "重量");
+			} else {
+				map.put(marterialTypeDetail + "_count", "数量");
+			}
+			map.put(marterialTypeDetail + "_unitprice", "单价");
+			map.put(marterialTypeDetail + "_cost", "金额");
 		}
 		map.put("totalCost", "合计");
 		return map;
 	}
 
-	private List<Map<String, Object>> getHeadPackMaterialMap(
-			List<String> materialCodeList,
+	private List<Map<String, Object>> getHeadPackMaterialMap(List<String> materialCodeList,
 			List<PubMaterialInfoVo> materialInfoList) {
-		Map<String, String> headMap = getHeadMap(materialCodeList,
-				materialInfoList);
+		Map<String, String> headMap = getHeadMap(materialCodeList, materialInfoList);
 		List<Map<String, Object>> headMapList = new ArrayList<Map<String, Object>>();
 		Set<String> set = headMap.keySet();
 		for (String key : set) {
@@ -348,8 +367,7 @@ public class BuinessDataExportController extends BaseController {
 		return headMapList;
 	}
 
-	private List<String> getMaterialCodeList(
-			List<BizOutstockPackmaterialEntity> ListHead) {
+	private List<String> getMaterialCodeList(List<BizOutstockPackmaterialEntity> ListHead) {
 		List<String> materialCodeList = new ArrayList<String>();
 		for (BizOutstockPackmaterialEntity entity : ListHead) {
 			materialCodeList.add(entity.getConsumerMaterialCode());
@@ -359,14 +377,15 @@ public class BuinessDataExportController extends BaseController {
 
 	/**
 	 * 耗材
+	 * 
 	 * @param xssfWorkbook
 	 * @param poiUtil
 	 * @param condition
 	 * @param filePath
 	 * @throws Exception
 	 */
-	private void handMaterial(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil,
-			Map<String, Object> condition, String filePath) throws Exception {
+	private void handMaterial(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
+			String filePath) throws Exception {
 		List<BizOutstockPackmaterialEntity> warehouseList = bizOutstockPackmaterialServiceImpl
 				.queryAllWarehouseFromBizData(condition);
 		for (BizOutstockPackmaterialEntity entity : warehouseList) {
@@ -379,8 +398,8 @@ public class BuinessDataExportController extends BaseController {
 			List<BizOutstockPackmaterialEntity> ListHead = bizOutstockPackmaterialServiceImpl
 					.getMaterialCodeFromBizData(condition);
 			List<String> materialCodeList = getMaterialCodeList(ListHead);
-			List<Map<String, Object>> headPackMaterialMapList = getHeadPackMaterialMap(
-					materialCodeList, materialInfoList);
+			List<Map<String, Object>> headPackMaterialMapList = getHeadPackMaterialMap(materialCodeList,
+					materialInfoList);
 
 			while (doLoop) {
 				PageInfo<FeesReceiveMaterial> packMaterialList = bizOutstockPackmaterialServiceImpl
@@ -403,8 +422,7 @@ public class BuinessDataExportController extends BaseController {
 				boolean flag = false;
 				Map<String, Object> matchMap = null;
 				for (Map<String, Object> map : dataPackMaterialList) {
-					if (map.get("waybillNo").equals(
-							materialEntity.getWaybillNo())) {
+					if (map.get("waybillNo").equals(materialEntity.getWaybillNo())) {
 						flag = true;
 						matchMap = map;
 						break;
@@ -412,14 +430,11 @@ public class BuinessDataExportController extends BaseController {
 				}
 				if (flag) {
 					// 检查耗材类型
-					String marterialType = getMaterialType(materialInfoList,
-							materialEntity.getProductNo());
+					String marterialType = getMaterialType(materialInfoList, materialEntity.getProductNo());
 					if (matchMap.containsKey(marterialType + "_name")) {
-						matchMap.put(
-								marterialType + "_name",
-								matchMap.get(marterialType + "_name") + ","
-										+ materialEntity.getProductName() == null ? ""
-										: materialEntity.getProductName());
+						matchMap.put(marterialType + "_name",
+								matchMap.get(marterialType + "_name") + "," + materialEntity.getProductName() == null
+										? "" : materialEntity.getProductName());
 						if (materialEntity.getProductNo().contains("GB")) {
 							matchMap.put(
 									marterialType + "_count",
@@ -439,15 +454,12 @@ public class BuinessDataExportController extends BaseController {
 										+ materialEntity.getCost() == null ? ""
 										: materialEntity.getCost());
 						double totleCost = matchMap.get("totalCost") == null ? 0d
-								: Double.parseDouble(matchMap.get("totalCost")
-										.toString());
-						totleCost += materialEntity.getCost() == null ? 0d
-								: materialEntity.getCost();
+								: Double.parseDouble(matchMap.get("totalCost").toString());
+						totleCost += materialEntity.getCost() == null ? 0d : materialEntity.getCost();
 						matchMap.put("totalCost", totleCost);// 金额
 					} else {
 						matchMap.put(marterialType + "_name",
-								materialEntity.getProductName() == null ? ""
-										: materialEntity.getProductName());
+								materialEntity.getProductName() == null ? "" : materialEntity.getProductName());
 						if (materialEntity.getProductNo().contains("GB")) {
 							matchMap.put(marterialType + "_count",
 									materialEntity.getWeight() == null ? ""
@@ -457,50 +469,36 @@ public class BuinessDataExportController extends BaseController {
 									materialEntity.getQuantity() == null ? ""
 											: materialEntity.getQuantity());
 						}
-						matchMap.put(marterialType + "_code",
-								materialEntity.getProductNo());
-						matchMap.put(marterialType + "_type",
-								materialEntity.getSpecDesc());
+						matchMap.put(marterialType + "_code", materialEntity.getProductNo());
+						matchMap.put(marterialType + "_type", materialEntity.getSpecDesc());
 						matchMap.put(marterialType + "_unitprice",
 								materialEntity.getUnitPrice() == null ? ""
 										: materialEntity.getUnitPrice());
 						matchMap.put(marterialType + "_cost", materialEntity
 								.getCost() == null ? "" : materialEntity.getCost());
 						double totleCost = matchMap.get("totalCost") == null ? 0d
-								: Double.parseDouble(matchMap.get("totalCost")
-										.toString());
-						totleCost += materialEntity.getCost() == null ? 0d
-								: materialEntity.getCost();
+								: Double.parseDouble(matchMap.get("totalCost").toString());
+						totleCost += materialEntity.getCost() == null ? 0d : materialEntity.getCost();
 						matchMap.put("totalCost", totleCost);// 金额
 					}
 				} else {
 					Map<String, Object> dataItem = new HashMap<String, Object>();
-					dataItem.put("warehouseName",
-							materialEntity.getWarehouseName());
-					dataItem.put("customerName",
-							materialEntity.getCustomerName());
+					dataItem.put("warehouseName", materialEntity.getWarehouseName());
+					dataItem.put("customerName", materialEntity.getCustomerName());
 					dataItem.put("waybillNo", materialEntity.getWaybillNo());
 					dataItem.put("outstockNo", materialEntity.getOutstockNo());
 					dataItem.put("totalqty", materialEntity.getTotalqty());
-					dataItem.put("productDetail",
-							materialEntity.getProductDetail());
+					dataItem.put("productDetail", materialEntity.getProductDetail());
 					dataItem.put("externalNo", materialEntity.getExternalNo());
 					dataItem.put("carrierName", materialEntity.getCarrierName());
 					dataItem.put("createTime", materialEntity.getCreateTime());
-					dataItem.put("receiveProvinceId",
-							materialEntity.getReceiveProvinceId());
-					dataItem.put("receiveCityId",
-							materialEntity.getReceiveCityId());
-					dataItem.put("receiveDetailAddress",
-							materialEntity.getReceiveDetailAddress());
-					String marterialType = getMaterialType(materialInfoList,
-							materialEntity.getProductNo());
-					dataItem.put(marterialType + "_name",
-							materialEntity.getProductName());
-					dataItem.put(marterialType + "_code",
-							materialEntity.getProductNo());
-					dataItem.put(marterialType + "_type",
-							materialEntity.getSpecDesc());
+					dataItem.put("receiveProvinceId", materialEntity.getReceiveProvinceId());
+					dataItem.put("receiveCityId", materialEntity.getReceiveCityId());
+					dataItem.put("receiveDetailAddress", materialEntity.getReceiveDetailAddress());
+					String marterialType = getMaterialType(materialInfoList, materialEntity.getProductNo());
+					dataItem.put(marterialType + "_name", materialEntity.getProductName());
+					dataItem.put(marterialType + "_code", materialEntity.getProductNo());
+					dataItem.put(marterialType + "_type", materialEntity.getSpecDesc());
 					if (materialEntity.getProductNo().contains("GB")) {
 						dataItem.put(marterialType + "_count", materialEntity
 								.getWeight() == null ? "" : materialEntity.getWeight());
@@ -518,8 +516,7 @@ public class BuinessDataExportController extends BaseController {
 				}
 
 			}
-			poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook,
-					entity.getWarehouseName() + "耗材使用费",
+			poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook, entity.getWarehouseName() + "耗材使用费",
 					headPackMaterialMapList, dataPackMaterialList);
 		}
 
@@ -531,11 +528,9 @@ public class BuinessDataExportController extends BaseController {
 		return pubMaterialInfoService.queryList(conditionMap);
 	}
 
-	private String getMaterialType(List<PubMaterialInfoVo> materialInfoList,
-			String materialCode) {
+	private String getMaterialType(List<PubMaterialInfoVo> materialInfoList, String materialCode) {
 		for (PubMaterialInfoVo infoVo : materialInfoList) {
-			if (StringUtils.isNotBlank(infoVo.getBarcode())
-					&& infoVo.getBarcode().equals(materialCode)) {
+			if (StringUtils.isNotBlank(infoVo.getBarcode()) && infoVo.getBarcode().equals(materialCode)) {
 				return infoVo.getMaterialType();
 			}
 		}
@@ -585,8 +580,7 @@ public class BuinessDataExportController extends BaseController {
 		return list;
 	}
 
-	private List<Map<String, Object>> getDispathItemMap(
-			List<FeesReceiveDispatchEntity> dataList) {
+	private List<Map<String, Object>> getDispathItemMap(List<FeesReceiveDispatchEntity> dataList) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		double yunfei = 0d;
@@ -598,16 +592,10 @@ public class BuinessDataExportController extends BaseController {
 			map.put("orderNo", entity.getOutstockNo());
 			map.put("externalNo", entity.getExternalNo());
 			map.put("waybillNo", entity.getWaybillNo());
-			map.put("createTime",
-					entity.getCreateTime() == null ? "" : sdf.format(entity
-							.getCreateTime()));
+			map.put("createTime", entity.getCreateTime() == null ? "" : sdf.format(entity.getCreateTime()));
 			map.put("zexpressNum", entity.getZexpressnum());
-			map.put("totalWeight",
-					entity.getTotalWeight() == null ? 0 : entity
-							.getTotalWeight());
-			map.put("totalQty",
-					entity.getTotalQuantity() == null ? 0 : entity
-							.getTotalQuantity());
+			map.put("totalWeight", entity.getTotalWeight() == null ? 0 : entity.getTotalWeight());
+			map.put("totalQty", entity.getTotalQuantity() == null ? 0 : entity.getTotalQuantity());
 			map.put("productDetail", entity.getProductDetail());
 			map.put("carrierName", entity.getCarrierName());
 			map.put("receiver", entity.getReceiveName());
@@ -615,14 +603,10 @@ public class BuinessDataExportController extends BaseController {
 			map.put("receiveCity", entity.getToCityName());
 			map.put("receiveDistrict", entity.getToDistrictName());
 			map.put("temperatureType", entity.getTemperatureType());
-			map.put("chargeWeight", entity.getChargedWeight() == null ? 0
-					: entity.getChargedWeight());
-			map.put("headPrice",
-					entity.getHeadPrice() == null ? 0 : entity.getHeadPrice());
-			map.put("continuePrice", entity.getContinuedPrice() == null ? 0
-					: entity.getContinuedPrice());
-			map.put("amount",
-					entity.getAmount() == null ? 0 : entity.getAmount());
+			map.put("chargeWeight", entity.getChargedWeight() == null ? 0 : entity.getChargedWeight());
+			map.put("headPrice", entity.getHeadPrice() == null ? 0 : entity.getHeadPrice());
+			map.put("continuePrice", entity.getContinuedPrice() == null ? 0 : entity.getContinuedPrice());
+			map.put("amount", entity.getAmount() == null ? 0 : entity.getAmount());
 			map.put("carrierCalStatus", getCalInfo(entity.getDispatchCal()));
 			map.put("carrierRemark", entity.getDispatchRemark());
 			map.put("orderOperatorAmount",
@@ -633,11 +617,9 @@ public class BuinessDataExportController extends BaseController {
 			map.put("dutyType", entity.getDutyType());
 			map.put("reasonDetail", entity.getUpdateReasonDetail());
 			list.add(map);
-			yunfei = yunfei
-					+ (entity.getAmount() == null ? 0 : entity.getAmount());
+			yunfei = yunfei + (entity.getAmount() == null ? 0 : entity.getAmount());
 			caozao = caozao
-					+ Double.valueOf(entity.getOrderOperatorAmount() == null ? "0"
-							: entity.getOrderOperatorAmount());
+					+ Double.valueOf(entity.getOrderOperatorAmount() == null ? "0" : entity.getOrderOperatorAmount());
 		}
 		Map<String, Object> finalMap = Maps.newHashMap();
 		finalMap.put("continuePrice", "合计金额：");
@@ -656,16 +638,15 @@ public class BuinessDataExportController extends BaseController {
 	 * @param filePath
 	 * @throws Exception
 	 */
-	private void handDispatch(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil,
-			Map<String, Object> condition, String filePath) throws Exception {
+	private void handDispatch(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
+			String filePath) throws Exception {
 		int pageNo = 1;
 		boolean doLoop = true;
 		List<FeesReceiveDispatchEntity> dataList = new ArrayList<FeesReceiveDispatchEntity>();
 		while (doLoop) {
 			PageInfo<FeesReceiveDispatchEntity> pageList = feesReceiveDispatchService
 					.querydistributionDetailByBizData(condition, pageNo, PAGESIZE);
-			if (null != pageList && pageList.getList() != null
-					&& pageList.getList().size() > 0) {
+			if (null != pageList && pageList.getList() != null && pageList.getList().size() > 0) {
 				if (pageList.getList().size() < PAGESIZE) {
 					doLoop = false;
 				} else {
@@ -695,19 +676,19 @@ public class BuinessDataExportController extends BaseController {
 		List<Map<String, Object>> headMap = getDispathHeadMap();
 
 		List<Map<String, Object>> itemMap = getDispathItemMap(dataList);
-		poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook, "宅配", headMap,
-				itemMap);
+		poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook, "宅配", headMap, itemMap);
 	}
 
 	/**
 	 * 预账单仓储
+	 * 
 	 * @param workbook
 	 * @param parameter
 	 * @param poiUtil
 	 * @param warehouseList
 	 */
-	private void handStorage(SXSSFWorkbook workbook, Map<String, Object> parameter,
-			POISXSSUtil poiUtil, List<String> warehouseList) {
+	private void handStorage(SXSSFWorkbook workbook, Map<String, Object> parameter, POISXSSUtil poiUtil,
+			List<String> warehouseList) {
 		for (String warehouseCode : warehouseList) {
 			int conIndex = 0;
 			parameter.put("warehouseCode", warehouseCode);
@@ -735,13 +716,13 @@ public class BuinessDataExportController extends BaseController {
 			if (conIndex == 0) {
 				continue;
 			}
-			
+
 			// st
 			Sheet sheet = workbook.createSheet(mapWarehouse.get(warehouseCode));
 
 			Font font = workbook.createFont();
 			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-			
+
 			CellStyle style = workbook.createCellStyle();
 			style.setAlignment(CellStyle.ALIGN_CENTER);
 			style.setWrapText(true);
@@ -892,14 +873,14 @@ public class BuinessDataExportController extends BaseController {
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 23, 23));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 24, 24));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 25, 25));
-			
+
 			Row row3 = sheet.createRow(3);
 			row3.setHeight((short) (20 * 20));
-			
+
 			Cell cell30 = row3.createCell(0);
 			cell30.setCellValue("上月结余");
 			cell30.setCellStyle(style);
-			
+
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 1));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 2, 2));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 3, 3));
@@ -980,19 +961,19 @@ public class BuinessDataExportController extends BaseController {
 						if ("LD".equals(tempretureType)) {
 							Cell cell49 = row.createCell(19);
 							cell49.setCellValue(cost);
-							ldcost = ldcost	+ cost;
+							ldcost = ldcost + cost;
 						} else if ("LC".equals(tempretureType)) {
 							Cell cell49 = row.createCell(20);
 							cell49.setCellValue(cost);
-							lccost = lccost	+ cost;
+							lccost = lccost + cost;
 						} else if ("HW".equals(tempretureType)) {
 							Cell cell49 = row.createCell(21);
 							cell49.setCellValue(cost);
-							hwcost = hwcost	+ cost;
+							hwcost = hwcost + cost;
 						} else if ("CW".equals(tempretureType)) {
 							Cell cell49 = row.createCell(22);
 							cell49.setCellValue(cost);
-							cwcost = cwcost	+ cost;
+							cwcost = cwcost + cost;
 						}
 						// 行小计
 						rowCost = rowCost + cost;
@@ -1004,7 +985,7 @@ public class BuinessDataExportController extends BaseController {
 					if (entity.getCreateTime().equals(timestamp)) {
 						Cell cell46 = row.createCell(6);
 						cell46.setCellValue(entity.getQuantity());
-						
+
 						double materialCost = entity.getCost().doubleValue();
 						Cell cell49 = row.createCell(23);
 						cell49.setCellValue(materialCost);
@@ -1047,29 +1028,30 @@ public class BuinessDataExportController extends BaseController {
 			cellLast.setCellValue(totalcost);
 		}
 	}
-	
+
 	/**
 	 * 预账单增值
+	 * 
 	 * @param workbook
 	 * @param poiUtil
 	 * @param condition
 	 * @param filePath
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	private void handAdd(SXSSFWorkbook workbook, POISXSSUtil poiUtil, Map<String, Object> condition, String filePath) throws IOException{
+	private void handAdd(SXSSFWorkbook workbook, POISXSSUtil poiUtil, Map<String, Object> condition, String filePath)
+			throws IOException {
 		int pageNo = 1;
 		int addLineNo = 1;
 		boolean doLoop = true;
 		totalAmount.set(0d);// 置零
-		
-		//仓储增值类型
+
+		// 仓储增值类型
 		Map<String, String> subjectMap = bmsGroupSubjectService.getExportSubject("receive_wh_valueadd_subject");
-		
+
 		while (doLoop) {
-			PageInfo<FeesReceiveStorageEntity> pageList = feesReceiveStorageService
-					.queryPreBillStorageAddFee(condition, pageNo, PAGESIZE);
-			if (null != pageList && pageList.getList() != null
-					&& pageList.getList().size() > 0) {
+			PageInfo<FeesReceiveStorageEntity> pageList = feesReceiveStorageService.queryPreBillStorageAddFee(condition,
+					pageNo, PAGESIZE);
+			if (null != pageList && pageList.getList() != null && pageList.getList().size() > 0) {
 				if (pageList.getList().size() < PAGESIZE) {
 					doLoop = false;
 				} else {
@@ -1079,97 +1061,96 @@ public class BuinessDataExportController extends BaseController {
 				doLoop = false;
 				return;
 			}
-			
+
 			List<Map<String, Object>> headAddList = getAddHead();
 			List<Map<String, Object>> dataAddList = getAddItem(pageList.getList(), subjectMap);
 			if (!doLoop) {
 				// 添加合计
 				dataAddList.addAll(getAddSumItem());
 			}
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, "增值", 
-					addLineNo, headAddList, dataAddList);
+
+			poiUtil.exportExcel2FilePath(poiUtil, workbook, "增值", addLineNo, headAddList, dataAddList);
 			if (null != pageList && pageList.getList().size() > 0) {
 				addLineNo += pageList.getList().size();
 			}
 		}
 	}
-	
+
 	/**
 	 * 增值-title
 	 */
-	private List<Map<String, Object>> getAddHead(){
-		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAddHead() {
+		List<Map<String, Object>> headInfoList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
-		
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "日期");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createTime");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "仓库名称");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "warehouseName");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "客户名称");
-        itemMap.put("columnWidth", 50);
-        itemMap.put("dataKey", "customerName");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "增值项目");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "subjectCode");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "增值服务内容");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "serviceContent");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "数量");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "quality");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "单位");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "unit");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "单价");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "unitPrice");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "金额");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "amount");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "备注");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "remark");
-        headInfoList.add(itemMap);
-        
-        return headInfoList;
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "日期");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "createTime");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "仓库名称");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "warehouseName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "客户名称");
+		itemMap.put("columnWidth", 50);
+		itemMap.put("dataKey", "customerName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "增值项目");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "subjectCode");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "增值服务内容");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "serviceContent");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "数量");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "quality");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "单位");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "unit");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "单价");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "unitPrice");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "金额");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "amount");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "备注");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "remark");
+		headInfoList.add(itemMap);
+
+		return headInfoList;
 	}
-	
+
 	/**
 	 * 增值-content
 	 */
-	private List<Map<String, Object>> getAddItem(List<FeesReceiveStorageEntity> list,Map<String, String> dictcodeMap){
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAddItem(List<FeesReceiveStorageEntity> list, Map<String, String> dictcodeMap) {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = null;
 		double t_amount = 0d;
 		for (FeesReceiveStorageEntity entity : list) {
@@ -1177,7 +1158,8 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("warehouseName", entity.getWarehouseName());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("subjectCode", entity.getOtherSubjectCode()==null?"":dictcodeMap.get(entity.getOtherSubjectCode()));
+			dataItem.put("subjectCode",
+					entity.getOtherSubjectCode() == null ? "" : dictcodeMap.get(entity.getOtherSubjectCode()));
 			dataItem.put("serviceContent", entity.getServiceContent());
 			dataItem.put("quality", entity.getQuantity());
 			dataItem.put("unit", entity.getUnit());
@@ -1191,141 +1173,142 @@ public class BuinessDataExportController extends BaseController {
 		totalAmount.set(totalAmount.get() + t_amount);
 		return dataList;
 	}
-	
+
 	/**
 	 * 增值-合计
 	 */
-	private List<Map<String, Object>> getAddSumItem(){
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAddSumItem() {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = new HashMap<String, Object>();
 		dataItem.put("unitPrice", "合计金额");
 		dataItem.put("amount", totalAmount.get());
 		dataList.add(dataItem);
 		return dataList;
 	}
-	
+
 	/**
 	 * 理赔
+	 * 
 	 * @param workbook
 	 * @param poiUtil
 	 * @param condition
 	 * @param filePath
 	 * @throws Exception
 	 */
-	private void handAbnormal(SXSSFWorkbook workbook, POISXSSUtil poiUtil, Map<String, Object> condition, String filePath)throws Exception{
+	private void handAbnormal(SXSSFWorkbook workbook, POISXSSUtil poiUtil, Map<String, Object> condition,
+			String filePath) throws Exception {
 		int pageNo = 1;
 		int abnormalLineNo = 1;
 		boolean doLoop = true;
 		totalAmount.set(0d);// 置零
 		totalDeliveryCost.set(0d);
-		
+
 		while (doLoop) {
-			PageInfo<FeesAbnormalEntity> abnormalList = 
-					feesAbnormalService.queryPreBillAbnormal(condition, pageNo, PAGESIZE);
+			PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormal(condition, pageNo,
+					PAGESIZE);
 			if (null != abnormalList && abnormalList.getList().size() > 0) {
 				if (abnormalList.getList().size() < PAGESIZE) {
 					doLoop = false;
-				}else {
-					pageNo += 1; 
+				} else {
+					pageNo += 1;
 				}
-			}else {
+			} else {
 				doLoop = false;
 			}
-			
+
 			List<Map<String, Object>> headAbnormalList = getAbnormalHead();
 			List<Map<String, Object>> dataAbnormalList = getAbnormalItem(abnormalList.getList());
 			if (!doLoop) {
 				// 添加合计
 				dataAbnormalList.addAll(getAbnormalSumItem());
 			}
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, "理赔", 
-					abnormalLineNo, headAbnormalList, dataAbnormalList);
-			if (null != abnormalList &&abnormalList.getList().size() > 0) {
+
+			poiUtil.exportExcel2FilePath(poiUtil, workbook, "理赔", abnormalLineNo, headAbnormalList, dataAbnormalList);
+			if (null != abnormalList && abnormalList.getList().size() > 0) {
 				abnormalLineNo += abnormalList.getList().size();
 			}
 		}
-	} 
+	}
 
 	/**
 	 * 理赔-title
 	 */
-	private List<Map<String, Object>> getAbnormalHead(){
-		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAbnormalHead() {
+		List<Map<String, Object>> headInfoList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
-		
+
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "发货仓库");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "warehouseName");
 		headInfoList.add(itemMap);
-		
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "运单日期");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createTime");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "运单号");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "waybillNo");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "客户");
-        itemMap.put("columnWidth", 50);
-        itemMap.put("dataKey", "customerName");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "赔付类型");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "reason");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "赔款额");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "payAmount");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "运费");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "deliveryCost");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "是否免运费");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "isDeliveryFree");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "登记人");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "creator");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "备注");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "remark");
-        headInfoList.add(itemMap);
-        
-        return headInfoList;
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "运单日期");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "createTime");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "运单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "waybillNo");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "客户");
+		itemMap.put("columnWidth", 50);
+		itemMap.put("dataKey", "customerName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "赔付类型");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "reason");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "赔款额");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "payAmount");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "运费");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "deliveryCost");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "是否免运费");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "isDeliveryFree");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "登记人");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "creator");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "备注");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "remark");
+		headInfoList.add(itemMap);
+
+		return headInfoList;
 	}
-	
+
 	/**
 	 * 理赔-content
 	 */
-	private List<Map<String, Object>> getAbnormalItem(List<FeesAbnormalEntity> list){
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAbnormalItem(List<FeesAbnormalEntity> list) {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = null;
 		double t_amount = 0d;
 		double t_deliveryCost = 0d;
-		
+
 		for (FeesAbnormalEntity entity : list) {
 			dataItem = new HashMap<String, Object>();
 			dataItem.put("warehouseName", entity.getWarehouseName());
@@ -1344,17 +1327,17 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("remark", entity.getRemark());
 			dataList.add(dataItem);
 		}
-		
+
 		totalAmount.set(totalAmount.get() + t_amount);
 		totalDeliveryCost.set(totalDeliveryCost.get() + t_deliveryCost);
 		return dataList;
 	}
-	
+
 	/**
 	 * 理赔-合计
 	 */
-	private List<Map<String, Object>> getAbnormalSumItem(){
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAbnormalSumItem() {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = new HashMap<String, Object>();
 		dataItem.put("reason", "合计金额");
 		dataItem.put("payAmount", totalAmount.get());
@@ -1362,116 +1345,117 @@ public class BuinessDataExportController extends BaseController {
 		dataList.add(dataItem);
 		return dataList;
 	}
-	
-	
+
 	/**
 	 * 改地址
+	 * 
 	 * @param poiUtil
 	 * @param workbook
 	 * @param path
 	 * @param billno
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	private void handAbnormalChange(SXSSFWorkbook workbook, POISXSSUtil poiUtil, Map<String, Object> condition, String filePath) throws IOException {
+	private void handAbnormalChange(SXSSFWorkbook workbook, POISXSSUtil poiUtil, Map<String, Object> condition,
+			String filePath) throws IOException {
 		int pageNo = 1;
 		int abnormalLineNo = 1;
 		boolean doLoop = true;
 		totalAmount.set(0d);// 置零
-		
+
 		while (doLoop) {
-			PageInfo<FeesAbnormalEntity> abnormalList = 
-					feesAbnormalService.queryPreBillAbnormalChange(condition, pageNo, PAGESIZE);
+			PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormalChange(condition,
+					pageNo, PAGESIZE);
 			if (null != abnormalList && abnormalList.getList().size() > 0) {
 				if (abnormalList.getList().size() < PAGESIZE) {
 					doLoop = false;
-				}else {
-					pageNo += 1; 
+				} else {
+					pageNo += 1;
 				}
-			}else {
+			} else {
 				doLoop = false;
 			}
-			
+
 			List<Map<String, Object>> headAbnormalChangeList = getAbnormalChangeHead();
 			List<Map<String, Object>> dataAbnormalChangeList = getAbnormalChangeItem(abnormalList.getList());
 			if (!doLoop) {
 				// 添加合计
 				dataAbnormalChangeList.addAll(getAbnormalChangeSumItem());
 			}
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, "改地址和退件费", 
-					abnormalLineNo, headAbnormalChangeList, dataAbnormalChangeList);
-			if (null != abnormalList &&abnormalList.getList().size() > 0) {
+
+			poiUtil.exportExcel2FilePath(poiUtil, workbook, "改地址和退件费", abnormalLineNo, headAbnormalChangeList,
+					dataAbnormalChangeList);
+			if (null != abnormalList && abnormalList.getList().size() > 0) {
 				abnormalLineNo += abnormalList.getList().size();
 			}
 		}
 	}
-	
+
 	/**
 	 * 理赔改地址-title
 	 */
-	private List<Map<String, Object>> getAbnormalChangeHead(){
-		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAbnormalChangeHead() {
+		List<Map<String, Object>> headInfoList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
-		
+
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "运单日期");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "createTime");
 		headInfoList.add(itemMap);
-		
+
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "运单号");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "waybillNo");
 		headInfoList.add(itemMap);
-		
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "商家名称");
-        itemMap.put("columnWidth", 50);
-        itemMap.put("dataKey", "customerName");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "退回单号");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "returnWaybillNo");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "退回金额");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "payAmount");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "承运商");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "carrierName");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "登记人");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "creator");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "备注");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "remark");
-        headInfoList.add(itemMap);
-        
-        return headInfoList;
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "商家名称");
+		itemMap.put("columnWidth", 50);
+		itemMap.put("dataKey", "customerName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "退回单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "returnWaybillNo");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "退回金额");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "payAmount");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "承运商");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "carrierName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "登记人");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "creator");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "备注");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "remark");
+		headInfoList.add(itemMap);
+
+		return headInfoList;
 	}
-	
+
 	/**
 	 * 理赔-content
 	 */
-	private List<Map<String, Object>> getAbnormalChangeItem(List<FeesAbnormalEntity> list){
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAbnormalChangeItem(List<FeesAbnormalEntity> list) {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = null;
 		double t_amount = 0d;
-		
+
 		for (FeesAbnormalEntity entity : list) {
 			dataItem = new HashMap<String, Object>();
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
@@ -1486,24 +1470,23 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("remark", entity.getRemark());
 			dataList.add(dataItem);
 		}
-		
+
 		totalAmount.set(totalAmount.get() + t_amount);
 		return dataList;
 	}
-	
+
 	/**
 	 * 理赔-合计
 	 */
-	private List<Map<String, Object>> getAbnormalChangeSumItem(){
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> getAbnormalChangeSumItem() {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = new HashMap<String, Object>();
 		dataItem.put("returnWaybillNo", "合计金额");
 		dataItem.put("payAmount", totalAmount.get());
 		dataList.add(dataItem);
 		return dataList;
 	}
-	
-	
+
 	/**
 	 * 修改导出任务列表
 	 * 
@@ -1511,8 +1494,7 @@ public class BuinessDataExportController extends BaseController {
 	 * @param process
 	 * @param taskState
 	 */
-	private void updateExportTask(String taskId, String taskState,
-			double process) {
+	private void updateExportTask(String taskId, String taskState, double process) {
 		FileExportTaskEntity entity = new FileExportTaskEntity();
 		if (StringUtils.isNotEmpty(taskState)) {
 			entity.setTaskState(taskState);
@@ -1523,11 +1505,9 @@ public class BuinessDataExportController extends BaseController {
 	}
 
 	private String getPath() {
-		SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode(
-				"GLOABL_PARAM", "EXPORT_RECEIVE_BILL");
+		SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode("GLOABL_PARAM", "EXPORT_RECEIVE_BILL");
 		if (systemCodeEntity == null) {
-			throw new BizException(
-					"请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_RECEIVE_BILL");
+			throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_RECEIVE_BILL");
 		}
 		return systemCodeEntity.getExtattr1();
 	}
@@ -1535,20 +1515,19 @@ public class BuinessDataExportController extends BaseController {
 	private boolean checkFileHasDownLoad(Map<String, Object> queryEntity) {
 		return fileExportTaskService.checkFileHasDownLoad(queryEntity);
 	}
-	
+
 	public List<String> queryPreBillWarehouse(Map<String, Object> param) {
 		return feesReceiveStorageService.queryPreBillWarehouse(param);
 	}
-	
-	private Map<String,String> getwarehouse(){
+
+	private Map<String, String> getwarehouse() {
 		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
-		Map<String, String> map = new LinkedHashMap<String,String>();
+		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (WarehouseVo warehouseVo : warehouseVos) {
 			map.put(warehouseVo.getWarehouseid(), warehouseVo.getWarehousename());
 		}
 		return map;
 	}
-	
 
 	private String getCalInfo(String status) {
 		if (StringUtils.isBlank(status)) {
@@ -1561,11 +1540,11 @@ public class BuinessDataExportController extends BaseController {
 			return status;
 		}
 	}
-	
-	private void setColumnWeight(Sheet sheet, int len, int weight){
+
+	private void setColumnWeight(Sheet sheet, int len, int weight) {
 		if (len > 0) {
 			for (int i = 0; i < len; i++) {
-				sheet.setColumnWidth(i, (short)((weight * 8) / ((double) 1 / 20)));
+				sheet.setColumnWidth(i, (short) ((weight * 8) / ((double) 1 / 20)));
 			}
 		}
 	}

@@ -88,17 +88,17 @@ public class BillReceiptFollowImportController extends HttpNewImport<BillReceipt
 				//infoList.add(new ErrorMessageVo(index,"业务月份格式不对"));
 				//break;
 			}		
-			//开票名称验证
+			//商家合同名称验证
 			if(StringUtils.isNotBlank(vo.getInvoiceName())){
-				//通过开票名称和月份,账单名称查询账单
+				//通过商家合同名称和月份,账单名称查询账单
 				Map<String, Object> condition=new HashMap<String, Object>();
 				condition.put("createMonth", vo.getCreateMonth());
 				condition.put("invoiceName", vo.getInvoiceName());
 				condition.put("billName",vo.getBillName());
 				List<BillCheckInfoVo> blist=billCheckInfoService.queryList(condition);
 				if(blist.size()==0){
-					mes+="未查询到该账单该月份的开票名称;";
-					//infoList.add(new ErrorMessageVo(index,"未查询到该月份的开票名称"));
+					mes+="未查询到该账单该月份的商家合同名称;";
+					//infoList.add(new ErrorMessageVo(index,"未查询到该月份的商家合同名称"));
 					//break;
 				}else{
 					if(blist.get(0).getBillStatus().equals(CheckBillStatusEnum.BAD_BILL.getCode())){
@@ -112,8 +112,8 @@ public class BillReceiptFollowImportController extends HttpNewImport<BillReceipt
 					}
 				}				
 			}else{
-				mes+="开票名称不能为空;";
-				//infoList.add(new ErrorMessageVo(index,"开票名称不能为空"));
+				mes+="商家合同名称不能为空;";
+				//infoList.add(new ErrorMessageVo(index,"商家合同名称不能为空"));
 				//break;
 			}
 			

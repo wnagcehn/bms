@@ -24,7 +24,7 @@ public class BillCheckInfoEntity implements IEntity {
 	private Integer id;
 	// 业务月份
 	private Integer createMonth;
-	// 开票名称
+	// 商家合同名称
 	private String invoiceName;
 	// 账单名称
 	private String billName;
@@ -167,14 +167,14 @@ public class BillCheckInfoEntity implements IEntity {
 	}
 	
 	/**
-     * 开票名称
+     * 商家合同名称
      */
 	public String getInvoiceName() {
 		return this.invoiceName;
 	}
 
     /**
-     * 开票名称
+     * 商家合同名称
      *
      * @param invoiceName
      */

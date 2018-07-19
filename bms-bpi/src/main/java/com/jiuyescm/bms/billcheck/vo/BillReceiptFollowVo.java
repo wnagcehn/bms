@@ -51,7 +51,7 @@ public class BillReceiptFollowVo implements IEntity {
 	// 附件地址
 	private String fileUrl;
 	
-	//开票名称
+	//商家合同名称
 	private String invoiceName;
 	//业务月份
 	private int createMonth;

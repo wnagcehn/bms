@@ -84,6 +84,10 @@ public class SystemCodeServiceImpl implements ISystemCodeService {
 		return systemCodeRepository.queryCodeList(param);
 	}
 
+	@Override
+	public List<SystemCodeEntity> queryBycreateDt(Map<String, Object> param) { 
+		return systemCodeRepository.queryBycreateDt(param);
+	}
 
 	@Override
 	public String getImpExcelFilePath(){
