@@ -425,21 +425,19 @@ public class BuinessDataExportController extends BaseController {
 									marterialType + "_count",
 									matchMap.get(marterialType + "_count")
 											+ "," + materialEntity.getWeight() == null ? ""
-											: materialEntity.getWeight()
-													.toString());
+											: materialEntity.getWeight());
 						} else {
 							matchMap.put(
 									marterialType + "_count",
 									matchMap.get(marterialType + "_count")
 											+ ","
 											+ materialEntity.getQuantity() == null ? ""
-											: materialEntity.getQuantity()
-													.toString());
+											: materialEntity.getQuantity());
 						}
 						matchMap.put(marterialType + "_cost",
 								matchMap.get(marterialType + "_cost") + ","
 										+ materialEntity.getCost() == null ? ""
-										: materialEntity.getCost().toString());
+										: materialEntity.getCost());
 						double totleCost = matchMap.get("totalCost") == null ? 0d
 								: Double.parseDouble(matchMap.get("totalCost")
 										.toString());
@@ -453,13 +451,11 @@ public class BuinessDataExportController extends BaseController {
 						if (materialEntity.getProductNo().contains("GB")) {
 							matchMap.put(marterialType + "_count",
 									materialEntity.getWeight() == null ? ""
-											: materialEntity.getWeight()
-													.toString());
+											: materialEntity.getWeight());
 						} else {
 							matchMap.put(marterialType + "_count",
 									materialEntity.getQuantity() == null ? ""
-											: materialEntity.getQuantity()
-													.toString());
+											: materialEntity.getQuantity());
 						}
 						matchMap.put(marterialType + "_code",
 								materialEntity.getProductNo());
@@ -467,11 +463,9 @@ public class BuinessDataExportController extends BaseController {
 								materialEntity.getSpecDesc());
 						matchMap.put(marterialType + "_unitprice",
 								materialEntity.getUnitPrice() == null ? ""
-										: materialEntity.getUnitPrice()
-												.toString());
+										: materialEntity.getUnitPrice());
 						matchMap.put(marterialType + "_cost", materialEntity
-								.getCost() == null ? "" : materialEntity
-								.getCost().toString());
+								.getCost() == null ? "" : materialEntity.getCost());
 						double totleCost = matchMap.get("totalCost") == null ? 0d
 								: Double.parseDouble(matchMap.get("totalCost")
 										.toString());
@@ -509,19 +503,16 @@ public class BuinessDataExportController extends BaseController {
 							materialEntity.getSpecDesc());
 					if (materialEntity.getProductNo().contains("GB")) {
 						dataItem.put(marterialType + "_count", materialEntity
-								.getWeight() == null ? "" : materialEntity
-								.getWeight().toString());
+								.getWeight() == null ? "" : materialEntity.getWeight());
 					} else {
 						dataItem.put(marterialType + "_count", materialEntity
-								.getQuantity() == null ? "" : materialEntity
-								.getQuantity().toString());
+								.getQuantity() == null ? "" : materialEntity.getQuantity());
 					}
 					dataItem.put(marterialType + "_unitprice", materialEntity
-							.getUnitPrice() == null ? "" : materialEntity
-							.getUnitPrice().toString());
+							.getUnitPrice() == null ? "" : materialEntity.getUnitPrice());
 					dataItem.put(marterialType + "_cost", materialEntity
 							.getCost() == null ? "" : materialEntity.getCost()
-							.toString());
+									);
 					dataItem.put("totalCost", materialEntity.getCost());// 金额
 					dataPackMaterialList.add(dataItem);
 				}
@@ -635,7 +626,7 @@ public class BuinessDataExportController extends BaseController {
 			map.put("carrierCalStatus", getCalInfo(entity.getDispatchCal()));
 			map.put("carrierRemark", entity.getDispatchRemark());
 			map.put("orderOperatorAmount",
-					entity.getOrderOperatorAmount() == null ? "0" : entity
+					entity.getOrderOperatorAmount() == null ? 0 : entity
 							.getOrderOperatorAmount());
 			map.put("orderCalStatus", getCalInfo(entity.getStorageCal()));
 			map.put("orderRemark", entity.getStorageRemark());

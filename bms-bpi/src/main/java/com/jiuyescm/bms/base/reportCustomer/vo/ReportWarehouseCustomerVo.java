@@ -43,6 +43,9 @@ public class ReportWarehouseCustomerVo implements IEntity {
 	private Timestamp lastModifyTime;
 	// 作废标识
 	private String delFlag;
+	
+	//记录日期
+	private String date;
 
 	public ReportWarehouseCustomerVo() {
 
@@ -254,6 +257,14 @@ public class ReportWarehouseCustomerVo implements IEntity {
      */
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
     
 }

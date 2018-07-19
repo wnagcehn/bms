@@ -204,6 +204,7 @@ public class ReportCustomerController {
 			
 			//判断数据是否已存在
 			for(ReportWarehouseCustomerVo vo:list){
+				vo.setCreateMonth(vo.getDate());
 				//重复性校验
 				//根据仓库精确匹配
 				if(StringUtils.isNotBlank(vo.getWarehouseCode())){
@@ -212,19 +213,31 @@ public class ReportCustomerController {
 					condition.put("customerId", vo.getCustomerId());
 					condition.put("warehouseCode", vo.getWarehouseCode());
 					condition.put("bizType", vo.getBizType());
-					ReportWarehouseCustomerVo reportVo=reportWarehouseCustomerService.queryOne(condition);
-					if(reportVo!=null){
-						return "存在重复数据";
+					ReportWarehouseCustomerVo re=reportWarehouseCustomerService.queryOne(condition);
+					if(re!=null){
+						return "复制的数据已存在";
+					}
+					
+					condition=new HashMap<String,Object>();
+					condition.put("createMonth", vo.getCreateMonth());
+					condition.put("customerId", vo.getCustomerId());
+					condition.put("warehouseCode", "");
+					condition.put("bizType", vo.getBizType());
+					ReportWarehouseCustomerVo re2=reportWarehouseCustomerService.queryOne(condition);
+					if(re2!=null){
+						return "复制的数据已存在";
 					}
 				}
-				Map<String,Object> condition=new HashMap<String,Object>();
-				condition.put("createMonth", vo.getCreateMonth());
-				condition.put("customerId", vo.getCustomerId());
-				condition.put("warehouseCode", "");
-				condition.put("bizType", vo.getBizType());
-				ReportWarehouseCustomerVo reportVo=reportWarehouseCustomerService.queryOne(condition);
-				if(reportVo!=null){
-					return "存在重复数据";
+				
+				if(StringUtils.isBlank(vo.getWarehouseCode())){
+					Map<String,Object> condition=new HashMap<String,Object>();
+					condition.put("createMonth", vo.getCreateMonth());
+					condition.put("customerId", vo.getCustomerId());
+					condition.put("bizType", vo.getBizType());
+					ReportWarehouseCustomerVo re3=reportWarehouseCustomerService.queryOne(condition);
+					if(re3!=null){
+						return "复制的数据已存在";
+					}
 				}
 			}
 			
