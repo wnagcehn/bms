@@ -120,7 +120,7 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 				excelMap.put(dataKey, index+"");
 			}
 			
-			//开票名称验证
+			//商家合同名称验证
 			if(StringUtils.isNotBlank(vo.getInvoiceName())){
 				if(customerInfoMap.containsKey(vo.getInvoiceName())){
 					/*
@@ -131,14 +131,14 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 						//break;					
 						}*/
 				}else{
-					mes+="开票名称["+vo.getInvoiceName()+"]未在OMS商家中心维护;";
-					//infoList.add(new ErrorMessageVo(index,"开票名称没有在开票商家中维护"));
+					mes+="商家合同名称["+vo.getInvoiceName()+"]未在OMS商家中心维护;";
+					//infoList.add(new ErrorMessageVo(index,"商家合同名称没有在开票商家中维护"));
 					//break;
 				}
 				
 			}else{
-				mes+="开票名称不能为空;";
-				//infoList.add(new ErrorMessageVo(index,"开票名称不能为空"));
+				mes+="商家合同名称不能为空;";
+				//infoList.add(new ErrorMessageVo(index,"商家合同名称不能为空"));
 				//break;
 			}
 			
@@ -225,14 +225,14 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 			}
 			
 			
-			//重复验证    同一个月份只允许存在一条账单（月份+开票名称+账单名称）
+			//重复验证    同一个月份只允许存在一条账单（月份+商家合同名称+账单名称）
 			Map<String, Object> condition=new HashMap<String, Object>();
 			condition.put("createMonth", vo.getCreateMonth());
 			condition.put("invoiceName", vo.getInvoiceName());
 			condition.put("billName", vo.getBillName());
 			List<BillCheckInfoVo> qlist=billCheckInfoService.queryList(condition);
 			if(qlist.size()>0){
-				mes+="(月份："+vo.getCreateMonth()+",开票名称:"+vo.getInvoiceName()+",账单名称:"+vo.getBillName()+")已存在";
+				mes+="(月份："+vo.getCreateMonth()+",商家合同名称:"+vo.getInvoiceName()+",账单名称:"+vo.getBillName()+")已存在";
 				//infoList.add(new ErrorMessageVo(index,"同一个月份只允许存在一条账单"));
 				//break;
 			}

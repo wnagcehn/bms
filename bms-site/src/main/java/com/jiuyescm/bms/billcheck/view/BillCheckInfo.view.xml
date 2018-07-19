@@ -14,7 +14,7 @@
       </PropertyDef>
       <PropertyDef name="invoiceName">
         <Property></Property>
-        <Property name="label">开票名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property></Property>
@@ -87,7 +87,7 @@
       </PropertyDef>
       <PropertyDef name="invoiceName">
         <Property></Property>
-        <Property name="label">开票名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property></Property>
@@ -1212,11 +1212,12 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
       <Property name="cols">210,*,*,*,*,*</Property>
-      <Property name="labelWidth">60</Property>
       <Property name="editorWidth">240</Property>
+      <Property name="labelWidth">60</Property>
       <AutoFormElement>
         <Property name="name">createMonthStart</Property>
         <Property name="property">createMonthStart</Property>
+        <Property name="labelWidth">60</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -1229,6 +1230,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
       <AutoFormElement>
         <Property name="name">invoiceName</Property>
         <Property name="property">invoiceName</Property>
+        <Property name="labelWidth">85</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>

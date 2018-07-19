@@ -96,6 +96,17 @@
 		order by sort_no
     </select>
     
+    <select id="queryBycreateDt" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity">
+        select
+        <include refid="baseColumns" />
+        from system_code
+        where 1=1 and status='0'
+		<include refid="baseSelectColumns" />
+		
+		order by create_dt
+    </select>
+    
     <select id="queryTemType" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity">
         

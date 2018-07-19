@@ -389,7 +389,6 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
     <UploadAction id="uploadAction">
       <ClientEvent name="onFileUploaded">var data= arg.returnValue;&#xD;
 if(data==&quot;上传成功&quot;){&#xD;
-	dorado.MessageBox.alert(data);&#xD;
 	var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
 	with (view.get(&quot;#dsTempletEntity&quot;)){&#xD;
 		set(&quot;parameter&quot;, data);&#xD;

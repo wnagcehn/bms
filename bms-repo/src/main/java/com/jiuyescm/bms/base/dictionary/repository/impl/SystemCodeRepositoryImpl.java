@@ -85,6 +85,12 @@ public class SystemCodeRepositoryImpl extends MyBatisDao<SystemCodeEntity> imple
  
 		return selectList("com.jiuyescm.bms.base.dictionary.SystemCodeMapper.query", param);
 	}
+	
+	@Override
+	public List<SystemCodeEntity> queryBycreateDt(Map<String, Object> param) {
+		
+		return selectList("com.jiuyescm.bms.base.dictionary.SystemCodeMapper.queryBycreateDt", param);
+	}
 
 	@Override
 	public SystemCodeEntity getSystemCode(String typeCode,String code) {

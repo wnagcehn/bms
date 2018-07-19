@@ -340,11 +340,11 @@ public class BillCheckInfoController{
 			String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
 			for(BillCheckInfoVo temp:datas){
 				if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){				
-					//验证开票名称是否存在
+					//验证商家合同名称是否存在
 					//获取所有商家
 					Map<String, Object> customerInfoMap=getCusMap();
 					if(!customerInfoMap.containsKey(temp.getInvoiceName())){
-						return "开票名称:"+temp.getInvoiceName()+"不存在";
+						return "商家合同名称:"+temp.getInvoiceName()+"不存在";
 					}
 					
 					//唯一性校验
@@ -355,7 +355,7 @@ public class BillCheckInfoController{
 					condition.put("billName", temp.getBillName());
 					BillCheckInfoVo bInfoVo=billCheckInfoService.queryOne(condition);
 					if(bInfoVo!=null && bInfoVo.getId()!=null && !bInfoVo.getId().equals(temp.getId())){
-						return "(业务月份:"+bInfoVo.getCreateMonth()+",开票名称:"+bInfoVo.getInvoiceName()+",账单名称:"+bInfoVo.getBillName()+")已存在";
+						return "(业务月份:"+bInfoVo.getCreateMonth()+",商家合同名称:"+bInfoVo.getInvoiceName()+",账单名称:"+bInfoVo.getBillName()+")已存在";
 					}
 					
 					if(!temp.getBillStatus().equals(CheckBillStatusEnum.BAD_BILL.getCode())){
@@ -979,7 +979,7 @@ public class BillCheckInfoController{
 		 cell0.setCellValue("业务月份");
 		 cell0.setCellStyle(style);
 		 Cell cell1 = row0.createCell(1);
-		 cell1.setCellValue("开票名称");
+		 cell1.setCellValue("商家合同名称");
 		 cell1.setCellStyle(style);
 		 Cell cell2 = row0.createCell(2);
 		 cell2.setCellStyle(style);
@@ -1182,7 +1182,7 @@ public class BillCheckInfoController{
 	}
 	
 	
-	//获取所有开票名称
+	//获取所有商家合同名称
 	private Map<String, Object> getCusMap(){
 		Map<String, Object> map=new HashMap<String, Object>();
 		try {

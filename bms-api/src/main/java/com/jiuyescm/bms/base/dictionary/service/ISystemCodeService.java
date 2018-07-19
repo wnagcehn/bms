@@ -68,4 +68,11 @@ public interface ISystemCodeService {
 	int getPartOutboundStatus();
 
 	SystemCodeEntity queryEntityByCode(String code);
+	
+	/**
+	 * 根据新建的时间去排序
+	 * @param param
+	 * @return
+	 */
+	List<SystemCodeEntity> queryBycreateDt(Map<String, Object> param);
 }
