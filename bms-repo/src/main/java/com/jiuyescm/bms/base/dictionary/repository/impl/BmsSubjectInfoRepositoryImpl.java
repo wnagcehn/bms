@@ -38,6 +38,17 @@ public class BmsSubjectInfoRepositoryImpl extends MyBatisDao<BmsSubjectInfoEntit
         PageInfo<BmsSubjectInfoEntity> pageInfo = new PageInfo<BmsSubjectInfoEntity>(list);
         return pageInfo;
     }
+	
+	@Override
+	public PageInfo<BmsSubjectInfoEntity> query(
+			BmsSubjectInfoEntity queryCondition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		List<BmsSubjectInfoEntity> list = selectList("com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper.queryAllEntity", queryCondition, new RowBounds(
+	                pageNo, pageSize));
+        PageInfo<BmsSubjectInfoEntity> pageInfo = new PageInfo<BmsSubjectInfoEntity>(list);
+        return pageInfo;
+	}
+
 
     @Override
     public BmsSubjectInfoEntity save(BmsSubjectInfoEntity entity) {
@@ -113,6 +124,5 @@ public class BmsSubjectInfoRepositoryImpl extends MyBatisDao<BmsSubjectInfoEntit
 		// TODO Auto-generated method stub
 		return this.selectList("com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper.queryByEntity", entity);
 	}
-
 	
 }

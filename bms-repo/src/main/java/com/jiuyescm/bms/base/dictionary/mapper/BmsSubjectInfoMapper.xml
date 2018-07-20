@@ -102,6 +102,16 @@
 		<include refid="baseSelectColumns" />
 		order by dimen1_sortno asc
     </select>
+    
+    <select id="queryAllEntity" parameterType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity"
+        resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_subject_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
     <select id="queryAllSubejct"  resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
     	select subject_code,subject_name from bms_subject_info
     	where del_flag='0'
@@ -218,6 +228,6 @@
 		<if test="(subjectCode != null and subjectCode !='')" >
 				and subject_code = #{subjectCode}
 		</if>
-		and fees_type!='APP' and del_flag='0'
+		and fees_type!='APP'
     </select>
 </mapper>
