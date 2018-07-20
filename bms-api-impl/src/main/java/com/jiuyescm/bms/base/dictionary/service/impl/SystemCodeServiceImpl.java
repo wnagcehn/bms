@@ -85,8 +85,8 @@ public class SystemCodeServiceImpl implements ISystemCodeService {
 	}
 
 	@Override
-	public List<SystemCodeEntity> queryBycreateDt(Map<String, Object> param) { 
-		return systemCodeRepository.queryBycreateDt(param);
+	public List<SystemCodeEntity> queryBySortNo(Map<String, Object> param) { 
+		return systemCodeRepository.queryBySortNo(param);
 	}
 
 	@Override

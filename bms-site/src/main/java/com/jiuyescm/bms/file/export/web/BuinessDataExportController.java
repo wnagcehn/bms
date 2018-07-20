@@ -299,7 +299,7 @@ public class BuinessDataExportController extends BaseController {
 		// 按新增时间获取systemCode表中的类别并排序
 		Map<String, Object> param = new HashMap<>();
 		param.put("typeCode", "PACKMAGERIAL_SORT");
-		List<SystemCodeEntity> entityList = systemCodeService.queryBycreateDt(param);
+		List<SystemCodeEntity> entityList = systemCodeService.queryBySortNo(param);
 		final List<String> orderList = new ArrayList<>();
 		for (SystemCodeEntity entity : entityList) {
 			orderList.add(entity.getCodeName());
@@ -437,8 +437,8 @@ public class BuinessDataExportController extends BaseController {
 										: "," + materialEntity.getProductName()));
 						matchMap.put(marterialType + "_code", matchMap.get(marterialType + "_code")
 								+ (materialEntity.getProductNo() == null ? "" : "," + materialEntity.getProductNo()));
-						matchMap.put(marterialType + "_type", matchMap.get(marterialType + "_type")
-								+ (materialEntity.getSpecDesc() == null ? "" : "," + materialEntity.getSpecDesc()));
+						matchMap.put(marterialType + "_type", (matchMap.get(marterialType + "_type") == "" ? "无" : matchMap.get(marterialType + "_type"))
+								+ (materialEntity.getSpecDesc() == null ? "无" : "," + materialEntity.getSpecDesc()));
 						if (materialEntity.getProductNo().contains("GB")) {
 							matchMap.put(marterialType + "_count", matchMap.get(marterialType + "_count")
 									+ (materialEntity.getWeight() == null ? "" : "," + materialEntity.getWeight()));
@@ -447,13 +447,14 @@ public class BuinessDataExportController extends BaseController {
 									+ (materialEntity.getQuantity() == null ? "" : "," + materialEntity.getQuantity()));
 						}
 						
-						matchMap.put(marterialType + "_cost", (matchMap.get(marterialType + "_cost") == "" ? 0d : Double.parseDouble(matchMap.get(marterialType + "_cost").toString()))
-								+ (materialEntity.getCost() == null ? 0d : materialEntity.getCost()));
-						matchMap.put(marterialType + "_unitprice",
+						matchMap.put(marterialType + "_cost", Double.parseDouble(matchMap.get(marterialType + "_cost").toString())
+								+ Double.parseDouble(materialEntity.getCost().toString()));
+						
+						matchMap.put(marterialType + "_unitprice", (matchMap.get(marterialType + "_unitprice") == "" ? "无" : matchMap.get(marterialType + "_unitprice")) +
 								(materialEntity.getUnitPrice() == null ? "" : "," + materialEntity.getUnitPrice()));
-						double totleCost = matchMap.get("totalCost") == null ? 0d
+						double totleCost = matchMap.get("totalCost") == null ? 0.0d
 								: Double.parseDouble(matchMap.get("totalCost").toString());
-						totleCost += materialEntity.getCost() == null ? 0d : materialEntity.getCost();
+						totleCost += materialEntity.getCost() == null ? 0.0d : materialEntity.getCost();
 						matchMap.put("totalCost", totleCost);// 金额
 					} else {
 						matchMap.put(marterialType + "_name",

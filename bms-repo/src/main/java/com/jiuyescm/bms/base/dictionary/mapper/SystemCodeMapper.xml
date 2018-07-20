@@ -92,11 +92,10 @@
         from system_code
         where 1=1 and status='0'
 		<include refid="baseSelectColumns" />
-		
 		order by sort_no
     </select>
     
-    <select id="queryBycreateDt" parameterType="java.util.Map"
+    <select id="queryBySortNo" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity">
         select
         <include refid="baseColumns" />
@@ -104,7 +103,7 @@
         where 1=1 and status='0'
 		<include refid="baseSelectColumns" />
 		
-		order by create_dt
+		order by sort_no asc
     </select>
     
     <select id="queryTemType" parameterType="java.util.Map"

@@ -203,6 +203,10 @@ public class BizDispatchBillVo implements IEntity {
 	private Double continuedPrice;
 	//纠正重量
 	private Double correctWeight;
+	//物流产品
+	private String servicecode;
+	private String servicename;
+	
 	public BizDispatchBillVo() {
 
 	}
@@ -1301,6 +1305,22 @@ public class BizDispatchBillVo implements IEntity {
 
 	public void setCorrectWeight(Double correctWeight) {
 		this.correctWeight = correctWeight;
+	}
+
+	public String getServicecode() {
+		return servicecode;
+	}
+
+	public void setServicecode(String servicecode) {
+		this.servicecode = servicecode;
+	}
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
 	}
     
 	

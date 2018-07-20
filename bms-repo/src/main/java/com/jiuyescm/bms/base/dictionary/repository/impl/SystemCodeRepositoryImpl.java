@@ -87,9 +87,9 @@ public class SystemCodeRepositoryImpl extends MyBatisDao<SystemCodeEntity> imple
 	}
 	
 	@Override
-	public List<SystemCodeEntity> queryBycreateDt(Map<String, Object> param) {
+	public List<SystemCodeEntity> queryBySortNo(Map<String, Object> param) {
 		
-		return selectList("com.jiuyescm.bms.base.dictionary.SystemCodeMapper.queryBycreateDt", param);
+		return selectList("com.jiuyescm.bms.base.dictionary.SystemCodeMapper.queryBySortNo", param);
 	}
 
 	@Override

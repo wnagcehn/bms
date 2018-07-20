@@ -233,7 +233,7 @@
       </PropertyDef>
       <PropertyDef name="expresstype">
         <Property></Property>
-        <Property name="label">快递业务类型</Property>
+        <Property name="label">物流产品类型</Property>
       </PropertyDef>
       <PropertyDef name="skuNum">
         <Property name="dataType">Integer</Property>
@@ -320,6 +320,15 @@
       </PropertyDef>
       <PropertyDef name="senderDistrict">
         <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierServiceName">
+        <Property name="label">物流产品</Property>
+      </PropertyDef>
+      <PropertyDef name="servicename">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
+      <PropertyDef name="servicecode">
+        <Property name="label">物流产品编码</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -883,6 +892,7 @@ var nowdays = new Date();&#xD;
       <AutoFormElement>
         <Property name="name">outstockNo</Property>
         <Property name="property">outstockNo</Property>
+        <Property name="labelWidth">85</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -1115,13 +1125,13 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
         <Property name="selectionMode">multiRows</Property>
         <Property name="rowSelectionProperty">checked</Property>
         <RowNumColumn/>
-        <DataColumn name="warehouseName">
-          <Property name="property">warehouseName</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
           <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn name="warehouseName">
+          <Property name="property">warehouseName</Property>
+          <Property name="width">120</Property>
         </DataColumn>
         <DataColumn name="outstockNo">
           <Property name="property">outstockNo</Property>
@@ -1203,8 +1213,8 @@ arg.processDefault = true;&#xD;
           <Property name="width">120</Property>
         </DataColumn>
         <DataColumn>
-          <Property name="property">expresstype</Property>
-          <Property name="name">expresstype</Property>
+          <Property name="property">servicename</Property>
+          <Property name="name">servicename</Property>
           <Property name="width">130</Property>
         </DataColumn>
         <DataColumn name="receiveTime">

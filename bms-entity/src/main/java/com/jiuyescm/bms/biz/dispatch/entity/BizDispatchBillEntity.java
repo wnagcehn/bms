@@ -189,6 +189,10 @@ public class BizDispatchBillEntity implements IEntity {
 	private String chargeCarrierName;
 	private String chargeCarrierId;
 	private List<PriceMainDispatchEntity> priceList;
+	
+	//物流产品类型
+	private String servicecode;
+	private String servicename;
 
 	public BizDispatchBillEntity() {
 
@@ -1209,6 +1213,22 @@ public class BizDispatchBillEntity implements IEntity {
 
 	public void setChargeCarrierId(String chargeCarrierId) {
 		this.chargeCarrierId = chargeCarrierId;
+	}
+
+	public String getServicecode() {
+		return servicecode;
+	}
+
+	public void setServicecode(String servicecode) {
+		this.servicecode = servicecode;
+	}
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
 	}
 	
 	
