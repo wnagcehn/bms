@@ -124,5 +124,13 @@ public class BmsSubjectInfoRepositoryImpl extends MyBatisDao<BmsSubjectInfoEntit
 		// TODO Auto-generated method stub
 		return this.selectList("com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper.queryByEntity", entity);
 	}
+
+	@Override
+	public BmsSubjectInfoEntity queryOne(Long id) {
+		// TODO Auto-generated method stub
+		Map<String,Object> map=new HashMap<>();
+		map.put("id", id);
+		return (BmsSubjectInfoEntity) this.selectOne("com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper.queryOneEntity", map);
+	}
 	
 }

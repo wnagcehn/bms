@@ -45,7 +45,7 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
 	@Override
 	public PageInfo<BmsSubjectInfoVo> query(BmsSubjectInfoVo queryCondition,
-			int pageNo, int pageSize) throws Exception {
+			int pageNo, int pageSize){
 		// TODO Auto-generated method stub
 		PageInfo<BmsSubjectInfoVo> result=new PageInfo<BmsSubjectInfoVo>();
 
@@ -94,6 +94,12 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
         	logger.error("转换失败:{0}",ex);
         }
 		return null;
+	}
+
+	@Override
+	public BmsSubjectInfoEntity queryOne(Long id) {
+		// TODO Auto-generated method stub
+		return bmsSubjectInfoRepository.queryOne(id);
 	}
 
 }

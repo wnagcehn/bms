@@ -10,9 +10,11 @@ public interface IBmsSubjectInfoService {
 	public List<BmsSubjectInfoVo> querySubject(BmsSubjectInfoVo vo);
 	
 	PageInfo<BmsSubjectInfoVo> query(
-			BmsSubjectInfoVo queryCondition, int pageNo, int pageSize) throws Exception;
+			BmsSubjectInfoVo queryCondition, int pageNo, int pageSize);
 	
     BmsSubjectInfoEntity save(BmsSubjectInfoVo entity);
 
     BmsSubjectInfoEntity update(BmsSubjectInfoVo entity);
+    
+    BmsSubjectInfoEntity queryOne(Long id);
 }

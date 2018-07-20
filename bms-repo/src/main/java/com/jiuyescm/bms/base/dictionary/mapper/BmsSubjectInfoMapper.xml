@@ -31,6 +31,9 @@
     </sql>
 	
 	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')">
+				and id = #{id}
+		</if>
 		<if test="(inOutTypecode != null and inOutTypecode !='')" >
 				and in_out_typecode = #{inOutTypecode}
 		</if>
@@ -101,6 +104,16 @@
         where 1=1
 		<include refid="baseSelectColumns" />
 		order by dimen1_sortno asc
+    </select>
+    
+    <select id="queryOneEntity" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+         select
+        <include refid="baseColumns" />
+        from bms_subject_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+		limit 1      
     </select>
     
     <select id="queryAllEntity" parameterType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity"
