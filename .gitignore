@@ -10,3 +10,4 @@
 /disconf/
 *.rules
 *.properties
+/resources/
