@@ -4,11 +4,13 @@
  */
 package com.jiuyescm.bms.general.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity;
 import com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity;
 import com.jiuyescm.bms.general.service.IReportWarehouseBizImportService;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -42,5 +44,19 @@ public class ReportWarehouseBizImportServiceImpl  extends MyBatisDao implements 
 	public int upsertPackMaterial(Map<String, Object> param) {
 		return insert("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.upsertPackMaterial", param);
 	}
+
+	@Override
+	public List<ReportWarehouseCustomerEntity> queryWareList(
+			Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryWareList", param);
+	}
+
+	@Override
+	public int updateReport(List<ReportWarehouseCustomerEntity> list) {
+		// TODO Auto-generated method stub
+		return updateBatch("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.updateReport", list);
+	}
+
 	
 }

@@ -223,7 +223,7 @@ public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDisp
 			voEntity.setTitleName(templateName);
 			voEntity.setBaseType(new DispatchQuoteCompareDataType());
 			voEntity.setDataList(getDataList(parameter));
-			return commanExport.exportXFile(voEntity);
+			return commanExport.exportFile(voEntity);
 		}catch(Exception e){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
@@ -239,36 +239,38 @@ public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDisp
 		List<SystemCodeEntity> areaTypeCodeList = systemCodeService.findEnumList("DISPATCH_AREA_TYPE");
 		List<SystemCodeEntity> timelinessCodeList = systemCodeService.findEnumList("DISPATCH_TIME");
 		Map<String, String> deliverMap = getDeliverMap();
-		for(BmsQuoteDispatchDetailVo entity:list){
-			setWareHouseName(entity,warehouseVoList);//调用MDM 设置仓配名称
-			setAddress(entity);//设置省市区名称
-			setTemperatureTypeCode(entity,temperatureList);//设置温度类别名称
-			setAreaTypeCode(entity,areaTypeCodeList);//设置地域类型名称
-			setTimeliness(entity,timelinessCodeList);//设置时效
-		}
 		List<Map<String,Object>> mapList=new ArrayList<Map<String,Object>>();
-		Map<String,Object> map=null;
-		for(BmsQuoteDispatchDetailVo entity:list){
-			map=new HashMap<String,Object>();
-			map.put("startWarehouseName", entity.getStartWarehouseName());
-			map.put("provinceName", entity.getProvinceName());
-			map.put("cityName", entity.getCityName());
-			map.put("areaName", entity.getAreaName());
-			map.put("weightDown", entity.getWeightDown());
-			map.put("weightUp", entity.getWeightUp());
-			map.put("unitPrice", entity.getUnitPrice());
-			map.put("firstWeight", entity.getFirstWeight());
-			map.put("firstWeightPrice", entity.getFirstWeightPrice());
-			map.put("continuedWeight", entity.getContinuedWeight());
-			map.put("continuedPrice", entity.getContinuedPrice());
-			map.put("timeliness", entity.getTimeliness());
-			map.put("temperatureTypeCode", entity.getTemperatureTypeCode());
-			map.put("areaTypeCode", entity.getAreaTypeCode());
-			map.put("productCase", entity.getProductCase());
-			map.put("deliverid", deliverMap.get(entity.getDeliverid()));
-			
-			mapList.add(map);
-		}
+		if(list!=null && list.size()>0){
+			for(BmsQuoteDispatchDetailVo entity:list){
+				setWareHouseName(entity,warehouseVoList);//调用MDM 设置仓配名称
+				setAddress(entity);//设置省市区名称
+				setTemperatureTypeCode(entity,temperatureList);//设置温度类别名称
+				setAreaTypeCode(entity,areaTypeCodeList);//设置地域类型名称
+				setTimeliness(entity,timelinessCodeList);//设置时效
+			}
+			Map<String,Object> map=null;
+			for(BmsQuoteDispatchDetailVo entity:list){
+				map=new HashMap<String,Object>();
+				map.put("startWarehouseName", entity.getStartWarehouseName());
+				map.put("provinceName", entity.getProvinceName());
+				map.put("cityName", entity.getCityName());
+				map.put("areaName", entity.getAreaName());
+				map.put("weightDown", entity.getWeightDown());
+				map.put("weightUp", entity.getWeightUp());
+				map.put("unitPrice", entity.getUnitPrice());
+				map.put("firstWeight", entity.getFirstWeight());
+				map.put("firstWeightPrice", entity.getFirstWeightPrice());
+				map.put("continuedWeight", entity.getContinuedWeight());
+				map.put("continuedPrice", entity.getContinuedPrice());
+				map.put("timeliness", entity.getTimeliness());
+				map.put("temperatureTypeCode", entity.getTemperatureTypeCode());
+				map.put("areaTypeCode", entity.getAreaTypeCode());
+				map.put("productCase", entity.getProductCase());
+				map.put("deliverid", deliverMap.get(entity.getDeliverid()));
+				
+				mapList.add(map);
+			}
+		}	
 		return mapList;
 	}
 	

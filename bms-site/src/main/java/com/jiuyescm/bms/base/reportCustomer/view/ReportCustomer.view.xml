@@ -67,6 +67,9 @@
         </Property>
         <Property name="label">月份</Property>
       </PropertyDef>
+      <PropertyDef name="date">
+        <Property/>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="year">
@@ -167,7 +170,8 @@ view.get(&quot;#addDialog&quot;).show();</ClientEvent>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnUpdate">
-        <ClientEvent name="onClick">//选中的记录&#xD;
+        <ClientEvent name="onClick">var entity=view.get(&quot;#dsEntity.data&quot;);&#xD;
+//选中的记录&#xD;
 var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
 if(selectDatas.length == 1){	&#xD;
 	//修改，只能选择一条&#xD;
@@ -175,9 +179,7 @@ if(selectDatas.length == 1){	&#xD;
 			&#xD;
 	var createMonth=data.get(&quot;createMonth&quot;);&#xD;
 	&#xD;
-	alert(createMonth);&#xD;
-	&#xD;
-	var dates = createMonth.split('-')&#xD;
+	var dates = createMonth.split('-');&#xD;
 	&#xD;
 	var year=dates[0];&#xD;
 	var month=dates[1];&#xD;
@@ -189,9 +191,9 @@ if(selectDatas.length == 1){	&#xD;
 	data.set(&quot;year&quot;, year);&#xD;
 	data.set(&quot;month&quot;, month);&#xD;
 	&#xD;
-	alert(year);&#xD;
-	alert(month);&#xD;
-&#xD;
+	&#xD;
+	entity.current = data;&#xD;
+	&#xD;
 	view.get(&quot;#updateDialog&quot;).show();&#xD;
 }else if(selectDatas.length > 1) {&#xD;
 	dorado.MessageBox.alert(&quot;只能勾选一条数据!&quot;); &#xD;
@@ -214,7 +216,8 @@ if(selectDatas.length&lt;1){&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;是否确定要删除数据?&quot;,function(){&#xD;
 		view.get(&quot;#deleteAction&quot;).execute({&#xD;
-			callback:function(success){&#xD;
+			callback:function(result){&#xD;
+				dorado.MessageBox.alert(&quot;删除成功!&quot;);&#xD;
 				var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
 				tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
 			}&#xD;
@@ -319,7 +322,6 @@ if(isNullOrEmpty(month)){&#xD;
 }&#xD;
 &#xD;
 if(!isNullOrEmpty(month)){&#xD;
-	alert(&quot;长度&quot;+month.length);&#xD;
 	if(month.length==1){&#xD;
 		month='0'+month;&#xD;
 	}&#xD;
@@ -344,9 +346,8 @@ view.id(&quot;addAction&quot;).execute(&#xD;
 		alertMsg(result.code, result.message);		&#xD;
 		if(&quot;SUCC&quot; == result.code){&#xD;
 			view.id(&quot;addDialog&quot;).hide();		&#xD;
-			with (view.get(&quot;#dsEntity&quot;)){&#xD;
-				flushAsync();&#xD;
-			}&#xD;
+			var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+			tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
 		}&#xD;
 	}&#xD;
 );</ClientEvent>
@@ -447,9 +448,8 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
 		alertMsg(result.code, result.message);&#xD;
 		if(&quot;SUCC&quot; == result.code){	&#xD;
 			view.id(&quot;updateDialog&quot;).hide();		&#xD;
-			with (view.get(&quot;#dsEntity&quot;)){&#xD;
-				flushAsync();&#xD;
-			}&#xD;
+			var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+			tmpDataSet.set(&quot;parameter&quot;, view.get(&quot;#dsCondition.data&quot;).current).flushAsync();&#xD;
 		}&#xD;
 	}&#xD;
 );</ClientEvent>
@@ -587,7 +587,7 @@ if(!isNullOrEmpty(month)){&#xD;
 var selectDatas = view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);&#xD;
 &#xD;
 selectDatas.each(function(item){&#xD;
-	item.set(&quot;createMonth&quot;,year + &quot;-&quot; +month);&#xD;
+	item.set(&quot;date&quot;,year + &quot;-&quot; +month);&#xD;
 });&#xD;
 &#xD;
 view.get(&quot;#copyAction&quot;).execute(function(result){&#xD;
@@ -647,6 +647,7 @@ arg.data=view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);</ClientEv
       <Property name="dataFontSize">10</Property>
       <Property name="maxSize">100000</Property>
       <Property name="userData"></Property>
+      <Property name="extension">xlsx</Property>
     </Export2ReportAction>
   </View>
 </ViewConfig>

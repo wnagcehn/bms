@@ -73,16 +73,30 @@ public class ReportCustomerController {
 				if(vo!=null){
 					return new ResponseVo(ResponseVo.FAIL, "商家仓库当前月份已存在");
 				}
+				
+				condition=new HashMap<String,Object>();
+				condition.put("createMonth", entity.getCreateMonth());
+				condition.put("customerId", entity.getCustomerId());
+				condition.put("warehouseCode", "");
+				condition.put("bizType", entity.getBizType());
+				ReportWarehouseCustomerVo vo2=reportWarehouseCustomerService.queryOne(condition);
+				if(vo2!=null){
+					return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+				}
 			}
-			Map<String,Object> condition=new HashMap<String,Object>();
-			condition.put("createMonth", entity.getCreateMonth());
-			condition.put("customerId", entity.getCustomerId());
-			condition.put("warehouseCode", "");
-			condition.put("bizType", entity.getBizType());
-			ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
-			if(vo!=null){
-				return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+			
+			if(StringUtils.isBlank(entity.getWarehouseCode())){
+				Map<String,Object> condition=new HashMap<String,Object>();
+				condition.put("createMonth", entity.getCreateMonth());
+				condition.put("customerId", entity.getCustomerId());
+				condition.put("bizType", entity.getBizType());
+				ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
+				if(vo!=null){
+					return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+				}
 			}
+			
+			
 			//不根据仓库匹配			
 			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
@@ -93,9 +107,9 @@ public class ReportCustomerController {
 			
 		}catch(Exception e){
 			logger.error("新增失败,失败原因:"+e.getMessage());
-			return new ResponseVo(ResponseVo.FAIL, MessageConstant.OPERATOR_FAIL_MSG);
+			return new ResponseVo(ResponseVo.FAIL, "新增失败");
 		}
-		return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
+		return new ResponseVo(ResponseVo.SUCCESS, "新增成功");
 	}
 	
 	/**
@@ -141,9 +155,9 @@ public class ReportCustomerController {
 			
 		}catch(Exception e){
 			logger.error("更新失败,失败原因:"+e.getMessage());
-			return new ResponseVo(ResponseVo.FAIL, MessageConstant.OPERATOR_FAIL_MSG);
+			return new ResponseVo(ResponseVo.FAIL, "更新失败");
 		}
-		return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);	
+		return new ResponseVo(ResponseVo.SUCCESS, "更新成功");	
 	}
 	
 	/**
@@ -169,9 +183,9 @@ public class ReportCustomerController {
 			
 		}catch(Exception e){
 			logger.error("批量删除失败,失败原因:"+e.getMessage());
-			return new ResponseVo(ResponseVo.FAIL, MessageConstant.OPERATOR_FAIL_MSG);
+			return new ResponseVo(ResponseVo.FAIL, "批量删除失败");
 		}
-		return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
+		return new ResponseVo(ResponseVo.SUCCESS, "批量删除成功");
 	}
 	
 	/**
@@ -190,6 +204,7 @@ public class ReportCustomerController {
 			
 			//判断数据是否已存在
 			for(ReportWarehouseCustomerVo vo:list){
+				vo.setCreateMonth(vo.getDate());
 				//重复性校验
 				//根据仓库精确匹配
 				if(StringUtils.isNotBlank(vo.getWarehouseCode())){
@@ -198,19 +213,31 @@ public class ReportCustomerController {
 					condition.put("customerId", vo.getCustomerId());
 					condition.put("warehouseCode", vo.getWarehouseCode());
 					condition.put("bizType", vo.getBizType());
-					ReportWarehouseCustomerVo reportVo=reportWarehouseCustomerService.queryOne(condition);
-					if(reportVo!=null){
-						return "存在重复数据";
+					ReportWarehouseCustomerVo re=reportWarehouseCustomerService.queryOne(condition);
+					if(re!=null){
+						return "复制的数据已存在";
+					}
+					
+					condition=new HashMap<String,Object>();
+					condition.put("createMonth", vo.getCreateMonth());
+					condition.put("customerId", vo.getCustomerId());
+					condition.put("warehouseCode", "");
+					condition.put("bizType", vo.getBizType());
+					ReportWarehouseCustomerVo re2=reportWarehouseCustomerService.queryOne(condition);
+					if(re2!=null){
+						return "复制的数据已存在";
 					}
 				}
-				Map<String,Object> condition=new HashMap<String,Object>();
-				condition.put("createMonth", vo.getCreateMonth());
-				condition.put("customerId", vo.getCustomerId());
-				condition.put("warehouseCode", "");
-				condition.put("bizType", vo.getBizType());
-				ReportWarehouseCustomerVo reportVo=reportWarehouseCustomerService.queryOne(condition);
-				if(reportVo!=null){
-					return "存在重复数据";
+				
+				if(StringUtils.isBlank(vo.getWarehouseCode())){
+					Map<String,Object> condition=new HashMap<String,Object>();
+					condition.put("createMonth", vo.getCreateMonth());
+					condition.put("customerId", vo.getCustomerId());
+					condition.put("bizType", vo.getBizType());
+					ReportWarehouseCustomerVo re3=reportWarehouseCustomerService.queryOne(condition);
+					if(re3!=null){
+						return "复制的数据已存在";
+					}
 				}
 			}
 			

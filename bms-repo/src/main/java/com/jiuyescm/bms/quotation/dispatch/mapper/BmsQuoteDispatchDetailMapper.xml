@@ -119,6 +119,7 @@
         from bms_quote_dispatch_detail
         where 1=1 and del_flag = '0'
 		<include refid="baseSelectColumns" />
+		ORDER BY create_time desc,start_warehouse_id,province_id
     </select>
 
     <select id="queryAllById" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">

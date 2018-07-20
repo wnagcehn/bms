@@ -13,6 +13,23 @@
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
     </resultMap>
   
+  	<resultMap id="baseMap" type="com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="create_month" property="createMonth" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
     <sql id="baseColumns">
         id, import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag
     </sql>
@@ -75,7 +92,7 @@
 		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'),customerid) a
 		
         on DUPLICATE KEY update
-        create_time=#{createTime,jdbcType=TIMESTAMP};
+        create_time=#{createTime,jdbcType=TIMESTAMP},del_flag=#{delFlag};
     </insert>
     
     <insert id="upsertPackMaterial" parameterType="java.util.Map" >
@@ -104,7 +121,7 @@
 		GROUP BY bop.warehouse_code, DATE_FORMAT(bop.create_time, '%Y-%m'), bop.customer_id) a
 		
         on DUPLICATE KEY update
-        create_time=#{createTime,jdbcType=TIMESTAMP};
+        create_time=#{createTime,jdbcType=TIMESTAMP},del_flag=#{delFlag};
     </insert>
 
     <update id="update" parameterType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
@@ -121,4 +138,16 @@
         where id=#{id}
     </update>
     
+    <select id="queryWareList" parameterType="java.util.Map" resultMap="baseMap">
+    	select id, create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type, remark, creator, create_time, last_modifier, last_modify_time,del_flag
+    	from report_warehouse_customer where 1=1 and del_flag='0' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+    </select>
+    
+    <update id="updateReport" parameterType="com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity">
+    	update report_warehouse_biz_import set del_flag='1'
+		where 1=1 and del_flag='0' and import_date=#{createMonth} and customer_id=#{customerId} and biz_type=#{bizType}
+		<if test="warehouseCode!=null and warehouseCode !=''">
+			and warehouse_code=#{warehouseCode}
+		</if>
+    </update>
 </mapper>
