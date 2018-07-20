@@ -58,8 +58,9 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 	    		BmsSubjectInfoVo vo = new BmsSubjectInfoVo();    		
 	            PropertyUtils.copyProperties(vo, entity);          
 	    		voList.add(vo);
-	    	}		
+	    	}
 	    	result.setList(voList);
+	    	PropertyUtils.copyProperties(result, pageInfo); 
 			return result;
 		} catch (Exception ex) {
          	logger.error("转换失败:{0}",ex);
