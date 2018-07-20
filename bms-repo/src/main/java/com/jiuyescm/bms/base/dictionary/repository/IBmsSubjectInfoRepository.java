@@ -19,7 +19,12 @@ public interface IBmsSubjectInfoRepository {
 
 	public PageInfo<BmsSubjectInfoEntity> query(Map<String, Object> condition,
             int pageNo, int pageSize);
+	
+	public PageInfo<BmsSubjectInfoEntity> query(BmsSubjectInfoEntity queryCondition,
+            int pageNo, int pageSize);
 
+	public BmsSubjectInfoEntity queryOne(Long id);
+	
     public BmsSubjectInfoEntity save(BmsSubjectInfoEntity entity);
 
     public BmsSubjectInfoEntity update(BmsSubjectInfoEntity entity);

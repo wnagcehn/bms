@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.dictionary.repository.IBmsSubjectInfoRepository;
 import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
@@ -40,6 +41,65 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 			logger.error("query error:",e);
 		}
 		return voList;
+	}
+
+	@Override
+	public PageInfo<BmsSubjectInfoVo> query(BmsSubjectInfoVo queryCondition,
+			int pageNo, int pageSize){
+		// TODO Auto-generated method stub
+		PageInfo<BmsSubjectInfoVo> result=new PageInfo<BmsSubjectInfoVo>();
+
+		try {
+			BmsSubjectInfoEntity queryEntity=new BmsSubjectInfoEntity();
+			PropertyUtils.copyProperties(queryEntity, queryCondition);
+			PageInfo<BmsSubjectInfoEntity> pageInfo=bmsSubjectInfoRepository.query(queryEntity, pageNo, pageSize);			
+			List<BmsSubjectInfoVo> voList = new ArrayList<BmsSubjectInfoVo>();
+	    	for(BmsSubjectInfoEntity entity : pageInfo.getList()) {
+	    		BmsSubjectInfoVo vo = new BmsSubjectInfoVo();    		
+	            PropertyUtils.copyProperties(vo, entity);          
+	    		voList.add(vo);
+	    	}		
+	    	result.setList(voList);
+			return result;
+		} catch (Exception ex) {
+         	logger.error("转换失败:{0}",ex);
+        }
+    	
+    	return result;
+	}
+
+	@Override
+	public BmsSubjectInfoEntity save(BmsSubjectInfoVo vo) {
+		// TODO Auto-generated method stub
+		BmsSubjectInfoEntity entity=new BmsSubjectInfoEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+            
+            return bmsSubjectInfoRepository.save(entity);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return null;
+	}
+
+	@Override
+	public BmsSubjectInfoEntity update(BmsSubjectInfoVo vo) {
+		// TODO Auto-generated method stub
+		BmsSubjectInfoEntity entity=new BmsSubjectInfoEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+            
+            return bmsSubjectInfoRepository.update(entity);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return null;
+	}
+
+	@Override
+	public BmsSubjectInfoEntity queryOne(Long id) {
+		// TODO Auto-generated method stub
+		return bmsSubjectInfoRepository.queryOne(id);
 	}
 
 }

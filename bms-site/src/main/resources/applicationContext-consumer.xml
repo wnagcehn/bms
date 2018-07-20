@@ -71,6 +71,10 @@
 		 version="1.0.0" registry="bms"/>
 		  <dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" 
 		 version="1.0.0" registry="bms"/>
+		 
+		  <dubbo:reference id="bmsSubjectService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" 
+		 version="1.0.0" registry="bms"/>		 
+		 
 		 <!-- 耗材导入报表服务  -->
 		 <dubbo:reference id="materialReportService" interface="com.jiuyescm.bms.report.service.IMaterialReportService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bizWarehouseImportReportService" interface="com.jiuyescm.bms.report.biz.service.IBizWarehouseImportReportService" version="1.0.0" registry="bms"/>

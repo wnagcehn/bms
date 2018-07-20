@@ -8,5 +8,3 @@
 *.bat
 /LOG_HOME_IS_UNDEFINED/
 /disconf/
-*.rules
-configure.properties

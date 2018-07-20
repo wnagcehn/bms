@@ -101,10 +101,10 @@ public class BuinessDataExportController extends BaseController {
 
 	private static final int PAGESIZE = 10000;
 	FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
-
+	
 	private static ThreadLocal<Double> totalAmount = new ThreadLocal<Double>();
 	private static ThreadLocal<Double> totalDeliveryCost = new ThreadLocal<Double>();
-
+	
 	/**
 	 * 分页查询
 	 * 
@@ -321,14 +321,14 @@ public class BuinessDataExportController extends BaseController {
 
 			@Override
 			public int compare(String o1, String o2) {
-
-				if (orderList.indexOf(o1) >= 0 && orderList.indexOf(o2) >= 0) {
-					return orderList.indexOf(o1) - orderList.indexOf(o2);
-				} else if (orderList.indexOf(o1) >= 0 && orderList.indexOf(o2) <= 0) {
+				
+		    	if (orderList.indexOf(o1) >= 0 && orderList.indexOf(o2) >= 0) {
+					return orderList.indexOf(o1)-orderList.indexOf(o2);
+				}else if (orderList.indexOf(o1) >= 0 && orderList.indexOf(o2) <= 0) {
 					return -1;
-				} else if (orderList.indexOf(o1) <= 0 && orderList.indexOf(o2) >= 0) {
+				}else if (orderList.indexOf(o1) <= 0 && orderList.indexOf(o2) >= 0) {
 					return 1;
-				} else {
+				}else {
 					return 0;
 				}
 			}
@@ -433,19 +433,29 @@ public class BuinessDataExportController extends BaseController {
 					String marterialType = getMaterialType(materialInfoList, materialEntity.getProductNo());
 					if (matchMap.containsKey(marterialType + "_name")) {
 						matchMap.put(marterialType + "_name",
+
 								matchMap.get(marterialType + "_name") + (materialEntity.getProductName() == null ? ""
 										: "," + materialEntity.getProductName()));
 						matchMap.put(marterialType + "_code", matchMap.get(marterialType + "_code")
 								+ (materialEntity.getProductNo() == null ? "" : "," + materialEntity.getProductNo()));
 						matchMap.put(marterialType + "_type", (matchMap.get(marterialType + "_type") == "" ? "无" : matchMap.get(marterialType + "_type"))
 								+ (materialEntity.getSpecDesc() == null ? "无" : "," + materialEntity.getSpecDesc()));
+
 						if (materialEntity.getProductNo().contains("GB")) {
-							matchMap.put(marterialType + "_count", matchMap.get(marterialType + "_count")
-									+ (materialEntity.getWeight() == null ? "" : "," + materialEntity.getWeight()));
+							matchMap.put(
+									marterialType + "_count",
+									matchMap.get(marterialType + "_count")
+											+ "," + materialEntity.getWeight() == null ? ""
+											: materialEntity.getWeight());
 						} else {
-							matchMap.put(marterialType + "_count", matchMap.get(marterialType + "_count")
-									+ (materialEntity.getQuantity() == null ? "" : "," + materialEntity.getQuantity()));
+							matchMap.put(
+									marterialType + "_count",
+									matchMap.get(marterialType + "_count")
+											+ ","
+											+ materialEntity.getQuantity() == null ? ""
+											: materialEntity.getQuantity());
 						}
+
 						
 						matchMap.put(marterialType + "_cost", Double.parseDouble(matchMap.get(marterialType + "_cost").toString())
 								+ Double.parseDouble(materialEntity.getCost().toString()));
@@ -453,6 +463,7 @@ public class BuinessDataExportController extends BaseController {
 						matchMap.put(marterialType + "_unitprice", (matchMap.get(marterialType + "_unitprice") == "" ? "无" : matchMap.get(marterialType + "_unitprice")) +
 								(materialEntity.getUnitPrice() == null ? "" : "," + materialEntity.getUnitPrice()));
 						double totleCost = matchMap.get("totalCost") == null ? 0.0d
+
 								: Double.parseDouble(matchMap.get("totalCost").toString());
 						totleCost += materialEntity.getCost() == null ? 0.0d : materialEntity.getCost();
 						matchMap.put("totalCost", totleCost);// 金额
@@ -461,17 +472,20 @@ public class BuinessDataExportController extends BaseController {
 								materialEntity.getProductName() == null ? "" : materialEntity.getProductName());
 						if (materialEntity.getProductNo().contains("GB")) {
 							matchMap.put(marterialType + "_count",
-									materialEntity.getWeight() == null ? "" : materialEntity.getWeight());
+									materialEntity.getWeight() == null ? ""
+											: materialEntity.getWeight());
 						} else {
 							matchMap.put(marterialType + "_count",
-									materialEntity.getQuantity() == null ? "" : materialEntity.getQuantity());
+									materialEntity.getQuantity() == null ? ""
+											: materialEntity.getQuantity());
 						}
 						matchMap.put(marterialType + "_code", materialEntity.getProductNo());
 						matchMap.put(marterialType + "_type", materialEntity.getSpecDesc());
 						matchMap.put(marterialType + "_unitprice",
-								materialEntity.getUnitPrice() == null ? "" : materialEntity.getUnitPrice());
-						matchMap.put(marterialType + "_cost",
-								materialEntity.getCost() == null ? "" : materialEntity.getCost());
+								materialEntity.getUnitPrice() == null ? ""
+										: materialEntity.getUnitPrice());
+						matchMap.put(marterialType + "_cost", materialEntity
+								.getCost() == null ? "" : materialEntity.getCost());
 						double totleCost = matchMap.get("totalCost") == null ? 0d
 								: Double.parseDouble(matchMap.get("totalCost").toString());
 						totleCost += materialEntity.getCost() == null ? 0d : materialEntity.getCost();
@@ -496,16 +510,17 @@ public class BuinessDataExportController extends BaseController {
 					dataItem.put(marterialType + "_code", materialEntity.getProductNo());
 					dataItem.put(marterialType + "_type", materialEntity.getSpecDesc());
 					if (materialEntity.getProductNo().contains("GB")) {
-						dataItem.put(marterialType + "_count",
-								materialEntity.getWeight() == null ? "" : materialEntity.getWeight());
+						dataItem.put(marterialType + "_count", materialEntity
+								.getWeight() == null ? "" : materialEntity.getWeight());
 					} else {
-						dataItem.put(marterialType + "_count",
-								materialEntity.getQuantity() == null ? "" : materialEntity.getQuantity());
+						dataItem.put(marterialType + "_count", materialEntity
+								.getQuantity() == null ? "" : materialEntity.getQuantity());
 					}
-					dataItem.put(marterialType + "_unitprice",
-							materialEntity.getUnitPrice() == null ? "" : materialEntity.getUnitPrice());
-					dataItem.put(marterialType + "_cost",
-							materialEntity.getCost() == null ? "" : materialEntity.getCost());
+					dataItem.put(marterialType + "_unitprice", materialEntity
+							.getUnitPrice() == null ? "" : materialEntity.getUnitPrice());
+					dataItem.put(marterialType + "_cost", materialEntity
+							.getCost() == null ? "" : materialEntity.getCost()
+									);
 					dataItem.put("totalCost", materialEntity.getCost());// 金额
 					dataPackMaterialList.add(dataItem);
 				}
@@ -605,7 +620,8 @@ public class BuinessDataExportController extends BaseController {
 			map.put("carrierCalStatus", getCalInfo(entity.getDispatchCal()));
 			map.put("carrierRemark", entity.getDispatchRemark());
 			map.put("orderOperatorAmount",
-					entity.getOrderOperatorAmount() == null ? 0 : entity.getOrderOperatorAmount());
+					entity.getOrderOperatorAmount() == null ? 0 : entity
+							.getOrderOperatorAmount());
 			map.put("orderCalStatus", getCalInfo(entity.getStorageCal()));
 			map.put("orderRemark", entity.getStorageRemark());
 			map.put("dutyType", entity.getDutyType());
