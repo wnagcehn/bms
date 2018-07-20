@@ -615,6 +615,12 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 				setMessage(infoList, error.getLineNo(),error.getErrorMsg());
 			}
 		}
+		
+		if (infoList != null && infoList.size() > 0) { // 有错误信息
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		} 
+		
 		//==============================================================================================================
 		int lineNo = 1;
 		List<WarehouseVo> wareHouselist = (List<WarehouseVo>)param.get("wareHouselist");
