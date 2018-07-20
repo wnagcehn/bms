@@ -69,13 +69,16 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 	}
 
 	@Override
-	public BmsSubjectInfoEntity save(BmsSubjectInfoVo vo) {
+	public BmsSubjectInfoVo save(BmsSubjectInfoVo vo) {
 		// TODO Auto-generated method stub
 		BmsSubjectInfoEntity entity=new BmsSubjectInfoEntity();
+		BmsSubjectInfoVo resultVo=new BmsSubjectInfoVo();
+
 		try {
-            PropertyUtils.copyProperties(entity, vo);
-            
-            return bmsSubjectInfoRepository.save(entity);
+            PropertyUtils.copyProperties(entity, vo);       
+            BmsSubjectInfoEntity resultEntity=bmsSubjectInfoRepository.save(entity);          
+            PropertyUtils.copyProperties(resultVo, resultEntity);         
+            return resultVo;
         } catch (Exception ex) {
         	logger.error("转换失败:{0}",ex);
         }
@@ -83,13 +86,15 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 	}
 
 	@Override
-	public BmsSubjectInfoEntity update(BmsSubjectInfoVo vo) {
+	public BmsSubjectInfoVo update(BmsSubjectInfoVo vo) {
 		// TODO Auto-generated method stub
 		BmsSubjectInfoEntity entity=new BmsSubjectInfoEntity();
+		BmsSubjectInfoVo resultVo=new BmsSubjectInfoVo();
 		try {
             PropertyUtils.copyProperties(entity, vo);
-            
-            return bmsSubjectInfoRepository.update(entity);
+            BmsSubjectInfoEntity resultEntity=bmsSubjectInfoRepository.update(entity);
+            PropertyUtils.copyProperties(resultVo, resultEntity);
+            return resultVo;
         } catch (Exception ex) {
         	logger.error("转换失败:{0}",ex);
         }
@@ -97,9 +102,17 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 	}
 
 	@Override
-	public BmsSubjectInfoEntity queryOne(Long id) {
+	public BmsSubjectInfoVo queryOne(Long id) {
 		// TODO Auto-generated method stub
-		return bmsSubjectInfoRepository.queryOne(id);
+		BmsSubjectInfoVo resultVo=new BmsSubjectInfoVo();
+		try {
+            BmsSubjectInfoEntity resultEntity=bmsSubjectInfoRepository.queryOne(id);
+            PropertyUtils.copyProperties(resultVo, resultEntity);
+            return resultVo;
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return null;
 	}
 
 }
