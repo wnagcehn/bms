@@ -462,10 +462,10 @@ public class BuinessDataExportController extends BaseController {
 						
 						matchMap.put(marterialType + "_unitprice", (matchMap.get(marterialType + "_unitprice") == "" ? "无" : matchMap.get(marterialType + "_unitprice")) +
 								(materialEntity.getUnitPrice() == null ? "" : "," + materialEntity.getUnitPrice()));
-						double totleCost = matchMap.get("totalCost") == null ? 0.0d
+						double totleCost = matchMap.get("totalCost") == null ? 0d
 
 								: Double.parseDouble(matchMap.get("totalCost").toString());
-						totleCost += materialEntity.getCost() == null ? 0.0d : materialEntity.getCost();
+						totleCost += materialEntity.getCost() == null ? 0d : materialEntity.getCost();
 						matchMap.put("totalCost", totleCost);// 金额
 					} else {
 						matchMap.put(marterialType + "_name",
