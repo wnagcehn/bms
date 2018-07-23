@@ -562,18 +562,8 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		
 		//判断取消的单子是否继续计算
 		if(StringUtils.isNotBlank(entity.getOrderStatus()) && "CLOSE".equals(entity.getOrderStatus())){
-			boolean isNeedCalculate= false;
-			String customerId=entity.getMonthFeeCount();//获取月结账号
-			for (SystemCodeEntity mouthfeeEntity : monthFeeList) {
-				if(mouthfeeEntity.getCode().equals(feeCount) || 
-				(mouthfeeEntity.getCode().equals(feeCount) && entity.getCustomerid().equals(mouthfeeEntity.getExtattr1()))){
-					ismouthCount = true;//false-此单参与计算费用
-					XxlJobLogger.log(entity.getRemark());
-					break;
-				}
-			}
-			if(!ismouthCount){
-				entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
+			if(!cancelCusList.contains(customerId)){
+				entity.setRemark("该运单是不需要计算的商家取消运单，金额置0");
 				feeEntity.setAmount(0.0d);
 				feeEntity.setTotalWeight(getBizTotalWeight(entity));
 				feeEntity.setChargedWeight(0d);

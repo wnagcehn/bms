@@ -158,17 +158,23 @@ public class DispatchBillResetJob extends IJobHandler{
 		
 		for(BizDispatchBillUpdateEntity updateEntity:bizList){
 			try{
-				//作废费用与配送业务数据
-				bizDispatchBillService.deleteByWayBillNo(updateEntity.getWaybillNo());
-				feesReceiveDispatchService.deleteByWayBillNo(updateEntity.getWaybillNo());
-				updateEntity.setIsCalculated("1");
 				if(updateEntity.getUpdateType()!=null&&updateEntity.getUpdateType().equals("CLOSE")){//转寄
+					//取消的单子直接重算
 					
+					//bizDispatchBillService.
 				}
 				else{
+					//转寄的单子
+					//作废费用与配送业务数据
+					bizDispatchBillService.deleteByWayBillNo(updateEntity.getWaybillNo());
+					feesReceiveDispatchService.deleteByWayBillNo(updateEntity.getWaybillNo());
+					
 					BizDispatchBillEntity entity=getDispatchBillEntity(updateEntity);
 					bizDispatchBillService.insertDispatchBillEntity(entity);
 				}
+				
+				updateEntity.setIsCalculated("1");
+
 				bizDispatchBillUpdateService.updateToIsCalculated(updateEntity);
 			}
 			catch(Exception ex){
