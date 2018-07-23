@@ -970,7 +970,7 @@ if (data != null) {&#xD;
     <Dialog id="dialogBillEdit">
       <ClientEvent name="onClose">view.id(&quot;dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="width">600</Property>
-      <Property name="height">350</Property>
+      <Property name="height">370</Property>
       <Property name="caption">调整运单</Property>
       <Buttons>
         <Button id="btnSave">
@@ -1114,6 +1114,20 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
             <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">sendProvinceId</Property>
+            <Property name="name">sendProvinceId</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Property name="editable">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">sendCityId</Property>
+            <Property name="name">sendCityId</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Property name="editable">true</Property>
+            <Editor/>
+          </AutoFormElement>
         </AutoForm>
       </Children>
       <Tools/>
@@ -1248,6 +1262,18 @@ arg.processDefault = true;&#xD;
         <DataColumn>
           <Property name="property">adjustDistrictId</Property>
           <Property name="name">adjustDistrictId</Property>
+          <Property name="width">80</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">sendProvinceId</Property>
+          <Property name="property">sendProvinceId</Property>
+          <Property name="width">80</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">sendCityId</Property>
+          <Property name="property">sendCityId</Property>
           <Property name="width">80</Property>
           <Editor/>
         </DataColumn>

@@ -122,7 +122,8 @@
         	a.id,a.warehouse_code, a.warehouse_name,a.customerid,a.customer_name,a.outstock_no,a.external_no,a.waybill_no,a.zexpressnum,a.bigstatus,a.smallstatus,a.temperature_type_name,a.total_weight,a.adjust_weight,a.totalqty,
 			a.throw_weight,a.product_detail,a.deliver_name,	a.month_fee_count,a.expresstype,a.receive_name,a.receive_province_id,a.receive_city_id,a.receive_district_id,a.adjust_province_id,a.adjust_city_id,a.adjust_district_id,a.create_time,a.accept_time,a.sign_time,a.remark,
 			a.carrier_id,a.carrier_name,a.origin_carrier_id,a.origin_carrier_name,a.adjust_carrier_id,a.adjust_carrier_name,a.fees_no,a.is_calculated,a.temperature_type_code,
-			b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,s.servicecode as servicecode, s.servicename as servicename
+			b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,s.servicecode as servicecode, s.servicename as servicename,
+			a.send_province_id, a.send_city_id
         from biz_dispatch_bill a
         LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
         LEFT JOIN fees_receive_dispatch c on c.fees_no=a.fees_no and c.del_flag='0' and c.subject_code='de_delivery_amount'
@@ -171,6 +172,8 @@
 		<if test="adjustDistrictId != null" >adjust_district_id=#{adjustDistrictId,jdbcType=VARCHAR},</if>
 		<if test="adjustCarrierId!=null">adjust_carrier_id=#{adjustCarrierId},</if>
 		<if test="adjustCarrierName!=null">adjust_carrier_name=#{adjustCarrierName},</if>
+		<if test="sendProvinceId != null" >send_province_id=#{sendProvinceId,jdbcType=VARCHAR},</if>
+		<if test="sendCityId != null" >send_city_id=#{sendCityId,jdbcType=VARCHAR},</if>
 		</set>
 		where
         <if test="(id !=null and id!='')">

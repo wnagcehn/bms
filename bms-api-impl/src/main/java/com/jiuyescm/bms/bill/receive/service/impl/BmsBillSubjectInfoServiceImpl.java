@@ -2065,9 +2065,26 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 			{
 				if(entity.getProductNo().indexOf(str)>=0)
 				{
-	              	 String name = str+"_"+"name"; 		// 耗编码
-	              	 String sl = str + "_"+ "sl";		//耗材数量
-	              	 String costStr = str+"_"+"cost";	//耗材费用
+	              	String name = str+"_"+"name"; 		// 耗编码
+	              	//如果存在已有耗材,","分隔累加
+	              	if (dataItem.containsKey(name)) {
+	              		String sl = str + "_"+ "sl";		//耗材数量
+		              	String costStr = str+"_"+"cost";	//耗材费用
+		              	  
+						dataItem.put(name, dataItem.get(name) + "," + entity.getProductName());
+						//如果是干冰，取重量，否则取数量
+						if(entity.getProductNo().indexOf("GB")>=0){
+							dataItem.put(sl, dataItem.get(sl) + "," + entity.getWeight()); 
+						}else{
+							dataItem.put(sl, dataItem.get(sl) + "," + entity.getQuantity());
+						}
+						dataItem.put(costStr, dataItem.get(costStr) + "," + entity.getCost());
+						cost += entity.getCost();
+						isextend = false;//非扩展列
+						break;
+					}
+	              	String sl = str + "_"+ "sl";		//耗材数量
+	              	String costStr = str+"_"+"cost";	//耗材费用
 	              	  
 					dataItem.put(name, entity.getProductName());
 					//如果是干冰，取重量，否则取数量

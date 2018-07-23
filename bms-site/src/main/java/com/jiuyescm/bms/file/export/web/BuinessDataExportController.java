@@ -438,22 +438,21 @@ public class BuinessDataExportController extends BaseController {
 										: "," + materialEntity.getProductName()));
 						matchMap.put(marterialType + "_code", matchMap.get(marterialType + "_code")
 								+ (materialEntity.getProductNo() == null ? "" : "," + materialEntity.getProductNo()));
-						matchMap.put(marterialType + "_type", (matchMap.get(marterialType + "_type") == "" ? "无" : matchMap.get(marterialType + "_type"))
+						matchMap.put(marterialType + "_type", (matchMap.get(marterialType + "_type") == null ? "无" : matchMap.get(marterialType + "_type"))
 								+ (materialEntity.getSpecDesc() == null ? "无" : "," + materialEntity.getSpecDesc()));
 
 						if (materialEntity.getProductNo().contains("GB")) {
 							matchMap.put(
 									marterialType + "_count",
 									matchMap.get(marterialType + "_count")
-											+ "," + materialEntity.getWeight() == null ? ""
-											: materialEntity.getWeight());
+											+ (materialEntity.getWeight() == null ? ""
+											: "," + materialEntity.getWeight()));
 						} else {
 							matchMap.put(
 									marterialType + "_count",
 									matchMap.get(marterialType + "_count")
-											+ ","
-											+ materialEntity.getQuantity() == null ? ""
-											: materialEntity.getQuantity());
+											+ (materialEntity.getQuantity() == null ? ""
+											: "," + materialEntity.getQuantity()));
 						}
 
 						

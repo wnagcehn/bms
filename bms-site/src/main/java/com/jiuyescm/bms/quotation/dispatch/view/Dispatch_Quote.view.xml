@@ -1439,7 +1439,7 @@ self.set(&quot;parameter&quot;,parameter);</ClientEvent>
     </UpdateAction>
     <TabControl>
       <ControlTab>
-        <Property name="caption">对应关系</Property>
+        <Property name="caption">配送报价</Property>
         <Container>
           <ToolBar>
             <DataPilot>
@@ -1716,6 +1716,29 @@ if(data){&#xD;
             <Property name="caption">导出</Property>
             <Property name="fileProvider">dispatchQuoteComparePR#downLoadData</Property>
           </DownloadAction>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">折扣报价</Property>
+        <Container>
+          <ToolBar/>
+          <AutoForm id="discountCondition">
+            <Property name="cols">220,140,140,140</Property>
+            <AutoFormElement>
+              <Property name="name">startWarehouseId</Property>
+              <Property name="property">startWarehouseId</Property>
+              <Property name="editorWidth">180</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="discountData">
+            <Property name="readOnly">true</Property>
+            <Property name="selectionMode">singleRow</Property>
+            <Property name="width">1700</Property>
+            <RowNumColumn>
+              <Property name="width">60</Property>
+            </RowNumColumn>
+          </DataGrid>
         </Container>
       </ControlTab>
     </TabControl>
