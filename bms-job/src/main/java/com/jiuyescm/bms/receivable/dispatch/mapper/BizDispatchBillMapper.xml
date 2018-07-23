@@ -75,7 +75,8 @@
 	    <result column="origin_carrier_id" property="originCarrierId" jdbcType="VARCHAR" />
 	    <result column="origin_carrier_name" property="originCarrierName" jdbcType="VARCHAR" />
 	    <result column="throw_weight" property="throwWeight" jdbcType="DOUBLE" />
-	    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />	    
+	    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+	    <result column="origin_weight" property="originWeight" jdbcType="DECIMAL" />	    
     </resultMap>
   
      <resultMap id="baseChangeResultMap" type="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity" >
@@ -109,7 +110,7 @@
         receive_street, receive_detail_address, receive_time, fees_no, account_state,external_no,sign_time,accept_time, 
         del_flag, total_volume,create_time,temperature_type_code,temperature_type_name,remark,zexpressnum, bigstatus, smallstatus, system_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_deliver_id,
         adjust_deliver_name, adjust_carrier_id, adjust_carrier_name,adjust_province_id,adjust_city_id,
-        adjust_district_id,origin_carrier_id,origin_carrier_name,IFNULL(throw_weight,0) as throw_weight,order_status
+        adjust_district_id,origin_carrier_id,origin_carrier_name,IFNULL(throw_weight,0) as throw_weight,order_status,origin_weight
         from biz_dispatch_bill
         where del_flag = 0
         <if test="(beginTime != null and beginTime !='')" >
@@ -282,5 +283,14 @@
     <update id="deleteByWayBillNo" parameterType="java.lang.String">
     	update biz_dispatch_bill set del_flag='1',last_modify_time=now(),last_modifier='sys_timer'
     	where waybill_no = #{waybillNo}
+    </update>
+    
+    <update id="updateByParam" parameterType="java.lang.String">
+   		 update biz_dispatch_bill
+   		 <set>
+   		 	<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+   	    	<if test="orderStatus != null" >order_status=#{orderStatus,jdbcType=VARCHAR},</if>
+   		 </set>
+   		 where waybill_no=#{waybillNo} and del_flag='0'
     </update>
 </mapper>

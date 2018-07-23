@@ -88,4 +88,11 @@ public class BizDispatchBillServiceImpl extends MyBatisDao implements IBizDispat
 		return (BizDispatchBillEntity) selectOne("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.getDispatchEntityByWaybillNo", waybillNo);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateByParam(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.update("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.updateByParam", condition);
+	}
+
 }

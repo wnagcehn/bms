@@ -26,6 +26,13 @@ public interface IBizDispatchBillService {
     public int update(BizDispatchBillEntity entity);
     
     /**
+     * 根据条件更新运单
+     * @param condition
+     * @return
+     */
+    public int updateByParam(Map<String, Object> condition);
+    
+    /**
      * 批量更新业务数据
      * @param aCondition
      * @return

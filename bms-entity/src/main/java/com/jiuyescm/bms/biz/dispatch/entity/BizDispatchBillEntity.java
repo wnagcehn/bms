@@ -185,6 +185,8 @@ public class BizDispatchBillEntity implements IEntity {
 	private String updateReasonDetail;
 	// 订单状态
 	private String orderStatus;
+	// 原始重量
+	private Double originWeight;
 	
 	//计费重量
 	private Double chargeWeight;
@@ -1240,6 +1242,14 @@ public class BizDispatchBillEntity implements IEntity {
 
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public Double getOriginWeight() {
+		return originWeight;
+	}
+
+	public void setOriginWeight(Double originWeight) {
+		this.originWeight = originWeight;
 	}
 	
 	

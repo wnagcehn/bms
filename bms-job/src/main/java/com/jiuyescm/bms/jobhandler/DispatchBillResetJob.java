@@ -159,9 +159,12 @@ public class DispatchBillResetJob extends IJobHandler{
 		for(BizDispatchBillUpdateEntity updateEntity:bizList){
 			try{
 				if(updateEntity.getUpdateType()!=null&&updateEntity.getUpdateType().equals("CLOSE")){//转寄
-					//取消的单子直接重算
-					
-					//bizDispatchBillService.
+					//取消的单子直接重算、更新运单的状态为取消
+					Map<String,Object> condition=new HashMap<String,Object>();
+					condition.put("waybillNo", updateEntity.getWaybillNo());
+					condition.put("isCalculated", "99");
+					condition.put("orderStatus", "CLOSE");
+					bizDispatchBillService.updateByParam(condition);
 				}
 				else{
 					//转寄的单子

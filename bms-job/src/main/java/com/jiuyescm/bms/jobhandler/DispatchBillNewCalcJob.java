@@ -470,6 +470,10 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		Map<String,Object> map=new HashMap<String,Object>();
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
+		
+		//将原始重量(OriginWeight)转换后赋值给新的运单重量（TotalWeight）
+		entity.setTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		
 		//String subjectId="";
 		//物流商的判断
 		/*if(StringUtils.isBlank(entity.getAdjustCarrierId())){
@@ -847,6 +851,25 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 			XxlJobLogger.log("验证签签约服务   耗时【{1}】毫秒 ",(current - start));	
 		}
 		return true;
+	}
+	
+	public double getNewTotalWeight(Double originWeight){
+		
+		double totalWeight=0d;
+		String weightString=originWeight+"";
+		if(weightString.contains(".0") && weightString.length()>3){
+			String v=weightString.substring(weightString.indexOf(".0")+2,weightString.indexOf(".0")+3);
+			Double val=Double.valueOf(v);
+			if(val==0){
+				totalWeight=Math.floor(originWeight);
+			}else{
+				totalWeight=originWeight+0.1;
+			}
+		}else{
+			totalWeight=originWeight;
+		}
+		
+		return totalWeight;		
 	}
 	
 	public double getNewThrowWeight(BizDispatchBillEntity entity){
