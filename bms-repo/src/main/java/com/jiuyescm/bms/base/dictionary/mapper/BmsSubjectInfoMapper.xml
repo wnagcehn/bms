@@ -44,7 +44,7 @@
 				and fees_type = #{feesType}
 		</if>
 		<if test="(subjectName != null and subjectName !='')" >
-				and subject_name = #{subjectName}
+				and subject_name like '%${subjectName}%'
 		</if>
 		<if test="(subjectCode != null and subjectCode !='')" >
 				and subject_code = #{subjectCode}
