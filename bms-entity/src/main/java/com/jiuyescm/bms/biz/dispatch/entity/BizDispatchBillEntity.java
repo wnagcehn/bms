@@ -183,6 +183,9 @@ public class BizDispatchBillEntity implements IEntity {
 	private String timeliness;
 	private String dutyType;
 	private String updateReasonDetail;
+	// 订单状态
+	private String orderStatus;
+	
 	//计费重量
 	private Double chargeWeight;
 	//计费物流商
@@ -1230,6 +1233,15 @@ public class BizDispatchBillEntity implements IEntity {
 	public void setServicename(String servicename) {
 		this.servicename = servicename;
 	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	
 	
 	
 }

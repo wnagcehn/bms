@@ -92,6 +92,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 	List<String> changeCusList=null;
 	Map<String, String> carrierMap=null;
 	Map<String,BigDecimal> metrialVolumMap=null;
+	List<String> cancelCusList=null;
 	
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -134,6 +135,16 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 			changeCusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 		}
 
+		
+		//指定需要计算取消状态单子的商家
+		map= new HashMap<String, Object>();
+		map.put("groupCode", "calculate_cancel_customer");
+		map.put("bizType", "group_customer");
+		BmsGroupVo bmsCancelCus=bmsGroupService.queryOne(map);
+		if(bmsCancelCus!=null){
+			cancelCusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
+		}
+			
 		//物流商
 		carrierMap=getCarrier();
 		
@@ -527,6 +538,32 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		if("SHUNFENG_DISPATCH".equals(subjectId)){
 			boolean ismouthCount= false;
 			String feeCount=entity.getMonthFeeCount();//获取月结账号
+			for (SystemCodeEntity mouthfeeEntity : monthFeeList) {
+				if(mouthfeeEntity.getCode().equals(feeCount) || 
+				(mouthfeeEntity.getCode().equals(feeCount) && entity.getCustomerid().equals(mouthfeeEntity.getExtattr1()))){
+					ismouthCount = true;//false-此单参与计算费用
+					XxlJobLogger.log(entity.getRemark());
+					break;
+				}
+			}
+			if(!ismouthCount){
+				entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
+				feeEntity.setAmount(0.0d);
+				feeEntity.setTotalWeight(getBizTotalWeight(entity));
+				feeEntity.setChargedWeight(0d);
+				entity.setIsCalculated(CalculateState.No_Exe.getCode());
+				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+				feeEntity.setOtherSubjectCode(_subjectCode);
+				feeEntity.setSubjectCode(_subjectCode);
+				feesList.add(feeEntity);
+				return false;
+			}
+		}
+		
+		//判断取消的单子是否继续计算
+		if(StringUtils.isNotBlank(entity.getOrderStatus()) && "CLOSE".equals(entity.getOrderStatus())){
+			boolean isNeedCalculate= false;
+			String customerId=entity.getMonthFeeCount();//获取月结账号
 			for (SystemCodeEntity mouthfeeEntity : monthFeeList) {
 				if(mouthfeeEntity.getCode().equals(feeCount) || 
 				(mouthfeeEntity.getCode().equals(feeCount) && entity.getCustomerid().equals(mouthfeeEntity.getExtattr1()))){
