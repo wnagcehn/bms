@@ -1680,7 +1680,6 @@ if(ruleNo&amp;&amp;ruleNo!=''){&#xD;
                 <Property name="property">ruleInstruction</Property>
                 <Property name="name">ruleInstruction</Property>
                 <Property name="align">center</Property>
-                <Property name="visible">false</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn name="remark">
@@ -1781,7 +1780,6 @@ if(ruleNo&amp;&amp;ruleNo!=''){&#xD;
                 <Property name="property">ruleInstruction</Property>
                 <Property name="name">ruleInstruction</Property>
                 <Property name="align">center</Property>
-                <Property name="visible">false</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn name="remark">
