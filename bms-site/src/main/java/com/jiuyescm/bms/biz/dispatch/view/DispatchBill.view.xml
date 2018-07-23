@@ -330,6 +330,11 @@
       <PropertyDef name="servicecode">
         <Property name="label">物流产品编码</Property>
       </PropertyDef>
+      <PropertyDef name="originWeight">
+        <Property name="label">原始重量</Property>
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">0.00</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1171,6 +1176,12 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
         <DataColumn name="isCalculated">
           <Property name="property">isCalculated</Property>
           <Property name="width">60</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">originWeight</Property>
+          <Property name="property">originWeight</Property>
+          <Property name="width">80</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn>
           <Property name="property">bigstatus</Property>

@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.biz.dispatch.entity;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -196,6 +197,9 @@ public class BizDispatchBillEntity implements IEntity {
 	//物流产品类型
 	private String servicecode;
 	private String servicename;
+	
+	//原始重量
+	private BigDecimal originWeight;
 
 	public BizDispatchBillEntity() {
 
@@ -1240,6 +1244,14 @@ public class BizDispatchBillEntity implements IEntity {
 
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public BigDecimal getOriginWeight() {
+		return originWeight;
+	}
+
+	public void setOriginWeight(BigDecimal originWeight) {
+		this.originWeight = originWeight;
 	}
 	
 	
