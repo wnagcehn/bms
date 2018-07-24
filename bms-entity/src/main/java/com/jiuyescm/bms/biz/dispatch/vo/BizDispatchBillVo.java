@@ -208,6 +208,8 @@ public class BizDispatchBillVo implements IEntity {
 	//物流产品
 	private String servicecode;
 	private String servicename;
+	// 订单状态
+	private String orderStatus;
 	//原始重量
 	private Double originWeight;
 	
@@ -1335,12 +1337,20 @@ public class BizDispatchBillVo implements IEntity {
 		this.originWeight = originWeight;
 	}
 
+
 	public Double getDiscountAmount() {
 		return discountAmount;
 	}
 
 	public void setDiscountAmount(Double discountAmount) {
 		this.discountAmount = discountAmount;
+	}
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 
     

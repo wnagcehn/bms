@@ -142,7 +142,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		map.put("bizType", "group_customer");
 		BmsGroupVo bmsCancelCus=bmsGroupService.queryOne(map);
 		if(bmsCancelCus!=null){
-			cancelCusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
+			cancelCusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
 		}
 			
 		//物流商
@@ -853,7 +853,17 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		return true;
 	}
 	
+	/**
+	 * 获取新的重量
+	 * @param originWeight
+	 * @return
+	 */
 	public double getNewTotalWeight(Double originWeight){
+			
+		//1、宅配重量如果前2位小数是0,存在第三位小数的，直接抹掉；
+	    //   比如:3.0056, 那么变成 3
+		//2、对于第一位小数位是0的，第二位不是0,在原重量上加0.1；
+	    //   比如3.015, 那么变成3.115
 		
 		double totalWeight=0d;
 		String weightString=originWeight+"";

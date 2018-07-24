@@ -179,6 +179,9 @@ public class BizDispatchBillPayEntity implements IEntity {
 	//抛重
 	private Double throwWeight;
 	
+	// 原始重量
+	private Double originWeight;
+	
 	//报价list
 	private List<PriceOutMainDispatchEntity> priceList;	
 	public String getAdjustDeliverid() {
@@ -1108,6 +1111,14 @@ public class BizDispatchBillPayEntity implements IEntity {
 
 	public void setThrowWeight(Double throwWeight) {
 		this.throwWeight = throwWeight;
+	}
+
+	public Double getOriginWeight() {
+		return originWeight;
+	}
+
+	public void setOriginWeight(Double originWeight) {
+		this.originWeight = originWeight;
 	}
   
 	

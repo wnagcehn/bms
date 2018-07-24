@@ -68,7 +68,8 @@
 	    <result column="adjust_province_id" property="adjustProvinceId" jdbcType="VARCHAR" /> 
 	    <result column="adjust_city_id" property="adjustCityId" jdbcType="VARCHAR" /> 
 	    <result column="adjust_district_id" property="adjustDistrictId" jdbcType="VARCHAR" /> 
-	     <result column="throw_weight" property="throwWeight" jdbcType="DOUBLE" />
+	    <result column="throw_weight" property="throwWeight" jdbcType="DOUBLE" />
+	    <result column="origin_weight" property="originWeight" jdbcType="DECIMAL" />
     </resultMap>
   
     <select id="querybizDispatchBillMap" parameterType="java.util.Map" resultMap="bizDispatchBillMap">
@@ -82,7 +83,7 @@
         del_flag, total_volume,create_time,create_time, last_modifier, last_modify_time, write_time, calculate_time,
         temperature_type_code, temperature_type_name, remark, zexpressnum, bigstatus, smallstatus, system_weight, totalqty, 
         product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5,workcount,adjust_province_id,
-        adjust_city_id,adjust_district_id,IFNULL(throw_weight,0) as throw_weight
+        adjust_city_id,adjust_district_id,IFNULL(throw_weight,0) as throw_weight,origin_weight
         from biz_dispatch_pay_bill 
         where del_flag = 0
         <if test="(beginTime != null and beginTime !='')" >
@@ -120,6 +121,7 @@
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
 			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			total_weight=#{totalWeight,jdbcType=DECIMAL}
 		</set>
         where id=#{id}
     </update>
