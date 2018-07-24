@@ -243,9 +243,10 @@
 			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-			<if test="throwWeight != null" >throw_weight=#{throwWeight,jdbcType=TIMESTAMP},</if>
+			<if test="throwWeight != null" >throw_weight=#{throwWeight,jdbcType=DECIMAL},</if>
 			<if test="originCarrierName != null" >origin_carrier_name=#{originCarrierName,jdbcType=VARCHAR},</if>
-			<if test="originCarrierId != null" >origin_carrier_id=#{originCarrierId,jdbcType=VARCHAR}</if>
+			<if test="originCarrierId != null" >origin_carrier_id=#{originCarrierId,jdbcType=VARCHAR},</if>
+			total_weight=#{totalWeight,jdbcType=DECIMAL}
 		</set>
         where id=#{id}
     </update>

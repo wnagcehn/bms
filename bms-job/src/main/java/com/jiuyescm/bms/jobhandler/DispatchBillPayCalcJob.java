@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.jobhandler;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -273,6 +274,10 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);
 		Map<String,Object> map=new HashMap<String,Object>();
+		
+		//获取新的重量
+		entity.setTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		
 		String deliverid=entity.getDeliverid();
 		entity.setCalculateTime(time);
 		boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
@@ -340,7 +345,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
 				double dd = getResult(entity.getAdjustWeight());
 				entity.setWeight(dd);
-				entity.setTotalWeight(entity.getAdjustWeight());
+				//entity.setTotalWeight(entity.getAdjustWeight());
 				
 			}
 			else{
@@ -354,13 +359,13 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 						XxlJobLogger.log("--------此单为顺丰同城  按普通重量计费--------");
 						double dd = getResult(entity.getTotalWeight());
 						entity.setWeight(dd);
-						entity.setTotalWeight(entity.getTotalWeight());
+						//entity.setTotalWeight(entity.getTotalWeight());
 					}
 					else{
 						XxlJobLogger.log("--------此单为顺丰非同城  按泡重计费--------");
 						double dd = getResult(entity.getThrowWeight());
 						entity.setWeight(dd);
-						entity.setTotalWeight(entity.getThrowWeight());
+						//entity.setTotalWeight(entity.getThrowWeight());
 					}
 				}
 				else{
@@ -400,17 +405,17 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
 				double mm=getTeshu(entity.getAdjustWeight());
 				entity.setWeight(mm);
-				entity.setTotalWeight(entity.getAdjustWeight());
+				//entity.setTotalWeight(entity.getAdjustWeight());
 			}
 			else{
 				double mm=getTeshu(entity.getTotalWeight());
 				entity.setWeight(mm);
-				entity.setTotalWeight(entity.getTotalWeight());
+				//entity.setTotalWeight(entity.getTotalWeight());
 			}
 			if("1400000036".equals(deliverid) || "1400000047".equals(deliverid) || "1400000658".equals(deliverid) || "1400000040".equals(deliverid) || "1500000019".equals(deliverid) || "1500000018".equals(deliverid)){
 				double dd = DoubleUtil.isBlank(entity.getAdjustWeight())?entity.getTotalWeight():entity.getAdjustWeight();
 				entity.setWeight(dd);
-				entity.setTotalWeight(dd);
+				//entity.setTotalWeight(dd);
 			}
 			
 		}
@@ -575,6 +580,31 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		feeEntity.setContinuedPrice(0.0d);	
 		return feeEntity;	
 	}
+	
+	/**
+	 * 获取新的实际重量
+	 * @param originWeight
+	 * @return
+	 */
+	public double getNewTotalWeight(double originWeight){
+		// 小数为大于0.05 保留小数， 不更改。应付重量=实际重量。
+		// 小数位小于等于0.05 则应付重量=实际重量整数位+0
+		
+		double totalWeight=0d;
+		BigDecimal   a1   =BigDecimal.valueOf(originWeight);
+		BigDecimal   a2   =BigDecimal.valueOf(Math.floor(originWeight));
+		BigDecimal result=a1.subtract(a2);		
+		double s=result.doubleValue();
+		if(s>0.05){
+			totalWeight=originWeight;
+		}else if(s<=0.05){
+			totalWeight=Math.floor(originWeight);
+		}
+		
+		return totalWeight;
+	}
+	
+	
 	/**
 	 * 计算此时的重量
 	 * @param weight
@@ -602,7 +632,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 	}
 	
 	/**
-	 * 对于除顺丰之外的宅配商，重量先舍去小数点2位以上的数据，再四舍五入
+	 * 对于除顺丰之外的宅配商，重量先舍去小数点2位以上的数据，再四舍五入(不用处理了)
 	 * @param weightTeshu
 	 * @return
 	 * （eg: 1.009->1.00->1   1.901->1.90->2）
@@ -610,7 +640,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 	public double getTeshu(double weightTeshu){
 		double weight=weightTeshu;
 		
-		double isweight;
+		/*double isweight;
 		
 		String a=weight+"";
 	    
@@ -641,8 +671,8 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		}else{
 			isweight=Math.ceil(weight);	
 		}
-		
-		return isweight;
+		*/
+		return weight;
 	}
 		
 	private String ReplaceChar(String str){
