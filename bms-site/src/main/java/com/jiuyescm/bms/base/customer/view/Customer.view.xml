@@ -23,7 +23,7 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="mkInvoiceName">
-        <Property name="label">开票商家名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
     </DataType>
   </Model>

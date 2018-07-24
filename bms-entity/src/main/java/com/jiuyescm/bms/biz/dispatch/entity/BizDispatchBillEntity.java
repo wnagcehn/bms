@@ -1251,6 +1251,8 @@ public class BizDispatchBillEntity implements IEntity {
 	public void setOriginWeight(Double originWeight) {
 		this.originWeight = originWeight;
 	}
+
+
 	
 	
 	
