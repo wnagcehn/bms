@@ -27,6 +27,7 @@ import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.bms.common.enumtype.ContractAbnormalTypeEnum;
 import com.jiuyescm.bms.common.enumtype.ImpState;
 import com.jiuyescm.bms.common.enumtype.IsState;
+import com.jiuyescm.bms.common.enumtype.OrderStatus;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.mdm.carrier.api.ICarrierService;
 import com.jiuyescm.mdm.carrier.vo.CarrierVo;
@@ -79,6 +80,12 @@ public class BmsDictionaryEnum {
 	public Map<String, String> getDataStateEnum() {  
 		//return CalculateState.
 		return BizState.getMap();
+	}
+	
+	@DataProvider
+	public Map<String, String> getOrderStatusEnum() {  
+		//return CalculateState.
+		return OrderStatus.getMap();
 	}
 	
 	/**

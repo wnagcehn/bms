@@ -31,6 +31,7 @@ import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
+import com.jiuyescm.bms.common.enumtype.OrderStatus;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -182,6 +183,7 @@ public class DispatchBillExportController extends BaseController{
 		
 		Map<String, String> temMap=getTemperatureTypeList();
 		Map<String,String> b2bMap=getIstB();
+		Map<String,String> orderStatusMap=getOrderStatus();
 		
 		int pageNo = 1;
 		int lineNo = 1;
@@ -201,7 +203,7 @@ public class DispatchBillExportController extends BaseController{
 			
 			//头、内容信息
 			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap);
+			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap);
 			
 			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
 					lineNo, headDetailMapList, dataDetailList);
@@ -268,6 +270,12 @@ public class DispatchBillExportController extends BaseController{
         itemMap.put("title", "小状态");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "smallstatus");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "订单状态");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "orderStatus");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -513,7 +521,7 @@ public class DispatchBillExportController extends BaseController{
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap){
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
 	        for (BizDispatchBillVo entity : list) {
@@ -527,6 +535,9 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("originWeight", entity.getOriginWeight());
 	        	dataItem.put("bigstatus", entity.getBigstatus());
 	        	dataItem.put("smallstatus", entity.getSmallstatus());
+	        	if(StringUtils.isNotBlank(entity.getOrderStatus())){
+		        	dataItem.put("orderStatus", orderStatusMap.get(entity.getOrderStatus()));
+	        	}
 	        	dataItem.put("b2bFlag",b2bMap.get(entity.getB2bFlag()));
 	        	dataItem.put("temperatureTypeCode", temMap.get(entity.getTemperatureTypeCode()));
 	        	dataItem.put("systemWeight", entity.getSystemWeight());
@@ -608,11 +619,24 @@ public class DispatchBillExportController extends BaseController{
 		return map;
 	}
 	
+	/**
+	 * B2B标识
+	 * @return
+	 */
 	@DataProvider
 	public Map<String,String> getIstB(){
 		Map<String, String> mapValue = new LinkedHashMap<String, String>();
 		mapValue.put("1", "B2B");
 		mapValue.put("0", "B2C");
 		return mapValue;
+	}
+	
+	/**
+	 * B2B标识
+	 * @return
+	 */
+	@DataProvider
+	public Map<String,String> getOrderStatus(){	
+		return OrderStatus.getMap();
 	}
 }
