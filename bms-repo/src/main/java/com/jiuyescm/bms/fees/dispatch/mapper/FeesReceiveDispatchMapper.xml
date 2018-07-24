@@ -440,7 +440,8 @@
      		frd.charged_weight, frd.weight_limit, frd.unit_price, frd.head_weight, frd.continued_weight, 
      		frd.head_price, frd.continued_price, frd.create_time,
 			bd.totalqty as totalQuantity,bd.product_detail as productDetail,frd.bigstatus,frd.smallstatus,frd.biz_type, 
-			frs.cost as orderOperatorAmount,bom.bill_type_name as billTypeName,bd.receive_name,bd.zexpressnum,bdc.duty_type,bdc.update_reason_detail
+			frs.cost as orderOperatorAmount,bom.bill_type_name as billTypeName,bd.receive_name,bd.zexpressnum,bdc.duty_type,bdc.update_reason_detail,
+			(frd.amount-frd.derate_amount) as discountAmount
         from fees_receive_dispatch frd
 		LEFT JOIN biz_dispatch_bill bd on frd.fees_no = bd.fees_no
 		LEFT JOIN biz_outstock_master bom on frd.waybill_no = bom.waybill_no and frd.outstock_no = bom.outstock_no
@@ -477,7 +478,8 @@
 	d.is_calculated as storageCal,
 	d.remark as storageRemark,
 	a.is_calculated as dispatchCal,
-	a.remark as dispatchRemark	
+	a.remark as dispatchRemark,
+	(b.amount-b.derate_amount) as discountAmount
 	from biz_dispatch_bill a
 	left join fees_receive_dispatch b on a.fees_no=b.fees_no and b.del_flag='0'
 	left join biz_outstock_master d on d.waybill_no=a.waybill_no  and d.del_flag='0'

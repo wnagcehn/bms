@@ -71,6 +71,8 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	private String priceId;
 	// 金额
 	private Double amount;
+	// 折扣后运费
+	private Double discountAmount;
 	// 账单编号
 	private String billNo;
 	// 规则编号
@@ -142,6 +144,7 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	private Double totalCost;
 	private Double receiptAmount;//实收金额
     private Double derateAmount;//减免费用
+    
 	//收件人
  	private String receiveName;
  	// 收件人省份
@@ -784,6 +787,14 @@ public class FeesReceiveDispatchEntity implements IEntity {
 
 	public void setIsCalculated(String isCalculated) {
 		this.isCalculated = isCalculated;
+	}
+
+	public Double getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(Double discountAmount) {
+		this.discountAmount = discountAmount;
 	}	
 	
 	

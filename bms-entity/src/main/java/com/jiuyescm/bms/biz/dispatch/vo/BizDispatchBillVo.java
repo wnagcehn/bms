@@ -177,6 +177,8 @@ public class BizDispatchBillVo implements IEntity {
 	
 	//运费
 	private Double dsAmount;
+	//折扣后运费
+	private Double discountAmount;
 	//运费计算状态
 	private String dsIsCalculated;
 	//运费计算备注
@@ -1331,6 +1333,14 @@ public class BizDispatchBillVo implements IEntity {
 
 	public void setOriginWeight(Double originWeight) {
 		this.originWeight = originWeight;
+	}
+
+	public Double getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(Double discountAmount) {
+		this.discountAmount = discountAmount;
 	}
 
     

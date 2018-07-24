@@ -1718,29 +1718,6 @@ if(data){&#xD;
           </DownloadAction>
         </Container>
       </ControlTab>
-      <ControlTab>
-        <Property name="caption">折扣报价</Property>
-        <Container>
-          <ToolBar/>
-          <AutoForm id="discountCondition">
-            <Property name="cols">220,140,140,140</Property>
-            <AutoFormElement>
-              <Property name="name">startWarehouseId</Property>
-              <Property name="property">startWarehouseId</Property>
-              <Property name="editorWidth">180</Property>
-              <Editor/>
-            </AutoFormElement>
-          </AutoForm>
-          <DataGrid id="discountData">
-            <Property name="readOnly">true</Property>
-            <Property name="selectionMode">singleRow</Property>
-            <Property name="width">1700</Property>
-            <RowNumColumn>
-              <Property name="width">60</Property>
-            </RowNumColumn>
-          </DataGrid>
-        </Container>
-      </ControlTab>
     </TabControl>
     <Dialog id="dialogEdit">
       <ClientEvent name="onClose">view.id(&quot;dsPriceMainDistribution&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>

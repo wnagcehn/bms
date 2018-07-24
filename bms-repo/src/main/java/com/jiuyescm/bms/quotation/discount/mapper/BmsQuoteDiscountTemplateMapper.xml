@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountTemplateMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+		   	<result column="template_name" property="templateName" jdbcType="VARCHAR" />
+		   	<result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+		   	<result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+		   	<result column="discount_type" property="discountType" jdbcType="VARCHAR" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, template_code, template_name, subject_code, biz_type, discount_type, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+template_code, template_name, subject_code, biz_type, discount_type, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_quote_discount_template
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_quote_discount_template
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" templateCode != null and templateCode !='' ">
+				and template_code = #{templateCode}
+			</if>
+        	<if test=" templateName != null and templateName !='' ">
+				and template_name like CONCAT('%',#{templateName},'%')
+			</if>
+        	<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+        	<if test=" bizType != null and bizType !='' ">
+				and biz_type = #{bizType}
+			</if>
+        	<if test=" discountType != null and discountType !='' ">
+				and discount_type = #{discountType}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				<![CDATA[create_time <= #{createEndTime}]]>
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time >= #{createTime}
+			</if>
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				and last_modifier = #{lastModifier}
+			</if>
+        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				and last_modify_time = #{lastModifyTime}
+			</if>
+			and del_flag = "0"
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
+        insert into bms_quote_discount_template(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{templateCode,jdbcType=VARCHAR}, 
+			#{templateName,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{bizType,jdbcType=VARCHAR}, 
+			#{discountType,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
+        update bms_quote_discount_template
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" templateCode != null and templateCode !='' ">
+				template_code = #{templateCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" templateName != null and templateName !='' ">
+				template_name = #{templateName,jdbcType=VARCHAR},
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				subject_code = #{subjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" bizType != null and bizType !='' ">
+				biz_type = #{bizType,jdbcType=VARCHAR},
+			</if>
+			<if test=" discountType != null and discountType !='' ">
+				discount_type = #{discountType,jdbcType=VARCHAR},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
+        update bms_quote_discount_template 
+        <trim prefix="set" suffixOverrides=",">
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </delete>
+</mapper>

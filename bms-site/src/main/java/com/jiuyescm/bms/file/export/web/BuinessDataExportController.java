@@ -570,6 +570,7 @@ public class BuinessDataExportController extends BaseController {
 		headMapDict.put("headPrice", "首重金额");
 		headMapDict.put("continuePrice", "续重金额");
 		headMapDict.put("amount", "运费");
+		headMapDict.put("discountAmount", "折扣后运费");
 		headMapDict.put("carrierCalStatus", "运费计算状态");
 		headMapDict.put("carrierRemark", "运费计算备注");
 		headMapDict.put("orderOperatorAmount", "操作费");
@@ -616,6 +617,7 @@ public class BuinessDataExportController extends BaseController {
 			map.put("headPrice", entity.getHeadPrice() == null ? 0 : entity.getHeadPrice());
 			map.put("continuePrice", entity.getContinuedPrice() == null ? 0 : entity.getContinuedPrice());
 			map.put("amount", entity.getAmount() == null ? 0 : entity.getAmount());
+			map.put("discountAmount", entity.getDiscountAmount() == null ? 0 : entity.getDiscountAmount());
 			map.put("carrierCalStatus", getCalInfo(entity.getDispatchCal()));
 			map.put("carrierRemark", entity.getDispatchRemark());
 			map.put("orderOperatorAmount",

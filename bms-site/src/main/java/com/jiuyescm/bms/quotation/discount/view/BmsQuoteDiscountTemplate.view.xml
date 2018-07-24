@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsQuoteDiscountTemplateEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增标识</Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property name="label">折扣方式</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsQuoteDiscountTemplateEntityQuery">
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property name="label">折扣方式</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="createEndTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsQuoteDiscountDetailEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增标识</Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="downLimit">
+        <Property name="label">下限</Property>
+      </PropertyDef>
+      <PropertyDef name="upLimit">
+        <Property name="label">上限</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="label">折扣首价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPriceRate">
+        <Property name="label">首价折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePrice">
+        <Property name="label">折扣续重价</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePirceRate">
+        <Property name="label">续重折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">整单折扣价</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPriceRate">
+        <Property name="label">整单折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标志（0：未作废，1：已作废）</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="1">已作废</Property>
+              <Property name="0">未作废</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsQuoteDiscountDetailEntityQuery">
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">生效时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">失效时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库编码</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="downLimit">
+        <Property name="label">下限</Property>
+      </PropertyDef>
+      <PropertyDef name="upLimit">
+        <Property name="label">上限</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="label">折扣首价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPriceRate">
+        <Property name="label">首价折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePrice">
+        <Property name="label">折扣续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePirceRate">
+        <Property name="label">续重折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">折扣一口价</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPriceRate">
+        <Property name="label">一口价折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标志（0：未作废，1：已作废）</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();
+</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                //刷新&#xD;
+								var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsQuoteDiscountTemplateEntity">
+      <Property name="dataType">[dtBmsQuoteDiscountTemplateEntity]</Property>
+      <Property name="dataProvider">bmsQuoteDiscountTemplateController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsQuoteDiscountTemplateEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsQuoteDiscountTemplateEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsBmsQuoteDiscountDetailEntity">
+      <Property name="dataType">[dtBmsQuoteDiscountDetailEntity]</Property>
+      <Property name="dataProvider">bmsQuoteDiscountDetailController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsQuoteDiscountDetailEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsQuoteDiscountDetailEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsQuoteDiscountDetailEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="queryForm">
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsBmsQuoteDiscountTemplateEntityQuery</Property>
+        <AutoFormElement>
+          <Property name="name">templateCode</Property>
+          <Property name="property">templateCode</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateName</Property>
+          <Property name="property">templateName</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">bizType</Property>
+          <Property name="property">bizType</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectCode</Property>
+          <Property name="property">subjectCode</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createEndTime</Property>
+          <Property name="property">createEndTime</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <SplitPanel>
+      <Property name="direction">top</Property>
+      <Property name="position">260</Property>
+      <MainControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton id="btnAdd1">
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData().current;
+if(data){
+	var datas = view.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEditDetail&quot;).show();
+}else{
+	dorado.MessageBox.alert(&quot;请选择一条数据&quot;);
+}
+
+</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="btnModify1">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEditDetail&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="btnRemove1">
+              <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteDetailAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                //刷新&#xD;
+								var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
+								with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
+									//定义查询条件json结构&#xD;
+									var queryJson={&#xD;
+										templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+									};&#xD;
+									set(&quot;parameter&quot;, queryJson);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+							}&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnDownloadTemplate">
+              <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;discount_quotation_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
+              <Property name="caption">模板下载</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnImport">
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);&#xD;
+if(data.current)&#xD;
+{&#xD;
+	var entity = data.current; &#xD;
+	view.get(&quot;#StepUploadAction&quot;).set(&quot;parameter&quot;,{&quot;templateCode&quot;:entity.get(&quot;templateCode&quot;)});&#xD;
+    view.get(&quot;#StepImportDialog&quot;).show();&#xD;
+}&#xD;
+else&#xD;
+{&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条数据!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+              <Property name="caption">导入</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="btnExport">
+              <Property name="caption">导出</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -280px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid id="detailDataGrid">
+            <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="templateCode">
+              <Property name="property">templateCode</Property>
+              <Property name="visible">false</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="startTime">
+              <Property name="property">startTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="endTime">
+              <Property name="property">endTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="warehouseCode">
+              <Property name="property">warehouseCode</Property>
+              <Property name="visible">false</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="warehouseName">
+              <Property name="property">warehouseName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="downLimit">
+              <Property name="property">downLimit</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="upLimit">
+              <Property name="property">upLimit</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="firstPrice">
+              <Property name="property">firstPrice</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="firstPriceRate">
+              <Property name="property">firstPriceRate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="continuePrice">
+              <Property name="property">continuePrice</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="continuePirceRate">
+              <Property name="property">continuePirceRate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="unitPrice">
+              <Property name="property">unitPrice</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="unitPriceRate">
+              <Property name="property">unitPriceRate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+              <Property name="property">lastModifier</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+              <Property name="property">lastModifyTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="delFlag">
+              <Property name="property">delFlag</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <DataGrid id="DataGrid">
+            <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="templateCode">
+              <Property name="property">templateCode</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="templateName">
+              <Property name="property">templateName</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="subjectCode">
+              <Property name="property">subjectCode</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="bizType">
+              <Property name="property">bizType</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="discountType">
+              <Property name="property">discountType</Property>
+              <Property name="visible">true</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+              <Property name="property">lastModifier</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+              <Property name="property">lastModifyTime</Property>
+              <Property name="width">117</Property>
+            </DataColumn>
+            <DataColumn name="delFlag">
+              <Property name="property">delFlag</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsQuoteDiscountTemplateEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">200</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBmsQuoteDiscountTemplateEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*,*</Property>
+          <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+          <Property name="dataType">dtBmsQuoteDiscountTemplateEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">templateCode</Property>
+            <Property name="property">templateCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">templateName</Property>
+            <Property name="property">templateName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectCode</Property>
+            <Property name="property">subjectCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bizType</Property>
+            <Property name="property">bizType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">discountType</Property>
+            <Property name="property">discountType</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogEditDetail">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsQuoteDiscountDetailEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onShow">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData().current;&#xD;
+var entity = view.id(&quot;formDetailEdit&quot;).get(&quot;entity&quot;);&#xD;
+if(data != &quot;undefined&quot; &amp;&amp; data != &quot;&quot;){&#xD;
+	entity.set(&quot;templateCode&quot;,data.get(&quot;templateCode&quot;));&#xD;
+}else{&#xD;
+	return;&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">300</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button id="btnSave1">
+          <ClientEvent name="onClick">view.id(&quot;updateDetailAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEditDetail&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel1">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBmsQuoteDiscountDetailEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEditDetail&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formDetailEdit">
+          <Property name="cols">*,*</Property>
+          <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+          <Property name="dataType">dtBmsQuoteDiscountDetailEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">templateCode</Property>
+            <Property name="property">templateCode</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">startTime</Property>
+            <Property name="property">startTime</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">endTime</Property>
+            <Property name="property">endTime</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">warehouseCode</Property>
+            <Property name="property">warehouseCode</Property>
+            <Property name="visible">true</Property>
+            <Property name="hideMode">visibility</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">warehouseName</Property>
+            <Property name="property">warehouseName</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">downLimit</Property>
+            <Property name="property">downLimit</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">upLimit</Property>
+            <Property name="property">upLimit</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">firstPrice</Property>
+            <Property name="property">firstPrice</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">firstPriceRate</Property>
+            <Property name="property">firstPriceRate</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">continuePrice</Property>
+            <Property name="property">continuePrice</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">continuePirceRate</Property>
+            <Property name="property">continuePirceRate</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">unitPrice</Property>
+            <Property name="property">unitPrice</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">unitPriceRate</Property>
+            <Property name="property">unitPriceRate</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="StepImportDialog">
+      <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
+$(&quot;#d_exportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">导入</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="impCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#StepImportDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="fileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="impBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">impBtn</Property>
+            <Property name="property">impBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="impBtn2">
+                <Property name="action">StepUploadAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="progressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="exportProgressBar"/>
+        <AjaxAction id="getProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">dispatchPR#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="setProgess">
+          <Property name="modal">false</Property>
+          <Property name="service">dispatchPR#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="StepUploadAction">
+          <ClientEvent name="onFileUploaded">&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+var data= arg.returnValue;&#xD;
+ &#xD;
+if(data.error!=null){  &#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	var data = view.get(&quot;#dsGenericTemplate&quot;).getData();&#xD;
+	with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			templateCode:data.current.get(&quot;templateCode&quot;)&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();&#xD;
+	}&#xD;
+	//var dataSet=view.get(&quot;#dsOmsorderinfo&quot;);&#xD;
+    //dataSet.setData(data.succ); &#xD;
+	//if(view.get(&quot;#dsOmsorderinfoitem.data&quot;)!=null &#xD;
+	//  &amp;&amp; view.get(&quot;#dsOmsorderinfoitem.data&quot;).toJSON().length>0){&#xD;
+	//	view.get(&quot;#dsOmsorderinfoitem.data&quot;).each(function(item){&#xD;
+	//		item.remove();&#xD;
+	//	});&#xD;
+	//}&#xD;
+}&#xD;
+&#xD;
+ &#xD;
+</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+$(&quot;#d_fileName input&quot;).val(fname);&#xD;
+view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
+view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+&#xD;
+var entity = view.get(&quot;#dsGenericTemplate.data&quot;).current;&#xD;
+var id = entity.get(&quot;id&quot;);&#xD;
+var parameter={&#xD;
+	id:id,&#xD;
+	templateCode:entity.get(&quot;templateCode&quot;),&#xD;
+	customerName:entity.get(&quot;customerName&quot;),&#xD;
+	customerId:entity.get(&quot;customerId&quot;),&#xD;
+	priceType:entity.get(&quot;priceType&quot;)&#xD;
+};&#xD;
+self.set(&quot;parameter&quot;,parameter);&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_progressLabel&quot;).show();&#xD;
+$(&quot;#d_exportProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#getProgess&quot;);&#xD;
+var setAction = view.get(&quot;#setProgess&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#exportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">5MB</Property>
+          <Property name="successMessage">操作完成!</Property>
+          <Property name="fileResolver">dispatchQuotePR#importDispatchTemplate</Property>
+          <Filters/>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <ClientEvent name="onSuccess">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+				</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bmsQuoteDiscountTemplateController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">bmsQuoteDiscountTemplateController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateDetailAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bmsQuoteDiscountDetailController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteDetailAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">bmsQuoteDiscountDetailController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DownloadAction id="downloadTemplateAction">
+      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
+      <Property name="hotkey">                    </Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

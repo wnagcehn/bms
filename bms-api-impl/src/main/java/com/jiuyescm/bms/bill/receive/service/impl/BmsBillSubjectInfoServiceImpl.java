@@ -2446,18 +2446,22 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 		 cell18.setCellValue("运费");
 		 cell18.setCellStyle(style);
 		 Cell cell19 = row0.createCell(19);
-		 cell19.setCellValue("操作费");
+		 cell19.setCellValue("折扣后运费");
 		 cell19.setCellStyle(style);
 		 Cell cell20 = row0.createCell(20);
-		 cell20.setCellValue("责任方");
+		 cell20.setCellValue("操作费");
 		 cell20.setCellStyle(style);
 		 Cell cell21 = row0.createCell(21);
-		 cell21.setCellValue("原因详情");
+		 cell21.setCellValue("责任方");
 		 cell21.setCellStyle(style);
+		 Cell cell22 = row0.createCell(22);
+		 cell22.setCellValue("原因详情");
+		 cell22.setCellStyle(style);
 		 
 		logger.info("账单导出给sheet赋值。。。");
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		double yunfei = 0.0;
+		double zhekouhou = 0.0;
 		double caozao = 0.0;
 		int RowIndex = 1;
 		for(int i=0;i<dataList.size();i++)
@@ -2506,13 +2510,16 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 			Cell cel18 = row.createCell(18);
 			cel18.setCellValue(entity.getAmount()==null?0:entity.getAmount());
 			Cell cel19 = row.createCell(19);
-			cel19.setCellValue(entity.getOrderOperatorAmount()==null?"0":entity.getOrderOperatorAmount());
+			cel19.setCellValue(entity.getDiscountAmount()==null?0:entity.getDiscountAmount());
+			Cell cel20 = row.createCell(20);
+			cel20.setCellValue(entity.getOrderOperatorAmount()==null?"0":entity.getOrderOperatorAmount());
 	
-			Cell cel20= row.createCell(20);
-			cel20.setCellValue(entity.getDutyType());
 			Cell cel21= row.createCell(21);
-			cel21.setCellValue(entity.getUpdateReasonDetail());
+			cel21.setCellValue(entity.getDutyType());
+			Cell cel22= row.createCell(22);
+			cel22.setCellValue(entity.getUpdateReasonDetail());
 			yunfei = yunfei + (entity.getAmount()==null?0:entity.getAmount());
+			zhekouhou = zhekouhou + (entity.getDiscountAmount()==null?0:entity.getDiscountAmount());
 			caozao = caozao + Double.valueOf(entity.getOrderOperatorAmount()==null?"0":entity.getOrderOperatorAmount());
 			
 		}
@@ -2522,9 +2529,10 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 		cellast.setCellValue("合计金额：");
 		Cell cellast0 = lastRow.createCell(18);
 		cellast0.setCellValue(yunfei);
-		
 		Cell cellast1 = lastRow.createCell(19);
-		cellast1.setCellValue(caozao);
+		cellast1.setCellValue(zhekouhou);	
+		Cell cellast2 = lastRow.createCell(20);
+		cellast2.setCellValue(caozao);
 	}
 	
 	/**
