@@ -53,11 +53,27 @@ public interface IPriceContractService {
 	public List<ContractDetailEntity> findAllContractItemName(String contractId);
 	
 	/**
+	 * 查询出所有的合同明细信息
+	 * @param parameter
+	 * @param aPageNo
+	 * @param aPageSize
+	 * @return
+	 */
+	public List<ContractDetailEntity> findAllContractDiscountItemName(String contractId);
+	
+	/**
 	 * 根据map条件查询对应的合同明细信息
 	 * @param parameter
 	 * @return
 	 */
 	public List<ContractDetailEntity> findAllContractItem(Map<String,Object> parameter);
+	
+	/**
+	 * 根据map条件查询对应的合同明细信息
+	 * @param parameter
+	 * @return
+	 */
+	public List<ContractDetailEntity> findAllContractDiscountItem(Map<String,Object> parameter);
 	
 	/**
 	 * 新增商家合同具体信息

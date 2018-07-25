@@ -368,6 +368,90 @@
       </PropertyDef>
       <PropertyDef name="templateId"/>
     </DataType>
+    <DataType name="dtDiscountSystemCode">
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="typeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="codeDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="updateId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deleteId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode"/>
+    </DataType>
+    <DataType name="dtPriceContractDiscountItemEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+        <Property name="label">合同编号</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeCode">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectId">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property></Property>
+        <Property name="label">模板编号</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <DataSet id="dsMyCondition">
@@ -405,6 +489,12 @@
       <Property name="loadMode">manual</Property>
       <Property name="dataType">[dtContractDetail]</Property>
     </DataSet>
+    <DataSet id="dsContractDetailDiscount">
+      <Property name="dataType">[dtContractDetail]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">customerContractController#queryDiscount</Property>
+    </DataSet>
     <DataSet id="dsStorageSystemCode">
       <Property name="dataType">[dtStorageSystemCode]</Property>
       <Property name="dataProvider">customerContractController#queryStorageService</Property>
@@ -419,6 +509,14 @@
       <Property name="dataType">[dtDispatchSystemCode]</Property>
       <Property name="dataProvider">customerContractController#queryDispatchService</Property>
       <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsDiscountSystemCode">
+      <Property name="dataType">[dtDiscountSystemCode]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">customerContractController#queryDiscountService</Property>
+    </DataSet>
+    <DataSet id="dsPriceContractDiscountItemEntity">
+      <Property name="dataType">[dtPriceContractDiscountItemEntity]</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -529,6 +627,8 @@ var storage=view.get(&quot;#dsContactDetailStorage.data&quot;).current;&#xD;
 var transport=view.get(&quot;#dsContractDetailTransport.data&quot;).current;&#xD;
 //对应的配送服务&#xD;
 var dispatch=view.get(&quot;#dsContractDetailDispatch.data&quot;).current;&#xD;
+//对应的折扣&#xD;
+var discount=view.get(&quot;#dsContractDetailDiscount.data&quot;).current;&#xD;
 &#xD;
 //获取此时的审核状态&#xD;
 var contractstate= view.get(&quot;#dsPriceContractInfoEntity&quot;).getData().current.get(&quot;contractState&quot;);&#xD;
@@ -543,6 +643,9 @@ var storageData = view.get(&quot;#dsStorageSystemCode.data&quot;);&#xD;
 var transportData = view.get(&quot;#dsTransportSystemCode.data&quot;);&#xD;
 //获取此时的运输报价&#xD;
 var dispatchData = view.get(&quot;#dsDispatchSystemCode.data&quot;);&#xD;
+//获取此时的折扣报价&#xD;
+var discountData = view.get(&quot;#dsDiscountSystemCode.data&quot;);&#xD;
+&#xD;
 &#xD;
 //先清空&#xD;
 storageData.each(function(entity){&#xD;
@@ -557,14 +660,20 @@ dispatchData.each(function(entity){&#xD;
 	entity.set(&quot;isCheck&quot;,false);&#xD;
 	entity.set(&quot;templateId&quot;,&quot;&quot;);&#xD;
 });&#xD;
-&#xD;
-if((undefined==storage || storage=='') &amp;&amp; (undefined==transport || transport=='') &amp;&amp; (undefined==dispatch || dispatch=='')){&#xD;
+discountData.each(function(entity){&#xD;
+	entity.set(&quot;isCheck&quot;,false);&#xD;
+	entity.set(&quot;templateId&quot;,&quot;&quot;);&#xD;
+});&#xD;
+if((undefined==storage || storage=='') &amp;&amp; (undefined==transport || transport=='') &amp;&amp; (undefined==dispatch || dispatch=='') &amp;&amp; (undefined==discount || discount=='')){&#xD;
 	var datas = view.get(&quot;#dsPriceContractItemEntity.data&quot;);&#xD;
 	datas.insert();&#xD;
+	view.get(&quot;#dsPriceContractDiscountItemEntity.data&quot;).insert();&#xD;
 	view.get(&quot;#dialogContractItemEdit&quot;).show();	&#xD;
 }else{&#xD;
 	var datas = view.get(&quot;#dsPriceContractItemEntity.data&quot;);&#xD;
 	datas.insert();&#xD;
+	&#xD;
+	view.get(&quot;#dsPriceContractDiscountItemEntity.data&quot;).insert();&#xD;
 	//dorado.MessageBox.alert(&quot;该合同已签约，无法继续签约!&quot;);&#xD;
 	//进入编辑页面&#xD;
 	//获取当前的合同id&#xD;
@@ -643,6 +752,30 @@ if((undefined==storage || storage=='') &amp;&amp; (undefined==transport || trans
 		&#xD;
 &#xD;
 	});&#xD;
+	&#xD;
+	view.get(&quot;#queryContractDiscountItemAction&quot;).set(&quot;parameter&quot;,contract).execute(function(result){&#xD;
+		var strs= new Array(); //定义一数组 &#xD;
+		result=result.substring(0,result.length-1);&#xD;
+		strs=result.split(&quot;,&quot;); //字符分割 &#xD;
+		discountData.each(function(entity){&#xD;
+			 for(var i=0;i&lt;strs.length;i++){&#xD;
+			 	//传入进来的code值&#xD;
+				if(strs[i].indexOf(&quot;&amp;&quot;)!=-1){&#xD;
+					var dataCode=strs[i].substring(0,strs[i].indexOf(&quot;&amp;&quot;));&#xD;
+					var datatemplate=strs[i].substring(strs[i].indexOf(&quot;&amp;&quot;)+1);	&#xD;
+					//alert(&quot;此时的数据code&quot;+dataCode+&quot;自身的code&quot;+entity.get(&quot;code&quot;));			&#xD;
+				 	if(entity.get(&quot;code&quot;)==dataCode){&#xD;
+						//alert(&quot;进来&quot;);&#xD;
+						entity.set(&quot;isCheck&quot;,true);&#xD;
+			   			entity.set(&quot;templateCode&quot;,datatemplate);	&#xD;
+					}	&#xD;
+				}&#xD;
+				&#xD;
+			 }&#xD;
+			&#xD;
+		});&#xD;
+	});&#xD;
+	&#xD;
 	view.get(&quot;#dialogContractItemEdit&quot;).show();	&#xD;
 }&#xD;
 &#xD;
@@ -780,6 +913,14 @@ with (view.get(&quot;#dsContractDetailTransport&quot;)){&#xD;
 	flushAsync();	&#xD;
 }				 &#xD;
 with (view.get(&quot;#dsContractDetailDispatch&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}&#xD;
+with (view.get(&quot;#dsContractDetailDiscount&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
 		contractId:data.current.get(&quot;contractCode&quot;),&#xD;
@@ -1033,18 +1174,39 @@ dispatchData.each(function(entity){  &#xD;
 	  }&#xD;
 });&#xD;
 &#xD;
+&#xD;
+var discountResult=&quot;&quot;;&#xD;
+//获取此时的折扣报价&#xD;
+var discountData = view.get(&quot;#dsDiscountSystemCode.data&quot;);&#xD;
+&#xD;
+discountData.each(function(entity){  &#xD;
+	  if(entity.get(&quot;isCheck&quot;)==true){&#xD;
+	  	 if(entity.get(&quot;templateCode&quot;)==''){&#xD;
+		 	 dorado.MessageBox.alert(&quot;您已选择&quot;+entity.get(&quot;codeName&quot;)+&quot;,请选择报价模板&quot;);&#xD;
+			 qwe='1';&#xD;
+			 return false;&#xD;
+		 }else{&#xD;
+		 	discountResult+='DISPATCH@'+entity.get(&quot;code&quot;)+'#'+entity.get(&quot;templateCode&quot;)+'&amp;';&#xD;
+		 }&#xD;
+	  }&#xD;
+});&#xD;
+&#xD;
 //有空时退出&#xD;
 if(qwe=='1'){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
 var entity = this.get(&quot;#dsPriceContractItemEntity&quot;).getData().current;&#xD;
-//var entity = view.get(&quot;#dsPriceContractItemEntity&quot;);&#xD;
-//alert(&quot;结果&quot;+result);&#xD;
-//alert(&quot;实体类&quot;+entity);&#xD;
 entity.set(&quot;subjectId&quot;,result);&#xD;
 //获取合同编号&#xD;
 entity.set(&quot;contractCode&quot;,contractCode);&#xD;
+&#xD;
+//折扣实体类&#xD;
+var discountEntity = view.get(&quot;#dsPriceContractDiscountItemEntity&quot;).getData().current;&#xD;
+discountEntity.set(&quot;subjectId&quot;,discountResult);&#xD;
+//获取合同编号&#xD;
+discountEntity.set(&quot;contractCode&quot;,contractCode);&#xD;
+&#xD;
 &#xD;
 view.id(&quot;updateContractItemAction&quot;).execute(&#xD;
 	function(result){&#xD;
@@ -1052,46 +1214,53 @@ view.id(&quot;updateContractItemAction&quot;).execute(&#xD;
 			 dorado.MessageBox.alert(&quot;签约服务不成功【&quot;+result+&quot;】&quot;);&#xD;
 			 return;&#xD;
 		}&#xD;
-		//with (view.get(&quot;#dsPriceContractInfoEntity&quot;)){&#xD;
-			//定义查询条件json结构&#xD;
-		//	flushAsync();&#xD;
-		//}&#xD;
-		view.id(&quot;dialogContractItemEdit&quot;).hide();&#xD;
-		&#xD;
-		&#xD;
-		var data = view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
-		with (view.get(&quot;#dsContactDetailStorage&quot;)){&#xD;
-			//定义查询条件json结构&#xD;
-			var queryJson={&#xD;
-				contractId:data.current.get(&quot;contractCode&quot;),&#xD;
-			};&#xD;
-			set(&quot;parameter&quot;, queryJson);&#xD;
-			flushAsync();	&#xD;
-		}&#xD;
-		with (view.get(&quot;#dsContractDetailTransport&quot;)){&#xD;
-			//定义查询条件json结构&#xD;
-			var queryJson={&#xD;
-				contractId:data.current.get(&quot;contractCode&quot;),&#xD;
-			};&#xD;
-			set(&quot;parameter&quot;, queryJson);&#xD;
-			flushAsync();	&#xD;
-		}				 &#xD;
-		with (view.get(&quot;#dsContractDetailDispatch&quot;)){&#xD;
-			//定义查询条件json结构&#xD;
-			var queryJson={&#xD;
-				contractId:data.current.get(&quot;contractCode&quot;),&#xD;
-			};&#xD;
-			set(&quot;parameter&quot;, queryJson);&#xD;
-			flushAsync();	&#xD;
-		}&#xD;
-		&#xD;
-		//var entity1=view.get(&quot;#dsContactDetailStorage.data&quot;);&#xD;
-		//entity1.clear();&#xD;
-		//var entity2=view.get(&quot;#dsContractDetailTransport.data&quot;);&#xD;
-		//entity2.clear();&#xD;
-		//var entity3=view.get(&quot;#dsContractDetailDispatch.data&quot;);&#xD;
-		//entity13.clear();&#xD;
-		&#xD;
+		//签约折扣报价&#xD;
+		view.id(&quot;updateContractDiscountItemAction&quot;).execute(&#xD;
+			function(result2){&#xD;
+				if(result2 != &quot;数据库操作成功&quot;){&#xD;
+					 dorado.MessageBox.alert(&quot;签约折扣报价不成功【&quot;+result+&quot;】&quot;);&#xD;
+					 return;&#xD;
+				}&#xD;
+				&#xD;
+				view.id(&quot;dialogContractItemEdit&quot;).hide();&#xD;
+				&#xD;
+				&#xD;
+				var data = view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
+				with (view.get(&quot;#dsContactDetailStorage&quot;)){&#xD;
+					//定义查询条件json结构&#xD;
+					var queryJson={&#xD;
+						contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+					};&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flushAsync();	&#xD;
+				}&#xD;
+				with (view.get(&quot;#dsContractDetailTransport&quot;)){&#xD;
+					//定义查询条件json结构&#xD;
+					var queryJson={&#xD;
+						contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+					};&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flushAsync();	&#xD;
+				}				 &#xD;
+				with (view.get(&quot;#dsContractDetailDispatch&quot;)){&#xD;
+					//定义查询条件json结构&#xD;
+					var queryJson={&#xD;
+						contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+					};&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flushAsync();	&#xD;
+				}	&#xD;
+				&#xD;
+				with (view.get(&quot;#dsContractDetailDiscount&quot;)){&#xD;
+					//定义查询条件json结构&#xD;
+					var queryJson={&#xD;
+						contractId:data.current.get(&quot;contractCode&quot;),&#xD;
+					};&#xD;
+					set(&quot;parameter&quot;, queryJson);&#xD;
+					flushAsync();	&#xD;
+				}&#xD;
+			}&#xD;
+		);&#xD;
 	}&#xD;
 );&#xD;
 </ClientEvent>
@@ -1230,16 +1399,64 @@ if(isCheck==false){&#xD;
               </DataColumn>
             </DataGrid>
           </ControlTab>
+          <ControlTab>
+            <Property name="caption">折扣服务</Property>
+            <TabControl>
+              <ControlTab>
+                <Property name="caption">配送</Property>
+                <DataGrid id="discountGrid">
+                  <ClientEvent name="onDataRowClick">&#xD;
+var entity= view.get(&quot;#dsDiscountSystemCode&quot;).getData();&#xD;
+&#xD;
+//获取此时的合同编号&#xD;
+var isCheck=entity.current.get(&quot;isCheck&quot;);&#xD;
+if(isCheck==false){&#xD;
+	//alert(&quot;此时的值&quot;+entity.current.get(&quot;templateId&quot;).get(&quot;readOnly&quot;));&#xD;
+	entity.current.set(&quot;templateCode&quot;,&quot;&quot;);&#xD;
+}else{&#xD;
+	//entity.current.set(&quot;readOnly&quot;,true);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dsDiscountSystemCode</Property>
+                  <Property name="height">100</Property>
+                  <Property name="showHeader">false</Property>
+                  <DataColumn>
+                    <Property name="name">isCheck</Property>
+                    <Property name="align">center</Property>
+                    <Property name="editorType">CheckBox</Property>
+                    <Property name="width">40</Property>
+                    <Property name="renderer">dorado.widget.grid.CheckBoxCellRenderer</Property>
+                    <Editor/>
+                  </DataColumn>
+                  <DataColumn name="codeName">
+                    <Property name="property">codeName</Property>
+                  </DataColumn>
+                  <DataColumn name="templateCode">
+                    <Property name="property">templateCode</Property>
+                    <Property name="trigger">triggerDiscount</Property>
+                  </DataColumn>
+                </DataGrid>
+              </ControlTab>
+            </TabControl>
+          </ControlTab>
         </TabControl>
       </Children>
       <Tools/>
     </Dialog>
     <UpdateAction id="updateContractItemAction">
       <Property name="dataResolver">customerContractController#saveContractItem</Property>
-      <Property name="successMessage">数据保存成功</Property>
       <Property name="executingMessage">数据保存中</Property>
       <UpdateItem>
         <Property name="dataSet">dsPriceContractItemEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateContractDiscountItemAction">
+      <Property name="dataResolver">customerContractController#saveContractDiscountItem</Property>
+      <Property name="successMessage">数据保存成功</Property>
+      <Property name="executingMessage">数据保存中</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsPriceContractDiscountItemEntity</Property>
+        <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
     <Trigger id="triggerCus">
@@ -1563,6 +1780,59 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <Trigger id="triggerDiscount">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsDiscountSystemCode&quot;).getData();&#xD;
+var code=data.current.get(&quot;code&quot;);&#xD;
+&#xD;
+//获取商家id;&#xD;
+var contract=view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
+var customerId=contract.current.get(&quot;customerId&quot;);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectDispatch&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsGenericTemplate.data&quot;);&#xD;
+subviewData.clear();&#xD;
+var stepData=subview.get(&quot;#dsBmsQuoteDispatchDetailVo.data&quot;);&#xD;
+stepData.clear();&#xD;
+&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsMoBanCondition.data&quot;).current;&#xD;
+ds.set(&quot;deliver&quot;,code);&#xD;
+ds.set(&quot;customerId&quot;,customerId);&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsGenericTemplate&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelDiscount&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDiscount">
+      <ClientEvent name="onHide">var sysdata = view.get(&quot;#dsDiscountSystemCode&quot;).getData().current;&#xD;
+&#xD;
+var data = this.get(&quot;#viewSelectDiscount.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	sysdata.set(&quot;templateCode&quot;,data.get(&quot;templateCode&quot;));				 &#xD;
+	//view.get(&quot;#formContractItemEdit.entity&quot;).set(&quot;subjectId14&quot;,data.get(&quot;deliver&quot;));&#xD;
+	if(data.get(&quot;templateCode&quot;)!=null){&#xD;
+		sysdata.set(&quot;isCheck&quot;,true);&#xD;
+	}&#xD;
+	&#xD;
+	this.get(&quot;#viewSelectDiscount&quot;).set(&quot;userData&quot;, null);&#xD;
+}</ClientEvent>
+      <Property name="caption">折扣报价模板选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDiscount">
+          <Property name="subView">com.jiuyescm.bms.quotation.dispatch.view.Dispatch_Quote_LookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
     <Container>
       <TabControl>
         <ControlTab>
@@ -1867,6 +2137,52 @@ if(ruleNo&amp;&amp;ruleNo!=''){&#xD;
             </DataGrid>
           </Container>
         </ControlTab>
+        <ControlTab>
+          <Property name="caption">折扣</Property>
+          <TabControl>
+            <ControlTab>
+              <Property name="caption">配送折扣</Property>
+              <DataGrid>
+                <ClientEvent name="onDataRowDoubleClick">var data = view.get(&quot;#dsContractDetailDiscount&quot;).getData();&#xD;
+//获取此时的模板id&#xD;
+var code=data.current.get(&quot;templateId&quot;);&#xD;
+&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectDiscountGeneral&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsGenericTemplate.data&quot;);&#xD;
+subviewData.clear();&#xD;
+var stepData=subview.get(&quot;#dsBmsQuoteDispatchDetailVo.data&quot;);&#xD;
+stepData.clear();&#xD;
+&#xD;
+//获取到选择按钮&#xD;
+var btn=subview.get(&quot;#select&quot;);&#xD;
+btn.set(&quot;visible&quot;,false);&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsMoBanCondition.data&quot;).current;&#xD;
+ds.set(&quot;templateCode&quot;,code);&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsGenericTemplate&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelDiscountGeneral&quot;).show();</ClientEvent>
+                <Property name="dataSet">dsContractDetailDiscount</Property>
+                <Property name="readOnly">true</Property>
+                <RowNumColumn/>
+                <DataColumn name="theLastName">
+                  <Property name="property">theLastName</Property>
+                </DataColumn>
+                <DataColumn name="templateId">
+                  <Property name="property">templateId</Property>
+                </DataColumn>
+                <DataColumn name="code">
+                  <Property name="property">code</Property>
+                  <Property name="visible">false</Property>
+                </DataColumn>
+              </DataGrid>
+            </ControlTab>
+          </TabControl>
+        </ControlTab>
       </TabControl>
     </Container>
     <Trigger id="triggerCustomer">
@@ -1898,6 +2214,9 @@ if (data != null) {&#xD;
     </FloatPanel>
     <AjaxAction id="queryContractItemAction">
       <Property name="service">customerContractController#queryAllContractItem</Property>
+    </AjaxAction>
+    <AjaxAction id="queryContractDiscountItemAction">
+      <Property name="service">customerContractController#queryAllContractDiscountItem</Property>
     </AjaxAction>
     <UpdateAction id="checkContractAction">
       <Property name="dataResolver">customerContractController#checkContract</Property>
@@ -2005,6 +2324,22 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectDispatchGeneral">
+          <Property name="subView">com.jiuyescm.bms.quotation.dispatch.view.Dispatch_Quote_LookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <FloatPanel id="panelDiscountGeneral">
+      <Property name="caption">折扣报价</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">1000</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDiscountGeneral">
           <Property name="subView">com.jiuyescm.bms.quotation.dispatch.view.Dispatch_Quote_LookUp</Property>
         </SubViewHolder>
       </Children>

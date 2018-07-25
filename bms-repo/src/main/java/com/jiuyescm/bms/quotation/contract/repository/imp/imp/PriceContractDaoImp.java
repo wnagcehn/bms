@@ -89,12 +89,24 @@ public class PriceContractDaoImp extends MyBatisDao implements IPriceContractDao
 		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.findAllContractItem", contractId);
 	}
 
+	
+	@Override
+	public List<ContractDetailEntity> findAllContractDiscountItemName(
+			String contractId) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.findAllContractDiscountItem", contractId);
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<PriceContractItemEntity> findAllTransportContractItem(Map<String, Object> parameter) {
 		// TODO Auto-generated method stub
 		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.findTransportContractItem", parameter);
 	}
+	
+
+
+
 	
 	@Override
 	public List<PriceContractItemEntity> findTransportPayFeesContractItem(
@@ -110,6 +122,15 @@ public class PriceContractDaoImp extends MyBatisDao implements IPriceContractDao
 		// TODO Auto-generated method stub
 		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.findAllReceiveContractDetail", parameter);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ContractDetailEntity> findAllContractDiscountItem(
+			Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.findAllReceiveContractDiscountDetail", parameter);
+	}
+	
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -179,6 +200,8 @@ public class PriceContractDaoImp extends MyBatisDao implements IPriceContractDao
 		// TODO Auto-generated method stub
 		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.queryCustomerList", "");
 	}
+
+
 
 	
 }

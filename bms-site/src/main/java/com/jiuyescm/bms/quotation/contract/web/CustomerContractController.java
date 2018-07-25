@@ -35,8 +35,10 @@ import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.pub.IPubRecordLogService;
 import com.jiuyescm.bms.pub.PubRecordLogEntity;
 import com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity;
+import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
+import com.jiuyescm.bms.quotation.contract.service.IPriceContractDiscountService;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
@@ -57,6 +59,9 @@ public class CustomerContractController {
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	@Resource
 	private IPubRecordLogService pubRecordLogService;
+	
+	@Resource
+	private IPriceContractDiscountService priceContractDiscountService;
 	
 	@Resource
 	private IBmsGroupSubjectService bmsGroupSubjectService;
@@ -444,6 +449,86 @@ public class CustomerContractController {
 	
 	}
 	
+	/**
+	 * 保存商家合同明细数据
+	 * @param datas
+	 */
+	@DataResolver
+	public String saveContractDiscountItem(PriceContractDiscountItemEntity temp){
+		
+		/*if(Session.isMissing()){
+			return "长时间未操作，用户已失效，请重新登录再试！";
+		}*/
+		try {
+			
+			Timestamp nowdate = JAppContext.currentTimestamp();
+			String userid=JAppContext.currentUserName();
+			//删除原先的折扣服务项
+			Map<String,Object> condition=new HashMap<String,Object>();
+			condition.put("contractCode", temp.getContractCode());
+			condition.put("delFlag", "1");
+			condition.put("lastModifier", JAppContext.currentUserName());
+			condition.put("lastModifyTime",JAppContext.currentTimestamp());
+			priceContractDiscountService.updateDiscountItem(condition);
+				
+			/*1001-RC00024&1007-12&1002-16&1006-19*/
+			List<PriceContractDiscountItemEntity> itemList=new ArrayList<>();
+			String[] item=temp.getSubjectId().split("&");
+			if(item.length>0){
+				for(String s:item){
+					PriceContractDiscountItemEntity newItem=new PriceContractDiscountItemEntity();
+					if(!StringUtils.isBlank(s)){
+						String[] detail=s.split("#");
+						String[] bizDetail=s.split("@");
+						if(StringUtils.isNotBlank(bizDetail[0]) && StringUtils.isNotBlank(detail[0]) && StringUtils.isNotBlank(detail[1])){
+							newItem.setContractCode(temp.getContractCode());
+							newItem.setBizTypeCode(bizDetail[0].trim());
+							newItem.setSubjectId(detail[0].substring(detail[0].indexOf("@")+1));	
+							newItem.setTemplateCode(detail[1].trim());
+							newItem.setCreator(userid);
+							newItem.setCreateTime(nowdate);
+							newItem.setDelFlag("0");
+							itemList.add(newItem);
+						}							
+					}
+				}
+				int result=priceContractDiscountService.insertDiscountItem(itemList);
+				if(result<=0){
+					return "保存科目失败";
+				}
+			}
+			try{
+				PubRecordLogEntity model=new PubRecordLogEntity();
+				model.setBizType(RecordLogBizTypeEnum.CONTACT.getCode());
+				model.setNewData("");
+				model.setOldData("");
+				model.setOperateDesc("商家合同签约服务");
+				model.setOperatePerson(JAppContext.currentUserName());
+				model.setOperateTable("price_contract_item");
+				model.setOperateTime(JAppContext.currentTimestamp());
+				model.setOperateType(RecordLogOperateType.UPDATE.getCode());
+				model.setRemark("");
+				model.setOperateTableKey(temp.getContractCode());
+				model.setUrlName(RecordLogUrlNameEnum.CONTACT_CUSTOMER.getCode());
+				pubRecordLogService.AddRecordLog(model);
+			}catch(Exception e){
+				logger.error("记录日志失败,失败原因:"+e.getMessage());
+			}
+			return "数据库操作成功";
+			
+		} catch (Exception e) {
+			logger.error("系统错误", e);
+			//写入日志
+			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.getMessage());
+
+			return "数据库操作失败";
+		}
+		
+	
+	}
+	
+	
+	
 	//查询所有的服务
 	@Expose
 	public String queryAllContractItem(PriceContractInfoEntity parameter){
@@ -464,6 +549,21 @@ public class CustomerContractController {
 		return result;
 	}
 	
+	
+	//查询所有的服务
+	@Expose
+	public String queryAllContractDiscountItem(PriceContractInfoEntity parameter){
+		List<ContractDetailEntity> contractList=priceContractService.findAllContractDiscountItemName(parameter.getContractCode());
+		//System.out.println(contractList);
+		String result="";
+		for(int i=0;i<contractList.size();i++){
+			ContractDetailEntity c=contractList.get(i);
+
+			result+=c.getSubjectId()+"&"+c.getTemplateId()+",";
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * 查询出所有的仓储服务
@@ -555,6 +655,31 @@ public class CustomerContractController {
 	}
 	
 	/**
+	 * 查询出所有的折扣
+	 * @param page
+	 * @param parameter
+	 */
+	@DataProvider
+	public void queryDiscount(Page<ContractDetailEntity> page,Map<String,Object> parameter){
+		Map<String,Object> aCondition=new HashMap<String,Object>();
+		aCondition.put("contractCode", parameter.get("contractId"));
+		aCondition.put("bizTypeCode", "DISPATCH");
+		List<ContractDetailEntity> contractList=priceContractService.findAllContractDiscountItem(aCondition);
+		
+		List<ContractDetailEntity> dispatchList=new ArrayList<>();
+		Map<String,String> map=bmsGroupSubjectService.getSubject("subject_discount_receive");
+
+		for(int i=0;i<contractList.size();i++){		
+			ContractDetailEntity dispatch=contractList.get(i);	
+			dispatch.setTheLastName(map.get(dispatch.getSubjectId()));
+			//dispatch.setSubjectName(dispatch.getDispatchName());	
+			dispatchList.add(dispatch);			
+		}
+		page.setEntities(dispatchList);
+		page.setEntityCount(dispatchList.size());
+	}
+	
+	/**
 	 * 查询所有的仓储服务类型
 	 * @param page
 	 * @param parameter
@@ -608,6 +733,26 @@ public class CustomerContractController {
 		
 		List<SystemCodeEntity> systemCodeList=new ArrayList<SystemCodeEntity>();
 		Map<String,String> map=bmsGroupSubjectService.getSubject("receive_ds_contract_subject");
+		for(String key:map.keySet()){  		
+			SystemCodeEntity code=new SystemCodeEntity();
+			code.setCode(key);
+			code.setCodeName(map.get(key));
+			systemCodeList.add(code);			
+		}  
+		page.setEntities(systemCodeList);
+	}
+	
+	/**
+	 * 获取所有的折扣服务
+	 * @param page
+	 * @param parameter
+	 */
+	@DataProvider
+	public void queryDiscountService(Page<SystemCodeEntity> page,Map<String,Object> parameter){
+		//List<SystemCodeEntity> systemCodeList= systemCodeService.findEnumList("DISPATCH_COMPANY");		
+		
+		List<SystemCodeEntity> systemCodeList=new ArrayList<SystemCodeEntity>();
+		Map<String,String> map=bmsGroupSubjectService.getSubject("subject_discount_receive");
 		for(String key:map.keySet()){  		
 			SystemCodeEntity code=new SystemCodeEntity();
 			code.setCode(key);

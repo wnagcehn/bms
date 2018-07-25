@@ -260,14 +260,22 @@
     
     <!-- 查找所有的合同明细中的费用科目-->
     <select id="findAllContractItem" parameterType="java.lang.String" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
-		SELECT e.template_type_code transportCode,e.template_name transportName,e.remark transportRemark,d.storage_template_type storageCode,d.template_name storageName,c.remark generalStorageRemark,d.remark storageRemark,f.template_name dispatchName,f.remark dispatchRemark,a.template_id,
-		a.subject_id subjectId
+		SELECT e.template_type_code transportCode,e.template_name transportName,e.remark transportRemark,
+			   d.storage_template_type storageCode,d.template_name storageName,c.remark generalStorageRemark,d.remark storageRemark,
+			   f.template_name dispatchName,f.remark dispatchRemark,a.template_id,a.subject_id subjectId
 		from price_contract_item a 
 		LEFT JOIN price_general_quotation c ON a.template_id=c.quotation_no 
 		LEFT JOIN price_general_template d ON a.template_id=d.template_code
 		left JOIN price_transport_template e on a.template_id=e.template_code 
 		LEFT JOIN price_dispatch_template f ON a.template_id=f.template_code
 		where a.contract_code=#{contractId} and a.del_flag='0' 
+   </select>
+   
+       <!-- 查找所有的合同明细中的费用科目-->
+    <select id="findAllContractDiscountItem" parameterType="java.lang.String" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+		select subject_id subjectId,template_code templateId
+		from price_contract_discount_item
+		where contract_code=#{contractId} and del_flag='0' 
    </select>
    
    <!-- 根据map条件查询出对应的费用科目 -->
@@ -297,6 +305,23 @@
 		</if>
 			and a.del_flag='0'
    </select>
+   
+   <select id="findAllReceiveContractDiscountDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+   		select subject_id subjectId,template_code templateId
+		from price_contract_discount_item
+		where 1=1 
+		<if test="(contractCode != null and contractCode !='')" >
+		   and contract_code=#{contractCode}  
+		</if>
+		<if test="(subjectId  !=null and subjectId !='')">
+			and subject_id=#{subjectId}
+		</if>
+		<if test="(bizTypeCode !=null and bizTypeCode!='')">
+			and biz_type_code=#{bizTypeCode}
+		</if>
+			and del_flag='0'
+   </select>
+   
    <select id="findAllPayContractDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
    		SELECT e.template_type_code transportCode,e.template_name transportName,
 		e.remark transportRemark,d.storage_template_type storageCode,
