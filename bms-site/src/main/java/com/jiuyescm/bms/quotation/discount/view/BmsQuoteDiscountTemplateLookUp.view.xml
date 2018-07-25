@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsQuoteDiscountTemplateEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增标识</Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property name="label">折扣方式</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsQuoteDiscountTemplateEntityQuery">
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="templateName">
+        <Property name="label">模板名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property name="label">折扣方式</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="createEndTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsQuoteDiscountDetailEntity">
+      <Property name="creationType">com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增标识</Property>
+      </PropertyDef>
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">Date</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">Date</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="downLimit">
+        <Property name="label">下限</Property>
+      </PropertyDef>
+      <PropertyDef name="upLimit">
+        <Property name="label">上限</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="label">折扣首价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPriceRate">
+        <Property name="label">首价折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePrice">
+        <Property name="label">折扣续重价</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePirceRate">
+        <Property name="label">续重折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">整单折扣价</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPriceRate">
+        <Property name="label">整单折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标志（0：未作废，1：已作废）</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="1">已作废</Property>
+              <Property name="0">未作废</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsQuoteDiscountDetailEntityQuery">
+      <PropertyDef name="templateCode">
+        <Property name="label">模版编号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">生效时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="label">失效时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库编码</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="downLimit">
+        <Property name="label">下限</Property>
+      </PropertyDef>
+      <PropertyDef name="upLimit">
+        <Property name="label">上限</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="label">折扣首价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPriceRate">
+        <Property name="label">首价折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePrice">
+        <Property name="label">折扣续重价格</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePirceRate">
+        <Property name="label">续重折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">折扣一口价</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPriceRate">
+        <Property name="label">一口价折扣率</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标志（0：未作废，1：已作废）</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="select">
+        <ClientEvent name="onClick">this.get(&quot;#actionSelect&quot;).execute();</ClientEvent>
+        <Property name="caption">选择</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsQuoteDiscountTemplateEntity">
+      <Property name="dataType">[dtBmsQuoteDiscountTemplateEntity]</Property>
+      <Property name="dataProvider">bmsQuoteDiscountTemplateController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsQuoteDiscountTemplateEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsQuoteDiscountTemplateEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsBmsQuoteDiscountDetailEntity">
+      <Property name="dataType">[dtBmsQuoteDiscountDetailEntity]</Property>
+      <Property name="dataProvider">bmsQuoteDiscountDetailController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsQuoteDiscountDetailEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsQuoteDiscountDetailEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsQuoteDiscountDetailEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="queryForm">
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsBmsQuoteDiscountTemplateEntityQuery</Property>
+        <AutoFormElement>
+          <Property name="name">templateCode</Property>
+          <Property name="property">templateCode</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">templateName</Property>
+          <Property name="property">templateName</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">bizType</Property>
+          <Property name="property">bizType</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectCode</Property>
+          <Property name="property">subjectCode</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createEndTime</Property>
+          <Property name="property">createEndTime</Property>
+          <Property name="showLabel">true</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <SplitPanel>
+      <Property name="direction">top</Property>
+      <Property name="position">260</Property>
+      <MainControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <Separator/>
+          </ToolBar>
+          <DataGrid id="detailDataGrid">
+            <Property name="dataSet">dsBmsQuoteDiscountDetailEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="templateCode">
+              <Property name="property">templateCode</Property>
+              <Property name="visible">false</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="startTime">
+              <Property name="property">startTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="endTime">
+              <Property name="property">endTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="downLimit">
+              <Property name="property">downLimit</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="upLimit">
+              <Property name="property">upLimit</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="firstPrice">
+              <Property name="property">firstPrice</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="firstPriceRate">
+              <Property name="property">firstPriceRate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="continuePrice">
+              <Property name="property">continuePrice</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="continuePirceRate">
+              <Property name="property">continuePirceRate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="unitPrice">
+              <Property name="property">unitPrice</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="unitPriceRate">
+              <Property name="property">unitPriceRate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+              <Property name="property">lastModifier</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+              <Property name="property">lastModifyTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="delFlag">
+              <Property name="property">delFlag</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <DataGrid id="DataGrid">
+            <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn name="templateCode">
+              <Property name="property">templateCode</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="templateName">
+              <Property name="property">templateName</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="subjectCode">
+              <Property name="property">subjectCode</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="bizType">
+              <Property name="property">bizType</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="discountType">
+              <Property name="property">discountType</Property>
+              <Property name="visible">true</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+              <Property name="property">lastModifier</Property>
+              <Property name="width">119</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+              <Property name="property">lastModifyTime</Property>
+              <Property name="width">117</Property>
+            </DataColumn>
+            <DataColumn name="delFlag">
+              <Property name="property">delFlag</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Action id="actionSelect">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsBmsQuoteDiscountTemplateEntity&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
+  </View>
+</ViewConfig>
