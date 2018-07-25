@@ -36,9 +36,11 @@ public class BizDispatchCarrierChangeJob extends IJobHandler {
 	public ReturnT<String> execute(String... params) throws Exception {
 		XxlJobLogger.log("bizDispatchCarrierChangeJob start.");
 		bizDispatchCarrierChange();
-		return null;
+		return ReturnT.SUCCESS;
 	}
-
+	
+	
+	
 	private void bizDispatchCarrierChange() {
 
 		// 查询全部未被处理过的数据
