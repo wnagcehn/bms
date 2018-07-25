@@ -17,7 +17,7 @@
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="discountType">
@@ -43,7 +43,7 @@
       <PropertyDef name="bizType">
         <Property name="label">费用类型</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
       </PropertyDef>
     </DataType>
@@ -101,11 +101,13 @@
       </PropertyDef>
       <PropertyDef name="startTime">
         <Property name="label">开始时间</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="label">结束时间</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
         <Property name="label">仓库</Property>
@@ -229,6 +231,17 @@
         <Property name="label">作废标志（0：未作废，1：已作废）</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ToolBar>
@@ -314,6 +327,9 @@
       <Property name="dataType">[dtBmsQuoteDiscountDetailEntityQuery]</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
     <Container>
       <AutoForm id="queryForm">
@@ -481,15 +497,6 @@ else&#xD;
             <DataColumn name="endTime">
               <Property name="property">endTime</Property>
               <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="warehouseCode">
-              <Property name="property">warehouseCode</Property>
-              <Property name="visible">false</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="warehouseName">
-              <Property name="property">warehouseName</Property>
-              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="downLimit">
               <Property name="property">downLimit</Property>
@@ -747,20 +754,6 @@ if(data != &quot;undefined&quot; &amp;&amp; data != &quot;&quot;){&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">warehouseCode</Property>
-            <Property name="property">warehouseCode</Property>
-            <Property name="visible">true</Property>
-            <Property name="hideMode">visibility</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">warehouseName</Property>
-            <Property name="property">warehouseName</Property>
-            <Property name="visible">false</Property>
-            <Property name="hideMode">display</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
             <Property name="name">downLimit</Property>
             <Property name="property">downLimit</Property>
             <Editor/>
@@ -882,8 +875,8 @@ if(data.error!=null){  &#xD;
 }&#xD;
 if(data.succ!=null){&#xD;
 	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
-	var data = view.get(&quot;#dsGenericTemplate&quot;).getData();&#xD;
-	with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
+	var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
+	with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
 		//定义查询条件json结构&#xD;
 		var queryJson={&#xD;
 			templateCode:data.current.get(&quot;templateCode&quot;)&#xD;
@@ -891,14 +884,7 @@ if(data.succ!=null){&#xD;
 		set(&quot;parameter&quot;, queryJson);&#xD;
 		flushAsync();&#xD;
 	}&#xD;
-	//var dataSet=view.get(&quot;#dsOmsorderinfo&quot;);&#xD;
-    //dataSet.setData(data.succ); &#xD;
-	//if(view.get(&quot;#dsOmsorderinfoitem.data&quot;)!=null &#xD;
-	//  &amp;&amp; view.get(&quot;#dsOmsorderinfoitem.data&quot;).toJSON().length>0){&#xD;
-	//	view.get(&quot;#dsOmsorderinfoitem.data&quot;).each(function(item){&#xD;
-	//		item.remove();&#xD;
-	//	});&#xD;
-	//}&#xD;
+&#xD;
 }&#xD;
 &#xD;
  &#xD;
@@ -908,14 +894,11 @@ $(&quot;#d_fileName input&quot;).val(fname);&#xD;
 view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
 view.get(&quot;#impCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
 &#xD;
-var entity = view.get(&quot;#dsGenericTemplate.data&quot;).current;&#xD;
+var entity = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;).current;&#xD;
 var id = entity.get(&quot;id&quot;);&#xD;
 var parameter={&#xD;
 	id:id,&#xD;
-	templateCode:entity.get(&quot;templateCode&quot;),&#xD;
-	customerName:entity.get(&quot;customerName&quot;),&#xD;
-	customerId:entity.get(&quot;customerId&quot;),&#xD;
-	priceType:entity.get(&quot;priceType&quot;)&#xD;
+	templateCode:entity.get(&quot;templateCode&quot;)&#xD;
 };&#xD;
 self.set(&quot;parameter&quot;,parameter);&#xD;
 &#xD;
@@ -957,7 +940,7 @@ var progressJob = setInterval(getProgress, 500);</ClientEvent>
           <Property name="caption">导入Excel</Property>
           <Property name="maxFileSize">5MB</Property>
           <Property name="successMessage">操作完成!</Property>
-          <Property name="fileResolver">dispatchQuotePR#importDispatchTemplate</Property>
+          <Property name="fileResolver">bmsQuoteDiscountTemplateController#importExcelTemplate</Property>
           <Filters/>
         </UploadAction>
       </Children>
@@ -1019,5 +1002,26 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
       <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
       <Property name="hotkey">                    </Property>
     </DownloadAction>
+    <Dialog id="errorProductMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="height">300</Property>
+      <Property name="width">540</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorProductMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+            <Property name="readOnly">true</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+            <Property name="readOnly">true</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

@@ -1,13 +1,18 @@
 package com.jiuyescm.bms.quotation.discount.service.impl;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.repository.IBmsQuoteDiscountDetailRepository;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountDetailService;
+import com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity;
+import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 
 /**
  * ..ServiceImpl
@@ -85,5 +90,22 @@ public class BmsQuoteDiscountDetailServiceImpl implements IBmsQuoteDiscountDetai
     public void delete(BmsQuoteDiscountDetailEntity entity) {
         bmsQuoteDiscountDetailRepository.delete(entity);
     }
+    
+	@Override
+	public int insertBatchTmp(List<BmsQuoteDiscountDetailEntity> list) throws Exception {
+		List<BmsQuoteDiscountDetailEntity> result = new ArrayList<BmsQuoteDiscountDetailEntity>();
+		if (null != list && list.size() > 0) {
+			PropertyUtils.copyProperties(result, list);
+			
+			BmsQuoteDiscountDetailEntity entity = null;
+			for (BmsQuoteDiscountDetailEntity vo : list) {
+				entity = new BmsQuoteDiscountDetailEntity();
+				PropertyUtils.copyProperties(entity, vo);
+				result.add(entity);
+			}
+			return bmsQuoteDiscountDetailRepository.insertBatch(result);
+		}
+		return 0;
+	}
 	
 }

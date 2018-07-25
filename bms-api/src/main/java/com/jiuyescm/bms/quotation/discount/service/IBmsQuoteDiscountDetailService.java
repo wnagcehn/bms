@@ -26,5 +26,12 @@ public interface IBmsQuoteDiscountDetailService {
 	void delete(BmsQuoteDiscountDetailEntity entity);
 
 	List<BmsQuoteDiscountDetailEntity> queryByTemplateCode(String code);
+	/**
+	 * 批量导入
+	 * @param list
+	 * @return
+	 * @throws Exception
+	 */
+	int insertBatchTmp(List<BmsQuoteDiscountDetailEntity> list) throws Exception;
 
 }

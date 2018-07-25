@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.repository.IBmsQuoteDiscountDetailRepository;
+import com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity;
 
 /**
  * ..RepositoryImpl
@@ -85,5 +86,15 @@ public class BmsQuoteDiscountDetailRepositoryImpl extends MyBatisDao<BmsQuoteDis
     public void delete(BmsQuoteDiscountDetailEntity entity) {
     	update("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountDetailMapper.delete", entity);
     }
+    
+    /**
+     * 导入
+     * @param list
+     * @return
+     */
+	@Override
+	public int insertBatch(List<BmsQuoteDiscountDetailEntity> list) {
+		return insertBatch("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountDetailMapper.save", list);
+	}
 	
 }

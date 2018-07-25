@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="create_month" property="createMonth" jdbcType="VARCHAR" />
+		   	<result column="customerId" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="biz_typecode" property="bizTypecode" jdbcType="VARCHAR" />
+		   	<result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+		   	<result column="task_name" property="taskName" jdbcType="VARCHAR" />
+		   	<result column="task_rate" property="taskRate" jdbcType="INTEGER" />
+		   	<result column="task_status" property="taskStatus" jdbcType="VARCHAR" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		   	<result column="startDate" property="startDate" jdbcType="DATE" />
+		   	<result column="endDate" property="endDate" jdbcType="DATE" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, task_id, create_month, customerId, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+task_id, create_month, customerId, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_discount_asyn_task
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_discount_asyn_task
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" taskId != null and taskId !='' ">
+				and task_id = #{taskId}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customerId = #{customerId}
+			</if>
+        	<if test=" bizTypecode != null and bizTypecode !='' ">
+				and biz_typecode = #{bizTypecode}
+			</if>
+        	<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+        	<if test=" taskName != null and taskName !='' ">
+				and task_name = #{taskName}
+			</if>
+        	<if test=" taskRate != null and taskRate !='' ">
+				and task_rate = #{taskRate}
+			</if>
+        	<if test=" taskStatus != null and taskStatus !='' ">
+				and task_status = #{taskStatus}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" finishTime != null and finishTime !='' ">
+				and finish_time = #{finishTime}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+        	<if test=" startDate != null and startDate !='' ">
+				and startDate = #{startDate}
+			</if>
+        	<if test=" endDate != null and endDate !='' ">
+				and endDate = #{endDate}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
+        insert into bms_discount_asyn_task(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{taskId,jdbcType=VARCHAR}, 
+			#{createMonth,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{bizTypecode,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{taskName,jdbcType=VARCHAR}, 
+			#{taskRate,jdbcType=INTEGER}, 
+			#{taskStatus,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{finishTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{startDate,jdbcType=DATE}, 
+			#{endDate,jdbcType=DATE}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
+        update bms_discount_asyn_task
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" taskId != null and taskId !='' ">
+				task_id = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test=" createMonth != null and createMonth !='' ">
+				create_month = #{createMonth,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customerId = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" bizTypecode != null and bizTypecode !='' ">
+				biz_typecode = #{bizTypecode,jdbcType=VARCHAR},
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				subject_code = #{subjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" taskName != null and taskName !='' ">
+				task_name = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test=" taskRate != null and taskRate !='' ">
+				task_rate = #{taskRate,jdbcType=INTEGER},
+			</if>
+			<if test=" taskStatus != null and taskStatus !='' ">
+				task_status = #{taskStatus,jdbcType=VARCHAR},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" finishTime != null and finishTime !='' ">
+				finish_time = #{finishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+			<if test=" startDate != null and startDate !='' ">
+				startDate = #{startDate,jdbcType=DATE},
+			</if>
+			<if test=" endDate != null and endDate !='' ">
+				endDate = #{endDate,jdbcType=DATE},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_discount_asyn_task 
+        where id = #{id}
+    </delete>
+</mapper>

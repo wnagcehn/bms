@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsDiscountAsynTaskEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增主键</Property>
+      </PropertyDef>
+      <PropertyDef name="taskId">
+        <Property name="label">任务ID</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="label">业务年月</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypecode">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="taskRate">
+        <Property name="label">任务进度</Property>
+      </PropertyDef>
+      <PropertyDef name="taskStatus">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="WAIT">等待</Property>
+              <Property name="PROCESS">处理</Property>
+              <Property name="SUCCESS">成功</Property>
+              <Property name="EXCEPTION">处理异常</Property>
+              <Property name="CANCEL">取消</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="finishTime">
+        <Property name="label">完成时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">0-启用 1-作废</Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="label">开始时间</Property>
+      </PropertyDef>
+      <PropertyDef name="endDate">
+        <Property name="label">结束时间</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="readOnly">false</Property>
+        <Property name="label">年份</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="value">1</Property>
+                <Property name="key">1</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">2</Property>
+                <Property name="key">2</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">3</Property>
+                <Property name="key">3</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">4</Property>
+                <Property name="key">4</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">5</Property>
+                <Property name="key">5</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">6</Property>
+                <Property name="key">6</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">7</Property>
+                <Property name="key">7</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">8</Property>
+                <Property name="key">8</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">9</Property>
+                <Property name="key">9</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">10</Property>
+                <Property name="key">10</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">11</Property>
+                <Property name="value">11</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">12</Property>
+                <Property name="value">12</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">月份</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property name="label">物流商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsDiscountAsynTaskEntityQuery">
+      <PropertyDef name="year">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="readOnly">false</Property>
+        <Property name="label">年份</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="value">1</Property>
+                <Property name="key">1</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">2</Property>
+                <Property name="key">2</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">3</Property>
+                <Property name="key">3</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">4</Property>
+                <Property name="key">4</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">5</Property>
+                <Property name="key">5</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">6</Property>
+                <Property name="key">6</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">7</Property>
+                <Property name="key">7</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">8</Property>
+                <Property name="key">8</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">9</Property>
+                <Property name="key">9</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">10</Property>
+                <Property name="key">10</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">11</Property>
+                <Property name="value">11</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">12</Property>
+                <Property name="value">12</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">月份</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="taskStatus">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="WAIT">等待</Property>
+              <Property name="PROCESS">处理</Property>
+              <Property name="SUCCESS">成功</Property>
+              <Property name="EXCEPTION">处理异常</Property>
+              <Property name="CANCEL">取消</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypecode">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property name="label">物流商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsDiscountAsynTaskEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
+var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);
+
+if(entity.get(&quot;year&quot;) == undefined){
+	dorado.MessageBox.alert(&quot;年份不能为空!&quot;);
+	return;
+}
+if(entity.get(&quot;month&quot;) == undefined){
+	dorado.MessageBox.alert(&quot;月份不能为空!&quot;);
+	return;
+}
+if(entity.get(&quot;month&quot;) &lt; 10){
+	var createMonth = entity.get(&quot;year&quot;)+&quot;-0&quot;+entity.get(&quot;month&quot;)
+}else{
+	var createMonth = entity.get(&quot;year&quot;)+&quot;-&quot;+entity.get(&quot;month&quot;)
+}
+
+data = {
+	createMonth:createMonth
+}
+with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){
+	set(&quot;parameter&quot;, data);
+	flushAsync();
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnComputeDiscount">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsDiscountAsynTaskEntity.data&quot;);&#xD;
+                datas.insert();&#xD;
+                view.get(&quot;#dialogEdit&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="caption">计算折扣</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -0px -80px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsDiscountAsynTaskEntity">
+      <Property name="dataType">[dtBmsDiscountAsynTaskEntity]</Property>
+      <Property name="dataProvider">bmsDiscountAsynTaskController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsDiscountAsynTaskEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsDiscountAsynTaskEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <UpdateAction id="updateAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bmsDiscountAsynTaskController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsDiscountAsynTaskEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Container>
+      <AutoForm id="queryForm">
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsBmsDiscountAsynTaskEntityQuery</Property>
+        <AutoFormElement>
+          <Property name="name">year</Property>
+          <Property name="property">year</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">month</Property>
+          <Property name="property">month</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">taskStatus</Property>
+          <Property name="property">taskStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">bizTypecode</Property>
+          <Property name="property">bizTypecode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectCode</Property>
+          <Property name="property">subjectCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">carrierId</Property>
+          <Property name="property">carrierId</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid id="DataGrid">
+        <Property name="dataSet">dsBmsDiscountAsynTaskEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="taskId">
+          <Property name="property">taskId</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="taskStatus">
+          <Property name="property">taskStatus</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="taskRate">
+          <Property name="property">taskRate</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="bizTypecode">
+          <Property name="property">bizTypecode</Property>
+          <Property name="visible">true</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="subjectCode">
+          <Property name="property">subjectCode</Property>
+          <Property name="visible">true</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">carrierId</Property>
+          <Property name="property">carrierId</Property>
+          <Property name="width">110</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="finishTime">
+          <Property name="property">finishTime</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="taskName">
+          <Property name="property">taskName</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="startDate">
+          <Property name="property">startDate</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="endDate">
+          <Property name="property">endDate</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">计算折扣</Property>
+      <Property name="center">true</Property>
+      <Property name="height">280</Property>
+      <Property name="width">380</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">计算折扣</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBmsDiscountAsynTaskEntity</Property>
+          <Property name="dataType">dtBmsDiscountAsynTaskEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">year</Property>
+            <Property name="property">year</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">month</Property>
+            <Property name="property">month</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">customerId</Property>
+            <Property name="property">customerId</Property>
+            <Property name="trigger">triggerCust</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">carrierId</Property>
+            <Property name="property">carrierId</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bizTypecode</Property>
+            <Property name="property">bizTypecode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectCode</Property>
+            <Property name="property">subjectCode</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerCus">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCust">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCust&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCust">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#formEdit.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer2">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

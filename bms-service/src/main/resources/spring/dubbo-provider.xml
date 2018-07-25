@@ -41,6 +41,7 @@
 	<dubbo:service interface="com.jiuyescm.bms.report.biz.service.IBizWarehouseImportReportService" ref="bizWarehouseImportReportService" />
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService" ref="bmsFileAsynTaskService" />
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService" ref="bmsCorrectAsynTaskService" />
+	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService" ref="bmsDiscountAsynTaskService" />
 	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialService" ref="bmsProductsMaterialService" />
 	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightService" ref="bmsProductsWeightService"/>
 	<dubbo:service interface="com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService" ref="bmsQuoteDispatchDetailService"/>
