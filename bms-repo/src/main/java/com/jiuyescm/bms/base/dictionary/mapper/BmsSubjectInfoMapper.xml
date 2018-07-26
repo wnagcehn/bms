@@ -129,6 +129,12 @@
     	select subject_code,subject_name from bms_subject_info
     	where del_flag='0'
     </select>
+    
+    <select id="findAll" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
+    	select <include refid="baseColumns" /> from bms_subject_info
+    	where del_flag='0' and biz_typecode = #{bizTypeCode}
+    </select>
+    
     <select id="queryAll" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity">
     	 select
         <include refid="baseColumns" />

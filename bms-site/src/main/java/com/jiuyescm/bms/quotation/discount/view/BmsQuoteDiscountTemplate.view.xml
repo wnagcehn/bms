@@ -13,12 +13,7 @@
       </PropertyDef>
       <PropertyDef name="templateName">
         <Property name="label">模板名称</Property>
-      </PropertyDef>
-      <PropertyDef name="subjectCode">
-        <Property name="label">费用科目</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
-        </Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="discountType">
         <Property name="label">折扣方式</Property>
@@ -40,11 +35,20 @@
       <PropertyDef name="delFlag">
         <Property name="label">作废标识</Property>
       </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
       <PropertyDef name="bizType">
         <Property name="label">费用类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBmsQuoteDiscountTemplateEntityQuery">
@@ -56,9 +60,6 @@
       </PropertyDef>
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="bizType">
         <Property name="label">费用类型</Property>
@@ -90,6 +91,9 @@
         <Property name="label">~</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsQuoteDiscountDetailEntity">
       <Property name="creationType">com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity</Property>
@@ -120,9 +124,11 @@
       </PropertyDef>
       <PropertyDef name="downLimit">
         <Property name="label">下限</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="upLimit">
         <Property name="label">上限</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="firstPrice">
         <Property name="label">折扣首价</Property>
@@ -242,6 +248,91 @@
         <Property name="label">消息</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtBmsSubjectInfoEntity" meta="x:15;y:15">
+      <Property name="matchType">com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity</Property>
+      <PropertyDef name="inOutTypecode">
+        <Property name="label">收支类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getInOutTypeCode&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypecode">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getBizTypeCode&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目编码</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getDelFlag&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="dimen1Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dimen1Sortno">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dimen2Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dimen2Sortno">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dimen3Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dimen3Sortno">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dimen4Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dimen4Sortno">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dimen5Code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dimen5Sortno">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="feesType">
+        <Property></Property>
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getFeesTypeMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ToolBar>
@@ -331,6 +422,9 @@
     <DataSet id="dsErrorMessageVo">
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
+    <DataSet id="dsSubjectCode">
+      <Property name="dataProvider">bmsSubjectInfoController#getSubjectCode</Property>
+    </DataSet>
     <Container>
       <AutoForm id="queryForm">
         <Property name="createPrivateDataSet">true</Property>
@@ -363,6 +457,15 @@
           <Property name="property">subjectCode</Property>
           <Property name="showLabel">true</Property>
           <Property name="showHint">false</Property>
+          <Property name="visible">false</Property>
+          <Property name="hideMode">display</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectName</Property>
+          <Property name="property">subjectName</Property>
+          <Property name="showHint">false</Property>
+          <Property name="trigger">subjectCodeDataSetDropDown</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -471,6 +574,18 @@ else&#xD;
             </ToolBarButton>
             <Separator/>
             <ToolBarButton id="btnExport">
+              <ClientEvent name="onClick">var action=view.get(&quot;#downloadPriceAction&quot;);&#xD;
+var data=view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;).current;&#xD;
+if(data){&#xD;
+	var templateName=data.get(&quot;templateName&quot;)+&quot;折扣报价&quot;;&#xD;
+	var parameter={&#xD;
+		templateName:templateName,&#xD;
+		templateCode:data.get(&quot;templateCode&quot;)&#xD;
+	}&#xD;
+	action.set(&quot;parameter&quot;,parameter).execute();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要导出的报价!&quot;);&#xD;
+}</ClientEvent>
               <Property name="caption">导出</Property>
               <Property name="icon">url(>skin>common/icons.gif) -140px -280px</Property>
             </ToolBarButton>
@@ -586,6 +701,13 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
             <DataColumn name="subjectCode">
               <Property name="property">subjectCode</Property>
               <Property name="width">119</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">subjectName</Property>
+              <Property name="property">subjectName</Property>
+              <Property name="width">119</Property>
+              <Editor/>
             </DataColumn>
             <DataColumn name="bizType">
               <Property name="property">bizType</Property>
@@ -661,23 +783,28 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">templateCode</Property>
-            <Property name="property">templateCode</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
             <Property name="name">templateName</Property>
             <Property name="property">templateName</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">subjectCode</Property>
-            <Property name="property">subjectCode</Property>
+            <Property name="name">bizType</Property>
+            <Property name="property">bizType</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">bizType</Property>
-            <Property name="property">bizType</Property>
+            <Property name="name">subjectCode</Property>
+            <Property name="property">subjectCode</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectName</Property>
+            <Property name="property">subjectName</Property>
+            <Property name="visible">true</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="trigger">subjectCodeEditDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -705,7 +832,36 @@ if(data != &quot;undefined&quot; &amp;&amp; data != &quot;&quot;){&#xD;
       <Property name="width">600</Property>
       <Buttons>
         <Button id="btnSave1">
-          <ClientEvent name="onClick">view.id(&quot;updateDetailAction&quot;).execute(&#xD;
+          <ClientEvent name="onClick">var entity = view.id(&quot;formDetailEdit&quot;).get(&quot;entity&quot;);&#xD;
+var count = 0;&#xD;
+&#xD;
+if(entity.get(&quot;firstPrice&quot;) != undefined &amp;&amp; entity.get(&quot;firstPrice&quot;) != &quot;&quot;){&#xD;
+	count++;&#xD;
+}&#xD;
+if(entity.get(&quot;firstPriceRate&quot;) != undefined &amp;&amp; entity.get(&quot;firstPriceRate&quot;) != &quot;&quot;){&#xD;
+	count++;&#xD;
+}&#xD;
+if(entity.get(&quot;continuePrice&quot;) != undefined &amp;&amp; entity.get(&quot;continuePrice&quot;) != &quot;&quot;){&#xD;
+	count++;&#xD;
+}&#xD;
+if(entity.get(&quot;continuePirceRate&quot;) != undefined &amp;&amp; entity.get(&quot;continuePirceRate&quot;) != &quot;&quot;){&#xD;
+	count++;&#xD;
+}&#xD;
+if(entity.get(&quot;unitPrice&quot;) != undefined &amp;&amp; entity.get(&quot;unitPrice&quot;) != &quot;&quot;){&#xD;
+	count++;&#xD;
+}&#xD;
+if(entity.get(&quot;unitPriceRate&quot;) != undefined &amp;&amp; entity.get(&quot;unitPriceRate&quot;) != &quot;&quot;){&#xD;
+	count++;&#xD;
+}&#xD;
+if(count == 0){&#xD;
+	dorado.MessageBox.alert(&quot;折扣首价、首价折扣率、折扣续价、续价折扣率、折扣一口价、一口价折扣率不能全为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(count > 1){&#xD;
+	dorado.MessageBox.alert(&quot;折扣首价、首价折扣率、折扣续价、续价折扣率、折扣一口价、一口价折扣率有且只能有一个有值&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.id(&quot;updateDetailAction&quot;).execute(&#xD;
                         function(){&#xD;
                             view.id(&quot;dialogEditDetail&quot;).hide();&#xD;
                         }&#xD;
@@ -1023,5 +1179,69 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
       </Children>
       <Tools/>
     </Dialog>
+    <DataSetDropDown id="bizTypeDropDown">
+      <Property name="dataSet">dsBizType</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="subjectCodeDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);&#xD;
+var bizType = entity.get(&quot;bizType&quot;);&#xD;
+&#xD;
+if(bizType != undefined){&#xD;
+	var subDropDown = view.get(&quot;#subjectCodeDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
+	var parameter={&#xD;
+		bizTypeCode:bizType&#xD;
+	};&#xD;
+	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
+	subjectCode:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">subjectCode=subjectCode</Property>
+      <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
+    <DownloadAction id="downloadPriceAction">
+      <Property name="caption">导出</Property>
+      <Property name="fileProvider">bmsQuoteDiscountTemplateController#downLoadData</Property>
+    </DownloadAction>
+    <DataSetDropDown id="subjectCodeEditDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+var bizType = entity.get(&quot;bizType&quot;);&#xD;
+if(bizType != undefined){&#xD;
+	var subDropDown = view.get(&quot;#subjectCodeEditDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
+	var parameter={&#xD;
+		bizTypeCode:bizType&#xD;
+	};&#xD;
+	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
+	subjectCode:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>

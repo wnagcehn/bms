@@ -35,4 +35,7 @@ public interface IBmsSubjectInfoService {
 
 	List<BmsSubjectInfoEntity> queryAllSubejct();
 
+
+	List<BmsSubjectInfoEntity> findAll(String bizTypeCode);
+
 }

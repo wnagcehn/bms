@@ -26,6 +26,7 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	private String bizTypecode;
 	// 费用科目编码
 	private String subjectCode;
+	private String subjectName;
 	// 任务名称
 	private String taskName;
 	// 任务进度
@@ -196,6 +197,14 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 
 	public void setMonth(String month) {
 		this.month = month;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
     
 }

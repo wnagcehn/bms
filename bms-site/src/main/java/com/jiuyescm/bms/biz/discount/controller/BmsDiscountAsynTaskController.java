@@ -9,6 +9,8 @@ import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
+import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 
 /**
@@ -23,6 +25,9 @@ public class BmsDiscountAsynTaskController {
 
 	@Autowired
 	private IBmsDiscountAsynTaskService bmsDiscountAsynTaskService;
+	
+	@Autowired
+	private SequenceService sequenceService;
 
 	/**
 	 * 根据id查询
@@ -57,6 +62,9 @@ public class BmsDiscountAsynTaskController {
 	@DataResolver
 	public void save(BmsDiscountAsynTaskEntity entity) {
 		if (null == entity.getId()) {
+			// 生成任务，写入任务表
+			String taskId =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+			entity.setTaskId(taskId);
 			entity.setCreateMonth(entity.getYear()+entity.getMonth());
 			entity.setTaskRate(0);
 			entity.setDelFlag("0");

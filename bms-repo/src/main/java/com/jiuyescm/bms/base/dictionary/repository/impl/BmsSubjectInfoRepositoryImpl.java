@@ -61,6 +61,13 @@ public class BmsSubjectInfoRepositoryImpl extends MyBatisDao<BmsSubjectInfoEntit
         update("com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper.update", entity);
         return entity;
     }
+    
+    @Override
+    public List<BmsSubjectInfoEntity> findAll(String bizTypeCode) {
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("bizTypeCode", bizTypeCode);
+    	return selectList("com.jiuyescm.bms.base.dictionary.BmsSubjectInfoMapper.findAll", map);
+    }
 
 	@Override
 	public List<BmsSubjectInfoEntity> queryAll(String inOutTypeCode) {

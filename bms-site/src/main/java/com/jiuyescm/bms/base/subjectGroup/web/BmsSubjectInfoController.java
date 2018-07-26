@@ -7,6 +7,7 @@ package com.jiuyescm.bms.base.subjectGroup.web;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -68,6 +69,15 @@ public class BmsSubjectInfoController {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
+	}
+	
+	@DataProvider
+	public List<BmsSubjectInfoEntity> getSubjectCode(Map<String, Object> param){
+		if (null != param) {
+			List<BmsSubjectInfoEntity> list = bmsSubjectInfoService.findAll(param.get("bizTypeCode").toString());
+			return list;
+		}
+		return null;
 	}
 	
 	@DataProvider

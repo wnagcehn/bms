@@ -23,14 +23,11 @@
       <PropertyDef name="bizTypecode">
         <Property name="label">业务类型</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="taskName">
         <Property name="label">任务名称</Property>
@@ -68,16 +65,18 @@
       </PropertyDef>
       <PropertyDef name="startDate">
         <Property name="label">开始时间</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="endDate">
         <Property name="label">结束时间</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="remark">
         <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="year">
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
         </Property>
         <Property name="readOnly">false</Property>
         <Property name="label">年份</Property>
@@ -85,58 +84,7 @@
       </PropertyDef>
       <PropertyDef name="month">
         <Property name="mapping">
-          <Property name="mapValues">
-            <Collection>
-              <Entity>
-                <Property name="value">1</Property>
-                <Property name="key">1</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">2</Property>
-                <Property name="key">2</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">3</Property>
-                <Property name="key">3</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">4</Property>
-                <Property name="key">4</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">5</Property>
-                <Property name="key">5</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">6</Property>
-                <Property name="key">6</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">7</Property>
-                <Property name="key">7</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">8</Property>
-                <Property name="key">8</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">9</Property>
-                <Property name="key">9</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">10</Property>
-                <Property name="key">10</Property>
-              </Entity>
-              <Entity>
-                <Property name="key">11</Property>
-                <Property name="value">11</Property>
-              </Entity>
-              <Entity>
-                <Property name="key">12</Property>
-                <Property name="value">12</Property>
-              </Entity>
-            </Collection>
-          </Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
         </Property>
         <Property name="label">月份</Property>
         <Property name="required">true</Property>
@@ -147,11 +95,15 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">
       <PropertyDef name="year">
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
         </Property>
         <Property name="readOnly">false</Property>
         <Property name="label">年份</Property>
@@ -159,58 +111,7 @@
       </PropertyDef>
       <PropertyDef name="month">
         <Property name="mapping">
-          <Property name="mapValues">
-            <Collection>
-              <Entity>
-                <Property name="value">1</Property>
-                <Property name="key">1</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">2</Property>
-                <Property name="key">2</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">3</Property>
-                <Property name="key">3</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">4</Property>
-                <Property name="key">4</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">5</Property>
-                <Property name="key">5</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">6</Property>
-                <Property name="key">6</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">7</Property>
-                <Property name="key">7</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">8</Property>
-                <Property name="key">8</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">9</Property>
-                <Property name="key">9</Property>
-              </Entity>
-              <Entity>
-                <Property name="value">10</Property>
-                <Property name="key">10</Property>
-              </Entity>
-              <Entity>
-                <Property name="key">11</Property>
-                <Property name="value">11</Property>
-              </Entity>
-              <Entity>
-                <Property name="key">12</Property>
-                <Property name="value">12</Property>
-              </Entity>
-            </Collection>
-          </Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
         </Property>
         <Property name="label">月份</Property>
         <Property name="required">true</Property>
@@ -250,9 +151,18 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);&#xD;
+</ClientEvent>
     <ToolBar>
       <DataPilot>
         <Property name="dataSet">dsBmsDiscountAsynTaskEntity</Property>
@@ -310,6 +220,9 @@ with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
     </DataSet>
+    <DataSet id="dsSubjectCode">
+      <Property name="dataProvider">bmsSubjectInfoController#getSubjectCode</Property>
+    </DataSet>
     <UpdateAction id="updateAction">
       <ClientEvent name="onSuccess">//刷新&#xD;
 var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;&#xD;
@@ -360,11 +273,20 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
         <AutoFormElement>
           <Property name="name">subjectCode</Property>
           <Property name="property">subjectCode</Property>
+          <Property name="visible">false</Property>
+          <Property name="hideMode">display</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectName</Property>
+          <Property name="property">subjectName</Property>
+          <Property name="trigger">subjectCodeDataSetDropDown</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">carrierId</Property>
           <Property name="property">carrierId</Property>
+          <Property name="visible">false</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -409,26 +331,45 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
         </DataColumn>
         <DataColumn name="subjectCode">
           <Property name="property">subjectCode</Property>
-          <Property name="visible">true</Property>
+          <Property name="visible">false</Property>
           <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">subjectName</Property>
+          <Property name="property">subjectName</Property>
+          <Property name="width">110</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn>
           <Property name="name">carrierId</Property>
           <Property name="property">carrierId</Property>
           <Property name="width">110</Property>
+          <Property name="visible">false</Property>
           <Editor/>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
           <Property name="width">110</Property>
         </DataColumn>
+        <DataColumn name="startDate">
+          <Property name="property">startDate</Property>
+          <Property name="visible">true</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn name="endDate">
+          <Property name="property">endDate</Property>
+          <Property name="visible">true</Property>
+          <Property name="width">110</Property>
+        </DataColumn>
         <DataColumn name="createTime">
           <Property name="property">createTime</Property>
           <Property name="width">110</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="finishTime">
           <Property name="property">finishTime</Property>
           <Property name="width">110</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
@@ -444,20 +385,15 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
           <Property name="visible">false</Property>
           <Property name="width">110</Property>
         </DataColumn>
-        <DataColumn name="startDate">
-          <Property name="property">startDate</Property>
-          <Property name="visible">false</Property>
-          <Property name="width">110</Property>
-        </DataColumn>
-        <DataColumn name="endDate">
-          <Property name="property">endDate</Property>
-          <Property name="visible">false</Property>
-          <Property name="width">110</Property>
-        </DataColumn>
       </DataGrid>
     </Container>
     <Dialog id="dialogEdit">
       <ClientEvent name="onClose">view.id(&quot;dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onShow">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+view.get(&quot;#formEdit.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#formEdit.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
       <Property name="caption">计算折扣</Property>
       <Property name="center">true</Property>
       <Property name="height">280</Property>
@@ -513,11 +449,6 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">carrierId</Property>
-            <Property name="property">carrierId</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
             <Property name="name">bizTypecode</Property>
             <Property name="property">bizTypecode</Property>
             <Editor/>
@@ -525,6 +456,21 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
           <AutoFormElement>
             <Property name="name">subjectCode</Property>
             <Property name="property">subjectCode</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectName</Property>
+            <Property name="property">subjectName</Property>
+            <Property name="trigger">subjectCodeEditDataSetDropDown</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">carrierId</Property>
+            <Property name="property">carrierId</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
         </AutoForm>
@@ -577,5 +523,59 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DataSetDropDown id="subjectCodeDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);&#xD;
+var bizType = entity.get(&quot;bizTypecode&quot;);&#xD;
+&#xD;
+if(bizType != undefined){&#xD;
+	var subDropDown = view.get(&quot;#subjectCodeDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
+	var parameter={&#xD;
+		bizTypeCode:bizType&#xD;
+	};&#xD;
+	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsDiscountAsynTaskEntityQuery&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
+	subjectCode:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="assignmentMap">subjectCode=subjectCode</Property>
+      <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="subjectCodeEditDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+var bizTypecode = entity.get(&quot;bizTypecode&quot;);&#xD;
+if(bizTypecode != undefined){&#xD;
+	var subDropDown = view.get(&quot;#subjectCodeEditDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
+	var parameter={&#xD;
+		bizTypeCode:bizTypecode&#xD;
+	};&#xD;
+	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
+	subjectCode:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>
