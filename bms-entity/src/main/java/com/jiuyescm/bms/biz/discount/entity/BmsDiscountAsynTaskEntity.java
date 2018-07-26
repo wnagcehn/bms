@@ -49,6 +49,8 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	//年、月
 	private String year;
 	private String month;
+	//物流商id
+	private String carrierId;
 
 	public BmsDiscountAsynTaskEntity() {
 		super();
@@ -197,5 +199,14 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	public void setMonth(String month) {
 		this.month = month;
 	}
+
+	public String getCarrierId() {
+		return carrierId;
+	}
+
+	public void setCarrierId(String carrierId) {
+		this.carrierId = carrierId;
+	}
     
+	
 }
