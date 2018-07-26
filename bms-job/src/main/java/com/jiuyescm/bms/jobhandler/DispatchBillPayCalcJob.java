@@ -591,16 +591,17 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		// 小数位小于等于0.05 则应付重量=实际重量整数位+0
 		
 		double totalWeight=0d;
-		BigDecimal   a1   =BigDecimal.valueOf(originWeight);
-		BigDecimal   a2   =BigDecimal.valueOf(Math.floor(originWeight));
-		BigDecimal result=a1.subtract(a2);		
-		double s=result.doubleValue();
-		if(s>0.05){
-			totalWeight=originWeight;
-		}else if(s<=0.05){
-			totalWeight=Math.floor(originWeight);
+		if(!DoubleUtil.isBlank(originWeight)){
+			BigDecimal   a1   =BigDecimal.valueOf(originWeight);
+			BigDecimal   a2   =BigDecimal.valueOf(Math.floor(originWeight));
+			BigDecimal result=a1.subtract(a2);		
+			double s=result.doubleValue();
+			if(s>0.05){
+				totalWeight=originWeight;
+			}else if(s<=0.05){
+				totalWeight=Math.floor(originWeight);
+			}
 		}
-		
 		return totalWeight;
 	}
 	
