@@ -1788,19 +1788,19 @@ var code=data.current.get(&quot;code&quot;);&#xD;
 var contract=view.get(&quot;#dsPriceContractInfoEntity&quot;).getData();&#xD;
 var customerId=contract.current.get(&quot;customerId&quot;);&#xD;
 &#xD;
-var subview = view.get(&quot;#viewSelectDispatch&quot;).get(&quot;subView&quot;);&#xD;
+var subview = view.get(&quot;#viewSelectDiscount&quot;).get(&quot;subView&quot;);&#xD;
 //清空&#xD;
-var subviewData=subview.get(&quot;#dsGenericTemplate.data&quot;);&#xD;
+var subviewData=subview.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);&#xD;
 subviewData.clear();&#xD;
-var stepData=subview.get(&quot;#dsBmsQuoteDispatchDetailVo.data&quot;);&#xD;
+var stepData=subview.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);&#xD;
 stepData.clear();&#xD;
+alert(code);&#xD;
 &#xD;
-&#xD;
-var ds = subview.get(&quot;#dsMoBanCondition.data&quot;).current;&#xD;
-ds.set(&quot;deliver&quot;,code);&#xD;
-ds.set(&quot;customerId&quot;,customerId);&#xD;
+var ds = subview.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;&#xD;
+//ds.set(&quot;bizType&quot;,&quot;DISPATCH&quot;);&#xD;
+ds.set(&quot;subjectCode&quot;,code);&#xD;
 //直接调用方法查询&#xD;
-var tmpDataSet=subview.get(&quot;#dsGenericTemplate&quot;);&#xD;
+var tmpDataSet=subview.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;);&#xD;
 tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
 &#xD;
 view.get(&quot;#panelDiscount&quot;).show();</ClientEvent>
@@ -1828,7 +1828,7 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectDiscount">
-          <Property name="subView">com.jiuyescm.bms.quotation.dispatch.view.Dispatch_Quote_LookUp</Property>
+          <Property name="subView">com.jiuyescm.bms.quotation.discount.view.BmsQuoteDiscountTemplateLookUp</Property>
         </SubViewHolder>
       </Children>
       <Tools/>
@@ -2150,19 +2150,15 @@ var code=data.current.get(&quot;templateId&quot;);&#xD;
 &#xD;
 var subview = view.get(&quot;#viewSelectDiscountGeneral&quot;).get(&quot;subView&quot;);&#xD;
 //清空&#xD;
-var subviewData=subview.get(&quot;#dsGenericTemplate.data&quot;);&#xD;
+var subviewData=subview.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);&#xD;
 subviewData.clear();&#xD;
-var stepData=subview.get(&quot;#dsBmsQuoteDispatchDetailVo.data&quot;);&#xD;
+var stepData=subview.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);&#xD;
 stepData.clear();&#xD;
 &#xD;
-//获取到选择按钮&#xD;
-var btn=subview.get(&quot;#select&quot;);&#xD;
-btn.set(&quot;visible&quot;,false);&#xD;
-&#xD;
-var ds = subview.get(&quot;#dsMoBanCondition.data&quot;).current;&#xD;
+var ds = subview.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;&#xD;
 ds.set(&quot;templateCode&quot;,code);&#xD;
 //直接调用方法查询&#xD;
-var tmpDataSet=subview.get(&quot;#dsGenericTemplate&quot;);&#xD;
+var tmpDataSet=subview.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;);&#xD;
 tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
 &#xD;
 view.get(&quot;#panelDiscountGeneral&quot;).show();</ClientEvent>
@@ -2340,7 +2336,7 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectDiscountGeneral">
-          <Property name="subView">com.jiuyescm.bms.quotation.dispatch.view.Dispatch_Quote_LookUp</Property>
+          <Property name="subView">com.jiuyescm.bms.quotation.discount.view.BmsQuoteDiscountTemplateLookUp</Property>
         </SubViewHolder>
       </Children>
       <Tools/>

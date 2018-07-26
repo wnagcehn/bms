@@ -48,7 +48,7 @@ warehouse_code, customerid, old_carrier_id, new_carrier_id, waybill_no, update_r
         old_update_reason as oldUpdateReason, is_calculated as isCalculated, calculate_time as calculateTime, 
         descript, create_time as createTime
         from biz_dispatch_carrier_change_detail
-        where is_calculated = '0'
+        where is_calculated = '0' limit 1000
     </select>
     
     <!--根据新物流商为顺丰的运单  查找转寄前最初的物流商 -->
