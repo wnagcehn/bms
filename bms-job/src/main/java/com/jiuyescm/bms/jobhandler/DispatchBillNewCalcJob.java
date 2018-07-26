@@ -864,22 +864,25 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 	    //   比如:3.0056, 那么变成 3
 		//2、对于第一位小数位是0的，第二位不是0,在原重量上加0.1；
 	    //   比如3.015, 那么变成3.115
-		
 		double totalWeight=0d;
-		String weightString=originWeight+"";
-		if(weightString.contains(".0") && weightString.length()>3){
-			String v=weightString.substring(weightString.indexOf(".0")+2,weightString.indexOf(".0")+3);
-			Double val=Double.valueOf(v);
-			if(val==0){
-				totalWeight=Math.floor(originWeight);
+		if(!DoubleUtil.isBlank(originWeight)){
+			String weightString=originWeight+"";
+			if(weightString.contains(".0") && weightString.length()>4){
+				String v=weightString.substring(weightString.indexOf(".0")+2,weightString.indexOf(".0")+3);
+				Double val=Double.valueOf(v);
+				if(val==0){
+					totalWeight=Math.floor(originWeight);
+				}else{				
+					BigDecimal   a1   =BigDecimal.valueOf(originWeight);
+					BigDecimal   a2  =new BigDecimal(0.1);
+					totalWeight=a1.add(a2).doubleValue();
+				}
 			}else{
-				totalWeight=originWeight+0.1;
-			}
-		}else{
-			totalWeight=originWeight;
+				totalWeight=originWeight;
+			}	
 		}
+		return totalWeight;	
 		
-		return totalWeight;		
 	}
 	
 	public double getNewThrowWeight(BizDispatchBillEntity entity){
