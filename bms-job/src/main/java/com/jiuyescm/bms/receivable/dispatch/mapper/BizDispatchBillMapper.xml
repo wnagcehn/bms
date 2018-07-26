@@ -146,7 +146,7 @@
     <select id="getDispatchEntityByWaybillNo" parameterType="java.lang.String" resultMap="bizDispatchBillMap">
 		select
         carrier_id,adjust_weight,adjust_deliver_name,adjust_deliver_id, adjust_carrier_id, adjust_carrier_name,
-				adjust_province_id,adjust_city_id,adjust_district_id
+				adjust_province_id,adjust_city_id,adjust_district_id,order_status
         from biz_dispatch_bill
         where id = (select max(id) from biz_dispatch_bill where waybill_no = #{waybillNo})
     </select>
@@ -154,7 +154,7 @@
     
     
   	<insert id="save" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
-        insert into biz_dispatch_bill(outstock_no, external_no, waybill_no, fees_no, waybill_num, waybill_list, warehouse_code, warehouse_name, customerid, customer_name, carrier_id, carrier_name, deliverid, deliver_name, total_weight, adjust_weight, total_volume, service_type_code, dispatch_type_code, collect_money, month_fee_count, send_name, send_province_id, send_city_id, send_district_id, send_street, send_detail_address, receive_name, receive_province_id, receive_city_id, receive_district_id, receive_street, receive_detail_address, account_state, sign_time, accept_time, receive_time, is_calculated, creator, create_time, last_modifier, last_modify_time, write_time, calculate_time, del_flag, temperature_type_code, temperature_type_name, remark, zexpressnum, bigstatus, smallstatus, system_weight, throw_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5, adjust_deliver_id, adjust_deliver_name, adjust_carrier_id, adjust_carrier_name, biz_type, adjust_province_id, adjust_city_id, adjust_district_id, origin_carrier_name, origin_carrier_id, sender_province, sender_city, sender_district)
+        insert into biz_dispatch_bill(outstock_no, external_no, waybill_no, fees_no, waybill_num, waybill_list, warehouse_code, warehouse_name, customerid, customer_name, carrier_id, carrier_name, deliverid, deliver_name, total_weight, adjust_weight, total_volume, service_type_code, dispatch_type_code, collect_money, month_fee_count, send_name, send_province_id, send_city_id, send_district_id, send_street, send_detail_address, receive_name, receive_province_id, receive_city_id, receive_district_id, receive_street, receive_detail_address, account_state, sign_time, accept_time, receive_time, is_calculated, creator, create_time, last_modifier, last_modify_time, write_time, calculate_time, del_flag, temperature_type_code, temperature_type_name, remark, zexpressnum, bigstatus, smallstatus, system_weight, throw_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5, adjust_deliver_id, adjust_deliver_name, adjust_carrier_id, adjust_carrier_name, biz_type, adjust_province_id, adjust_city_id, adjust_district_id, origin_carrier_name, origin_carrier_id, sender_province, sender_city, sender_district,order_status)
         values (
 		
 		#{outstockNo,jdbcType=VARCHAR}, 
@@ -231,7 +231,8 @@
 		#{originCarrierId,jdbcType=VARCHAR}, 
 		#{senderProvince,jdbcType=VARCHAR}, 
 		#{senderCity,jdbcType=VARCHAR}, 
-		#{senderDistrict,jdbcType=VARCHAR}
+		#{senderDistrict,jdbcType=VARCHAR},
+		#{orderStatus,jdbcType=VARCHAR}
         )
     </insert>
   
