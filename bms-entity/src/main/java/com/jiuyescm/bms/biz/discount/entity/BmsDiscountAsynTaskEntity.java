@@ -52,6 +52,8 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	private String month;
 	//物流商id
 	private String carrierId;
+	
+	private String taskProcess;//任务进度
 
 	public BmsDiscountAsynTaskEntity() {
 		super();
@@ -214,6 +216,14 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 
 	public void setCarrierId(String carrierId) {
 		this.carrierId = carrierId;
+	}
+
+	public String getTaskProcess() {
+		return taskProcess;
+	}
+
+	public void setTaskProcess(String taskProcess) {
+		this.taskProcess = taskProcess;
 	}
     
 	

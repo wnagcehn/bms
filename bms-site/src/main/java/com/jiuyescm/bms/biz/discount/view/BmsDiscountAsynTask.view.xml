@@ -97,7 +97,10 @@
       </PropertyDef>
       <PropertyDef name="subjectName">
         <Property name="label">费用科目</Property>
-        <Property name="required">true</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="taskProcess">
+        <Property name="label">任务进度</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">
@@ -181,15 +184,7 @@ if(entity.get(&quot;month&quot;) == undefined){
 	dorado.MessageBox.alert(&quot;月份不能为空!&quot;);
 	return;
 }
-if(entity.get(&quot;month&quot;) &lt; 10){
-	var createMonth = entity.get(&quot;year&quot;)+&quot;-0&quot;+entity.get(&quot;month&quot;)
-}else{
-	var createMonth = entity.get(&quot;year&quot;)+&quot;-&quot;+entity.get(&quot;month&quot;)
-}
 
-data = {
-	createMonth:createMonth
-}
 with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){
 	set(&quot;parameter&quot;, data);
 	flushAsync();
@@ -323,6 +318,13 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
         <DataColumn name="taskRate">
           <Property name="property">taskRate</Property>
           <Property name="width">110</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">taskProcess</Property>
+          <Property name="property">taskProcess</Property>
+          <Property name="width">110</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn name="bizTypecode">
           <Property name="property">bizTypecode</Property>
