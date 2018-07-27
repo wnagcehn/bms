@@ -3,13 +3,8 @@ package com.jiuyescm.bms.quotation.contract.repository.imp;
 import java.util.List;
 import java.util.Map;
 
-import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity;
-import com.jiuyescm.bms.quotation.contract.entity.ContractManageEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
-import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 
 public interface IPriceContractDiscountRepository {
     /**
@@ -22,5 +17,17 @@ public interface IPriceContractDiscountRepository {
      * 插入折扣科目
      */
     public int insertDiscountItem(List<PriceContractDiscountItemEntity> list);
+    
+    
+    /**
+     * 查询是否签约折扣科目
+     */
+    public PriceContractDiscountItemEntity query(Map<String,Object> condition);
+    
+    
+    /**
+     * 查询签约的折扣科目
+     */
+    public List<BmsQuoteDiscountDetailEntity> queryDiscountPrice(Map<String,Object> condition);
 
 }

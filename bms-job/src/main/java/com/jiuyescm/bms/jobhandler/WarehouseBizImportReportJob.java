@@ -45,7 +45,8 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		// 默认上个月的第一天
 		int preMonth = 1;
 		try {
-			if(params != null && params.length > 0) {
+			if(params != null && params.length > 0) { 
+				
 				if (StringUtils.isNotBlank(params[0])) {
 					// 指定月份
 					preMonth = Integer.parseInt(params[0]);

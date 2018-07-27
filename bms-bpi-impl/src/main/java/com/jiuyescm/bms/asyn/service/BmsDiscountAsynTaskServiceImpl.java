@@ -2,8 +2,10 @@ package com.jiuyescm.bms.asyn.service;
 
 import java.util.Map;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.discount.repository.IBmsDiscountAsynTaskRepository;
@@ -79,5 +81,11 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
     public void delete(Long id) {
         bmsDiscountAsynTaskRepository.delete(id);
     }
+
+	@Override
+	public BmsDiscountAsynTaskEntity queryTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsDiscountAsynTaskRepository.queryTask(condition);
+	}
 	
 }
