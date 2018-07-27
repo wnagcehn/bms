@@ -18,6 +18,8 @@ public interface IBmsDiscountAsynTaskService {
             int pageSize);
 
 	List<BmsDiscountAsynTaskEntity> query(Map<String, Object> condition);
+	
+	BmsDiscountAsynTaskEntity queryTask(Map<String,Object> condition);
 
     BmsDiscountAsynTaskEntity save(BmsDiscountAsynTaskEntity entity);
 

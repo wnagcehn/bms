@@ -2,8 +2,10 @@ package com.jiuyescm.bms.biz.discount.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
@@ -80,5 +82,11 @@ public class BmsDiscountAsynTaskRepositoryImpl extends MyBatisDao<BmsDiscountAsy
     public void delete(Long id) {
         delete("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.delete", id);
     }
+
+	@Override
+	public BmsDiscountAsynTaskEntity queryTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (BmsDiscountAsynTaskEntity) selectOne("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.queryTask", condition);
+	}
 	
 }

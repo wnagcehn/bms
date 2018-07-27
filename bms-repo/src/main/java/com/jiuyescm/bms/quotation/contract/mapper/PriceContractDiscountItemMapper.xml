@@ -85,4 +85,27 @@
 #{delFlag,jdbcType=VARCHAR}
         )
     </insert>
+    
+    <select id="queryItem" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    		select * from price_contract_discount_item where 1=1
+			and contract_code=(select contract_code 
+			        from price_contract_info 
+			        where del_flag = 0 and <![CDATA[start_date < current_timestamp()]]>  and <![CDATA[expire_date >= current_timestamp()]]>
+			        and customerid=#{customerId} and contract_type_code=#{contractTypeCode} and contract_state='1' limit 1)
+			and biz_type_code=#{bizTypeCode} and subject_id=#{subjectId} and del_flag='0' limit 1
+    </select>
+    
+    
+    <select id="queryDiscountPrice" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity">
+		select * from bms_quote_discount_detail
+		where 1=1 and del_flag='0'
+		and template_code=(select a.template_code from price_contract_discount_item a INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code and b.del_flag='0'
+		where a.contract_code=#{contractCode} and a.subject_id=#{subjectId} and a.del_flag='0')
+		<if test="(createTime != null and createTime !='')" >
+			and start_time <![CDATA[>= ]]>#{createTime} and <![CDATA[end_time <= #{createTime}]]>
+		</if>
+		<if test="(orderCount!=null and orderCount!='')">
+			and down_limit<![CDATA[<#{orderCount}]]> and up_limit>=#{orderCount}
+		</if>
+    </select>
 </mapper>

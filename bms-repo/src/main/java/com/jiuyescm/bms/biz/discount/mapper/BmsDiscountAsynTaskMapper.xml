@@ -37,6 +37,8 @@ task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_
         where id = #{id}
     </select>
 	
+	
+	
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
@@ -90,6 +92,18 @@ task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_
 			order by d.create_time desc	
     </select>
 
+	<select id="queryTask" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
+		select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_discount_asyn_task
+        where 1 = 1
+        <if test=" taskId != null and taskId !='' ">
+				and task_id = #{taskId}
+		</if>
+		limit 1
+	</select>
+	
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
         insert into bms_discount_asyn_task(

@@ -8,9 +8,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
-import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDiscountRepository;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractDiscountService;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 
 @Service("priceContractDiscountService")
 public class PriceContractDiscountServiceImp implements IPriceContractDiscountService{
@@ -28,6 +28,20 @@ public class PriceContractDiscountServiceImp implements IPriceContractDiscountSe
 	public int insertDiscountItem(List<PriceContractDiscountItemEntity> list) {
 		// TODO Auto-generated method stub
 		return priceContractDiscountRepository.insertDiscountItem(list);
+	}
+
+	@Override
+	public List<BmsQuoteDiscountDetailEntity> queryDiscountPrice(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return priceContractDiscountRepository.queryDiscountPrice(condition);
+	}
+
+	@Override
+	public PriceContractDiscountItemEntity query(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		
+		return priceContractDiscountRepository.query(condition);
 	}
 	
 }
