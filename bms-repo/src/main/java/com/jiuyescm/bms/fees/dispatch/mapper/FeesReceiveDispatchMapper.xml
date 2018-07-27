@@ -608,6 +608,10 @@
     	update fees_receive_dispatch set bill_no=#{billNo},status=#{status}
     	where fees_no = #{feesNo}
     </update>
+     <update id="updateBatch" parameterType="com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity">
+    	update fees_receive_dispatch set derate_amount=#{derateAmount}
+    	where id=#{id}
+    </update>
     <select id="sumSubjectMoney" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">
 		select sum(amount) as totalAmount,sum(derate_amount) as derateAmount,count(0) as num from fees_receive_dispatch 
 		where bill_no=#{billNo} and warehouse_code=#{warehouseCode} and carrierid=#{subjectCode}

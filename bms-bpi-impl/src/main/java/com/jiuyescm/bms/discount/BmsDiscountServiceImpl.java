@@ -69,4 +69,21 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
     	return result;
 	}
 
+	@Override
+	public int updateList(List<FeesReceiveDispatchDiscountVo> list) {
+		// TODO Auto-generated method stub
+		List<FeesReceiveDispatchDiscountEntity> enList=new ArrayList<FeesReceiveDispatchDiscountEntity>();
+		for(FeesReceiveDispatchDiscountVo vo : list) {
+			FeesReceiveDispatchDiscountEntity entity= new FeesReceiveDispatchDiscountEntity();
+    		try {
+                PropertyUtils.copyProperties(entity, vo);
+            } catch (Exception ex) {
+            	logger.error("转换失败:{0}",ex);
+            }
+    		enList.add(entity);
+    	}
+		
+		return bmsDiscountRepository.updateList(enList);
+	}
+
 }

@@ -49,7 +49,7 @@
     </sql>
 	  
     <select id="queryAll" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
+        resultType="com.jiuyescm.bms.discount.FeesReceiveDispatchDiscountEntity">
         select
                a.id, a.task_id, a.waybill_no, a.discount_amount, a.derate_amount, a.is_calculated, a.calculate_time, a.write_time, a.remark,b.create_time,b.customerid
         from fees_receive_dispatch_discount a
@@ -57,6 +57,22 @@
         where 1=1
 		<include refid="baseSelectColumns" />
     </select>
+
+    <update id="updateList" parameterType="com.jiuyescm.bms.discount.FeesReceiveDispatchDiscountEntity">
+        update fees_receive_dispatch_discount 
+		<set >
+			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DECIMAL},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="quoteId != null" >quote_id=#{quoteId,jdbcType=BIGINT},</if>
+			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
 
     <select id="queryAccount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
