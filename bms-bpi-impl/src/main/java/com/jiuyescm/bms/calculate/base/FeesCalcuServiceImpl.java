@@ -38,7 +38,7 @@ public class FeesCalcuServiceImpl implements IFeesCalcuService {
 		
 		if(resultVo.getPrice() == null){
 			logger.info("【费用计算执行失败】,耗时："+ (current - start) + "毫秒");
-			return new CalcuResultVo("fail","","规则计算不成功",resultVo.getPrice(),resultVo.getQuoId(),resultVo.getMethod(),resultVo.getUnitPrice());
+			return new CalcuResultVo("fail","","规则计算不成功",resultVo.getPrice(),resultVo.getQuoId(),resultVo.getMethod(),resultVo.getUnitPrice(),resultVo.getParams());
 		}
 		else{
 			logger.info("【费用计算执行成功】,耗时：【"+ (current - start) + "】毫秒，费用【"+resultVo.getPrice()+"】");

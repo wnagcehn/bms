@@ -2,8 +2,10 @@ package com.jiuyescm.bms.quotation.discount.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
@@ -80,5 +82,11 @@ public class BmsQuoteDiscountTemplateRepositoryImpl extends MyBatisDao<BmsQuoteD
     public void delete(BmsQuoteDiscountTemplateEntity entity) {
         update("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountTemplateMapper.delete", entity);
     }
+
+	@Override
+	public BmsQuoteDiscountTemplateEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (BmsQuoteDiscountTemplateEntity) selectOne("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountTemplateMapper.queryOne", condition);
+	}
 	
 }

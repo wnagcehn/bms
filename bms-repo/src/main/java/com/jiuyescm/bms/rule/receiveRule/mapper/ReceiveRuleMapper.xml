@@ -169,8 +169,10 @@
     <select id="queryRuleByPriceType" parameterType="java.util.Map" resultMap="baseResultMap">
 		select id, quotationNo, quotationName, biz_type_code, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule ,instruction		
 		from bill_rule_receive
-		where 1=1 and quo_modus=#{quoModus}			
-		and biz_type_code=#{bizTypeCode}
+		where 1=1 and quo_modus=#{quoModus}
+		<if test="bizTypeCode != null" >
+			and biz_type_code=#{bizTypeCode}
+		</if>		
 		and del_flag = '0'
     </select>
 </mapper>

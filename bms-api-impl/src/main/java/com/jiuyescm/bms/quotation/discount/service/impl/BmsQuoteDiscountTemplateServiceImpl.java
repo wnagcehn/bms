@@ -1,22 +1,16 @@
 package com.jiuyescm.bms.quotation.discount.service.impl;
 
-import java.util.Map;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
 import com.jiuyescm.bms.quotation.discount.repository.IBmsQuoteDiscountDetailRepository;
 import com.jiuyescm.bms.quotation.discount.repository.IBmsQuoteDiscountTemplateRepository;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountTemplateService;
-import com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity;
-import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 
 /**
  * ..ServiceImpl
@@ -92,6 +86,12 @@ public class BmsQuoteDiscountTemplateServiceImpl implements IBmsQuoteDiscountTem
     public void delete(BmsQuoteDiscountTemplateEntity entity) {
         bmsQuoteDiscountTemplateRepository.delete(entity);
     }
+
+	@Override
+	public BmsQuoteDiscountTemplateEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsQuoteDiscountTemplateRepository.queryOne(condition);
+	}
 
 	
 }

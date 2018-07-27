@@ -15,7 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
+import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
+import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
+import com.jiuyescm.bms.biz.BizBaseEntity;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
+import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.discount.service.IBmsDiscountService;
 import com.jiuyescm.bms.discount.vo.BmsDiscountAccountVo;
 import com.jiuyescm.bms.discount.vo.FeesReceiveDispatchDiscountVo;
@@ -25,6 +32,12 @@ import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntit
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractDiscountService;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
 import com.jiuyescm.bms.quotation.contract.vo.PriceContractDiscountItemVo;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
+import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountTemplateService;
+import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
+import com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService;
+import com.jiuyescm.bms.quotation.dispatch.service.IPriceDispatchService;
 
 public class BmsReceiveDispatchListener implements MessageListener{
 
@@ -41,6 +54,18 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	
 	@Autowired
 	private IPriceContractDiscountService priceContractDiscountService;
+	
+	@Autowired
+	private IBmsQuoteDispatchDetailService priceDspatchService;
+	
+	@Autowired
+	private IReceiveRuleService receiveRuleService;
+	
+	@Autowired
+	private IBmsQuoteDiscountTemplateService bmsQuoteDiscountTemplateService;
+	
+	@Autowired
+	private IFeesCalcuService feesCalcuService;
 	
 	@Override
 	public void onMessage(Message message) {
@@ -91,6 +116,37 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			logger.info("没有查询到该商家的统计记录");
 			return;
 		}
+		
+		//判断该科目是否签约折扣报价
+		condition.put("customerId", task.getCustomerId());
+		condition.put("contractTypeCode", "CUSTOMER_CONTRACT");
+		condition.put("bizTypeCode", "DISPATCH");
+		condition.put("subjectId", task.getSubjectCode());
+		PriceContractDiscountItemEntity item=priceContractDiscountService.query(condition);
+		if(item==null){
+			logger.info("该商家未签约折扣服务");
+			return;
+		}
+		
+		//查询折扣报价模板
+		condition=new HashMap<String,Object>();
+		condition.put("templateCode", item.getTemplateCode());
+		BmsQuoteDiscountTemplateEntity template=bmsQuoteDiscountTemplateService.queryOne(condition);
+		if(template==null){
+			logger.info("未查询到折扣报价模板");
+			return;
+		}
+		//查询折扣规则
+		condition=new HashMap<String,Object>();
+		condition.put("quoModus", template.getDiscountType());
+		BillRuleReceiveEntity rule=receiveRuleService.queryRuleByPriceType(condition);
+		if(rule==null){
+			logger.info("未查询到折扣规则");
+			return;
+		}
+		
+		
+		
 		//更新taskId到折扣费用表中
 		condition.put("taskId", taskId);
 		int updateResult=bmsDiscountService.updateFeeDiscountTask(condition);
@@ -110,7 +166,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				}else {
 					pageNo += 1; 
 				}
-				handDiscount(pageInfo.getList());
+				handDiscount(pageInfo.getList(),task,item,rule);
 			}else {
 				doLoop = false;
 			}			
@@ -123,7 +179,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	 * 折扣计算
 	 * @param list
 	 */
-	public void handDiscount(List<FeesReceiveDispatchDiscountVo> list){
+	public void handDiscount(List<FeesReceiveDispatchDiscountVo> list,BmsDiscountAsynTaskEntity task,PriceContractDiscountItemEntity item,BillRuleReceiveEntity rule){
 		//循环处理
 		  //获取单条业务数据
 		  //获取对应的原始报价 和 计算规则
@@ -137,15 +193,68 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			condition.put("waybillNo", vo.getWaybillNo());
 			FeesReceiveDispatchEntity fees=feesReceiveDispatchService.queryOne(condition);
 			if(fees!=null && "1".equals(fees.getIsCalculated()) && StringUtils.isNotBlank(fees.getPriceId()) && StringUtils.isNotBlank(fees.getRuleNo())){
-				//费用计算成功的
-				//判断该科目是否签约折扣报价
-				condition.put("customerId", vo.getCustomerId());
-				/*condition.put("contractTypeCode", value)*/
-				PriceContractDiscountItemEntity item=priceContractDiscountService.query(condition);
+				//查询折扣报价
+				List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
+				if(discountPriceList==null || discountPriceList.size()<=0){
+					vo.setIsCalculated("2");
+					vo.setRemark("未查询到折扣报价");
+					continue;
+				}
+				if(discountPriceList.size()>1){
+					vo.setIsCalculated("2");
+					vo.setRemark("折扣报价存在多条，无法计算");
+					continue;
+				}
+				
+				//查询原始报价
+				condition=new HashMap<String,Object>();
+				condition.put("id", fees.getPriceId());
+				BmsQuoteDispatchDetailVo oldPrice=priceDspatchService.queryOne(condition);
+				if(oldPrice==null){
+					vo.setIsCalculated("2");
+					vo.setRemark("未查询到原始报价");
+					continue;
+				}
 				
 				
+				//进入折扣规则，得到最后计算的首重续重
+				CalcuReqVo<BmsQuoteDiscountDetailEntity> reqVo = new CalcuReqVo<BmsQuoteDiscountDetailEntity>();
+				reqVo.setBizData(oldPrice);//原始报价
+				reqVo.setQuoEntity(discountPriceList.get(0));//折扣报价
+				reqVo.setRuleNo(rule.getQuotationNo());
+				reqVo.setRuleStr(rule.getRule());
+				
+				CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);		
+				
+				Map<String,Object> map=resultVo.getParams();
+				//得到新的计算报价
+				BmsQuoteDispatchDetailVo newprice=(BmsQuoteDispatchDetailVo) map.get("newPrice");			
+				if(newprice==null){
+					vo.setIsCalculated("2");
+					vo.setRemark("新的计算报价为空");
+					continue;
+				}	
 				
 				
+				//进入费用计算
+				BizDispatchBillEntity biz=new BizDispatchBillEntity();
+				biz.setWeight(fees.getChargedWeight());
+				CalcuReqVo<BmsQuoteDispatchDetailVo> reqCalVo = new CalcuReqVo<BmsQuoteDispatchDetailVo>();
+				reqCalVo.setBizData(biz);//业务数据
+				reqCalVo.setQuoEntity(newprice);//折扣后报价			
+				//获取原来的计算规则
+				condition=new HashMap<String,Object>();
+				condition.put("quotationNo", fees.getRuleNo());
+				BillRuleReceiveEntity oldRule=receiveRuleService.queryOne(condition);				
+				reqCalVo.setRuleNo(rule.getQuotationNo());
+				reqCalVo.setRuleStr(rule.getRule());
+				
+				CalcuResultVo resultCalVo = feesCalcuService.FeesCalcuService(reqVo);
+				if("succ".equals(resultCalVo.getSuccess())){
+					
+					
+				}
+			
 			}else{
 				//费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
 				vo.setIsCalculated("2");

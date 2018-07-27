@@ -45,5 +45,5 @@ public interface IBmsQuoteDispatchDetailService {
 	int insertBatchTmp(List<BmsQuoteDispatchDetailVo> list) throws Exception;
 	 
     void delete(Long id) throws Exception;
-
+    BmsQuoteDispatchDetailVo queryOne(Map<String, Object> condition);
 }

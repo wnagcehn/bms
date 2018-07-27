@@ -76,4 +76,10 @@ public class BmsQuoteDispatchDetailRepositoryImpl extends MyBatisDao<BmsQuoteDis
 		return insertBatch("com.jiuyescm.bms.quotation.dispatch.mapper.BmsQuoteDispatchDetailMapper.save", list);
 	}
 
+	@Override
+	public BmsQuoteDispatchDetailEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (BmsQuoteDispatchDetailEntity) selectOne("com.jiuyescm.bms.quotation.dispatch.mapper.BmsQuoteDispatchDetailMapper.queryOne", condition);
+	}
+
 }

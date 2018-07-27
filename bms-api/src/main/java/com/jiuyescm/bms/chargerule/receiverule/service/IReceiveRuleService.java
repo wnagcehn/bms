@@ -62,5 +62,10 @@ public interface IReceiveRuleService{
 	 * 根据商家费用科目查询规则
 	 */
 	public BillRuleReceiveEntity  queryByCustomerId(Map<String, Object> parameter);
+	
+	/**
+	 * 根据报价形式查询规则
+	 */
+	public BillRuleReceiveEntity queryRuleByPriceType(Map<String, Object> parameter);
 
 }

@@ -19,6 +19,8 @@ public interface IBmsQuoteDiscountTemplateService {
 
 	List<BmsQuoteDiscountTemplateEntity> query(Map<String, Object> condition);
 
+	BmsQuoteDiscountTemplateEntity queryOne(Map<String, Object> condition);
+	
     BmsQuoteDiscountTemplateEntity save(BmsQuoteDiscountTemplateEntity entity);
 
     BmsQuoteDiscountTemplateEntity update(BmsQuoteDiscountTemplateEntity entity);

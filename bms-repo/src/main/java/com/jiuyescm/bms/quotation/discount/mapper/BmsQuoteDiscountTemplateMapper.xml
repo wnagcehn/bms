@@ -31,6 +31,16 @@ template_code, template_name, subject_code, biz_type, discount_type, creator, cr
         where id = #{id}
     </select>
 	
+	<select id="queryOne"  parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
+         select * from bms_quote_discount_template
+         where 1 = 1
+       	<if test=" templateCode != null and templateCode !='' ">
+			and template_code = #{templateCode}
+		</if>
+		and del_flag='0'
+     </select>
+	
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
