@@ -35,43 +35,32 @@ template_code, template_name, subject_code, biz_type, discount_type, creator, cr
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity">
         select
-        <include refid="BASE_COLUMNS_ALL" />
-        from bms_quote_discount_template
+        d.id, d.template_code, d.template_name, d.subject_code,
+        d.biz_type, d.discount_type, d.creator, d.create_time, d.last_modifier, 
+        d.last_modify_time, d.del_flag, s.subject_name as subjectName
+        from bms_quote_discount_template d
+        left join bms_subject_info s on d.subject_code=s.subject_code and s.del_flag='0'
         where 1 = 1
-        	<if test=" id != null and id !='' ">
-				and id = #{id}
-			</if>
         	<if test=" templateCode != null and templateCode !='' ">
-				and template_code = #{templateCode}
+				and d.template_code = #{templateCode}
 			</if>
         	<if test=" templateName != null and templateName !='' ">
-				and template_name like CONCAT('%',#{templateName},'%')
+				and d.template_name like CONCAT('%',#{templateName},'%')
 			</if>
         	<if test=" subjectCode != null and subjectCode !='' ">
-				and subject_code = #{subjectCode}
+				and d.subject_code = #{subjectCode}
 			</if>
         	<if test=" bizType != null and bizType !='' ">
-				and biz_type = #{bizType}
-			</if>
-        	<if test=" discountType != null and discountType !='' ">
-				and discount_type = #{discountType}
-			</if>
-        	<if test=" creator != null and creator !='' ">
-				and creator = #{creator}
+				and d.biz_type = #{bizType}
 			</if>
         	<if test=" createTime != null and createTime !='' ">
-				<![CDATA[create_time <= #{createEndTime}]]>
+				<![CDATA[d.create_time <= #{createEndTime}]]>
 			</if>
         	<if test=" createTime != null and createTime !='' ">
-				and create_time >= #{createTime}
+				and d.create_time >= #{createTime}
 			</if>
-        	<if test=" lastModifier != null and lastModifier !='' ">
-				and last_modifier = #{lastModifier}
-			</if>
-        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
-				and last_modify_time = #{lastModifyTime}
-			</if>
-			and del_flag = "0"
+			and d.del_flag = "0"
+			order by d.create_time desc		
     </select>
 
 	<!-- 保存 -->

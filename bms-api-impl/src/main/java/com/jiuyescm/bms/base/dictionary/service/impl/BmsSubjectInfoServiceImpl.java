@@ -92,6 +92,9 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService {
 	public List<BmsSubjectInfoEntity> queryAllSubejct() {
 		return bmsSubjectInfoRepository.queryAllSubejct();
 	}
-
 	
+	@Override
+	public List<BmsSubjectInfoEntity> findAll(String bizTypeCode){
+		return bmsSubjectInfoRepository.findAll(bizTypeCode);
+	}
 }

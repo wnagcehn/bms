@@ -16,19 +16,25 @@ import org.springframework.stereotype.Controller;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.DownloadFile;
 import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.RecordLogBizTypeEnum;
 import com.jiuyescm.bms.common.enumtype.RecordLogOperateType;
 import com.jiuyescm.bms.common.enumtype.RecordLogUrlNameEnum;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Session;
+import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
+import com.jiuyescm.bms.common.web.HttpCommanExport;
 import com.jiuyescm.bms.pub.IPubRecordLogService;
 import com.jiuyescm.bms.pub.PubRecordLogEntity;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
@@ -37,6 +43,7 @@ import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountDetailServic
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountTemplateService;
 import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 import com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService;
+import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.cfm.common.sequence.SequenceGenerator;
 import com.jiuyescm.common.ConstantInterface;
@@ -47,7 +54,9 @@ import com.jiuyescm.common.utils.excel.IFileReader;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DataProperty;
 import com.jiuyescm.common.utils.upload.DiscountQuoteTemplateDataType;
+import com.jiuyescm.common.utils.upload.DispatchQuoteCompareDataType;
 import com.jiuyescm.common.utils.upload.DispatchQuoteTemplateDataType;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
@@ -82,6 +91,13 @@ public class BmsQuoteDiscountTemplateController {
 	
 	@Resource
 	private IPubRecordLogService pubRecordLogService;
+	
+	@Resource 
+	private SequenceService sequenceService;
+	
+	@Resource
+	private ISystemCodeService systemCodeService; //业务类型
+	
 
 	/**
 	 * 根据id查询
@@ -126,8 +142,13 @@ public class BmsQuoteDiscountTemplateController {
 		}
 		String username = JAppContext.currentUserName();
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		if (null != entity.getSubjectCode()) {
+			entity.setSubjectCode(entity.getSubjectCode());
+		}		
 		if (null == entity.getId()) {
 			try {
+				String templateNo =sequenceService.getBillNoOne(GenericTemplateEntity.class.getName(), "ZB", "00000");
+				entity.setTemplateCode(templateNo);
 				entity.setCreator(username);
 				entity.setCreateTime(currentTime);
 				entity.setDelFlag("0");
@@ -389,13 +410,44 @@ public class BmsQuoteDiscountTemplateController {
 		
 		int lineNo = 1;
 		for (BmsQuoteDiscountDetailEntity bmsQuoteDiscountDetailEntity : discountList) {
+			int count = 0;
+			lineNo++;
 			if (bmsQuoteDiscountDetailEntity.getStartTime() == null) {
 				setMessage(infoList, lineNo, "开始时间不能为空！");
 			}
 			if (bmsQuoteDiscountDetailEntity.getEndTime() == null) {
 				setMessage(infoList, lineNo, "结束时间不能为空！");
 			}
-			lineNo++;
+			if (bmsQuoteDiscountDetailEntity.getDownLimit() == null || StringUtils.isBlank(bmsQuoteDiscountDetailEntity.getDownLimit().toString())) {
+				setMessage(infoList, lineNo, "下限不能为空！");
+			}
+			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null || StringUtils.isBlank(bmsQuoteDiscountDetailEntity.getUpLimit().toString())) {
+				setMessage(infoList, lineNo, "上限不能为空！");
+			}
+			if (bmsQuoteDiscountDetailEntity.getFirstPrice() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getFirstPrice().toString())) {
+				count ++;
+			}
+			if (bmsQuoteDiscountDetailEntity.getFirstPriceRate() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getFirstPriceRate().toString())) {
+				count ++;
+			}
+			if (bmsQuoteDiscountDetailEntity.getContinuePrice() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getContinuePrice().toString())) {
+				count ++;
+			}
+			if (bmsQuoteDiscountDetailEntity.getContinuePirceRate() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getContinuePirceRate().toString())) {
+				count ++;
+			}
+			if (bmsQuoteDiscountDetailEntity.getUnitPrice() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getUnitPrice().toString())) {
+				count ++;
+			}
+			if (bmsQuoteDiscountDetailEntity.getUnitPriceRate() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getUnitPriceRate().toString())) {
+				count ++;
+			}
+			if (count == 0) {
+				setMessage(infoList, lineNo, "折扣首价，首价折扣率，折扣续价，续价折扣率，折扣一口价，一口价折扣率不能全为空！");
+			}
+			if (count > 1) {
+				setMessage(infoList, lineNo, "折扣首价，首价折扣率，折扣续价，续价折扣率，折扣一口价，一口价折扣率只能有一个有值！");
+			}
 		}
 
 		if (infoList != null && infoList.size() > 0) { // 有错误信息
@@ -434,5 +486,62 @@ public class BmsQuoteDiscountTemplateController {
 		list.add("productCase");
 		list.add("deliverid");
 		return list;
+	}
+	
+	/**
+	 * 导出报价
+	 * @param parameter
+	 * @return
+	 * @throws Exception
+	 */
+	@FileProvider
+	public DownloadFile downLoadData(Map<String,Object> parameter) throws Exception{
+		try{
+			String path=getPath();
+			String templateName=parameter.get("templateName").toString();
+			HttpCommanExport commanExport=new HttpCommanExport(path);
+			ExportDataVoEntity voEntity=new ExportDataVoEntity();
+			voEntity.setTitleName(templateName);
+			voEntity.setBaseType(new DiscountQuoteTemplateDataType());
+			voEntity.setDataList(getDataList(parameter));
+			return commanExport.exportFile(voEntity);
+		}catch(Exception e){
+			//写入日志
+			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
+			throw e;
+		}
+		
+	}
+	
+	private String getPath(){
+		SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode("GLOABL_PARAM", "EXPORT_DISCOUNT_BILL");
+		if(systemCodeEntity == null){
+			throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_DISCOUNT_BILL");
+		}
+		return systemCodeEntity.getExtattr1();
+	}
+	
+	private List<Map<String,Object>> getDataList(Map<String,Object> parameter) throws Exception{
+		List<BmsQuoteDiscountDetailEntity> list = bmsQuoteDiscountDetailService.queryByTemplateCode(parameter.get("templateCode").toString());
+		List<Map<String,Object>> mapList=new ArrayList<Map<String,Object>>();
+		if(list!=null && list.size()>0){
+			Map<String,Object> map=null;
+			for(BmsQuoteDiscountDetailEntity entity:list){
+				map=new HashMap<String,Object>();
+				map.put("startTime", entity.getStartTime());
+				map.put("endTime", entity.getEndTime());
+				map.put("downLimit", entity.getDownLimit());
+				map.put("upLimit", entity.getUpLimit());
+				map.put("firstPrice", entity.getFirstPrice());
+				map.put("firstPriceRate", entity.getFirstPriceRate());
+				map.put("continuePrice", entity.getContinuePrice());
+				map.put("continuePriceRate", entity.getContinuePirceRate());
+				map.put("unitPrice", entity.getUnitPrice());
+				map.put("unitPriceRate", entity.getUnitPriceRate());
+				
+				mapList.add(map);
+			}
+		}	
+		return mapList;
 	}
 }

@@ -23,6 +23,7 @@ public class BmsQuoteDiscountTemplateEntity implements IEntity {
 	private String templateName;
 	// 费用科目
 	private String subjectCode;
+	private String subjectName;
 	// 业务类型编码（仓储，干线, 配送）
 	private String bizType;
 	// 折扣方式
@@ -128,6 +129,14 @@ public class BmsQuoteDiscountTemplateEntity implements IEntity {
 
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
     
 }

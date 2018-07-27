@@ -48,4 +48,6 @@ public interface IBmsSubjectInfoRepository {
 	public List<BmsSubjectInfoEntity> queryAllSubejct();
 	
 	public List<BmsSubjectInfoEntity> querySubject(BmsSubjectInfoEntity entity);
+	
+	List<BmsSubjectInfoEntity> findAll(String bizTypeCode);
 }
