@@ -12,12 +12,12 @@ import javax.jms.TextMessage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
 import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
-import com.jiuyescm.bms.biz.BizBaseEntity;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -30,15 +30,13 @@ import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
 import com.jiuyescm.bms.fees.dispatch.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractDiscountService;
-import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
-import com.jiuyescm.bms.quotation.contract.vo.PriceContractDiscountItemVo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountTemplateService;
 import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 import com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService;
-import com.jiuyescm.bms.quotation.dispatch.service.IPriceDispatchService;
 
+@Service("bmsReceiveDispatchListener")
 public class BmsReceiveDispatchListener implements MessageListener{
 
 	private static final Logger logger = Logger.getLogger(BmsReceiveDispatchListener.class.getName());
