@@ -390,12 +390,19 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
       </DataGrid>
     </Container>
     <Dialog id="dialogEdit">
-      <ClientEvent name="onClose">view.id(&quot;dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onClose">view.id(&quot;dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.id(&quot;bizTypecode&quot;).set(&quot;readOnly&quot;, true);&#xD;
+view.id(&quot;subjectName&quot;).set(&quot;readOnly&quot;, true);&#xD;
+view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
       <ClientEvent name="onShow">var date=new Date;  &#xD;
 var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
 view.get(&quot;#formEdit.entity&quot;).set(&quot;year&quot;,year);&#xD;
-view.get(&quot;#formEdit.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
+view.get(&quot;#formEdit.entity&quot;).set(&quot;month&quot;,month);&#xD;
+&#xD;
+view.id(&quot;bizTypecode&quot;).set(&quot;readOnly&quot;, true);&#xD;
+view.id(&quot;subjectName&quot;).set(&quot;readOnly&quot;, true);&#xD;
+view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
       <Property name="caption">计算折扣</Property>
       <Property name="center">true</Property>
       <Property name="height">280</Property>
@@ -444,25 +451,25 @@ view.get(&quot;#formEdit.entity&quot;).set(&quot;month&quot;,month);</ClientEven
             <Property name="property">month</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement id="customerId">
             <Property name="name">customerId</Property>
             <Property name="property">customerId</Property>
             <Property name="trigger">triggerCust</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement id="bizTypecode">
             <Property name="name">bizTypecode</Property>
             <Property name="property">bizTypecode</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement id="subjectCode">
             <Property name="name">subjectCode</Property>
             <Property name="property">subjectCode</Property>
             <Property name="visible">false</Property>
             <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement id="subjectName">
             <Property name="name">subjectName</Property>
             <Property name="property">subjectName</Property>
             <Property name="trigger">subjectCodeEditDataSetDropDown</Property>
@@ -509,6 +516,9 @@ if (data != null) {&#xD;
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
 if (data != null) {&#xD;
 	view.get(&quot;#formEdit.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+	view.id(&quot;bizTypecode&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.id(&quot;subjectName&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, false);&#xD;
 }</ClientEvent>
       <Property name="caption">商家选择</Property>
       <Property name="center">true</Property>
