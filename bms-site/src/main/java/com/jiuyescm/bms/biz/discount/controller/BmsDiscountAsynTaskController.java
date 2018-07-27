@@ -7,12 +7,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.baidu.disconf.client.utils.StringUtil;
@@ -44,6 +51,11 @@ public class BmsDiscountAsynTaskController {
 
 	@Autowired
 	private SequenceService sequenceService;
+
+	@Resource
+	private JmsTemplate jmsQueueTemplate;
+
+	private static final String BMS_DISCOUNT_ASYN_TASK = "BMS.DISCOUNT.ASYN.TASK";
 
 	/**
 	 * 根据id查询
@@ -99,6 +111,7 @@ public class BmsDiscountAsynTaskController {
 	 */
 	@DataResolver
 	public void save(BmsDiscountAsynTaskEntity entity) throws ParseException {
+		// 时间转换
 		if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
 			String startDateStr = entity.getYear() + "-" + entity.getMonth() + "-01 00:00:00";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -127,26 +140,56 @@ public class BmsDiscountAsynTaskController {
 		entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 		entity.setCreator(JAppContext.currentUserName());
 		entity.setCreateTime(JAppContext.currentTimestamp());
-		try {
+
+		// 1.全填(一个费用科目)
+		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode())
+				&& StringUtils.isNotEmpty(entity.getSubjectCode())) {
+			// 发送一条mq
 			bmsDiscountAsynTaskService.save(entity);
-		} catch (Exception e) {
-			logger.error("保存失败！", e);
-		}	
+			try {				
+				final String msg = entity.getTaskId();
+				jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
+					@Override
+					public Message createMessage(Session session) throws JMSException {
+						return session.createTextMessage(msg);
+					}
+				});
+			} catch (Exception e) {
+				logger.error("send MQ:", e);
+			}
+		}
 		
-		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode()) && StringUtils.isNotEmpty(entity.getSubjectCode())) {
-			//发送一条mq
+		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode())
+				&& StringUtils.isEmpty(entity.getSubjectCode())) {
+			// 发送业务类型下所有费用科目的
+			
 		}
-		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			//发送业务类型下所有费用科目的
+		
+		
+		try {
+			
+			final String msg = entity.getTaskId();
+			jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					return session.createTextMessage(msg);
+				}
+			});
+		} catch (Exception e) {
+			logger.error("send MQ:", e);
 		}
-		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			//发送商家下所有的
+		
+		
+
+		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode())
+				&& StringUtils.isEmpty(entity.getSubjectCode())) {
+			// 发送商家下所有的
 		}
-		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			//发送所有
+		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode())
+				&& StringUtils.isEmpty(entity.getSubjectCode())) {
+			// 发送所有
 		}
 	}
-
 
 	/**
 	 * 删除
