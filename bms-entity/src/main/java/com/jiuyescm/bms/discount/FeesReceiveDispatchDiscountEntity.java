@@ -37,7 +37,8 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 	private Timestamp writeTime;
 	// 计算说明
 	private String remark;
-
+	// 报价id
+	private Long quoteId;
 	//商家id
 	private String customerId;
 	//创建时间
@@ -205,6 +206,14 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	public Long getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(Long quoteId) {
+		this.quoteId = quoteId;
 	}
     
 }

@@ -97,15 +97,14 @@
     
     
     <select id="queryDiscountPrice" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity">
-		select * from bms_quote_discount_detail
-		where 1=1 and del_flag='0'
-		and template_code=(select a.template_code from price_contract_discount_item a INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code and b.del_flag='0'
-		where a.contract_code=#{contractCode} and a.subject_id=#{subjectId} and a.del_flag='0')
-		<if test="(createTime != null and createTime !='')" >
-			and start_time <![CDATA[>= ]]>#{createTime} and <![CDATA[end_time <= #{createTime}]]>
-		</if>
-		<if test="(orderCount!=null and orderCount!='')">
-			and down_limit<![CDATA[<#{orderCount}]]> and up_limit>=#{orderCount}
-		</if>
+		select * from bms_quote_discount_detail a 
+		INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code and b.del_flag='0'
+		INNER JOIN price_contract_discount_item c on b.template_code=c.template_code and c.del_flag='0'
+		INNER JOIN price_contract_info d on c.contract_code=d.contract_code and d.del_flag='0'
+		where 1=1  and d.customerId=#{customerId} and d.contract_type_code=#{contractTypeCode}
+		<![CDATA[d.start_date < current_timestamp()]]> and d.expire_date <![CDATA[>= ]]> current_timestamp()
+		and c.subject_id=#{subjectId} 
+		and a.start_time <![CDATA[<= #{createTime}]]> and a.end_time >= #{createTime}
+		and a.down_limit<![CDATA[<#{count}]]> and a.up_limit>=#{count}
     </select>
 </mapper>

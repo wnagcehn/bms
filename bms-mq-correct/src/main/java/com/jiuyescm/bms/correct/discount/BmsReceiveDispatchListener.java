@@ -170,6 +170,16 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			bmsDiscountAsynTaskService.update(task);
 			return;
 		}
+		
+		//查询折扣方式
+		if(StringUtils.isBlank(template.getDiscountType())){
+			logger.info("模板"+template.getTemplateCode()+"未查询到折扣方式");
+			task.setRemark("模板"+template.getTemplateCode()+"未查询到折扣方式");
+			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+			bmsDiscountAsynTaskService.update(task);
+			return;
+		}
+		
 		//查询折扣规则
 		condition=new HashMap<String,Object>();
 		condition.put("quoModus", template.getDiscountType());
@@ -186,6 +196,10 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		
 		//更新taskId到折扣费用表中
 		condition.put("taskId", taskId);
+		condition.put("startTime", task.getStartDate());
+		condition.put("endTime", task.getEndDate());
+		condition.put("customerId", task.getCustomerId());
+		condition.put("carrierId", task.getCarrierId());
 		int updateResult=bmsDiscountService.updateFeeDiscountTask(condition);
 		if(updateResult<=0){
 			logger.info("更新taskId到折扣费用表中");
@@ -197,18 +211,16 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		
 		updateProgress(task,50);
 		//批量获取业务数据 1000条一次（根据taskId关联）
-		int pageNo = 1;
+		//int pageNo = 1;
 		boolean doLoop = true;
 		while (doLoop) {			
 			PageInfo<FeesReceiveDispatchDiscountVo> pageInfo = 
-					bmsDiscountService.queryAll(condition, pageNo,1000);
+					bmsDiscountService.queryAll(condition, 1,1000);
 			if (null != pageInfo && pageInfo.getList().size() > 0) {
 				if (pageInfo.getList().size() < 1000) {
 					doLoop = false;
-				}else {
-					pageNo += 1; 
 				}
-				handDiscount(pageInfo.getList(),task,item,rule);
+				handDiscount(pageInfo.getList(),task,item,rule,template,discountAccountVo);
 			}else {
 				doLoop = false;
 			}			
@@ -221,7 +233,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	 * 折扣计算
 	 * @param list
 	 */
-	public void handDiscount(List<FeesReceiveDispatchDiscountVo> list,BmsDiscountAsynTaskEntity task,PriceContractDiscountItemEntity item,BillRuleReceiveEntity rule){
+	public void handDiscount(List<FeesReceiveDispatchDiscountVo> list,BmsDiscountAsynTaskEntity task,PriceContractDiscountItemEntity item,BillRuleReceiveEntity rule,BmsQuoteDiscountTemplateEntity template,BmsDiscountAccountVo discountAccountVo){
 		//循环处理
 		  //获取单条业务数据
 		  //获取对应的原始报价 和 计算规则
@@ -243,23 +255,44 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			BigDecimal amount=new BigDecimal(0);
 			condition.put("waybillNo", discountVo.getWaybillNo());
 			FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryOne(condition);
+			
 			if(fee!=null && "1".equals(fee.getIsCalculated()) && StringUtils.isNotBlank(fee.getPriceId()) && StringUtils.isNotBlank(fee.getRuleNo())){
 				logger.info("原始报价id为"+fee.getPriceId()+",原始规则为"+fee.getRuleNo());
+				
+				//查询明细报价
+				condition=new HashMap<String,Object>();
+				condition.put("customerId", task.getCustomerId());
+				condition.put("contractTypeCode", "CUSTOMER_CONTRACT");
+				condition.put("bizTypeCode", "DISPATCH");
+				condition.put("subjectId", task.getSubjectCode());
+				condition.put("createTime", fee.getCreateTime()); 
 				//查询折扣报价
+				if("MONTH_COUNT".equals(template.getDiscountType())){
+					//月单量
+					condition.put("count", discountAccountVo.getOrderCount());
+				}else if("MONTH_AMOUNT".equals(template.getDiscountType())){
+					//月金额
+					condition.put("count", discountAccountVo.getAmount());
+				}
+				
 				List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
 				if(discountPriceList==null || discountPriceList.size()<=0){
-					discountVo.setIsCalculated("2");
-					discountVo.setRemark("未查询到折扣报价");
+					logger.info("未查询到折扣报价明细");
+					discountVo.setIsCalculated("2");					
+					discountVo.setCalculateTime(JAppContext.currentTimestamp());
+					discountVo.setRemark("未查询到折扣报价明细");
 					continue;
 				}
 				if(discountPriceList.size()>1){
+					logger.info("折扣报价明细存在多条");
 					discountVo.setIsCalculated("2");
-					discountVo.setRemark("折扣报价存在多条，无法计算");
+					discountVo.setCalculateTime(JAppContext.currentTimestamp());
+					discountVo.setRemark("折扣报价明细存在多条");
 					continue;
 				}
+				BmsQuoteDiscountDetailEntity discountPrice=discountPriceList.get(0);
 				
 				//判断是否是整单折扣
-				BmsQuoteDiscountDetailEntity discountPrice=discountPriceList.get(0);
 				logger.info("折扣报价的id"+discountPrice.getId());
 				
 				if(!DoubleUtil.isBlank(discountPrice.getUnitPrice())){
@@ -279,6 +312,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					BmsQuoteDispatchDetailVo oldPrice=priceDspatchService.queryOne(condition);
 					if(oldPrice==null){
 						discountVo.setIsCalculated("2");
+						discountVo.setCalculateTime(JAppContext.currentTimestamp());
 						discountVo.setRemark("未查询到原始报价");
 						continue;
 					}
@@ -293,14 +327,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);		
 					
 					Map<String,Object> map=resultVo.getParams();
-					//得到新的计算报价
-					BmsQuoteDispatchDetailVo newprice=(BmsQuoteDispatchDetailVo) map.get("newPrice");			
-					if(newprice==null){
+					if(map==null || map.get("newPrice")==null || (BmsQuoteDispatchDetailVo) map.get("newPrice")==null){
 						discountVo.setIsCalculated("2");
+						discountVo.setCalculateTime(JAppContext.currentTimestamp());
 						discountVo.setRemark("新的计算报价为空");
 						continue;
-					}	
-					
+					}
+					//得到新的计算报价
+					BmsQuoteDispatchDetailVo newprice=(BmsQuoteDispatchDetailVo) map.get("newPrice");			
 					
 					//进入费用计算
 					BizDispatchBillEntity biz=new BizDispatchBillEntity();
@@ -316,7 +350,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					reqCalVo.setRuleStr(oldRule.getRule());
 								
 					
-					CalcuResultVo resultCalVo = feesCalcuService.FeesCalcuService(reqVo);
+					CalcuResultVo resultCalVo = feesCalcuService.FeesCalcuService(reqCalVo);
 					if(resultCalVo!=null && "succ".equals(resultCalVo.getSuccess()) && resultCalVo.getPrice()!=null){
 						//计算成功的
 						amount=resultCalVo.getPrice();	
@@ -328,16 +362,19 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				//费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
 				discountVo.setIsCalculated("2");
 				discountVo.setCalculateTime(JAppContext.currentTimestamp());
+				discountVo.setRemark("费用计算失败或者报价为空或者计算规则为空");
 			}
 		}
 		
 		updateProgress(task,90);
 		
 		//批量更新折扣费用
+		logger.info("批量更新折扣费用"+list.size());
 		int result=bmsDiscountService.updateList(list);
 		if(result<=0){
 			logger.info("批量更新折扣费用失败");
 		}else{
+			logger.info("批量更新原始费用"+feeList.size());
 			//批量更新原始费用中的减免费用
 			int feeResult=feesReceiveDispatchService.updateBatch(feeList);
 			if(feeResult<=0){
@@ -345,6 +382,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			}
 		}
 		
+		task.setRemark("折扣计算成功");
 		updateProgress(task,100);
 		
 	}
@@ -355,6 +393,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		BigDecimal derateAmount=oldAmount.subtract(amount);//减免金额
 		vo.setDerateAmount(derateAmount);//减免金额
 		vo.setIsCalculated("1");//计算状态
+		vo.setRemark("计算成功");
 		vo.setCalculateTime(JAppContext.currentTimestamp());//计算时间
 		vo.setQuoteId(discountPrice.getId().longValue());//报价id
 		fees.setDerateAmount(derateAmount.doubleValue());//费用里的减免金额

@@ -16,7 +16,7 @@ import com.jiuyescm.bms.discount.service.IBmsDiscountService;
 import com.jiuyescm.bms.discount.vo.BmsDiscountAccountVo;
 import com.jiuyescm.bms.discount.vo.FeesReceiveDispatchDiscountVo;
 
-@Service("bmsDiscountServiceImpl")
+@Service("bmsDiscountService")
 public class BmsDiscountServiceImpl implements IBmsDiscountService{
 
 	private static final Logger logger = Logger.getLogger(BmsDiscountServiceImpl.class.getName());
@@ -59,8 +59,9 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
 	            PropertyUtils.copyProperties(vo, entity);          
 	            voList.add(vo);
 	    	}
-	    	result.setList(voList);
+	    	
 	    	PropertyUtils.copyProperties(result, pageInfo); 
+	    	result.setList(voList);
 			return result;
 		} catch (Exception ex) {
          	logger.error("转换失败:{0}",ex);
