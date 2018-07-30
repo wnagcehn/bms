@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.discount.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -29,5 +30,11 @@ public interface IBmsDiscountService {
 	PageInfo<FeesReceiveDispatchDiscountVo> queryAll(Map<String, Object> condition, int pageNo,
             int pageSize);
     
+	/**
+	 * 批量折扣费用
+	 * @param list
+	 * @return
+	 */
+	int updateList(List<FeesReceiveDispatchDiscountVo> list);
 	
 }

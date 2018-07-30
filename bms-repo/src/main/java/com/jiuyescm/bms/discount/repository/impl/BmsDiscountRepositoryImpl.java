@@ -40,4 +40,11 @@ public class BmsDiscountRepositoryImpl extends MyBatisDao implements IBmsDiscoun
 		return page;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateList(List<FeesReceiveDispatchDiscountEntity> list) {
+		// TODO Auto-generated method stub
+		return updateBatch("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.updateList", list);
+	}
+
 }

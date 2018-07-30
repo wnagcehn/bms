@@ -130,7 +130,8 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	//费用二级科目
 	private String otherSubjectCode;
 	
-
+	//减免金额
+	private Double derateAmount;
 	public FeesReceiveDispatchEntity() {
 
 	}
@@ -1005,6 +1006,16 @@ public class FeesReceiveDispatchEntity implements IEntity {
 
 	public void setOtherSubjectCode(String otherSubjectCode) {
 		this.otherSubjectCode = otherSubjectCode;
-	}	
+	}
+
+	public Double getDerateAmount() {
+		return derateAmount;
+	}
+
+	public void setDerateAmount(Double derateAmount) {
+		this.derateAmount = derateAmount;
+	}
+
+	
 	
 }

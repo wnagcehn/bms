@@ -70,4 +70,7 @@
 		 <dubbo:reference id="bmsProductsMaterialService" interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsProductsWeightService" interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsCorrectAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="bmsDiscountAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="bmsDiscountService" interface="com.jiuyescm.bms.discount.service.IBmsDiscountService" version="1.0.0" registry="bms"/>	 
+		 <dubbo:reference id="bmsQuoteDispatchDetailService" interface="com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService" version="1.0.0" registry="bms"/>
 </beans> 
