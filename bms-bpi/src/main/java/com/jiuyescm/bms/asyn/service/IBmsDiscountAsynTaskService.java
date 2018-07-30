@@ -26,5 +26,21 @@ public interface IBmsDiscountAsynTaskService {
     BmsDiscountAsynTaskEntity update(BmsDiscountAsynTaskEntity entity);
 
     void delete(Long id);
+    
+    /**
+     * 是否存在任务
+     * @param voEntity
+     * @return
+     * @throws Exception
+     */
+	boolean existTask(BmsDiscountAsynTaskEntity voEntity) throws Exception;
+	
+	/**
+	 * 批量保存
+	 * @param voList
+	 * @return
+	 * @throws Exception
+	 */
+	int saveBatch(List<BmsDiscountAsynTaskEntity> voList) throws Exception;
 
 }

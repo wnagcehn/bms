@@ -412,17 +412,18 @@ public class BmsQuoteDiscountTemplateController {
 		for (BmsQuoteDiscountDetailEntity bmsQuoteDiscountDetailEntity : discountList) {
 			int count = 0;
 			lineNo++;
+			StringBuilder sb = new StringBuilder();
 			if (bmsQuoteDiscountDetailEntity.getStartTime() == null) {
-				setMessage(infoList, lineNo, "开始时间不能为空！");
+				sb.append("开始时间不能为空, ");
 			}
 			if (bmsQuoteDiscountDetailEntity.getEndTime() == null) {
-				setMessage(infoList, lineNo, "结束时间不能为空！");
+				sb.append("结束时间不能为空, ");
 			}
-			if (bmsQuoteDiscountDetailEntity.getDownLimit() == null || StringUtils.isBlank(bmsQuoteDiscountDetailEntity.getDownLimit().toString())) {
-				setMessage(infoList, lineNo, "下限不能为空！");
+			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null && bmsQuoteDiscountDetailEntity.getDownLimit() != null) {
+				sb.append("上限下限同时存在，或者同时不存在 , ");
 			}
-			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null || StringUtils.isBlank(bmsQuoteDiscountDetailEntity.getUpLimit().toString())) {
-				setMessage(infoList, lineNo, "上限不能为空！");
+			if (bmsQuoteDiscountDetailEntity.getUpLimit() != null && bmsQuoteDiscountDetailEntity.getDownLimit() == null) {
+				sb.append("上限下限同时存在，或者同时不存在, ");
 			}
 			if (bmsQuoteDiscountDetailEntity.getFirstPrice() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getFirstPrice().toString())) {
 				count ++;
@@ -443,11 +444,15 @@ public class BmsQuoteDiscountTemplateController {
 				count ++;
 			}
 			if (count == 0) {
-				setMessage(infoList, lineNo, "折扣首价，首价折扣率，折扣续价，续价折扣率，折扣一口价，一口价折扣率不能全为空！");
+				sb.append("折扣首价、首价折扣率、折扣续价、续价折扣率、折扣一口价、一口价折扣率不能全为空");
 			}
 			if (count > 1) {
-				setMessage(infoList, lineNo, "折扣首价，首价折扣率，折扣续价，续价折扣率，折扣一口价，一口价折扣率只能有一个有值！");
+				sb.append("折扣首价、首价折扣率、折扣续价、续价折扣率、折扣一口价、一口价折扣率只能有一个有值！");
 			}
+			if (!sb.toString().equals("")) {
+				sb.toString().substring(0, sb.toString().length()-1);
+				setMessage(infoList, lineNo, sb.toString());		
+			}	
 		}
 
 		if (infoList != null && infoList.size() > 0) { // 有错误信息

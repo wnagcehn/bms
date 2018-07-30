@@ -108,4 +108,31 @@
 			and down_limit<![CDATA[<#{orderCount}]]> and up_limit>=#{orderCount}
 		</if>
     </select>
+    
+    <select id="queryByCustomerId" parameterType="java.lang.String" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    	select * from price_contract_discount_item where 1=1
+		and contract_code=(select contract_code 
+        from price_contract_info 
+        where del_flag = 0
+        and customerid=#{customerid} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and del_flag='0'
+    </select>
+    
+    <select id="queryByCustomerIdAndBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    	select * from price_contract_discount_item where 1=1
+		and contract_code=(select contract_code 
+        from price_contract_info 
+        where del_flag = 0
+        and customerid=#{customerid} and biz_type_code=#{bizTypeCode} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and del_flag='0'
+    </select>
+    
+    <select id="queryAll" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    	select i.*, c.customerId as customerId from price_contract_discount_item i
+		LEFT JOIN price_contract_info c on c.contract_code=i.contract_code
+		where 1=1
+		and i.contract_code=(select contract_code 
+        from price_contract_info 
+        where del_flag = 0
+        and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and i.del_flag='0'
+    </select>
+    
 </mapper>

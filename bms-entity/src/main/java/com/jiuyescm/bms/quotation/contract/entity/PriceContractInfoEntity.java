@@ -49,7 +49,13 @@ public class PriceContractInfoEntity implements IEntity {
 	private Timestamp lastModifyTime;
 	// 删除标志
 	private String delFlag;
-
+	
+	private String bizTypeCode;
+	private String bizTypeName;
+	
+	private String subjectId;
+	private String carrierId;
+	private String carrierName;
 	public PriceContractInfoEntity() {
 
 	}
@@ -300,6 +306,46 @@ public class PriceContractInfoEntity implements IEntity {
 
 	public void setContractState(String contractState) {
 		this.contractState = contractState;
+	}
+
+	public String getBizTypeCode() {
+		return bizTypeCode;
+	}
+
+	public void setBizTypeCode(String bizTypeCode) {
+		this.bizTypeCode = bizTypeCode;
+	}
+
+	public String getBizTypeName() {
+		return bizTypeName;
+	}
+
+	public void setBizTypeName(String bizTypeName) {
+		this.bizTypeName = bizTypeName;
+	}
+
+	public String getCarrierId() {
+		return carrierId;
+	}
+
+	public void setCarrierId(String carrierId) {
+		this.carrierId = carrierId;
+	}
+
+	public String getCarrierName() {
+		return carrierName;
+	}
+
+	public void setCarrierName(String carrierName) {
+		this.carrierName = carrierName;
+	}
+
+	public String getSubjectId() {
+		return subjectId;
+	}
+
+	public void setSubjectId(String subjectId) {
+		this.subjectId = subjectId;
 	}
     
 }

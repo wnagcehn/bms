@@ -34,14 +34,17 @@ public class BmsQuoteDiscountDetailEntity implements IEntity {
 	private Double firstPrice;
 	// 首价折扣率
 	private Double firstPriceRate;
+	private String firstPriceRateDT;
 	// 折扣续重价格
 	private Double continuePrice;
 	// 续重折扣率
 	private Double continuePirceRate;
+	private String continuePirceRateDT;
 	// 折扣一口价
 	private Double unitPrice;
 	// 一口价折扣率
 	private Double unitPriceRate;
+	private String unitPriceRateDT;
 	// 创建时间
 	private String creator;
 	// 创建时间
@@ -208,5 +211,30 @@ public class BmsQuoteDiscountDetailEntity implements IEntity {
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
 	}
+
+	public String getFirstPriceRateDT() {
+		return firstPriceRateDT;
+	}
+
+	public void setFirstPriceRateDT(String firstPriceRateDT) {
+		this.firstPriceRateDT = firstPriceRateDT;
+	}
+
+	public String getContinuePirceRateDT() {
+		return continuePirceRateDT;
+	}
+
+	public void setContinuePirceRateDT(String continuePirceRateDT) {
+		this.continuePirceRateDT = continuePirceRateDT;
+	}
+
+	public String getUnitPriceRateDT() {
+		return unitPriceRateDT;
+	}
+
+	public void setUnitPriceRateDT(String unitPriceRateDT) {
+		this.unitPriceRateDT = unitPriceRateDT;
+	}
+
     
 }

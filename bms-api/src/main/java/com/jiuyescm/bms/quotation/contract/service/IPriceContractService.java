@@ -137,4 +137,18 @@ public interface IPriceContractService {
      * @return
      */
     public List<String> queryCustomerList();
+    
+    /**
+     * 查询商家下所有业务类型
+     * @param customerId
+     * @return
+     */
+	List<PriceContractInfoEntity> queryByCustomerId(String customerId);
+	
+	/**
+	 * 查询商家下的业务类型下的费用科目
+	 * @param param
+	 * @return
+	 */
+	List<PriceContractInfoEntity> queryByCustomerIdAndBizType(Map<String, String> param);
 }

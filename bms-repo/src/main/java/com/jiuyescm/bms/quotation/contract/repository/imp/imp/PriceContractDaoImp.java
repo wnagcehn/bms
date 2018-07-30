@@ -97,6 +97,18 @@ public class PriceContractDaoImp extends MyBatisDao implements IPriceContractDao
 		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.findAllContractDiscountItem", contractId);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PriceContractInfoEntity> queryByCustomerId(String customerId) {
+		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.queryByCustomerId", customerId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PriceContractInfoEntity> queryByCustomerIdAndBizType(Map<String, String> param) {
+		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.queryByCustomerIdAndBizType", param);
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<PriceContractItemEntity> findAllTransportContractItem(Map<String, Object> parameter) {

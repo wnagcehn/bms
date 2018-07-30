@@ -1,14 +1,19 @@
 package com.jiuyescm.bms.asyn.service;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.discount.repository.IBmsDiscountAsynTaskRepository;
+import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 
 /**
  * ..ServiceImpl
@@ -17,7 +22,9 @@ import com.jiuyescm.bms.biz.discount.repository.IBmsDiscountAsynTaskRepository;
  */
 @Service("bmsDiscountAsynTaskService")
 public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskService {
-
+	
+	private static final Logger logger = Logger.getLogger(BmsDiscountAsynTaskServiceImpl.class.getName());
+	
 	@Autowired
     private IBmsDiscountAsynTaskRepository bmsDiscountAsynTaskRepository;
 
@@ -62,6 +69,28 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
     public BmsDiscountAsynTaskEntity save(BmsDiscountAsynTaskEntity entity) {
         return bmsDiscountAsynTaskRepository.save(entity);
     }
+    
+    /**
+     * 批量保存
+     * @param voList
+     * @return
+     * @throws Exception
+     */
+	@Override
+	public int saveBatch(List<BmsDiscountAsynTaskEntity> voList) throws Exception {
+		try{
+			List<BmsDiscountAsynTaskEntity> list=new ArrayList<BmsDiscountAsynTaskEntity>();
+			for(BmsDiscountAsynTaskEntity voEntity:voList){
+				BmsDiscountAsynTaskEntity entity=new BmsDiscountAsynTaskEntity();
+				PropertyUtils.copyProperties(entity,voEntity);
+				list.add(entity);
+			}
+			return bmsDiscountAsynTaskRepository.saveBatch(list);
+		}catch(Exception e){
+			logger.error("saveBatch:",e);
+			throw e;
+		}
+	}
 
 	/**
 	 * 更新
@@ -86,6 +115,18 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
 	public BmsDiscountAsynTaskEntity queryTask(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		return bmsDiscountAsynTaskRepository.queryTask(condition);
+	}
+	
+	@Override
+	public boolean existTask(BmsDiscountAsynTaskEntity voEntity) throws Exception {
+		try{
+			BmsDiscountAsynTaskEntity entity=new BmsDiscountAsynTaskEntity();
+			PropertyUtils.copyProperties(entity,voEntity);
+			return bmsDiscountAsynTaskRepository.existTask(entity);
+		}catch(Exception e){
+			logger.error("existTask:",e);
+			throw e;
+		}
 	}
 	
 }

@@ -24,6 +24,7 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	private String customerId;
 	// 业务类型（STORAGE-仓，TRANSPORT-干，DISPATCH-配）
 	private String bizTypecode;
+	private String bizTypeName;
 	// 费用科目编码
 	private String subjectCode;
 	private String subjectName;
@@ -224,6 +225,14 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 
 	public void setTaskProcess(String taskProcess) {
 		this.taskProcess = taskProcess;
+	}
+
+	public String getBizTypeName() {
+		return bizTypeName;
+	}
+
+	public void setBizTypeName(String bizTypeName) {
+		this.bizTypeName = bizTypeName;
 	}
     
 	

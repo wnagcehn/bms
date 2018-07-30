@@ -49,6 +49,20 @@ public class PriceContractDiscountRepositoryImpl extends MyBatisDao implements I
 		// TODO Auto-generated method stub
 		return (PriceContractDiscountItemEntity) selectOne("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryItem", condition);
 	}
+	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid) {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryByCustomerId", customerid);
+	}
+	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryByCustomerIdAndBizType(Map<String, String> param) {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryByCustomerIdAndBizType", param);
+	}
 
+	@Override
+	public List<PriceContractDiscountItemEntity> queryAll() {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryAll", null);
+	}
 	
 }

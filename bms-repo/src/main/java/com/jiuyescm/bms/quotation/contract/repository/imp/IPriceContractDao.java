@@ -137,4 +137,18 @@ public interface IPriceContractDao {
 	 * @return
 	 */
 	public List<ContractDetailEntity> findAllContractDiscountItem(Map<String,Object> parameter);
+	
+	/**
+	 * 查询商家下的业务类型
+	 * @param customerId
+	 * @return
+	 */
+	List<PriceContractInfoEntity> queryByCustomerId(String customerId);
+	
+	/**
+	 * 查询商家下业务类型下的科目
+	 * @param param
+	 * @return
+	 */
+	List<PriceContractInfoEntity> queryByCustomerIdAndBizType(Map<String, String> param);
 }

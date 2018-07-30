@@ -63,12 +63,13 @@ template_code, template_name, subject_code, biz_type, discount_type, creator, cr
         	<if test=" bizType != null and bizType !='' ">
 				and d.biz_type = #{bizType}
 			</if>
-        	<if test=" createTime != null and createTime !='' ">
-				<![CDATA[d.create_time <= #{createEndTime}]]>
+        	<if test=" createEndTime != null and createEndTime !='' ">
+				and <![CDATA[d.create_time <= #{createEndTime}]]>
 			</if>
         	<if test=" createTime != null and createTime !='' ">
 				and d.create_time >= #{createTime}
 			</if>
+			and s.in_out_typecode='INPUT'
 			and d.del_flag = "0"
 			order by d.create_time desc		
     </select>

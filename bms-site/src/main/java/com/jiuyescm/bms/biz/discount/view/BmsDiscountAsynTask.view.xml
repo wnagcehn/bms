@@ -22,9 +22,6 @@
       </PropertyDef>
       <PropertyDef name="bizTypecode">
         <Property name="label">业务类型</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
@@ -102,6 +99,9 @@
       <PropertyDef name="taskProcess">
         <Property name="label">任务进度</Property>
       </PropertyDef>
+      <PropertyDef name="bizTypeName">
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">
       <PropertyDef name="year">
@@ -144,9 +144,6 @@
       </PropertyDef>
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="carrierId">
         <Property name="label">物流商</Property>
@@ -216,6 +213,12 @@ with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){
       <Property name="readOnly">false</Property>
     </DataSet>
     <DataSet id="dsSubjectCode">
+      <Property name="dataProvider">customerContractController#getSubjectCode</Property>
+    </DataSet>
+    <DataSet id="dsBizType">
+      <Property name="dataProvider">customerContractController#getBizTypeCode</Property>
+    </DataSet>
+    <DataSet id="dsAllSubjectCode">
       <Property name="dataProvider">bmsSubjectInfoController#getSubjectCode</Property>
     </DataSet>
     <UpdateAction id="updateAction">
@@ -328,8 +331,14 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
         </DataColumn>
         <DataColumn name="bizTypecode">
           <Property name="property">bizTypecode</Property>
-          <Property name="visible">true</Property>
+          <Property name="visible">false</Property>
           <Property name="width">110</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="width">110</Property>
+          <Property name="name">bizTypeName</Property>
+          <Property name="property">bizTypeName</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn name="subjectCode">
           <Property name="property">subjectCode</Property>
@@ -392,6 +401,7 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
     <Dialog id="dialogEdit">
       <ClientEvent name="onClose">view.id(&quot;dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.id(&quot;bizTypecode&quot;).set(&quot;readOnly&quot;, true);&#xD;
+view.id(&quot;bizTypeName&quot;).set(&quot;readOnly&quot;, true);&#xD;
 view.id(&quot;subjectName&quot;).set(&quot;readOnly&quot;, true);&#xD;
 view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
       <ClientEvent name="onShow">var date=new Date;  &#xD;
@@ -401,6 +411,7 @@ view.get(&quot;#formEdit.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#formEdit.entity&quot;).set(&quot;month&quot;,month);&#xD;
 &#xD;
 view.id(&quot;bizTypecode&quot;).set(&quot;readOnly&quot;, true);&#xD;
+view.id(&quot;bizTypeName&quot;).set(&quot;readOnly&quot;, true);&#xD;
 view.id(&quot;subjectName&quot;).set(&quot;readOnly&quot;, true);&#xD;
 view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
       <Property name="caption">计算折扣</Property>
@@ -455,11 +466,23 @@ view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
             <Property name="name">customerId</Property>
             <Property name="property">customerId</Property>
             <Property name="trigger">triggerCust</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="bizTypecode">
             <Property name="name">bizTypecode</Property>
             <Property name="property">bizTypecode</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="bizTypeName">
+            <Property name="name">bizTypeName</Property>
+            <Property name="property">bizTypeName</Property>
+            <Property name="trigger">bizTypeDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="subjectCode">
@@ -467,12 +490,16 @@ view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
             <Property name="property">subjectCode</Property>
             <Property name="visible">false</Property>
             <Property name="hideMode">display</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="subjectName">
             <Property name="name">subjectName</Property>
             <Property name="property">subjectName</Property>
             <Property name="trigger">subjectCodeEditDataSetDropDown</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -514,11 +541,18 @@ if (data != null) {&#xD;
     </Trigger>
     <FloatPanel id="panelCust">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
 if (data != null) {&#xD;
 	view.get(&quot;#formEdit.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
 	view.id(&quot;bizTypecode&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	view.id(&quot;bizTypeName&quot;).set(&quot;readOnly&quot;, false);&#xD;
 	view.id(&quot;subjectName&quot;).set(&quot;readOnly&quot;, false);&#xD;
 	view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, false);&#xD;
+	entity.set(&quot;bizTypecode&quot;, &quot;&quot;);&#xD;
+	entity.set(&quot;bizTypeName&quot;, &quot;&quot;);&#xD;
+	entity.set(&quot;subjectName&quot;, &quot;&quot;);&#xD;
+	entity.set(&quot;subjectCode&quot;, &quot;&quot;);&#xD;
 }</ClientEvent>
       <Property name="caption">商家选择</Property>
       <Property name="center">true</Property>
@@ -541,11 +575,11 @@ var bizType = entity.get(&quot;bizTypecode&quot;);&#xD;
 &#xD;
 if(bizType != undefined){&#xD;
 	var subDropDown = view.get(&quot;#subjectCodeDataSetDropDown&quot;);&#xD;
-	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsAllSubjectCode&quot;);&#xD;
 	var parameter={&#xD;
 		bizTypeCode:bizType&#xD;
 	};&#xD;
-	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+	view.get(&quot;#dsAllSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;
 	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
 	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
@@ -566,28 +600,62 @@ arg.processDefault = false;</ClientEvent>
     <DataSetDropDown id="subjectCodeEditDataSetDropDown">
       <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
 var bizTypecode = entity.get(&quot;bizTypecode&quot;);&#xD;
+var customerId = entity.get(&quot;customerId&quot;);&#xD;
 if(bizTypecode != undefined){&#xD;
 	var subDropDown = view.get(&quot;#subjectCodeEditDataSetDropDown&quot;);&#xD;
 	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
 	var parameter={&#xD;
-		bizTypeCode:bizTypecode&#xD;
+		bizTypeCode:bizTypecode,&#xD;
+		customerId:customerId&#xD;
 	};&#xD;
 	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;&quot;);&#xD;
 	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
 	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
 	return;&#xD;
 }</ClientEvent>
       <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;);&#xD;
 data.set({&#xD;
-	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
-	subjectCode:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
+	subjectName:arg.selectedValue.get(&quot;carrierName&quot;),&#xD;
+	subjectCode:arg.selectedValue.get(&quot;subjectId&quot;),&#xD;
+	carrierId:arg.selectedValue.get(&quot;carrierId&quot;)&#xD;
 });&#xD;
 arg.processDefault = false;</ClientEvent>
       <Property name="autoOpen">true</Property>
       <Property name="editable">false</Property>
       <Property name="useEmptyItem">true</Property>
-      <Property name="displayProperty">subjectName</Property>
+      <Property name="displayProperty">carrierName</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="bizTypeDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+var customerId = entity.get(&quot;customerId&quot;);&#xD;
+&#xD;
+if(customerId != undefined){&#xD;
+	var subDropDown = view.get(&quot;#bizTypeDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsBizType&quot;);&#xD;
+	var parameter={&#xD;
+		customerId:customerId&#xD;
+	};&#xD;
+	view.get(&quot;#dsBizType&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择商家&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+data.set({&#xD;
+	bizTypecode:arg.selectedValue.get(&quot;bizTypeCode&quot;),&#xD;
+	bizTypeName:arg.selectedValue.get(&quot;bizTypeName&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;subjectName&quot;, &quot;&quot;);&#xD;
+data.set(&quot;subjectCode&quot;, &quot;&quot;);&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">bizTypeName</Property>
     </DataSetDropDown>
   </View>
 </ViewConfig>

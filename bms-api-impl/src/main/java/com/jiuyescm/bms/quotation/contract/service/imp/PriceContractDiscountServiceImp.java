@@ -44,4 +44,18 @@ public class PriceContractDiscountServiceImp implements IPriceContractDiscountSe
 		return priceContractDiscountRepository.query(condition);
 	}
 	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid) {	
+		return priceContractDiscountRepository.queryByCustomerId(customerid);
+	}
+	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryByCustomerIdAndBizType(Map<String, String> param) {	
+		return priceContractDiscountRepository.queryByCustomerIdAndBizType(param);
+	}
+	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryAll() {	
+		return priceContractDiscountRepository.queryAll();
+	}
 }

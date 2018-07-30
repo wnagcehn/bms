@@ -29,5 +29,25 @@ public interface IPriceContractDiscountRepository {
      * 查询签约的折扣科目
      */
     public List<BmsQuoteDiscountDetailEntity> queryDiscountPrice(Map<String,Object> condition);
+    
+    /**
+     * 根据商家ID查询商家下所有的费用科目
+     * @param customerid
+     * @return
+     */
+	List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid);
+	
+	/**
+	 * 根据商家ID和业务类型查费用科目
+	 * @param param
+	 * @return
+	 */
+	List<PriceContractDiscountItemEntity> queryByCustomerIdAndBizType(Map<String, String> param);
+	
+	/**
+	 * 查询所有费用科目
+	 * @return
+	 */
+	List<PriceContractDiscountItemEntity> queryAll();
 
 }

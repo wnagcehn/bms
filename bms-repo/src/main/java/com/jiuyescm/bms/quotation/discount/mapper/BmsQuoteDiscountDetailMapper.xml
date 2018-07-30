@@ -159,30 +159,14 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
 			<if test=" warehouseName != null and warehouseName !='' ">
 				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
 			</if>
-			<if test=" downLimit != null and downLimit !='' ">
 				down_limit = #{downLimit,jdbcType=DOUBLE},
-			</if>
-			<if test=" upLimit != null and upLimit !='' ">
 				up_limit = #{upLimit,jdbcType=DOUBLE},
-			</if>
-			<if test=" firstPrice != null and firstPrice !='' ">
 				first_price = #{firstPrice,jdbcType=DOUBLE},
-			</if>
-			<if test=" firstPriceRate != null and firstPriceRate !='' ">
 				first_price_rate = #{firstPriceRate,jdbcType=DOUBLE},
-			</if>
-			<if test=" continuePrice != null and continuePrice !='' ">
 				continue_price = #{continuePrice,jdbcType=DOUBLE},
-			</if>
-			<if test=" continuePirceRate != null and continuePirceRate !='' ">
 				continue_pirce_rate = #{continuePirceRate,jdbcType=DOUBLE},
-			</if>
-			<if test=" unitPrice != null and unitPrice !='' ">
 				unit_price = #{unitPrice,jdbcType=DOUBLE},
-			</if>
-			<if test=" unitPriceRate != null and unitPriceRate !='' ">
 				unit_price_rate = #{unitPriceRate,jdbcType=DOUBLE},
-			</if>
 			<if test=" creator != null and creator !='' ">
 				creator = #{creator,jdbcType=VARCHAR},
 			</if>
