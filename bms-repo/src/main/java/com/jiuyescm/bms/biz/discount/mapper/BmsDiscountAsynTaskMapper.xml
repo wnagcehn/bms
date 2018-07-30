@@ -89,6 +89,7 @@ task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_
         	<if test=" carrierId != null and carrierId !='' ">
 				and d.carrier_id = #{carrierId}
 			</if>
+			and s.in_out_typecode='INPUT'
 			and d.del_flag = "0"
 			order by d.create_time desc	
     </select>

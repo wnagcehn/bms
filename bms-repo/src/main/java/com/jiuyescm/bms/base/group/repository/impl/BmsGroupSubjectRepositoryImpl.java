@@ -21,6 +21,11 @@ public class BmsGroupSubjectRepositoryImpl extends MyBatisDao<BmsGroupSubjectEnt
 	public List<BmsGroupSubjectEntity> queryAllByGroupId(int groupId) {
 		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupSubjectMapper.queryAllByGroupId", groupId);
 	}
+	
+	@Override
+	public List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(BmsGroupSubjectEntity entity) {
+		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupSubjectMapper.queryAllByGroupIdAndBizTypeCode", entity);
+	}
 
 	@Override
 	public int addBatch(List<BmsGroupSubjectEntity> list) {

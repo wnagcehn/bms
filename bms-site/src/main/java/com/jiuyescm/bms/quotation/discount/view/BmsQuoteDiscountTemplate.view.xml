@@ -17,9 +17,6 @@
       </PropertyDef>
       <PropertyDef name="discountType">
         <Property name="label">折扣方式</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;QUO_DISCOUNT&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property name="label">创建人</Property>
@@ -43,7 +40,7 @@
         <Property name="required">false</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
-        <Property name="label">费用类型</Property>
+        <Property name="label">业务类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
@@ -65,7 +62,7 @@
         <Property name="label">费用科目</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
-        <Property name="label">费用类型</Property>
+        <Property name="label">业务类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
@@ -436,7 +433,8 @@
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
     <DataSet id="dsSubjectCode">
-      <Property name="dataProvider">bmsSubjectInfoController#getSubjectCode</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsGroupSubjectController#queryAllByGroupIdAndBizTypeCode</Property>
     </DataSet>
     <Container>
       <AutoForm id="queryForm">
@@ -459,6 +457,9 @@
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
+          <ClientEvent name="onFocus">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);&#xD;
+entity.set(&quot;subjectCode&quot;, &quot;&quot;);&#xD;
+entity.set(&quot;subjectName&quot;, &quot;&quot;);</ClientEvent>
           <Property name="name">bizType</Property>
           <Property name="property">bizType</Property>
           <Property name="showLabel">true</Property>

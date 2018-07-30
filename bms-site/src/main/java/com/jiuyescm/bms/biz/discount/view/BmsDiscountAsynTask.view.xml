@@ -219,7 +219,8 @@ with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){
       <Property name="dataProvider">customerContractController#getBizTypeCode</Property>
     </DataSet>
     <DataSet id="dsAllSubjectCode">
-      <Property name="dataProvider">bmsSubjectInfoController#getSubjectCode</Property>
+      <Property name="dataProvider">bmsGroupSubjectController#queryAllByGroupIdAndBizTypeCode</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <UpdateAction id="updateAction">
       <ClientEvent name="onSuccess">//刷新&#xD;
@@ -264,6 +265,10 @@ var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
+          <ClientEvent name="onFocus">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);&#xD;
+entity.set(&quot;subjectCode&quot;, &quot;&quot;);&#xD;
+entity.set(&quot;subjectName&quot;, &quot;&quot;);&#xD;
+</ClientEvent>
           <Property name="name">bizTypecode</Property>
           <Property name="property">bizTypecode</Property>
           <Editor/>

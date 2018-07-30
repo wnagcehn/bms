@@ -16,6 +16,7 @@ import com.jiuyescm.bms.base.group.repository.IBmsGroupRepository;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupSubjectRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 @Service("bmsGroupSubjectService")
 public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
@@ -147,6 +148,32 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 			logger.error("getImportSubject:",e);
 		}
 		return resultMap;
+	}
+	
+	@Override
+	public List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(Map<String, Object> param) {
+		List<BmsGroupSubjectEntity> list = null;
+		try {
+			Map<String,Object> map= new HashMap<String, Object>();
+			map.put(GROUPCODE, "subject_discount_receive");
+			map.put(BIZTYPE, BMSSUBJECT);
+			BmsGroupEntity bmsGroup=bmsGroupRepository.queryOne(map);
+			if(bmsGroup!=null){
+				BmsGroupSubjectEntity entity = new BmsGroupSubjectEntity();		
+				if (param.get("bizTypeCode") == null) {
+					return null;
+				}
+				entity.setBizTypecode(param.get("bizTypeCode").toString());
+				entity.setGroupId(bmsGroup.getId());
+				list=bmsGroupSubjectRepository.queryAllByGroupIdAndBizTypeCode(entity);
+				if (list.isEmpty()) {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("queryAllByGroupIdAndBizTypeCode:",e);
+		}
+		return list;
 	}
 
 

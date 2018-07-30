@@ -15,6 +15,7 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
+import com.jiuyescm.bms.base.group.BmsGroupSubjectEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
@@ -161,4 +162,18 @@ public class BmsGroupSubjectController {
 		}
 		
 	}
+	
+	@DataProvider
+	public List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(Map<String, Object> param){
+		if (null == param) {
+			return null;
+		}
+		List<BmsGroupSubjectEntity> list = bmsGroupSubjectService.queryAllByGroupIdAndBizTypeCode(param);
+		if (null == list || list.size() == 0) {
+			List<BmsGroupSubjectEntity> newList = new ArrayList<>();
+			return newList;
+		}
+		return list;
+	}
+
 }
