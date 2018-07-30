@@ -183,6 +183,7 @@ public class BizDispatchBillEntity implements IEntity {
 	private String timeliness;
 	private String dutyType;
 	private String updateReasonDetail;
+	
 	// 订单状态
 	private String orderStatus;
 	// 原始重量
@@ -198,6 +199,8 @@ public class BizDispatchBillEntity implements IEntity {
 	//物流产品类型
 	private String servicecode;
 	private String servicename;
+	//减免金额
+	private Double derateAmount;
 
 	public BizDispatchBillEntity() {
 
@@ -1250,6 +1253,14 @@ public class BizDispatchBillEntity implements IEntity {
 
 	public void setOriginWeight(Double originWeight) {
 		this.originWeight = originWeight;
+	}
+
+	public Double getDerateAmount() {
+		return derateAmount;
+	}
+
+	public void setDerateAmount(Double derateAmount) {
+		this.derateAmount = derateAmount;
 	}
 
 

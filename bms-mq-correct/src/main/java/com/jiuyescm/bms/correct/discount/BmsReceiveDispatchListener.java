@@ -228,7 +228,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		}
 		
 		task.setRemark("折扣计算成功");
-		updateProgress(task,50);
+		updateProgress(task,100);
 		
 	}
 	
@@ -330,29 +330,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 						continue;
 					}
 					
-					//===========================进入折扣规则，得到最后计算的首重续重===============================
-					CalcuReqVo<BmsQuoteDiscountDetailEntity> reqVo = new CalcuReqVo<BmsQuoteDiscountDetailEntity>();
-					reqVo.setBizData(oldPrice);//原始报价
-					reqVo.setQuoEntity(discountPrice);//折扣报价
-					reqVo.setRuleNo(rule.getQuotationNo());//折扣规则
-					reqVo.setRuleStr(rule.getRule());
-					
-					CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);		
-					
-					Map<String,Object> map=resultVo.getParams();
-					if(map==null || map.get("newPrice")==null || (BmsQuoteDispatchDetailVo) map.get("newPrice")==null){
-						discountVo.setIsCalculated("2");
-						discountVo.setDerateAmount(amount);
-						discountVo.setDiscountAmount(amount);
-						discountVo.setCalculateTime(JAppContext.currentTimestamp());
-						discountVo.setRemark("新的计算报价为空");
-						fee.setDerateAmount(0d);
-						feeList.add(fee);
-						continue;
-					}
-					//得到新的计算报价
-					BmsQuoteDispatchDetailVo newprice=(BmsQuoteDispatchDetailVo) map.get("newPrice");			
-					//============================折扣规则处理结束=========================================
+					//===========================通过原始报价和折扣报价，得到最后计算的首重续重===============================
+					BmsQuoteDispatchDetailVo newprice=getNewPrice(oldPrice,discountPrice);	
 					
 					//============================开始费用计算========================================
 					//进入费用计算
@@ -427,5 +406,30 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	public void updateProgress(BmsDiscountAsynTaskEntity taskVo,int num){
 		taskVo.setTaskRate(num);
 		bmsDiscountAsynTaskService.update(taskVo);
+	}
+	
+	/**
+	 * 获取新的计算报价报价
+	 * @param oldPrice
+	 * @param discount
+	 * @return
+	 */
+	public BmsQuoteDispatchDetailVo getNewPrice(BmsQuoteDispatchDetailVo oldPrice,BmsQuoteDiscountDetailEntity discount){
+		
+		if(!DoubleUtil.isBlank(discount.getFirstPrice())){
+			//折扣首价
+			oldPrice.setFirstWeightPrice(discount.getFirstPrice());
+		}else if(!DoubleUtil.isBlank(discount.getFirstPriceRate())){
+			//首价折扣率
+			oldPrice.setFirstWeightPrice(oldPrice.getFirstWeightPrice()*discount.getFirstPriceRate());
+		}else if(!DoubleUtil.isBlank(discount.getContinuePrice())){
+			//折扣续重价
+			oldPrice.setContinuedPrice(discount.getContinuePrice());
+		}else if(!DoubleUtil.isBlank(discount.getContinuePirceRate())){
+			//续重折扣率
+			oldPrice.setContinuedPrice(oldPrice.getContinuedPrice()*discount.getContinuePirceRate());
+		}
+		
+		return oldPrice;
 	}
 }

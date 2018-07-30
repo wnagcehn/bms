@@ -1794,7 +1794,6 @@ var subviewData=subview.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;);
 subviewData.clear();&#xD;
 var stepData=subview.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);&#xD;
 stepData.clear();&#xD;
-alert(code);&#xD;
 &#xD;
 var ds = subview.get(&quot;#dsBmsQuoteDiscountTemplateEntityQuery.data&quot;).current;&#xD;
 //ds.set(&quot;bizType&quot;,&quot;DISPATCH&quot;);&#xD;

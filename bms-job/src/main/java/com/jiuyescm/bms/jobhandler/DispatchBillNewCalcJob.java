@@ -157,6 +157,11 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		for (BizDispatchBillEntity entity : billList) {
 			if(StringUtils.isNotEmpty(entity.getFeesNo())){
 				feesNos.add(entity.getFeesNo());
+				feesMap.put("feesNo", entity.getFeesNo());
+				FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryFees(feesMap);
+				if(fee!=null){
+					entity.setDerateAmount(fee.getDerateAmount());
+				}
 			}
 			else{
 				entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
@@ -164,6 +169,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		}
 		try{
 			if(feesNos.size()>0){
+				feesMap = new HashMap<String, Object>();
 				feesMap.put("feesNos", feesNos);
 				long operateTime = System.currentTimeMillis();
 				feesReceiveDispatchService.deleteBatch(feesMap);
@@ -1203,7 +1209,8 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		feeEntity.setHeadWeight(0.0d);
 		feeEntity.setHeadPrice(0.0d);
 		feeEntity.setContinuedWeight(0.0d);
-		feeEntity.setContinuedPrice(0.0d);		
+		feeEntity.setContinuedPrice(0.0d);	
+		feeEntity.setDerateAmount(entity.getDerateAmount());
 		return feeEntity;
 		
 	}

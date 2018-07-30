@@ -104,7 +104,7 @@
 		where 1=1  and d.customerId=#{customerId} and d.contract_type_code=#{contractTypeCode} 
 		and <![CDATA[d.start_date < current_timestamp()]]> and d.expire_date <![CDATA[>= ]]> current_timestamp()
 		and c.subject_id=#{subjectId} 
-		and a.start_time <![CDATA[<= #{createTime}]]> and a.end_time >= #{createTime}
-		and a.down_limit<![CDATA[<#{count}]]> and a.up_limit>=#{count}
+		and a.start_time <![CDATA[<= #{createTime}]]> and a.end_time > #{createTime}
+		and a.down_limit<![CDATA[<=#{count}]]> and a.up_limit>#{count}
     </select>
 </mapper>
