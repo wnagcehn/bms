@@ -180,19 +180,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				bmsDiscountAsynTaskService.update(task);
 				return;
 			}
-			
-			//查询折扣规则
-			condition=new HashMap<String,Object>();
-			condition.put("quoModus", template.getDiscountType());
-			BillRuleReceiveEntity rule=receiveRuleService.queryRuleByPriceType(condition);
-			if(rule==null){
-				logger.info("未查询到折扣规则");
-				task.setRemark("未查询到折扣规则");
-				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
-				bmsDiscountAsynTaskService.update(task);
-				return;
-			}
-			
+					
 			updateProgress(task,40);
 			
 			//更新taskId到折扣费用表中
@@ -222,7 +210,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					if (pageInfo.getList().size() < 1000) {
 						doLoop = false;
 					}
-					handDiscount(pageInfo.getList(),task,item,rule,template,discountAccountVo);
+					handDiscount(pageInfo.getList(),task,template,discountAccountVo);
 				}else {
 					doLoop = false;
 				}			
@@ -242,7 +230,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	 * 折扣计算
 	 * @param list
 	 */
-	public void handDiscount(List<FeesReceiveDispatchDiscountVo> list,BmsDiscountAsynTaskEntity task,PriceContractDiscountItemEntity item,BillRuleReceiveEntity rule,BmsQuoteDiscountTemplateEntity template,BmsDiscountAccountVo discountAccountVo){
+	public void handDiscount(List<FeesReceiveDispatchDiscountVo> list,BmsDiscountAsynTaskEntity task,BmsQuoteDiscountTemplateEntity template,BmsDiscountAccountVo discountAccountVo){
 		//循环处理
 		  //获取单条业务数据
 		  //获取对应的原始报价 和 计算规则
