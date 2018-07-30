@@ -22,6 +22,7 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
@@ -69,6 +70,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	
 	@Autowired
 	private IFeesCalcuService feesCalcuService;
+	
+	@Autowired
+	private IBizDispatchBillService bizDispatchBillService;
 	
 	@Override
 	public void onMessage(Message message) {
@@ -127,16 +131,27 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		bmsDiscountAsynTaskService.update(task);
 		
 		try {
-			//统计商家的月单量和金额  商家，物流商维度进行统计
+			//判断该商家是否有未计算的单子
 			condition=new HashMap<String,Object>();
 			condition.put("startTime", task.getStartDate());
 			condition.put("endTime", task.getEndDate());
 			condition.put("customerId", task.getCustomerId());
 			condition.put("carrierId", task.getCarrierId());
+			List<BizDispatchBillEntity> bizList=bizDispatchBillService.queryNotCalculate(condition);
+			if(bizList.size()>0){
+				logger.info("该商家存在未计算或待重算的业务数据");
+				task.setRemark("该商家存在未计算或待重算的业务数据");
+				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+				bmsDiscountAsynTaskService.update(task);	
+				return;
+			}
+			//
+			//统计商家的月单量和金额  商家，物流商维度进行统计
 			BmsDiscountAccountVo discountAccountVo=bmsDiscountService.queryAccount(condition);
 			if(discountAccountVo==null){
 				logger.info("没有查询到该商家的统计记录");
 				task.setRemark("没有查询到该商家的统计记录");
+				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);	
 				return;
@@ -153,6 +168,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(item==null){
 				logger.info("该商家未签约折扣服务");
 				task.setRemark("该商家未签约折扣服务");
+				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);
 				return;
@@ -167,6 +183,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(template==null){
 				logger.info("未查询到折扣报价模板");
 				task.setRemark("未查询到折扣报价模板");
+				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);
 				return;
@@ -177,6 +194,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				logger.info("模板"+template.getTemplateCode()+"未查询到折扣方式");
 				task.setRemark("模板"+template.getTemplateCode()+"未查询到折扣方式");
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+				task.setTaskRate(80);
 				bmsDiscountAsynTaskService.update(task);
 				return;
 			}
@@ -193,6 +211,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(updateResult<=0){
 				logger.info("更新taskId到折扣费用表中");
 				task.setRemark("更新taskId到折扣费用表中");
+				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);
 				return;
@@ -220,6 +239,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			updateProgress(task,100);
 		} catch (Exception e1) {
 			logger.info("折扣处理失败",e1);
+			task.setTaskRate(80);
 			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 			bmsDiscountAsynTaskService.update(task);
 		}
@@ -305,7 +325,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				}else if(!DoubleUtil.isBlank(discountPrice.getUnitPriceRate())){
 					logger.info("进入整单折扣率计算");
 					//整单折扣率
-					amount=BigDecimal.valueOf(fee.getAmount()*discountPrice.getUnitPriceRate());
+					amount=BigDecimal.valueOf(fee.getAmount()*discountPrice.getUnitPriceRate()/100);
 				}else{
 					//其余的（包含首重续重折扣）
 					//查询原始报价
@@ -415,13 +435,13 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			oldPrice.setFirstWeightPrice(discount.getFirstPrice());
 		}else if(!DoubleUtil.isBlank(discount.getFirstPriceRate())){
 			//首价折扣率
-			oldPrice.setFirstWeightPrice(oldPrice.getFirstWeightPrice()*discount.getFirstPriceRate());
+			oldPrice.setFirstWeightPrice(oldPrice.getFirstWeightPrice()*discount.getFirstPriceRate()/100);
 		}else if(!DoubleUtil.isBlank(discount.getContinuePrice())){
 			//折扣续重价
 			oldPrice.setContinuedPrice(discount.getContinuePrice());
 		}else if(!DoubleUtil.isBlank(discount.getContinuePirceRate())){
 			//续重折扣率
-			oldPrice.setContinuedPrice(oldPrice.getContinuedPrice()*discount.getContinuePirceRate());
+			oldPrice.setContinuedPrice(oldPrice.getContinuedPrice()*discount.getContinuePirceRate()/100);
 		}
 		
 		return oldPrice;

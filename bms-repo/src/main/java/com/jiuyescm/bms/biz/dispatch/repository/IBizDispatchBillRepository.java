@@ -93,8 +93,10 @@ public interface IBizDispatchBillRepository{
 
 	public int retryByWaybillNo(List<String> aCondition);
 	
-	 public int retryByMaterialMark(Map<String,Object> condition);
+	public int retryByMaterialMark(Map<String,Object> condition);
 	
-	 public List<String> queryWayBillNo(Map<String,Object> condition);
+	public List<String> queryWayBillNo(Map<String,Object> condition);
 	 
+	public List<BizDispatchBillEntity> queryNotCalculate(Map<String,Object> condition);
+
 }
