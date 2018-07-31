@@ -424,7 +424,15 @@
 		select
 		<include refid="baseColumns" />
 		from bill_check_info where 1=1 and del_flag='0' and id in
-		(select bill_check_id from bill_check_invoice where 1=1 and del_flag='0' and invoice_no like '%${invoiceNo}%')
+		(select DISTINCT bill_check_id from bill_check_invoice where 1=1 and del_flag='0' and invoice_no like '%${invoiceNo}%')
+		<include refid="baseSelectColumns" />
+	</select>
+	
+	<select id="queryByFollowType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+		select
+		<include refid="baseColumns" />
+		from bill_check_info where 1=1 and del_flag='0' and id in
+		(select DISTINCT bill_check_id from bill_receipt_follow where 1=1 and del_flag='0' and follow_type=#{followType})
 		<include refid="baseSelectColumns" />
 	</select>
 	

@@ -15,6 +15,9 @@ public interface IBillCheckInfoRepository {
 	PageInfo<BillCheckInfoEntity> queryByInvoiceNo(Map<String, Object> condition, int pageNo,
             int pageSize);
 	
+	PageInfo<BillCheckInfoEntity> queryByFollowType(Map<String, Object> condition, int pageNo,
+            int pageSize);
+	
 	List<BillCheckInfoEntity> queryList(Map<String, Object> condition);
 	
 	/**
