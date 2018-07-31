@@ -444,4 +444,13 @@
 		</foreach>
 	 </if>	
     </select>
+    
+    <select id="queryNotCalculate" parameterType="java.util.Map" resultMap="baseResultMap">
+    	select * from biz_dispatch_bill 
+    	where 1=1  and del_flag='0'
+    	and customerId=#{customerId} 
+    	and create_time>=#{startTime} and <![CDATA[create_time<#{endTime}]]>
+    	and carrier_id=#{carrierId}
+		and is_calculated in ('0','99')
+    </select>
 </mapper>

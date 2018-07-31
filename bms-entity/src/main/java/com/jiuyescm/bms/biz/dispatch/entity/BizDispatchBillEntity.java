@@ -1067,16 +1067,22 @@ public class BizDispatchBillEntity implements IEntity {
 		this.priceList = priceList;
 	}
 
-	public String getAdjustDeliverId() {
+	/*public String getAdjustDeliverId() {
 		return adjustDeliverId;
 	}
 
 	public void setAdjustDeliverid(String adjustDeliverId) {
 		this.adjustDeliverId = adjustDeliverId;
-	}
+	}*/
+	
+	
 
 	public String getAdjustDeliverName() {
 		return adjustDeliverName;
+	}
+
+	public String getAdjustDeliverId() {
+		return adjustDeliverId;
 	}
 
 	public void setAdjustDeliverName(String adjustDeliverName) {

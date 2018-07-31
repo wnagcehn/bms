@@ -98,4 +98,6 @@ public interface IBizDispatchBillService {
 	 
 	 public List<String> queryWayBillNo(Map<String,Object> condition);
 	 
+	 public List<BizDispatchBillEntity> queryNotCalculate(Map<String,Object> condition);
+	 
 }
