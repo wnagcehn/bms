@@ -1,11 +1,13 @@
 package com.jiuyescm.bms.quotation.contract.repository.imp.imp;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDiscountRepository;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
@@ -51,8 +53,8 @@ public class PriceContractDiscountRepositoryImpl extends MyBatisDao implements I
 	}
 	
 	@Override
-	public List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid) {
-		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryByCustomerId", customerid);
+	public List<PriceContractDiscountItemEntity> queryByCustomerId(BmsDiscountAsynTaskEntity entity) {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryByCustomerId", entity);
 	}
 	
 	@Override
@@ -61,8 +63,8 @@ public class PriceContractDiscountRepositoryImpl extends MyBatisDao implements I
 	}
 
 	@Override
-	public List<PriceContractDiscountItemEntity> queryAll() {
-		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryAll", null);
+	public List<PriceContractDiscountItemEntity> queryAll(Timestamp time) {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryAll", time);
 	}
 	
 }

@@ -1,8 +1,10 @@
 package com.jiuyescm.bms.quotation.contract.repository.imp;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
+import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 
@@ -35,7 +37,7 @@ public interface IPriceContractDiscountRepository {
      * @param customerid
      * @return
      */
-	List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid);
+	List<PriceContractDiscountItemEntity> queryByCustomerId(BmsDiscountAsynTaskEntity entity);
 	
 	/**
 	 * 根据商家ID和业务类型查费用科目
@@ -48,6 +50,5 @@ public interface IPriceContractDiscountRepository {
 	 * 查询所有费用科目
 	 * @return
 	 */
-	List<PriceContractDiscountItemEntity> queryAll();
-
+	List<PriceContractDiscountItemEntity> queryAll(Timestamp time);
 }

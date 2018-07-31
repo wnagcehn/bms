@@ -826,6 +826,11 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <ClientEvent name="onFocus">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+entity.set(&quot;subjectCode&quot;, &quot;&quot;);&#xD;
+entity.set(&quot;subjectName&quot;, &quot;&quot;);&#xD;
+</ClientEvent>
             <Property name="name">bizType</Property>
             <Property name="property">bizType</Property>
             <Editor/>
@@ -1272,7 +1277,7 @@ if(bizType != undefined){&#xD;
 	};&#xD;
 	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;
-	//this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
+	this.get(&quot;#dsSubjectCode&quot;).clear();&#xD;
 	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
 	return;&#xD;
 }</ClientEvent>

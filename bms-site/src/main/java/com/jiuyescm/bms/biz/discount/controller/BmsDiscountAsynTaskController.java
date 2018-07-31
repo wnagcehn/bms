@@ -228,7 +228,19 @@ public class BmsDiscountAsynTaskController {
 		
 		// 3.发送商家下所有的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			List<PriceContractDiscountItemEntity> cusList = priceContractDiscountService.queryByCustomerId(entity.getCustomerId());
+			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+			// 合同生效期和开始时间比较
+			if (month < 10) {
+				newEntity.setMonth("0" + entity.getMonth().toString());
+			}
+			String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date startDa = sd.parse(startD);
+			Timestamp starttime = new Timestamp(startDa.getTime());
+			newEntity.setStartDate(starttime);
+			newEntity.setCustomerId(entity.getCustomerId());
+			
+			List<PriceContractDiscountItemEntity> cusList = priceContractDiscountService.queryByCustomerId(newEntity);
 			if(cusList.isEmpty()){
 				result.put("fail", "你还没为这个商家配置折扣");
 				return result;
@@ -284,7 +296,17 @@ public class BmsDiscountAsynTaskController {
 		}		
 		// 4.发送所有
 		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			List<PriceContractDiscountItemEntity> allList = priceContractDiscountService.queryAll();
+			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+			// 合同生效期和开始时间比较
+			if (month < 10) {
+				newEntity.setMonth("0" + entity.getMonth().toString());
+			}
+			String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date startDa = sd.parse(startD);
+			Timestamp starttime = new Timestamp(startDa.getTime());
+			List<PriceContractDiscountItemEntity> allList = priceContractDiscountService.queryAll(starttime);
+			
 			if (allList.isEmpty()) {
 				result.put("fail", "没有商家配置折扣");
 				return result;
