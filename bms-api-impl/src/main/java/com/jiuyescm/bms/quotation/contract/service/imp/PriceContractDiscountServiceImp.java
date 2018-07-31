@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.quotation.contract.service.imp;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDiscountRepository;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractDiscountService;
@@ -45,8 +47,8 @@ public class PriceContractDiscountServiceImp implements IPriceContractDiscountSe
 	}
 	
 	@Override
-	public List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid) {	
-		return priceContractDiscountRepository.queryByCustomerId(customerid);
+	public List<PriceContractDiscountItemEntity> queryByCustomerId(BmsDiscountAsynTaskEntity entity) {	
+		return priceContractDiscountRepository.queryByCustomerId(entity);
 	}
 	
 	@Override
@@ -55,7 +57,7 @@ public class PriceContractDiscountServiceImp implements IPriceContractDiscountSe
 	}
 	
 	@Override
-	public List<PriceContractDiscountItemEntity> queryAll() {	
-		return priceContractDiscountRepository.queryAll();
+	public List<PriceContractDiscountItemEntity> queryAll(Timestamp time) {	
+		return priceContractDiscountRepository.queryAll(time);
 	}
 }
