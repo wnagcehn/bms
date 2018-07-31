@@ -39,6 +39,7 @@ public class PriceContractDiscountItemEntity implements IEntity {
 	private String delFlag;
 
 	private String customerId;
+	private String carrierId;
 	public PriceContractDiscountItemEntity() {
 
 	}
@@ -209,6 +210,14 @@ public class PriceContractDiscountItemEntity implements IEntity {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	public String getCarrierId() {
+		return carrierId;
+	}
+
+	public void setCarrierId(String carrierId) {
+		this.carrierId = carrierId;
 	}
     
 }

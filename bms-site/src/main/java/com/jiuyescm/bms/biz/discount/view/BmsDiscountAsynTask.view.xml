@@ -223,12 +223,6 @@ with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){
       <Property name="loadMode">manual</Property>
     </DataSet>
     <UpdateAction id="updateAction">
-      <ClientEvent name="onSuccess">//刷新&#xD;
-var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;&#xD;
-				with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){&#xD;
-					set(&quot;parameter&quot;, data);&#xD;
-					flushAsync();&#xD;
-				}</ClientEvent>
       <Property name="successMessage">数据保存成功！</Property>
       <Property name="modal">true</Property>
       <Property name="dataResolver">bmsDiscountAsynTaskController#save</Property>
@@ -425,11 +419,45 @@ view.id(&quot;subjectCode&quot;).set(&quot;readOnly&quot;, true);</ClientEvent>
       <Property name="width">380</Property>
       <Buttons>
         <Button id="btnSave">
-          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
-                        function(){&#xD;
-                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
-                        }&#xD;
-                    );</ClientEvent>
+          <ClientEvent name="onClick">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+if(entity.get(&quot;customerId&quot;) == undefined || entity.get(&quot;customerId&quot;) == &quot;&quot;){&#xD;
+	dorado.MessageBox.confirm(&quot;你确定要为&quot; + entity.get(&quot;year&quot;) + &quot;年&quot; + entity.get(&quot;month&quot;) + &quot;月所有商家生成折扣吗？&quot;, function(){&#xD;
+	view.id(&quot;updateAction&quot;).execute(&#xD;
+        function(result){&#xD;
+			if(result[&quot;success&quot;]){&#xD;
+				//刷新&#xD;
+				var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+				view.id(&quot;dialogEdit&quot;).hide();&#xD;
+			}else{&#xD;
+				dorado.MessageBox.alert(result[&quot;fail&quot;]);	&#xD;
+			}&#xD;
+        }&#xD;
+    );&#xD;
+});&#xD;
+}else{&#xD;
+	view.id(&quot;updateAction&quot;).execute(&#xD;
+        function(result){&#xD;
+			if(result[&quot;success&quot;]){&#xD;
+				//刷新&#xD;
+				var data = view.get(&quot;#dsBmsDiscountAsynTaskEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBmsDiscountAsynTaskEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+				view.id(&quot;dialogEdit&quot;).hide();&#xD;
+			}else{&#xD;
+				dorado.MessageBox.alert(result[&quot;fail&quot;]);	&#xD;
+			}&#xD;
+        }&#xD;
+    );&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
           <Property name="caption">计算折扣</Property>
           <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
         </Button>
