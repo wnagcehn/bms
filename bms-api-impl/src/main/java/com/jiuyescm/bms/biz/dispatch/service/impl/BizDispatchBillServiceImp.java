@@ -137,4 +137,11 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 		// TODO Auto-generated method stub
 		return bizRepository.retryByMaterialMark(condition);
 	}
+
+	@Override
+	public List<BizDispatchBillEntity> queryNotCalculate(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bizRepository.queryNotCalculate(condition);
+	}
 }

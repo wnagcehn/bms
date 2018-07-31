@@ -60,6 +60,7 @@
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
 	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR"/>
 	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR"/>
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE"/>
     </resultMap>
 
 
@@ -77,7 +78,7 @@
     		price_id, amount, bill_no, rule_no, to_province_name, to_district_name, to_city_name, charged_weight,
     		weight_limit, unit_price, head_weight, continued_weight, head_price, continued_price, accept_time,
     		sign_time,biz_type, bigstatus, smallstatus,is_calculated, calculate_time, param1, param2, param3, param4, param5, status,
-    		creator, create_time, last_modifier, last_modify_time, del_flag)
+    		creator, create_time, last_modifier, last_modify_time, del_flag,derate_amount)
         values (
 			#{feesNo,jdbcType=VARCHAR}, 
 			#{waybillNo,jdbcType=VARCHAR}, 
@@ -135,7 +136,8 @@
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{lastModifier,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{derateAmount,jdbcType=DOUBLE}		
         )
     </insert>
 

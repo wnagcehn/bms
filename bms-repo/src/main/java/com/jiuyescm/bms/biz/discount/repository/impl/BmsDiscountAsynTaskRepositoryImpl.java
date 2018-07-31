@@ -2,12 +2,15 @@ package com.jiuyescm.bms.biz.discount.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.discount.repository.IBmsDiscountAsynTaskRepository;
+import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 
 /**
  * ..RepositoryImpl
@@ -60,6 +63,11 @@ public class BmsDiscountAsynTaskRepositoryImpl extends MyBatisDao<BmsDiscountAsy
         insert("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.save", entity);
         return entity;
     }
+    
+	@Override
+	public int saveBatch(List<BmsDiscountAsynTaskEntity> list) {
+		return this.insertBatch("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.save", list);
+	}
 
 	/**
 	 * 更新
@@ -80,5 +88,25 @@ public class BmsDiscountAsynTaskRepositoryImpl extends MyBatisDao<BmsDiscountAsy
     public void delete(Long id) {
         delete("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.delete", id);
     }
+
+	@Override
+	public BmsDiscountAsynTaskEntity queryTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (BmsDiscountAsynTaskEntity) selectOne("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.queryTask", condition);
+	}
+	
+	@Override
+	public boolean existTask(BmsDiscountAsynTaskEntity entity) {
+		Object obj=this.selectOneForObject("com.jiuyescm.bms.biz.discount.BmsDiscountAsynTaskMapper.existTask", entity);
+		if(obj!=null){
+			int k=Integer.valueOf(obj.toString());
+			if(k>0){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		return false;
+	}
 	
 }

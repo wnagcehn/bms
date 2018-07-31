@@ -77,6 +77,21 @@ public class CalcuResultVo implements Serializable {
 		this.method = method;
 		this.unitPrice = unitPrice;
 	}
+	
+	
+	public CalcuResultVo(String success, String code, String msg,
+			BigDecimal price, String quoId, String method, Double unitPrice,
+			Map<String, Object> params) {
+		super();
+		this.success = success;
+		this.code = code;
+		this.msg = msg;
+		this.price = price;
+		this.quoId = quoId;
+		this.method = method;
+		this.unitPrice = unitPrice;
+		this.params = params;
+	}
 	public String getQuoId() {
 		return quoId;
 	}

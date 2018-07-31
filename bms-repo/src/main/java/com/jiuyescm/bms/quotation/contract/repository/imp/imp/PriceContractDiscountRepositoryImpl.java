@@ -7,9 +7,8 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDiscountRepository;
-import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
@@ -38,5 +37,32 @@ public class PriceContractDiscountRepositoryImpl extends MyBatisDao implements I
 		return insertBatch("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.insertDiscountItem", list);
 	}
 
+	@Override
+	public List<BmsQuoteDiscountDetailEntity> queryDiscountPrice(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryDiscountPrice", condition);
+	}
+
+	@Override
+	public PriceContractDiscountItemEntity query(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (PriceContractDiscountItemEntity) selectOne("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryItem", condition);
+	}
+	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryByCustomerId(String customerid) {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryByCustomerId", customerid);
+	}
+	
+	@Override
+	public List<PriceContractDiscountItemEntity> queryByCustomerIdAndBizType(Map<String, String> param) {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryByCustomerIdAndBizType", param);
+	}
+
+	@Override
+	public List<PriceContractDiscountItemEntity> queryAll() {
+		return this.getSqlSessionTemplate().selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractDiscountItemMapper.queryAll", null);
+	}
 	
 }

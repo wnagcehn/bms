@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.discount.mapper.BmsDiscountMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.discount.BmsDiscountAccountEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="discount_amount" property="discountAmount" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, task_id, waybill_no, discount_amount, derate_amount, is_calculated, calculate_time, write_time, remark
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(taskId != null and taskId !='')" >
+				and task_id = #{taskId}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(discountAmount != null and discountAmount !='')" >
+				and discount_amount = #{discountAmount}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(calculateTime != null and calculateTime !='')" >
+			    and calculate_time >= #{calculateTime} add <![CDATA[calculate_time <= #{calculateTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+    </sql>
+	  
+    <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.discount.FeesReceiveDispatchDiscountEntity">
+        select
+               a.id, a.task_id, a.waybill_no, a.discount_amount, a.derate_amount, a.is_calculated, a.calculate_time, a.write_time, a.remark,b.create_time,b.customerid
+        from fees_receive_dispatch_discount a
+        inner join biz_dispatch_bill b on a.waybill_no=b.waybill_no
+        where 1=1 and b.del_flag ='0' and a.is_calculated='0'
+		<if test="(taskId != null and taskId !='')" >
+				and a.task_id = #{taskId}
+		</if>
+    </select>
+
+    <update id="updateList" parameterType="com.jiuyescm.bms.discount.FeesReceiveDispatchDiscountEntity">
+        update fees_receive_dispatch_discount 
+		<set >
+			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+			<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DECIMAL},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="quoteId != null" >quote_id=#{quoteId,jdbcType=BIGINT},</if>
+			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <select id="queryAccount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
+       select 
+			a.customerid as customerId,
+			a.carrier_id as carrierId,
+			count(0) as orderCount, 
+			sum(b.amount) as amount
+		from biz_dispatch_bill a
+		left join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag=0
+		where a.create_time >= #{startTime}
+		and a.create_time<![CDATA[<#{endTime}]]>
+		and a.customerid = #{customerId} and a.carrier_id =#{carrierId}
+		and a.del_flag = 0 and a.is_calculated != '5'
+		group by a.customerid,a.carrier_id
+    </select>
+    
+    <update id="updateFeeDiscountTask" parameterType="java.util.Map">
+    	update biz_dispatch_bill a 
+    	inner JOIN fees_receive_dispatch_discount b on a.waybill_no=b.waybill_no set b.is_calculated='0',b.task_id=#{taskId}
+		where a.create_time >= #{startTime}
+		and a.create_time<![CDATA[<#{endTime}]]>
+		and a.customerid = #{customerId}
+		and a.del_flag = 0 and a.carrier_id=#{carrierId} and a.is_calculated != '5'
+    </update>
+</mapper> 

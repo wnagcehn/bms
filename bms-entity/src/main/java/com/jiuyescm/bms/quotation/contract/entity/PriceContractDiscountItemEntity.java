@@ -3,7 +3,6 @@
  *
  */
 package com.jiuyescm.bms.quotation.contract.entity;
-
 import java.sql.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;
@@ -39,6 +38,8 @@ public class PriceContractDiscountItemEntity implements IEntity {
 	// 删除标志
 	private String delFlag;
 
+	private String customerId;
+	private String carrierId;
 	public PriceContractDiscountItemEntity() {
 
 	}
@@ -201,6 +202,22 @@ public class PriceContractDiscountItemEntity implements IEntity {
      */
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getCarrierId() {
+		return carrierId;
+	}
+
+	public void setCarrierId(String carrierId) {
+		this.carrierId = carrierId;
 	}
     
 }

@@ -117,4 +117,20 @@ public class BmsQuoteDispatchDetailServiceImpl implements IBmsQuoteDispatchDetai
 		return 0;
 	}
 
+	@Override
+	public BmsQuoteDispatchDetailVo queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BmsQuoteDispatchDetailVo vo=new BmsQuoteDispatchDetailVo();
+		BmsQuoteDispatchDetailEntity entity=bmsQuoteDispatchDetailRepository.queryOne(condition);
+		if(entity==null){
+			return null;
+		}
+		try {
+            PropertyUtils.copyProperties(vo, entity);
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return vo;
+	}
+
 }

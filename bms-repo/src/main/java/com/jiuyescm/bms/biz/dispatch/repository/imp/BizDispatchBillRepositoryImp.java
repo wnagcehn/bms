@@ -192,4 +192,11 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 		// TODO Auto-generated method stub
 		return this.update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.retryByMaterialMark", condition);
 	}
+
+	@Override
+	public List<BizDispatchBillEntity> queryNotCalculate(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryNotCalculate", condition);
+	}
 }

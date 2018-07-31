@@ -1,9 +1,11 @@
 package com.jiuyescm.bms.quotation.discount.controller;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.drools.compiler.lang.DRL5Expressions.relationalOp_return;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,17 @@ public class BmsQuoteDiscountDetailController {
 	public void query(Page<BmsQuoteDiscountDetailEntity> page, Map<String, Object> param) {
 		PageInfo<BmsQuoteDiscountDetailEntity> pageInfo = bmsQuoteDiscountDetailService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
+			for (BmsQuoteDiscountDetailEntity entity : pageInfo.getList()) {
+				if (null != entity.getFirstPriceRate()) {
+					entity.setFirstPriceRateDT(entity.getFirstPriceRate().toString()+"%");
+				}
+				if (null != entity.getContinuePirceRate()) {
+					entity.setContinuePirceRateDT(entity.getContinuePirceRate().toString()+"%");
+				}
+				if (null != entity.getUnitPriceRate()) {
+					entity.setUnitPriceRateDT(entity.getUnitPriceRate().toString()+"%");
+				}
+			}
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
@@ -66,8 +79,9 @@ public class BmsQuoteDiscountDetailController {
 	 * @return
 	 */
 	@DataResolver
-	public void save(BmsQuoteDiscountDetailEntity entity) {
+	public Map<String, String> save(BmsQuoteDiscountDetailEntity entity) {
 		String username = JAppContext.currentUserName();
+		Map<String, String> result = new HashMap<>();
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
 		for (WarehouseVo warehouseVo : warehouseVos) {
@@ -75,16 +89,27 @@ public class BmsQuoteDiscountDetailController {
 				entity.setWarehouseName(warehouseVo.getWarehousename());
 			}
 		}
+		if (null == entity.getUpLimit() && entity.getDownLimit() != null) {
+			result.put("fail", "上限下限同时存在，或者同时不存在！");
+			return result;
+		}
+		if (null != entity.getUpLimit() && entity.getDownLimit() == null) {
+			result.put("fail", "上限下限同时存在，或者同时不存在！");
+			return result;
+		}
 		if (null == entity.getId()) {
 			entity.setDelFlag("0");
 			entity.setCreator(username);
 			entity.setCreateTime(currentTime);
 			bmsQuoteDiscountDetailService.save(entity);
+			result.put("success", "保存成功");
 		} else {
 			entity.setLastModifier(username);
 			entity.setLastModifyTime(currentTime);
 			bmsQuoteDiscountDetailService.update(entity);
+			result.put("success", "修改成功");
 		}
+		return result;
 	}
 
 	/**

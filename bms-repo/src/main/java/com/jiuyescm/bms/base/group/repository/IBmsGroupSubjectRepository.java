@@ -23,4 +23,6 @@ public interface IBmsGroupSubjectRepository {
 
 	int querySubjectCountByGroupId(int groupId);
 
+	List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(BmsGroupSubjectEntity entity);
+
 }

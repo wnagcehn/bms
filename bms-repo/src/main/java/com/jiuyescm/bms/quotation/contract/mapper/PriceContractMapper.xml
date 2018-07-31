@@ -426,4 +426,18 @@
     <select id="queryCustomerList" resultType="String">
     	select DISTINCT(customerid) from price_contract_info where del_flag='0'
     </select>
+    
+    <select id="queryByCustomerId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
+    	select DISTINCT b.biz_type_code as bizTypeCode,c.code_name as bizTypeName from price_contract_info a
+		inner join price_contract_discount_item b on a.contract_code = b.contract_code
+		inner join system_code c on b.biz_type_code = c.`code`
+		where a.customerId = #{customerId}
+    </select>
+    
+    <select id="queryByCustomerIdAndBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
+    	select DISTINCT b.subject_id as subjectId,c.extattr1 as carrierId,c.code_name as carrierName from price_contract_info a
+		inner join price_contract_discount_item b on a.contract_code = b.contract_code
+		inner join system_code c on b.subject_id = c.`code`
+		where a.customerId = #{customerId} and b.biz_type_code = #{bizTypeCode};
+    </select>
 </mapper>

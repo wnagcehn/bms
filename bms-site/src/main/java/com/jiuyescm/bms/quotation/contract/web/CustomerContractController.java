@@ -23,6 +23,7 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -776,6 +777,24 @@ public class CustomerContractController {
 		mapValue.put(ConstantInterface.IsChecked.ISCHECKED_YES,"已审核");
 		mapValue.put(ConstantInterface.IsChecked.ISCHECKED_NO, "未审核");
 		return mapValue;
+	}
+	
+	@DataProvider
+	public List<PriceContractInfoEntity> getBizTypeCode(Map<String, Object> param){
+		if (null != param) {
+			List<PriceContractInfoEntity> list = priceContractService.queryByCustomerId(param.get("customerId").toString());
+			return list;
+		}
+		return null;
+	}
+	
+	@DataProvider
+	public List<PriceContractInfoEntity> getSubjectCode(Map<String, String> param){
+		if (null != param) {
+			List<PriceContractInfoEntity> list = priceContractService.queryByCustomerIdAndBizType(param);
+			return list;
+		}
+		return null;
 	}
 	
 }

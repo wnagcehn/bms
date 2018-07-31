@@ -164,6 +164,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		}
 		try{
 			if(feesNos.size()>0){
+				feesMap = new HashMap<String, Object>();
 				feesMap.put("feesNos", feesNos);
 				long operateTime = System.currentTimeMillis();
 				feesReceiveDispatchService.deleteBatch(feesMap);
@@ -1203,7 +1204,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		feeEntity.setHeadWeight(0.0d);
 		feeEntity.setHeadPrice(0.0d);
 		feeEntity.setContinuedWeight(0.0d);
-		feeEntity.setContinuedPrice(0.0d);		
+		feeEntity.setContinuedPrice(0.0d);	
 		return feeEntity;
 		
 	}

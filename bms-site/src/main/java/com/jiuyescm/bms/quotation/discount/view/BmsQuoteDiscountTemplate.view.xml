@@ -17,6 +17,9 @@
       </PropertyDef>
       <PropertyDef name="discountType">
         <Property name="label">折扣方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;QUO_DISCOUNT&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property name="label">创建人</Property>
@@ -40,7 +43,7 @@
         <Property name="required">false</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
-        <Property name="label">费用类型</Property>
+        <Property name="label">业务类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
@@ -62,7 +65,7 @@
         <Property name="label">费用科目</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
-        <Property name="label">费用类型</Property>
+        <Property name="label">业务类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
@@ -124,29 +127,29 @@
       </PropertyDef>
       <PropertyDef name="downLimit">
         <Property name="label">下限</Property>
-        <Property name="required">true</Property>
+        <Property name="required">false</Property>
       </PropertyDef>
       <PropertyDef name="upLimit">
         <Property name="label">上限</Property>
-        <Property name="required">true</Property>
+        <Property name="required">false</Property>
       </PropertyDef>
       <PropertyDef name="firstPrice">
         <Property name="label">折扣首价</Property>
       </PropertyDef>
       <PropertyDef name="firstPriceRate">
-        <Property name="label">首价折扣率</Property>
+        <Property name="label">首价折扣率(%)</Property>
       </PropertyDef>
       <PropertyDef name="continuePrice">
         <Property name="label">折扣续重价</Property>
       </PropertyDef>
       <PropertyDef name="continuePirceRate">
-        <Property name="label">续重折扣率</Property>
+        <Property name="label">续重折扣率(%)</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
         <Property name="label">整单折扣价</Property>
       </PropertyDef>
       <PropertyDef name="unitPriceRate">
-        <Property name="label">整单折扣率</Property>
+        <Property name="label">整单折扣率(%)</Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property name="label">创建时间</Property>
@@ -172,6 +175,15 @@
             </Entity>
           </Property>
         </Property>
+      </PropertyDef>
+      <PropertyDef name="firstPriceRateDT">
+        <Property name="label">首价折扣率(%)</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePirceRateDT">
+        <Property name="label">续重折扣率(%)</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPriceRateDT">
+        <Property name="label">整单折扣率(%)</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBmsQuoteDiscountDetailEntityQuery">
@@ -250,6 +262,7 @@
     </DataType>
     <DataType name="dtBmsSubjectInfoEntity" meta="x:15;y:15">
       <Property name="matchType">com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity</Property>
       <PropertyDef name="inOutTypecode">
         <Property name="label">收支类型</Property>
         <Property name="mapping">
@@ -423,7 +436,8 @@
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
     <DataSet id="dsSubjectCode">
-      <Property name="dataProvider">bmsSubjectInfoController#getSubjectCode</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsGroupSubjectController#queryAllByGroupIdAndBizTypeCode</Property>
     </DataSet>
     <Container>
       <AutoForm id="queryForm">
@@ -446,6 +460,9 @@
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
+          <ClientEvent name="onFocus">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);&#xD;
+entity.set(&quot;subjectCode&quot;, &quot;&quot;);&#xD;
+entity.set(&quot;subjectName&quot;, &quot;&quot;);</ClientEvent>
           <Property name="name">bizType</Property>
           <Property name="property">bizType</Property>
           <Property name="showLabel">true</Property>
@@ -628,6 +645,13 @@ if(data){&#xD;
             <DataColumn name="firstPriceRate">
               <Property name="property">firstPriceRate</Property>
               <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">firstPriceRateDT</Property>
+              <Property name="property">firstPriceRateDT</Property>
+              <Property name="width">80</Property>
+              <Editor/>
             </DataColumn>
             <DataColumn name="continuePrice">
               <Property name="property">continuePrice</Property>
@@ -636,6 +660,13 @@ if(data){&#xD;
             <DataColumn name="continuePirceRate">
               <Property name="property">continuePirceRate</Property>
               <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">continuePirceRateDT</Property>
+              <Property name="property">continuePirceRateDT</Property>
+              <Property name="width">80</Property>
+              <Editor/>
             </DataColumn>
             <DataColumn name="unitPrice">
               <Property name="property">unitPrice</Property>
@@ -644,6 +675,13 @@ if(data){&#xD;
             <DataColumn name="unitPriceRate">
               <Property name="property">unitPriceRate</Property>
               <Property name="width">80</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">unitPriceRateDT</Property>
+              <Property name="property">unitPriceRateDT</Property>
+              <Property name="width">80</Property>
+              <Editor/>
             </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
@@ -862,8 +900,23 @@ if(count > 1){&#xD;
 	return;&#xD;
 }&#xD;
 view.id(&quot;updateDetailAction&quot;).execute(&#xD;
-                        function(){&#xD;
-                            view.id(&quot;dialogEditDetail&quot;).hide();&#xD;
+                        function(result){&#xD;
+							if(result[&quot;fail&quot;]){&#xD;
+								dorado.MessageBox.alert(result[&quot;fail&quot;]);&#xD;
+								return;&#xD;
+							}else{&#xD;
+								//刷新&#xD;
+								var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
+								with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
+									//定义查询条件json结构&#xD;
+									var queryJson={&#xD;
+										templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+									};&#xD;
+									set(&quot;parameter&quot;, queryJson);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+								view.id(&quot;dialogEditDetail&quot;).hide();&#xD;
+							}                    &#xD;
                         }&#xD;
                     );</ClientEvent>
           <Property name="caption">保存</Property>
@@ -1126,16 +1179,7 @@ var progressJob = setInterval(getProgress, 500);</ClientEvent>
       </UpdateItem>
     </UpdateAction>
     <UpdateAction id="updateDetailAction">
-      <ClientEvent name="onSuccess">//刷新&#xD;
-var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData();&#xD;
-with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
-	//定义查询条件json结构&#xD;
-	var queryJson={&#xD;
-		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
-	};&#xD;
-	set(&quot;parameter&quot;, queryJson);&#xD;
-	flushAsync();&#xD;
-}&#xD;
+      <ClientEvent name="onSuccess">&#xD;
 &#xD;
 </ClientEvent>
       <Property name="successMessage">数据保存成功！</Property>
@@ -1173,7 +1217,7 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
           </DataColumn>
           <DataColumn name="msg">
             <Property name="property">msg</Property>
-            <Property name="readOnly">true</Property>
+            <Property name="readOnly">false</Property>
           </DataColumn>
         </DataGrid>
       </Children>

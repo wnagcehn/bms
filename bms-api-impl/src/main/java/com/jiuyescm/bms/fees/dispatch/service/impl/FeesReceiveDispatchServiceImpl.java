@@ -139,4 +139,10 @@ public class FeesReceiveDispatchServiceImpl implements IFeesReceiveDispatchServi
 			Map<String, Object> condition,int pageNo, int pageSize) {
 		return repository.querydistributionDetailByBizData(condition,pageNo,pageSize);
 	}
+
+	@Override
+	public int updateBatch(List<FeesReceiveDispatchEntity> list) {
+		// TODO Auto-generated method stub
+		return repository.updateBatch(list);
+	}
 }

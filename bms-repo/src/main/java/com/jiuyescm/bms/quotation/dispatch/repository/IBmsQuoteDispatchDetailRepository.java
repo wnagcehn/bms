@@ -47,4 +47,5 @@ public interface IBmsQuoteDispatchDetailRepository {
     
     public void delete(Long id);
 
+    public BmsQuoteDispatchDetailEntity queryOne(Map<String,Object> condition);
 }

@@ -339,5 +339,11 @@ public class FeesReceiveDispatchRepositoryImpl extends MyBatisDao implements IFe
 		PageInfo<FeesReceiveDispatchEntity> pageInfo= new PageInfo<FeesReceiveDispatchEntity>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public int updateBatch(List<FeesReceiveDispatchEntity> list) {
+		// TODO Auto-generated method stub
+		return this.updateBatch("com.jiuyescm.bms.fees.dispatch.mapper.FeesReceiveDispatchMapper.updateBatch", list);
+	}
 	
 }

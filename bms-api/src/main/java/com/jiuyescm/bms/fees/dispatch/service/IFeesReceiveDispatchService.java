@@ -66,4 +66,5 @@ public interface IFeesReceiveDispatchService {
 	PageInfo<FeesReceiveDispatchEntity> querydistributionDetailByBizData(
 			Map<String, Object> condition,int pageNo, int pageSize);
 
+	public int updateBatch(List<FeesReceiveDispatchEntity> list);
 }

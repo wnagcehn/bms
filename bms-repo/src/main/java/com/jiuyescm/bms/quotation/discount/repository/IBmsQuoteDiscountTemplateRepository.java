@@ -18,6 +18,8 @@ public interface IBmsQuoteDiscountTemplateRepository {
 		int pageNo, int pageSize);
 
 	List<BmsQuoteDiscountTemplateEntity> query(Map<String, Object> condition);
+	
+	BmsQuoteDiscountTemplateEntity queryOne(Map<String, Object> condition);
 
     BmsQuoteDiscountTemplateEntity save(BmsQuoteDiscountTemplateEntity entity);
 

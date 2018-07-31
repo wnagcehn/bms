@@ -85,4 +85,59 @@
 #{delFlag,jdbcType=VARCHAR}
         )
     </insert>
+    
+    <select id="queryItem" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    		select * from price_contract_discount_item where 1=1
+			and contract_code=(select contract_code 
+			        from price_contract_info 
+			        where del_flag = 0 and <![CDATA[start_date < current_timestamp()]]>  and <![CDATA[expire_date >= current_timestamp()]]>
+			        and customerid=#{customerId} and contract_type_code=#{contractTypeCode} and contract_state='1' limit 1)
+			and biz_type_code=#{bizTypeCode} and subject_id=#{subjectId} and del_flag='0' limit 1
+    </select>
+    
+    
+    <select id="queryDiscountPrice" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity">
+		select * from bms_quote_discount_detail a 
+		INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code and b.del_flag='0'
+		INNER JOIN price_contract_discount_item c on b.template_code=c.template_code and c.del_flag='0'
+		INNER JOIN price_contract_info d on c.contract_code=d.contract_code and d.del_flag='0'
+		where 1=1  and d.customerId=#{customerId} and d.contract_type_code=#{contractTypeCode} 
+		and <![CDATA[d.start_date < current_timestamp()]]> and d.expire_date <![CDATA[>= ]]> current_timestamp()
+		and c.subject_id=#{subjectId} 
+		and a.start_time <![CDATA[<= #{createTime}]]> and a.end_time > #{createTime}
+		and a.down_limit<![CDATA[<=#{count}]]> and a.up_limit>#{count}
+		and a.del_flag=0
+    </select>
+    
+    <select id="queryByCustomerId" parameterType="java.lang.String" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    	select i.*, s.extattr1 as carrierId from price_contract_discount_item i
+    	LEFT JOIN system_code s on i.subject_id = s.`code`
+    	where 1=1
+		and i.contract_code=(select contract_code 
+        from price_contract_info 
+        where del_flag = 0
+        and customerid=#{customerid} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and i.del_flag='0'
+    </select>
+    
+    <select id="queryByCustomerIdAndBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    	select i.*, s.extattr1 as carrierId from price_contract_discount_item i
+    	LEFT JOIN system_code s on i.subject_id = s.`code`
+    	where 1=1
+		and i.contract_code=(select contract_code 
+        from price_contract_info 
+        where del_flag = 0
+        and customerid=#{customerid} and biz_type_code=#{bizTypeCode} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and i.del_flag='0'
+    </select>
+    
+    <select id="queryAll" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
+    	select i.*, c.customerId as customerId, s.extattr1 as carrierId from price_contract_discount_item i
+		LEFT JOIN price_contract_info c on c.contract_code=i.contract_code
+		LEFT JOIN system_code s on i.subject_id = s.`code`
+		where 1=1
+		and i.contract_code in (select contract_code 
+        from price_contract_info 
+        where del_flag = 0
+        and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1') and i.del_flag='0'
+    </select>
+    
 </mapper>
