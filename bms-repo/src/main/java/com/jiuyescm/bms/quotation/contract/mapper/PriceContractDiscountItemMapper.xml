@@ -110,7 +110,7 @@
     </select>
     
     <select id="queryByCustomerId" parameterType="java.lang.String" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
-    	select i.*, s.extattr1 as carrrierId from price_contract_discount_item i
+    	select i.*, s.extattr1 as carrierId from price_contract_discount_item i
     	LEFT JOIN system_code s on i.subject_id = s.`code`
     	where 1=1
 		and i.contract_code=(select contract_code 
@@ -120,7 +120,7 @@
     </select>
     
     <select id="queryByCustomerIdAndBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
-    	select i.*, s.extattr1 as carrrierId from price_contract_discount_item i
+    	select i.*, s.extattr1 as carrierId from price_contract_discount_item i
     	LEFT JOIN system_code s on i.subject_id = s.`code`
     	where 1=1
 		and i.contract_code=(select contract_code 
@@ -130,7 +130,7 @@
     </select>
     
     <select id="queryAll" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
-    	select i.*, c.customerId as customerId, s.extattr1 as carrrierId from price_contract_discount_item i
+    	select i.*, c.customerId as customerId, s.extattr1 as carrierId from price_contract_discount_item i
 		LEFT JOIN price_contract_info c on c.contract_code=i.contract_code
 		LEFT JOIN system_code s on i.subject_id = s.`code`
 		where 1=1
