@@ -236,6 +236,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			}
 			
 			task.setRemark("折扣计算成功");
+			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
 			updateProgress(task,100);
 		} catch (Exception e1) {
 			logger.info("折扣处理失败",e1);
