@@ -6,6 +6,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.BmsGroupSubjectEntity;
 import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
+import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 
 public interface IBmsGroupSubjectService {
 
@@ -23,7 +24,7 @@ public interface IBmsGroupSubjectService {
 	Map<String,String> getExportSubject(String groupCode);
 	
 	Map<String,String> getSubject(String groupCode);
-	
+
 	List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(Map<String, Object> param);
 
 }

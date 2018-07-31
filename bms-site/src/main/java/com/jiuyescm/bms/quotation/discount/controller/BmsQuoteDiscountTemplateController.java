@@ -419,11 +419,8 @@ public class BmsQuoteDiscountTemplateController {
 			if (bmsQuoteDiscountDetailEntity.getEndTime() == null) {
 				sb.append("结束时间不能为空, ");
 			}
-			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null && bmsQuoteDiscountDetailEntity.getDownLimit() != null) {
-				sb.append("上限下限同时存在，或者同时不存在 , ");
-			}
-			if (bmsQuoteDiscountDetailEntity.getUpLimit() != null && bmsQuoteDiscountDetailEntity.getDownLimit() == null) {
-				sb.append("上限下限同时存在，或者同时不存在, ");
+			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null || bmsQuoteDiscountDetailEntity.getDownLimit() != null) {
+				sb.append("上限下限不能为空, ");
 			}
 			if (bmsQuoteDiscountDetailEntity.getFirstPrice() != null && StringUtils.isNotBlank(bmsQuoteDiscountDetailEntity.getFirstPrice().toString())) {
 				count ++;
@@ -450,8 +447,8 @@ public class BmsQuoteDiscountTemplateController {
 				sb.append("折扣首价、首价折扣率、折扣续价、续价折扣率、折扣一口价、一口价折扣率只能有一个有值！");
 			}
 			if (!sb.toString().equals("")) {
-				sb.toString().substring(0, sb.toString().length()-1);
-				setMessage(infoList, lineNo, sb.toString());		
+				String newsb = sb.toString().substring(0, sb.toString().length()-2);
+				setMessage(infoList, lineNo, newsb);		
 			}	
 		}
 

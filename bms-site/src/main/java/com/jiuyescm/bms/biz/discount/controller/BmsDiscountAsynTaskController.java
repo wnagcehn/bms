@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
+
+import com.alibaba.dubbo.common.io.Bytes;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
@@ -152,6 +154,7 @@ public class BmsDiscountAsynTaskController {
 			bmsDiscountAsynTaskService.save(entity);
 			result.put("success", "保存成功");
 			try {				
+				logger.info("开始发送MQ");
 				final String msg = entity.getTaskId();
 				jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
 					@Override
@@ -159,6 +162,7 @@ public class BmsDiscountAsynTaskController {
 						return session.createTextMessage(msg);
 					}
 				});
+				logger.info("MQ发送成功");
 			} catch (Exception e) {
 				logger.error("send MQ:", e);
 			}
@@ -211,7 +215,8 @@ public class BmsDiscountAsynTaskController {
 				bmsDiscountAsynTaskService.saveBatch(newList);
 				result.put("success", "保存成功");
 				for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
-					try {				
+					try {			
+						logger.info("开始发送MQ");
 						final String msg = bmsDiscountAsynTaskEntity.getTaskId();
 						jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
 							@Override
@@ -219,6 +224,7 @@ public class BmsDiscountAsynTaskController {
 								return session.createTextMessage(msg);
 							}
 						});
+						logger.info("MQ发送成功");
 					} catch (Exception e) {
 						logger.error("send MQ:", e);
 					}
@@ -242,9 +248,10 @@ public class BmsDiscountAsynTaskController {
 			
 			List<PriceContractDiscountItemEntity> cusList = priceContractDiscountService.queryByCustomerId(newEntity);
 			if(cusList.isEmpty()){
-				result.put("fail", "你还没为这个商家配置折扣");
+				result.put("fail", "未查询到商家折扣报价或商家合同过期");
 				return result;
 			}
+
 			List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
 			for (PriceContractDiscountItemEntity cusEntity : cusList) {
 				BmsDiscountAsynTaskEntity bdatEntity = new BmsDiscountAsynTaskEntity();
@@ -280,7 +287,8 @@ public class BmsDiscountAsynTaskController {
 				bmsDiscountAsynTaskService.saveBatch(bdatList);
 				result.put("success", "保存成功");
 				for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : bdatList) {
-					try {				
+					try {
+						logger.info("开始发送MQ");
 						final String msg = bmsDiscountAsynTaskEntity.getTaskId();
 						jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
 							@Override
@@ -288,6 +296,7 @@ public class BmsDiscountAsynTaskController {
 								return session.createTextMessage(msg);
 							}
 						});
+						logger.info("MQ发送成功");
 					} catch (Exception e) {
 						logger.error("send MQ:", e);
 					}
@@ -347,6 +356,7 @@ public class BmsDiscountAsynTaskController {
 				result.put("success", "保存成功");
 				for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
 					try {				
+						logger.info("开始发送MQ");
 						final String msg = bmsDiscountAsynTaskEntity.getTaskId();
 						jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
 							@Override
@@ -354,6 +364,7 @@ public class BmsDiscountAsynTaskController {
 								return session.createTextMessage(msg);
 							}
 						});
+						logger.info("MQ发送成功");
 					} catch (Exception e) {
 						logger.error("send MQ:", e);
 					}

@@ -127,11 +127,11 @@
       </PropertyDef>
       <PropertyDef name="downLimit">
         <Property name="label">下限</Property>
-        <Property name="required">false</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="upLimit">
         <Property name="label">上限</Property>
-        <Property name="required">false</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="firstPrice">
         <Property name="label">折扣首价</Property>
