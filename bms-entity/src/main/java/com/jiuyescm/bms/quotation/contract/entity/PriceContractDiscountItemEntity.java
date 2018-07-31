@@ -25,6 +25,7 @@ public class PriceContractDiscountItemEntity implements IEntity {
 	private String bizTypeCode;
 	// 费用科目
 	private String subjectId;
+	private String subjectName;
 	// 计费模板
 	private String templateCode;
 	// 创建者
@@ -218,6 +219,14 @@ public class PriceContractDiscountItemEntity implements IEntity {
 
 	public void setCarrierId(String carrierId) {
 		this.carrierId = carrierId;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
     
 }
