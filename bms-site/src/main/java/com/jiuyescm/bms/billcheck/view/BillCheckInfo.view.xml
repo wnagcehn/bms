@@ -75,6 +75,12 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getIsState&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="followType">
+        <Property name="label">跟进类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillReceiptFollowStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInfo">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
@@ -1303,6 +1309,11 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Property name="property">isapplyBad</Property>
         <Property name="editorWidth">120</Property>
         <Property name="labelWidth">90</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">followType</Property>
+        <Property name="property">followType</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>

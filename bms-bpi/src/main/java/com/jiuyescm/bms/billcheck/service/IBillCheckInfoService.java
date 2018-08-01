@@ -9,7 +9,6 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 
-
 public interface IBillCheckInfoService {
 	/**
 	 * 对账主表的信息
