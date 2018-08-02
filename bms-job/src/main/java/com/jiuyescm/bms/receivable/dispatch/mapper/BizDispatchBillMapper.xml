@@ -248,7 +248,7 @@
 			<if test="throwWeight != null" >throw_weight=#{throwWeight,jdbcType=DECIMAL},</if>
 			<if test="originCarrierName != null" >origin_carrier_name=#{originCarrierName,jdbcType=VARCHAR},</if>
 			<if test="originCarrierId != null" >origin_carrier_id=#{originCarrierId,jdbcType=VARCHAR},</if>
-			total_weight=#{totalWeight,jdbcType=DECIMAL}
+			total_weight=#{newTotalWeight,jdbcType=DECIMAL}
 		</set>
         where id=#{id}
     </update>

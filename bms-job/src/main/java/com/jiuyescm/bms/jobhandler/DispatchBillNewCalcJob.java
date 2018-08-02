@@ -473,7 +473,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		long current = 0l;// 当前系统时间
 		
 		//将原始重量(OriginWeight)转换后赋值给新的运单重量（TotalWeight）
-		entity.setTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		entity.setNewTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
 		
 		//String subjectId="";
 		//物流商的判断
@@ -1165,7 +1165,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		//feeEntity.setCarrierName(entity.getAdjustCarrierName()==null?entity.getOriginCarrierName():entity.getAdjustCarrierName());
 		feeEntity.setWaybillNo(entity.getWaybillNo());			// 运单号
 		//feeEntity.setTotalWeight(entity.getAdjustWeight()==null?entity.getTotalWeight():entity.getAdjustWeight());      //实际重量
-		feeEntity.setTotalWeight(entity.getTotalWeight());//实际重量
+		feeEntity.setTotalWeight(entity.getNewTotalWeight());//实际重量
 		feeEntity.setSubjectCode(_subjectCode);
 		feeEntity.setOtherSubjectCode(_subjectCode);
 		String provinceId="";
