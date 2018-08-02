@@ -24,6 +24,7 @@
 		<module>bms-job</module>
 		<module>bms-mq-import</module>
 		<module>bms-mq-correct</module>
+		<module>bms-mq-calcu</module>
   </modules>
 
 	<properties>
