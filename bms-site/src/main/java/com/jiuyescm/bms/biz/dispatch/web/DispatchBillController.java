@@ -211,7 +211,7 @@ public class DispatchBillController{
 				//此为修改业务数据  
 				//业务数据有生成过费用，且没有过账的话,则允许调整重量,且调整完后,状态重置为未计算
 				//如果没有过账的话,就允许调整重量,且调整完后,状态重置为未计算,定时任务重新扫描到并重新生成应收费用.
-				temp.setIsCalculated("0");
+				temp.setIsCalculated("99");
 				temp.setLastModifier(userid);
 				temp.setLastModifyTime(nowdate);
 				bizDispatchBillService.adjustBillEntity(temp);
