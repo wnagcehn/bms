@@ -195,9 +195,22 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		// 表格列数
 		int cols = reader.getColCount();
 		if((cols-5)%2 != 0){ // 如果列数不对则 返回
-			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 36, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列数不对");
+			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 33, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列数不对");
 			return;
 		}		
+		
+		//判断列头是否重复
+		List<String> mMap=new ArrayList<String>();
+		int col = (reader.getOriginColumn().size() - 5) / 2; //有多少种耗材
+		for(int i = 0; i < col; i++){
+			String codeName = originColumn.get(i * 2 + 6);//耗材编码对应的列名			
+			if(!mMap.contains(codeName)){
+				mMap.add(codeName);
+			}else{
+				bmsMaterialImportTaskCommon.setTaskStatus(taskId, 34, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列名不对,存在重复列名，请检查");
+				return;
+			}
+		}
 		
 		//----------初始化基础数据
 		try{
@@ -378,12 +391,12 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			outstockNo = cells.get("出库单号");
 			waybillNo = cells.get("运单号");
 			
-			
 			//****************************************************************** 遍历耗材
 			int col = (reader.getColCount() - 5) / 2; //有多少种耗材
 			for(int i = 0; i < col; i++){
 				String codeName = originColumn.get(i * 2 + 6);//耗材编码对应的列名
 				String numName =  originColumn.get(i * 2 + 7);//耗材数量对应的列名
+				
 				//耗材与数量同时存在
 				if(cells.containsKey(codeName) && cells.containsKey(numName)){
 					isHaveMaterial = true;
