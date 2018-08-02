@@ -1166,7 +1166,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		//feeEntity.setCarrierName(entity.getAdjustCarrierName()==null?entity.getOriginCarrierName():entity.getAdjustCarrierName());
 		feeEntity.setWaybillNo(entity.getWaybillNo());			// 运单号
 		//feeEntity.setTotalWeight(entity.getAdjustWeight()==null?entity.getTotalWeight():entity.getAdjustWeight());      //实际重量
-		feeEntity.setTotalWeight(entity.getNewTotalWeight());//实际重量
+		feeEntity.setTotalWeight(entity.getTotalWeight());//实际重量
 		feeEntity.setSubjectCode(_subjectCode);
 		feeEntity.setOtherSubjectCode(_subjectCode);
 		String provinceId="";
