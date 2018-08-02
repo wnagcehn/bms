@@ -472,8 +472,9 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		
-		//将原始重量(OriginWeight)转换后赋值给新的运单重量（TotalWeight）
+		//将原始重量(OriginWeight)转换后赋值给新的运单重量（TotalWeight,业务数据保存时保存newTotalWeight）
 		entity.setNewTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		entity.setTotalWeight(entity.getNewTotalWeight());
 		
 		//String subjectId="";
 		//物流商的判断
