@@ -201,7 +201,9 @@ public class BizDispatchBillEntity implements IEntity {
 	private String servicename;
 	//减免金额
 	private Double derateAmount;
-
+	//新的实际重量
+	private Double newTotalWeight;
+	
 	public BizDispatchBillEntity() {
 
 	}
@@ -1267,6 +1269,14 @@ public class BizDispatchBillEntity implements IEntity {
 
 	public void setDerateAmount(Double derateAmount) {
 		this.derateAmount = derateAmount;
+	}
+
+	public Double getNewTotalWeight() {
+		return newTotalWeight;
+	}
+
+	public void setNewTotalWeight(Double newTotalWeight) {
+		this.newTotalWeight = newTotalWeight;
 	}
 
 
