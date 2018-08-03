@@ -25,6 +25,8 @@
 		<module>bms-mq-import</module>
 		<module>bms-mq-correct</module>
 		<module>bms-mq-calcu</module>
+		<module>bms-base-api</module>
+		<module>bms-base-service</module>
   </modules>
 
 	<properties>
