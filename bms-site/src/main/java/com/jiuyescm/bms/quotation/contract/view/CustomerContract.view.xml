@@ -2166,11 +2166,17 @@ view.get(&quot;#panelDiscountGeneral&quot;).show();</ClientEvent>
                 <Property name="dataSet">dsContractDetailDiscount</Property>
                 <Property name="readOnly">true</Property>
                 <RowNumColumn/>
-                <DataColumn name="theLastName">
-                  <Property name="property">theLastName</Property>
+                <DataColumn name="subjectName">
+                  <Property name="property">subjectName</Property>
+                  <Property name="caption">费用科目</Property>
                 </DataColumn>
                 <DataColumn name="templateId">
                   <Property name="property">templateId</Property>
+                  <Property name="caption">模板编号</Property>
+                </DataColumn>
+                <DataColumn name="theLastName">
+                  <Property name="property">theLastName</Property>
+                  <Property name="caption">模板名称</Property>
                 </DataColumn>
                 <DataColumn name="code">
                   <Property name="property">code</Property>
