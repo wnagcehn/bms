@@ -23,7 +23,6 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
