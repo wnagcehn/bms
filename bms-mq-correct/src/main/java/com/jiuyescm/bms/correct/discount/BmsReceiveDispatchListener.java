@@ -401,14 +401,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	}
 	
 	public void handAmount(FeesReceiveDispatchDiscountVo vo,FeesReceiveDispatchEntity fees,BigDecimal amount,BmsQuoteDiscountDetailEntity discountPrice){
-		//对折扣后价格四舍五入 
-		//例如
-		//13.325  两位小数13.33
-		//13.321  两位小数13.32
-		double newAmount=amount.doubleValue();
-		newAmount=(double)Math.round(newAmount*100)/100;
-		//四舍五入后的价格
-		amount=BigDecimal.valueOf(newAmount);		
+		//对折扣后价格四舍五入 	
 		vo.setDiscountAmount(amount);//折扣后价格
 		BigDecimal oldAmount=BigDecimal.valueOf(fees.getAmount());//原始价格
 		BigDecimal derateAmount=oldAmount.subtract(amount);//减免金额
