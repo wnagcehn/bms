@@ -113,6 +113,12 @@
       <PropertyDef name="customerName">
         <Property name="label">商家名称</Property>
       </PropertyDef>
+      <PropertyDef name="quotationNo">
+        <Property name="label">规则</Property>
+      </PropertyDef>
+      <PropertyDef name="quotationName">
+        <Property name="label">规则</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtStorageMaterialType">
       <Property name="creationType">com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity</Property>
@@ -604,7 +610,7 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
     <Dialog id="editDialog">
       <ClientEvent name="onClose">view.id(&quot;dsStorageType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="width">450</Property>
-      <Property name="height">300</Property>
+      <Property name="height">320</Property>
       <Property name="caption">新增或编辑</Property>
       <Buttons>
         <Button id="btnSave">
@@ -675,6 +681,17 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
               <Editor>
                 <TextArea/>
               </Editor>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">quotationName</Property>
+              <Property name="property">quotationName</Property>
+              <Property name="trigger">triggerQuotation</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
+              <Property name="name">quotationNo</Property>
+              <Property name="property">quotationNo</Property>
+              <Editor/>
             </AutoFormElement>
           </AutoForm>
         </Container>
@@ -1153,7 +1170,7 @@ view.id(&quot;materialInsertAction&quot;).execute(&#xD;
 		if(data=='SUCCESS'){&#xD;
 			//alert('操作成功！');&#xD;
 		}else{&#xD;
-			alert(data);&#xD;
+			dorado.MessageBox.alert(data);&#xD;
 		}&#xD;
 		view.id(&quot;editMaterialLineDialog&quot;).hide();&#xD;
 		var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
@@ -1287,8 +1304,28 @@ if(wallT)&#xD;
 &#xD;
 &#xD;
 view.id(&quot;materialUpdateAction&quot;).execute(&#xD;
-	function(){&#xD;
+	function(data){&#xD;
+		if(data=='SUCCESS'){&#xD;
+			//alert('操作成功！');&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(data);&#xD;
+		}&#xD;
 		view.id(&quot;updateDialog&quot;).hide();&#xD;
+		var data = view.get(&quot;#dsStorageType.data&quot;);&#xD;
+		var templateId=data.current.get(&quot;id&quot;);&#xD;
+		&#xD;
+		if(templateId==''||templateId==null){&#xD;
+			return false;&#xD;
+		}&#xD;
+		&#xD;
+		with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				templateId:templateId&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
 	}&#xD;
 );</ClientEvent>
                 <Property name="caption">保存</Property>
@@ -1908,5 +1945,49 @@ if(data.succ){&#xD;
     <DataSet id="dsimportCompareVo">
       <Property name="dataType">[dtImportDataVo]</Property>
     </DataSet>
+    <Trigger id="triggerQuotation">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsStorageType&quot;).getData();&#xD;
+var bizTypeCode=data.current.get(&quot;bizTypeCode&quot;);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectQuotation&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsBillRuleReceiveEntity.data&quot;);&#xD;
+subviewData.clear();&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsCondition.data&quot;).current;&#xD;
+&#xD;
+ds.set(&quot;bizTypeCode&quot;,bizTypeCode);&#xD;
+ds.set(&quot;subjectId&quot;,&quot;wh_material_use&quot;);&#xD;
+ds.set(&quot;subjectName&quot;,&quot;耗材使用费&quot;);&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsBillRuleReceiveEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelQuotation&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelQuotation">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectQuotation.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsStorageType&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        quotationNo:data.get(&quot;quotationNo&quot;),&#xD;
+		quotationName:data.get(&quot;quotationName&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">规则选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">530</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">900</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectQuotation">
+          <Property name="subView">com.jiuyescm.bms.chargerule.reciverule.view.ReceiveBillRuleLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

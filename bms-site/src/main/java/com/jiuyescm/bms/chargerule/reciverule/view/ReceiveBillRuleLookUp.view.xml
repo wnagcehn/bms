@@ -64,7 +64,7 @@
         </Property>
       </PropertyDef>
     </DataType>
-    <DataType name="dtCondition">
+    <DataType name="dtCondition1">
       <PropertyDef name="quotationNo">
         <Property name="label">规则编号</Property>
       </PropertyDef>
@@ -209,7 +209,7 @@
     </DataSet>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
+      <Property name="dataType">[dtCondition1]</Property>
     </DataSet>
     <DataSet id="dsSystemCodeEntity">
       <Property name="dataType">[dtSystemCodeEntity]</Property>
@@ -284,84 +284,11 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
         </ToolBarButton>
-        <Separator>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </Separator>
-        <ToolBarButton id="btnAdd">
-          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillRuleReceiveEntity.data&quot;);&#xD;
-datas.insert();&#xD;
-view.get(&quot;#dialogRuleEdit&quot;).show();</ClientEvent>
-          <Property name="caption">新增</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </ToolBarButton>
-        <Separator>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </Separator>
-        <ToolBarButton id="btnUpdate">
-          <ClientEvent name="onClick">var data=view.get(&quot;#dsBillRuleReceiveEntity.data&quot;);&#xD;
-if(data.current){&#xD;
-	view.get(&quot;#dialogRuleEdit&quot;).show();&#xD;
-}else{&#xD;
-	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
-}</ClientEvent>
-          <Property name="caption">修改</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </ToolBarButton>
-        <Separator>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </Separator>
-        <ToolBarButton id="btnDelete">
-          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillRuleReceiveEntity.data&quot;);&#xD;
-var currentData = datas.current;&#xD;
-if(currentData){&#xD;
-	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
-		view.get(&quot;#removeRuleAction&quot;).execute({&#xD;
-			callback:function(success){&#xD;
-				with (view.get(&quot;#dsBillRuleReceiveEntity&quot;)){&#xD;
-					flushAsync();&#xD;
-				}&#xD;
-			}&#xD;
-		});&#xD;
-	});&#xD;
-}else{&#xD;
-	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
-}</ClientEvent>
-          <Property name="caption">删除</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </ToolBarButton>
-        <Separator>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-        </Separator>
-        <ToolBarButton id="btn_customer">
-          <ClientEvent name="onClick">var data=view.get(&quot;#dsBillRuleReceiveEntity.data&quot;).current;&#xD;
-if(data){&#xD;
-	var datas = view.get(&quot;#dsRuleCustomerReceivableEntity.data&quot;);&#xD;
-	datas.insert();&#xD;
-	var entity = datas.current;&#xD;
-	entity.set(&quot;ruleNo&quot;,data.get(&quot;quotationNo&quot;));&#xD;
-	entity.set(&quot;subjectId&quot;,data.get(&quot;subjectName&quot;));&#xD;
-	view.get(&quot;#maintainRuleCustomer&quot;).show();&#xD;
-}else{&#xD;
-	dorado.MessageBox.alert(&quot;请选择需要维护的记录!&quot;);&#xD;
-}</ClientEvent>
-          <Property name="caption">维护商家</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -260px -120px</Property>
-        </ToolBarButton>
       </ToolBar>
       <AutoForm id="formCondition">
         <Property name="dataSet">dsCondition</Property>
-        <Property name="cols">*,*,*,*,*</Property>
-        <Property name="dataType">dtCondition</Property>
+        <Property name="cols">*,*,*</Property>
+        <Property name="dataType">dtCondition1</Property>
         <AutoFormElement>
           <Property name="property">quotationNo</Property>
           <Property name="name">quotationNo</Property>
@@ -370,12 +297,14 @@ if(data){&#xD;
         <AutoFormElement>
           <Property name="name">bizTypeCode</Property>
           <Property name="property">bizTypeCode</Property>
+          <Property name="readOnly">true</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">subjectName</Property>
           <Property name="property">subjectName</Property>
           <Property name="trigger">ddropDowmQuerySubject</Property>
+          <Property name="readOnly">true</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -411,6 +340,7 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
 }</ClientEvent>
+        <ClientEvent name="onDataRowDoubleClick">this.get(&quot;#actionSelectQuotation&quot;).execute();</ClientEvent>
         <Property name="dataSet">dsBillRuleReceiveEntity</Property>
         <Property name="readOnly">true</Property>
         <Property name="height">200</Property>
@@ -928,5 +858,13 @@ if (data != null) {&#xD;
       <ClientEvent name="onExecute">view.get(&quot;#panelCustomer2&quot;).show();</ClientEvent>
       <Property name="editable">true</Property>
     </Trigger>
+    <Action id="actionSelectQuotation">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsBillRuleReceiveEntity&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}&#xD;
+</ClientEvent>
+    </Action>
   </View>
 </ViewConfig>

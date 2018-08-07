@@ -79,6 +79,19 @@
 		</if>
 		order by id
     </select>
+    
+    <select id="queryByTemplateId" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity">
+        select
+        <include refid="baseColumns" />
+        from price_storage_material
+        where del_flag = 0 
+		<if test="(templateId != null and templateId !='')" >
+				and template_id = #{templateId}
+		</if>
+		order by id
+    </select>
+    
   <insert id="insertSelective" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity" >
     insert into price_storage_material
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -289,9 +302,11 @@
 		<if test="(subjectId != null and subjectId !='')">
 			and a.subject_id=#{subjectId}
 		</if>
+		<!-- 
 		<if test="(warehouseId != null and warehouseId !='')">
 			and c.warehouse_id=#{warehouseId}
 		</if>
+		 -->
 		<if test="(materialCode != null and materialCode !='')">
 			and c.material_code=#{materialCode}
 		</if>

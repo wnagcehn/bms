@@ -84,5 +84,11 @@ public class PriceMaterialQuotationServiceImpl implements
 			Map<String, Object> parameter) {
 		return repository.queryAllById(parameter);
 	}
+	
+	@Override
+	public List<PriceMaterialQuotationEntity> queryByTemplateId(
+			Map<String, Object> parameter) {
+		return repository.queryByTemplateId(parameter);
+	}
 
 }
