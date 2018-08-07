@@ -84,11 +84,11 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="ruleNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">规则编号</Property>
       </PropertyDef>
       <PropertyDef name="ruleName">
-        <Property/>
+        <Property></Property>
         <Property name="label">规则名称</Property>
       </PropertyDef>
     </DataType>
@@ -1090,7 +1090,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
       <ClientEvent name="onClose">view.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="caption">添加仓储通用报价</Property>
       <Property name="width">380</Property>
-      <Property name="height">300</Property>
+      <Property name="height">500</Property>
       <Buttons>
         <Button>
           <ClientEvent name="onClick">view.get(&quot;#saveAction&quot;).execute(&#xD;
@@ -1132,6 +1132,7 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
           <AutoFormElement>
             <Property name="name">ruleNo</Property>
             <Property name="property">ruleNo</Property>
+            <Property name="trigger">triggerRule</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1181,7 +1182,7 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
 				}&#xD;
 view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
       <Property name="caption">修改入仓报价</Property>
-      <Property name="height">280</Property>
+      <Property name="height">500</Property>
       <Property name="width">380</Property>
       <Buttons>
         <Button>
@@ -1230,6 +1231,12 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">ruleNo</Property>
+            <Property name="property">ruleNo</Property>
+            <Property name="trigger">triggerRule</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="name">customerName</Property>
             <Property name="property">customerName</Property>
             <Property name="trigger">triggerCustomer1</Property>
@@ -1257,11 +1264,6 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Editor>
               <TextArea/>
             </Editor>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">ruleNo</Property>
-            <Property name="property">ruleNo</Property>
-            <Editor/>
           </AutoFormElement>
         </AutoForm>
       </Children>
@@ -2685,15 +2687,26 @@ if (data != null) {&#xD;
       </UpdateItem>
     </UpdateAction>
     <Trigger id="triggerRule">
-      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer1&quot;).show();</ClientEvent>
+      <ClientEvent name="onExecute">var subview = view.get(&quot;#viewSelectRule&quot;).get(&quot;subView&quot;);&#xD;
+var entity=view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
+if(isNullOrEmpty(entity.get(&quot;subjectId&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用科目！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var tmpDataSet=subview.get(&quot;#dsCondition。data&quot;).current;&#xD;
+tmpDataSet.set(&quot;bizTypeCode&quot;,&quot;STORAGE&quot;);&#xD;
+tmpDataSet.set();&#xD;
+&#xD;
+view.get(&quot;#panelRule&quot;).show();</ClientEvent>
     </Trigger>
     <FloatPanel id="panelRule">
-      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer1.userData&quot;);&#xD;
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectRule.userData&quot;);&#xD;
 if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
-        customerId:data.get(&quot;customerid&quot;),&#xD;
-		customerName:data.get(&quot;customername&quot;)&#xD;
+        ruleNo:data.get(&quot;quotationNo&quot;),&#xD;
+		ruleName:data.get(&quot;quotationName&quot;)&#xD;
     });&#xD;
 }</ClientEvent>
       <Property name="caption">规则选择</Property>
@@ -2705,8 +2718,8 @@ if (data != null) {&#xD;
       <Property name="width">800</Property>
       <Buttons/>
       <Children>
-        <SubViewHolder id="viewSelectCustomer1">
-          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        <SubViewHolder id="viewSelectRule">
+          <Property name="subView">com.jiuyescm.bms.chargerule.reciverule.view.ReceiveBillRuleLookUp</Property>
         </SubViewHolder>
       </Children>
       <Tools/>
