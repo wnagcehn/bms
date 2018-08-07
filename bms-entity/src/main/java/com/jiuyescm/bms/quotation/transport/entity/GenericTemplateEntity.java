@@ -49,6 +49,9 @@ public class GenericTemplateEntity extends BmsCommonAttribute {
 	//商家名称
 	private String customerName;
 	
+	//模板编号/名称
+	private String quotationNo;
+	private String quotationName;
 	public String getStorageTemplateType() {
 		return storageTemplateType;
 	}
@@ -137,4 +140,20 @@ public class GenericTemplateEntity extends BmsCommonAttribute {
 		this.customerName = customerName;
 	}
 
+	public String getQuotationNo() {
+		return quotationNo;
+	}
+
+	public void setQuotationNo(String quotationNo) {
+		this.quotationNo = quotationNo;
+	}
+
+	public String getQuotationName() {
+		return quotationName;
+	}
+
+	public void setQuotationName(String quotationName) {
+		this.quotationName = quotationName;
+	}
+	
 }

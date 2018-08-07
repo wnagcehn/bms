@@ -20,11 +20,12 @@
 	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
 	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="quotation_no" property="quotationNo" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="baseColumns">
         id,customerId,customerName, template_code, template_name, template_type, biz_type_code, subject_id,bill_way_code,
-        storage_template_type,remark, param1, creator, create_time, last_modifier, last_modify_time, del_flag
+        storage_template_type,remark, param1, creator, create_time, last_modifier, last_modify_time, del_flag, quotation_no
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -81,31 +82,32 @@
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
         select
-        <include refid="baseColumns" />
-        from price_general_template
-        where 1=1 and del_flag=0
+        p.*, r.quotationName as quotationName
+        from price_general_template p
+        LEFT JOIN bill_rule_receive r on p.quotation_no=r.quotationNo
+        where 1=1 and p.del_flag=0
         <if test="(customerId != null and customerId !='')" >
-				and customerId = #{customerId}
+				and p.customerId = #{customerId}
 		</if>
 		<if test="(templateCode != null and templateCode !='')" >
-				and template_code  like '%${templateCode}%' 
+				and p.template_code  like '%${templateCode}%' 
 		</if>
 		<if test="(templateName != null and templateName !='')" >
-				and template_name  like  '%${templateName}%'
+				and p.template_name  like  '%${templateName}%'
 		</if>
 		<if test="(templateType != null and templateType !='')" >
-				and template_type = #{templateType}
+				and p.template_type = #{templateType}
 		</if>
 		<if test="(remark != null and remark !='')" >
-				and remark  like  '%${remark}%'
+				and p.remark  like  '%${remark}%'
 		</if>
 		<if test="(storageTemplateType != null and storageTemplateType !='')" >
-				and storage_template_type = #{storageTemplateType}
+				and p.storage_template_type = #{storageTemplateType}
 		</if>
 		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
-			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+			    and p.create_time >= #{startTime} and <![CDATA[p.create_time <= #{endTime}]]>
 		</if>
-		order by create_time desc,id desc
+		order by p.create_time desc,p.id desc
     </select>
     
     <select id="queryOne" parameterType="java.util.Map"
@@ -150,7 +152,7 @@
     <insert id="save" parameterType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
         insert into price_general_template(customerId,customerName,template_code,template_name, template_type, biz_type_code,
         	subject_id, bill_way_code,storage_template_type,remark, param1, creator, create_time, 
-        	last_modifier, last_modify_time, del_flag)
+        	last_modifier, last_modify_time, del_flag, quotation_no)
         values (
         	#{customerId},#{customerName},
 			#{templateCode,jdbcType=VARCHAR}, 
@@ -166,7 +168,8 @@
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{lastModifier,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{quotationNo,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -188,6 +191,7 @@
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
 			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="quotationNo != null" >quotation_no=#{quotationNo,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>
