@@ -282,8 +282,8 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 			feesList.add(storageFeeEntity);
 			return false;
 		}
-		
-		priceType=priceGenerallist.get(0).getPriceType();
+		PriceGeneralQuotationEntity priceGeneral=priceGenerallist.get(0);
+		priceType=priceGeneral.getPriceType();
 		List<PriceStepQuotationEntity> priceStepList=null;
 		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
 			//寻找阶梯报价
@@ -317,13 +317,12 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 		XxlJobLogger.log("验证报价耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
 		/*查找商家 规则*/
-		map.clear();
+		map.clear();		
 		BillRuleReceiveEntity ruleEntity=null;
 		if(mapRule.containsKey(customerId)){
 			ruleEntity=mapRule.get(customerId);
 		}else{
-			map.put("customerid",customerId);
-			map.put("subjectId", SubjectId);
+			map.put("quotationNo",priceGeneral.getRuleNo());
 		    ruleEntity=receiveRuleRepository.queryByCustomerId(map);
 		    mapRule.put(customerId, ruleEntity);
 		}
