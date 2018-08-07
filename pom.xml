@@ -24,6 +24,9 @@
 		<module>bms-job</module>
 		<module>bms-mq-import</module>
 		<module>bms-mq-correct</module>
+		<module>bms-mq-calcu</module>
+		<module>bms-base-api</module>
+		<module>bms-base-service</module>
   </modules>
 
 	<properties>
@@ -72,6 +75,11 @@
 			<groupId>com.jiuyescm.framework</groupId>
 			<artifactId>datasource-security</artifactId>
 			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
 		</dependency>
 
        <dependency>  

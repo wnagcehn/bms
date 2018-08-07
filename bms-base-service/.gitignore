@@ -1,0 +1,12 @@
+/target/*
+/bin/*
+/*/target/*
+/*/bin/*
+/*.bat
+.project
+.classpath
+/target/
+/LOG_HOME_IS_UNDEFINED/*
+/disconf/*
+
+.settings/*

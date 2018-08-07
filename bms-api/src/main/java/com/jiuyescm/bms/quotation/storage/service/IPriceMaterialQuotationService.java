@@ -32,5 +32,7 @@ public interface IPriceMaterialQuotationService {
 
 	List<PriceMaterialQuotationEntity> queryById(Map<String, Object> parameter);
 
+	List<PriceMaterialQuotationEntity> queryByTemplateId(Map<String, Object> parameter);
+
 
 }

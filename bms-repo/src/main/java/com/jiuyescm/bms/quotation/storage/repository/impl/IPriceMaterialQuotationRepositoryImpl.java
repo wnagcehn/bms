@@ -75,6 +75,12 @@ public class IPriceMaterialQuotationRepositoryImpl extends MyBatisDao<PriceMater
 			Map<String, Object> parameter) {
 		return selectList("com.jiuyescm.bms.quotation.storage.PriceMaterialQuotationMapper.queryAllById", parameter);
 	}
+	
+	@Override
+	public List<PriceMaterialQuotationEntity> queryByTemplateId(
+			Map<String, Object> parameter) {
+		return selectList("com.jiuyescm.bms.quotation.storage.PriceMaterialQuotationMapper.queryByTemplateId", parameter);
+	}
 
 	@Override
 	public List<PriceMaterialQuotationEntity> queryMaterialQuatationByContract(

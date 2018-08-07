@@ -57,7 +57,7 @@
         <Property name="label">说明</Property>
       </PropertyDef>
       <PropertyDef name="quoModus">
-        <Property/>
+        <Property></Property>
         <Property name="label">报价形式</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;QUO_MODUS_RECEIVE_DISPATCH&quot;)}</Property>
