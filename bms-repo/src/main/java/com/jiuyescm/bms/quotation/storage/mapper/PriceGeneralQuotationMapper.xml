@@ -82,38 +82,38 @@
 	  
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity">
-        select
-        <include refid="baseColumns" />
-        from price_general_quotation
-        where del_flag = 0 
+        select p.*, r.quotationName as ruleName, g.subject_name as subjectName from price_general_quotation p
+		LEFT JOIN bill_rule_receive r on p.rule_no=r.quotationNo
+		LEFT JOIN bms_group_subject g on g.subject_code=p.subject_id
+        where p.del_flag = 0 
 		<if test="(quotationNo != null and quotationNo !='')" >
-			and quotation_no like '%${quotationNo}%' 
+			and p.quotation_no like '%${quotationNo}%' 
 		</if>
 		<if test="(remark != null and remark !='')" >
-			and remark like '%${remark}%' 
+			and p.remark like '%${remark}%' 
 		</if>
 		<if test="(bizTypeCode != null and bizTypeCode !='')" >
-			and biz_type_code = #{bizTypeCode}
+			and p.biz_type_code = #{bizTypeCode}
 		</if>
 		<if test="(priceType != null and priceType !='')" >
-			and price_type = #{priceType}
+			and p.price_type = #{priceType}
 		</if>
 		<if test="(templateType != null and templateType !='')" >
-			and template_type = #{templateType}
+			and p.template_type = #{templateType}
 		</if>
 		<if test="(subjectId != null and subjectId !='')" >
-			and subject_id = #{subjectId}
+			and p.subject_id = #{subjectId}
 		</if>
 		<if test="(feeUnitCode != null and feeUnitCode !='')" >
-			and fee_unit_code = #{feeUnitCode}
+			and p.fee_unit_code = #{feeUnitCode}
 		</if>
 		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
-		    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		    and p.create_time >= #{startTime} and <![CDATA[p.create_time <= #{endTime}]]>
 		</if>
 		<if test="(customerId!=null and customerId!='')">
-			and customerId=#{customerId}
+			and p.customerId=#{customerId}
 		</if>
-		order by create_time  desc
+		order by p.create_time  desc
     </select>
     
     <select id="queryByQuotationNo" parameterType="java.util.Map" resultMap="baseResultMap">
@@ -169,7 +169,7 @@
     <insert id="save" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity">
         insert into price_general_quotation(quotation_no,customerId,customerName,biz_type_code, template_type, subject_id, 
         fee_unit_code, unit_price, description,price_type,remark, param1, creator, create_time, last_modifier,
-        last_modify_time, del_flag)
+        last_modify_time, del_flag, rule_no)
         values (
 			#{quotationNo,jdbcType=VARCHAR}, 
 			#{customerId},#{customerName},
@@ -186,7 +186,8 @@
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{lastModifier,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{ruleNo,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -210,6 +211,7 @@
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
 			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>

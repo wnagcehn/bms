@@ -22,9 +22,6 @@
       <PropertyDef name="subjectId">
         <Property></Property>
         <Property name="label">费用科目</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="feeUnitCode">
         <Property></Property>
@@ -90,6 +87,10 @@
       <PropertyDef name="ruleName">
         <Property></Property>
         <Property name="label">规则名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -828,6 +829,10 @@ view.get(&quot;#dsB2bOut&quot;).getData().insert();</ClientEvent>
 view.get(&quot;#dsMaterial&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtMaterialStock]</Property>
     </DataSet>
+    <DataSet id="dsSubjectId">
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsGroupController#getSubjectIdAndSubjectName</Property>
+    </DataSet>
     <Container>
       <ToolBar>
         <DataPilot>
@@ -1072,9 +1077,17 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="ruleNo">
           <Property name="property">ruleNo</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">ruleName</Property>
+          <Property name="property">ruleName</Property>
+          <Property name="width">90</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
@@ -1125,8 +1138,16 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">subjectName</Property>
+            <Property name="property">subjectName</Property>
+            <Property name="trigger">subjectIdDataSetDropDown</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="name">subjectId</Property>
             <Property name="property">subjectId</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1226,8 +1247,16 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">subjectName</Property>
+            <Property name="property">subjectName</Property>
+            <Property name="trigger">subjectIdDataSetDropDown</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="name">subjectId</Property>
             <Property name="property">subjectId</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -2687,16 +2716,24 @@ if (data != null) {&#xD;
       </UpdateItem>
     </UpdateAction>
     <Trigger id="triggerRule">
-      <ClientEvent name="onExecute">var subview = view.get(&quot;#viewSelectRule&quot;).get(&quot;subView&quot;);&#xD;
-var entity=view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
-if(isNullOrEmpty(entity.get(&quot;subjectId&quot;))){&#xD;
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsQuotaList&quot;).getData();&#xD;
+var subjectName = data.current.get(&quot;subjectName&quot;);&#xD;
+var subjectId = data.current.get(&quot;subjectId&quot;);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectRule&quot;).get(&quot;subView&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(subjectId)){&#xD;
 	dorado.MessageBox.alert(&quot;请先选择费用科目！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-var tmpDataSet=subview.get(&quot;#dsCondition。data&quot;).current;&#xD;
-tmpDataSet.set(&quot;bizTypeCode&quot;,&quot;STORAGE&quot;);&#xD;
-tmpDataSet.set();&#xD;
+var ds=subview.get(&quot;#dsCondition.data&quot;).current;&#xD;
+ds.set(&quot;bizTypeCode&quot;,&quot;STORAGE&quot;);&#xD;
+ds.set(&quot;subjectName&quot;,subjectName);&#xD;
+ds.set(&quot;subjectId&quot;,subjectId);&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsBillRuleReceiveEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
 &#xD;
 view.get(&quot;#panelRule&quot;).show();</ClientEvent>
     </Trigger>
@@ -2724,5 +2761,26 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DataSetDropDown id="subjectIdDataSetDropDown">
+      <ClientEvent name="beforeExecute">var groupCode = &quot;receive_wh_base_quo_subject&quot;;&#xD;
+&#xD;
+var subDropDown = view.get(&quot;#subjectIdDataSetDropDown&quot;);&#xD;
+subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectId&quot;);&#xD;
+var parameter={&#xD;
+	groupCode:groupCode&#xD;
+};&#xD;
+view.get(&quot;#dsSubjectId&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
+	subjectId:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>
