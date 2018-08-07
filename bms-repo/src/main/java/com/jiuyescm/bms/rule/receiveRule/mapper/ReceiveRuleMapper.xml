@@ -159,10 +159,10 @@
 		and re.del_flag = '0'
     </select>
     
-     <!-- 通过商家id查询计费规则和商家关联 -->
+     <!-- 通过商家id查询模板的规则 -->
     <select id="queryByCustomerId" parameterType="java.util.Map" resultMap="baseResultMap">
-		select b.rule,b.quotationNo from pub_rule_customer_receivable a
-		left join bill_rule_receive b on a.rule_no = b.quotationNo
+		select b.rule, a.quotation_no from price_general_template a
+		left join bill_rule_receive b on a.quotation_no = b.quotationNo
 		where a.customerid = #{customerid}  and a.subject_id = #{subjectId} and a.del_flag = 0 and b.del_flag = 0 limit 1;
     </select>
     

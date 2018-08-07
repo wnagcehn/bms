@@ -19,6 +19,7 @@ public class PriceGeneralQuotationEntity extends BmsCommonAttribute {
 	private String templateType;
 	// 费用科目
 	private String subjectId;
+	private String subjectName;
 	// 计费单位
 	private String feeUnitCode;
 	// 单价
@@ -214,6 +215,14 @@ public class PriceGeneralQuotationEntity extends BmsCommonAttribute {
 
 	public void setRuleName(String ruleName) {
 		this.ruleName = ruleName;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 
 }
