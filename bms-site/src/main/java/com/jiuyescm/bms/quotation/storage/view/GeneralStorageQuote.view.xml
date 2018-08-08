@@ -59,6 +59,7 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;PRICE_TYPE&quot;)}</Property>
         </Property>
+        <Property name="defaultValue">PRICE_TYPE_NORMAL</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家ID</Property>
@@ -79,6 +80,7 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
         </Property>
+        <Property name="defaultValue">C</Property>
       </PropertyDef>
       <PropertyDef name="ruleNo">
         <Property></Property>
@@ -1046,6 +1048,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         <DataColumn>
           <Property name="property">customerName</Property>
           <Property name="name">customerName</Property>
+          <Property name="width">90</Property>
           <Editor/>
         </DataColumn>
         <DataColumn>
@@ -1063,9 +1066,10 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
           <Property name="name">templateType</Property>
           <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="subjectId">
-          <Property name="property">subjectId</Property>
+        <DataColumn>
+          <Property name="property">subjectName</Property>
           <Property name="width">90</Property>
+          <Property name="name">subjectName</Property>
         </DataColumn>
         <DataColumn name="feeUnitCode">
           <Property name="property">feeUnitCode</Property>
@@ -1103,7 +1107,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
       <ClientEvent name="onClose">view.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="caption">添加仓储通用报价</Property>
       <Property name="width">380</Property>
-      <Property name="height">500</Property>
+      <Property name="height">400</Property>
       <Buttons>
         <Button>
           <ClientEvent name="onClick">view.get(&quot;#saveAction&quot;).execute(&#xD;
@@ -1203,7 +1207,7 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
 				}&#xD;
 view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
       <Property name="caption">修改入仓报价</Property>
-      <Property name="height">500</Property>
+      <Property name="height">400</Property>
       <Property name="width">380</Property>
       <Buttons>
         <Button>
@@ -2690,8 +2694,9 @@ if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
         customerId:data.get(&quot;customerid&quot;),&#xD;
-		customerName:data.get(&quot;customername&quot;)&#xD;
-    });&#xD;
+		customerName:data.get(&quot;customername&quot;)    &#xD;
+	});&#xD;
+	entity.set(&quot;remark&quot;,data.get(&quot;customername&quot;)+&quot;-&quot;+entity.get(&quot;subjectName&quot;));&#xD;
 }</ClientEvent>
       <Property name="caption">商家选择</Property>
       <Property name="center">true</Property>
@@ -2776,6 +2781,10 @@ data.set({&#xD;
 	subjectName:arg.selectedValue.get(&quot;subjectName&quot;),&#xD;
 	subjectId:arg.selectedValue.get(&quot;subjectCode&quot;)&#xD;
 });&#xD;
+&#xD;
+if(!isNullOrEmpty(data.get(&quot;remark&quot;))){&#xD;
+	data.set(&quot;remark&quot;,data.get(&quot;customerName&quot;)+&quot;-&quot;+data.get(&quot;subjectName&quot;));&#xD;
+}&#xD;
 arg.processDefault = false;</ClientEvent>
       <Property name="autoOpen">true</Property>
       <Property name="editable">false</Property>
