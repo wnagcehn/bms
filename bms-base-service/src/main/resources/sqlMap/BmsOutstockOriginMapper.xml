@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.BmsOutstockOriginEntityMapper" >
+    <resultMap id="baseResultMap" type="java.math.BigDecimal.BmsOutstockOriginEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT UNSIGNED" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="zexpressnum" property="zexpressnum" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="splitbox_flag" property="splitboxFlag" jdbcType="VARCHAR" />
+	    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+	    <result column="month_fee_count" property="monthFeeCount" jdbcType="VARCHAR" />
+	    <result column="product_detail" property="productDetail" jdbcType="LONGTEXT" />
+	    <result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
+	    <result column="bill_type_code" property="billTypeCode" jdbcType="VARCHAR" />
+	    <result column="system_weight" property="systemWeight" jdbcType="DECIMAL" />
+	    <result column="origin_weight" property="originWeight" jdbcType="DECIMAL" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DECIMAL" />
+	    <result column="throw_weight" property="throwWeight" jdbcType="DECIMAL" />
+	    <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+	    <result column="total_sku" property="totalSku" jdbcType="DECIMAL" />
+	    <result column="total_box" property="totalBox" jdbcType="DECIMAL" />
+	    <result column="total_volume" property="totalVolume" jdbcType="DECIMAL" />
+	    <result column="send_name" property="sendName" jdbcType="VARCHAR" />
+	    <result column="send_province" property="sendProvince" jdbcType="VARCHAR" />
+	    <result column="send_city" property="sendCity" jdbcType="VARCHAR" />
+	    <result column="send_area" property="sendArea" jdbcType="VARCHAR" />
+	    <result column="send_address" property="sendAddress" jdbcType="VARCHAR" />
+	    <result column="receive_name" property="receiveName" jdbcType="VARCHAR" />
+	    <result column="receive_province" property="receiveProvince" jdbcType="VARCHAR" />
+	    <result column="receive_city" property="receiveCity" jdbcType="VARCHAR" />
+	    <result column="receive_area" property="receiveArea" jdbcType="VARCHAR" />
+	    <result column="receive_address" property="receiveAddress" jdbcType="VARCHAR" />
+	    <result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
+	    <result column="weight_mark" property="weightMark" jdbcType="DECIMAL" />
+	    <result column="outing_time" property="outingTime" jdbcType="TIMESTAMP" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, outstock_no, waybill_no, zexpressnum, external_no, warehouse_code, warehouse_name, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, temperature_type_code, splitbox_flag, b2b_flag, month_fee_count, product_detail, service_type_code, bill_type_code, system_weight, origin_weight, total_weight, throw_weight, total_qty, total_sku, total_box, total_volume, send_name, send_province, send_city, send_area, send_address, receive_name, receive_province, receive_city, receive_area, receive_address, products_mark, weight_mark, outing_time, create_time, write_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(zexpressnum != null and zexpressnum !='')" >
+				and zexpressnum = #{zexpressnum}
+		</if>
+		<if test="(externalNo != null and externalNo !='')" >
+				and external_no = #{externalNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+				and carrier_id = #{carrierId}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and carrier_name = #{carrierName}
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and deliver_id = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliver_name = #{deliverName}
+		</if>
+		<if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and temperature_type_code = #{temperatureTypeCode}
+		</if>
+		<if test="(splitboxFlag != null and splitboxFlag !='')" >
+				and splitbox_flag = #{splitboxFlag}
+		</if>
+		<if test="(b2bFlag != null and b2bFlag !='')" >
+				and b2b_flag = #{b2bFlag}
+		</if>
+		<if test="(monthFeeCount != null and monthFeeCount !='')" >
+				and month_fee_count = #{monthFeeCount}
+		</if>
+		<if test="(productDetail != null and productDetail !='')" >
+				and product_detail = #{productDetail}
+		</if>
+		<if test="(serviceTypeCode != null and serviceTypeCode !='')" >
+				and service_type_code = #{serviceTypeCode}
+		</if>
+		<if test="(billTypeCode != null and billTypeCode !='')" >
+				and bill_type_code = #{billTypeCode}
+		</if>
+		<if test="(systemWeight != null and systemWeight !='')" >
+				and system_weight = #{systemWeight}
+		</if>
+		<if test="(originWeight != null and originWeight !='')" >
+				and origin_weight = #{originWeight}
+		</if>
+		<if test="(totalWeight != null and totalWeight !='')" >
+				and total_weight = #{totalWeight}
+		</if>
+		<if test="(throwWeight != null and throwWeight !='')" >
+				and throw_weight = #{throwWeight}
+		</if>
+		<if test="(totalQty != null and totalQty !='')" >
+				and total_qty = #{totalQty}
+		</if>
+		<if test="(totalSku != null and totalSku !='')" >
+				and total_sku = #{totalSku}
+		</if>
+		<if test="(totalBox != null and totalBox !='')" >
+				and total_box = #{totalBox}
+		</if>
+		<if test="(totalVolume != null and totalVolume !='')" >
+				and total_volume = #{totalVolume}
+		</if>
+		<if test="(sendName != null and sendName !='')" >
+				and send_name = #{sendName}
+		</if>
+		<if test="(sendProvince != null and sendProvince !='')" >
+				and send_province = #{sendProvince}
+		</if>
+		<if test="(sendCity != null and sendCity !='')" >
+				and send_city = #{sendCity}
+		</if>
+		<if test="(sendArea != null and sendArea !='')" >
+				and send_area = #{sendArea}
+		</if>
+		<if test="(sendAddress != null and sendAddress !='')" >
+				and send_address = #{sendAddress}
+		</if>
+		<if test="(receiveName != null and receiveName !='')" >
+				and receive_name = #{receiveName}
+		</if>
+		<if test="(receiveProvince != null and receiveProvince !='')" >
+				and receive_province = #{receiveProvince}
+		</if>
+		<if test="(receiveCity != null and receiveCity !='')" >
+				and receive_city = #{receiveCity}
+		</if>
+		<if test="(receiveArea != null and receiveArea !='')" >
+				and receive_area = #{receiveArea}
+		</if>
+		<if test="(receiveAddress != null and receiveAddress !='')" >
+				and receive_address = #{receiveAddress}
+		</if>
+		<if test="(productsMark != null and productsMark !='')" >
+				and products_mark = #{productsMark}
+		</if>
+		<if test="(weightMark != null and weightMark !='')" >
+				and weight_mark = #{weightMark}
+		</if>
+		<if test="(outingTime != null and outingTime !='')" >
+			    and outing_time >= #{outingTime} add <![CDATA[outing_time <= #{outingTime}]]>
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="java.math.BigDecimal.BmsOutstockOriginEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_outstock_origin
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <insert id="save" parameterType="java.math.BigDecimal.BmsOutstockOriginEntity">
+        insert into bms_outstock_origin(outstock_no, waybill_no, zexpressnum, external_no, warehouse_code, warehouse_name, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, temperature_type_code, splitbox_flag, b2b_flag, month_fee_count, product_detail, service_type_code, bill_type_code, system_weight, origin_weight, total_weight, throw_weight, total_qty, total_sku, total_box, total_volume, send_name, send_province, send_city, send_area, send_address, receive_name, receive_province, receive_city, receive_area, receive_address, products_mark, weight_mark, outing_time, create_time, write_time)
+        values (
+
+#{outstockNo,jdbcType=VARCHAR}, 
+#{waybillNo,jdbcType=VARCHAR}, 
+#{zexpressnum,jdbcType=VARCHAR}, 
+#{externalNo,jdbcType=VARCHAR}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{warehouseName,jdbcType=VARCHAR}, 
+#{customerId,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{carrierId,jdbcType=VARCHAR}, 
+#{carrierName,jdbcType=VARCHAR}, 
+#{deliverId,jdbcType=VARCHAR}, 
+#{deliverName,jdbcType=VARCHAR}, 
+#{temperatureTypeCode,jdbcType=VARCHAR}, 
+#{splitboxFlag,jdbcType=VARCHAR}, 
+#{b2bFlag,jdbcType=VARCHAR}, 
+#{monthFeeCount,jdbcType=VARCHAR}, 
+#{productDetail,jdbcType=LONGTEXT}, 
+#{serviceTypeCode,jdbcType=VARCHAR}, 
+#{billTypeCode,jdbcType=VARCHAR}, 
+#{systemWeight,jdbcType=DECIMAL}, 
+#{originWeight,jdbcType=DECIMAL}, 
+#{totalWeight,jdbcType=DECIMAL}, 
+#{throwWeight,jdbcType=DECIMAL}, 
+#{totalQty,jdbcType=DECIMAL}, 
+#{totalSku,jdbcType=DECIMAL}, 
+#{totalBox,jdbcType=DECIMAL}, 
+#{totalVolume,jdbcType=DECIMAL}, 
+#{sendName,jdbcType=VARCHAR}, 
+#{sendProvince,jdbcType=VARCHAR}, 
+#{sendCity,jdbcType=VARCHAR}, 
+#{sendArea,jdbcType=VARCHAR}, 
+#{sendAddress,jdbcType=VARCHAR}, 
+#{receiveName,jdbcType=VARCHAR}, 
+#{receiveProvince,jdbcType=VARCHAR}, 
+#{receiveCity,jdbcType=VARCHAR}, 
+#{receiveArea,jdbcType=VARCHAR}, 
+#{receiveAddress,jdbcType=VARCHAR}, 
+#{productsMark,jdbcType=VARCHAR}, 
+#{weightMark,jdbcType=DECIMAL}, 
+#{outingTime,jdbcType=TIMESTAMP}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{writeTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="java.math.BigDecimal.BmsOutstockOriginEntity">
+        update bms_outstock_origin 
+		<set >
+
+<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+<if test="zexpressnum != null" >zexpressnum=#{zexpressnum,jdbcType=VARCHAR},</if>
+<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="carrierId != null" >carrier_id=#{carrierId,jdbcType=VARCHAR},</if>
+<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+<if test="deliverId != null" >deliver_id=#{deliverId,jdbcType=VARCHAR},</if>
+<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
+<if test="splitboxFlag != null" >splitbox_flag=#{splitboxFlag,jdbcType=VARCHAR},</if>
+<if test="b2bFlag != null" >b2b_flag=#{b2bFlag,jdbcType=VARCHAR},</if>
+<if test="monthFeeCount != null" >month_fee_count=#{monthFeeCount,jdbcType=VARCHAR},</if>
+<if test="productDetail != null" >product_detail=#{productDetail,jdbcType=LONGTEXT},</if>
+<if test="serviceTypeCode != null" >service_type_code=#{serviceTypeCode,jdbcType=VARCHAR},</if>
+<if test="billTypeCode != null" >bill_type_code=#{billTypeCode,jdbcType=VARCHAR},</if>
+<if test="systemWeight != null" >system_weight=#{systemWeight,jdbcType=DECIMAL},</if>
+<if test="originWeight != null" >origin_weight=#{originWeight,jdbcType=DECIMAL},</if>
+<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DECIMAL},</if>
+<if test="throwWeight != null" >throw_weight=#{throwWeight,jdbcType=DECIMAL},</if>
+<if test="totalQty != null" >total_qty=#{totalQty,jdbcType=DECIMAL},</if>
+<if test="totalSku != null" >total_sku=#{totalSku,jdbcType=DECIMAL},</if>
+<if test="totalBox != null" >total_box=#{totalBox,jdbcType=DECIMAL},</if>
+<if test="totalVolume != null" >total_volume=#{totalVolume,jdbcType=DECIMAL},</if>
+<if test="sendName != null" >send_name=#{sendName,jdbcType=VARCHAR},</if>
+<if test="sendProvince != null" >send_province=#{sendProvince,jdbcType=VARCHAR},</if>
+<if test="sendCity != null" >send_city=#{sendCity,jdbcType=VARCHAR},</if>
+<if test="sendArea != null" >send_area=#{sendArea,jdbcType=VARCHAR},</if>
+<if test="sendAddress != null" >send_address=#{sendAddress,jdbcType=VARCHAR},</if>
+<if test="receiveName != null" >receive_name=#{receiveName,jdbcType=VARCHAR},</if>
+<if test="receiveProvince != null" >receive_province=#{receiveProvince,jdbcType=VARCHAR},</if>
+<if test="receiveCity != null" >receive_city=#{receiveCity,jdbcType=VARCHAR},</if>
+<if test="receiveArea != null" >receive_area=#{receiveArea,jdbcType=VARCHAR},</if>
+<if test="receiveAddress != null" >receive_address=#{receiveAddress,jdbcType=VARCHAR},</if>
+<if test="productsMark != null" >products_mark=#{productsMark,jdbcType=VARCHAR},</if>
+<if test="weightMark != null" >weight_mark=#{weightMark,jdbcType=DECIMAL},</if>
+<if test="outingTime != null" >outing_time=#{outingTime,jdbcType=TIMESTAMP},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>
