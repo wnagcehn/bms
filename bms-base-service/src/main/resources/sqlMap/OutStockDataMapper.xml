@@ -58,7 +58,7 @@
 	    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
     </resultMap>
-    、
+    
     <sql id="baseColumns">
         outstock_no, waybill_no, origin_zexpressnum, external_no, warehouse_code, customer_id, 
         origin_carrier_id, forward_carrier_id, adjust_carrier_id, origin_deliver_id, forward_deliver_id,

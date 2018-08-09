@@ -76,7 +76,7 @@
 	    <result column="calcu_msg" property="calcuMsg" jdbcType="VARCHAR" />
 	    <result column="calcu_time" property="calcuTime" jdbcType="TIMESTAMP" />
     </resultMap>
-    、
+    
     <sql id="baseColumns">
         outstock_no, waybill_no, origin_zexpressnum, external_no, warehouse_code, customer_id, 
         origin_carrier_id, forward_carrier_id, adjust_carrier_id, origin_deliver_id, forward_deliver_id,

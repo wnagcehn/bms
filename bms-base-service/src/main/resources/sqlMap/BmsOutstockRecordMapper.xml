@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jiuyescm.bms.BmsOutstockRecordEntityMapper" >
-    <resultMap id="baseResultMap" type="java.math.BigDecimal.BmsOutstockRecordEntity" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
@@ -153,7 +153,7 @@
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
-        resultType="java.math.BigDecimal.BmsOutstockRecordEntity">
+        resultType="com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity">
         select
         <include refid="baseColumns" />
         from bms_outstock_record
@@ -161,7 +161,7 @@
 		<include refid="baseSelectColumns" />
     </select>
 
-    <insert id="save" parameterType="java.math.BigDecimal.BmsOutstockRecordEntity">
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity">
         insert into bms_outstock_record(waybill_no, zexpressnum, month_fee_count, service_type_code, dispatch_type_code, expresstype, throw_weight, adjust_weight, correct_weight, adjust_box, adjust_qty, adjust_send_province, adjust_send_city, adjust_send_area, adjust_receive_province, adjust_receive_city, adjust_receive_area, forward_carrier_id, forward_deliver_id, adjust_carrier_id, adjust_deliver_id, account_state, bigstatus, smallstatus, sign_time, accept_time, waybill_status, order_status, del_flag, last_modifier, last_modifier_id, last_modify_time, create_time, is_calculated)
         values (
 
@@ -202,7 +202,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="java.math.BigDecimal.BmsOutstockRecordEntity">
+    <update id="update" parameterType="com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity">
         update bms_outstock_record 
 		<set >
 
