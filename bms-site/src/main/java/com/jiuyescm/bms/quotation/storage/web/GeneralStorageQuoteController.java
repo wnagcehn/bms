@@ -16,11 +16,14 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSON;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 import com.bstek.dorado.uploader.DownloadFile;
 import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
+import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.bms.common.enumtype.RecordLogBizTypeEnum;
@@ -33,6 +36,8 @@ import com.jiuyescm.bms.common.system.ResponseVo;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.pub.IPubRecordLogService;
 import com.jiuyescm.bms.pub.PubRecordLogEntity;
+import com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity;
+import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.service.IPriceGeneralQuotationService;
@@ -54,6 +59,8 @@ public class GeneralStorageQuoteController {
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	@Resource
 	private IPubRecordLogService pubRecordLogService;
+	@Resource
+	private IReceiveRuleService receiveRuleService;
 		
 	/**
 	 * 分页查询
@@ -310,5 +317,16 @@ public class GeneralStorageQuoteController {
 	}
 	
 	
+	//查询所有的服务
+	@Expose
+	public String queryRule(Map<String,Object> parameter){
+		String result="";
+		
+		BillRuleReceiveEntity rule=receiveRuleService.queryOne(parameter);
+		if(rule!=null){
+			result=rule.getQuotationNo()+"&"+rule.getQuotationName();
+		}
+		return result;
+	}
 	
 }

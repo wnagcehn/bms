@@ -683,7 +683,7 @@
         <Property></Property>
         <Property name="label">始发仓</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchQuotePR#getPubWareHouse&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="provinceId">

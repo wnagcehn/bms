@@ -45,6 +45,14 @@ public class BillRuleReceiveEntity extends Rule implements IEntity{
 	// 报价形式
 	private String quoModus;
 	
+	// 序号
+	private Integer sortNo;
+	// 是否可见(0可见 1不可见)
+	private String visible;
+	// 是否默认常用(0是 1否)
+	private String isDefault;
+
+	
 	//新增一属性只做记录，不添加到数据库中
 	private String subjectName;
 	public BillRuleReceiveEntity() {
@@ -250,6 +258,30 @@ public class BillRuleReceiveEntity extends Rule implements IEntity{
 
 	public void setQuoModus(String quoModus) {
 		this.quoModus = quoModus;
+	}
+
+	public Integer getSortNo() {
+		return sortNo;
+	}
+
+	public void setSortNo(Integer sortNo) {
+		this.sortNo = sortNo;
+	}
+
+	public String getVisible() {
+		return visible;
+	}
+
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
+	public String getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(String isDefault) {
+		this.isDefault = isDefault;
 	}
     
 }

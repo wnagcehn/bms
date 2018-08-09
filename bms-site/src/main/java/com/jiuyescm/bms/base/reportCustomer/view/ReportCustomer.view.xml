@@ -15,7 +15,7 @@
       <PropertyDef name="warehouseCode">
         <Property></Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;dispatchQuotePR#getPubWareHouse&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
         </Property>
         <Property name="label">仓库名称</Property>
       </PropertyDef>
@@ -68,7 +68,7 @@
         <Property name="label">月份</Property>
       </PropertyDef>
       <PropertyDef name="date">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
