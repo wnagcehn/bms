@@ -7,12 +7,14 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.api.IFeesDispatchService;
 import com.jiuyescm.bms.biz.entity.BmsFeesDispatchEntity;
 import com.jiuyescm.bms.biz.repo.IFeesDispatchRepository;
 import com.jiuyescm.bms.biz.vo.BmsDispatchVo;
 
+@Service("feesDispatchService")
 public class FeesDispatchServiceImpl implements IFeesDispatchService{
 
 	private static final Logger logger = LoggerFactory.getLogger(DispatchServiceImpl.class.getName());

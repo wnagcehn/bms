@@ -7,12 +7,14 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.api.IFeesStorageDiscountService;
 import com.jiuyescm.bms.biz.entity.BmsFeesStorageDiscountEntity;
 import com.jiuyescm.bms.biz.repo.IFeesStorageDiscountRepository;
 import com.jiuyescm.bms.biz.vo.OutstockInfoVo;
 
+@Service("feesStorageDiscountService")
 public class FeesStorageDiscountServiceImpl implements IFeesStorageDiscountService{
 
 	private static final Logger logger = LoggerFactory.getLogger(DispatchServiceImpl.class.getName());
