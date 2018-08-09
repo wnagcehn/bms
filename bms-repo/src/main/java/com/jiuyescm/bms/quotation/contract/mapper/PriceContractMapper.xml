@@ -307,19 +307,20 @@
    </select>
    
    <select id="findAllReceiveContractDiscountDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
-   		select subject_id subjectId,template_code templateId
-		from price_contract_discount_item
+   		select a.subject_id subjectId,a.template_code templateId,b.template_name theLastName
+		from price_contract_discount_item a
+        INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code
 		where 1=1 
 		<if test="(contractCode != null and contractCode !='')" >
-		   and contract_code=#{contractCode}  
+		   and a.contract_code=#{contractCode}  
 		</if>
 		<if test="(subjectId  !=null and subjectId !='')">
-			and subject_id=#{subjectId}
+			and a.subject_id=#{subjectId}
 		</if>
 		<if test="(bizTypeCode !=null and bizTypeCode!='')">
-			and biz_type_code=#{bizTypeCode}
+			and a.biz_type_code=#{bizTypeCode}
 		</if>
-			and del_flag='0'
+			and a.del_flag='0' and b.del_flag='0'
    </select>
    
    <select id="findAllPayContractDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">

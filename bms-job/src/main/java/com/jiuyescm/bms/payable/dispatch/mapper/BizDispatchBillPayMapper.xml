@@ -121,7 +121,7 @@
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
 			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-			total_weight=#{totalWeight,jdbcType=DECIMAL}
+			total_weight=#{newTotalWeight,jdbcType=DECIMAL}
 		</set>
         where id=#{id}
     </update>

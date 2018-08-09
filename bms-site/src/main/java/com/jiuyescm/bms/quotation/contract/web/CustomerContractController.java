@@ -23,7 +23,6 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -671,8 +670,8 @@ public class CustomerContractController {
 		Map<String,String> map=bmsGroupSubjectService.getSubject("subject_discount_receive");
 
 		for(int i=0;i<contractList.size();i++){		
-			ContractDetailEntity dispatch=contractList.get(i);	
-			dispatch.setTheLastName(map.get(dispatch.getSubjectId()));
+			ContractDetailEntity dispatch=contractList.get(i);
+			dispatch.setSubjectName(map.get(dispatch.getSubjectId()));
 			//dispatch.setSubjectName(dispatch.getDispatchName());	
 			dispatchList.add(dispatch);			
 		}

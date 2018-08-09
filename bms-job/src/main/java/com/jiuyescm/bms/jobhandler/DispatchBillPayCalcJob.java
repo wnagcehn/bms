@@ -276,7 +276,8 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		Map<String,Object> map=new HashMap<String,Object>();
 		
 		//获取新的重量
-		entity.setTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		entity.setNewTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		entity.setTotalWeight(entity.getNewTotalWeight());
 		
 		String deliverid=entity.getDeliverid();
 		entity.setCalculateTime(time);

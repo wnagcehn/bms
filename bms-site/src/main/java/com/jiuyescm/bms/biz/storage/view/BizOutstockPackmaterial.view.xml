@@ -228,9 +228,14 @@
       <PropertyDef name="num">
         <Property></Property>
         <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
       </PropertyDef>
-      <PropertyDef name="unitPrice">
-        <Property name="label">单价</Property>
+      <PropertyDef name="isCalculated">
+        <Property/>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">计算状态</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskEntity">
@@ -1335,29 +1340,20 @@ view.get(&quot;#exportTemplateAction&quot;).set(&quot;parameter&quot;,condition)
                   <Property name="dataSet">dsMaterialPriceGroupCountList</Property>
                   <Property name="readOnly">true</Property>
                   <Property name="supportsPaging">false</Property>
-                  <RowNumColumn/>
-                  <DataColumn>
-                    <Property name="property">customerId</Property>
-                    <Property name="width">150</Property>
-                    <Property name="name">customerId</Property>
+                  <DataColumn name="customerName">
+                    <Property name="property">customerName</Property>
                   </DataColumn>
-                  <DataColumn>
-                    <Property name="property">warehouseCode</Property>
-                    <Property name="name">warehouseCode</Property>
+                  <DataColumn name="warehouseName">
+                    <Property name="property">warehouseName</Property>
                   </DataColumn>
-                  <DataColumn>
+                  <DataColumn name="consumerMaterialCode">
                     <Property name="property">consumerMaterialCode</Property>
-                    <Property name="name">consumerMaterialCode</Property>
                   </DataColumn>
-                  <DataColumn>
+                  <DataColumn name="isCalculated">
+                    <Property name="property">isCalculated</Property>
+                  </DataColumn>
+                  <DataColumn name="num">
                     <Property name="property">num</Property>
-                    <Property name="caption">数量</Property>
-                    <Property name="name">num</Property>
-                  </DataColumn>
-                  <DataColumn>
-                    <Property name="name">unitPrice</Property>
-                    <Property name="property">unitPrice</Property>
-                    <Editor/>
                   </DataColumn>
                 </DataGrid>
               </Container>
