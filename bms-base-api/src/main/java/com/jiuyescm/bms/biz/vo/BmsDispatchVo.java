@@ -120,6 +120,17 @@ public class BmsDispatchVo implements Serializable{
 		private String orderStatus;
 		// 作废标识
 		private String delFlag;
+		
+		//责任方
+		private String dutyType;
+		
+		//修改原因
+		private String updateReasonType;
+		
+		//修改原因明细
+		private String updateReasonDetail;
+		
+		
 		// 费用科目
 		private String subjectCode;
 		// 计费商品数量
@@ -1205,6 +1216,51 @@ public class BmsDispatchVo implements Serializable{
 	     */
 		public void setCalcuTime(Timestamp calcuTime) {
 			this.calcuTime = calcuTime;
+		}
+
+		/**
+		 * 责任方
+		 * @return
+		 */
+		public String getDutyType() {
+			return dutyType;
+		}
+
+		/**
+		 * 责任方
+		 */
+		public void setDutyType(String dutyType) {
+			this.dutyType = dutyType;
+		}
+
+		/**
+		 * 修改原因
+		 * @return
+		 */
+		public String getUpdateReasonType() {
+			return updateReasonType;
+		}
+
+		/**
+		 * 修改原因
+		 */
+		public void setUpdateReasonType(String updateReasonType) {
+			this.updateReasonType = updateReasonType;
+		}
+
+		/**
+		 * 修改原因明细
+		 * @return
+		 */
+		public String getUpdateReasonDetail() {
+			return updateReasonDetail;
+		}
+
+		/**
+		 * 修改原因明细
+		 */
+		public void setUpdateReasonDetail(String updateReasonDetail) {
+			this.updateReasonDetail = updateReasonDetail;
 		}
 	    
 }
