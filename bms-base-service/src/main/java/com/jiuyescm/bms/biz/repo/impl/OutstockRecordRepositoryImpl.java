@@ -1,5 +1,7 @@
 package com.jiuyescm.bms.biz.repo.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity;
@@ -13,5 +15,11 @@ public class OutstockRecordRepositoryImpl extends MyBatisDao<BmsOutstockRecordEn
 	public int insert(BmsOutstockRecordEntity entity) {
 		// TODO Auto-generated method stub
 		return this.insert("com.jiuyescm.bms.BmsOutstockRecordEntityMapper.save", entity);
+	}
+
+	@Override
+	public int insertList(List<BmsOutstockRecordEntity> list) {
+		// TODO Auto-generated method stub
+		return this.insertBatch("com.jiuyescm.bms.BmsOutstockRecordEntityMapper.save", list);
 	}
 }

@@ -1,5 +1,8 @@
 package com.jiuyescm.bms.biz.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,25 @@ public class OutstockRecordServiceImpl implements IOutstockRecordService{
         }
 		
 		return repository.insert(record);
+	}
+
+	@Override
+	public int insertList(List<OutstockInfoVo> list) {
+		// TODO Auto-generated method stub
+		List<BmsOutstockRecordEntity> enList=new ArrayList<BmsOutstockRecordEntity>();
+		try {
+			for(OutstockInfoVo vo : list) {
+				BmsOutstockRecordEntity entity = new BmsOutstockRecordEntity();
+	    		
+	            PropertyUtils.copyProperties(entity, vo);
+	            
+	    		enList.add(entity);
+	    	}
+		} catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		
+		return repository.insertList(enList);
 	}
 
 }

@@ -17,5 +17,11 @@ public class OutstockInfoRepositoryImpl  extends MyBatisDao<BmsOutstockInfoEntit
 		return this.updateBatch("com.jiuyescm.bms.BmsOutstockInfoEntityMapper.update", list);
 	}
 
+	@Override
+	public int update(BmsOutstockInfoEntity entity) {
+		// TODO Auto-generated method stub
+		return this.update("com.jiuyescm.bms.BmsOutstockInfoEntityMapper.update", entity);
+	}
+
 
 }

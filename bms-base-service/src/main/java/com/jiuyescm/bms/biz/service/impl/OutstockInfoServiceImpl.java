@@ -41,4 +41,17 @@ public class OutstockInfoServiceImpl implements IOutstockInfoService{
 		return repository.updateList(enList);
 	}
 
+	@Override
+	public int update(OutstockInfoVo vo) {
+		// TODO Auto-generated method stub
+		BmsOutstockInfoEntity entity=new BmsOutstockInfoEntity();
+		try {	    		
+	        PropertyUtils.copyProperties(entity, vo);
+		} catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		
+		return repository.update(entity);
+	}
+
 }
