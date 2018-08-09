@@ -21,7 +21,7 @@ public class DispatchRepositoryImpl extends MyBatisDao<BmsDispatchVo> implements
 	@Override
 	public PageInfo<BmsDispatchVo> querybizData(Map<String, Object> condition,int pageNo, int pageSize) {
 		
-		try{
+		/*try{
 			List<BmsDispatchVo> list = selectList("com.jiuyescm.bms.OutStockDataMapper.querybizData", condition, new RowBounds(
 	                pageNo, pageSize));
 			PageInfo<BmsDispatchVo> pageInfo = new PageInfo<BmsDispatchVo>(list);
@@ -30,13 +30,14 @@ public class DispatchRepositoryImpl extends MyBatisDao<BmsDispatchVo> implements
 		catch(Exception ex){
 			logger.error("querybizData查询异常", ex);
 			return null;
-		}
+		}*/
+		return null;
 	}
 
 	@Override
 	public PageInfo<BmsDispatchVo> queryAll(Map<String, Object> condition,int pageNo, int pageSize) {
 		try{
-			List<BmsDispatchVo> list = selectList("com.jiuyescm.bms.OutStockDataMapper.queryAll", condition, new RowBounds(pageNo, pageSize));
+			List<BmsDispatchVo> list = selectList("com.jiuyescm.bms.DispatchMapper.queryAll", condition, new RowBounds(pageNo, pageSize));
 			PageInfo<BmsDispatchVo> pageInfo = new PageInfo<BmsDispatchVo>(list);
 	        return pageInfo;
 		}
