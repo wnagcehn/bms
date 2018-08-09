@@ -46,6 +46,8 @@ public class DispatchServiceImpl implements IDispatchService {
 
 	@Override
 	public int updateBizData(List<BmsDispatchVo> vos) {
+		//1:写入到记录表
+		//2:更新到outstock_info
 		//扩展
 		return dispatchRepositoryImpl.updateBizData(vos);
 	}
