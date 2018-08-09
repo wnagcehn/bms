@@ -419,7 +419,7 @@ public class BmsQuoteDiscountTemplateController {
 			if (bmsQuoteDiscountDetailEntity.getEndTime() == null) {
 				sb.append("结束时间不能为空, ");
 			}
-			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null || bmsQuoteDiscountDetailEntity.getDownLimit() != null) {
+			if (bmsQuoteDiscountDetailEntity.getUpLimit() == null || bmsQuoteDiscountDetailEntity.getDownLimit() == null) {
 				sb.append("上限下限不能为空, ");
 			}
 			if (bmsQuoteDiscountDetailEntity.getUpLimit() <= bmsQuoteDiscountDetailEntity.getDownLimit()) {
