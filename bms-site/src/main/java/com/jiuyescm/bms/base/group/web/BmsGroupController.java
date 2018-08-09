@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.base.group.web;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -302,5 +303,29 @@ public class BmsGroupController {
 			e.printStackTrace();
 		}
 		return resultMap;
+	}	
+	
+	@DataProvider
+	public List<BmsGroupSubjectVo> getSubjectIdAndSubjectName(String groupCode){
+		List<BmsGroupSubjectVo> bgsList = new ArrayList<>();
+		try {
+			Map<String,Object> map= new HashMap<String, Object>();
+			map.put("groupCode", groupCode);
+			map.put("bizType", "bms_subject");
+			BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+			if(bmsGroup!=null){
+				List<BmsGroupSubjectVo> list=bmsGroupSubjectService.queryAllByGroupId(bmsGroup.getId());
+				for(BmsGroupSubjectVo vo:list){
+					BmsGroupSubjectVo bgsVo = new BmsGroupSubjectVo();
+					bgsVo.setSubjectCode(vo.getSubjectCode());
+					bgsVo.setSubjectName(vo.getSubjectName());
+					bgsList.add(bgsVo);
+				}
+				return bgsList;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bgsList;
 	}	
 }

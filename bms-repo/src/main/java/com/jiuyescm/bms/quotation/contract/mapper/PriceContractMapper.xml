@@ -280,19 +280,20 @@
    
    <!-- 根据map条件查询出对应的费用科目 -->
    <select id="findAllReceiveContractDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
-   		SELECT e.template_type_code transportCode,e.template_name transportName,
-		e.remark transportRemark,d.storage_template_type storageCode,
-		d.template_name storageName,c.remark generalStorageRemark,
-		d.remark storageRemark,f.template_name dispatchName,f.remark dispatchRemark,
-		a.template_id,a.subject_id subjectId,i.instruction as ruleInstruction,h.rule_no as ruleNo
-		from price_contract_item a 	
+  	   SELECT e.template_type_code transportCode,e.template_name transportName,e.remark transportRemark,
+			 d.storage_template_type storageCode,d.template_name storageName,d.remark storageRemark,
+             f.template_name dispatchName,f.remark dispatchRemark,
+		     a.template_id,a.subject_id subjectId,
+             c.remark generalStorageRemark,
+			 IFNULL(c.rule_no,d.quotation_no) as ruleNo,
+			 IFNULL(g.instruction,h.instruction) as ruleInstruction
+		from price_contract_item a
 		LEFT JOIN price_general_quotation c ON a.template_id=c.quotation_no and c.del_flag=0
 		LEFT JOIN price_general_template d ON a.template_id=d.template_code and d.del_flag=0
-		left JOIN price_transport_template e on a.template_id=e.template_code and e.del_flag=0
+		LEFT JOIN price_transport_template e on a.template_id=e.template_code and e.del_flag=0
 		LEFT JOIN price_dispatch_template f ON a.template_id=f.template_code and f.del_flag=0
-		left join price_contract_info g on g.contract_code=a.contract_code and g.del_flag=0
-		left join pub_rule_customer_receivable h on h.customerid=g.customerId and h.subject_id=a.subject_id and h.del_flag=0
-		left join bill_rule_receive i on i.quotationNo=h.rule_no and i.del_flag=0
+		LEFT JOIN bill_rule_receive g on g.quotationNo=c.rule_no and g.subject_id=c.subject_id and g.del_flag=0
+        LEFT JOIN bill_rule_receive h on h.quotationNo=d.quotation_no and h.subject_id=d.subject_id and h.del_flag=0
 		where 1=1 
 		<if test="(contractCode != null and contractCode !='')" >
 		   and a.contract_code=#{contractCode}  

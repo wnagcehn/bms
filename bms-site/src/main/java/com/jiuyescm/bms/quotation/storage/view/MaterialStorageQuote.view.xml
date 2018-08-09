@@ -102,6 +102,7 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
         </Property>
+        <Property name="defaultValue">C</Property>
       </PropertyDef>
       <PropertyDef name="param1">
         <Property></Property>
@@ -118,6 +119,12 @@
       </PropertyDef>
       <PropertyDef name="quotationName">
         <Property name="label">规则</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtStorageMaterialType">
@@ -595,6 +602,11 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
           <Editor/>
         </DataColumn>
         <DataColumn>
+          <Property name="name">quotationName</Property>
+          <Property name="property">quotationName</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
           <Property name="name">remark</Property>
           <Property name="property">remark</Property>
           <Editor/>
@@ -691,6 +703,8 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
             <AutoFormElement layoutConstraint="colSpan:2">
               <Property name="name">quotationNo</Property>
               <Property name="property">quotationNo</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
               <Editor/>
             </AutoFormElement>
           </AutoForm>
@@ -721,7 +735,7 @@ view.get(&quot;#dsStorageMaterialType.data&quot;).clear();&#xD;
 view.get(&quot;#dsStorageMaterialType.data&quot;).clear();&#xD;
 </ClientEvent>
       <Property name="caption">修改模板</Property>
-      <Property name="height">280</Property>
+      <Property name="height">345</Property>
       <Property name="width">380</Property>
       <Buttons>
         <Button>
@@ -789,11 +803,24 @@ view.get(&quot;#dsStorageMaterialType.data&quot;).clear();&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">quotationName</Property>
+            <Property name="property">quotationName</Property>
+            <Property name="trigger">triggerQuotation</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="name">remark</Property>
             <Property name="property">remark</Property>
             <Editor>
               <TextArea/>
             </Editor>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">quotationNo</Property>
+            <Property name="property">quotationNo</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
           </AutoFormElement>
         </AutoForm>
       </Children>
@@ -1678,7 +1705,8 @@ if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsStorageType&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
         customerId:data.get(&quot;customerid&quot;),&#xD;
-		customerName:data.get(&quot;customername&quot;)&#xD;
+		customerName:data.get(&quot;customername&quot;),&#xD;
+		templateName:data.get(&quot;customername&quot;)+&quot;-耗材报价&quot;&#xD;
     });&#xD;
 }</ClientEvent>
       <Property name="caption">商家选择</Property>
