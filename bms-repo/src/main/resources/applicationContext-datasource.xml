@@ -59,7 +59,11 @@
 		<property name="typeAliasesPackage" value="com.jiuyescm.**.entity" />
 		<property name="configLocation" value="classpath:/mybatis-config.xml" />
 		<property name="mapperLocations"
-			value="classpath*:com/jiuyescm/**/mapper/*Mapper.xml" />
+			<!-- value="classpath*:com/jiuyescm/**/mapper/*Mapper.xml" />  -->
+			 <list>
+                <value>classpath*:sqlMap/*Mapper.xml</value>
+                <value>classpath*:com/jiuyescm/**/mapper/*Mapper.xml</value>
+            </list>
 	</bean>
 
 	<!-- 配置事务管理器 -->
