@@ -853,8 +853,9 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
         <Separator/>
         <ToolBarButton id="add">
           <ClientEvent name="onClick">view.get(&quot;#dsQuotaList&quot;).getData().insert();&#xD;
-var en = view.get(&quot;#addQuotaFrm.entity&quot;);&#xD;
-	//en.set(&quot;feeUnitCode&quot;,&quot;ITEM&quot;);&#xD;
+&#xD;
+&#xD;
+&#xD;
 view.get(&quot;#addDialog&quot;).show();</ClientEvent>
           <Property name="caption">新增</Property>
           <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
@@ -1161,6 +1162,12 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">ruleName</Property>
+            <Property name="property">ruleName</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="property">customerName</Property>
             <Property name="name">customerName</Property>
             <Property name="trigger">triggerCustomer1</Property>
@@ -1267,6 +1274,12 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Property name="name">ruleNo</Property>
             <Property name="property">ruleNo</Property>
             <Property name="trigger">triggerRule</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">ruleName</Property>
+            <Property name="property">ruleName</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -2785,11 +2798,29 @@ data.set({&#xD;
 if(!isNullOrEmpty(data.get(&quot;remark&quot;))){&#xD;
 	data.set(&quot;remark&quot;,data.get(&quot;customerName&quot;)+&quot;-&quot;+data.get(&quot;subjectName&quot;));&#xD;
 }&#xD;
+&#xD;
+var result={&#xD;
+	subjectId:data.get(&quot;subjectId&quot;),&#xD;
+	isDefault:&quot;0&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#queryRuleAction&quot;).set(&quot;parameter&quot;,result).execute(function(result){&#xD;
+	var strs= new Array(); //定义一数组 &#xD;
+	strs=result.split(&quot;&amp;&quot;); //字符分割 &#xD;
+	data.set({&#xD;
+		ruleNo:strs[0],&#xD;
+		ruleName:strs[1]&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
 arg.processDefault = false;</ClientEvent>
       <Property name="autoOpen">true</Property>
       <Property name="editable">false</Property>
       <Property name="useEmptyItem">true</Property>
       <Property name="displayProperty">subjectName</Property>
     </DataSetDropDown>
+    <AjaxAction id="queryRuleAction">
+      <Property name="service">generalStorageQuoteController#queryRule</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

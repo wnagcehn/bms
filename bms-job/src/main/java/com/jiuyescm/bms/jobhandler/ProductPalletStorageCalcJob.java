@@ -404,8 +404,7 @@ public class ProductPalletStorageCalcJob extends CommonCalcJob<BizProductPalletS
 		if(mapRule.containsKey(customerId)){
 			ruleEntity=mapRule.get(customerId);
 		}else{
-			map.put("customerid",customerId);
-			map.put("subjectId", SubjectId);
+			map.put("quotationNo",priceGenerallist.get(0).getRuleNo());
 		    ruleEntity=receiveRuleRepository.queryByCustomerId(map);
 		    mapRule.put(customerId, ruleEntity);
 		}

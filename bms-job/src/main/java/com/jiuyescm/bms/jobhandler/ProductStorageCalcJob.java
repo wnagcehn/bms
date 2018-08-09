@@ -397,10 +397,9 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 		if(mapRule.containsKey(customerId)){
 			ruleEntity=mapRule.get(customerId);
 		}else{
-			map.put("customerid",customerId);
-			map.put("subjectId", SubjectId);
+			map.put("quotationNo",priceGenerallist.get(0).getRuleNo());
 		    ruleEntity=receiveRuleRepository.queryByCustomerId(map);
-		    mapRule.put(entity.getCustomerid(), ruleEntity);
+		    mapRule.put(customerId, ruleEntity);
 		}
 		if(ruleEntity == null){
 			XxlJobLogger.log("规则未配置");

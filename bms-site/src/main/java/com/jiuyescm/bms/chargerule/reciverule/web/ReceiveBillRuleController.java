@@ -56,9 +56,18 @@ public class ReceiveBillRuleController{
 	 */
 	@DataProvider
 	public void queryAll(Page<BillRuleReceiveEntity> page,Map<String,Object> parameter){
+		if(parameter==null){
+			parameter=new HashMap<String,Object>();		
+			parameter.put("isDefault", "");
+		}	
+		if(parameter!=null && parameter.get("isDefault")==null){
+			parameter.put("isDefault", "");
+		}
 		if(parameter!=null && "ALL".equals(parameter.get("bizTypeCode"))){
 			parameter.put("bizTypeCode", "");
 		}
+		
+		
 		PageInfo<BillRuleReceiveEntity> tmpPageInfo =receiveRuleService.queryAllRule(parameter,page.getPageNo(),page.getPageSize());
 		if (tmpPageInfo != null) {
 			page.setEntities(tmpPageInfo.getList());
