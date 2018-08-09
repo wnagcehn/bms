@@ -1228,7 +1228,6 @@ public class BmsDispatchVo implements Serializable{
 
 		/**
 		 * 责任方
-		 * @return
 		 */
 		public void setDutyType(String dutyType) {
 			this.dutyType = dutyType;
@@ -1244,7 +1243,6 @@ public class BmsDispatchVo implements Serializable{
 
 		/**
 		 * 修改原因
-		 * @return
 		 */
 		public void setUpdateReasonType(String updateReasonType) {
 			this.updateReasonType = updateReasonType;
@@ -1260,7 +1258,6 @@ public class BmsDispatchVo implements Serializable{
 
 		/**
 		 * 修改原因明细
-		 * @return
 		 */
 		public void setUpdateReasonDetail(String updateReasonDetail) {
 			this.updateReasonDetail = updateReasonDetail;
