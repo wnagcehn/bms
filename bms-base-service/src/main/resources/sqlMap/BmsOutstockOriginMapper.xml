@@ -3,7 +3,7 @@
 <mapper namespace="com.jiuyescm.bms.BmsOutstockOriginEntityMapper" >
     <resultMap id="baseResultMap" type="java.math.BigDecimal.BmsOutstockOriginEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
-	    <result column="id" property="id" jdbcType="BIGINT UNSIGNED" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
 	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
 	    <result column="zexpressnum" property="zexpressnum" jdbcType="VARCHAR" />

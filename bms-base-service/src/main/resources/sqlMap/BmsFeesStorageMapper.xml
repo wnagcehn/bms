@@ -3,7 +3,7 @@
 <mapper namespace="com.jiuyescm.bms.BmsFeesStorageEntityMapper" >
     <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.entity.BmsFeesStorageEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
-	    <result column="id" property="id" jdbcType="BIGINT UNSIGNED" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
 	    <result column="uniq_code" property="uniqCode" jdbcType="VARCHAR" />
 	    <result column="charge_weight" property="chargeWeight" jdbcType="DECIMAL" />

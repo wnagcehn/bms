@@ -273,31 +273,29 @@
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
-        <Property name="label">九曳订单号</Property>
+        <Property name="label">出库单号</Property>
       </PropertyDef>
-      <PropertyDef name="logistics">
+      <PropertyDef name="customerId">
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
         <Property name="label">物流商</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult(&quot;ALL&quot;)}</Property>
         </Property>
         <Property name="readOnly">false</Property>
       </PropertyDef>
-      <PropertyDef name="wareHousename">
+      <PropertyDef name="warehouseCode">
         <Property name="label">仓库名称</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="merchantId">
-        <Property name="label">商家</Property>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+        <Property name="label">运单号</Property>
       </PropertyDef>
-      <PropertyDef name="accountState">
-        <Property name="label">状态</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
-        </Property>
-      </PropertyDef>
-      <PropertyDef name="createTime">
+      <PropertyDef name="startTime">
         <Property name="dataType">DateTime</Property>
         <Property name="label">创建时间</Property>
       </PropertyDef>
@@ -305,15 +303,11 @@
         <Property name="dataType">DateTime</Property>
         <Property name="label">结束时间</Property>
       </PropertyDef>
-      <PropertyDef name="waybillNo">
+      <PropertyDef name="orderStatus">
         <Property></Property>
-        <Property name="label">运单号</Property>
-      </PropertyDef>
-      <PropertyDef name="extattr1">
-        <Property></Property>
-        <Property name="label">数据类型</Property>
+        <Property name="label">订单状态</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDataStateEnum&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOrderStatusEnum&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="dutyType">
@@ -328,14 +322,13 @@
           </Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="customerName"/>
-      <PropertyDef name="orderStatus">
-        <Property></Property>
-        <Property name="label">订单状态</Property>
+      <PropertyDef name="isCalculated">
+        <Property name="label">状态</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOrderStatusEnum&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="customerName"/>
     </DataType>
     <DataType name="dtBmsOutstockRecord">
       <Property name="creationType">com.jiuyescm.bms.biz.vo.OutstockRecordVo</Property>
@@ -343,27 +336,27 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="waybillNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">运单号</Property>
       </PropertyDef>
       <PropertyDef name="zexpressnum">
-        <Property/>
+        <Property></Property>
         <Property name="label">转寄后运单号</Property>
       </PropertyDef>
       <PropertyDef name="monthFeeCount">
-        <Property/>
+        <Property></Property>
         <Property name="label">月结账号</Property>
       </PropertyDef>
       <PropertyDef name="serviceTypeCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">服务类型</Property>
       </PropertyDef>
       <PropertyDef name="dispatchTypeCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">配送类型</Property>
       </PropertyDef>
       <PropertyDef name="expresstype">
-        <Property/>
+        <Property></Property>
         <Property name="label">快递业务类型</Property>
       </PropertyDef>
       <PropertyDef name="throwWeight">
@@ -387,79 +380,79 @@
         <Property name="label">调整商品数量</Property>
       </PropertyDef>
       <PropertyDef name="adjustSendProvince">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整发件省</Property>
       </PropertyDef>
       <PropertyDef name="adjustSendCity">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整发件市</Property>
       </PropertyDef>
       <PropertyDef name="adjustSendArea">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整发件区</Property>
       </PropertyDef>
       <PropertyDef name="adjustReceiveProvince">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整收件省</Property>
       </PropertyDef>
       <PropertyDef name="adjustReceiveCity">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整收件市</Property>
       </PropertyDef>
       <PropertyDef name="adjustReceiveArea">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整收件区</Property>
       </PropertyDef>
       <PropertyDef name="forwardCarrierId">
-        <Property/>
+        <Property></Property>
         <Property name="label">转寄物流商id</Property>
       </PropertyDef>
       <PropertyDef name="forwardDeliverId">
-        <Property/>
+        <Property></Property>
         <Property name="label">转寄宅配商id</Property>
       </PropertyDef>
       <PropertyDef name="adjustCarrierId">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整物流商id</Property>
       </PropertyDef>
       <PropertyDef name="adjustDeliverId">
-        <Property/>
+        <Property></Property>
         <Property name="label">调整宅配商id</Property>
       </PropertyDef>
       <PropertyDef name="accountState">
-        <Property/>
+        <Property></Property>
         <Property name="label">结算状态</Property>
       </PropertyDef>
       <PropertyDef name="bigstatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">大状态</Property>
       </PropertyDef>
       <PropertyDef name="smallstatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">小状态</Property>
       </PropertyDef>
       <PropertyDef name="waybillStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">运单状态</Property>
       </PropertyDef>
       <PropertyDef name="orderStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">订单状态</Property>
       </PropertyDef>
       <PropertyDef name="delFlag">
-        <Property/>
+        <Property></Property>
         <Property name="label">作废标识</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
-        <Property/>
+        <Property></Property>
         <Property name="label">修改人</Property>
       </PropertyDef>
       <PropertyDef name="lastModifierId">
-        <Property/>
+        <Property></Property>
         <Property name="label">修改人Id</Property>
       </PropertyDef>
       <PropertyDef name="isCalculated">
-        <Property/>
+        <Property></Property>
         <Property name="label">计算状态</Property>
       </PropertyDef>
       <PropertyDef name="signTime">
@@ -756,34 +749,29 @@ var nowdays = new Date();&#xD;
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">logistics</Property>
-          <Property name="property">logistics</Property>
+          <Property name="name">carrierId</Property>
+          <Property name="property">carrierId</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">wareHousename</Property>
-          <Property name="property">wareHousename</Property>
+          <Property name="name">warehouseCode</Property>
+          <Property name="property">warehouseCode</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">extattr1</Property>
-          <Property name="property">extattr1</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">merchantId</Property>
-          <Property name="property">merchantId</Property>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
           <Property name="trigger">triggerCus</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">accountState</Property>
-          <Property name="property">accountState</Property>
+          <Property name="name">isCalculated</Property>
+          <Property name="property">isCalculated</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">createTime</Property>
-          <Property name="property">createTime</Property>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -802,6 +790,30 @@ var nowdays = new Date();&#xD;
           <Editor/>
         </AutoFormElement>
       </AutoForm>
+      <Trigger id="triggerCus">
+        <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+      </Trigger>
+      <FloatPanel id="panelCustomer">
+        <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queyConditionForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+	view.get(&quot;#queyConditionForm.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+}</ClientEvent>
+        <Property name="caption">商家选择</Property>
+        <Property name="center">true</Property>
+        <Property name="closeable">true</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <Property name="height">450</Property>
+        <Property name="modal">true</Property>
+        <Property name="width">800</Property>
+        <Buttons/>
+        <Children>
+          <SubViewHolder id="viewSelectCustomer">
+            <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+          </SubViewHolder>
+        </Children>
+        <Tools/>
+      </FloatPanel>
     </Container>
     <SplitPanel>
       <Property name="direction">top</Property>

@@ -37,7 +37,7 @@ public class DispatchRepositoryImpl extends MyBatisDao<BmsDispatchVo> implements
 	@Override
 	public PageInfo<BmsDispatchVo> queryAll(Map<String, Object> condition,int pageNo, int pageSize) {
 		try{
-			List<BmsDispatchVo> list = selectList("com.jiuyescm.bms.DispatchMapper.queryAll", condition, new RowBounds(pageNo, pageSize));
+			List<BmsDispatchVo> list = selectList("com.jiuyescm.bms.biz.DispatchMapper.queryAll", condition, new RowBounds(pageNo, pageSize));
 			PageInfo<BmsDispatchVo> pageInfo = new PageInfo<BmsDispatchVo>(list);
 	        return pageInfo;
 		}
