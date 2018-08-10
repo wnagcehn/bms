@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.BmsFeesStorageDiscountEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.entity.BmsFeesStorageDiscountEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="uniq_code" property="uniqCode" jdbcType="VARCHAR" />
+	    <result column="discount_amount" property="discountAmount" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+	    <result column="quote_id" property="quoteId" jdbcType="BIGINT" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="calcu_status" property="calcuStatus" jdbcType="VARCHAR" />
+	    <result column="calcu_msg" property="calcuMsg" jdbcType="VARCHAR" />
+	    <result column="calcu_time" property="calcuTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, task_id, subject_code, uniq_code, discount_amount, derate_amount, quote_id, is_calculated, calcu_status, calcu_msg, calcu_time, write_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(taskId != null and taskId !='')" >
+				and task_id = #{taskId}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(uniqCode != null and uniqCode !='')" >
+				and uniq_code = #{uniqCode}
+		</if>
+		<if test="(discountAmount != null and discountAmount !='')" >
+				and discount_amount = #{discountAmount}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(quoteId != null and quoteId !='')" >
+				and quote_id = #{quoteId}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(calcuStatus != null and calcuStatus !='')" >
+				and calcu_status = #{calcuStatus}
+		</if>
+		<if test="(calcuMsg != null and calcuMsg !='')" >
+				and calcu_msg = #{calcuMsg}
+		</if>
+		<if test="(calcuTime != null and calcuTime !='')" >
+			    and calcu_time >= #{calcuTime} add <![CDATA[calcu_time <= #{calcuTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+    </sql>
+	  
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.entity.BmsFeesStorageDiscountEntity">
+        update bms_fees_storage_discount 
+		<set >
+
+<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
+<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+<if test="uniqCode != null" >uniq_code=#{uniqCode,jdbcType=VARCHAR},</if>
+<if test="discountAmount != null" >discount_amount=#{discountAmount,jdbcType=DECIMAL},</if>
+<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+<if test="quoteId != null" >quote_id=#{quoteId,jdbcType=BIGINT},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="calcuStatus != null" >calcu_status=#{calcuStatus,jdbcType=VARCHAR},</if>
+<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>
+<if test="calcuTime != null" >calcu_time=#{calcuTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+</mapper>

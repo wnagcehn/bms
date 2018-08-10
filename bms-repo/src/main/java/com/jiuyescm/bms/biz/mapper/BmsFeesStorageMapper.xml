@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.BmsFeesStorageEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.entity.BmsFeesStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="uniq_code" property="uniqCode" jdbcType="VARCHAR" />
+	    <result column="charge_weight" property="chargeWeight" jdbcType="DECIMAL" />
+	    <result column="charge_box" property="chargeBox" jdbcType="DECIMAL" />
+	    <result column="charge_qty" property="chargeQty" jdbcType="DECIMAL" />
+	    <result column="charge_sku" property="chargeSku" jdbcType="DECIMAL" />
+	    <result column="charge_carrier_id" property="chargeCarrierId" jdbcType="VARCHAR" />
+	    <result column="quote_id" property="quoteId" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="calcu_status" property="calcuStatus" jdbcType="VARCHAR" />
+	    <result column="calcu_msg" property="calcuMsg" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="calcu_time" property="calcuTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, subject_code, uniq_code, charge_weight, charge_box, charge_qty, charge_sku, charge_carrier_id, quote_id, amount, derate_amount, create_time, write_time, is_calculated, calcu_status, calcu_msg, remark, del_flag, calcu_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(uniqCode != null and uniqCode !='')" >
+				and uniq_code = #{uniqCode}
+		</if>
+		<if test="(chargeWeight != null and chargeWeight !='')" >
+				and charge_weight = #{chargeWeight}
+		</if>
+		<if test="(chargeBox != null and chargeBox !='')" >
+				and charge_box = #{chargeBox}
+		</if>
+		<if test="(chargeQty != null and chargeQty !='')" >
+				and charge_qty = #{chargeQty}
+		</if>
+		<if test="(chargeSku != null and chargeSku !='')" >
+				and charge_sku = #{chargeSku}
+		</if>
+		<if test="(chargeCarrierId != null and chargeCarrierId !='')" >
+				and charge_carrier_id = #{chargeCarrierId}
+		</if>
+		<if test="(quoteId != null and quoteId !='')" >
+				and quote_id = #{quoteId}
+		</if>
+		<if test="(amount != null and amount !='')" >
+				and amount = #{amount}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(calcuStatus != null and calcuStatus !='')" >
+				and calcu_status = #{calcuStatus}
+		</if>
+		<if test="(calcuMsg != null and calcuMsg !='')" >
+				and calcu_msg = #{calcuMsg}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(calcuTime != null and calcuTime !='')" >
+			    and calcu_time >= #{calcuTime} add <![CDATA[calcu_time <= #{calcuTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.entity.BmsFeesStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from bms_fees_storage
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.entity.BmsFeesStorageEntity">
+        insert into bms_fees_storage(subject_code, uniq_code, charge_weight, charge_box, charge_qty, charge_sku, charge_carrier_id, quote_id, amount, derate_amount, create_time, write_time, is_calculated, calcu_status, calcu_msg, remark, del_flag, calcu_time)
+        values (
+
+#{subjectCode,jdbcType=VARCHAR}, 
+#{uniqCode,jdbcType=VARCHAR}, 
+#{chargeWeight,jdbcType=DECIMAL}, 
+#{chargeBox,jdbcType=DECIMAL}, 
+#{chargeQty,jdbcType=DECIMAL}, 
+#{chargeSku,jdbcType=DECIMAL}, 
+#{chargeCarrierId,jdbcType=VARCHAR}, 
+#{quoteId,jdbcType=VARCHAR}, 
+#{amount,jdbcType=DECIMAL}, 
+#{derateAmount,jdbcType=DECIMAL}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{isCalculated,jdbcType=VARCHAR}, 
+#{calcuStatus,jdbcType=VARCHAR}, 
+#{calcuMsg,jdbcType=VARCHAR}, 
+#{remark,jdbcType=VARCHAR}, 
+#{delFlag,jdbcType=VARCHAR}, 
+#{calcuTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.biz.entity.BmsFeesStorageEntity">
+        update bms_fees_storage 
+		<set >
+
+<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+<if test="uniqCode != null" >uniq_code=#{uniqCode,jdbcType=VARCHAR},</if>
+<if test="chargeWeight != null" >charge_weight=#{chargeWeight,jdbcType=DECIMAL},</if>
+<if test="chargeBox != null" >charge_box=#{chargeBox,jdbcType=DECIMAL},</if>
+<if test="chargeQty != null" >charge_qty=#{chargeQty,jdbcType=DECIMAL},</if>
+<if test="chargeSku != null" >charge_sku=#{chargeSku,jdbcType=DECIMAL},</if>
+<if test="chargeCarrierId != null" >charge_carrier_id=#{chargeCarrierId,jdbcType=VARCHAR},</if>
+<if test="quoteId != null" >quote_id=#{quoteId,jdbcType=VARCHAR},</if>
+<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+<if test="calcuStatus != null" >calcu_status=#{calcuStatus,jdbcType=VARCHAR},</if>
+<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>
+<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="calcuTime != null" >calcu_time=#{calcuTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>
