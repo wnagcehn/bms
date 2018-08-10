@@ -109,7 +109,7 @@ public class OutStockController {
 			param = new HashMap<String, Object>();
 		}
 		
-		PageInfo<OutstockRecordVo> pageInfo = outstockService.
+		PageInfo<OutstockRecordVo> pageInfo = null;
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
