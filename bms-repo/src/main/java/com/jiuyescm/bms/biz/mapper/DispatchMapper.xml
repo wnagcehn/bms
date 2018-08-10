@@ -105,7 +105,7 @@
 				and customer_id = #{customerId}
 		</if>
 		<if test="(carrierId != null and carrierId !='')" >
-				and carrier_id = #{carrierId}
+				and origin_carrier_id = #{carrierId}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
 				and warehouse_code = #{warehouseCode}
@@ -137,6 +137,7 @@
     	select
     	<include refid="baseColumns"/>
     	from view_dispatch 
+    	where 1=1
     	<include refid="baseSelectColumns" />
     </select>
     

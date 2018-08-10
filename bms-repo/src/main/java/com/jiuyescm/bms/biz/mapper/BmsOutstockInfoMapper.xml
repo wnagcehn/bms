@@ -223,7 +223,7 @@
 <if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
 <if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 		</set>
-        where id=#{id}
+        where waybill_no=#{waybillNo}
     </update>
 
 </mapper>
