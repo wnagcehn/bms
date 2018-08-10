@@ -112,6 +112,21 @@ public class OutStockController {
 	}
 	
 	/**
+	 * 分页查询
+	 * 
+	 * @param page
+	 * @param param
+	 */
+	@DataProvider
+	public BmsDispatchVo queryOne( Map<String, Object> param) {
+		if (param == null){
+			param = new HashMap<String, Object>();
+		}	
+		BmsDispatchVo vo = dispatchService.queryOne(param);
+		return vo;
+	}
+	
+	/**
 	 * 更新
 	 * @param datas
 	 * @return
@@ -313,7 +328,7 @@ public class OutStockController {
 					for(CarrierVo entity:carrierList){
 						if(entity.getName().equals(adjustCarrier)){
 							bmsDispatchVo.setAdjustCarrierId(entity.getCarrierid());
-							//map0.put("adjustCarrierName", adjustCarrier);
+							bmsDispatchVo.setAdjustCarrierName(adjustCarrier);
 							break;
 						}
 					}
@@ -328,9 +343,9 @@ public class OutStockController {
 				if(StringUtils.isNotBlank(adjustDeliver)){
 					for(DeliverVo entity:deliverList){
 						if(entity.getDelivername().equals(adjustDeliver)){
-							//map0.put("adjustDeliverName", adjustDeliver);
 							bmsDispatchVo.setAdjustDeliverId(entity.getDeliverid());
-							break;	
+							bmsDispatchVo.setAdjustDeliverName(adjustDeliver);
+							break;
 						}
 					}
 					

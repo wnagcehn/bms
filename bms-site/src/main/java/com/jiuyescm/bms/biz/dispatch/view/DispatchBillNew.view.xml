@@ -522,6 +522,10 @@
     <DataSet id="dsErrorMessageVo">
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
+    <DataSet id="dsBmsOutstockDetail">
+      <Property name="dataType">[dtBmsOutstock]</Property>
+      <Property name="dataProvider">outStockController#queryOne</Property>
+    </DataSet>
     <ToolBar>
       <DataPilot>
         <Property name="itemCodes">pages,pageSize</Property>
@@ -998,6 +1002,17 @@ with (view.get(&quot;#dsBmsOutstockRecord&quot;)){&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
 }&#xD;
+&#xD;
+/**&#xD;
+with (view.get(&quot;#dsBmsOutstockDetail&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		waybillNo:data.current.get(&quot;waybillNo&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+**/&#xD;
 </ClientEvent>
               <Property name="dataSet">dsBmsOutstock</Property>
               <Property name="readOnly">true</Property>
@@ -1621,7 +1636,7 @@ if(data.error!=null){&#xD;
 	 return;&#xD;
 }&#xD;
 if(data.succ!=null){&#xD;
-	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
 	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
 		view.get(&quot;#updateWayBillDialog&quot;).hide();&#xD;
 		&#xD;
@@ -1680,7 +1695,7 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
 //view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
 //view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
 </ClientEvent>
-          <Property name="fileResolver">dispatchBillController#importUpdateWeight</Property>
+          <Property name="fileResolver">outStockController#importUpdateWeightLock</Property>
           <Property name="caption">导入Excel</Property>
           <Property name="maxFileSize">5MB</Property>
           <Filters>
@@ -1699,5 +1714,26 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
     <DownloadAction id="downloadTemplateAction">
       <Property name="fileProvider">dispatchBillController#downloadTemplate</Property>
     </DownloadAction>
+    <Dialog id="errorMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="width">540</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>
