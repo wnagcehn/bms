@@ -164,27 +164,27 @@
       </PropertyDef>
       <PropertyDef name="originReceiveProvince">
         <Property></Property>
-        <Property name="label">收件人省份</Property>
+        <Property name="label">收件省</Property>
       </PropertyDef>
       <PropertyDef name="adjustReceiveProvince">
         <Property></Property>
-        <Property name="label">调整收件省</Property>
+        <Property name="label">调整省</Property>
       </PropertyDef>
       <PropertyDef name="originReceiveCity">
         <Property></Property>
-        <Property name="label">收件人城市</Property>
+        <Property name="label">收件市</Property>
       </PropertyDef>
       <PropertyDef name="adjustReceiveCity">
         <Property></Property>
-        <Property name="label">调整收件市</Property>
+        <Property name="label">调整市</Property>
       </PropertyDef>
       <PropertyDef name="originReceiveArea">
         <Property></Property>
-        <Property name="label">收件人地区</Property>
+        <Property name="label">收件区县</Property>
       </PropertyDef>
       <PropertyDef name="adjustReceiveArea">
         <Property></Property>
-        <Property name="label">调整收件区</Property>
+        <Property name="label">调整区</Property>
       </PropertyDef>
       <PropertyDef name="lastModifierId">
         <Property></Property>
@@ -486,11 +486,14 @@
     </DataSet>
     <DataSet id="dsBmsOutstockRecord">
       <Property name="dataType">[dtBmsOutstockRecord]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">outStockController#queryRecord</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
         <Property name="itemCodes">pages,pageSize</Property>
-        <Property name="dataSet">dsBizDispatchBillEntity</Property>
+        <Property name="dataSet">dsBmsOutstock</Property>
       </DataPilot>
       <ToolBarButton id="btnQuery">
         <ClientEvent name="onClick">&#xD;
@@ -503,7 +506,7 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnUpdate">
-        <ClientEvent name="onClick">var data=view.get(&quot;#dsBizDispatchBillEntity.data&quot;);&#xD;
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsOutstock.data&quot;);&#xD;
 if(data.current){&#xD;
 	view.get(&quot;#dialogBillEdit&quot;).show();&#xD;
 }else{&#xD;
@@ -820,6 +823,10 @@ if (data != null) {&#xD;
       <Property name="position">210</Property>
       <MainControl>
         <Container>
+          <DataPilot>
+            <Property name="itemCodes">pages,pageSize</Property>
+            <Property name="dataSet">dsBmsOutstockRecord</Property>
+          </DataPilot>
           <DataGrid id="DataGridRecord">
             <Property name="dataSet">dsBmsOutstockRecord</Property>
             <DataColumn name="waybillNo">
@@ -949,6 +956,16 @@ if (data != null) {&#xD;
         <Container layout="hbox">
           <Container>
             <DataGrid id="DataGrid1">
+              <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsBmsOutstock&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsOutstockRecord&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		waybillNo:data.current.get(&quot;waybillNo&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
               <Property name="dataSet">dsBmsOutstock</Property>
               <Property name="readOnly">true</Property>
               <Property name="selectionMode">multiRows</Property>
@@ -1175,6 +1192,16 @@ if (data != null) {&#xD;
           </Container>
           <Container>
             <DataGrid id="DataGrid2">
+              <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsBmsOutstock&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsOutstockRecord&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		waybillNo:data.current.get(&quot;waybillNo&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
               <Property name="dataSet">dsBmsOutstock</Property>
               <Property name="width">500</Property>
               <DataColumn name="originCarrierId">
@@ -1230,5 +1257,151 @@ if (data != null) {&#xD;
         </Container>
       </SideControl>
     </SplitPanel>
+    <Dialog id="dialogBillEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsOutstock&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">600</Property>
+      <Property name="height">370</Property>
+      <Property name="caption">调整运单</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity = view.get(&quot;#billEditForm&quot;).get(&quot;entity&quot;);	&#xD;
+&#xD;
+var weight=entity.get(&quot;totalWeight&quot;);&#xD;
+//alert(&quot;调整重量&quot;+adjustWeight);&#xD;
+&#xD;
+if(undefined==weight || weight==''){&#xD;
+	dorado.MessageBox.alert(&quot;请填写重量!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if (isNaN(weight)) {&#xD;
+	dorado.MessageBox.alert(&quot;重量必须为数字!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var adjustCarrierName=entity.get(&quot;adjustCarrierName&quot;);&#xD;
+if(adjustCarrierName==&quot;&quot;){&#xD;
+	entity.set(&quot;adjustCarrierId&quot;,&quot;&quot;);&#xD;
+}&#xD;
+&#xD;
+var bizEntity=view.get(&quot;#dsBmsOutstock.data&quot;);&#xD;
+&#xD;
+view.id(&quot;updateBillAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dsBmsOutstock&quot;)){&#xD;
+				//定义查询条件json结构s&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		view.id(&quot;dialogBillEdit&quot;).hide();&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsBmsOutstock&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogBillEdit&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="billEditForm">
+          <Property name="dataSet">dsBmsOutstock</Property>
+          <Property name="dataType">dtBmsOutstock</Property>
+          <Property name="editorWidth">200</Property>
+          <Property name="rowHeight">40</Property>
+          <Property name="cols">*,*</Property>
+          <AutoFormElement>
+            <Property name="property">adjustReceiveProvince</Property>
+            <Property name="name">adjustReceiveProvince</Property>
+            <Property name="trigger">ddropDownQueryProvince</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">originReceiveProvince</Property>
+            <Property name="name">originReceiveProvince</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">adjustReceiveCity</Property>
+            <Property name="name">adjustReceiveCity</Property>
+            <Property name="trigger">ddropDownQueryCity</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">originReceiveCity</Property>
+            <Property name="name">originReceiveCity</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">adjustReceiveArea</Property>
+            <Property name="name">adjustReceiveArea</Property>
+            <Property name="trigger">ddropDownQueryDistrict</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">originReceiveArea</Property>
+            <Property name="name">originReceiveArea</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">adjustWeight</Property>
+            <Property name="name">adjustWeight</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">totalWeight</Property>
+            <Property name="name">totalWeight</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">adjustCarrierId</Property>
+            <Property name="name">adjustCarrierId</Property>
+            <Property name="trigger">triggerCarrierSelect</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">originCarrierId</Property>
+            <Property name="name">originCarrierId</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">adjustSendProvince</Property>
+            <Property name="name">adjustSendProvince</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Property name="editable">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">adjustSendCity</Property>
+            <Property name="name">adjustSendCity</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Property name="editable">true</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateBillAction">
+      <Property name="dataResolver">outStockController#updateEntity</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsOutstock</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>

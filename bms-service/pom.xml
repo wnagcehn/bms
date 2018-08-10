@@ -41,11 +41,7 @@
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
-		<dependency>
-		  <groupId>com.jiuyescm.bms</groupId>
-		  <artifactId>bms-base-service</artifactId>
-		  <version>1.0.1-SNAPSHOT</version>
-		</dependency>
+		
 		
 		<dependency>
 			<groupId>com.github.sgroschupf</groupId>

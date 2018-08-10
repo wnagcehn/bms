@@ -157,6 +157,8 @@ public class BmsDispatchVo implements Serializable{
 		private String calcuMsg;
 		// 计算时间
 		private Timestamp calcuTime;
+		//费用No
+		private String feesNo;
 
 		public BmsDispatchVo() {
 
@@ -1261,6 +1263,14 @@ public class BmsDispatchVo implements Serializable{
 		 */
 		public void setUpdateReasonDetail(String updateReasonDetail) {
 			this.updateReasonDetail = updateReasonDetail;
+		}
+
+		public String getFeesNo() {
+			return feesNo;
+		}
+
+		public void setFeesNo(String feesNo) {
+			this.feesNo = feesNo;
 		}
 	    
 }
