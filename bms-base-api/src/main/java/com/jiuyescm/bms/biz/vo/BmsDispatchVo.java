@@ -2,7 +2,7 @@ package com.jiuyescm.bms.biz.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 /**
  * 配送数据vo

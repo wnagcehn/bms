@@ -21,7 +21,7 @@
 	    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
 	    <result column="origin_month_fee_count" property="originMonthFeeCount" jdbcType="VARCHAR" />
 	    <result column="month_fee_count" property="monthFeeCount" jdbcType="VARCHAR" />
-	    <result column="product_detail" property="productDetail" jdbcType="LONGTEXT" />
+	    <result column="product_detail" property="productDetail" jdbcType="VARCHAR" />
 	    <result column="origin_service_type_code" property="originServiceTypeCode" jdbcType="VARCHAR" />
 	    <result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
 	    <result column="system_weight" property="systemWeight" jdbcType="DECIMAL" />
@@ -114,7 +114,7 @@
 				and waybill_no = #{waybillNo}
 		</if>
     	<if test="(startTime != null and startTime !='')" >
-			    and create_time>= #{createTime}
+			    and create_time>= #{startTime}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
 			    and <![CDATA[create_time <= #{endTime} ]]>
