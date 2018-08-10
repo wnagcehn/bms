@@ -11,8 +11,11 @@
 	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
 	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	    <result column="origin_carrier_id" property="originCarrierId" jdbcType="VARCHAR" />
+	    <result column="origin_carrier_name" property="originCarrierName" jdbcType="VARCHAR" />
 	    <result column="forward_carrier_id" property="forwardCarrierId" jdbcType="VARCHAR" />
+	    <result column="forward_carrier_name" property="forwardCarrierName" jdbcType="VARCHAR" />
 	    <result column="adjust_carrier_id" property="adjustCarrierId" jdbcType="VARCHAR" />
+	    <result column="adjust_carrier_id" property="adjustCarrierName" jdbcType="VARCHAR" />
 	    <result column="origin_deliver_id" property="originDeliverId" jdbcType="VARCHAR" />
 	    <result column="forward_deliver_id" property="forwardDeliverId" jdbcType="VARCHAR" />
 	    <result column="adjust_deliver_id" property="adjustDeliverId" jdbcType="VARCHAR" />
@@ -79,7 +82,7 @@
     
     <sql id="baseColumns">
         outstock_no, waybill_no, origin_zexpressnum, external_no, warehouse_code, customer_id, 
-        origin_carrier_id, forward_carrier_id, adjust_carrier_id, origin_deliver_id, forward_deliver_id,
+        origin_carrier_id,origin_carrier_name, forward_carrier_id,forward_carrier_name, adjust_carrier_id,adjust_carrier_name, origin_deliver_id, forward_deliver_id,
          adjust_deliver_id, temperature_type_code, splitbox_flag, b2b_flag, origin_month_fee_count, 
          month_fee_count, product_detail, origin_service_type_code, service_type_code, system_weight, 
          origin_weight, total_weight, origin_throw_weight, throw_weight, correct_throw_weight, correct_weight, 
@@ -138,6 +141,14 @@
     	<include refid="baseColumns"/>
     	from view_dispatch 
     	<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="queryOne" resultMap="baseResultMap">
+    	select
+    	<include refid="baseColumns"/>
+    	from view_dispatch 
+    	<include refid="baseSelectColumns" />
+    	limit 1
     </select>
     
 

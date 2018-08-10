@@ -28,10 +28,16 @@ public class BmsDispatchVo implements Serializable{
 		private String customerId;
 		// 物流商编号
 		private String originCarrierId;
+		//物流商名称
+		private String originCarrierName;
 		// 转寄物流商id
 		private String forwardCarrierId;
+		// 转寄物流商名称
+		private String forwardCarrierName;
 		// 调整物流商id
 		private String adjustCarrierId;
+		//调整物流商名称
+		private String adjustCarrierName;
 		// 宅配商编号
 		private String originDeliverId;
 		// 转寄宅配商id
@@ -1271,6 +1277,30 @@ public class BmsDispatchVo implements Serializable{
 
 		public void setFeesNo(String feesNo) {
 			this.feesNo = feesNo;
+		}
+
+		public String getOriginCarrierName() {
+			return originCarrierName;
+		}
+
+		public void setOriginCarrierName(String originCarrierName) {
+			this.originCarrierName = originCarrierName;
+		}
+
+		public String getForwardCarrierName() {
+			return forwardCarrierName;
+		}
+
+		public void setForwardCarrierName(String forwardCarrierName) {
+			this.forwardCarrierName = forwardCarrierName;
+		}
+
+		public String getAdjustCarrierName() {
+			return adjustCarrierName;
+		}
+
+		public void setAdjustCarrierName(String adjustCarrierName) {
+			this.adjustCarrierName = adjustCarrierName;
 		}
 	    
 }
