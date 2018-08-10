@@ -48,6 +48,19 @@ public class DispatchRepositoryImpl extends MyBatisDao<BmsDispatchVo> implements
 	}
 
 	@Override
+	public BmsDispatchVo queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		try{
+			BmsDispatchVo dispatch =(BmsDispatchVo) this.selectOne("com.jiuyescm.bms.biz.DispatchMapper.queryOne", condition);
+	        return dispatch;
+		}
+		catch(Exception ex){
+			logger.error("queryAll查询异常", ex);
+			return null;
+		}
+	}
+	
+	@Override
 	public PageInfo<BmsDispatchVo> queryBizOrigin(
 			Map<String, Object> condition, int pageNo, int pageSize) {
 		// TODO Auto-generated method stub
@@ -72,5 +85,7 @@ public class DispatchRepositoryImpl extends MyBatisDao<BmsDispatchVo> implements
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
 
 }
