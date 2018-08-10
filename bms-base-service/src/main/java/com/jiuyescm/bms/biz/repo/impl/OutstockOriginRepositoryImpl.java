@@ -14,7 +14,7 @@ public class OutstockOriginRepositoryImpl extends MyBatisDao<BmsOutstockOriginEn
 	@Override
 	public int updateList(List<BmsOutstockOriginEntity> list) {
 		// TODO Auto-generated method stub
-		return this.updateBatch("com.jiuyescm.bms.BmsOutstockOriginEntityMapper.update", list);
+		return this.updateBatch("com.jiuyescm.bms.BmsOutstockOriginMapper.update", list);
 	}
 
 }
