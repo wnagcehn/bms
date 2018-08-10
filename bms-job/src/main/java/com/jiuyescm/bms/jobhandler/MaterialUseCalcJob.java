@@ -116,10 +116,12 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 			reqVo.setRuleStr(ruleEntity.getRule());
 			storageFeeEntity.setRuleNo(ruleEntity.getQuotationNo());
 			
+			PriceMaterialQuotationEntity quoEntity=new PriceMaterialQuotationEntity();
 			if(mapCusPrice.containsKey(customerId)){
-				reqVo.setQuoEntites(mapCusPrice.get(customerId));
+				quoEntity.setList(mapCusPrice.get(customerId));
 			}
 			
+			reqVo.setQuoEntity(quoEntity);
 		
 			long start = System.currentTimeMillis();// 系统开始时间
 			long current = 0l;// 当前系统时间
