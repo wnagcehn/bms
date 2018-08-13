@@ -307,7 +307,7 @@
       </PropertyDef>
       <PropertyDef name="throwWeight">
         <Property name="dataType">Double</Property>
-        <Property name="label">泡重</Property>
+        <Property name="label">原始泡重</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
         <Property></Property>

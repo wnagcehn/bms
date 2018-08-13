@@ -17,6 +17,7 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.common.constants.DispatchMessageConstant;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
@@ -59,6 +60,8 @@ public class DeliverTemplateController {
 	private IPubRecordLogService pubRecordLogService;
 	@Resource
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Resource
+	private ISystemCodeService systemCodeService;
 	
 	/**
 	 * 分页查询
@@ -99,7 +102,13 @@ public class DeliverTemplateController {
 					return new ResponseVo(ResponseVo.FAIL, MessageConstant.QUOTE_STANDARD_EXIST_MSG);
 				}
 			}
-			
+			List<SystemCodeEntity> codeList = systemCodeService.findEnumList("DISPATCH_COMPANY");
+			for (SystemCodeEntity scEntity : codeList) {
+				if (scEntity.getCode().equals(entity.getDeliver())) {
+					entity.setCarrierid(scEntity.getExtattr1());
+					break;
+				}
+			}
 			String templateNo =sequenceService.getBillNoOne(PriceDispatchTemplateEntity.class.getName(), "IMB", "00000");
 			entity.setTemplateCode(templateNo);
 			entity.setCreateTime(JAppContext.currentTimestamp());
@@ -161,6 +170,13 @@ public class DeliverTemplateController {
 			PriceDispatchTemplateEntity queryEntity = priceDispatchTemplateService.query(condition);
 			if (null != queryEntity) {
 				return new ResponseVo(ResponseVo.FAIL, MessageConstant.QUOTE_STANDARD_EXIST_MSG);
+			}
+		}
+		List<SystemCodeEntity> codeList = systemCodeService.findEnumList("DISPATCH_COMPANY");
+		for (SystemCodeEntity scEntity : codeList) {
+			if (scEntity.getCode().equals(temp.getDeliver())) {
+				temp.setCarrierid(scEntity.getExtattr1());
+				break;
 			}
 		}
 		temp.setLastModifier(JAppContext.currentUserName());

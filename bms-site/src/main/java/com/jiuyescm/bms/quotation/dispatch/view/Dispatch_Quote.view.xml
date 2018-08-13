@@ -261,6 +261,7 @@
         </Property>
         <Property name="defaultValue">GENERAL</Property>
       </PropertyDef>
+      <PropertyDef name="carrierid"/>
     </DataType>
     <DataType name="dtPriceCondition">
       <PropertyDef name="startWarehouseId">
@@ -802,6 +803,12 @@
       <PropertyDef name="areaName">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="serviceTypeCode">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
+      <PropertyDef name="servicename">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -1128,7 +1135,8 @@ if(currentData){&#xD;
 with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
-		templateCode:data.current.get(&quot;templateCode&quot;)&#xD;
+		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+		carrierid:data.current.get(&quot;carrierid&quot;)&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -1461,7 +1469,8 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 		startWarehouseId:startWarehouseId,&#xD;
 		provinceId:provinceId,&#xD;
 		cityId:cityId,&#xD;
-		areaId:areaId&#xD;
+		areaId:areaId,&#xD;
+		carrierid:data.current.get(&quot;carrierid&quot;)&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -1686,8 +1695,17 @@ if(data){&#xD;
               <Property name="property">continuedPrice</Property>
               <Property name="width">100</Property>
             </DataColumn>
-            <DataColumn name="timeliness">
-              <Property name="property">timeliness</Property>
+            <DataColumn>
+              <Property name="property">serviceTypeCode</Property>
+              <Property name="name">serviceTypeCode</Property>
+              <Property name="width">90</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">servicename</Property>
+              <Property name="property">servicename</Property>
+              <Property name="width">90</Property>
+              <Editor/>
             </DataColumn>
             <DataColumn>
               <Property name="property">productCase</Property>
@@ -1830,6 +1848,7 @@ view.id(&quot;updateAction&quot;).execute(function(result){&#xD;
 		//定义查询条件json结构&#xD;
 		var queryJson={&#xD;
 			templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+			carrierid:data.current.get(&quot;carrierid&quot;)&#xD;
 		};&#xD;
 		set(&quot;parameter&quot;, queryJson);&#xD;
 		flushAsync();&#xD;
@@ -1858,6 +1877,7 @@ view.id(&quot;updateAction&quot;).execute(function(result){&#xD;
           <Property name="dataType">dtBmsQuoteDispatchDetailVo</Property>
           <Property name="rowHeight">30</Property>
           <Property name="cols">*,*,*,*</Property>
+          <Property name="labelWidth">90</Property>
           <AutoFormElement layoutConstraint="colSpan:4">
             <Property name="name">templateCode</Property>
             <Property name="property">templateCode</Property>
@@ -1924,11 +1944,23 @@ view.id(&quot;updateAction&quot;).execute(function(result){&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">
-            <Property name="name">timeliness</Property>
-            <Property name="property">timeliness</Property>
+            <Property name="name">serviceTypeCode</Property>
+            <Property name="property">serviceTypeCode</Property>
             <Property name="editorWidth">170</Property>
             <Property name="editable">true</Property>
             <Property name="showHint">false</Property>
+            <Property name="trigger">triggerServiceType</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">servicename</Property>
+            <Property name="property">servicename</Property>
+            <Property name="showHint">false</Property>
+            <Property name="trigger">triggerServiceType</Property>
+            <Property name="editorWidth">170</Property>
+            <Property name="width">270</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">
@@ -2760,5 +2792,48 @@ if(data.succ){&#xD;
       <Property name="dataFontSize">10</Property>
       <Property name="maxSize">100000</Property>
     </Export2ReportAction>
+    <Trigger id="triggerServiceType">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsGenericTemplate&quot;).getData();&#xD;
+var carrierid=data.current.get(&quot;carrierid&quot;);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectServiceType&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsPubCarrierServicetypeEntity.data&quot;);&#xD;
+subviewData.clear();&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsPubCarrierServicetypeEntityQuery.data&quot;).current;&#xD;
+&#xD;
+ds.set(&quot;carrierid&quot;,carrierid);&#xD;
+&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsPubCarrierServicetypeEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelServiceType&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelServiceType">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectServiceType.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        serviceTypeCode:data.get(&quot;servicecode&quot;),&#xD;
+		servicename:data.get(&quot;servicename&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectServiceType">
+          <Property name="subView">com.jiuyescm.bms.base.servicetype.view.ServicetypeLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

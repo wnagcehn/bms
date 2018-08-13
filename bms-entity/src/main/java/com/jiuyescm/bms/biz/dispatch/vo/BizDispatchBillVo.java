@@ -213,6 +213,8 @@ public class BizDispatchBillVo implements IEntity {
 	//原始重量
 	private Double originWeight;
 	
+	private Double correctThrowWeight;
+	
 	public BizDispatchBillVo() {
 
 	}
@@ -1351,6 +1353,14 @@ public class BizDispatchBillVo implements IEntity {
 
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public Double getCorrectThrowWeight() {
+		return correctThrowWeight;
+	}
+
+	public void setCorrectThrowWeight(Double correctThrowWeight) {
+		this.correctThrowWeight = correctThrowWeight;
 	}
 
     

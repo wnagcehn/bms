@@ -31,7 +31,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag
+        id, template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag, service_type_code
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -115,11 +115,87 @@
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
         select
-        <include refid="baseColumns" />
-        from bms_quote_dispatch_detail
-        where 1=1 and del_flag = '0'
-		<include refid="baseSelectColumns" />
-		ORDER BY create_time desc,start_warehouse_id,province_id
+        d.*, s.servicename as servicename
+        from bms_quote_dispatch_detail d
+		LEFT JOIN price_dispatch_template t on d.template_code=t.template_code
+		LEFT JOIN pub_carrier_servicetype s on s.servicecode=d.service_type_code and s.carrierid = #{carrierid}
+        where 1=1 and d.del_flag = '0'
+        <if test="(id != null and id !='')" >
+				and d.id = #{id}
+		</if>
+		<if test="(templateCode != null and templateCode !='')" >
+				and d.template_code = #{templateCode}
+		</if>
+		<if test="(startWarehouseId != null and startWarehouseId !='')" >
+				and d.start_warehouse_id = #{startWarehouseId}
+		</if>
+		<if test="(provinceId != null and provinceId !='')" >
+				and d.province_id = #{provinceId}
+		</if>
+		<if test="(cityId != null and cityId !='')" >
+				and d.city_id = #{cityId}
+		</if>
+		<if test="(areaId != null and areaId !='')" >
+				and d.area_id = #{areaId}
+		</if>
+		<if test="(weightDown != null and weightDown !='')" >
+				and d.weight_down = #{weightDown}
+		</if>
+		<if test="(weightUp != null and weightUp !='')" >
+				and d.weight_up = #{weightUp}
+		</if>
+		<if test="(unitPrice != null and unitPrice !='')" >
+				and d.unit_price = #{unitPrice}
+		</if>
+		<if test="(firstWeight != null and firstWeight !='')" >
+				and d.first_weight = #{firstWeight}
+		</if>
+		<if test="(firstWeightPrice != null and firstWeightPrice !='')" >
+				and d.first_weight_price = #{firstWeightPrice}
+		</if>
+		<if test="(continuedWeight != null and continuedWeight !='')" >
+				and d.continued_weight = #{continuedWeight}
+		</if>
+		<if test="(continuedPrice != null and continuedPrice !='')" >
+				and d.continued_price = #{continuedPrice}
+		</if>
+		<if test="(weightLimit != null and weightLimit !='')" >
+				and d.weight_limit = #{weightLimit}
+		</if>
+		<if test="(timeliness != null and timeliness !='')" >
+				and d.timeliness = #{timeliness}
+		</if>
+		<if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and d.temperature_type_code = #{temperatureTypeCode}
+		</if>
+		<if test="(productCase != null and productCase !='')" >
+				and d.product_case = #{productCase}
+		</if>
+		<if test="(areaTypeCode != null and areaTypeCode !='')" >
+				and d.area_type_code = #{areaTypeCode}
+		</if>
+		<if test="(deliverid != null and deliverid !='')" >
+				and d.deliverid = #{deliverid}
+		</if>
+		<if test="(mark != null and mark !='')" >
+				and d.mark = #{mark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and d.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and d.create_time >= #{createTime} add <![CDATA[d.create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and d.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and d.last_modify_time >= #{lastModifyTime} add <![CDATA[d.last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and d.del_flag = #{delFlag}
+		</if>
+		ORDER BY d.create_time desc,d.start_warehouse_id,d.province_id 
     </select>
 
 	<select id="queryOne"  parameterType="java.util.Map"
@@ -153,7 +229,7 @@
 	 -->
 
     <insert id="save" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity">
-        insert into bms_quote_dispatch_detail(template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag)
+        insert into bms_quote_dispatch_detail(template_code, start_warehouse_id, province_id, city_id, area_id, weight_down, weight_up, unit_price, first_weight, first_weight_price, continued_weight, continued_price, weight_limit, timeliness, temperature_type_code, product_case, area_type_code, deliverid, mark, creator, create_time, last_modifier, last_modify_time, del_flag, service_type_code)
         values (
 			#{templateCode,jdbcType=VARCHAR}, 
 			#{startWarehouseId,jdbcType=VARCHAR}, 
@@ -178,7 +254,8 @@
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{lastModifier,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{serviceTypeCode,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -209,6 +286,7 @@
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
 			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="serviceTypeCode != null" >service_type_code=#{serviceTypeCode,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>
