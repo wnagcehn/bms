@@ -204,6 +204,8 @@ public class BizDispatchBillEntity implements IEntity {
 	//新的实际重量
 	private Double newTotalWeight;
 	
+	private Double correctThrowWeight;
+	
 	public BizDispatchBillEntity() {
 
 	}
@@ -1277,6 +1279,14 @@ public class BizDispatchBillEntity implements IEntity {
 
 	public void setNewTotalWeight(Double newTotalWeight) {
 		this.newTotalWeight = newTotalWeight;
+	}
+
+	public Double getCorrectThrowWeight() {
+		return correctThrowWeight;
+	}
+
+	public void setCorrectThrowWeight(Double correctThrowWeight) {
+		this.correctThrowWeight = correctThrowWeight;
 	}
 
 
