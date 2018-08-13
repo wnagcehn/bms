@@ -14,6 +14,6 @@ public class FeesStorageRepositoryImpl  extends MyBatisDao<BmsFeesStorageEntity>
 	@Override
 	public int updateList(List<BmsFeesStorageEntity> list) {
 		// TODO Auto-generated method stub
-		return this.updateBatch("com.jiuyescm.bms.biz.BmsFeesStorageEntityMapper.update", list);
+		return this.updateBatch("com.jiuyescm.bms.biz.BmsFeesStorageMapper.update", list);
 	}
 }

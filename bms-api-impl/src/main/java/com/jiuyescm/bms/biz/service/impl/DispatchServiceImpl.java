@@ -57,4 +57,10 @@ public class DispatchServiceImpl implements IDispatchService {
 		return dispatchRepositoryImpl.reCalcu(condition);
 	}
 
+	@Override
+	public BmsDispatchVo queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return dispatchRepositoryImpl.queryOne(condition);
+	}
+
 }

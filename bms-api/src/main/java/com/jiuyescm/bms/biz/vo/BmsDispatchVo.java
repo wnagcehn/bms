@@ -28,16 +28,28 @@ public class BmsDispatchVo implements Serializable{
 		private String customerId;
 		// 物流商编号
 		private String originCarrierId;
+		//物流商名称
+		private String originCarrierName;
 		// 转寄物流商id
 		private String forwardCarrierId;
+		// 转寄物流商名称
+		private String forwardCarrierName;
 		// 调整物流商id
 		private String adjustCarrierId;
+		//调整物流商名称
+		private String adjustCarrierName;
 		// 宅配商编号
 		private String originDeliverId;
+		// 宅配商名称
+		private String originDeliverName;
 		// 转寄宅配商id
 		private String forwardDeliverId;
+		// 转寄宅配商名称
+		private String forwardDeliverName;
 		// 调整宅配商id
 		private String adjustDeliverId;
+		// 调整宅配商名称
+		private String adjustDeliverName;
 		// 温度类型
 		private String temperatureTypeCode;
 		// 是否拆箱
@@ -158,7 +170,9 @@ public class BmsDispatchVo implements Serializable{
 		// 计算时间
 		private Timestamp calcuTime;
 		//费用No
-		private String feesNo;
+		private String feesNo;		
+		//快递服务类型名称
+		private String serviceTypeName;
 
 		public BmsDispatchVo() {
 
@@ -1271,6 +1285,62 @@ public class BmsDispatchVo implements Serializable{
 
 		public void setFeesNo(String feesNo) {
 			this.feesNo = feesNo;
+		}
+
+		public String getOriginCarrierName() {
+			return originCarrierName;
+		}
+
+		public void setOriginCarrierName(String originCarrierName) {
+			this.originCarrierName = originCarrierName;
+		}
+
+		public String getForwardCarrierName() {
+			return forwardCarrierName;
+		}
+
+		public void setForwardCarrierName(String forwardCarrierName) {
+			this.forwardCarrierName = forwardCarrierName;
+		}
+
+		public String getAdjustCarrierName() {
+			return adjustCarrierName;
+		}
+
+		public void setAdjustCarrierName(String adjustCarrierName) {
+			this.adjustCarrierName = adjustCarrierName;
+		}
+
+		public String getServiceTypeName() {
+			return serviceTypeName;
+		}
+
+		public void setServiceTypeName(String serviceTypeName) {
+			this.serviceTypeName = serviceTypeName;
+		}
+
+		public String getOriginDeliverName() {
+			return originDeliverName;
+		}
+
+		public void setOriginDeliverName(String originDeliverName) {
+			this.originDeliverName = originDeliverName;
+		}
+
+		public String getForwardDeliverName() {
+			return forwardDeliverName;
+		}
+
+		public void setForwardDeliverName(String forwardDeliverName) {
+			this.forwardDeliverName = forwardDeliverName;
+		}
+
+		public String getAdjustDeliverName() {
+			return adjustDeliverName;
+		}
+
+		public void setAdjustDeliverName(String adjustDeliverName) {
+			this.adjustDeliverName = adjustDeliverName;
 		}
 	    
 }

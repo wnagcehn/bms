@@ -19,6 +19,6 @@ public class FeesDispatchRepositoryImpl extends MyBatisDao<BmsFeesDispatchEntity
 	@Override
 	public int updateList(List<BmsFeesDispatchEntity> list) {
 		// TODO Auto-generated method stub
-		return this.updateBatch("com.jiuyescm.bms.biz.BmsFeesDispatchEntityMapper.update", list);
+		return this.updateBatch("com.jiuyescm.bms.biz.BmsFeesDispatchMapper.update", list);
 	}
 }

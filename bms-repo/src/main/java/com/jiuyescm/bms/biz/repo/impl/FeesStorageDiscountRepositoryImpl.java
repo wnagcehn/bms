@@ -15,7 +15,7 @@ public class FeesStorageDiscountRepositoryImpl  extends MyBatisDao<BmsFeesStorag
 	public int updateList(List<BmsFeesStorageDiscountEntity> list) {
 		// TODO Auto-generated method stub
 		
-		return this.updateBatch("com.jiuyescm.bms.biz.BmsFeesStorageDiscountEntityMapper.update", list);
+		return this.updateBatch("com.jiuyescm.bms.biz.BmsFeesStorageDiscountMapper.update", list);
 	}
 
 

@@ -32,7 +32,7 @@
       </PropertyDef>
       <PropertyDef name="originCarrierId">
         <Property></Property>
-        <Property name="label">物流商Id</Property>
+        <Property name="label">实际物流商</Property>
       </PropertyDef>
       <PropertyDef name="forwardCarrierId">
         <Property></Property>
@@ -40,7 +40,7 @@
       </PropertyDef>
       <PropertyDef name="adjustCarrierId">
         <Property></Property>
-        <Property name="label">调整物流商Id</Property>
+        <Property name="label">调整物流商</Property>
       </PropertyDef>
       <PropertyDef name="originDeliverId">
         <Property></Property>
@@ -270,8 +270,14 @@
         <Property name="label">计算时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
+      <PropertyDef name="adjustCarrierName">
+        <Property name="label">调整物流商</Property>
+      </PropertyDef>
+      <PropertyDef name="originCarrierName">
+        <Property name="label">实际物流商</Property>
+      </PropertyDef>
     </DataType>
-    <DataType name="dtCondition">
+    <DataType name="dtCondition1">
       <PropertyDef name="outstockNo">
         <Property name="label">出库单号</Property>
       </PropertyDef>
@@ -472,11 +478,22 @@
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
+      <Property name="dataType">[dtCondition1]</Property>
     </DataSet>
     <DataSet id="dsBmsOutstock">
       <Property name="dataType">[dtBmsOutstock]</Property>
@@ -489,6 +506,25 @@
       <Property name="loadMode">manual</Property>
       <Property name="pageSize">20</Property>
       <Property name="dataProvider">outStockController#queryRecord</Property>
+    </DataSet>
+    <DataSet id="dsAllProvinces">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getAllProvinces</Property>
+    </DataSet>
+    <DataSet id="dsCities">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getCitiesByProvinceCode</Property>
+    </DataSet>
+    <DataSet id="dsDistricts">
+      <Property name="dataType">[dtRegionVoEntity]</Property>
+      <Property name="dataProvider">omsAddressController#getDistrictsByCityCode</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
+    </DataSet>
+    <DataSet id="dsBmsOutstockDetail">
+      <Property name="dataType">[dtBmsOutstock]</Property>
+      <Property name="dataProvider">outStockController#queryOne</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -645,14 +681,14 @@ validRetryAction.execute(function(retMap){&#xD;
 </ClientEvent>
         <Property name="caption">模板下载</Property>
         <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="btnTemplateImport">
         <ClientEvent name="onClick">view.get(&quot;#importWayBillDialog&quot;).show();&#xD;
 </ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
         <Property name="caption">导入模板</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="export">
         <ClientEvent name="onClick">var condition=view.get(&quot;#queyConditionForm.entity&quot;);&#xD;
@@ -736,7 +772,7 @@ var nowdays = new Date();&#xD;
 		endTime:lastDay&#xD;
 	});&#xD;
 **/</ClientEvent>
-        <Property name="dataType">dtCondition</Property>
+        <Property name="dataType">dtCondition1</Property>
         <Property name="dataSet">dsCondition</Property>
         <Property name="cols">*,*,*,*,*</Property>
         <Property name="labelSeparator">：</Property>
@@ -829,6 +865,7 @@ if (data != null) {&#xD;
           </DataPilot>
           <DataGrid id="DataGridRecord">
             <Property name="dataSet">dsBmsOutstockRecord</Property>
+            <Property name="readOnly">true</Property>
             <DataColumn name="waybillNo">
               <Property name="property">waybillNo</Property>
               <Property name="width">90</Property>
@@ -965,11 +1002,21 @@ with (view.get(&quot;#dsBmsOutstockRecord&quot;)){&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
 }&#xD;
+&#xD;
+/**&#xD;
+with (view.get(&quot;#dsBmsOutstockDetail&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		waybillNo:data.current.get(&quot;waybillNo&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+**/&#xD;
 </ClientEvent>
               <Property name="dataSet">dsBmsOutstock</Property>
               <Property name="readOnly">true</Property>
               <Property name="selectionMode">multiRows</Property>
-              <Property name="rowSelectionProperty">checked</Property>
               <Property name="width">650</Property>
               <RowNumColumn/>
               <DataColumn name="outstockNo">
@@ -1204,6 +1251,7 @@ with (view.get(&quot;#dsBmsOutstockRecord&quot;)){&#xD;
 </ClientEvent>
               <Property name="dataSet">dsBmsOutstock</Property>
               <Property name="width">500</Property>
+              <Property name="readOnly">true</Property>
               <DataColumn name="originCarrierId">
                 <Property name="property">originCarrierId</Property>
                 <Property name="width">90</Property>
@@ -1267,7 +1315,6 @@ with (view.get(&quot;#dsBmsOutstockRecord&quot;)){&#xD;
           <ClientEvent name="onClick">var entity = view.get(&quot;#billEditForm&quot;).get(&quot;entity&quot;);	&#xD;
 &#xD;
 var weight=entity.get(&quot;totalWeight&quot;);&#xD;
-//alert(&quot;调整重量&quot;+adjustWeight);&#xD;
 &#xD;
 if(undefined==weight || weight==''){&#xD;
 	dorado.MessageBox.alert(&quot;请填写重量!&quot;);&#xD;
@@ -1369,6 +1416,13 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
           <AutoFormElement>
             <Property name="property">adjustCarrierId</Property>
             <Property name="name">adjustCarrierId</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustCarrierName</Property>
+            <Property name="property">adjustCarrierName</Property>
             <Property name="trigger">triggerCarrierSelect</Property>
             <Editor/>
           </AutoFormElement>
@@ -1376,6 +1430,19 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
             <Property name="property">originCarrierId</Property>
             <Property name="name">originCarrierId</Property>
             <Property name="editable">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">originCarrierName</Property>
+            <Property name="name">originCarrierName</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">originCarrierName</Property>
+            <Property name="property">originCarrierName</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1403,5 +1470,270 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
+    <DataSetDropDown id="ddropDownQueryProvince">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsOutstock&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	adjustReceiveProvince:arg.selectedValue.get(&quot;province&quot;)&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;adjustReceiveCity&quot;,&quot;&quot;);&#xD;
+data.set(&quot;adjustReceiveArea&quot;,&quot;&quot;);&#xD;
+&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsAllProvinces</Property>
+      <Property name="displayProperty">province</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryCity">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsBmsOutstock&quot;).getData(&quot;#&quot;);&#xD;
+//var provinceId = data.get(&quot;receiveProvinceName&quot;);&#xD;
+var provinceName = data.get(&quot;adjustReceiveProvince&quot;);&#xD;
+&#xD;
+if(provinceName){&#xD;
+	var parameter={&#xD;
+		province:provinceName&#xD;
+	};&#xD;
+	view.get(&quot;#dsCities&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsCities&quot;).clear();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsOutstock&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	adjustReceiveCity:arg.selectedValue.get(&quot;city&quot;),&#xD;
+});&#xD;
+&#xD;
+data.set(&quot;adjustReceiveArea&quot;,&quot;&quot;);&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">provincecode=provincecode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsCities</Property>
+      <Property name="displayProperty">city</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="ddropDownQueryDistrict">
+      <ClientEvent name="beforeExecute">var data = this.get(&quot;#dsBmsOutstock&quot;).getData(&quot;#&quot;);&#xD;
+var provinceName=data.get(&quot;adjustReceiveProvince&quot;);&#xD;
+var cityName = data.get(&quot;adjustReceiveCity&quot;);&#xD;
+if(cityName){&#xD;
+	var parameter={&#xD;
+		province:provinceName,city:cityName&#xD;
+	};&#xD;
+	view.get(&quot;#dsDistricts&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsDistricts&quot;).clear();&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBmsOutstock&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	adjustReceiveArea:arg.selectedValue.get(&quot;district&quot;),&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="assignmentMap">provincecode=provincecode,citycode=citycode</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsDistricts</Property>
+      <Property name="displayProperty">district</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
+    <Trigger id="triggerCarrierSelect">
+      <ClientEvent name="onExecute">view.get(&quot;#carrierSelectDialog&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <Dialog id="carrierSelectDialog">
+      <ClientEvent name="onHide">var data = this.get(&quot;#carrierSelectSubView.userData&quot;);&#xD;
+if(data!=null){&#xD;
+	view.get(&quot;#billEditForm.entity&quot;).set(&quot;adjustCarrierName&quot;,data.get(&quot;name&quot;));&#xD;
+	view.get(&quot;#billEditForm.entity&quot;).set(&quot;adjustCarrierId&quot;,data.get(&quot;carrierid&quot;));&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">600</Property>
+      <Property name="height">400</Property>
+      <Property name="caption">物流商选择</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="carrierSelectSubView">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.CarrierLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="updateWayBillDialog">
+      <ClientEvent name="onShow">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+//view.get(&quot;#updateCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">批量更新</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="updateCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="ufileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="uimportBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">importBtn</Property>
+            <Property name="property">importBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="uimportBtn2">
+                <Property name="action">updateWayBillAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="uprogressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="uimportProgressBar"/>
+        <AjaxAction id="ugetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">trunkWaybillController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="usetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">trunkWaybillController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="updateWayBillAction">
+          <ClientEvent name="onFileUploaded">//view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
+		view.get(&quot;#updateWayBillDialog&quot;).hide();&#xD;
+		&#xD;
+		var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsBmsOutstock&quot;)){&#xD;
+			set(&quot;parameter&quot;, condition);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_uprogressLabel&quot;).show();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).show();&#xD;
+view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#ugetProgress&quot;);&#xD;
+var setAction = view.get(&quot;#usetProgress&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+			&#xD;
+			var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			with (view.get(&quot;#dsBizDispatchBillEntity&quot;)){&#xD;
+				set(&quot;parameter&quot;, condition);&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+&#xD;
+$(&quot;#d_ufileName input&quot;).val(fname);&#xD;
+//view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+</ClientEvent>
+          <Property name="fileResolver">outStockController#importUpdateWeightLock</Property>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">5MB</Property>
+          <Filters>
+            <Filter>
+              <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+              <Property name="title">Excel文件</Property>
+            </Filter>
+          </Filters>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="updateTemplateAction">
+      <Property name="fileProvider">outStockController#downloadTemplateUpdate</Property>
+    </DownloadAction>
+    <DownloadAction id="downloadTemplateAction">
+      <Property name="fileProvider">dispatchBillController#downloadTemplate</Property>
+    </DownloadAction>
+    <Dialog id="errorMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="width">540</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

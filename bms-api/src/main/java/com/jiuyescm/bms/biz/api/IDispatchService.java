@@ -58,6 +58,11 @@ public interface IDispatchService {
 	 */
 	int reCalcu(Map<String, Object> condition);
 	
-	
+	/**
+	 * 根据条件查询单个业务数据
+	 * @param condition
+	 * @return
+	 */
+	BmsDispatchVo queryOne(Map<String, Object> condition);
 	
 }
