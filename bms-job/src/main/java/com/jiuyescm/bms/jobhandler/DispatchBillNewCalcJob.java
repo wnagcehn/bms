@@ -152,7 +152,14 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		delete(billList);
 	}
 	private void delete(List<BizDispatchBillEntity> billList){
-		List<String> feesNos = new ArrayList<String>();
+		
+		for (BizDispatchBillEntity entity : billList) {
+			if(StringUtils.isEmpty(entity.getFeesNo())){
+				entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
+			}
+		}
+		
+		/*List<String> feesNos = new ArrayList<String>();
 		Map<String, Object> feesMap = new HashMap<String, Object>();
 		for (BizDispatchBillEntity entity : billList) {
 			if(StringUtils.isNotEmpty(entity.getFeesNo())){
@@ -174,7 +181,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		}
 		catch(Exception ex){
 			XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-		}
+		}*/
 	}
 	/**
 	 * 顺丰以外物流商的报价
@@ -457,9 +464,9 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveDispatchService.InsertBatch(feesList);
+		feesReceiveDispatchService.updateBatch(feesList);
 		current = System.currentTimeMillis();
-		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒 ",(current - start));
+		XxlJobLogger.log("更新费用数据耗时：【{0}】毫秒 ",(current - start));
 	}
 
 	@Override
