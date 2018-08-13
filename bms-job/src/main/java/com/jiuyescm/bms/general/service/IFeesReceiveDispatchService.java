@@ -57,4 +57,6 @@ public interface IFeesReceiveDispatchService {
 	 */
 	public List<FeesReceiveDispatchEntity> queryDailyFees(Map<String,Object> condition);
 	
+	public void updateBatch(List<FeesReceiveDispatchEntity> entity);
+	
 }

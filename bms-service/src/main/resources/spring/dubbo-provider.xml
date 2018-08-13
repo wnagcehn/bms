@@ -49,7 +49,5 @@
 	<dubbo:service interface="com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService" ref="reportWarehouseCustomerService"/>
 	<dubbo:service interface="com.jiuyescm.bms.discount.service.IBmsDiscountService" ref="bmsDiscountService"/>
 	
-	
-	<dubbo:service interface="com.jiuyescm.bms.biz.api.IDispatchService" ref="dispatchService" />
 
 </beans>
