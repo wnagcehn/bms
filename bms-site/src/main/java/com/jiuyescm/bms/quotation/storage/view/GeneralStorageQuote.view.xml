@@ -1135,7 +1135,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
       <ClientEvent name="onClose">view.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="caption">添加仓储通用报价</Property>
       <Property name="width">380</Property>
-      <Property name="height">400</Property>
+      <Property name="height">300</Property>
       <Buttons>
         <Button>
           <ClientEvent name="onClick">view.get(&quot;#saveAction&quot;).execute(&#xD;
@@ -1167,6 +1167,8 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
           <AutoFormElement>
             <Property name="property">templateType</Property>
             <Property name="name">templateType</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1187,6 +1189,7 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Property name="property">ruleNo</Property>
             <Property name="trigger">triggerRule</Property>
             <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1194,6 +1197,7 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Property name="property">ruleName</Property>
             <Property name="editable">false</Property>
             <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1243,7 +1247,7 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
 				}&#xD;
 view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
       <Property name="caption">修改入仓报价</Property>
-      <Property name="height">400</Property>
+      <Property name="height">300</Property>
       <Property name="width">380</Property>
       <Buttons>
         <Button>
@@ -1284,6 +1288,8 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
           <AutoFormElement>
             <Property name="name">templateType</Property>
             <Property name="property">templateType</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1304,6 +1310,7 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Property name="property">ruleNo</Property>
             <Property name="trigger">triggerRule</Property>
             <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1311,6 +1318,7 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Property name="property">ruleName</Property>
             <Property name="editable">false</Property>
             <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
