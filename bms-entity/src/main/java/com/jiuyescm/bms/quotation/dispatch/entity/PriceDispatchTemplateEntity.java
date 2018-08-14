@@ -50,6 +50,8 @@ public class PriceDispatchTemplateEntity implements IEntity {
 	private String delFlag;
 	//报价形式
 	private String priceType;
+	//物流商id
+	private String carrierid;
 
 	private List<PriceMainDispatchEntity> child;
 
@@ -263,6 +265,14 @@ public class PriceDispatchTemplateEntity implements IEntity {
 
 	public void setPriceType(String priceType) {
 		this.priceType = priceType;
+	}
+
+	public String getCarrierid() {
+		return carrierid;
+	}
+
+	public void setCarrierid(String carrierid) {
+		this.carrierid = carrierid;
 	}
 
 }

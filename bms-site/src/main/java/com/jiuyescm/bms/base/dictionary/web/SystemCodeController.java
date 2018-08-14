@@ -295,4 +295,13 @@ public class SystemCodeController {
 		return mapValue;
 	}
 	
+	@DataProvider
+	public Map<String,String> getCarrierId(String typeCode){
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> codeList = systemCodeService.findEnumList(typeCode);
+		for (SystemCodeEntity SystemCodeVo : codeList) {	
+			mapValue.put(SystemCodeVo.getCode(), SystemCodeVo.getExtattr1());
+		}		
+		return mapValue;
+	}
 }

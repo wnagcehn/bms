@@ -67,7 +67,10 @@ public class BmsQuoteDispatchDetailEntity implements IEntity {
 	private Timestamp lastModifyTime;
 	// 删除标志
 	private String delFlag;
-
+	
+	private String serviceTypeCode;
+	private String servicename;
+	private String carrierid;
 	public BmsQuoteDispatchDetailEntity() {
 
 	}
@@ -407,6 +410,30 @@ public class BmsQuoteDispatchDetailEntity implements IEntity {
      */
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
+	}
+
+	public String getCarrierid() {
+		return carrierid;
+	}
+
+	public void setCarrierid(String carrierid) {
+		this.carrierid = carrierid;
 	}
     
 }

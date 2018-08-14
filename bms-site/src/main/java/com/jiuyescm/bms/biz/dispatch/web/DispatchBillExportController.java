@@ -309,9 +309,15 @@ public class DispatchBillExportController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "泡重");
+        itemMap.put("title", "原始泡重");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "throwWeight");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "纠正泡重");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "correctThrowWeight");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -550,6 +556,7 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("totalWeight", entity.getTotalWeight());
 	        	dataItem.put("adjustWeight", entity.getAdjustWeight());
 	        	dataItem.put("throwWeight", entity.getThrowWeight());
+	        	dataItem.put("correctThrowWeight", entity.getCorrectThrowWeight());
 	        	dataItem.put("correctWeight", entity.getCorrectWeight());       	
 	        	dataItem.put("chargeWeight", entity.getChargeWeight());
 	        	dataItem.put("totalqty", entity.getTotalqty());

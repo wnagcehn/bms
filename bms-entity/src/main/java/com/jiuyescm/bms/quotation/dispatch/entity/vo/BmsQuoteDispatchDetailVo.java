@@ -50,8 +50,6 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 	private String timeliness;
 	// 温度类型
 	private String temperatureTypeCode;
-	
-	private String serviceTypeCode;
 	// 特殊计费商品
 	private String productCase;
 	// 地域类型
@@ -75,6 +73,10 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 	private String provinceName;
 	private String cityName;
 	private String areaName;
+	
+	private String serviceTypeCode;
+	private String carrierid;
+	private String servicename;
 	
 	// 报价形式
 	private String priceType;
@@ -476,6 +478,22 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 
 	public void setServiceTypeCode(String serviceTypeCode) {
 		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getCarrierid() {
+		return carrierid;
+	}
+
+	public void setCarrierid(String carrierid) {
+		this.carrierid = carrierid;
+	}
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
 	}
     
 }

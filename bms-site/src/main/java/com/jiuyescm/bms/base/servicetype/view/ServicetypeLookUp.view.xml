@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtPubCarrierServicetypeEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">主键ID</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierid">
+        <Property name="label">物流商ID</Property>
+      </PropertyDef>
+      <PropertyDef name="carriercode">
+        <Property name="label">物流商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="servicecode">
+        <Property name="label">服务类型编码</Property>
+      </PropertyDef>
+      <PropertyDef name="servicename">
+        <Property name="label">服务类型名称</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="label">是否作废</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonid">
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonid">
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="writeTime">
+        <Property name="label">写入时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="carriername">
+        <Property name="label">物流商名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubCarrierServicetypeController#getCarrierName&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPubCarrierServicetypeEntityQuery">
+      <PropertyDef name="carrierid">
+        <Property name="label">物流商ID</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubCarrierServicetypeController#getCarrierName&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="carriercode">
+        <Property name="label">物流商编码</Property>
+      </PropertyDef>
+      <PropertyDef name="servicecode">
+        <Property name="label">服务类型编码</Property>
+      </PropertyDef>
+      <PropertyDef name="servicename">
+        <Property name="label">服务类型名称</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="label">是否作废</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="crepersonid">
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="modpersonid">
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="writeTime">
+        <Property name="label">写入时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPubCarrierServicetypeEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsPubCarrierServicetypeEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsPubCarrierServicetypeEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsPubCarrierServicetypeEntity">
+      <Property name="dataType">[dtPubCarrierServicetypeEntity]</Property>
+      <Property name="dataProvider">pubCarrierServicetypeController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsPubCarrierServicetypeEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsPubCarrierServicetypeEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtPubCarrierServicetypeEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <AutoForm id="queryForm">
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="labelWidth">65</Property>
+      <Property name="dataSet">dsPubCarrierServicetypeEntityQuery</Property>
+      <AutoFormElement id="carrierid">
+        <Property name="name">carrierid</Property>
+        <Property name="property">carrierid</Property>
+        <Property name="editable">false</Property>
+        <Property name="readOnly">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">delflag</Property>
+        <Property name="property">delflag</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <ClientEvent name="onDoubleClick">this.get(&quot;#actionSelectServiceType&quot;).execute();</ClientEvent>
+      <Property name="dataSet">dsPubCarrierServicetypeEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="id">
+        <Property name="property">id</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="carrierid">
+        <Property name="property">carrierid</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">carriername</Property>
+        <Property name="visible">true</Property>
+        <Property name="width">80</Property>
+        <Property name="name">carriername</Property>
+      </DataColumn>
+      <DataColumn name="servicecode">
+        <Property name="property">servicecode</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="servicename">
+        <Property name="property">servicename</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="delflag">
+        <Property name="property">delflag</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="creperson">
+        <Property name="property">creperson</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="cretime">
+        <Property name="property">cretime</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="modperson">
+        <Property name="property">modperson</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="modtime">
+        <Property name="property">modtime</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="crepersonid">
+        <Property name="property">crepersonid</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="modpersonid">
+        <Property name="property">modpersonid</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="writeTime">
+        <Property name="property">writeTime</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+    </DataGrid>
+    <Action id="actionSelectServiceType">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsPubCarrierServicetypeEntity&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}&#xD;
+</ClientEvent>
+    </Action>
+  </View>
+</ViewConfig>
