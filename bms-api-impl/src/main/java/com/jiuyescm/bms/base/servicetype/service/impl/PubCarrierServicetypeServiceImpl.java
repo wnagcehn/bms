@@ -72,4 +72,8 @@ public class PubCarrierServicetypeServiceImpl implements IPubCarrierServicetypeS
         return pubCarrierServicetypeRepository.update(entity);
     }
 	
+    @Override
+    public List<PubCarrierServicetypeEntity> queryByCarrierid(String carrierid){
+    	return pubCarrierServicetypeRepository.queryByCarrierid(carrierid);
+    }
 }

@@ -621,6 +621,20 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
     </Container>
     <Dialog id="editDialog">
       <ClientEvent name="onClose">view.id(&quot;dsStorageType&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onShow">var data = this.get(&quot;#dsStorageType&quot;).getData(&quot;#&quot;);&#xD;
+var result={&#xD;
+	subjectId:data.get(&quot;subjectId&quot;),&#xD;
+	isDefault:&quot;0&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#queryRuleAction&quot;).set(&quot;parameter&quot;,result).execute(function(result){&#xD;
+	var strs= new Array(); //定义一数组 &#xD;
+	strs=result.split(&quot;&amp;&quot;); //字符分割 &#xD;
+	data.set({&#xD;
+		quotationNo:strs[0],&#xD;
+		quotationName:strs[1]&#xD;
+	});&#xD;
+});</ClientEvent>
       <Property name="width">450</Property>
       <Property name="height">320</Property>
       <Property name="caption">新增或编辑</Property>
@@ -662,34 +676,40 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
               <Property name="property">customerName</Property>
               <Property name="name">customerName</Property>
               <Property name="trigger">triggerCustomer1</Property>
+              <Property name="labelWidth">84</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">templateType</Property>
               <Property name="property">templateType</Property>
               <Property name="editable">false</Property>
+              <Property name="labelWidth">84</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">templateName</Property>
               <Property name="property">templateName</Property>
+              <Property name="labelWidth">84</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">bizTypeCode</Property>
               <Property name="property">bizTypeCode</Property>
               <Property name="readOnly">true</Property>
+              <Property name="labelWidth">84</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">storageTemplateType</Property>
               <Property name="property">storageTemplateType</Property>
               <Property name="readOnly">true</Property>
+              <Property name="labelWidth">84</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement layoutConstraint="colSpan:2">
               <Property name="name">remark</Property>
               <Property name="property">remark</Property>
+              <Property name="labelWidth">84</Property>
               <Editor>
                 <TextArea/>
               </Editor>
@@ -698,6 +718,7 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
               <Property name="name">quotationName</Property>
               <Property name="property">quotationName</Property>
               <Property name="trigger">triggerQuotation</Property>
+              <Property name="labelWidth">84</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement layoutConstraint="colSpan:2">
@@ -2017,5 +2038,8 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <AjaxAction id="queryRuleAction">
+      <Property name="service">generalStorageQuoteController#queryRule</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

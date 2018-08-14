@@ -22,5 +22,12 @@ public interface IPubCarrierServicetypeService {
     PubCarrierServicetypeEntity save(PubCarrierServicetypeEntity entity);
 
     PubCarrierServicetypeEntity update(PubCarrierServicetypeEntity entity);
+    
+    /**
+     * 批量导入 查出该物流商下的物流产品类型
+     * @param carrierid
+     * @return
+     */
+	List<PubCarrierServicetypeEntity> queryByCarrierid(String carrierid);
 
 }
