@@ -125,11 +125,44 @@
       <PropertyDef name="quotationId">
         <Property name="label">模板Id</Property>
       </PropertyDef>
-      <PropertyDef name="weightLower">
-        <Property name="label">重量下限</Property>
+      <PropertyDef name="startDate">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">生效日期</Property>
       </PropertyDef>
-      <PropertyDef name="weightUpper">
-        <Property name="label">重量上限</Property>
+      <PropertyDef name="expireDate">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">失效日期</Property>
+      </PropertyDef>
+      <PropertyDef name="numLower">
+        <Property name="label">下限</Property>
+      </PropertyDef>
+      <PropertyDef name="numUpper">
+        <Property name="label">上限</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首量</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首价</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedItem">
+        <Property name="label">续量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续价</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property/>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="temperatureTypeCode">
         <Property name="label">温度类型</Property>
@@ -137,12 +170,8 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="unitPrice">
-        <Property name="label">单价</Property>
-      </PropertyDef>
-      <PropertyDef name="id">
-        <Property name="dataType">Long</Property>
-        <Property name="label">id</Property>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property></Property>
@@ -162,12 +191,13 @@
         <Property name="label">最后修改时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
       <PropertyDef name="delFlag">
         <Property></Property>
         <Property name="label">删除标志</Property>
-      </PropertyDef>
-      <PropertyDef name="remark">
-        <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="skuUpper">
         <Property name="label">sku上限</Property>
@@ -181,11 +211,11 @@
       <PropertyDef name="volumeLower">
         <Property name="label">体积下限</Property>
       </PropertyDef>
-      <PropertyDef name="numUpper">
-        <Property name="label">数量上限</Property>
+      <PropertyDef name="weightLower">
+        <Property name="label">重量下限</Property>
       </PropertyDef>
-      <PropertyDef name="numLower">
-        <Property name="label">数量下限</Property>
+      <PropertyDef name="weightUpper">
+        <Property name="label">重量上限</Property>
       </PropertyDef>
       <PropertyDef name="userDefine1">
         <Property name="label">扩展1</Property>
@@ -201,9 +231,6 @@
       </PropertyDef>
       <PropertyDef name="userDefine5">
         <Property name="label">扩展5</Property>
-      </PropertyDef>
-      <PropertyDef name="continuedItem">
-        <Property name="label">续件价格</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
@@ -945,7 +972,7 @@ view.get(&quot;#downloadMoBanAction&quot;).set(&quot;parameter&quot;,{&quot;subj
 if(data.current)&#xD;
 {&#xD;
 	var entity = data.current; &#xD;
-	view.get(&quot;#StepUploadAction&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:entity.get(&quot;id&quot;)});&#xD;
+	view.get(&quot;#StepUploadAction&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:entity.get(&quot;id&quot;),&quot;unit&quot;:entity.get(&quot;feeUnitCode&quot;)});&#xD;
     view.get(&quot;#StepImportDialog&quot;).show();&#xD;
 }&#xD;
 else&#xD;
@@ -1508,6 +1535,7 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
 &#xD;
 </ClientEvent>
               <Property name="caption">试算</Property>
+              <Property name="visible">false</Property>
             </ToolBarButton>
           </ToolBar>
           <DataGrid>
@@ -1515,76 +1543,39 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
             <Property name="readOnly">true</Property>
             <IndicatorColumn/>
             <RowNumColumn/>
-            <DataColumn>
+            <DataColumn name="warehouseCode">
+              <Property name="property">warehouseCode</Property>
+            </DataColumn>
+            <DataColumn name="temperatureTypeCode">
               <Property name="property">temperatureTypeCode</Property>
-              <Property name="name">temperatureTypeCode</Property>
-              <Editor/>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">unitPrice</Property>
-              <Property name="name">unitPrice</Property>
+            <DataColumn name="quotationId">
+              <Property name="property">quotationId</Property>
+              <Property name="visible">false</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="name">continuedItem</Property>
-              <Property name="property">continuedItem</Property>
-              <Editor/>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">weightLower</Property>
-              <Property name="name">weightLower</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">weightUpper</Property>
-              <Property name="name">weightUpper</Property>
-            </DataColumn>
-            <DataColumn>
+            <DataColumn name="numLower">
               <Property name="property">numLower</Property>
-              <Property name="name">numLower</Property>
             </DataColumn>
-            <DataColumn>
+            <DataColumn name="numUpper">
               <Property name="property">numUpper</Property>
-              <Property name="name">numUpper</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">skuLower</Property>
-              <Property name="name">skuLower</Property>
+            <DataColumn name="unitPrice">
+              <Property name="property">unitPrice</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">skuUpper</Property>
-              <Property name="name">skuUpper</Property>
+            <DataColumn name="firstNum">
+              <Property name="property">firstNum</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">volumeLower</Property>
-              <Property name="name">volumeLower</Property>
+            <DataColumn name="firstPrice">
+              <Property name="property">firstPrice</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">volumeUpper</Property>
-              <Property name="name">volumeUpper</Property>
+            <DataColumn name="continuedItem">
+              <Property name="property">continuedItem</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="name">remark</Property>
+            <DataColumn name="continuedPrice">
+              <Property name="property">continuedPrice</Property>
+            </DataColumn>
+            <DataColumn name="remark">
               <Property name="property">remark</Property>
-              <Editor/>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine1</Property>
-              <Property name="name">userDefine1</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine2</Property>
-              <Property name="name">userDefine2</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine3</Property>
-              <Property name="name">userDefine3</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine4</Property>
-              <Property name="name">userDefine4</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine5</Property>
-              <Property name="name">userDefine5</Property>
             </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
@@ -1592,21 +1583,57 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
             <DataColumn name="createTime">
               <Property name="property">createTime</Property>
             </DataColumn>
+            <DataColumn name="lastModifier">
+              <Property name="property">lastModifier</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+              <Property name="property">lastModifyTime</Property>
+            </DataColumn>
           </DataGrid>
           <Dialog id="addStepDialog">
             <ClientEvent name="onClose">view.id(&quot;dsStepList&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
-            <Property name="width">700</Property>
-            <Property name="height">378</Property>
+            <Property name="width">600</Property>
+            <Property name="height">300</Property>
             <Property name="caption">新增【存储费阶梯报价】</Property>
             <Buttons>
               <Button id="btnSaveTransport">
-                <ClientEvent name="onClick">var en = view.get(&quot;#addStepForm&quot;).get(&quot;entity&quot;);&#xD;
+                <ClientEvent name="onClick">var entity = view.get(&quot;#addStepForm&quot;).get(&quot;entity&quot;);&#xD;
 &#xD;
-if(en.get(&quot;unitPrice&quot;)==''||en.get(&quot;unitPrice&quot;)==null||isNaN(en.get(&quot;unitPrice&quot;)))&#xD;
-{&#xD;
-	dorado.MessageBox.alert(&quot;单价请输入数字&quot;);&#xD;
-	return false;&#xD;
+var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;numLower&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;下限不能为空&quot;);&#xD;
+	return;&#xD;
 }&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;numUpper&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;上限不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(entity.get(&quot;numUpper&quot;) &lt;= entity.get(&quot;numLower&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;上限必须大于下限&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//模板中单位为单时，单价必填&#xD;
+if(!isNullOrEmpty(data.get(&quot;feeUnitCode&quot;))){&#xD;
+	if(data.get(&quot;feeUnitCode&quot;)=='BILL'){&#xD;
+		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
+			dorado.MessageBox.alert(&quot;模板单位为单时，单价不能为空&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}else{&#xD;
+		//其他单位    &#xD;
+		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
+			if(isNullOrEmpty(entity.get(&quot;firstNum&quot;)) || isNullOrEmpty(entity.get(&quot;firstPrice&quot;)) ||isNullOrEmpty(entity.get(&quot;continuedItem&quot;)) || isNullOrEmpty(entity.get(&quot;continuedPrice&quot;))){&#xD;
+				dorado.MessageBox.alert(&quot;单价为空时，首量、首价、续量、续价不能为空!&quot;);&#xD;
+				return;&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
 &#xD;
 view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
 	function(){&#xD;
@@ -1645,32 +1672,6 @@ view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
                   <Property name="dataSet">dsStepList</Property>
                   <Property name="dataType">dtStepEntity</Property>
                   <AutoFormElement>
-                    <Property name="name">temperatureTypeCode</Property>
-                    <Property name="property">temperatureTypeCode</Property>
-                    <Property name="readOnly">false</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">unitPrice</Property>
-                    <Property name="property">unitPrice</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">continuedItem</Property>
-                    <Property name="property">continuedItem</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">weightLower</Property>
-                    <Property name="property">weightLower</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">weightUpper</Property>
-                    <Property name="property">weightUpper</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
                     <Property name="name">numLower</Property>
                     <Property name="property">numLower</Property>
                     <Editor/>
@@ -1681,23 +1682,39 @@ view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">skuLower</Property>
-                    <Property name="property">skuLower</Property>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">skuUpper</Property>
-                    <Property name="property">skuUpper</Property>
+                    <Property name="name">warehouseCode</Property>
+                    <Property name="property">warehouseCode</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">volumeLower</Property>
-                    <Property name="property">volumeLower</Property>
+                    <Property name="name">firstNum</Property>
+                    <Property name="property">firstNum</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">volumeUpper</Property>
-                    <Property name="property">volumeUpper</Property>
+                    <Property name="name">firstPrice</Property>
+                    <Property name="property">firstPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedItem</Property>
+                    <Property name="property">continuedItem</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedPrice</Property>
+                    <Property name="property">continuedPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Property name="readOnly">false</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
@@ -1706,31 +1723,6 @@ view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
                     <Editor>
                       <TextArea/>
                     </Editor>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine1</Property>
-                    <Property name="property">userDefine1</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine2</Property>
-                    <Property name="property">userDefine2</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine3</Property>
-                    <Property name="property">userDefine3</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine4</Property>
-                    <Property name="property">userDefine4</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine5</Property>
-                    <Property name="property">userDefine5</Property>
-                    <Editor/>
                   </AutoFormElement>
                 </AutoForm>
               </Container>
@@ -2303,17 +2295,58 @@ view.get(&quot;#calculateAction&quot;).set(&quot;parameter&quot;,queryJson).exec
             <Property name="caption">更新【存储费阶梯报价】</Property>
             <Buttons>
               <Button id="btnSaveStep">
-                <ClientEvent name="onClick">var en = view.get(&quot;#updateStepForm&quot;).get(&quot;entity&quot;);&#xD;
+                <ClientEvent name="onClick">var entity = view.get(&quot;#updateStepForm&quot;).get(&quot;entity&quot;);&#xD;
 &#xD;
-if(en.get(&quot;unitPrice&quot;)==''||en.get(&quot;unitPrice&quot;)==null||isNaN(en.get(&quot;unitPrice&quot;)))&#xD;
-{&#xD;
-	dorado.MessageBox.alert(&quot;单价请输入数字&quot;);&#xD;
-	return false;&#xD;
+var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;numLower&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;下限不能为空&quot;);&#xD;
+	return;&#xD;
 }&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;numUpper&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;上限不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(entity.get(&quot;numUpper&quot;) &lt;= entity.get(&quot;numLower&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;上限必须大于下限&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//模板中单位为单时，单价必填&#xD;
+if(!isNullOrEmpty(data.get(&quot;feeUnitCode&quot;))){&#xD;
+	if(data.get(&quot;feeUnitCode&quot;)=='BILL'){&#xD;
+		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
+			dorado.MessageBox.alert(&quot;模板单位为单时，单价不能为空&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}else{&#xD;
+		//其他单位    &#xD;
+		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
+			if(isNullOrEmpty(entity.get(&quot;firstNum&quot;)) || isNullOrEmpty(entity.get(&quot;firstPrice&quot;)) ||isNullOrEmpty(entity.get(&quot;continuedItem&quot;)) || isNullOrEmpty(entity.get(&quot;continuedPrice&quot;))){&#xD;
+				dorado.MessageBox.alert(&quot;单价为空时，首量、首价、续量、续价不能为空!&quot;);&#xD;
+				return;&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
 &#xD;
 view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
 	function(){&#xD;
 		view.id(&quot;updateStepDialog&quot;).hide();&#xD;
+		var data = view.get(&quot;#dsQuotaList.data&quot;);&#xD;
+		var quotationId=data.current.get(&quot;id&quot;);&#xD;
+		&#xD;
+		with (view.get(&quot;#dsStepList&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				quotationId:quotationId&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
 	}&#xD;
 );</ClientEvent>
                 <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
@@ -2338,32 +2371,6 @@ view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
                   <Property name="dataSet">dsStepList</Property>
                   <Property name="dataType">dtStepEntity</Property>
                   <AutoFormElement>
-                    <Property name="name">temperatureTypeCode</Property>
-                    <Property name="property">temperatureTypeCode</Property>
-                    <Property name="readOnly">false</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">unitPrice</Property>
-                    <Property name="property">unitPrice</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">continuedItem</Property>
-                    <Property name="property">continuedItem</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">weightLower</Property>
-                    <Property name="property">weightLower</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">weightUpper</Property>
-                    <Property name="property">weightUpper</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
                     <Property name="name">numLower</Property>
                     <Property name="property">numLower</Property>
                     <Editor/>
@@ -2374,23 +2381,39 @@ view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">skuLower</Property>
-                    <Property name="property">skuLower</Property>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">skuUpper</Property>
-                    <Property name="property">skuUpper</Property>
+                    <Property name="name">warehouseCode</Property>
+                    <Property name="property">warehouseCode</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">volumeLower</Property>
-                    <Property name="property">volumeLower</Property>
+                    <Property name="name">firstNum</Property>
+                    <Property name="property">firstNum</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
-                    <Property name="name">volumeUpper</Property>
-                    <Property name="property">volumeUpper</Property>
+                    <Property name="name">firstPrice</Property>
+                    <Property name="property">firstPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedItem</Property>
+                    <Property name="property">continuedItem</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedPrice</Property>
+                    <Property name="property">continuedPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Property name="readOnly">false</Property>
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
@@ -2399,31 +2422,6 @@ view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
                     <Editor>
                       <TextArea/>
                     </Editor>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine1</Property>
-                    <Property name="property">userDefine1</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine2</Property>
-                    <Property name="property">userDefine2</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine3</Property>
-                    <Property name="property">userDefine3</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine4</Property>
-                    <Property name="property">userDefine4</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">userDefine5</Property>
-                    <Property name="property">userDefine5</Property>
-                    <Editor/>
                   </AutoFormElement>
                 </AutoForm>
               </Container>
