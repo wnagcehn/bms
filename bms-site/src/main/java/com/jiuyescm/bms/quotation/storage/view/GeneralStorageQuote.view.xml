@@ -158,7 +158,7 @@
         <Property name="label">续价</Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
@@ -1186,12 +1186,14 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Property name="name">ruleNo</Property>
             <Property name="property">ruleNo</Property>
             <Property name="trigger">triggerRule</Property>
+            <Property name="visible">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">ruleName</Property>
             <Property name="property">ruleName</Property>
             <Property name="editable">false</Property>
+            <Property name="visible">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1301,12 +1303,14 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Property name="name">ruleNo</Property>
             <Property name="property">ruleNo</Property>
             <Property name="trigger">triggerRule</Property>
+            <Property name="visible">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">ruleName</Property>
             <Property name="property">ruleName</Property>
             <Property name="editable">false</Property>
+            <Property name="visible">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
