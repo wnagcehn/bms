@@ -50,6 +50,8 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 	private String timeliness;
 	// 温度类型
 	private String temperatureTypeCode;
+	
+	private String serviceTypeCode;
 	// 特殊计费商品
 	private String productCase;
 	// 地域类型
@@ -466,6 +468,14 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 
 	public void setList(List<BmsQuoteDispatchDetailVo> list) {
 		this.list = list;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
 	}
     
 }

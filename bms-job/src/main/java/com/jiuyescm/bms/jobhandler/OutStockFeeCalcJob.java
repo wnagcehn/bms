@@ -70,35 +70,7 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 	
 	@Override
 	protected List<BizOutstockMasterEntity> queryBillList(Map<String, Object> map) {
-
-		long operateTime = System.currentTimeMillis();
-		List<String> feesNos = new ArrayList<String>();
-		Map<String, Object> feesMap = new HashMap<String, Object>();
 		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
-		if(bizList == null || bizList.size() == 0){
-			
-		}
-		else{
-			for (BizOutstockMasterEntity entity : bizList) {
-				if(StringUtils.isNotEmpty(entity.getFeesNo())){
-					feesNos.add(entity.getFeesNo());
-				}
-				else{
-					entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
-				}
-			}
-			try{
-				if(feesNos.size()>0){
-					feesMap.put("feesNos", feesNos);
-					feesReceiveStorageService.deleteBatch(feesMap);
-					long current = System.currentTimeMillis();// 系统开始时间
-					XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
-				}
-			}
-			catch(Exception ex){
-				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-			}
-		}
 		return bizList;
 		
 	}
@@ -190,25 +162,20 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 	 * 批量保存数据
 	 */
 	@Override
-	protected void saveBatchData(List<BizOutstockMasterEntity> billList,
-			List<FeesReceiveStorageEntity> feesList) {
+	protected void saveBatchData(List<BizOutstockMasterEntity> billList,List<FeesReceiveStorageEntity> feesList) {
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		bizOutstockMasterService.updateOutstockBatch(billList);
 	    current = System.currentTimeMillis();
 	    XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒",(current - start));
 	    start = System.currentTimeMillis();// 系统开始时间
-	    feesReceiveStorageService.InsertBatch(feesList);
-		/*for(FeesReceiveStorageEntity feeEntity:feesList){
-			feesReceiveStorageService.Insert(feeEntity);
-		}*/
+	    feesReceiveStorageService.updateBatch(feesList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 	}
 
 	@Override
-	protected boolean validateData(BizOutstockMasterEntity entity,
-			List<FeesReceiveStorageEntity> feesList) {
+	protected boolean validateData(BizOutstockMasterEntity entity,List<FeesReceiveStorageEntity> feesList) {
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
 		entity.setCalculateTime(JAppContext.currentTimestamp());
 		Map<String,Object> map=new HashMap<String,Object>();
@@ -340,8 +307,7 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 		return true;
 
 	}
-	private PriceStepQuotationEntity getStepQuotationById(
-			List<PriceStepQuotationEntity> priceStepList, String priceId) {
+	private PriceStepQuotationEntity getStepQuotationById(List<PriceStepQuotationEntity> priceStepList, String priceId) {
 		PriceStepQuotationEntity stepQuotationEntity=null;
 		for(PriceStepQuotationEntity entity:priceStepList){
 			if(entity.getId().toString().equals(priceId)){
@@ -407,50 +373,9 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 
 	@Override
 	protected void calcuStandardService(List<BizOutstockMasterEntity> billList) {
-		for (BizOutstockMasterEntity entity : billList) {
-			if(CalculateState.Quote_Miss.getCode().equals(entity.getIsCalculated())){
-				try{
-					calcu(entity);
-				}
-				catch(Exception ex){
-					XxlJobLogger.log("采用【标准报价】计算异常 "+ ex.getMessage());	
-				}
-			}
-		}
+		
 	}
 	
-	private void calcu(BizOutstockMasterEntity entity){
-		long start = System.currentTimeMillis();// 系统开始时间
-		
-		CalcuReqVo reqVo = standardReqVoServiceImpl.getStorageReqVo(SubjectId);
-		if("true".equals(reqVo.getParams().get("succ"))){
-			XxlJobLogger.log("消息【{0}】 规则编号【{1}】",reqVo.getParams().get("msg").toString(),reqVo.getRuleNo());	
-			reqVo.setBizData(entity);
-			CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
-			if("succ".equals(resultVo.getSuccess())){
-				FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
-				storageFeeEntity.setFeesNo(entity.getFeesNo());
-				storageFeeEntity.setParam1(TemplateTypeEnum.STANDARD.getCode());
-				storageFeeEntity.setParam2(resultVo.getMethod());//
-				storageFeeEntity.setParam3(resultVo.getQuoId());
-				entity.setRemark("计算成功");
-				entity.setIsCalculated(CalculateState.Finish.getCode());
-				storageFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
-				storageFeeEntity.setCost(resultVo.getPrice());
-				feesReceiveStorageService.updateOne(storageFeeEntity);
-			}
-			else{
-				entity.setRemark("【标准报价】费用计算失败:"+resultVo.getMsg());
-			}
-		}
-		else{
-			XxlJobLogger.log(reqVo.getParams().get("msg").toString());	
-			entity.setRemark((String) reqVo.getParams().get("msg"));
-		}
-		bizOutstockMasterService.update(entity);
-		long current = System.currentTimeMillis();;// 当前系统时间
-		XxlJobLogger.log("【标准报价】调用规则引擎   耗时【{0}】毫秒  费用【{1}】 ",(current - start));	
-	}
 	
 	void setSubjectId(BizOutstockMasterEntity entity)
 	{
