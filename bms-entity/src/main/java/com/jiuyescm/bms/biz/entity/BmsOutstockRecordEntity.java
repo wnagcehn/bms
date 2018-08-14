@@ -34,15 +34,15 @@ public class BmsOutstockRecordEntity implements IEntity {
 	// 快递业务类型
 	private String expresstype;
 	// 抛重
-	private BigDecimal throwWeight;
+	private Double throwWeight;
 	// 调整重量
-	private BigDecimal adjustWeight;
+	private Double adjustWeight;
 	// 纠正重量
-	private BigDecimal correctWeight;
+	private Double correctWeight;
 	// 调整箱数
-	private BigDecimal adjustBox;
+	private Double adjustBox;
 	// 调整商品数量
-	private BigDecimal adjustQty;
+	private Double adjustQty;
 	// 调整发件省
 	private String adjustSendProvince;
 	// 调整发件市
@@ -206,86 +206,47 @@ public class BmsOutstockRecordEntity implements IEntity {
 		this.expresstype = expresstype;
 	}
 	
-	/**
-     * 抛重
-     */
-	public BigDecimal getThrowWeight() {
-		return this.throwWeight;
+	
+	public Double getThrowWeight() {
+		return throwWeight;
 	}
 
-    /**
-     * 抛重
-     *
-     * @param throwWeight
-     */
-	public void setThrowWeight(BigDecimal throwWeight) {
+	public void setThrowWeight(Double throwWeight) {
 		this.throwWeight = throwWeight;
 	}
-	
-	/**
-     * 调整重量
-     */
-	public BigDecimal getAdjustWeight() {
-		return this.adjustWeight;
+
+	public Double getAdjustWeight() {
+		return adjustWeight;
 	}
 
-    /**
-     * 调整重量
-     *
-     * @param adjustWeight
-     */
-	public void setAdjustWeight(BigDecimal adjustWeight) {
+	public void setAdjustWeight(Double adjustWeight) {
 		this.adjustWeight = adjustWeight;
 	}
-	
-	/**
-     * 纠正重量
-     */
-	public BigDecimal getCorrectWeight() {
-		return this.correctWeight;
+
+	public Double getCorrectWeight() {
+		return correctWeight;
 	}
 
-    /**
-     * 纠正重量
-     *
-     * @param correctWeight
-     */
-	public void setCorrectWeight(BigDecimal correctWeight) {
+	public void setCorrectWeight(Double correctWeight) {
 		this.correctWeight = correctWeight;
 	}
-	
-	/**
-     * 调整箱数
-     */
-	public BigDecimal getAdjustBox() {
-		return this.adjustBox;
+
+	public Double getAdjustBox() {
+		return adjustBox;
 	}
 
-    /**
-     * 调整箱数
-     *
-     * @param adjustBox
-     */
-	public void setAdjustBox(BigDecimal adjustBox) {
+	public void setAdjustBox(Double adjustBox) {
 		this.adjustBox = adjustBox;
 	}
-	
-	/**
-     * 调整商品数量
-     */
-	public BigDecimal getAdjustQty() {
-		return this.adjustQty;
+
+	public Double getAdjustQty() {
+		return adjustQty;
 	}
 
-    /**
-     * 调整商品数量
-     *
-     * @param adjustQty
-     */
-	public void setAdjustQty(BigDecimal adjustQty) {
+	public void setAdjustQty(Double adjustQty) {
 		this.adjustQty = adjustQty;
 	}
-	
+
 	/**
      * 调整发件省
      */

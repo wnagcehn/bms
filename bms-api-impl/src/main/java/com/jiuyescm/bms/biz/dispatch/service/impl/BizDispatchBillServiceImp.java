@@ -7,6 +7,10 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +20,21 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
+import com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity;
+import com.jiuyescm.bms.biz.repo.IOutstockRecordRepository;
+import com.jiuyescm.bms.biz.service.impl.OutstockInfoServiceImpl;
+import com.jiuyescm.exception.BizException;
 
 @Service("bizDispatchBillService")
 public class BizDispatchBillServiceImp implements IBizDispatchBillService{
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(BizDispatchBillServiceImp.class.getName());
+	
 	@Resource
 	private IBizDispatchBillRepository bizRepository;
+	
+	@Autowired 
+	private IOutstockRecordRepository outstockRecordrepository;
 	
 	@Override
 	public PageInfo<BizDispatchBillEntity> queryAll(
@@ -115,8 +128,25 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 		return bizRepository.updateBatchWeight(list);
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
 	public int adjustBillEntity(BizDispatchBillEntity temp) {
+		
+		//1:写入到记录表
+		BmsOutstockRecordEntity record=new BmsOutstockRecordEntity();
+		try {
+			PropertyUtils.copyProperties(record, temp);
+			record.setAdjustReceiveProvince(temp.getAdjustProvinceId());
+			record.setAdjustReceiveCity(temp.getAdjustCityId());
+			record.setAdjustReceiveArea(temp.getAdjustDistrictId());
+			record.setAdjustCarrierId(temp.getAdjustCarrierId());
+			record.setAdjustSendProvince(temp.getSendProvinceId());
+			record.setAdjustSendCity(temp.getSendCityId());
+			outstockRecordrepository.insert(record);
+		} catch (Exception e) {
+			logger.error("转换为记录实体类失败:{0}",e);
+		}
+		//2:更新到主表
 		return bizRepository.adjustBillEntity(temp);
 	}
 

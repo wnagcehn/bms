@@ -157,5 +157,11 @@ carrierid, carriercode, servicecode, servicename, remark, delflag, creperson, cr
         </trim>
         where id = #{id}
     </update>
+    
+    <select id="queryByCarrierid" parameterType="java.lang.String"
+        resultType="com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity">
+    	select * from pub_carrier_servicetype
+    	where carrierid = #{carrierid}
+    </select>
 
 </mapper>

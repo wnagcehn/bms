@@ -820,14 +820,14 @@ validRetryAction.execute(function(retMap){&#xD;
 </ClientEvent>
         <Property name="caption">模板下载</Property>
         <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="btnTemplateImport">
         <ClientEvent name="onClick">view.get(&quot;#importWayBillDialog&quot;).show();&#xD;
 </ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
         <Property name="caption">导入模板</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="export">
         <ClientEvent name="onClick">var condition=view.get(&quot;#queyConditionForm.entity&quot;);&#xD;
@@ -1013,15 +1013,15 @@ if (data != null) {&#xD;
         <Button id="btnSave">
           <ClientEvent name="onClick">var entity = view.get(&quot;#billEditForm&quot;).get(&quot;entity&quot;);	&#xD;
 &#xD;
-var weight=entity.get(&quot;totalWeight&quot;);&#xD;
+var adjustWeight=entity.get(&quot;adjustWeight&quot;);&#xD;
 //alert(&quot;调整重量&quot;+adjustWeight);&#xD;
 &#xD;
-if(undefined==weight || weight==''){&#xD;
-	dorado.MessageBox.alert(&quot;请填写重量!&quot;);&#xD;
+if(undefined==adjustWeight || adjustWeight==''){&#xD;
+	dorado.MessageBox.alert(&quot;请填写调整重量!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-if (isNaN(weight)) {&#xD;
+if (isNaN(adjustWeight)) {&#xD;
 	dorado.MessageBox.alert(&quot;重量必须为数字!&quot;);&#xD;
 	return;&#xD;
 }&#xD;

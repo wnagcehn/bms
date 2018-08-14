@@ -71,5 +71,10 @@ public class PubCarrierServicetypeRepositoryImpl extends MyBatisDao<PubCarrierSe
         update("com.jiuyescm.bms.base.servicetype.PubCarrierServicetypeMapper.update", entity);
         return entity;
     }
+    
+    @Override
+    public List<PubCarrierServicetypeEntity> queryByCarrierid(String carrierid){
+    	return this.selectList("com.jiuyescm.bms.base.servicetype.PubCarrierServicetypeMapper.queryByCarrierid", carrierid);
+    }
 	
 }
