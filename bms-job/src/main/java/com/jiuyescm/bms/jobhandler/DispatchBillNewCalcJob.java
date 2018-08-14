@@ -447,8 +447,8 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
 		double newThrowWeight=getNewThrowWeight(entity);
 		//将新泡重赋值
-		entity.setThrowWeight(newThrowWeight);
-		
+		//entity.setThrowWeight(newThrowWeight);
+		entity.setCorrectThrowWeight(newThrowWeight);
 		
 		//先进行判断是否是不计算的运单
 		//**********************************如果是不计算配送费用的宅配商,费用表照常写入，费用表中的计费重量置为空，实际重量为运单表中的但金额至0*****
@@ -595,7 +595,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 						else{
 							XxlJobLogger.log("--------此单为顺丰非同城  按泡重计费--------");
 							//泡重不存在
-							if(DoubleUtil.isBlank(entity.getThrowWeight())){
+							if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
 								if (hasCorrect) {
 									double dd = getResult(correctWeight);
 									entity.setWeight(dd);
@@ -623,7 +623,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 								//泡重存在时
 								if (hasCorrect) {
 									// 有纠正重量时比较 泡重和 纠正重量
-									if(correctWeight >= entity.getThrowWeight()){
+									if(correctWeight >= entity.getCorrectThrowWeight()){
 										// 纠正重量大于抛重重量，按纠正重量算
 										double dd = getResult(correctWeight);
 										entity.setWeight(dd);
@@ -631,31 +631,31 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 										double resultWeight = compareWeight(entity.getTotalWeight(), 
 												getResult(entity.getTotalWeight()), correctWeight);
 										entity.setTotalWeight(resultWeight);
-									}else if(correctWeight < entity.getThrowWeight()){
+									}else if(correctWeight < entity.getCorrectThrowWeight()){
 										// 纠正重量小于抛重时，按抛重算
-										double dd = getResult(entity.getThrowWeight());
+										double dd = getResult(entity.getCorrectThrowWeight());
 										entity.setWeight(dd);//计费重量
-										entity.setTotalWeight(entity.getThrowWeight()); //实际重量 eg:5.1
+										entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 									}
 								}else {
 									if(!DoubleUtil.isBlank(entity.getTotalWeight())){
 										// 没有纠正重量时比较 泡重和 实际重量
-										if(entity.getTotalWeight() >= entity.getThrowWeight()){
+										if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
 											// 运单重量大于抛重时，按运单重量算
 											double dd = getResult(entity.getTotalWeight());
 											entity.setWeight(dd);
 											entity.setTotalWeight(entity.getTotalWeight());
-										}else if(entity.getTotalWeight() < entity.getThrowWeight()){
+										}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
 											// 运单重量小于抛重时，按抛重算
-											double dd = getResult(entity.getThrowWeight());
+											double dd = getResult(entity.getCorrectThrowWeight());
 											entity.setWeight(dd);//计费重量
-											entity.setTotalWeight(entity.getThrowWeight()); //实际重量 eg:5.1
+											entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 										}
 									}else{
 										//实际重量为空时，直接取泡重
-										double dd = getResult(entity.getThrowWeight());
+										double dd = getResult(entity.getCorrectThrowWeight());
 										entity.setWeight(dd);
-										entity.setTotalWeight(entity.getThrowWeight());
+										entity.setTotalWeight(entity.getCorrectThrowWeight());
 									}
 								}
 							}						
