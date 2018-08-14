@@ -19,6 +19,8 @@ public interface IFeesReceiveStorageService {
 	 */
 	public void InsertBatch(List<FeesReceiveStorageEntity> entity);
 	
+	public void updateBatch(List<FeesReceiveStorageEntity> entity);
+	
 	/**
 	 * 单个删除仓储费用表
 	 * @param omsId 单号（oms内部单号-orderno）
