@@ -108,7 +108,6 @@
     <update id="update" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
         update fees_receive_storage 
 		<set >
-			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
 			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
 			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
@@ -150,7 +149,7 @@
 			<if test="bizId != null" >biz_id=#{bizId,jdbcType=VARCHAR},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 		</set>
-        where biz_id=#{bizId} and subject_code = #{subjectCode}
+        where fees_no=#{feesNo} and del_flag='0'
     </update>
     
     <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">

@@ -193,7 +193,11 @@
 			and pg.subject_id= #{subjectId}
 		</if>
 	</select>
+	
     <select id="queryPriceStepByQuatationId" parameterType="java.util.Map" resultMap="baseResultMap">
-    	 select * from price_storage_step  where quotation_id=#{quotationId} and del_flag=0;
+    	 select * from price_storage_step  where quotation_id=#{quotationId} and del_flag=0
+    	 <if test="(num != null and num !='')">
+    	    and num_upper > #{num} and <![CDATA[num_lower <= #{num}]]>
+		 </if>
     </select>
 </mapper>
