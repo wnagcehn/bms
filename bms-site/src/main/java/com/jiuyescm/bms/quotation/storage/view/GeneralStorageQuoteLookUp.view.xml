@@ -22,9 +22,6 @@
       <PropertyDef name="subjectId">
         <Property></Property>
         <Property name="label">费用科目</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_base_quo_subject&quot;)}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="feeUnitCode">
         <Property></Property>
@@ -35,7 +32,6 @@
         <Property name="defaultValue">ITEM</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
-        <Property name="dataType">Double</Property>
         <Property name="label">单价</Property>
       </PropertyDef>
       <PropertyDef name="description">
@@ -45,7 +41,7 @@
       <PropertyDef name="remark">
         <Property></Property>
         <Property name="label">备注</Property>
-        <Property name="required">true</Property>
+        <Property name="required">false</Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property></Property>
@@ -63,6 +59,7 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;PRICE_TYPE&quot;)}</Property>
         </Property>
+        <Property name="defaultValue">PRICE_TYPE_NORMAL</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家ID</Property>
@@ -73,6 +70,9 @@
       <PropertyDef name="param1">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
       <PropertyDef name="templateType">
         <Property></Property>
         <Property name="label">模版类型</Property>
@@ -80,6 +80,19 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
         </Property>
+        <Property name="defaultValue">C</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleName">
+        <Property></Property>
+        <Property name="label">规则名称</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtGCondition">
@@ -100,6 +113,9 @@
         <Property name="dataType">DateTime</Property>
         <Property name="label">结束时间</Property>
       </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家ID</Property>
       </PropertyDef>
@@ -109,11 +125,44 @@
       <PropertyDef name="quotationId">
         <Property name="label">模板Id</Property>
       </PropertyDef>
-      <PropertyDef name="weightLower">
-        <Property name="label">重量下限</Property>
+      <PropertyDef name="startDate">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">生效日期</Property>
       </PropertyDef>
-      <PropertyDef name="weightUpper">
-        <Property name="label">重量上限</Property>
+      <PropertyDef name="expireDate">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">失效日期</Property>
+      </PropertyDef>
+      <PropertyDef name="numLower">
+        <Property name="label">下限</Property>
+      </PropertyDef>
+      <PropertyDef name="numUpper">
+        <Property name="label">上限</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首量</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">首价</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedItem">
+        <Property name="label">续量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuedPrice">
+        <Property name="dataType">Double</Property>
+        <Property name="label">续价</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="temperatureTypeCode">
         <Property name="label">温度类型</Property>
@@ -121,12 +170,8 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="unitPrice">
-        <Property name="label">单价</Property>
-      </PropertyDef>
-      <PropertyDef name="id">
-        <Property name="dataType">Long</Property>
-        <Property name="label">id</Property>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property></Property>
@@ -146,12 +191,13 @@
         <Property name="label">最后修改时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">id</Property>
+      </PropertyDef>
       <PropertyDef name="delFlag">
         <Property></Property>
         <Property name="label">删除标志</Property>
-      </PropertyDef>
-      <PropertyDef name="remark">
-        <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="skuUpper">
         <Property name="label">sku上限</Property>
@@ -165,11 +211,11 @@
       <PropertyDef name="volumeLower">
         <Property name="label">体积下限</Property>
       </PropertyDef>
-      <PropertyDef name="numUpper">
-        <Property name="label">数量上限</Property>
+      <PropertyDef name="weightLower">
+        <Property name="label">重量下限</Property>
       </PropertyDef>
-      <PropertyDef name="numLower">
-        <Property name="label">数量下限</Property>
+      <PropertyDef name="weightUpper">
+        <Property name="label">重量上限</Property>
       </PropertyDef>
       <PropertyDef name="userDefine1">
         <Property name="label">扩展1</Property>
@@ -186,9 +232,6 @@
       <PropertyDef name="userDefine5">
         <Property name="label">扩展5</Property>
       </PropertyDef>
-      <PropertyDef name="continuedItem">
-        <Property name="label">续件价格</Property>
-      </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
       <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
@@ -199,6 +242,564 @@
       <PropertyDef name="msg">
         <Property></Property>
         <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtOutStock">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+        <Property name="label">物流商</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOmsCarrierList&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+        <Property name="label">温度</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="resizeWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+        <Property name="label">sku数</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">预估单量</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="productDetail">
+        <Property></Property>
+        <Property name="label">商品明细</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtRepertory">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dataNum">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="curDay">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="productId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="productName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="stockPlaceCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="stockPlace">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="batchCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="aqty">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperature">
+        <Property></Property>
+        <Property name="label">温度</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;TEMPERATURE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="volume">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="pieceNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property></Property>
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="feeUnitCode">
+        <Property></Property>
+        <Property name="label">存储方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;STORAGE_CHARGE_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtInStock">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="instockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="shopperCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="shopperName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNum">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="instockType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feeAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiver">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+        <Property name="label">合同编码</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtOutStockDetail">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="chyunName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="resizeWeight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property></Property>
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtB2bOut">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="shopper">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="logistics">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="unpacking">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="billType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="b2bFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQuantity">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalVarieties">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="sku">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
+      </PropertyDef>
+      <PropertyDef name="billNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="splitSingle">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delivery">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtMaterialStock">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="packNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="packName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="qty">
+        <Property name="label">数量</Property>
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="dataType">Double</Property>
+        <Property name="label">托数</Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property name="label">计算结果</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -222,6 +823,45 @@
     <DataSet id="dsErrorMessageVo">
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
+    <DataSet id="dsOutStock">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsOutStock&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtOutStock]</Property>
+    </DataSet>
+    <DataSet id="dsRepertory">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsRepertory&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtRepertory]</Property>
+    </DataSet>
+    <DataSet id="dsMasterList">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsMasterList&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtInStock]</Property>
+    </DataSet>
+    <DataSet id="dsReturnList">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsReturnList&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtInStock]</Property>
+    </DataSet>
+    <DataSet id="dsReturnStock">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsReturnStock&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtOutStockDetail]</Property>
+    </DataSet>
+    <DataSet id="dsB2bOut">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsB2bOut&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtB2bOut]</Property>
+    </DataSet>
+    <DataSet id="dsMaterial">
+      <ClientEvent name="onCreate">//如果不加这句话,Form查询框就是灰色的.&#xD;
+view.get(&quot;#dsMaterial&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtMaterialStock]</Property>
+    </DataSet>
+    <DataSet id="dsSubjectId">
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsGroupController#getSubjectIdAndSubjectName</Property>
+    </DataSet>
     <Container>
       <ToolBar>
         <DataPilot>
@@ -237,6 +877,7 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
         </ToolBarButton>
+        <Separator/>
         <ToolBarButton id="select">
           <ClientEvent name="onClick">this.get(&quot;#actionSelect&quot;).execute();</ClientEvent>
           <Property name="caption">选择</Property>
@@ -244,9 +885,10 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
         </ToolBarButton>
       </ToolBar>
       <AutoForm id="queryConditionFrm">
-        <Property name="cols">*,*,*</Property>
-        <Property name="dataSet">dsGCondition</Property>
         <Property name="dataType">dtGCondition</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="dataSet">dsGCondition</Property>
+        <Property name="labelSeparator">:</Property>
         <AutoFormElement>
           <Property name="name">quotationNo</Property>
           <Property name="property">quotationNo</Property>
@@ -259,6 +901,17 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
+          <Property name="name">subjectId</Property>
+          <Property name="property">subjectId</Property>
+          <Property name="editable">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">remark</Property>
+          <Property name="property">remark</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
           <Property name="name">startTime</Property>
           <Property name="property">startTime</Property>
           <Editor/>
@@ -266,13 +919,6 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
         <AutoFormElement>
           <Property name="name">endTime</Property>
           <Property name="property">endTime</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">subjectId</Property>
-          <Property name="property">subjectId</Property>
-          <Property name="editable">false</Property>
-          <Property name="visible">false</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -299,43 +945,49 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="quotationNo">
           <Property name="property">quotationNo</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">customerName</Property>
           <Property name="name">customerName</Property>
+          <Property name="width">90</Property>
           <Editor/>
         </DataColumn>
         <DataColumn>
           <Property name="name">priceType</Property>
           <Property name="property">priceType</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">customerName</Property>
-          <Property name="name">customerName</Property>
+          <Property name="width">90</Property>
           <Editor/>
         </DataColumn>
         <DataColumn name="bizTypeCode">
           <Property name="property">bizTypeCode</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">templateType</Property>
           <Property name="name">templateType</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="subjectId">
-          <Property name="property">subjectId</Property>
+        <DataColumn>
+          <Property name="property">subjectName</Property>
+          <Property name="width">90</Property>
+          <Property name="name">subjectName</Property>
         </DataColumn>
         <DataColumn name="feeUnitCode">
           <Property name="property">feeUnitCode</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="unitPrice">
           <Property name="property">unitPrice</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
+          <Property name="width">130</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
+          <Property name="width">120</Property>
         </DataColumn>
         <DataColumn name="createTime">
           <Property name="property">createTime</Property>
@@ -351,98 +1003,62 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
             <DataPilot>
               <Property name="dataSet">dsStepList</Property>
             </DataPilot>
-            <Separator/>
           </ToolBar>
           <DataGrid>
             <Property name="dataSet">dsStepList</Property>
-            <Property name="selectionMode">singleRow</Property>
-            <Property name="width">2000</Property>
+            <Property name="readOnly">true</Property>
             <IndicatorColumn/>
             <RowNumColumn/>
-            <DataColumn>
+            <DataColumn name="warehouseCode">
+              <Property name="property">warehouseCode</Property>
+            </DataColumn>
+            <DataColumn name="temperatureTypeCode">
               <Property name="property">temperatureTypeCode</Property>
-              <Property name="name">temperatureTypeCode</Property>
-              <Editor/>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">unitPrice</Property>
-              <Property name="name">unitPrice</Property>
+            <DataColumn name="quotationId">
+              <Property name="property">quotationId</Property>
+              <Property name="visible">false</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="name">continuedItem</Property>
-              <Property name="property">continuedItem</Property>
-              <Editor/>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">weightLower</Property>
-              <Property name="name">weightLower</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">weightUpper</Property>
-              <Property name="name">weightUpper</Property>
-            </DataColumn>
-            <DataColumn>
+            <DataColumn name="numLower">
               <Property name="property">numLower</Property>
-              <Property name="name">numLower</Property>
             </DataColumn>
-            <DataColumn>
+            <DataColumn name="numUpper">
               <Property name="property">numUpper</Property>
-              <Property name="name">numUpper</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">skuLower</Property>
-              <Property name="name">skuLower</Property>
+            <DataColumn name="unitPrice">
+              <Property name="property">unitPrice</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">skuUpper</Property>
-              <Property name="name">skuUpper</Property>
+            <DataColumn name="firstNum">
+              <Property name="property">firstNum</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">volumeLower</Property>
-              <Property name="name">volumeLower</Property>
+            <DataColumn name="firstPrice">
+              <Property name="property">firstPrice</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">volumeUpper</Property>
-              <Property name="name">volumeUpper</Property>
+            <DataColumn name="continuedItem">
+              <Property name="property">continuedItem</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine1</Property>
-              <Property name="name">userDefine1</Property>
+            <DataColumn name="continuedPrice">
+              <Property name="property">continuedPrice</Property>
             </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine2</Property>
-              <Property name="name">userDefine2</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine3</Property>
-              <Property name="name">userDefine3</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine4</Property>
-              <Property name="name">userDefine4</Property>
-            </DataColumn>
-            <DataColumn>
-              <Property name="property">userDefine5</Property>
-              <Property name="name">userDefine5</Property>
+            <DataColumn name="remark">
+              <Property name="property">remark</Property>
             </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
             </DataColumn>
             <DataColumn name="createTime">
               <Property name="property">createTime</Property>
-              <Property name="width">130</Property>
+            </DataColumn>
+            <DataColumn name="lastModifier">
+              <Property name="property">lastModifier</Property>
+            </DataColumn>
+            <DataColumn name="lastModifyTime">
+              <Property name="property">lastModifyTime</Property>
             </DataColumn>
           </DataGrid>
         </Container>
       </ControlTab>
     </TabControl>
-    <Action id="actionSelect">
-      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
-if (tmpSelectData != null) {&#xD;
-	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
-	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
-}</ClientEvent>
-    </Action>
     <Trigger id="triggerCustomer">
       <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
     </Trigger>
@@ -470,5 +1086,12 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <Action id="actionSelect">
+      <ClientEvent name="onExecute">var tmpSelectData = this.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+if (tmpSelectData != null) {&#xD;
+	this.get(&quot;parent&quot;).set(&quot;userData&quot;, tmpSelectData); // 提交选择的记录&#xD;
+	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
+}</ClientEvent>
+    </Action>
   </View>
 </ViewConfig>

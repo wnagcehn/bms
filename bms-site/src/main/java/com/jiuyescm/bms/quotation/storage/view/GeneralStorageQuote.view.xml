@@ -1107,16 +1107,6 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
           <Property name="property">unitPrice</Property>
           <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="ruleNo">
-          <Property name="property">ruleNo</Property>
-          <Property name="width">90</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="name">ruleName</Property>
-          <Property name="property">ruleName</Property>
-          <Property name="width">90</Property>
-          <Editor/>
-        </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
           <Property name="width">90</Property>
