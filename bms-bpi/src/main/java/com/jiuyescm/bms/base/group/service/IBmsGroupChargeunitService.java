@@ -30,6 +30,13 @@ public interface IBmsGroupChargeunitService {
 	int queryUnitCountByGroupId(int groupId);
 
 	List<String> queryUnitByGroupId(int groupId);
+	
+	/**
+	 * 根据groupCode查unitCode和unitName
+	 * @param param
+	 * @return
+	 */
+	List<BmsGroupChargeunitEntity> queryByGroupCode(Map<String, String> param);
 
 
 }

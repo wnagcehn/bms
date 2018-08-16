@@ -141,4 +141,15 @@ public class BmsGroupChargeunitController {
 		
 	}
 	
+	@DataProvider
+	public List<BmsGroupChargeunitEntity> queryByGroupCode(Map<String, String> param){
+		List<BmsGroupChargeunitEntity> list = null;
+		try {
+			list = bmsGroupChargeunitService.queryByGroupCode(param);
+		} catch (Exception e) {
+			logger.error("查询异常", e);
+		}
+		return list;
+	}
+	
 }

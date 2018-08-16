@@ -26,10 +26,6 @@
       <PropertyDef name="feeUnitCode">
         <Property></Property>
         <Property name="label">计费单位</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;STORAGE_CHARGE_TYPE&quot;)}</Property>
-        </Property>
-        <Property name="defaultValue">ITEM</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
         <Property name="label">单价</Property>
@@ -93,6 +89,9 @@
       <PropertyDef name="subjectName">
         <Property></Property>
         <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="unitName">
+        <Property name="label">计费单位</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -872,6 +871,10 @@ view.get(&quot;#dsMaterial&quot;).getData().insert();</ClientEvent>
       <Property name="loadMode">manual</Property>
       <Property name="dataProvider">bmsGroupController#getSubjectIdAndSubjectName</Property>
     </DataSet>
+    <DataSet id="dsUnit">
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsGroupChargeunitController#queryByGroupCode</Property>
+    </DataSet>
     <Container>
       <ToolBar>
         <DataPilot>
@@ -1117,6 +1120,13 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         <DataColumn name="feeUnitCode">
           <Property name="property">feeUnitCode</Property>
           <Property name="width">90</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">unitName</Property>
+          <Property name="property">unitName</Property>
+          <Property name="width">90</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn name="unitPrice">
           <Property name="property">unitPrice</Property>
@@ -1220,6 +1230,15 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Property name="name">feeUnitCode</Property>
             <Property name="property">feeUnitCode</Property>
             <Property name="readOnly">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">unitName</Property>
+            <Property name="property">unitName</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="trigger">unitDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1341,6 +1360,15 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Property name="name">feeUnitCode</Property>
             <Property name="property">feeUnitCode</Property>
             <Property name="readOnly">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">unitName</Property>
+            <Property name="property">unitName</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="trigger">unitDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -2848,6 +2876,32 @@ arg.processDefault = false;</ClientEvent>
       <Property name="editable">false</Property>
       <Property name="useEmptyItem">true</Property>
       <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="unitDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+var groupCode = entity.get(&quot;subjectId&quot;);&#xD;
+if(groupCode != undefined){&#xD;
+	var subDropDown = view.get(&quot;#unitDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsUnit&quot;);&#xD;
+	var parameter={&#xD;
+		groupCode:groupCode&#xD;
+	};&#xD;
+	view.get(&quot;#dsUnit&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsUnit&quot;).clear();&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	unitName:arg.selectedValue.get(&quot;unitName&quot;),&#xD;
+	feeUnitCode:arg.selectedValue.get(&quot;unitCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">unitName</Property>
     </DataSetDropDown>
     <AjaxAction id="queryRuleAction">
       <Property name="service">generalStorageQuoteController#queryRule</Property>

@@ -137,4 +137,9 @@ public class BmsGroupChargeunitServiceImpl implements IBmsGroupChargeunitService
 		return bmsGroupChargeunitRepository.queryUnitByGroupId(groupId);
 	}
 	
+	@Override
+	public List<BmsGroupChargeunitEntity> queryByGroupCode(Map<String, String> param){
+		return bmsGroupChargeunitRepository.queryByGroupCode(param);
+	}
+	
 }
