@@ -137,7 +137,7 @@
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
 			<if test="customerName != null" >customerName=#{customerName,jdbcType=VARCHAR},</if>
-			<if test="priceType!=null">price_type=#{priceType,jdbcType=VARCHAR}</if>
+			<if test="priceType!=null">price_type=#{priceType,jdbcType=VARCHAR},</if>
 			<if test="carrierid!=null">carrierid=#{carrierid,jdbcType=VARCHAR}</if>
 		</set>
         where id=#{id}
