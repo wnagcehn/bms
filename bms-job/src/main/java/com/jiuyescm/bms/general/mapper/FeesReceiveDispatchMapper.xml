@@ -260,7 +260,7 @@
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
 		</set>
-        where fees_no=#{feesNo}
+        where fees_no=#{feesNo} and del_flag='0'
     </update>
     
     
