@@ -1,37 +1,41 @@
 package com.jiuyescm.bms.general.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
-import com.jiuyescm.bs.util.StringUtil;
 
 @Service("storageQuoteFilterServiceImpl")
 public class StorageQuoteFilterServiceImpl implements IStorageQuoteFilterService{
 
 	@Override
-	public PriceStepQuotationEntity quoteFilter(List<PriceStepQuotationEntity> quotes,PriceStepQuotationEntity quote) {
+	public PriceStepQuotationEntity quoteFilter(List<PriceStepQuotationEntity> quotes,Map<String,Object> map) {
 		
 		Integer level = 33;
 		PriceStepQuotationEntity entity = new PriceStepQuotationEntity();
 		
-		String temperature_code = StringUtil.isEmpty(quote.getTemperatureTypeCode())?"":quote.getTemperatureTypeCode();
-		String warehouse_code = StringUtil.isEmpty(quote.getWarehouseCode())?"":quote.getWarehouseCode();
+		String warehouse_code = map.get("warehouse_code")==null?"":map.get("warehouse_code").toString();
+		String temperature_code =map.get("temperature_code")==null?"":map.get("temperature_code").toString();
 		
 		for (PriceStepQuotationEntity quoteEntity : quotes) {
-			String temperature_quote = StringUtil.isEmpty(quoteEntity.getTemperatureTypeCode())?"":quoteEntity.getTemperatureTypeCode();
-			String warehouse_quote = StringUtil.isEmpty(quote.getWarehouseCode())?"":quote.getWarehouseCode();
 			
-			if(!temperature_code.equals(temperature_quote) && StringUtil.isEmpty(temperature_quote)){
-				continue;//温度不匹配
-			}
-			if(!warehouse_code.equals(warehouse_quote) && StringUtil.isEmpty(warehouse_quote)){
+			String warehouse_quote = StringUtils.isEmpty(quoteEntity.getWarehouseCode())?"":quoteEntity.getWarehouseCode();
+			String temperature_quote = StringUtils.isEmpty(quoteEntity.getTemperatureTypeCode())?"":quoteEntity.getTemperatureTypeCode();
+			
+			if(!warehouse_code.equals(warehouse_quote) && StringUtils.isNotEmpty(warehouse_quote)){
 				continue;//仓库不匹配
 			}
+			
+			if(!temperature_code.equals(temperature_quote) && StringUtils.isNotEmpty(temperature_quote)){
+				continue;//温度不匹配
+			}
+		
+			Integer warehouselevel = warehouse_code.equals(warehouse_quote)?1:2;		//仓库优先级	
 			Integer temperaturelevel = temperature_code.equals(temperature_quote)?1:2; //温度优先级
-			Integer warehouselevel = warehouse_code.equals(warehouse_quote)?1:2;		//仓库优先级
 			
 			Integer temLevel = Integer.valueOf(temperaturelevel.toString()+warehouselevel.toString());
 			if(temLevel<level){

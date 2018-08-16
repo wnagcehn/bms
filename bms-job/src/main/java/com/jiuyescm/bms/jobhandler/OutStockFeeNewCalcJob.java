@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
+import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
@@ -49,7 +51,7 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
-	
+	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	
 	private String SubjectId = "wh_b2c_work";		//费用类型-B2C订单操作费 1004原编码
 	
@@ -256,10 +258,42 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 		
 		
 		//=====================================查询子报价==================================
+		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
 		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
 		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
 			//寻找阶梯报价
-			if(!mapCusStepPrice.containsKey(customerId)){				
+			if(!mapCusStepPrice.containsKey(customerId)){
+				map.clear();
+				map.put("quotationId", priceGeneral.getId());
+				//根据报价单位判断
+				if("BILL".equals(priceGeneral.getFeeUnitCode())){//按单
+					map.put("num", "1");
+				}else if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
+					map.put("num", entity.getTotalQuantity());
+				}else if("SKU".equals(priceGeneral.getFeeUnitCode())){//按sku
+					map.put("num", entity.getTotalVarieties());
+				}
+				//查询出的所有子报价
+				list=repository.queryPriceStepByQuatationId(map);
+				
+				if(list==null || list.size() == 0){
+					XxlJobLogger.log("阶梯报价未配置");
+					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					entity.setRemark("阶梯报价未配置");
+					feesList.add(storageFeeEntity);
+					return  false;
+				}
+				
+				//封装数据的仓库和温度
+				map.clear();
+				map.put("warehouse_code", entity.getWarehouseCode());
+				map.put("temperature_code", entity.getTemperatureTypeCode());
+				
+				price=storageQuoteFilterService.quoteFilter(list, map);
+				
+				
+				
 				price=QuoteFilter(entity,priceGeneral);
 				mapCusStepPrice.put(customerId,price);
 			}else{
@@ -384,7 +418,7 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 		}
 		
 		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
-		//根据id值获取报价
+		//根据id值获取报价x
 		for (Map.Entry<String, PriceStepQuotationEntity> entry : priceMap.entrySet()) {  
             if(key.equals(entry.getKey())){  
                 price=entry.getValue(); 
