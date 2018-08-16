@@ -67,6 +67,8 @@
 		 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="bmsGroupCustomerService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService" 
 		 version="1.0.0" registry="bms"/>
+		<dubbo:reference id="bmsGroupChargeunitService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService" 
+		 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="bmsWarehouseConfigService" interface="com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService" 
 		 version="1.0.0" registry="bms"/>
 		  <dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" 

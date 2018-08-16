@@ -1007,6 +1007,7 @@ if(dataPrice){&#xD;
 &#xD;
 </ClientEvent>
               <Property name="caption">试算</Property>
+              <Property name="visible">false</Property>
             </ToolBarButton>
           </ToolBar>
           <AutoForm id="materialLineSearch">

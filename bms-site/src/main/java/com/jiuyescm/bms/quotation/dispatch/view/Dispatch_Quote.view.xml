@@ -2827,7 +2827,7 @@ if (data != null) {&#xD;
 		servicename:data.get(&quot;servicename&quot;)&#xD;
     });&#xD;
 }</ClientEvent>
-      <Property name="caption">商家选择</Property>
+      <Property name="caption">物流产品类型选择</Property>
       <Property name="center">true</Property>
       <Property name="closeable">true</Property>
       <Property name="contentOverflow">scroll</Property>

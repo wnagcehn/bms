@@ -159,7 +159,7 @@
       <AutoFormElement>
         <Property name="name">carrierid</Property>
         <Property name="property">carrierid</Property>
-        <Property name="editable">false</Property>
+        <Property name="editable">true</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -180,12 +180,12 @@
       </DataColumn>
       <DataColumn name="carrierid">
         <Property name="property">carrierid</Property>
-        <Property name="width">80</Property>
+        <Property name="width">100</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">carriername</Property>
         <Property name="visible">true</Property>
-        <Property name="width">80</Property>
+        <Property name="width">90</Property>
         <Property name="name">carriername</Property>
       </DataColumn>
       <DataColumn name="servicecode">
@@ -210,7 +210,7 @@
       </DataColumn>
       <DataColumn name="cretime">
         <Property name="property">cretime</Property>
-        <Property name="width">120</Property>
+        <Property name="width">130</Property>
       </DataColumn>
       <DataColumn name="modperson">
         <Property name="property">modperson</Property>
@@ -218,19 +218,21 @@
       </DataColumn>
       <DataColumn name="modtime">
         <Property name="property">modtime</Property>
-        <Property name="width">120</Property>
+        <Property name="width">130</Property>
       </DataColumn>
       <DataColumn name="crepersonid">
         <Property name="property">crepersonid</Property>
         <Property name="width">80</Property>
+        <Property name="visible">false</Property>
       </DataColumn>
       <DataColumn name="modpersonid">
         <Property name="property">modpersonid</Property>
         <Property name="width">80</Property>
+        <Property name="visible">false</Property>
       </DataColumn>
       <DataColumn name="writeTime">
         <Property name="property">writeTime</Property>
-        <Property name="width">120</Property>
+        <Property name="width">130</Property>
       </DataColumn>
     </DataGrid>
   </View>

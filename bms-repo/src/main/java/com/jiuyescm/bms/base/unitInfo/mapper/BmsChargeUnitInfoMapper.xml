@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.unitInfo.BmsChargeUnitInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.base.unitInfo.entity.BmsChargeUnitInfoEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="unit_code" property="unitCode" jdbcType="VARCHAR" />
+		   	<result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		   	<result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, unit_code, unit_name, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, del_flag
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+unit_code, unit_name, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, del_flag
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_charge_unit_info
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.unitInfo.entity.BmsChargeUnitInfoEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_charge_unit_info
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" unitCode != null and unitCode !='' ">
+				and unit_code = #{unitCode}
+			</if>
+        	<if test=" unitName != null and unitName !='' ">
+        		and unit_name like CONCAT('%',#{unitName},'%')
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" creatorId != null and creatorId !='' ">
+				and creator_id = #{creatorId}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				and last_modifier = #{lastModifier}
+			</if>
+        	<if test=" lastModifierId != null and lastModifierId !='' ">
+				and last_modifier_id = #{lastModifierId}
+			</if>
+        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				and last_modify_time = #{lastModifyTime}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.base.unitInfo.entity.BmsChargeUnitInfoEntity">
+        insert into bms_charge_unit_info(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{unitCode,jdbcType=VARCHAR}, 
+			#{unitName,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{creatorId,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifierId,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.base.unitInfo.entity.BmsChargeUnitInfoEntity">
+        update bms_charge_unit_info
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" unitCode != null and unitCode !='' ">
+				unit_code = #{unitCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" unitName != null and unitName !='' ">
+				unit_name = #{unitName,jdbcType=VARCHAR},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" creatorId != null and creatorId !='' ">
+				creator_id = #{creatorId,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifierId != null and lastModifierId !='' ">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_charge_unit_info 
+        where id = #{id}
+    </delete>
+    
+    <select id="queryById" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.unitInfo.entity.BmsChargeUnitInfoEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_charge_unit_info
+        where 1 = 1 and id != #{id}
+        	<if test=" unitCode != null and unitCode !='' ">
+				and unit_code = #{unitCode}
+			</if>
+        	<if test=" unitName != null and unitName !='' ">
+        		and unit_name like CONCAT('%',#{unitName},'%')
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" creatorId != null and creatorId !='' ">
+				and creator_id = #{creatorId}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				and last_modifier = #{lastModifier}
+			</if>
+        	<if test=" lastModifierId != null and lastModifierId !='' ">
+				and last_modifier_id = #{lastModifierId}
+			</if>
+        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				and last_modify_time = #{lastModifyTime}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+    </select>
+</mapper>
