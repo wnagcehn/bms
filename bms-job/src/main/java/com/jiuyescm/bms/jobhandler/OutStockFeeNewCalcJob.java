@@ -1,7 +1,6 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -317,10 +316,6 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 		}
 		
 		//====================筛选报价=================
-		List<String> priorities=new ArrayList<String>();
-		priorities.add("warehouseCode");
-		priorities.add("temperatureTypeCode");
-		
 		Map<String,PriceStepQuotationEntity> priceMap=new HashMap<String,PriceStepQuotationEntity>();
 		
 		Map<String, Integer> voMap = new HashMap<String, Integer>();
@@ -329,50 +324,49 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 			priceMap.put(vo.getId().toString(), vo);
 		}
 		
-		for (String strPrior : priorities) {			
-			if(strPrior.equals("warehouseCode")){
-				String warehouseCode = StringUtil.isEmpty(entity.getWarehouseCode())?"":entity.getWarehouseCode();
-				for (PriceStepQuotationEntity vo : list) {
-					String warehouseCode_quote = StringUtil.isEmpty(vo.getWarehouseCode())?"":vo.getWarehouseCode();
-					if(warehouseCode.equals(warehouseCode_quote)){
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+10);
-						}
-					}
-					else if(!warehouseCode_quote.equals(warehouseCode) && StringUtil.isEmpty(warehouseCode_quote)){
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
-						}
-					}
-					else{
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
-						}
-					}
+		
+		String warehouseCode = StringUtil.isEmpty(entity.getWarehouseCode())?"":entity.getWarehouseCode();
+		String temperature_code = StringUtil.isEmpty(entity.getTemperatureTypeCode())?"":entity.getTemperatureTypeCode();
+		for (PriceStepQuotationEntity vo : list) {		
+			//================================仓库判断===========================
+			String warehouseCode_quote = StringUtil.isEmpty(vo.getWarehouseCode())?"":vo.getWarehouseCode();
+			if(warehouseCode.equals(warehouseCode_quote)){
+				if(voMap.containsKey(vo.getId().toString())){
+					voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+10);
 				}
 			}
-			if(strPrior.equals("temperatureTypeCode")){
-				String temperature_code = StringUtil.isEmpty(entity.getTemperatureTypeCode())?"":entity.getTemperatureTypeCode();
-				for (PriceStepQuotationEntity vo : list) {
-					String temperature_quote = StringUtil.isEmpty(vo.getTemperatureTypeCode())?"":vo.getTemperatureTypeCode();
-					if(temperature_quote.equals(temperature_code)){
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+1);
-						}
-					}
-					else if(!temperature_quote.equals(temperature_code) && StringUtil.isEmpty(temperature_quote)){
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
-						}
-					}
-					else{
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
-						}
-					}
+			else if(!warehouseCode_quote.equals(warehouseCode) && StringUtil.isEmpty(warehouseCode_quote)){
+				if(voMap.containsKey(vo.getId().toString())){
+					voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
+				}
+			}
+			else{
+				if(voMap.containsKey(vo.getId().toString())){
+					voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
+					continue;
+				}
+			}
+			
+			//================================温度类型判断===========================
+			String temperature_quote = StringUtil.isEmpty(vo.getTemperatureTypeCode())?"":vo.getTemperatureTypeCode();
+			if(temperature_quote.equals(temperature_code)){
+				if(voMap.containsKey(vo.getId().toString())){
+					voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+1);
+				}
+			}
+			else if(!temperature_quote.equals(temperature_code) && StringUtil.isEmpty(temperature_quote)){
+				if(voMap.containsKey(vo.getId().toString())){
+					voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
+				}
+			}
+			else{
+				if(voMap.containsKey(vo.getId().toString())){
+					voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
+					continue;
 				}
 			}
 		}
+				
 		if(voMap.size() == 0){
 			return null;
 		}
