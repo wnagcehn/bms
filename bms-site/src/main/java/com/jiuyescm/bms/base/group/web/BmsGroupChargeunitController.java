@@ -14,6 +14,8 @@ import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity;
+import com.jiuyescm.bms.base.group.BmsGroupSubjectEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupChargeunitVo;
@@ -101,6 +103,7 @@ public class BmsGroupChargeunitController {
 			voEntity.setGroupId(unitVo.getGroupId());
 			voEntity.setUnitCode(unVo.getUnitCode());
 			voEntity.setUnitName(unVo.getUnitName());
+			voEntity.setUnitId(Integer.valueOf(unVo.getId().toString()));
 			voEntity.setLastModifier(currentUser);
 			voEntity.setLastModifyTime(currentTime);
 			voEntity.setDelFlag("0");

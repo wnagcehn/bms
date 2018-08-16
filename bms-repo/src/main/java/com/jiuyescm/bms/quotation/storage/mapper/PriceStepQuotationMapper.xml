@@ -34,10 +34,11 @@
 	    <result column="first_num" property="firstNum" jdbcType="DECIMAL" />
 	    <result column="first_price" property="firstPrice" jdbcType="DECIMAL" />
 	    <result column="continued_price" property="continuedPrice" jdbcType="DECIMAL" />
+	    <result column="cap_price" property="capPrice" jdbcType="DECIMAL" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, warehouse_code, quotation_id, contract_code, startDate, expireDate, weight_lower, weight_upper, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, user_define3, user_define4, user_define5, first_num, first_price, continued_price
+        id, warehouse_code, quotation_id, contract_code, startDate, expireDate, weight_lower, weight_upper, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, user_define3, user_define4, user_define5, first_num, first_price, continued_price, cap_price
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -100,7 +101,7 @@
     </select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
-        insert into price_storage_step(warehouse_code, quotation_id, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower,first_num, first_price, continued_price)
+        insert into price_storage_step(warehouse_code, quotation_id, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower,first_num, first_price, continued_price, cap_price)
         values (
 			#{warehouseCode,jdbcType=VARCHAR}, 
 			#{quotationId,jdbcType=VARCHAR}, 
@@ -117,7 +118,8 @@
 			#{numLower,jdbcType=DECIMAL}, 
 			#{firstNum,jdbcType=DECIMAL}, 
 			#{firstPrice,jdbcType=DECIMAL}, 
-			#{continuedPrice,jdbcType=DECIMAL}
+			#{continuedPrice,jdbcType=DECIMAL},
+			#{capPrice,jdbcType=DECIMAL}
         )
     </insert>
 
@@ -153,6 +155,7 @@
 			<if test="firstNum != null" >first_num=#{firstNum,jdbcType=DECIMAL},</if>
 			<if test="firstPrice != null" >first_price=#{firstPrice,jdbcType=DECIMAL},</if>
 			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
+			<if test="capPrice != null" >cap_price=#{capPrice,jdbcType=DECIMAL},</if>
 		</set>
         where id=#{id}
     </update>

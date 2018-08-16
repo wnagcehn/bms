@@ -13,6 +13,7 @@ public class StorageStepTemplateDataType extends BaseDataType{
 		this.dataProps.add(new DataProperty("firstPrice", "首价"));
 		this.dataProps.add(new DataProperty("continuedItem", "续量"));
 		this.dataProps.add(new DataProperty("continuedPrice", "续价"));
+		this.dataProps.add(new DataProperty("capPrice", "封顶价"));
 		this.dataProps.add(new DataProperty("remark", "备注"));		
 	}
 }    

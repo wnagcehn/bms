@@ -2,6 +2,7 @@ package com.jiuyescm.bms.base.group;
 
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupChargeunitRepository;
+import com.jiuyescm.bms.base.group.repository.IBmsGroupRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupChargeunitVo;
 
@@ -26,6 +28,9 @@ public class BmsGroupChargeunitServiceImpl implements IBmsGroupChargeunitService
 	
 	@Autowired
     private IBmsGroupChargeunitRepository bmsGroupChargeunitRepository;
+	
+	@Autowired
+	private IBmsGroupRepository bmsGroupRepository;
 
 	@Override
 	public List<BmsGroupChargeunitVo> queryAllByGroupId(int groupId) throws Exception {

@@ -151,4 +151,11 @@ public interface IPriceContractDao {
 	 * @return
 	 */
 	List<PriceContractInfoEntity> queryByCustomerIdAndBizType(Map<String, String> param);
+	
+	/**
+	 * 查询合同下费用科目的模板编码
+	 * @param param
+	 * @return
+	 */
+	ContractDetailEntity queryTempByContractCodeAndSubjectId(Map<String, String> param);
 }

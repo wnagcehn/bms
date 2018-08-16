@@ -94,7 +94,7 @@ public class BmsGroupController {
 		if(StringUtils.isNoneBlank(parentId)){
 			pid=Integer.valueOf(parentId);
 		}
-		return bmsGroupService.queryDataByParentIdAndBizType(pid,"bms_unit");
+		return bmsGroupService.queryDataByParentIdAndBizType(pid,"bms_charge_unit");
 	}
 	
 	@DataResolver
@@ -108,7 +108,7 @@ public class BmsGroupController {
 			if (EntityState.NEW.equals(EntityUtils.getState(voEntity))) {
 				voEntity.setCreateTime(nowdate);
 				voEntity.setCreator(userName);
-				voEntity.setBizType("bms_unit");
+				voEntity.setBizType("bms_charge_unit");
 				if(!bmsGroupService.checkGroup(voEntity)){
 					throw new Exception("组编码已经存在");
 				}
@@ -121,7 +121,7 @@ public class BmsGroupController {
 			}
 			List<BmsGroupVo> list=voEntity.getChildren();
 			if(list!=null){
-				saveSubjectGroup(list);
+				saveUnitGroup(list);
 			}
 		}
 	

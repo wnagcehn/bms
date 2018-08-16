@@ -129,7 +129,7 @@
     <DataType name="dataTypeBmsGroup" parent="dtBmsGroupEntity">
       <Reference name="children">
         <Property name="dataType">[SELF]</Property>
-        <Property name="dataProvider">bmsGroupController#loadSubjectDataByParent</Property>
+        <Property name="dataProvider">bmsGroupController#loadUnitDataByParent</Property>
         <Property name="parameter">
           <Entity>
             <Property name="parentId">$${this.id}</Property>
@@ -268,7 +268,7 @@ var timestamp=new Date();&#xD;
 view.get(&quot;#subjectFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.lookup.view.BmsChargeUnitLookUp.d?timestamp=&quot;+timestamp);&#xD;
 view.get(&quot;#dialogSubjectInfo&quot;).show();&#xD;
 </ClientEvent>
-          <Property name="caption">添加费用科目</Property>
+          <Property name="caption">添加计费单位</Property>
           <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
         </ToolBarButton>
         <Separator/>
@@ -283,7 +283,7 @@ view.get(&quot;#dialogSubjectInfo&quot;).show();&#xD;
 	});&#xD;
 });&#xD;
 </ClientEvent>
-          <Property name="caption">删除科目</Property>
+          <Property name="caption">删除单位</Property>
           <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
         </ToolBarButton>
         <Separator/>

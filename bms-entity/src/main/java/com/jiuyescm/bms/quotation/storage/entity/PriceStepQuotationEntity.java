@@ -48,6 +48,8 @@ public class PriceStepQuotationEntity extends BmsCommonAttribute{
 	// 修改时间
 	private Timestamp lastModifyTime;
 	
+	//封顶价
+	private Double capPrice;
 	
     //重量下限
 	private Double weightLower;
@@ -248,6 +250,12 @@ public class PriceStepQuotationEntity extends BmsCommonAttribute{
 	}
 	public void setContractCode(String contractCode) {
 		this.contractCode = contractCode;
+	}
+	public Double getCapPrice() {
+		return capPrice;
+	}
+	public void setCapPrice(Double capPrice) {
+		this.capPrice = capPrice;
 	}
 	
 	

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,11 +26,15 @@ import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStandardReqVoService;
 import com.jiuyescm.bms.general.service.SequenceService;
+import com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
+import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
 import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceMaterialQuotationRepository;
+import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
+import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
@@ -50,6 +56,8 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 	@Autowired private IStandardReqVoService standardReqVoServiceImpl;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private IBizDispatchBillService bizDispatchBillService;
+	@Autowired private IGenericTemplateRepository genericTemplateRepository;
+	@Resource private IPriceContractDao priceContractService;
 	
 	private String BizTypeCode = "STORAGE"; //仓储费编码
 	private String SubjectId = "wh_material_use";		//费用类型-耗材使用费编码  1009原编码
@@ -264,7 +272,7 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 		map.put("materialCode",entity.getConsumerMaterialCode());
 		map.put("warehouseId", entity.getWarehouseCode());
 		List<PriceMaterialQuotationEntity> materialList=priceMaterialQuotationRepository.queryMaterialQuatationByContract(map);
-	    mapCusPrice.put(customerId, materialList);
+		mapCusPrice.put(customerId, materialList);
 		if(materialList==null||materialList.size()==0){
 			XxlJobLogger.log("报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -282,9 +290,24 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 		if(mapRule.containsKey(customerId)){
 			ruleEntity=mapRule.get(customerId);
 		}else{
-			map.put("customerid",customerId);
-			map.put("subjectId", SubjectId);
-		    ruleEntity=receiveRuleRepository.queryByCustomerId(map);
+//			map.put("customerid",customerId);
+//			map.put("subjectId", SubjectId);
+//		    ruleEntity=receiveRuleRepository.queryByCustomerId(map);
+			//根据合同编码和费用科目查出模板编码
+			Map<String, String> param = new HashMap<>();
+			param.put("contractCode", contractEntity.getContractCode());
+			param.put("subjectId",SubjectId);
+			ContractDetailEntity cdEntity = priceContractService.queryTempByContractCodeAndSubjectId(param);
+			if (null != cdEntity) {
+				//根据模板编码查出报价中的规则编号
+				Map<String, Object> cond = new HashMap<>();
+				cond.put("templateCode", cdEntity.getTemplateId());
+				GenericTemplateEntity gtmEntity = genericTemplateRepository.query(cond);
+				//根据规则编号查出规则
+				Map<String, Object> con = new HashMap<>();
+				con.put("quotationNo", gtmEntity.getQuotationNo());
+				ruleEntity = receiveRuleRepository.queryOne(con);
+			}
 		    mapRule.put(customerId, ruleEntity);
 		}
 		
