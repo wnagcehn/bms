@@ -1355,65 +1355,54 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		if(list==null || list.size() == 0){
 			return null;
 		}
-		
-		if(priorities == null || priorities.size() == 0){
-			priorities = new ArrayList<String>();
-			priorities.add("temperature_code");
-			priorities.add("service_type_code");
-		}
+
 		Map<String, Integer> voMap = new HashMap<String, Integer>();
 		for (BmsQuoteDispatchDetailVo vo : list) {
 			voMap.put(vo.getId().toString(), 0);
 		}
 		
-		for (String strPrior : priorities) {
-			if(strPrior.equals("temperature_code")){
-				String temperature_code = StringUtil.isEmpty(entity.getTemperatureTypeCode())?"":entity.getTemperatureTypeCode();
-				for (BmsQuoteDispatchDetailVo vo : list) {
-					String temperature_quote = StringUtil.isEmpty(vo.getTemperatureTypeCode())?"":vo.getTemperatureTypeCode();
-					if(temperature_quote.equals(temperature_code)){
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+10);
-						}
-					}
-					else if(!temperature_quote.equals(temperature_code) && StringUtil.isEmpty(temperature_quote))
-					{
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
-						}
-					}
-					else{
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
-						}
-						//voMap.put(vo.getId().toString(), 30);
+		String temperature_code = StringUtil.isEmpty(entity.getTemperatureTypeCode())?"":entity.getTemperatureTypeCode();
+		String service_type_code = StringUtil.isEmpty(entity.getServiceTypeCode())?"":entity.getServiceTypeCode();
+		for (BmsQuoteDispatchDetailVo vo : list) {
+			 //=====================================温度判断=================================
+				String temperature_quote = StringUtil.isEmpty(vo.getTemperatureTypeCode())?"":vo.getTemperatureTypeCode();
+				if(temperature_quote.equals(temperature_code)){
+					if(voMap.containsKey(vo.getId().toString())){
+						voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+10);
 					}
 				}
-			}
-			if(strPrior.equals("service_type_code")){
-				String service_type_code = StringUtil.isEmpty(entity.getServiceTypeCode())?"":entity.getServiceTypeCode();
-				for (BmsQuoteDispatchDetailVo vo : list) {
-					String service_type_quote = StringUtil.isEmpty(vo.getServiceTypeCode())?"":vo.getServiceTypeCode();
-					if(service_type_code.equals(service_type_quote)){
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+1);
-						}
-					}
-					else if(!service_type_quote.equals(service_type_code) && StringUtil.isEmpty(service_type_quote))
-					{
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
-						}
-					}
-					else{
-						if(voMap.containsKey(vo.getId().toString())){
-							voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
-						}
-						//voMap.put(vo.getId().toString(), 30);
+				else if(!temperature_quote.equals(temperature_code) && StringUtil.isEmpty(temperature_quote)){
+					if(voMap.containsKey(vo.getId().toString())){
+						voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
 					}
 				}
-			}
+				else{
+					if(voMap.containsKey(vo.getId().toString())){
+						voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
+						continue;
+					}
+				}
+
+				//=========================物流产品类型比较==================================
+				String service_type_quote = StringUtil.isEmpty(vo.getServiceTypeCode())?"":vo.getServiceTypeCode();
+				if(service_type_code.equals(service_type_quote)){
+					if(voMap.containsKey(vo.getId().toString())){
+						voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+1);
+					}
+				}
+				else if(!service_type_quote.equals(service_type_code) && StringUtil.isEmpty(service_type_quote)){
+					if(voMap.containsKey(vo.getId().toString())){
+						voMap.put(vo.getId().toString(), voMap.get(vo.getId().toString())+20);
+					}
+				}
+				else{
+					if(voMap.containsKey(vo.getId().toString())){
+						voMap.remove(vo.getId().toString()); //剔除不满足条件的报价
+						continue;
+					}
+				}
 		}
+
 		if(voMap.size() == 0){
 			return null;
 		}
