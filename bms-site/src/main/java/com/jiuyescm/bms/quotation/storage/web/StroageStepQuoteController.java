@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
@@ -41,12 +42,15 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.cfm.common.sequence.SequenceGenerator;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.BeanToMapUtil;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.FileOperationUtil;
 import com.jiuyescm.common.utils.excel.FileReaderFactory;
 import com.jiuyescm.common.utils.excel.IFileReader;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DataProperty;
 import com.jiuyescm.common.utils.upload.StorageStepTemplateDataType;
+import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 @Controller("stroageStepQuoteController")
 public class StroageStepQuoteController {
@@ -64,6 +68,9 @@ public class StroageStepQuoteController {
 	
 	@Resource
 	private IPubRecordLogService pubRecordLogService;
+	
+	@Autowired
+	private IWarehouseService warehouseService;
 	
 	@DataProvider
 	public void query(Page<PriceStepQuotationEntity> page, Map<String, Object> param) {
@@ -286,6 +293,7 @@ public class StroageStepQuoteController {
 		long starTime=System.currentTimeMillis();	//开始时间
 		Map<String, Object> map = new HashMap<String, Object>();
 		String id=(String)parameter.get("id");//获取当前的id
+		String unit=(String)parameter.get("unit");//获取当前的计费单位
 		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();// 校验信息（报错提示）
 		ErrorMessageVo errorVo = null;
 		PriceGeneralQuotationEntity generEn = priceGeneralQuotationService.findById(Long.parseLong(id));
@@ -338,7 +346,7 @@ public class StroageStepQuoteController {
 			List<SystemCodeEntity> sysCodeList = systemCodeService.findEnumList("TEMPERATURE_TYPE");
 			String currentNo = SequenceGenerator.uuidOf36String("t");// 当前操作ID
 			// 模板信息必填项校验
-			map = impExcelCheckInfoProduct(infoList, templateList, map, currentNo,sysCodeList);
+			map = impExcelCheckInfoProduct(infoList, templateList, map, currentNo,sysCodeList,unit);
 			if (map.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) { // 有基本的错误信息(必填，数据类型不正确)
 				return map;
 			}
@@ -388,6 +396,7 @@ public class StroageStepQuoteController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		String id=(String)parameter.get("id");//获取当前的id
+		String unit=(String)parameter.get("unit");//获取当前的id
 		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();// 校验信息（报错提示）
 		ErrorMessageVo errorVo = null;
 		PriceGeneralQuotationEntity generEn = priceGeneralQuotationService.findById(Long.parseLong(id));
@@ -431,7 +440,7 @@ public class StroageStepQuoteController {
 			String currentNo = SequenceGenerator.uuidOf36String("t");// 当前操作ID
 			
 			// 模板信息必填项校验
-			map = impExcelCheckInfoProduct(infoList, templateList, map, currentNo,sysCodeList);
+			map = impExcelCheckInfoProduct(infoList, templateList, map, currentNo,sysCodeList,unit);
 			
 			if (map.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) { // 有基本的错误信息(必填，数据类型不正确)
 				return map;
@@ -498,16 +507,58 @@ public class StroageStepQuoteController {
 		return null;
 	}
 	
-	private Map<String, Object> impExcelCheckInfoProduct(List<ErrorMessageVo> infoList, List<PriceStepQuotationEntity> prodList, Map<String, Object> map, String currentNo,List<SystemCodeEntity> sysCodeList) {
+	private Map<String, Object> impExcelCheckInfoProduct(List<ErrorMessageVo> infoList, List<PriceStepQuotationEntity> prodList, Map<String, Object> map, String currentNo,List<SystemCodeEntity> sysCodeList,String unit) {
+		List<WarehouseVo>  wareHouselist  = warehouseService.queryAllWarehouse();	
+		
 		int lineNo = 0;
 		for (int i = 0; i < prodList.size(); i++) {
 			PriceStepQuotationEntity p=prodList.get(i);
 			lineNo=lineNo+1;
 			
-			if(null==p.getUnitPrice()){
-				setMessage(infoList, lineNo,"单价为空!");
+			
+			//判断仓库id是否在仓库表中维护 并将此仓库返回,将id回填			
+			for(WarehouseVo entity:wareHouselist){
+				if(entity.getWarehousename().equals(p.getWarehouseCode())){
+					p.setWarehouseCode(entity.getWarehouseid());
+					break;
+				}
+			}
+			if(StringUtils.isBlank(p.getWarehouseCode())){
+				setMessage(infoList, lineNo,"仓库id没有在仓库表中维护!");
 			}
 			
+			
+			if(p.getNumLower()==null || DoubleUtil.isBlank(p.getNumLower())){
+				setMessage(infoList, lineNo,"下限不能为空");
+				continue;
+			}
+
+			if(p.getNumUpper()==null || DoubleUtil.isBlank(p.getNumUpper())){
+				setMessage(infoList, lineNo,"上限不能为空");
+				continue;
+			}
+
+			if(p.getNumUpper().doubleValue()<=p.getNumLower().doubleValue()){
+				setMessage(infoList, lineNo,"上限必须大于下限");
+			}
+
+			//模板中单位为单时，单价必填
+			if(StringUtils.isNotBlank(unit)){
+				if("BILL".equals(unit)){
+					if(DoubleUtil.isBlank(p.getUnitPrice())){
+						setMessage(infoList, lineNo,"模板单位为单时，单价不能为空");
+					}
+				}else{
+					//其他单位    
+					if(DoubleUtil.isBlank(p.getUnitPrice())){
+						if(DoubleUtil.isBlank(p.getFirstNum())|| DoubleUtil.isBlank(p.getFirstPrice()) ||DoubleUtil.isBlank(p.getContinuedItem()) || DoubleUtil.isBlank(p.getContinuedPrice())){
+							setMessage(infoList, lineNo,"单价为空时，首量、首价、续量、续价不能为空!");
+						}
+					}
+				}
+			}
+	
+			//温度类型判断
 			if(StringUtils.isEmpty(p.getTemperatureTypeCode())){
 				setMessage(infoList, lineNo,"温度类型为空!");
 			}
@@ -528,12 +579,12 @@ public class StroageStepQuoteController {
 				setMessage(infoList, lineNo,"系统没有维护该温度类型!");
 			}
 			
-			if (infoList != null && infoList.size() > 0) { // 有错误信息
-				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-			} else {
-				map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, prodList); // 无基本错误信息
-			}
-			
+		}
+		
+		if (infoList != null && infoList.size() > 0) { // 有错误信息
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+		} else {
+			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, prodList); // 无基本错误信息
 		}
 		return map;
 	}
