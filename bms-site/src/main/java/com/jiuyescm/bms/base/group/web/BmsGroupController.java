@@ -87,6 +87,46 @@ public class BmsGroupController {
 		}
 	
 	}
+	
+	@DataProvider
+	public List<BmsGroupVo> loadUnitDataByParent(String parentId) throws Exception{
+		int pid=0;
+		if(StringUtils.isNoneBlank(parentId)){
+			pid=Integer.valueOf(parentId);
+		}
+		return bmsGroupService.queryDataByParentIdAndBizType(pid,"bms_unit");
+	}
+	
+	@DataResolver
+	public void saveUnitGroup(List<BmsGroupVo> datas) throws Exception{
+		if (datas == null) {
+			return;
+		}
+		Timestamp nowdate = JAppContext.currentTimestamp();
+		String userName=JAppContext.currentUserName();
+		for(BmsGroupVo voEntity:datas){
+			if (EntityState.NEW.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setCreateTime(nowdate);
+				voEntity.setCreator(userName);
+				voEntity.setBizType("bms_unit");
+				if(!bmsGroupService.checkGroup(voEntity)){
+					throw new Exception("组编码已经存在");
+				}
+				bmsGroupService.addGroup(voEntity);
+			}
+			else if (EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setLastModifyTime(nowdate);
+				voEntity.setLastModifier(userName);
+				bmsGroupService.updateGroup(voEntity);
+			}
+			List<BmsGroupVo> list=voEntity.getChildren();
+			if(list!=null){
+				saveSubjectGroup(list);
+			}
+		}
+	
+	}
+	
 	@DataResolver
 	public void saveGroup(List<BmsGroupVo> datas) throws Exception{
 		if (datas == null) {

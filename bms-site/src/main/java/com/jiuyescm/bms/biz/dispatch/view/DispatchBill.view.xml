@@ -1170,7 +1170,13 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
       <Tools/>
     </Dialog>
     <Container layout="hbox">
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="contentOverflowX">scroll</Property>
+      <Property name="contentOverflowY">scroll</Property>
       <Container>
+        <Property name="contentOverflowY">scroll</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <Property name="contentOverflowX">scroll</Property>
         <TabControl>
           <ControlTab>
             <Property name="caption">运单数据</Property>
@@ -1308,6 +1314,9 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
         </TabControl>
       </Container>
       <Container>
+        <Property name="contentOverflowY">scroll</Property>
+        <Property name="contentOverflowX">scroll</Property>
+        <Property name="contentOverflow">scroll</Property>
         <TabControl>
           <ControlTab>
             <Property name="caption">重量</Property>

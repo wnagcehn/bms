@@ -94,6 +94,7 @@
             </Entity>
           </Property>
         </Property>
+        <Property name="defaultValue">0</Property>
       </PropertyDef>
       <PropertyDef name="creperson">
         <Property name="label">创建人</Property>
@@ -166,6 +167,7 @@
       <AutoFormElement>
         <Property name="name">delflag</Property>
         <Property name="property">delflag</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
