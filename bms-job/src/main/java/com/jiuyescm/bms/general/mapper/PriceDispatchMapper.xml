@@ -52,6 +52,7 @@
 	    <result column="weight_limit" property="weightLimit" jdbcType="DECIMAL" />
 	    <result column="timeliness" property="timeliness" jdbcType="VARCHAR" />
 	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
 	    <result column="product_case" property="productCase" jdbcType="VARCHAR" />
 	    <result column="area_type_code" property="areaTypeCode" jdbcType="VARCHAR" />
 	    <result column="deliverid" property="deliverid" jdbcType="VARCHAR" />
