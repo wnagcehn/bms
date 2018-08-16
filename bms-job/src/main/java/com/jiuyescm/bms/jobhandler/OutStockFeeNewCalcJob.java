@@ -139,6 +139,12 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
+				}				
+				//判断封顶价
+				if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
+					if(stepQuoEntity.getCapPrice()<amount){
+						amount=stepQuoEntity.getCapPrice();
+					}
 				}
 				storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 				storageFeeEntity.setParam3(generalEntity.getId()+"");
@@ -292,9 +298,6 @@ public class OutStockFeeNewCalcJob extends CommonCalcJob<BizOutstockMasterEntity
 				
 				price=storageQuoteFilterService.quoteFilter(list, map);
 				
-				
-				
-				price=QuoteFilter(entity,priceGeneral);
 				mapCusStepPrice.put(customerId,price);
 			}else{
 				price=mapCusStepPrice.get(customerId);
