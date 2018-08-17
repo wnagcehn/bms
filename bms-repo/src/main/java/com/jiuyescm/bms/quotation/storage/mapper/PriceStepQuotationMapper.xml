@@ -6,7 +6,6 @@
 	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
 	    <result column="quotation_id" property="quotationId" jdbcType="VARCHAR" />
-	    <result column="contract_code" property="contractCode" jdbcType="VARCHAR" />
 	    <result column="startDate" property="startDate" jdbcType="TIMESTAMP" />
 	    <result column="expireDate" property="expireDate" jdbcType="TIMESTAMP" />
 	    <result column="weight_lower" property="weightLower" jdbcType="DECIMAL" />
@@ -38,7 +37,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, warehouse_code, quotation_id, contract_code, startDate, expireDate, weight_lower, weight_upper, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, user_define3, user_define4, user_define5, first_num, first_price, continued_price, cap_price
+        id, warehouse_code, quotation_id, startDate, expireDate, weight_lower, weight_upper, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, user_define3, user_define4, user_define5, first_num, first_price, continued_price, cap_price
     </sql>
 	
 	<sql id="baseSelectColumns">
