@@ -117,7 +117,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 			if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
 				storageFeeEntity.setQuantity((new Double(entity.getAqty())).intValue());
 			}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
-				storageFeeEntity.setQuantity((new Double(entity.getWeight())).intValue());
+				storageFeeEntity.setQuantity((new Double(entity.getWeight()*entity.getAqty())).intValue());
 			}
 
 			//计算方法
@@ -128,7 +128,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 				if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
 					amount=entity.getAqty()*generalEntity.getUnitPrice();
 				}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
-					amount=entity.getWeight()*generalEntity.getUnitPrice();
+					amount=entity.getWeight()*entity.getAqty()*generalEntity.getUnitPrice();
 				}
 				storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
 				storageFeeEntity.setParam3(generalEntity.getId()+"");
@@ -143,9 +143,9 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 					}
 				}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-						amount=entity.getWeight()*stepQuoEntity.getUnitPrice();
+						amount=entity.getWeight()*entity.getAqty()*stepQuoEntity.getUnitPrice();
 					}else{
-						amount=stepQuoEntity.getFirstNum()<entity.getWeight()?stepQuoEntity.getFirstPrice()+(entity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+						amount=stepQuoEntity.getFirstNum()<entity.getWeight()*entity.getAqty()?stepQuoEntity.getFirstPrice()+(entity.getWeight()*entity.getAqty()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
 				}
 				//判断封顶价
@@ -352,7 +352,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 				if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
 					map.put("num", entity.getAqty());	
 				}else if("KILOGRAM".equals(priceGeneral.getFeeUnitCode())){//按重量
-					map.put("num", entity.getWeight());
+					map.put("num", entity.getWeight()*entity.getAqty());
 				}
 						
 				//查询出的所有子报价
