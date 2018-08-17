@@ -380,6 +380,7 @@ public class ProductPalletStorageCalcJob extends CommonCalcJob<BizProductPalletS
 				//封装数据的仓库和温度
 				map.clear();
 				map.put("warehouse_code", entity.getWarehouseCode());
+				map.put("temperature_code", entity.getTemperatureTypeCode());
 				price=storageQuoteFilterService.quoteFilter(list, map);
 				mapCusStepPrice.put(customerId,price);
 			}else{

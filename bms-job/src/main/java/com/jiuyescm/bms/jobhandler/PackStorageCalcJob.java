@@ -316,6 +316,7 @@ public class PackStorageCalcJob extends CommonCalcJob<BizPackStorageEntity,FeesR
 				//封装数据的仓库和温度
 				map.clear();
 				map.put("warehouse_code", entity.getWarehouseCode());
+				map.put("temperature_code", entity.getTemperatureTypeCode());
 				price=storageQuoteFilterService.quoteFilter(list, map);
 				mapCusStepPrice.put(customerId,price);
 			}else{
