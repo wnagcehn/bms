@@ -72,4 +72,9 @@ public class BmsGroupChargeunitRepositoryImpl extends MyBatisDao<BmsGroupChargeu
 		return session.selectList("com.jiuyescm.bms.base.group.BmsGroupChargeunitMapper.queryUnitByGroupId", groupId);
 	}
 	
+	@Override
+	public List<BmsGroupChargeunitEntity> queryByGroupCode(Map<String, String> param){
+		return this.selectList("com.jiuyescm.bms.base.group.BmsGroupChargeunitMapper.queryByGroupCode", param);
+	}
+	
 }

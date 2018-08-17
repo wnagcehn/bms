@@ -26,7 +26,19 @@ public interface IBmsGroupChargeunitRepository {
 	List<String> checkUnitCodeExist(int groupId, List<String> customerIdList);
 
 	int queryUnitCountByGroupId(int groupId);
-
+	
+	/**
+	 * 根据groupId查询unit
+	 * @param groupId
+	 * @return
+	 */
 	List<String> queryUnitByGroupId(int groupId);
+	
+	/**
+	 * 根据groupCode查询unitCode和unitName
+	 * @param param
+	 * @return
+	 */
+	List<BmsGroupChargeunitEntity> queryByGroupCode(Map<String, String> param);
 
 }
