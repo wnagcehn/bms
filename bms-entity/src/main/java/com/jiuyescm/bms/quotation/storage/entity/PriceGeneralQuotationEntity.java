@@ -40,6 +40,8 @@ public class PriceGeneralQuotationEntity extends BmsCommonAttribute {
 	
 	// 参数1
 	private String param1;
+	
+	private String unitName;
 
 	public PriceGeneralQuotationEntity() {
 
@@ -223,6 +225,14 @@ public class PriceGeneralQuotationEntity extends BmsCommonAttribute {
 
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
+	}
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
 	}
 
 }

@@ -55,6 +55,21 @@ public class PubCarrierServicetypeController {
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
 	}
+	
+	/**
+	 * 分页查询
+	 * @param page
+	 * @param param
+	 */
+	@DataProvider
+	public void queryNotDel(Page<PubCarrierServicetypeEntity> page, Map<String, Object> param) {
+		param.put("delFalg", "0");
+		PageInfo<PubCarrierServicetypeEntity> pageInfo = pubCarrierServicetypeService.query(param, page.getPageNo(), page.getPageSize());
+		if (pageInfo != null) {
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int) pageInfo.getTotal());
+		}
+	}
 
 	/**
 	 * 保存

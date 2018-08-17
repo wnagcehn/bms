@@ -442,4 +442,8 @@
 		where a.customerId = #{customerId} and b.biz_type_code = #{bizTypeCode}  and a.contract_state='1' 
 		and a.contract_type_code='CUSTOMER_CONTRACT' and b.del_flag=0;
     </select>
+    
+    <select id="queryTempByContractCodeAndSubjectId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
+    	select * from price_contract_item WHERE subject_id=#{subjectId} and contract_code=#{contractCode}
+    </select>
 </mapper>

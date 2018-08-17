@@ -719,6 +719,7 @@ view.get(&quot;#queryRuleAction&quot;).set(&quot;parameter&quot;,result).execute
               <Property name="property">quotationName</Property>
               <Property name="trigger">triggerQuotation</Property>
               <Property name="labelWidth">84</Property>
+              <Property name="editable">false</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement layoutConstraint="colSpan:2">
@@ -827,6 +828,7 @@ view.get(&quot;#dsStorageMaterialType.data&quot;).clear();&#xD;
             <Property name="name">quotationName</Property>
             <Property name="property">quotationName</Property>
             <Property name="trigger">triggerQuotation</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -841,6 +843,7 @@ view.get(&quot;#dsStorageMaterialType.data&quot;).clear();&#xD;
             <Property name="property">quotationNo</Property>
             <Property name="visible">false</Property>
             <Property name="hideMode">display</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
         </AutoForm>
@@ -1007,6 +1010,7 @@ if(dataPrice){&#xD;
 &#xD;
 </ClientEvent>
               <Property name="caption">试算</Property>
+              <Property name="visible">false</Property>
             </ToolBarButton>
           </ToolBar>
           <AutoForm id="materialLineSearch">

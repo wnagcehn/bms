@@ -127,7 +127,7 @@
         from biz_dispatch_bill a
         LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
         LEFT JOIN fees_receive_dispatch c on c.fees_no=a.fees_no and c.del_flag='0' and c.subject_code='de_delivery_amount'
-        LEFT JOIN pub_carrier_servicetype s on s.carrierid = a.carrier_id and s.servicecode=a.expresstype and s.delflag='0'
+        LEFT JOIN pub_carrier_servicetype s on s.carrierid = a.carrier_id and s.servicecode=a.service_type_code and s.delflag='0'
         where a.del_flag = '0'
 		<include refid="baseSelectColumns" />
 		<if test="(dutyType != null and dutyType !='')" >

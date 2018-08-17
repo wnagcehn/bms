@@ -26,10 +26,6 @@
       <PropertyDef name="feeUnitCode">
         <Property></Property>
         <Property name="label">计费单位</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getNewEnumList&quot;).getResult(&quot;STORAGE_CHARGE_TYPE&quot;)}</Property>
-        </Property>
-        <Property name="defaultValue">ITEM</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
         <Property name="label">单价</Property>
@@ -94,6 +90,9 @@
         <Property></Property>
         <Property name="label">费用科目</Property>
       </PropertyDef>
+      <PropertyDef name="unitName">
+        <Property name="label">计费单位</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="quotationNo">
@@ -118,6 +117,12 @@
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="priceType">
+        <Property name="label">报价类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;PRICE_TYPE&quot;)}</Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtStepEntity">
@@ -231,6 +236,10 @@
       </PropertyDef>
       <PropertyDef name="userDefine5">
         <Property name="label">扩展5</Property>
+      </PropertyDef>
+      <PropertyDef name="capPrice">
+        <Property name="label">封顶价</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
@@ -862,6 +871,10 @@ view.get(&quot;#dsMaterial&quot;).getData().insert();</ClientEvent>
       <Property name="loadMode">manual</Property>
       <Property name="dataProvider">bmsGroupController#getSubjectIdAndSubjectName</Property>
     </DataSet>
+    <DataSet id="dsUnit">
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">bmsGroupChargeunitController#queryByGroupCode</Property>
+    </DataSet>
     <Container>
       <ToolBar>
         <DataPilot>
@@ -1029,12 +1042,17 @@ dorado.MessageBox.confirm(&quot;确认作废报价【&quot;+data.get(&quot;quota
         <AutoFormElement>
           <Property name="name">subjectId</Property>
           <Property name="property">subjectId</Property>
-          <Property name="editable">false</Property>
+          <Property name="editable">true</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">remark</Property>
           <Property name="property">remark</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">priceType</Property>
+          <Property name="property">priceType</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -1102,6 +1120,13 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         <DataColumn name="feeUnitCode">
           <Property name="property">feeUnitCode</Property>
           <Property name="width">90</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">unitName</Property>
+          <Property name="property">unitName</Property>
+          <Property name="width">90</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn name="unitPrice">
           <Property name="property">unitPrice</Property>
@@ -1185,7 +1210,7 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
           <AutoFormElement>
             <Property name="name">ruleName</Property>
             <Property name="property">ruleName</Property>
-            <Property name="editable">false</Property>
+            <Property name="editable">true</Property>
             <Property name="visible">false</Property>
             <Property name="hideMode">display</Property>
             <Editor/>
@@ -1205,6 +1230,15 @@ view.id(&quot;addDialog&quot;).hide();&#xD;
             <Property name="name">feeUnitCode</Property>
             <Property name="property">feeUnitCode</Property>
             <Property name="readOnly">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">unitName</Property>
+            <Property name="property">unitName</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="trigger">unitDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1326,6 +1360,15 @@ view.get(&quot;#dsStepList.data&quot;).clear();</ClientEvent>
             <Property name="name">feeUnitCode</Property>
             <Property name="property">feeUnitCode</Property>
             <Property name="readOnly">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">unitName</Property>
+            <Property name="property">unitName</Property>
+            <Property name="readOnly">false</Property>
+            <Property name="trigger">unitDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -1579,6 +1622,11 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
             <DataColumn name="remark">
               <Property name="property">remark</Property>
             </DataColumn>
+            <DataColumn>
+              <Property name="name">capPrice</Property>
+              <Property name="property">capPrice</Property>
+              <Editor/>
+            </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
             </DataColumn>
@@ -1720,6 +1768,156 @@ view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
+                    <Property name="name">capPrice</Property>
+                    <Property name="property">capPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
+                    <Property name="name">remark</Property>
+                    <Property name="property">remark</Property>
+                    <Editor>
+                      <TextArea/>
+                    </Editor>
+                  </AutoFormElement>
+                </AutoForm>
+              </Container>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <Dialog id="updateStepDialog">
+            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+            <Property name="width">700</Property>
+            <Property name="height">378</Property>
+            <Property name="caption">更新【存储费阶梯报价】</Property>
+            <Buttons>
+              <Button id="btnSaveStep">
+                <ClientEvent name="onClick">var entity = view.get(&quot;#updateStepForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;numLower&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;下限不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;numUpper&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;上限不能为空&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(entity.get(&quot;numUpper&quot;) &lt;= entity.get(&quot;numLower&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;上限必须大于下限&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+//模板中单位为单时，单价必填&#xD;
+if(!isNullOrEmpty(data.get(&quot;feeUnitCode&quot;))){&#xD;
+	if(data.get(&quot;feeUnitCode&quot;)=='BILL'){&#xD;
+		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
+			dorado.MessageBox.alert(&quot;模板单位为单时，单价不能为空&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}else{&#xD;
+		//其他单位    &#xD;
+		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
+			if(isNullOrEmpty(entity.get(&quot;firstNum&quot;)) || isNullOrEmpty(entity.get(&quot;firstPrice&quot;)) ||isNullOrEmpty(entity.get(&quot;continuedItem&quot;)) || isNullOrEmpty(entity.get(&quot;continuedPrice&quot;))){&#xD;
+				dorado.MessageBox.alert(&quot;单价为空时，首量、首价、续量、续价不能为空!&quot;);&#xD;
+				return;&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+&#xD;
+view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
+	function(){&#xD;
+		view.id(&quot;updateStepDialog&quot;).hide();&#xD;
+		var data = view.get(&quot;#dsQuotaList.data&quot;);&#xD;
+		var quotationId=data.current.get(&quot;id&quot;);&#xD;
+		&#xD;
+		with (view.get(&quot;#dsStepList&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				quotationId:quotationId&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	}&#xD;
+);</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                <Property name="caption">保存</Property>
+              </Button>
+              <Button id="btnCancelStep">
+                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsStepList&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;updateStepDialog&quot;).hide();&#xD;
+	}&#xD;
+);&#xD;
+</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <Container>
+                <AutoForm id="updateStepForm">
+                  <Property name="cols">*,*</Property>
+                  <Property name="dataSet">dsStepList</Property>
+                  <Property name="dataType">dtStepEntity</Property>
+                  <AutoFormElement>
+                    <Property name="name">numLower</Property>
+                    <Property name="property">numLower</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">numUpper</Property>
+                    <Property name="property">numUpper</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">unitPrice</Property>
+                    <Property name="property">unitPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">warehouseCode</Property>
+                    <Property name="property">warehouseCode</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">firstNum</Property>
+                    <Property name="property">firstNum</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">firstPrice</Property>
+                    <Property name="property">firstPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedItem</Property>
+                    <Property name="property">continuedItem</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">continuedPrice</Property>
+                    <Property name="property">continuedPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">temperatureTypeCode</Property>
+                    <Property name="property">temperatureTypeCode</Property>
+                    <Property name="readOnly">false</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">capPrice</Property>
+                    <Property name="property">capPrice</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
                     <Property name="name">remark</Property>
                     <Property name="property">remark</Property>
                     <Editor>
@@ -2290,146 +2488,6 @@ view.get(&quot;#calculateAction&quot;).set(&quot;parameter&quot;,queryJson).exec
               <Property name="dataPath">[#current]</Property>
             </UpdateItem>
           </UpdateAction>
-          <Dialog id="updateStepDialog">
-            <ClientEvent name="onClose">view.id(&quot;dataSetTransportLine&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
-            <Property name="width">700</Property>
-            <Property name="height">378</Property>
-            <Property name="caption">更新【存储费阶梯报价】</Property>
-            <Buttons>
-              <Button id="btnSaveStep">
-                <ClientEvent name="onClick">var entity = view.get(&quot;#updateStepForm&quot;).get(&quot;entity&quot;);&#xD;
-&#xD;
-var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
-&#xD;
-if(isNullOrEmpty(entity.get(&quot;numLower&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;下限不能为空&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-&#xD;
-if(isNullOrEmpty(entity.get(&quot;numUpper&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;上限不能为空&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-&#xD;
-if(entity.get(&quot;numUpper&quot;) &lt;= entity.get(&quot;numLower&quot;)){&#xD;
-	dorado.MessageBox.alert(&quot;上限必须大于下限&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-&#xD;
-//模板中单位为单时，单价必填&#xD;
-if(!isNullOrEmpty(data.get(&quot;feeUnitCode&quot;))){&#xD;
-	if(data.get(&quot;feeUnitCode&quot;)=='BILL'){&#xD;
-		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
-			dorado.MessageBox.alert(&quot;模板单位为单时，单价不能为空&quot;);&#xD;
-			return;&#xD;
-		}&#xD;
-	}else{&#xD;
-		//其他单位    &#xD;
-		if(isNullOrEmpty(entity.get(&quot;unitPrice&quot;))){&#xD;
-			if(isNullOrEmpty(entity.get(&quot;firstNum&quot;)) || isNullOrEmpty(entity.get(&quot;firstPrice&quot;)) ||isNullOrEmpty(entity.get(&quot;continuedItem&quot;)) || isNullOrEmpty(entity.get(&quot;continuedPrice&quot;))){&#xD;
-				dorado.MessageBox.alert(&quot;单价为空时，首量、首价、续量、续价不能为空!&quot;);&#xD;
-				return;&#xD;
-			}&#xD;
-		}&#xD;
-	}&#xD;
-}&#xD;
-&#xD;
-&#xD;
-view.id(&quot;ladderUpdateAction&quot;).execute(&#xD;
-	function(){&#xD;
-		view.id(&quot;updateStepDialog&quot;).hide();&#xD;
-		var data = view.get(&quot;#dsQuotaList.data&quot;);&#xD;
-		var quotationId=data.current.get(&quot;id&quot;);&#xD;
-		&#xD;
-		with (view.get(&quot;#dsStepList&quot;)){&#xD;
-			//定义查询条件json结构&#xD;
-			var queryJson={&#xD;
-				quotationId:quotationId&#xD;
-			};&#xD;
-			set(&quot;parameter&quot;, queryJson);&#xD;
-			flushAsync();&#xD;
-		}&#xD;
-	}&#xD;
-);</ClientEvent>
-                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
-                <Property name="caption">保存</Property>
-              </Button>
-              <Button id="btnCancelStep">
-                <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
-	function(){&#xD;
-		view.id(&quot;dsStepList&quot;).getData(&quot;#&quot;).cancel();&#xD;
-		view.id(&quot;updateStepDialog&quot;).hide();&#xD;
-	}&#xD;
-);&#xD;
-</ClientEvent>
-                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-                <Property name="caption">取消</Property>
-              </Button>
-            </Buttons>
-            <Children>
-              <Container>
-                <AutoForm id="updateStepForm">
-                  <Property name="cols">*,*</Property>
-                  <Property name="dataSet">dsStepList</Property>
-                  <Property name="dataType">dtStepEntity</Property>
-                  <AutoFormElement>
-                    <Property name="name">numLower</Property>
-                    <Property name="property">numLower</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">numUpper</Property>
-                    <Property name="property">numUpper</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">unitPrice</Property>
-                    <Property name="property">unitPrice</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">warehouseCode</Property>
-                    <Property name="property">warehouseCode</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">firstNum</Property>
-                    <Property name="property">firstNum</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">firstPrice</Property>
-                    <Property name="property">firstPrice</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">continuedItem</Property>
-                    <Property name="property">continuedItem</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">continuedPrice</Property>
-                    <Property name="property">continuedPrice</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">temperatureTypeCode</Property>
-                    <Property name="property">temperatureTypeCode</Property>
-                    <Property name="readOnly">false</Property>
-                    <Editor/>
-                  </AutoFormElement>
-                  <AutoFormElement>
-                    <Property name="name">remark</Property>
-                    <Property name="property">remark</Property>
-                    <Editor>
-                      <TextArea/>
-                    </Editor>
-                  </AutoFormElement>
-                </AutoForm>
-              </Container>
-            </Children>
-            <Tools/>
-          </Dialog>
           <UpdateAction id="removeAllAction">
             <Property name="dataResolver">stroageStepQuoteController#removeAll</Property>
             <UpdateItem>
@@ -2818,6 +2876,32 @@ arg.processDefault = false;</ClientEvent>
       <Property name="editable">false</Property>
       <Property name="useEmptyItem">true</Property>
       <Property name="displayProperty">subjectName</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="unitDataSetDropDown">
+      <ClientEvent name="beforeExecute">var entity = view.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+var groupCode = entity.get(&quot;subjectId&quot;);&#xD;
+if(groupCode != undefined){&#xD;
+	var subDropDown = view.get(&quot;#unitDataSetDropDown&quot;);&#xD;
+	subDropDown.set(&quot;dataSet&quot;,&quot;dsUnit&quot;);&#xD;
+	var parameter={&#xD;
+		groupCode:groupCode&#xD;
+	};&#xD;
+	view.get(&quot;#dsUnit&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
+}else{&#xD;
+	this.get(&quot;#dsUnit&quot;).clear();&#xD;
+	dorado.MessageBox.alert(&quot;请先选择费用类型&quot;);&#xD;
+	return;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsQuotaList&quot;).getData(&quot;#&quot;);&#xD;
+data.set({&#xD;
+	unitName:arg.selectedValue.get(&quot;unitName&quot;),&#xD;
+	feeUnitCode:arg.selectedValue.get(&quot;unitCode&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">unitName</Property>
     </DataSetDropDown>
     <AjaxAction id="queryRuleAction">
       <Property name="service">generalStorageQuoteController#queryRule</Property>
