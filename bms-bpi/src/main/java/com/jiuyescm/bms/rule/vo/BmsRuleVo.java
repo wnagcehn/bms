@@ -3,7 +3,9 @@ package com.jiuyescm.bms.rule.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class BmsRuleVo  implements Serializable{
+import com.jiuyescm.bms.chargerule.receiverule.entity.Rule;
+
+public class BmsRuleVo extends Rule implements Serializable{
 
 	/**
 	 * 
