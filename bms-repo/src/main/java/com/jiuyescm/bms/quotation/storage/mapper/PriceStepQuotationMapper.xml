@@ -123,18 +123,22 @@
     </insert>
 
     <update id="update" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
-         update price_storage_step 
+        update price_storage_step 
 		<set >
-			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			warehouse_code=#{warehouseCode,jdbcType=VARCHAR},
+			temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},
+			unit_price=#{unitPrice,jdbcType=DECIMAL},
+			first_num=#{firstNum,jdbcType=DECIMAL},
+			first_price=#{firstPrice,jdbcType=DECIMAL},
+			continued_item=#{continuedItem,jdbcType=DECIMAL},
+			continued_price=#{continuedPrice,jdbcType=DECIMAL},
+			cap_price=#{capPrice,jdbcType=DECIMAL},
+			remark=#{remark,jdbcType=VARCHAR},
 			<if test="quotationId != null" >quotation_id=#{quotationId,jdbcType=VARCHAR},</if>
 			<if test="startDate != null" >startDate=#{startDate,jdbcType=TIMESTAMP},</if>
 			<if test="expireDate != null" >expireDate=#{expireDate,jdbcType=TIMESTAMP},</if>
 			<if test="weightLower != null" >weight_lower=#{weightLower,jdbcType=DECIMAL},</if>
-			<if test="weightUpper != null" >weight_upper=#{weightUpper,jdbcType=DECIMAL},</if>
-			<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
-			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
-			<if test="continuedItem != null" >continued_item=#{continuedItem,jdbcType=DECIMAL},</if>
-			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="weightUpper != null" >weight_upper=#{weightUpper,jdbcType=DECIMAL},</if>			
 			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
 			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
@@ -151,10 +155,6 @@
 			<if test="userDefine3 != null" >user_define3=#{userDefine3,jdbcType=VARCHAR},</if>
 			<if test="userDefine4 != null" >user_define4=#{userDefine4,jdbcType=VARCHAR},</if>
 			<if test="userDefine5 != null" >user_define5=#{userDefine5,jdbcType=VARCHAR},</if>
-			<if test="firstNum != null" >first_num=#{firstNum,jdbcType=DECIMAL},</if>
-			<if test="firstPrice != null" >first_price=#{firstPrice,jdbcType=DECIMAL},</if>
-			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
-			<if test="capPrice != null" >cap_price=#{capPrice,jdbcType=DECIMAL},</if>
 		</set>
         where id=#{id}
     </update>
