@@ -140,9 +140,11 @@
       </PropertyDef>
       <PropertyDef name="numLower">
         <Property name="label">下限</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="numUpper">
         <Property name="label">上限</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
         <Property name="label">单价</Property>
@@ -1653,13 +1655,13 @@ var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
 &#xD;
 //获取下限&#xD;
 var numLower = entity.get(&quot;numLower&quot;);&#xD;
-if(numLower == null || numLower == undefined || numLower==''){&#xD;
+if(numLower == null || numLower == undefined){&#xD;
 	dorado.MessageBox.alert(&quot;下限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 //获取上限&#xD;
 var numUpper = entity.get(&quot;numUpper&quot;);&#xD;
-if(numUpper == null || numUpper == undefined || numUpper==''){&#xD;
+if(numUpper == null || numUpper == undefined){&#xD;
 	dorado.MessageBox.alert(&quot;上限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
@@ -1800,14 +1802,13 @@ var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
 &#xD;
 //获取下限&#xD;
 var numLower = entity.get(&quot;numLower&quot;);&#xD;
-if(numLower == null || numLower == undefined || numLower=='' ){&#xD;
-	alert(123);&#xD;
+if(numLower == null || numLower == undefined){&#xD;
 	dorado.MessageBox.alert(&quot;下限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 //获取上限&#xD;
 var numUpper = entity.get(&quot;numUpper&quot;);&#xD;
-if(numUpper == null || numUpper == undefined || numUpper==''){&#xD;
+if(numUpper == null || numUpper == undefined){&#xD;
 	dorado.MessageBox.alert(&quot;上限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
