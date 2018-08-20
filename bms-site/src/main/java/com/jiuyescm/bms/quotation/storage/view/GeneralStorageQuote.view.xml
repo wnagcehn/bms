@@ -1121,7 +1121,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="feeUnitCode">
           <Property name="property">feeUnitCode</Property>
-          <Property name="width">90</Property>
+          <Property name="width">70</Property>
           <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
@@ -1132,11 +1132,11 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="unitPrice">
           <Property name="property">unitPrice</Property>
-          <Property name="width">90</Property>
+          <Property name="width">70</Property>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
-          <Property name="width">90</Property>
+          <Property name="width">160</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
