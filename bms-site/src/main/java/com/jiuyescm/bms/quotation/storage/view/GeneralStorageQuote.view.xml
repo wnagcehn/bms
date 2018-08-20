@@ -1631,15 +1631,19 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
             </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="createTime">
               <Property name="property">createTime</Property>
+              <Property name="width">130</Property>
             </DataColumn>
             <DataColumn name="lastModifier">
               <Property name="property">lastModifier</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="lastModifyTime">
               <Property name="property">lastModifyTime</Property>
+              <Property name="width">130</Property>
             </DataColumn>
           </DataGrid>
           <Dialog id="addStepDialog">
