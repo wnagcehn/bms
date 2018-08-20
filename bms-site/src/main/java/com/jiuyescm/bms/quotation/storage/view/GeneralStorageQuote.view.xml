@@ -1592,54 +1592,70 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
             <RowNumColumn/>
             <DataColumn name="warehouseCode">
               <Property name="property">warehouseCode</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="temperatureTypeCode">
               <Property name="property">temperatureTypeCode</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="quotationId">
               <Property name="property">quotationId</Property>
               <Property name="visible">false</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="numLower">
               <Property name="property">numLower</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="numUpper">
               <Property name="property">numUpper</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="unitPrice">
               <Property name="property">unitPrice</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="firstNum">
               <Property name="property">firstNum</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="firstPrice">
               <Property name="property">firstPrice</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="continuedItem">
               <Property name="property">continuedItem</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="continuedPrice">
               <Property name="property">continuedPrice</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="remark">
               <Property name="property">remark</Property>
+              <Property name="width">100</Property>
             </DataColumn>
             <DataColumn>
               <Property name="name">capPrice</Property>
               <Property name="property">capPrice</Property>
+              <Property name="width">80</Property>
               <Editor/>
             </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="createTime">
               <Property name="property">createTime</Property>
+              <Property name="width">130</Property>
             </DataColumn>
             <DataColumn name="lastModifier">
               <Property name="property">lastModifier</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="lastModifyTime">
               <Property name="property">lastModifyTime</Property>
+              <Property name="width">130</Property>
             </DataColumn>
           </DataGrid>
           <Dialog id="addStepDialog">
