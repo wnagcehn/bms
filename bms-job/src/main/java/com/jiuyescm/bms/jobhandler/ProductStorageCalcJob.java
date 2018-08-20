@@ -245,7 +245,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 	    current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveStorageService.InsertBatch(feesList);
+		feesReceiveStorageService.updateBatch(feesList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒",(current - start));
 	}

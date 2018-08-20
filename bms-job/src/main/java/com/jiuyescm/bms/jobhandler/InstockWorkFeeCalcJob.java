@@ -154,9 +154,7 @@ public class InstockWorkFeeCalcJob extends CommonCalcJob<BizInStockMasterEntity,
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		for(FeesReceiveStorageEntity feeEntity:feesList){
-			feesReceiveStorageService.Insert(feeEntity);
-		}
+		feesReceiveStorageService.updateBatch(feesList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒 ",(current - start));
 	}
