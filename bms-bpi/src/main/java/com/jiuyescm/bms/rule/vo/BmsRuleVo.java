@@ -3,19 +3,22 @@ package com.jiuyescm.bms.rule.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.jiuyescm.bms.chargerule.receiverule.entity.Rule;
 
-public class BmsRuleVo extends Rule implements Serializable{
+public class BmsRuleVo implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -64662296756308131L;
 
-	// id
+	
 		private Long id;
 		// 报价名称
 		private String quotationName;
+		
+		// 报价编号
+		private String quotationNo;
+		
 		// 业务类型
 		private String bizTypeCode;
 		// SubjectId
@@ -276,6 +279,14 @@ public class BmsRuleVo extends Rule implements Serializable{
 
 		public void setIsDefault(String isDefault) {
 			this.isDefault = isDefault;
+		}
+
+		public String getQuotationNo() {
+			return quotationNo;
+		}
+
+		public void setQuotationNo(String quotationNo) {
+			this.quotationNo = quotationNo;
 		}
 	
 }
