@@ -130,12 +130,14 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 				}else if("ITEMS".equals(unit)){//按件	
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 						amount=stepQuoEntity.getUnitPrice();
+						storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getTotalQuantity()?stepQuoEntity.getFirstPrice()+(entity.getTotalQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
 				}else if("SKU".equals(unit)){//按sku
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 						amount=stepQuoEntity.getUnitPrice();
+						storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
@@ -146,7 +148,7 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 						amount=stepQuoEntity.getCapPrice();
 					}
 				}
-				storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+				
 				storageFeeEntity.setParam3(generalEntity.getId()+"");
 				break;
 			default:
