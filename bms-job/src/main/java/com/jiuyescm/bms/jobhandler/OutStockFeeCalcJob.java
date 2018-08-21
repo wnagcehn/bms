@@ -90,13 +90,13 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 			entity.setCalculateTime(JAppContext.currentTimestamp());
 			storageFeeEntity.setCalculateTime(entity.getCalculateTime());
 			String customerId=entity.getCustomerid();	
-			if(null!=entity.getAdjustBoxnum()){//如果调整的不为空 则调整算钱
+	/*		if(null!=entity.getAdjustBoxnum()){//如果调整的不为空 则调整算钱
 				entity.setBoxnum(entity.getAdjustBoxnum());
 			}
 			//原编码1007
 			if("wh_b2b_work".equals(SubjectId)&&null!=entity.getBoxnum()){
 				storageFeeEntity.setQuantity(entity.getBoxnum());
-			}
+			}*/
 			
 			//报价模板
 			PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);
@@ -130,12 +130,14 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 				}else if("ITEMS".equals(unit)){//按件	
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 						amount=stepQuoEntity.getUnitPrice();
+						storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getTotalQuantity()?stepQuoEntity.getFirstPrice()+(entity.getTotalQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
 				}else if("SKU".equals(unit)){//按sku
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 						amount=stepQuoEntity.getUnitPrice();
+						storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
@@ -146,8 +148,8 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 						amount=stepQuoEntity.getCapPrice();
 					}
 				}
-				storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				storageFeeEntity.setParam3(generalEntity.getId()+"");
+				
+				storageFeeEntity.setParam3(stepQuoEntity.getId()+"");
 				break;
 			default:
 				break;
@@ -195,6 +197,18 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		entity.setCalculateTime(JAppContext.currentTimestamp());
+		
+		//==============判断是否是B2B，B2B暂不计算
+		if("1".equals(entity.getB2bFlag())){
+			XxlJobLogger.log(String.format("B2B订单暂不支持计算  订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
+			entity.setIsCalculated(CalculateState.No_Exe.getCode());
+			storageFeeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+			entity.setRemark(String.format("B2B订单暂不支持计算   订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
+			feesList.add(storageFeeEntity);
+			return false;
+		}
+		
+		//=========================验证合同================
 		PriceContractInfoEntity contractEntity =null;
 		if(mapContact.containsKey(entity.getCustomerid())){
 			contractEntity=mapContact.get(entity.getCustomerid());
@@ -268,40 +282,37 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
 		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
 			//寻找阶梯报价
-			if(!mapCusStepPrice.containsKey(customerId)){
-				map.clear();
-				map.put("quotationId", priceGeneral.getId());
-				//根据报价单位判断
-				if("BILL".equals(priceGeneral.getFeeUnitCode())){//按单
-					map.put("num", "1");
-				}else if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
-					map.put("num", entity.getTotalQuantity());
-				}else if("SKU".equals(priceGeneral.getFeeUnitCode())){//按sku
-					map.put("num", entity.getTotalVarieties());
-				}
-				//查询出的所有子报价
-				list=repository.queryPriceStepByQuatationId(map);
-				
-				if(list==null || list.size() == 0){
-					XxlJobLogger.log("阶梯报价未配置");
-					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					entity.setRemark("阶梯报价未配置");
-					feesList.add(storageFeeEntity);
-					return  false;
-				}
-				
-				//封装数据的仓库和温度
-				map.clear();
-				map.put("warehouse_code", entity.getWarehouseCode());
-				map.put("temperature_code", entity.getTemperatureTypeCode());
-				
-				price=storageQuoteFilterService.quoteFilter(list, map);
-				
-				mapCusStepPrice.put(customerId,price);
-			}else{
-				price=mapCusStepPrice.get(customerId);
+			map.clear();
+			map.put("quotationId", priceGeneral.getId());
+			//根据报价单位判断
+			if("BILL".equals(priceGeneral.getFeeUnitCode())){//按单
+				map.put("num", "1");
+			}else if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
+				map.put("num", entity.getTotalQuantity());
+			}else if("SKU".equals(priceGeneral.getFeeUnitCode())){//按sku
+				map.put("num", entity.getTotalVarieties());
 			}
+			//查询出的所有子报价
+			list=repository.queryPriceStepByQuatationId(map);
+			
+			if(list==null || list.size() == 0){
+				XxlJobLogger.log("阶梯报价未配置");
+				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setRemark("阶梯报价未配置");
+				feesList.add(storageFeeEntity);
+				return  false;
+			}
+			
+			//封装数据的仓库和温度
+			map.clear();
+			map.put("warehouse_code", entity.getWarehouseCode());
+			map.put("temperature_code", entity.getTemperatureTypeCode());
+			
+			price=storageQuoteFilterService.quoteFilter(list, map);
+			
+			mapCusStepPrice.put(customerId,price);
+
 			if(price==null){
 				XxlJobLogger.log("阶梯报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -454,6 +465,7 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 		storageFeeEntity.setWeight(outstock.getTotalWeight());
 		storageFeeEntity.setOperateTime(outstock.getCreateTime());
 		storageFeeEntity.setCostType("FEE_TYPE_GENEARL");
+		storageFeeEntity.setUnitPrice(0d);
 		storageFeeEntity.setCost(new BigDecimal(0));	//入仓金额
 		storageFeeEntity.setSubjectCode(SubjectId);
 		storageFeeEntity.setOtherSubjectCode(SubjectId);

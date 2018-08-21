@@ -7,6 +7,7 @@
  */
 package com.jiuyescm.bms.rule.receiveRule.repository;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -21,6 +22,8 @@ public interface IReceiveRuleRepository{
 	 * @return
 	 */
 	public PageInfo<BillRuleReceiveEntity> queryAll(Map<String,Object> parameter,int aPageNo,int aPageSize);
+	
+	List<BillRuleReceiveEntity> queryAll(Map<String,Object> parameter);
 	
 	public PageInfo<BillRuleReceiveEntity> queryAllRule(Map<String,Object> parameter,int aPageNo,int aPageSize);
 

@@ -137,12 +137,14 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 				PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);				
 				if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+						storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						amount=entity.getAqty()*stepQuoEntity.getUnitPrice();
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getAqty()?stepQuoEntity.getFirstPrice()+(entity.getAqty()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 					}
 				}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
 					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+						storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						amount=entity.getWeight()*entity.getAqty()*stepQuoEntity.getUnitPrice();
 					}else{
 						amount=stepQuoEntity.getFirstNum()<entity.getWeight()*entity.getAqty()?stepQuoEntity.getFirstPrice()+(entity.getWeight()*entity.getAqty()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
@@ -154,8 +156,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 						amount=stepQuoEntity.getCapPrice();
 					}
 				}
-				storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				storageFeeEntity.setParam3(generalEntity.getId()+"");
+				storageFeeEntity.setParam3(stepQuoEntity.getId()+"");
 				break;
 			default:
 				break;
@@ -204,6 +205,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 		storageFeeEntity.setUnit("ITEMS");
 		storageFeeEntity.setBizId(String.valueOf(entity.getId()));//业务数据主键
 		storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
+		storageFeeEntity.setUnitPrice(0d);
 		storageFeeEntity.setFeesNo(entity.getFeesNo());		
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setDelFlag("0");
@@ -345,36 +347,32 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
 		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
 			//寻找阶梯报价
-			if(!mapCusStepPrice.containsKey(customerId)){
-				map.clear();
-				map.put("quotationId", priceGeneral.getId());
-				//根据报价单位判断
-				if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
-					map.put("num", entity.getAqty());	
-				}else if("KILOGRAM".equals(priceGeneral.getFeeUnitCode())){//按重量
-					map.put("num", entity.getWeight()*entity.getAqty());
-				}
-						
-				//查询出的所有子报价
-				list=repository.queryPriceStepByQuatationId(map);
-				
-				if(list==null || list.size() == 0){
-					XxlJobLogger.log("阶梯报价未配置");
-					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					entity.setRemark("阶梯报价未配置");
-					feesList.add(storageFeeEntity);
-					return  false;
-				}
-				
-				//封装数据的仓库和温度
-				map.clear();
-				map.put("warehouse_code", entity.getWarehouseCode());
-				price=storageQuoteFilterService.quoteFilter(list, map);
-				mapCusStepPrice.put(customerId,price);
-			}else{
-				price=mapCusStepPrice.get(customerId);
+			map.clear();
+			map.put("quotationId", priceGeneral.getId());
+			//根据报价单位判断
+			if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
+				map.put("num", entity.getAqty());	
+			}else if("KILOGRAM".equals(priceGeneral.getFeeUnitCode())){//按重量
+				map.put("num", entity.getWeight()*entity.getAqty());
 			}
+					
+			//查询出的所有子报价
+			list=repository.queryPriceStepByQuatationId(map);
+			
+			if(list==null || list.size() == 0){
+				XxlJobLogger.log("阶梯报价未配置");
+				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setRemark("阶梯报价未配置");
+				feesList.add(storageFeeEntity);
+				return  false;
+			}
+			
+			//封装数据的仓库和温度
+			map.clear();
+			map.put("warehouse_code", entity.getWarehouseCode());
+			price=storageQuoteFilterService.quoteFilter(list, map);
+			mapCusStepPrice.put(customerId,price);
 			if(price==null){
 				XxlJobLogger.log("阶梯报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
