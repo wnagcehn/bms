@@ -31,4 +31,6 @@ public interface IPriceMaterialQuotationRepository {
 
 	List<PriceMaterialQuotationEntity> queryMaterialQuatationByContract(
 			Map<String, Object> map);
+
+	List<PriceMaterialQuotationEntity> queryByTemplateId(Map<String, Object> parameter);
 }

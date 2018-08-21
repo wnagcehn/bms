@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.group.BmsGroupChargeunitMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		   	<result column="unit_id" property="unitId" jdbcType="INTEGER" />
+		   	<result column="unit_code" property="unitCode" jdbcType="VARCHAR" />
+		   	<result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+		   	<result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, group_id, unit_id, unit_code, unit_name, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+		group_id, unit_id, unit_code, unit_name, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+
+	<select id="queryAllByGroupId" resultMap="BaseResultMap" parameterType="int">
+		select id, group_id, unit_id, unit_code, unit_name, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag
+		from bms_group_chargeunit where group_id=#{groupId} and ifnull(del_flag,'0')='0'
+	</select>
+	
+	<select id="queryUnitByGroupId" resultType="String" parameterType="int">
+		select unit_code from bms_group_chargeunit where group_id=#{groupId} and ifnull(del_flag,'0')='0'
+	</select>
+	
+	<select id="queryGroupUnit" parameterType="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity" resultType="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity">
+		select id, group_id, unit_id, unit_code, unit_name, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag
+		from bms_group_chargeunit
+		where 1=1 and ifnull(del_flag,'0')='0'
+		<if test="(groupIds!=null and groupIds.size()>0)">
+			and group_id in
+			<foreach collection="groupIds" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="(groupId != null and groupId !='')" >
+				and group_id = #{groupId}
+		</if>
+	</select>
+	
+	<insert id="insertEntity" parameterType="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity">
+	    insert into bms_group_chargeunit(group_id, unit_id, unit_code, unit_name, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag)
+        values (
+		#{groupId,jdbcType=INTEGER}, 
+		#{unitId,jdbcType=VARCHAR}, 
+		#{unitCode,jdbcType=VARCHAR},
+		#{unitName,jdbcType=VARCHAR},
+		#{sortNo,jdbcType=INTEGER}, 
+		#{creator,jdbcType=VARCHAR}, 
+		#{createTime,jdbcType=TIMESTAMP}, 
+		#{lastModifier,jdbcType=VARCHAR}, 
+		#{lastModifyTime,jdbcType=TIMESTAMP}, 
+		#{delFlag,jdbcType=VARCHAR}
+        )
+     </insert>
+     
+     <update id="deleteEntity" parameterType="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity">
+		update bms_group_chargeunit set del_flag='1',last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
+		where id=#{id}
+	</update>
+	
+	<select id="checkSubjectCodeExist" parameterType="java.util.Map" resultType="String">
+		select unit_code from bms_group_chargeunit where group_id=#{groupId} and ifnull(del_flag,'0')='0' and
+		unit_code in
+		<foreach collection="unitCodeList" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>	
+	</select>
+	
+	<select id="querySubjectCountByGroupId" parameterType="int" resultType="int">
+		select count(*) as num from bms_group_chargeunit where group_id=#{groupId} and ifnull(del_flag,'0')='0'
+	</select>
+	
+	<update id="update" parameterType="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity">
+        update bms_group_chargeunit 
+		<set >
+			<if test="groupId != null" >group_id=#{groupId,jdbcType=INTEGER},</if>
+			<if test="unitId != null" >unit_id=#{unitId,jdbcType=VARCHAR},</if>
+			<if test="unitCode != null" >unit_code=#{unitCode,jdbcType=VARCHAR},</if>
+			<if test="unitName != null" >unit_name=#{unitName,jdbcType=VARCHAR},</if>
+			<if test="sortNo != null" >sort_no=#{sortNo,jdbcType=INTEGER},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+    <select id="queryByGroupCode" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity">
+		select u.* from bms_group_chargeunit u
+		LEFT JOIN bms_group g on u.group_id=g.id
+		WHERE u.del_flag='0' and g.group_code=#{groupCode}
+	</select>
+</mapper>

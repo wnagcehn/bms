@@ -16,10 +16,13 @@
 	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
 	    <result column="rule" property="rule" jdbcType="VARCHAR" />
+	    <result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+	    <result column="visible" property="visible" jdbcType="VARCHAR" />
+	    <result column="is_default" property="isDefault" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, quotationNo, quotationName, biz_type_code, subject_id, remark,instruction, creator, create_time, last_modifier, last_modify_time, del_flag, rule, quo_modus
+        id, quotationNo, quotationName, biz_type_code, subject_id, remark,instruction, creator, create_time, last_modifier, last_modify_time, del_flag, rule, quo_modus, sort_no, visible, is_default  isDefault
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -63,13 +66,16 @@
 		<if test="(quoModus != null and quoModus !='')" >
 				and quo_modus = #{quoModus}
 		</if>
-		and a.del_flag = '0'
+		<if test="(isDefault !=null and isDefault!='')">
+			    and a.is_default=#{isDefault}
+		</if>
+		and a.del_flag = '0' and a.visible='0'
     </sql>
 	
 	<!-- 查询计费规则 -->
     <select id="queryAll" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId,a.subject_id subjectName, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction
+        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId,a.subject_id subjectName, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction, a.sort_no sort_no, visible, is_default isDefault
         from bill_rule_receive a LEFT JOIN system_code b ON a.subject_id=b.`code` and b.status='0' where 1=1 
 		<include refid="baseSelectColumns" />
 		order by create_time desc
@@ -78,16 +84,16 @@
     <!-- 查询计费规则 新-->
     <select id="queryAllRule" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId,a.subject_id subjectName, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction ,quo_modus
+        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId,a.subject_id subjectName, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction ,quo_modus, a.sort_no sort_no, visible, is_default isDefault
         from bill_rule_receive a LEFT JOIN system_code b ON a.subject_id=b.`code` and b.status='0' where 1=1 
 		<include refid="baseSelectColumns" />
-		order by create_time desc
+		order by a.sort_no desc,a.create_time desc
     </select>
 
 	<!-- 查询单个计费规则 -->
     <select id="queryOne" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule ,instruction
+        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule ,instruction, a.sort_no sort_no, visible, is_default isDefault
         from bill_rule_receive a LEFT JOIN system_code b ON a.subject_id=b.`code` and b.status='0' where 1=1
 		<include refid="baseSelectColumns" />
 		limit 1
@@ -96,7 +102,7 @@
     <!-- 查询单个计费规则 -->
     <select id="queryOneRule" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule ,instruction,quo_modus
+        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule ,instruction,quo_modus, a.sort_no sort_no, visible, is_default isDefault
         from bill_rule_receive a LEFT JOIN system_code b ON a.subject_id=b.`code` and b.status='0' where 1=1
 		<include refid="baseSelectColumns" />
 		limit 1
@@ -104,7 +110,7 @@
 
 	<!-- 创建新的计费规则 -->
 	<insert id="saveRule" parameterType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        insert into bill_rule_receive(quotationNo, quotationName, biz_type_code, subject_id, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction, quo_modus)
+        insert into bill_rule_receive(quotationNo, quotationName, biz_type_code, subject_id, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction, quo_modus, sort_no, visible, is_default)
         values (
 		#{quotationNo,jdbcType=VARCHAR}, 
 		#{quotationName,jdbcType=VARCHAR}, 
@@ -118,7 +124,10 @@
 		#{delFlag,jdbcType=VARCHAR}, 
 		#{rule,jdbcType=VARCHAR},
 		#{instruction,jdbcType=VARCHAR}, 
-		#{quoModus,jdbcType=VARCHAR}
+		#{quoModus,jdbcType=VARCHAR},
+		#{sortNo,jdbcType=INTEGER}, 
+		#{visible,jdbcType=VARCHAR}, 
+		#{isDefault,jdbcType=VARCHAR}
         )
     </insert>
     
@@ -139,6 +148,9 @@
 		<if test="rule != null" >rule=#{rule,jdbcType=VARCHAR},</if>
 		<if test="instruction != null" >instruction=#{instruction,jdbcType=VARCHAR},</if>
 		<if test="quoModus != null" >quo_modus=#{quoModus,jdbcType=VARCHAR},</if>
+		<if test="sortNo != null" >sort_no=#{sortNo,jdbcType=INTEGER},</if>
+		<if test="visible != null" >visible=#{visible,jdbcType=VARCHAR},</if>
+		<if test="isDefault != null" >is_default=#{isDefault,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>
@@ -159,10 +171,10 @@
 		and re.del_flag = '0'
     </select>
     
-     <!-- 通过商家id查询计费规则和商家关联 -->
+     <!-- 通过商家id查询模板的规则 -->
     <select id="queryByCustomerId" parameterType="java.util.Map" resultMap="baseResultMap">
-		select b.rule,b.quotationNo from pub_rule_customer_receivable a
-		left join bill_rule_receive b on a.rule_no = b.quotationNo
+		select b.rule, a.quotation_no from price_general_template a
+		left join bill_rule_receive b on a.quotation_no = b.quotationNo
 		where a.customerid = #{customerid}  and a.subject_id = #{subjectId} and a.del_flag = 0 and b.del_flag = 0 limit 1;
     </select>
     

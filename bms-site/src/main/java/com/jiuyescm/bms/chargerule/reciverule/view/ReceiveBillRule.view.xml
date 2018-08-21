@@ -57,11 +57,31 @@
         <Property name="label">说明</Property>
       </PropertyDef>
       <PropertyDef name="quoModus">
-        <Property/>
+        <Property></Property>
         <Property name="label">报价形式</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;QUO_MODUS_RECEIVE_DISPATCH&quot;)}</Property>
         </Property>
+      </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">序号</Property>
+      </PropertyDef>
+      <PropertyDef name="visible">
+        <Property></Property>
+        <Property name="label">是否可见</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getValue&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="isDefault">
+        <Property></Property>
+        <Property name="label">是否默认常规</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getValue&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -433,6 +453,12 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="sortNo">
+          <Property name="property">sortNo</Property>
+        </DataColumn>
+        <DataColumn name="isDefault">
+          <Property name="property">isDefault</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>

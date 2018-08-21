@@ -86,4 +86,9 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
 		return this.selectList("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.queryDailyStorageFee", condition);
 	}
 
+	@Override
+	public void updateBatch(List<FeesReceiveStorageEntity> entity) {
+		this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.update", entity);
+	}
+
 }

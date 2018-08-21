@@ -34,6 +34,7 @@
     <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupUserService" ref="bmsGroupUserService" />
     <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService" ref="bmsGroupSubjectService" />
     <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService" ref="bmsGroupCustomerService" />
+    <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService" ref="bmsGroupChargeunitService" />
     <dubbo:service interface="com.jiuyescm.bms.report.service.IReportCustomerDailyIncomeService" ref="reportCustomerDailyIncomeService" />
     <dubbo:service interface="com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService" ref="bmsWarehouseConfigService" />
     <dubbo:service interface="com.jiuyescm.bms.report.service.IMaterialReportService" ref="materialReportService" />
@@ -48,5 +49,7 @@
 	<dubbo:service interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" ref="bmsSubjectService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService" ref="reportWarehouseCustomerService"/>
 	<dubbo:service interface="com.jiuyescm.bms.discount.service.IBmsDiscountService" ref="bmsDiscountService"/>
+	
+	<dubbo:service interface="com.jiuyescm.bms.rule.api.IBmsRuleService" ref="bmsRuleService"/>
 
 </beans>

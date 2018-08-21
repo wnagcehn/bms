@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.servicetype.PubCarrierServicetypeMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="carrierid" property="carrierid" jdbcType="VARCHAR" />
+		   	<result column="carriercode" property="carriercode" jdbcType="VARCHAR" />
+		   	<result column="servicecode" property="servicecode" jdbcType="VARCHAR" />
+		   	<result column="servicename" property="servicename" jdbcType="VARCHAR" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="delflag" property="delflag" jdbcType="CHAR" />
+		   	<result column="creperson" property="creperson" jdbcType="VARCHAR" />
+		   	<result column="cretime" property="cretime" jdbcType="TIMESTAMP" />
+		   	<result column="modperson" property="modperson" jdbcType="VARCHAR" />
+		   	<result column="modtime" property="modtime" jdbcType="TIMESTAMP" />
+		   	<result column="crepersonid" property="crepersonid" jdbcType="VARCHAR" />
+		   	<result column="modpersonid" property="modpersonid" jdbcType="VARCHAR" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, carrierid, carriercode, servicecode, servicename, remark, delflag, creperson, cretime, modperson, modtime, crepersonid, modpersonid, write_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+carrierid, carriercode, servicecode, servicename, remark, delflag, creperson, cretime, modperson, modtime, crepersonid, modpersonid, write_time
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from pub_carrier_servicetype
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity">
+        select
+        id, carrierid, carriercode, servicecode, 
+        servicename, remark, delflag, creperson, 
+        cretime, modperson, modtime, crepersonid, 
+        modpersonid, write_time, carrierid as carriername
+        from pub_carrier_servicetype
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" carrierid != null and carrierid !='' ">
+				and carrierid = #{carrierid}
+			</if>
+        	<if test=" carriercode != null and carriercode !='' ">
+				and carriercode = #{carriercode}
+			</if>
+        	<if test=" servicecode != null and servicecode !='' ">
+				and servicecode = #{servicecode}
+			</if>
+        	<if test=" servicename != null and servicename !='' ">
+				and servicename = #{servicename}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+        	<if test=" delflag != null and delflag !='' ">
+				and delflag = #{delflag}
+			</if>
+        	<if test=" creperson != null and creperson !='' ">
+				and creperson = #{creperson}
+			</if>
+        	<if test=" cretime != null and cretime !='' ">
+				and cretime = #{cretime}
+			</if>
+        	<if test=" modperson != null and modperson !='' ">
+				and modperson = #{modperson}
+			</if>
+        	<if test=" modtime != null and modtime !='' ">
+				and modtime = #{modtime}
+			</if>
+        	<if test=" crepersonid != null and crepersonid !='' ">
+				and crepersonid = #{crepersonid}
+			</if>
+        	<if test=" modpersonid != null and modpersonid !='' ">
+				and modpersonid = #{modpersonid}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity">
+        insert into pub_carrier_servicetype(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{carrierid,jdbcType=VARCHAR}, 
+			#{carriercode,jdbcType=VARCHAR}, 
+			#{servicecode,jdbcType=VARCHAR}, 
+			#{servicename,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{delflag,jdbcType=CHAR}, 
+			#{creperson,jdbcType=VARCHAR}, 
+			#{cretime,jdbcType=TIMESTAMP}, 
+			#{modperson,jdbcType=VARCHAR}, 
+			#{modtime,jdbcType=TIMESTAMP}, 
+			#{crepersonid,jdbcType=VARCHAR}, 
+			#{modpersonid,jdbcType=VARCHAR}, 
+			#{writeTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity">
+        update pub_carrier_servicetype
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" carrierid != null and carrierid !='' ">
+				carrierid = #{carrierid,jdbcType=VARCHAR},
+			</if>
+			<if test=" carriercode != null and carriercode !='' ">
+				carriercode = #{carriercode,jdbcType=VARCHAR},
+			</if>
+			<if test=" servicecode != null and servicecode !='' ">
+				servicecode = #{servicecode,jdbcType=VARCHAR},
+			</if>
+			<if test=" servicename != null and servicename !='' ">
+				servicename = #{servicename,jdbcType=VARCHAR},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" delflag != null and delflag !='' ">
+				delflag = #{delflag,jdbcType=CHAR},
+			</if>
+			<if test=" creperson != null and creperson !='' ">
+				creperson = #{creperson,jdbcType=VARCHAR},
+			</if>
+			<if test=" cretime != null and cretime !='' ">
+				cretime = #{cretime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" modperson != null and modperson !='' ">
+				modperson = #{modperson,jdbcType=VARCHAR},
+			</if>
+			<if test=" modtime != null and modtime !='' ">
+				modtime = #{modtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" crepersonid != null and crepersonid !='' ">
+				crepersonid = #{crepersonid,jdbcType=VARCHAR},
+			</if>
+			<if test=" modpersonid != null and modpersonid !='' ">
+				modpersonid = #{modpersonid,jdbcType=VARCHAR},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <select id="queryByCarrierid" parameterType="java.lang.String"
+        resultType="com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity">
+    	select * from pub_carrier_servicetype
+    	where carrierid = #{carrierid}
+    </select>
+
+</mapper>

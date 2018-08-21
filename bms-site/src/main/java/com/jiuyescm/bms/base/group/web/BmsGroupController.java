@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.base.group.web;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,46 @@ public class BmsGroupController {
 		}
 	
 	}
+	
+	@DataProvider
+	public List<BmsGroupVo> loadUnitDataByParent(String parentId) throws Exception{
+		int pid=0;
+		if(StringUtils.isNoneBlank(parentId)){
+			pid=Integer.valueOf(parentId);
+		}
+		return bmsGroupService.queryDataByParentIdAndBizType(pid,"bms_charge_unit");
+	}
+	
+	@DataResolver
+	public void saveUnitGroup(List<BmsGroupVo> datas) throws Exception{
+		if (datas == null) {
+			return;
+		}
+		Timestamp nowdate = JAppContext.currentTimestamp();
+		String userName=JAppContext.currentUserName();
+		for(BmsGroupVo voEntity:datas){
+			if (EntityState.NEW.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setCreateTime(nowdate);
+				voEntity.setCreator(userName);
+				voEntity.setBizType("bms_charge_unit");
+				if(!bmsGroupService.checkGroup(voEntity)){
+					throw new Exception("组编码已经存在");
+				}
+				bmsGroupService.addGroup(voEntity);
+			}
+			else if (EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setLastModifyTime(nowdate);
+				voEntity.setLastModifier(userName);
+				bmsGroupService.updateGroup(voEntity);
+			}
+			List<BmsGroupVo> list=voEntity.getChildren();
+			if(list!=null){
+				saveUnitGroup(list);
+			}
+		}
+	
+	}
+	
 	@DataResolver
 	public void saveGroup(List<BmsGroupVo> datas) throws Exception{
 		if (datas == null) {
@@ -302,5 +343,29 @@ public class BmsGroupController {
 			e.printStackTrace();
 		}
 		return resultMap;
+	}	
+	
+	@DataProvider
+	public List<BmsGroupSubjectVo> getSubjectIdAndSubjectName(String groupCode){
+		List<BmsGroupSubjectVo> bgsList = new ArrayList<>();
+		try {
+			Map<String,Object> map= new HashMap<String, Object>();
+			map.put("groupCode", groupCode);
+			map.put("bizType", "bms_subject");
+			BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+			if(bmsGroup!=null){
+				List<BmsGroupSubjectVo> list=bmsGroupSubjectService.queryAllByGroupId(bmsGroup.getId());
+				for(BmsGroupSubjectVo vo:list){
+					BmsGroupSubjectVo bgsVo = new BmsGroupSubjectVo();
+					bgsVo.setSubjectCode(vo.getSubjectCode());
+					bgsVo.setSubjectName(vo.getSubjectName());
+					bgsList.add(bgsVo);
+				}
+				return bgsList;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bgsList;
 	}	
 }

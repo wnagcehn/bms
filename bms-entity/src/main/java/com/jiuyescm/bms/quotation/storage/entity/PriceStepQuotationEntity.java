@@ -1,5 +1,7 @@
 package com.jiuyescm.bms.quotation.storage.entity;
 
+import java.sql.Timestamp;
+
 import com.jiuyescm.bms.common.BmsCommonAttribute;
 
 /**
@@ -11,49 +13,75 @@ public class PriceStepQuotationEntity extends BmsCommonAttribute{
 	
 	
 	private static final long serialVersionUID = -6280172759526293122L;
-		//模版编号
-	    private String quotationId;
-	    //重量下限
-		private Double weightLower;
-		//重量上限
-		private Double weightUpper;
-		//温度类型
-		private String temperatureTypeCode;
-		// 单价
-		private Double unitPrice;
-		//数量上限
-		private Double numUpper;
-		//数量下限
-		private Double numLower;
-		
-		private Double skuUpper;
-		
-		private Double skuLower;
-		//体积上限
-		private Double volumeUpper;
-		
-		private Double volumeLower;
-		
-		private String userDefine1;
-		
-		private String userDefine2;
-		
-		private String userDefine3;
-		
-		private String userDefine4;
-		
-		private String userDefine5;
-		// 备注
-		private String remark;
-		//续件价格
-		private Double continuedItem;
+	//模版编号
+    private String quotationId;
+	// 生效日期
+	private Timestamp startDate;
+	// 失效日期
+	private Timestamp expireDate;
+	//数量上限
+	private Double numUpper;
+	//数量下限
+	private Double numLower;
+	// 单价
+	private Double unitPrice;	
+	// 首量
+	private Double firstNum;
+	// 首价
+	private Double firstPrice;
+	//续件
+	private Double continuedItem;
+	//续价价格
+	private Double continuedPrice;
+	// 仓库编码
+	private String warehouseCode;
+	//温度类型
+	private String temperatureTypeCode;
+	// 备注
+	private String remark;
+	// 创建者
+	private String creator;
+	// 创建时间
+	private Timestamp createTime;
+	// 修改者
+	private String lastModifier;
+	// 修改时间
+	private Timestamp lastModifyTime;
 	
-	public Double getContinuedItem() {
-			return continuedItem;
-		}
-		public void setContinuedItem(Double continuedItem) {
-			this.continuedItem = continuedItem;
-		}
+	//封顶价
+	private Double capPrice;
+	
+    //重量下限
+	private Double weightLower;
+	//重量上限
+	private Double weightUpper;
+	
+	private Double skuUpper;
+	
+	private Double skuLower;
+	//体积上限
+	private Double volumeUpper;
+	
+	private Double volumeLower;
+	
+	private String userDefine1;
+	
+	private String userDefine2;
+	
+	private String userDefine3;
+	
+	private String userDefine4;
+	
+	private String userDefine5;
+	
+	private String contractCode;
+	
+    public Double getContinuedItem() {
+		return continuedItem;
+	}
+	public void setContinuedItem(Double continuedItem) {
+		this.continuedItem = continuedItem;
+	}
 	public String getQuotationId() {
 		return quotationId;
 	}
@@ -156,6 +184,78 @@ public class PriceStepQuotationEntity extends BmsCommonAttribute{
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public Timestamp getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Timestamp startDate) {
+		this.startDate = startDate;
+	}
+	public Timestamp getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(Timestamp expireDate) {
+		this.expireDate = expireDate;
+	}
+	public Double getFirstNum() {
+		return firstNum;
+	}
+	public void setFirstNum(Double firstNum) {
+		this.firstNum = firstNum;
+	}
+	public Double getFirstPrice() {
+		return firstPrice;
+	}
+	public void setFirstPrice(Double firstPrice) {
+		this.firstPrice = firstPrice;
+	}
+	public Double getContinuedPrice() {
+		return continuedPrice;
+	}
+	public void setContinuedPrice(Double continuedPrice) {
+		this.continuedPrice = continuedPrice;
+	}
+	public String getWarehouseCode() {
+		return warehouseCode;
+	}
+	public void setWarehouseCode(String warehouseCode) {
+		this.warehouseCode = warehouseCode;
+	}
+	public String getCreator() {
+		return creator;
+	}
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+	public String getLastModifier() {
+		return lastModifier;
+	}
+	public void setLastModifier(String lastModifier) {
+		this.lastModifier = lastModifier;
+	}
+	public Timestamp getLastModifyTime() {
+		return lastModifyTime;
+	}
+	public void setLastModifyTime(Timestamp lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+	public String getContractCode() {
+		return contractCode;
+	}
+	public void setContractCode(String contractCode) {
+		this.contractCode = contractCode;
+	}
+	public Double getCapPrice() {
+		return capPrice;
+	}
+	public void setCapPrice(Double capPrice) {
+		this.capPrice = capPrice;
 	}
 	
 	

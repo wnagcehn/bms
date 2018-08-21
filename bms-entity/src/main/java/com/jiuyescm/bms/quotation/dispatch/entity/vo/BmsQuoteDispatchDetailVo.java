@@ -74,6 +74,10 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 	private String cityName;
 	private String areaName;
 	
+	private String serviceTypeCode;
+	private String carrierid;
+	private String servicename;
+	
 	// 报价形式
 	private String priceType;
 	//报价list
@@ -466,6 +470,30 @@ public class BmsQuoteDispatchDetailVo implements IEntity {
 
 	public void setList(List<BmsQuoteDispatchDetailVo> list) {
 		this.list = list;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getCarrierid() {
+		return carrierid;
+	}
+
+	public void setCarrierid(String carrierid) {
+		this.carrierid = carrierid;
+	}
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
 	}
     
 }

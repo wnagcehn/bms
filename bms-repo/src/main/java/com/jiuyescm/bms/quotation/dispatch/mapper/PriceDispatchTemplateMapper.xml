@@ -22,7 +22,7 @@
   
     <sql id="baseColumns">
  			id, template_code, template_name, template_type, customerId, customerName, deliver, 
- 			remark, param1, creator, create_time, last_modifier, last_modify_time, del_flag, price_type   
+ 			remark, param1, creator, create_time, last_modifier, last_modify_time, del_flag, price_type, carrierid 
  	</sql>
 	
 	<sql id="baseSelectColumns">
@@ -101,7 +101,7 @@
 
     <insert id="save" parameterType="com.jiuyescm.bms.quotation.dispatch.entity.PriceDispatchTemplateEntity">
        insert into price_dispatch_template(template_code, template_name, template_type, deliver, remark, 
-       param1, creator, create_time, last_modifier, last_modify_time, del_flag, customerId, customerName,price_type)
+       param1, creator, create_time, last_modifier, last_modify_time, del_flag, customerId, customerName,price_type, carrierid)
         values (
 			#{templateCode,jdbcType=VARCHAR}, 
 			#{templateName,jdbcType=VARCHAR}, 
@@ -116,7 +116,8 @@
 			#{delFlag,jdbcType=VARCHAR}, 
 			#{customerId,jdbcType=VARCHAR}, 
 			#{customerName,jdbcType=VARCHAR},
-			#{priceType,jdbcType=VARCHAR}
+			#{priceType,jdbcType=VARCHAR},
+			#{carrierid,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -136,7 +137,8 @@
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
 			<if test="customerName != null" >customerName=#{customerName,jdbcType=VARCHAR},</if>
-			<if test="priceType!=null">price_type=#{priceType,jdbcType=VARCHAR}</if>
+			<if test="priceType!=null">price_type=#{priceType,jdbcType=VARCHAR},</if>
+			<if test="carrierid!=null">carrierid=#{carrierid,jdbcType=VARCHAR}</if>
 		</set>
         where id=#{id}
     </update>

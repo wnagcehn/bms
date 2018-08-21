@@ -66,6 +66,26 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;QUO_MODUS_RECEIVE_DISPATCH&quot;)}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="sortNo">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">序号</Property>
+      </PropertyDef>
+      <PropertyDef name="visible">
+        <Property></Property>
+        <Property name="label">是否可见</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getValue&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+      <PropertyDef name="isDefault">
+        <Property></Property>
+        <Property name="label">是否默认常规</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getValue&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="bizTypeCode">
@@ -296,6 +316,28 @@ view.get(&quot;#dialogRuleEdit&quot;).show();</ClientEvent>
         <ToolBarButton id="btnUpdate">
           <ClientEvent name="onClick">var data=view.get(&quot;#dsBillRuleReceiveEntity.data&quot;);&#xD;
 if(data.current){&#xD;
+	&#xD;
+	var entity=	data.current;&#xD;
+	&#xD;
+	if(isNullOrEmpty(entity.get(&quot;visible&quot;))){&#xD;
+		entity.set(&quot;visible&quot;,&quot;1&quot;);&#xD;
+	}else{&#xD;
+		if(entity.get(&quot;visible&quot;)==0){&#xD;
+			entity.set(&quot;visible&quot;,&quot;0&quot;);&#xD;
+		}else{&#xD;
+			entity.set(&quot;visible&quot;,&quot;1&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+		&#xD;
+	if(isNullOrEmpty(entity.get(&quot;isDefault&quot;))){&#xD;
+		entity.set(&quot;isDefault&quot;,&quot;1&quot;);&#xD;
+	}else{&#xD;
+		if(entity.get(&quot;isDefault&quot;)==0){&#xD;
+			entity.set(&quot;isDefault&quot;,&quot;0&quot;);&#xD;
+		}else if(entity.get(&quot;isDefault&quot;)==1){&#xD;
+			entity.set(&quot;isDefault&quot;,&quot;1&quot;);&#xD;
+		}&#xD;
+	}&#xD;
 	view.get(&quot;#dialogRuleEdit&quot;).show();&#xD;
 }else{&#xD;
 	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
@@ -391,6 +433,12 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
         <DataColumn name="remark">
           <Property name="property">remark</Property>
         </DataColumn>
+        <DataColumn name="sortNo">
+          <Property name="property">sortNo</Property>
+        </DataColumn>
+        <DataColumn name="isDefault">
+          <Property name="property">isDefault</Property>
+        </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
           <Property name="width">120</Property>
@@ -409,38 +457,7 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
         <Button id="btnSave">
           <ClientEvent name="onClick">var entity = view.get(&quot;#formRuleEdit&quot;).get(&quot;entity&quot;);	&#xD;
 &#xD;
-/*&#xD;
-var quotationName = entity.get(&quot;quotationName&quot;);&#xD;
-if(isNullOrEmpty(quotationName)){&#xD;
-	dorado.MessageBox.alert(&quot;规则名称不能为空!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-var bizTypeCode=entity.get(&quot;bizTypeCode&quot;);&#xD;
-if(isNullOrEmpty(bizTypeCode)){&#xD;
-	dorado.MessageBox.alert(&quot;请选择费用类型!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-var subjectId=entity.get(&quot;subjectId&quot;);&#xD;
-if(isNullOrEmpty(subjectId)){&#xD;
-	dorado.MessageBox.alert(&quot;请选择费用科目!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-var remark = entity.get(&quot;remark&quot;);&#xD;
-if(isNullOrEmpty(remark)){&#xD;
-	dorado.MessageBox.alert(&quot;备注不能为空!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-var rule = entity.get(&quot;rule&quot;);&#xD;
-if(isNullOrEmpty(rule)){&#xD;
-	dorado.MessageBox.alert(&quot;计费规则不能为空!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-var quoModus = entity.get(&quot;quoModus&quot;);&#xD;
-if(isNullOrEmpty(quoModus)){&#xD;
-	dorado.MessageBox.alert(&quot;报价形式不能为空!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-*/&#xD;
+&#xD;
 view.id(&quot;updateRuleAction&quot;).execute(&#xD;
 	function(result){&#xD;
 		with (view.get(&quot;#dsBillRuleReceiveEntity&quot;)){&#xD;
@@ -497,6 +514,22 @@ view.id(&quot;updateRuleAction&quot;).execute(&#xD;
           <AutoFormElement>
             <Property name="name">quoModus</Property>
             <Property name="property">quoModus</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">sortNo</Property>
+            <Property name="property">sortNo</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">visible</Property>
+            <Property name="property">visible</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">isDefault</Property>
+            <Property name="property">isDefault</Property>
+            <Property name="editorWidth">150</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">

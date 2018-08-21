@@ -1,8 +1,10 @@
 package com.jiuyescm.bms.quotation.storage.entity;
 
-import com.jiuyescm.cfm.domain.IEntity;
+import java.util.List;
 
 import javax.persistence.Entity;
+
+import com.jiuyescm.cfm.domain.IEntity;
 
 @Entity public class PriceMaterialQuotationEntity implements IEntity{
 
@@ -52,6 +54,9 @@ import javax.persistence.Entity;
 	 * 删除标识
 	 */
 	private String delFlag;
+	
+	//报价list
+	private List<PriceMaterialQuotationEntity> list;
   
     public Long getId() {
 		return id;
@@ -183,6 +188,14 @@ import javax.persistence.Entity;
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
+
+	public List<PriceMaterialQuotationEntity> getList() {
+		return list;
+	}
+
+	public void setList(List<PriceMaterialQuotationEntity> list) {
+		this.list = list;
+	}
 
    
 }

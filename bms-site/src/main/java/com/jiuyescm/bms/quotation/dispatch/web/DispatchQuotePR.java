@@ -38,6 +38,9 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
+import com.jiuyescm.bms.base.servicetype.repository.IPubCarrierServicetypeRepository;
+import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -126,6 +129,8 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 	private IPubRecordLogService pubRecordLogService;
 	@Resource 
 	private IDeliverService deliverService;
+	@Resource
+	private IPubCarrierServicetypeService pubCarrierServicetypeService;
 	
 	/**
 	 * 分页查询主模板
@@ -383,6 +388,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		ErrorMessageVo errorVo = null;
 		//获取当前的id
 		String templateCode = (String)parameter.get("templateCode");
+		String carrierid = (String)parameter.get("carrierid");
 		String priceType = (String)parameter.get("priceType");
 		if(StringUtils.isBlank(priceType)){
 			errorVo = new ErrorMessageVo();
@@ -460,8 +466,27 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 			}
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
 			
+			List<PubCarrierServicetypeEntity> servicetypeList = pubCarrierServicetypeService.queryByCarrierid(carrierid);
+			
 			//设置属性
 			for(BmsQuoteDispatchDetailVo p : templateList){
+				boolean exe = false;
+				if (StringUtils.isNotBlank(p.getServicename())) {
+					for (PubCarrierServicetypeEntity pcsEntity : servicetypeList) {
+						if (p.getServicename().equals(pcsEntity.getServicename())) {
+							p.setServiceTypeCode(pcsEntity.getServicecode());
+							exe = true;
+							break;
+						}
+					}
+					if (!exe) {
+						errorVo = new ErrorMessageVo();
+						errorVo.setMsg("该物流商下无该物流产品类型！");
+						infoList.add(errorVo);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						return map;	
+					}
+				}
 				p.setTemplateCode(templateCode);
 //				p.setMark(dealPriceRuleNo(p));// 报价规则编号
 				p.setDelFlag("0");// 设置为未作废

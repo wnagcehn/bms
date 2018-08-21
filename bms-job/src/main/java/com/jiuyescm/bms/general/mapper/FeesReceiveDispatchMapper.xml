@@ -198,6 +198,71 @@
         where fees_no=#{feesNo}
     </update>
     
+    <update id="updateBatch" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity">
+    	update fees_receive_dispatch 
+		<set >
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+			<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+			<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="carrierid != null" >carrierid=#{carrierid,jdbcType=VARCHAR},</if>
+			<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+			<if test="deliveryid != null" >deliveryid=#{deliveryid,jdbcType=VARCHAR},</if>
+			<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if>
+			<if test="unpacking != null" >unpacking=#{unpacking,jdbcType=VARCHAR},</if>
+			<if test="unpackNum != null" >unpack_num=#{unpackNum,jdbcType=DECIMAL},</if>
+			<if test="deliveryDate != null" >delivery_date=#{deliveryDate,jdbcType=TIMESTAMP},</if>
+			<if test="temperatureType != null" >temperature_type=#{temperatureType,jdbcType=VARCHAR},</if>
+			<if test="billType != null" >bill_type=#{billType,jdbcType=VARCHAR},</if>
+			<if test="b2bFlag != null" >b2b_flag=#{b2bFlag,jdbcType=VARCHAR},</if>
+			<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DECIMAL},</if>
+			<if test="totalQuantity != null" >total_quantity=#{totalQuantity,jdbcType=DECIMAL},</if>
+			<if test="totalVarieties != null" >total_varieties=#{totalVarieties,jdbcType=DECIMAL},</if>
+			<if test="splitSingle != null" >split_single=#{splitSingle,jdbcType=VARCHAR},</if>
+			<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
+			<if test="priceId != null" >price_id=#{priceId,jdbcType=VARCHAR},</if>
+			<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="toProvinceName != null" >to_province_name=#{toProvinceName,jdbcType=VARCHAR},</if>
+			<if test="toDistrictName != null" >to_district_name=#{toDistrictName,jdbcType=VARCHAR},</if>
+			<if test="toCityName != null" >to_city_name=#{toCityName,jdbcType=VARCHAR},</if>
+			<if test="chargedWeight != null" >charged_weight=#{chargedWeight,jdbcType=DECIMAL},</if>
+			<if test="weightLimit != null" >weight_limit=#{weightLimit,jdbcType=DECIMAL},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
+			<if test="headWeight != null" >head_weight=#{headWeight,jdbcType=DECIMAL},</if>
+			<if test="continuedWeight != null" >continued_weight=#{continuedWeight,jdbcType=DECIMAL},</if>
+			<if test="headPrice != null" >head_price=#{headPrice,jdbcType=DECIMAL},</if>
+			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
+			<if test="acceptTime != null" >accept_time=#{acceptTime,jdbcType=TIMESTAMP},</if>
+			<if test="signTime != null" >sign_time=#{signTime,jdbcType=TIMESTAMP},</if>
+			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="bigstatus != null" >bigstatus=#{bigstatus,jdbcType=VARCHAR},</if>
+			<if test="smallstatus != null" >smallstatus=#{smallstatus,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param5 != null" >param5=#{param5,jdbcType=VARCHAR},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+		</set>
+        where fees_no=#{feesNo} and del_flag='0'
+    </update>
+    
     
     <!-- <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity">
         update fees_receive_dispatch 

@@ -123,11 +123,11 @@
 			a.throw_weight,a.product_detail,a.deliver_name,	a.month_fee_count,a.expresstype,a.receive_name,a.receive_province_id,a.receive_city_id,a.receive_district_id,a.adjust_province_id,a.adjust_city_id,a.adjust_district_id,a.create_time,a.accept_time,a.sign_time,a.remark,
 			a.carrier_id,a.carrier_name,a.origin_carrier_id,a.origin_carrier_name,a.adjust_carrier_id,a.adjust_carrier_name,a.fees_no,a.is_calculated,a.temperature_type_code,
 			b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,s.servicecode as servicecode, s.servicename as servicename,
-			a.send_province_id, a.send_city_id, a.origin_weight as originWeight,a.order_status as orderStatus
+			a.send_province_id, a.send_city_id, a.origin_weight as originWeight,a.order_status as orderStatus, a.correct_throw_weight as correctThrowWeight, a.system_weight as systemWeight
         from biz_dispatch_bill a
         LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
         LEFT JOIN fees_receive_dispatch c on c.fees_no=a.fees_no and c.del_flag='0' and c.subject_code='de_delivery_amount'
-        LEFT JOIN pub_carrier_servicetype s on s.carrierid = a.carrier_id and s.servicecode=a.expresstype and s.delflag='0'
+        LEFT JOIN pub_carrier_servicetype s on s.carrierid = a.carrier_id and s.servicecode=a.service_type_code and s.delflag='0'
         where a.del_flag = '0'
 		<include refid="baseSelectColumns" />
 		<if test="(dutyType != null and dutyType !='')" >
@@ -148,7 +148,7 @@
 			b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,c.head_price as headPrice,c.continued_price as continuedPrice,a.send_province_id,a.send_city_id,
 			d.b2b_flag,d.resize_num,d.total_varieties,d.boxnum,d.adjust_boxnum,c.amount as dsAmount,a.is_calculated as dsIsCalculated,a.remark as dsRemark,e.cost as orderAmount,d.is_calculated as orderIsCalculated,d.remark as orderRemark,ifnull(f.correct_weight,0) as correctWeight,
 			s.servicename as servicename, s.servicecode as servicecode, a.origin_weight as originWeight, (c.amount-c.derate_amount) as discountAmount,
-			a.order_status as orderStatus
+			a.order_status as orderStatus, a.correct_throw_weight as correctThrowWeight
         from biz_dispatch_bill a
         LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
         LEFT JOIN fees_receive_dispatch c on c.fees_no=a.fees_no and c.del_flag='0' and c.subject_code='de_delivery_amount'

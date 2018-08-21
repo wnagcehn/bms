@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.drools.compiler.lang.dsl.DSLMapParser.entry_return;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -71,6 +72,8 @@ import com.jiuyescm.mdm.customer.vo.SystemCodeVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 import com.thoughtworks.xstream.core.util.Base64Encoder;
+
+import groovy.xml.Entity;
 
 @Controller("stroageMaterialQuoteController")
 public class StroageMaterialQuoteController extends CommonComparePR<PriceMaterialQuotationEntity>{
@@ -134,6 +137,16 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}else if(entity == null){
 				return "页面传递参数有误！";
 			}
+			if (StringUtils.isEmpty(entity.getWarehouseId())) {
+				Map<String, Object> parameter = new HashMap<>();
+				parameter.put("templateId", entity.getTemplateId());
+				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
+				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
+					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode())) {
+						return " 未填写仓库的耗材不允许重复录入!";
+					}
+				}
+			}
 			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setLastModifier(JAppContext.currentUserName());
@@ -185,6 +198,16 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}else if(entity == null){
 				return "页面传递参数有误！";
 			}
+			if (StringUtils.isEmpty(entity.getWarehouseId())) {
+				Map<String, Object> parameter = new HashMap<>();
+				parameter.put("templateId", entity.getTemplateId());
+				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
+				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
+					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode())) {
+						return "未填写仓库的耗材不允许重复录入!";
+					}
+				}
+			}
 			entity.setLastModifier(JAppContext.currentUserName());
 			entity.setLastModifyTime(JAppContext.currentTimestamp());
 			entity.setDelFlag("0");
@@ -218,7 +241,9 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			if((ex.getMessage().indexOf("Duplicate entry"))>0){
+				return "违反唯一性校验";
+			}
 			return "数据库操作失败";
 		}
 	}
@@ -661,21 +686,30 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}
 			
 			boolean warehouseCheck = false;
-			
-			for(WarehouseVo entity:wareHouselist)
-			{
-				if(entity.getWarehousename().equals(p.getWarehouseId()))
+			//如果仓库为空，不允许重复录入。不为空需要校验
+			if(StringUtils.isEmpty(p.getWarehouseId())){
+				for (WarehouseVo warehouseVo : wareHouselist) {
+					if (warehouseVo.getWarehousename().equals(p.getWarehouseId())) {
+						setMessage(infoList, lineNo, "未填写仓库的耗材不允许重复录入!");
+						break;
+					}
+				}
+			}else {
+				for(WarehouseVo entity:wareHouselist)
 				{
-					p.setWarehouseId(entity.getWarehouseid());
-					warehouseCheck = true;
-					break;
+					if(entity.getWarehousename().equals(p.getWarehouseId()))
+					{
+						p.setWarehouseId(entity.getWarehouseid());
+						warehouseCheck = true;
+						break;
+					}
+				}
+				
+				if(!warehouseCheck){
+					setMessage(infoList, lineNo,"仓库信息不对!");
 				}
 			}
-			
-			if(!warehouseCheck){
-				setMessage(infoList, lineNo,"仓库信息不对!");
-			}
-			
+		
 			boolean materailTypeCheck = false;
 			
 			if(!StringUtils.isEmpty(p.getMaterialType())&&mapValue.containsValue(p.getMaterialType()))

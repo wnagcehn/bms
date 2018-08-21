@@ -87,4 +87,9 @@ public class FeesReceiveDispatchServiceImpl extends MyBatisDao implements IFeesR
 		return this.selectList("com.jiuyescm.bms.general.entity.FeesReceiveDispatchMapper.queryDailyFees", condition);
 	}
 
+	@Override
+	public void updateBatch(List<FeesReceiveDispatchEntity> entity) {
+		this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveDispatchMapper.updateBatch", entity);
+	}
+
 }

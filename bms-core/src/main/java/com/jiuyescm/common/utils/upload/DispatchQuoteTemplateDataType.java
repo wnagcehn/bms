@@ -15,7 +15,7 @@ public class DispatchQuoteTemplateDataType extends BaseDataType{
 		this.dataProps.add(new DataProperty("firstWeightPrice", "首重价格"));
 		this.dataProps.add(new DataProperty("continuedWeight", "续重重量(kg)"));
 		this.dataProps.add(new DataProperty("continuedPrice", "续重价格"));
-		this.dataProps.add(new DataProperty("timeliness", "时效"));
+		this.dataProps.add(new DataProperty("servicename", "物流产品类型"));
 		this.dataProps.add(new DataProperty("temperatureTypeCode", "温度类型"));
 		this.dataProps.add(new DataProperty("areaTypeCode", "地域类型"));
 		this.dataProps.add(new DataProperty("productCase", "特殊计费商品"));

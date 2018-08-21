@@ -163,4 +163,9 @@ public class PriceContractServiceImp implements IPriceContractService{
 		// TODO Auto-generated method stub
 		return priceContractDao.findAllContractDiscountItem(parameter);
 	}
+	
+	@Override
+	public ContractDetailEntity queryTempByContractCodeAndSubjectId(Map<String, String> param){
+		return priceContractDao.queryTempByContractCodeAndSubjectId(param);
+	}
 }

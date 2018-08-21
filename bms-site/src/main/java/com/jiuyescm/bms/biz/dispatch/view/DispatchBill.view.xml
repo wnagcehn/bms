@@ -222,7 +222,7 @@
       </PropertyDef>
       <PropertyDef name="systemWeight">
         <Property name="dataType">Double</Property>
-        <Property name="label">系统逻辑重量</Property>
+        <Property name="label">逻辑重量</Property>
       </PropertyDef>
       <PropertyDef name="totalqty">
         <Property name="dataType">Integer</Property>
@@ -283,13 +283,13 @@
         <Property name="label">调整宅配商名称</Property>
       </PropertyDef>
       <PropertyDef name="adjustProvinceId">
-        <Property name="label">调整省</Property>
+        <Property name="label">调整收件省</Property>
       </PropertyDef>
       <PropertyDef name="adjustCityId">
-        <Property name="label">调整市</Property>
+        <Property name="label">调整收件市</Property>
       </PropertyDef>
       <PropertyDef name="adjustDistrictId">
-        <Property name="label">调整区</Property>
+        <Property name="label">调整收件区</Property>
       </PropertyDef>
       <PropertyDef name="originCarrierId">
         <Property name="label">订单物流商ID</Property>
@@ -307,7 +307,7 @@
       </PropertyDef>
       <PropertyDef name="throwWeight">
         <Property name="dataType">Double</Property>
-        <Property name="label">泡重</Property>
+        <Property name="label">原始泡重</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
         <Property></Property>
@@ -333,10 +333,9 @@
       <PropertyDef name="originWeight">
         <Property name="label">原始重量</Property>
         <Property name="dataType">BigDecimal</Property>
-        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="orderStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">订单状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOrderStatusEnum&quot;).getResult()}</Property>
@@ -346,10 +345,13 @@
         <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="chargeCarrierName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="chargeCarrierId">
-        <Property/>
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="correctThrowWeight">
+        <Property name="label">纠正泡重</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -411,7 +413,7 @@
       </PropertyDef>
       <PropertyDef name="customerName"/>
       <PropertyDef name="orderStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">订单状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getOrderStatusEnum&quot;).getResult()}</Property>
@@ -818,14 +820,14 @@ validRetryAction.execute(function(retMap){&#xD;
 </ClientEvent>
         <Property name="caption">模板下载</Property>
         <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="btnTemplateImport">
         <ClientEvent name="onClick">view.get(&quot;#importWayBillDialog&quot;).show();&#xD;
 </ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
         <Property name="caption">导入模板</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="export">
         <ClientEvent name="onClick">var condition=view.get(&quot;#queyConditionForm.entity&quot;);&#xD;
@@ -936,6 +938,8 @@ var nowdays = new Date();&#xD;
       <AutoFormElement>
         <Property name="name">extattr1</Property>
         <Property name="property">extattr1</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -1009,15 +1013,15 @@ if (data != null) {&#xD;
         <Button id="btnSave">
           <ClientEvent name="onClick">var entity = view.get(&quot;#billEditForm&quot;).get(&quot;entity&quot;);	&#xD;
 &#xD;
-var weight=entity.get(&quot;totalWeight&quot;);&#xD;
+var adjustWeight=entity.get(&quot;adjustWeight&quot;);&#xD;
 //alert(&quot;调整重量&quot;+adjustWeight);&#xD;
 &#xD;
-if(undefined==weight || weight==''){&#xD;
-	dorado.MessageBox.alert(&quot;请填写重量!&quot;);&#xD;
+if(undefined==adjustWeight || adjustWeight==''){&#xD;
+	dorado.MessageBox.alert(&quot;请填写调整重量!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-if (isNaN(weight)) {&#xD;
+if (isNaN(adjustWeight)) {&#xD;
 	dorado.MessageBox.alert(&quot;重量必须为数字!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
@@ -1165,76 +1169,179 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <Container>
-      <DataGrid id="dataShowGrid">
-        <Property name="dataSet">dsBizDispatchBillEntity</Property>
-        <Property name="readOnly">true</Property>
-        <Property name="selectionMode">multiRows</Property>
-        <Property name="rowSelectionProperty">checked</Property>
-        <RowNumColumn/>
-        <DataColumn name="customerName">
-          <Property name="property">customerName</Property>
-          <Property name="width">150</Property>
-        </DataColumn>
-        <DataColumn name="warehouseName">
-          <Property name="property">warehouseName</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn name="outstockNo">
-          <Property name="property">outstockNo</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn name="externalNo">
-          <Property name="property">externalNo</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn name="waybillNo">
-          <Property name="property">waybillNo</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">zexpressnum</Property>
-          <Property name="name">zexpressnum</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn name="feesNo">
-          <Property name="property">feesNo</Property>
-          <Property name="width">140</Property>
-        </DataColumn>
-        <DataColumn name="isCalculated">
-          <Property name="property">isCalculated</Property>
-          <Property name="width">60</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="name">originWeight</Property>
-          <Property name="property">originWeight</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">bigstatus</Property>
-          <Property name="name">bigstatus</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">smallstatus</Property>
-          <Property name="name">smallstatus</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn name="orderStatus">
-          <Property name="property">orderStatus</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn name="temperatureTypeCode">
-          <Property name="property">temperatureTypeCode</Property>
-          <Property name="width">60</Property>
-        </DataColumn>
-        <DataColumn name="totalWeight">
-          <Property name="property">totalWeight</Property>
-          <Property name="width">80</Property>
-        </DataColumn>
-        <DataColumn name="adjustWeight">
-          <ClientEvent name="onRenderCell">var adjustWeight=arg.data.get(&quot;adjustWeight&quot;);&#xD;
+    <Container layout="hbox">
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="contentOverflowX">scroll</Property>
+      <Property name="contentOverflowY">scroll</Property>
+      <Container>
+        <Property name="contentOverflowY">scroll</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <Property name="contentOverflowX">scroll</Property>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">运单数据</Property>
+            <DataGrid id="dataShowGrid">
+              <Property name="dataSet">dsBizDispatchBillEntity</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="selectionMode">multiRows</Property>
+              <Property name="rowSelectionProperty">checked</Property>
+              <Property name="width">650</Property>
+              <RowNumColumn/>
+              <DataColumn name="customerName">
+                <Property name="property">customerName</Property>
+                <Property name="width">150</Property>
+              </DataColumn>
+              <DataColumn name="warehouseName">
+                <Property name="property">warehouseName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="outstockNo">
+                <Property name="property">outstockNo</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn name="externalNo">
+                <Property name="property">externalNo</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="waybillNo">
+                <Property name="property">waybillNo</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">zexpressnum</Property>
+                <Property name="name">zexpressnum</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn name="feesNo">
+                <Property name="property">feesNo</Property>
+                <Property name="width">140</Property>
+              </DataColumn>
+              <DataColumn name="isCalculated">
+                <Property name="property">isCalculated</Property>
+                <Property name="width">60</Property>
+              </DataColumn>
+              <DataColumn name="temperatureTypeCode">
+                <Property name="property">temperatureTypeCode</Property>
+                <Property name="width">60</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">totalqty</Property>
+                <Property name="name">totalqty</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">productDetail</Property>
+                <Property name="name">productDetail</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn name="monthFeeCount">
+                <Property name="property">monthFeeCount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">servicename</Property>
+                <Property name="name">servicename</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn name="receiveTime">
+                <Property name="property">receiveTime</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="receiveProvinceId">
+                <Property name="property">receiveProvinceId</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn name="receiveCityId">
+                <Property name="property">receiveCityId</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn name="receiveDistrictId">
+                <Property name="property">receiveDistrictId</Property>
+                <Property name="width">80</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">sendProvinceId</Property>
+                <Property name="property">sendProvinceId</Property>
+                <Property name="width">80</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">sendCityId</Property>
+                <Property name="property">sendCityId</Property>
+                <Property name="width">80</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="createTime">
+                <Property name="property">createTime</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="acceptTime">
+                <Property name="property">acceptTime</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="signTime">
+                <Property name="property">signTime</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+                <Property name="width">140</Property>
+              </DataColumn>
+              <DataColumn name="carrierName">
+                <Property name="property">carrierName</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">originCarrierName</Property>
+                <Property name="name">originCarrierName</Property>
+                <Property name="width">80</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="adjustCarrierName">
+                <Property name="property">adjustCarrierName</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn name="dutyType">
+                <Property name="property">dutyType</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+              <DataColumn name="updateReasonDetail">
+                <Property name="property">updateReasonDetail</Property>
+                <Property name="width">100</Property>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+        </TabControl>
+      </Container>
+      <Container>
+        <Property name="contentOverflowY">scroll</Property>
+        <Property name="contentOverflowX">scroll</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">重量</Property>
+            <DataGrid id="dataShowGrid2">
+              <Property name="dataSet">dsBizDispatchBillEntity</Property>
+              <Property name="width">500</Property>
+              <Property name="readOnly">true</Property>
+              <DataColumn>
+                <Property name="name">systemWeight</Property>
+                <Property name="property">systemWeight</Property>
+                <Property name="width">78</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">originWeight</Property>
+                <Property name="property">originWeight</Property>
+                <Property name="width">78</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="totalWeight">
+                <Property name="property">totalWeight</Property>
+                <Property name="width">78</Property>
+              </DataColumn>
+              <DataColumn name="adjustWeight">
+                <ClientEvent name="onRenderCell">var adjustWeight=arg.data.get(&quot;adjustWeight&quot;);&#xD;
 var totalWeight=arg.data.get(&quot;totalWeight&quot;);&#xD;
 if(!isNullOrEmpty(adjustWeight) &amp;&amp; !isNullOrEmpty(totalWeight)){&#xD;
 	if(adjustWeight!=totalWeight){&#xD;
@@ -1248,117 +1355,72 @@ if(isNullOrEmpty(adjustWeight)){&#xD;
 }&#xD;
 arg.processDefault = true;&#xD;
 </ClientEvent>
-          <Property name="property">adjustWeight</Property>
-          <Property name="width">80</Property>
-        </DataColumn>
-        <DataColumn name="throwWeight">
-          <Property name="property">throwWeight</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">totalqty</Property>
-          <Property name="name">totalqty</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">productDetail</Property>
-          <Property name="name">productDetail</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn name="monthFeeCount">
-          <Property name="property">monthFeeCount</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">servicename</Property>
-          <Property name="name">servicename</Property>
-          <Property name="width">130</Property>
-        </DataColumn>
-        <DataColumn name="receiveTime">
-          <Property name="property">receiveTime</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn name="receiveProvinceId">
-          <Property name="property">receiveProvinceId</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn name="receiveCityId">
-          <Property name="property">receiveCityId</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn name="receiveDistrictId">
-          <Property name="property">receiveDistrictId</Property>
-          <Property name="width">80</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">adjustProvinceId</Property>
-          <Property name="name">adjustProvinceId</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">adjustCityId</Property>
-          <Property name="name">adjustCityId</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">adjustDistrictId</Property>
-          <Property name="name">adjustDistrictId</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="name">sendProvinceId</Property>
-          <Property name="property">sendProvinceId</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="name">sendCityId</Property>
-          <Property name="property">sendCityId</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn name="createTime">
-          <Property name="property">createTime</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn name="acceptTime">
-          <Property name="property">acceptTime</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn name="signTime">
-          <Property name="property">signTime</Property>
-          <Property name="width">120</Property>
-        </DataColumn>
-        <DataColumn name="remark">
-          <Property name="property">remark</Property>
-          <Property name="width">140</Property>
-        </DataColumn>
-        <DataColumn name="carrierName">
-          <Property name="property">carrierName</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">originCarrierName</Property>
-          <Property name="name">originCarrierName</Property>
-          <Property name="width">80</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn name="adjustCarrierName">
-          <Property name="property">adjustCarrierName</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn name="dutyType">
-          <Property name="property">dutyType</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-        <DataColumn name="updateReasonDetail">
-          <Property name="property">updateReasonDetail</Property>
-          <Property name="width">100</Property>
-        </DataColumn>
-      </DataGrid>
+                <Property name="property">adjustWeight</Property>
+                <Property name="width">78</Property>
+              </DataColumn>
+              <DataColumn name="throwWeight">
+                <Property name="property">throwWeight</Property>
+                <Property name="width">78</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">correctThrowWeight</Property>
+                <Property name="property">correctThrowWeight</Property>
+                <Property name="width">78</Property>
+                <Property name="align">right</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">订单状态</Property>
+            <DataGrid id="dataShowGrid3">
+              <Property name="width">500</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="dataSet">dsBizDispatchBillEntity</Property>
+              <DataColumn name="orderStatus">
+                <Property name="property">orderStatus</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">bigstatus</Property>
+                <Property name="name">bigstatus</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">smallstatus</Property>
+                <Property name="name">smallstatus</Property>
+                <Property name="width">130</Property>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">调整地址</Property>
+            <DataGrid id="dataShowGrid4">
+              <Property name="width">500</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="dataSet">dsBizDispatchBillEntity</Property>
+              <DataColumn>
+                <Property name="property">adjustProvinceId</Property>
+                <Property name="name">adjustProvinceId</Property>
+                <Property name="width">80</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">adjustCityId</Property>
+                <Property name="name">adjustCityId</Property>
+                <Property name="width">80</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">adjustDistrictId</Property>
+                <Property name="name">adjustDistrictId</Property>
+                <Property name="width">80</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+        </TabControl>
+      </Container>
     </Container>
     <Dialog id="dialogAddressEdit">
       <Property name="caption">调整省市区</Property>

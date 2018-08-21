@@ -16,7 +16,6 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
-import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -26,6 +25,7 @@ import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStandardReqVoService;
+import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
@@ -37,6 +37,7 @@ import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationReposito
 import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -57,14 +58,15 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private IBmsGroupService bmsGroupService;
 	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
+	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	
 	private String BizTypeCode = "STORAGE"; //仓储费编码
 	private String SubjectId = "wh_product_storage";		//费用类型-商品存储费 编码 1002 原编码
 	private String quoType = "C";//默认使用常规报价
 	
 	List<SystemCodeEntity> scList;
-	Map<String,List<PriceGeneralQuotationEntity>> mapCusPrice=null;
-	Map<String,List<PriceStepQuotationEntity>> mapCusStepPrice=null;
+	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
+	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	List<String> cusList=null;
@@ -78,43 +80,16 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 	
 	@Override
 	protected List<BizProductStorageEntity> queryBillList(Map<String, Object> map) {
-		
-		long operateTime = System.currentTimeMillis();
-		List<String> feesNos = new ArrayList<String>();
-		Map<String, Object> feesMap = new HashMap<String, Object>();
+
 		List<BizProductStorageEntity> bizList = bizProductStorageService.query(map);
-		if(bizList == null || bizList.size() == 0){
-			
-		}
-		else{
-			for (BizProductStorageEntity entity : bizList) {
-				if(StringUtils.isNotEmpty(entity.getFeesNo())){
-					feesNos.add(entity.getFeesNo());
-				}
-				else{
-					entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
-				}
-			}
-			try{
-				if(feesNos.size()>0){
-					feesMap.put("feesNos", feesNos);
-					feesReceiveStorageService.deleteBatch(feesMap);
-					long current = System.currentTimeMillis();// 系统开始时间
-					XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
-				}
-			}
-			catch(Exception ex){
-				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-			}
-		}
 		return bizList;
 		
 	}
 
 	@Override
 	protected void initConf(List<BizProductStorageEntity> billList) {
-		mapCusStepPrice=new HashMap<String,List<PriceStepQuotationEntity>>();
-		mapCusPrice=new HashMap<String,List<PriceGeneralQuotationEntity>>();
+		mapCusStepPrice=new HashMap<String,PriceStepQuotationEntity>();
+		mapCusPrice=new HashMap<String,PriceGeneralQuotationEntity>();
 		mapContact=new HashMap<String,PriceContractInfoEntity>();
 		mapRule=new HashMap<String,BillRuleReceiveEntity>();
 		
@@ -135,59 +110,65 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 		try{
 			entity.setCalculateTime(JAppContext.currentTimestamp());
 			storageFeeEntity.setCalculateTime(entity.getCalculateTime());
-			CalcuReqVo reqVo = new CalcuReqVo();
-			reqVo.setBizData(entity);
-			BillRuleReceiveEntity ruleEntity=mapRule.get(entity.getCustomerid());
-			reqVo.setRuleNo(ruleEntity.getQuotationNo());
-			reqVo.setRuleStr(ruleEntity.getRule());
-			storageFeeEntity.setRuleNo(ruleEntity.getQuotationNo());
 			
-			if(mapCusPrice.containsKey(entity.getCustomerid())){
-				reqVo.setQuoEntites(mapCusPrice.get(entity.getCustomerid()));
+			String customerId=entity.getCustomerid();
+			//报价模板
+			PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);	
+			if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
+				storageFeeEntity.setQuantity((new Double(entity.getAqty())).intValue());
+			}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
+				storageFeeEntity.setQuantity((new Double(entity.getWeight()*entity.getAqty())).intValue());
 			}
-			if(mapCusStepPrice.containsKey(entity.getCustomerid())){
-				reqVo.setQuoEntites(mapCusStepPrice.get(entity.getCustomerid()));
+
+			//计算方法
+			double amount=0d;
+			switch(priceType){
+			case "PRICE_TYPE_NORMAL"://一口价				
+	            // -> 费用 = 数量*模板单价
+				if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
+					amount=entity.getAqty()*generalEntity.getUnitPrice();
+				}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
+					amount=entity.getWeight()*entity.getAqty()*generalEntity.getUnitPrice();
+				}
+				storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
+				storageFeeEntity.setParam3(generalEntity.getId()+"");
+				break;
+			case "PRICE_TYPE_STEP"://阶梯价
+				PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);				
+				if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
+					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+						amount=entity.getAqty()*stepQuoEntity.getUnitPrice();
+					}else{
+						amount=stepQuoEntity.getFirstNum()<entity.getAqty()?stepQuoEntity.getFirstPrice()+(entity.getAqty()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+					}
+				}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
+					if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+						amount=entity.getWeight()*entity.getAqty()*stepQuoEntity.getUnitPrice();
+					}else{
+						amount=stepQuoEntity.getFirstNum()<entity.getWeight()*entity.getAqty()?stepQuoEntity.getFirstPrice()+(entity.getWeight()*entity.getAqty()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+					}
+				}
+				//判断封顶价
+				if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
+					if(stepQuoEntity.getCapPrice()<amount){
+						amount=stepQuoEntity.getCapPrice();
+					}
+				}
+				storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+				storageFeeEntity.setParam3(generalEntity.getId()+"");
+				break;
+			default:
+				break;
 			}
 			
-			long start = System.currentTimeMillis();// 系统开始时间
-			long current = 0l;// 当前系统时间
-			CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
-			current= System.currentTimeMillis();
-			if("succ".equals(resultVo.getSuccess())){
-				XxlJobLogger.log("调用规则引擎成功   耗时【{0}】毫秒  费用【{1}】 ",(current - start),resultVo.getPrice());	
-				switch(priceType){
-				case "PRICE_TYPE_NORMAL":
-					PriceGeneralQuotationEntity generalEntity=getgeneralEntityById(mapCusPrice.get(entity.getCustomerid()),resultVo.getQuoId());
-					storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
-					storageFeeEntity.setCost(resultVo.getPrice());
-					break;
-				case "PRICE_TYPE_STEP":
-					PriceStepQuotationEntity stepQuoEntity=getStepQuotationById(mapCusStepPrice.get(entity.getCustomerid()),resultVo.getQuoId());
-					storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-					storageFeeEntity.setCost(resultVo.getPrice());
-					break;
-					default:
-						break;
-				}
-				storageFeeEntity.setParam2(resultVo.getMethod());//
-				storageFeeEntity.setParam3(resultVo.getQuoId());
-				storageFeeEntity.setBizType(entity.getextattr1());//判断是否是遗漏数据
-				entity.setRemark("计算成功");
-				entity.setIsCalculated(CalculateState.Finish.getCode());
-				storageFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
-				feesList.add(storageFeeEntity);
-			}else{
-				XxlJobLogger.log("调用规则引擎失败   耗时【{0}】毫秒   ",(current - start));
-				String ruleNo="";
-				if(ruleEntity!=null){
-					ruleNo=ruleEntity.getQuotationNo();
-				}
-				XxlJobLogger.log("费用["+ruleNo+"]计算失败--"+resultVo.getMsg());
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("费用计算失败:"+resultVo.getMsg());
-				feesList.add(storageFeeEntity);
-			}
+			storageFeeEntity.setCost(BigDecimal.valueOf(amount));
+			storageFeeEntity.setParam4(priceType);
+			storageFeeEntity.setBizType(entity.getextattr1());//判断是否是遗漏数据
+			entity.setRemark("计算成功");
+			entity.setIsCalculated(CalculateState.Finish.getCode());
+			storageFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
+			feesList.add(storageFeeEntity);		
+			
 			XxlJobLogger.log(String.format("====================================[%s]计算完毕============================================",entity.getId()));
 		}catch(Exception ex){
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -264,7 +245,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 	    current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveStorageService.InsertBatch(feesList);
+		feesReceiveStorageService.updateBatch(feesList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒",(current - start));
 	}
@@ -338,19 +319,19 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 		
 		start = System.currentTimeMillis();// 系统开始时间
 		/*验证报价 报价*/
-		List<PriceGeneralQuotationEntity> priceGenerallist=null;
+		PriceGeneralQuotationEntity quoTemplete=null;
 		if(!mapCusPrice.containsKey(customerId)){
 			map.clear();
-			map.put("contractCode", contractEntity.getContractCode());
 			map.put("subjectId",SubjectId);
-			priceGenerallist=priceGeneralQuotationRepository.queryPriceGeneralByContract(map);
-			if(priceGenerallist!=null){
-				mapCusPrice.put(customerId, priceGenerallist);
+			map.put("quotationNo", contractItems.get(0).getTemplateId());
+			quoTemplete=priceGeneralQuotationRepository.query(map);
+			if(quoTemplete != null){
+				mapCusPrice.put(customerId, quoTemplete);//加入缓存
 			}
 		}else{
-			priceGenerallist=mapCusPrice.get(entity.getCustomerid());
+			quoTemplete=mapCusPrice.get(entity.getCustomerid());
 		}
-		if(priceGenerallist==null||priceGenerallist.size()==0){
+		if(quoTemplete==null){
 			XxlJobLogger.log("报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -358,19 +339,43 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 			feesList.add(storageFeeEntity);
 			return false;
 		}
-	    priceType=priceGenerallist.get(0).getPriceType();
-		List<PriceStepQuotationEntity> priceStepList=null;
+		PriceGeneralQuotationEntity priceGeneral=quoTemplete;
+	    priceType=priceGeneral.getPriceType();
+		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
+		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
 		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
 			//寻找阶梯报价
 			if(!mapCusStepPrice.containsKey(customerId)){
 				map.clear();
-				map.put("quotationId", priceGenerallist.get(0).getId());
-				priceStepList=repository.queryPriceStepByQuatationId(map);
-				mapCusStepPrice.put(customerId,priceStepList);
+				map.put("quotationId", priceGeneral.getId());
+				//根据报价单位判断
+				if("ITEMS".equals(priceGeneral.getFeeUnitCode())){//按件
+					map.put("num", entity.getAqty());	
+				}else if("KILOGRAM".equals(priceGeneral.getFeeUnitCode())){//按重量
+					map.put("num", entity.getWeight()*entity.getAqty());
+				}
+						
+				//查询出的所有子报价
+				list=repository.queryPriceStepByQuatationId(map);
+				
+				if(list==null || list.size() == 0){
+					XxlJobLogger.log("阶梯报价未配置");
+					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					entity.setRemark("阶梯报价未配置");
+					feesList.add(storageFeeEntity);
+					return  false;
+				}
+				
+				//封装数据的仓库和温度
+				map.clear();
+				map.put("warehouse_code", entity.getWarehouseCode());
+				price=storageQuoteFilterService.quoteFilter(list, map);
+				mapCusStepPrice.put(customerId,price);
 			}else{
-				priceStepList=mapCusStepPrice.get(customerId);
+				price=mapCusStepPrice.get(customerId);
 			}
-			if(priceStepList==null||priceStepList.size()==0){
+			if(price==null){
 				XxlJobLogger.log("阶梯报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -384,23 +389,22 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 			XxlJobLogger.log("报价类型未知");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价【"+priceGenerallist.get(0).getQuotationNo()+"】类型未知");
+			entity.setRemark("报价【"+priceGeneral.getQuotationNo()+"】类型未知");
 			feesList.add(storageFeeEntity);
 			return  false;
 		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("验证报价耗时：【{0}】毫秒  ",(current - start));
-		start = System.currentTimeMillis();// 系统开始时间
-		/*查找商家 规则*/
+		/*start = System.currentTimeMillis();// 系统开始时间
+		查找商家 规则
 		map.clear();
 		BillRuleReceiveEntity ruleEntity=null;
 		if(mapRule.containsKey(customerId)){
 			ruleEntity=mapRule.get(customerId);
 		}else{
-			map.put("customerid",customerId);
-			map.put("subjectId", SubjectId);
+			map.put("quotationNo",priceGenerallist.get(0).getRuleNo());
 		    ruleEntity=receiveRuleRepository.queryByCustomerId(map);
-		    mapRule.put(entity.getCustomerid(), ruleEntity);
+		    mapRule.put(customerId, ruleEntity);
 		}
 		if(ruleEntity == null){
 			XxlJobLogger.log("规则未配置");
@@ -411,7 +415,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 			return  false;
 		}
 		current = System.currentTimeMillis();
-		XxlJobLogger.log("验证规则耗时：【{0}】毫秒  ",(current - start));
+		XxlJobLogger.log("验证规则耗时：【{0}】毫秒  ",(current - start));*/
 		return true;
 	}
 

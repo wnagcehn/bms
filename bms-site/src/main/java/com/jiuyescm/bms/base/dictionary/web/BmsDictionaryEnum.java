@@ -338,4 +338,12 @@ public class BmsDictionaryEnum {
 		return map;
 	}
 	
+	
+	@DataProvider
+	public Map<String,String> getValue(){
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("0", "是");
+		mapValue.put("1", "否");
+		return mapValue;
+	}
 }

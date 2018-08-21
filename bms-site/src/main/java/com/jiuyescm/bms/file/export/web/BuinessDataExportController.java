@@ -1248,10 +1248,11 @@ public class BuinessDataExportController extends BaseController {
 				// 添加合计
 				dataAbnormalList.addAll(getAbnormalSumItem());
 			}
-
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, "理赔", abnormalLineNo, headAbnormalList, dataAbnormalList);
-			if (null != abnormalList && abnormalList.getList().size() > 0) {
-				abnormalLineNo += abnormalList.getList().size();
+			if (!(pageNo == 1 && (abnormalList == null || abnormalList.getList().size() <= 0))) {
+				poiUtil.exportExcel2FilePath(poiUtil, workbook, "理赔", abnormalLineNo, headAbnormalList, dataAbnormalList);
+				if (null != abnormalList && abnormalList.getList().size() > 0) {
+					abnormalLineNo += abnormalList.getList().size();
+				}
 			}
 		}
 	}
@@ -1407,11 +1408,12 @@ public class BuinessDataExportController extends BaseController {
 				// 添加合计
 				dataAbnormalChangeList.addAll(getAbnormalChangeSumItem());
 			}
-
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, "改地址和退件费", abnormalLineNo, headAbnormalChangeList,
-					dataAbnormalChangeList);
-			if (null != abnormalList && abnormalList.getList().size() > 0) {
-				abnormalLineNo += abnormalList.getList().size();
+			if (!(pageNo == 1 && (abnormalList == null || abnormalList.getList().size() <= 0))) {
+				poiUtil.exportExcel2FilePath(poiUtil, workbook, "改地址和退件费", abnormalLineNo, headAbnormalChangeList,
+						dataAbnormalChangeList);
+				if (null != abnormalList && abnormalList.getList().size() > 0) {
+					abnormalLineNo += abnormalList.getList().size();
+				}
 			}
 		}
 	}
