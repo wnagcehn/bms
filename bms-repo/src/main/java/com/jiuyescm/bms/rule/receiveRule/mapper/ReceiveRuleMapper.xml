@@ -69,6 +69,9 @@
 		<if test="(isDefault !=null and isDefault!='')">
 			    and a.is_default=#{isDefault}
 		</if>
+		<if test="(ruleType != null and ruleType !='')" >
+				and rule_type = #{ruleType}
+		</if>
 		and a.del_flag = '0' and a.visible='0'
     </sql>
 	

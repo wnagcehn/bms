@@ -140,9 +140,11 @@
       </PropertyDef>
       <PropertyDef name="numLower">
         <Property name="label">下限</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="numUpper">
         <Property name="label">上限</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
         <Property name="label">单价</Property>
@@ -1119,7 +1121,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="feeUnitCode">
           <Property name="property">feeUnitCode</Property>
-          <Property name="width">90</Property>
+          <Property name="width">70</Property>
           <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
@@ -1130,11 +1132,11 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="unitPrice">
           <Property name="property">unitPrice</Property>
-          <Property name="width">90</Property>
+          <Property name="width">70</Property>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
-          <Property name="width">90</Property>
+          <Property name="width">160</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
@@ -1590,54 +1592,70 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
             <RowNumColumn/>
             <DataColumn name="warehouseCode">
               <Property name="property">warehouseCode</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="temperatureTypeCode">
               <Property name="property">temperatureTypeCode</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="quotationId">
               <Property name="property">quotationId</Property>
               <Property name="visible">false</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="numLower">
               <Property name="property">numLower</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="numUpper">
               <Property name="property">numUpper</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="unitPrice">
               <Property name="property">unitPrice</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="firstNum">
               <Property name="property">firstNum</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="firstPrice">
               <Property name="property">firstPrice</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="continuedItem">
               <Property name="property">continuedItem</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="continuedPrice">
               <Property name="property">continuedPrice</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="remark">
               <Property name="property">remark</Property>
+              <Property name="width">100</Property>
             </DataColumn>
             <DataColumn>
               <Property name="name">capPrice</Property>
               <Property name="property">capPrice</Property>
+              <Property name="width">80</Property>
               <Editor/>
             </DataColumn>
             <DataColumn name="creator">
               <Property name="property">creator</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="createTime">
               <Property name="property">createTime</Property>
+              <Property name="width">130</Property>
             </DataColumn>
             <DataColumn name="lastModifier">
               <Property name="property">lastModifier</Property>
+              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="lastModifyTime">
               <Property name="property">lastModifyTime</Property>
+              <Property name="width">130</Property>
             </DataColumn>
           </DataGrid>
           <Dialog id="addStepDialog">
@@ -1651,13 +1669,16 @@ if(&quot;wh_b2c_work&quot;==subjectId){&#xD;
 &#xD;
 var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
 &#xD;
-if(isNullOrEmpty(entity.get(&quot;numLower&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;下限不能为空&quot;);&#xD;
+//获取下限&#xD;
+var numLower = entity.get(&quot;numLower&quot;);&#xD;
+if(numLower == null || numLower == undefined){&#xD;
+	dorado.MessageBox.alert(&quot;下限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
-if(isNullOrEmpty(entity.get(&quot;numUpper&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;上限不能为空&quot;);&#xD;
+//获取上限&#xD;
+var numUpper = entity.get(&quot;numUpper&quot;);&#xD;
+if(numUpper == null || numUpper == undefined){&#xD;
+	dorado.MessageBox.alert(&quot;上限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
@@ -1795,13 +1816,16 @@ view.id(&quot;ladderInsertAction&quot;).execute(&#xD;
 &#xD;
 var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
 &#xD;
-if(isNullOrEmpty(entity.get(&quot;numLower&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;下限不能为空&quot;);&#xD;
+//获取下限&#xD;
+var numLower = entity.get(&quot;numLower&quot;);&#xD;
+if(numLower == null || numLower == undefined){&#xD;
+	dorado.MessageBox.alert(&quot;下限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
-if(isNullOrEmpty(entity.get(&quot;numUpper&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;上限不能为空&quot;);&#xD;
+//获取上限&#xD;
+var numUpper = entity.get(&quot;numUpper&quot;);&#xD;
+if(numUpper == null || numUpper == undefined){&#xD;
+	dorado.MessageBox.alert(&quot;上限不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;

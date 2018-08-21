@@ -6,7 +6,6 @@
 	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
 	    <result column="quotation_id" property="quotationId" jdbcType="VARCHAR" />
-	    <result column="contract_code" property="contractCode" jdbcType="VARCHAR" />
 	    <result column="startDate" property="startDate" jdbcType="TIMESTAMP" />
 	    <result column="expireDate" property="expireDate" jdbcType="TIMESTAMP" />
 	    <result column="weight_lower" property="weightLower" jdbcType="DECIMAL" />
@@ -38,7 +37,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, warehouse_code, quotation_id, contract_code, startDate, expireDate, weight_lower, weight_upper, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, user_define3, user_define4, user_define5, first_num, first_price, continued_price, cap_price
+        id, warehouse_code, quotation_id, startDate, expireDate, weight_lower, weight_upper, temperature_type_code, unit_price, continued_item, remark, creator, create_time, last_modifier, last_modify_time, del_flag, num_upper, num_lower, sku_upper, sku_lower, volume_upper, volume_lower, user_define1, user_define2, user_define3, user_define4, user_define5, first_num, first_price, continued_price, cap_price
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -124,18 +123,22 @@
     </insert>
 
     <update id="update" parameterType="com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity">
-         update price_storage_step 
+        update price_storage_step 
 		<set >
-			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			warehouse_code=#{warehouseCode,jdbcType=VARCHAR},
+			temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},
+			unit_price=#{unitPrice,jdbcType=DECIMAL},
+			first_num=#{firstNum,jdbcType=DECIMAL},
+			first_price=#{firstPrice,jdbcType=DECIMAL},
+			continued_item=#{continuedItem,jdbcType=DECIMAL},
+			continued_price=#{continuedPrice,jdbcType=DECIMAL},
+			cap_price=#{capPrice,jdbcType=DECIMAL},
+			remark=#{remark,jdbcType=VARCHAR},
 			<if test="quotationId != null" >quotation_id=#{quotationId,jdbcType=VARCHAR},</if>
 			<if test="startDate != null" >startDate=#{startDate,jdbcType=TIMESTAMP},</if>
 			<if test="expireDate != null" >expireDate=#{expireDate,jdbcType=TIMESTAMP},</if>
 			<if test="weightLower != null" >weight_lower=#{weightLower,jdbcType=DECIMAL},</if>
-			<if test="weightUpper != null" >weight_upper=#{weightUpper,jdbcType=DECIMAL},</if>
-			<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
-			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
-			<if test="continuedItem != null" >continued_item=#{continuedItem,jdbcType=DECIMAL},</if>
-			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="weightUpper != null" >weight_upper=#{weightUpper,jdbcType=DECIMAL},</if>			
 			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
 			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
@@ -152,10 +155,6 @@
 			<if test="userDefine3 != null" >user_define3=#{userDefine3,jdbcType=VARCHAR},</if>
 			<if test="userDefine4 != null" >user_define4=#{userDefine4,jdbcType=VARCHAR},</if>
 			<if test="userDefine5 != null" >user_define5=#{userDefine5,jdbcType=VARCHAR},</if>
-			<if test="firstNum != null" >first_num=#{firstNum,jdbcType=DECIMAL},</if>
-			<if test="firstPrice != null" >first_price=#{firstPrice,jdbcType=DECIMAL},</if>
-			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
-			<if test="capPrice != null" >cap_price=#{capPrice,jdbcType=DECIMAL},</if>
 		</set>
         where id=#{id}
     </update>

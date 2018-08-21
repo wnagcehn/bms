@@ -93,4 +93,10 @@ public class ReceiveRuleRepositoryImp extends MyBatisDao implements IReceiveRule
 		// TODO Auto-generated method stub
 		return (BillRuleReceiveEntity) super.selectOne("com.jiuyescm.bms.rule.receiveRule.mapper.ReceiveRuleMapper.queryRuleByPriceType", parameter);
 	}
+
+	@Override
+	public List<BillRuleReceiveEntity> queryAll(Map<String, Object> parameter) {
+		List<BillRuleReceiveEntity> list=selectList("com.jiuyescm.bms.rule.receiveRule.mapper.ReceiveRuleMapper.queryAll", parameter);
+		return list;
+	}
 }
