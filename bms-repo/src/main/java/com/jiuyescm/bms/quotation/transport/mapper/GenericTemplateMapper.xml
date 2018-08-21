@@ -113,7 +113,10 @@
     <select id="queryOne" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity">
         select
-        <include refid="baseColumns" />
+        id, template_code as templateCode, customerId, 
+        customerName, template_name as templateName, template_type as templateType,
+        biz_type_code as bizTypeCode, subject_id as subjectId, bill_way_code as billWayCode,
+        remark, param1, storage_template_type, quotation_no as quotationNo
         from price_general_template
         where 1=1 and del_flag='0'
 		<if test="(templateCode != null and templateCode !='')" >

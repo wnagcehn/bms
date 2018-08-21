@@ -1170,13 +1170,9 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
       <Tools/>
     </Dialog>
     <Container layout="hbox">
-      <Property name="contentOverflow">scroll</Property>
-      <Property name="contentOverflowX">scroll</Property>
-      <Property name="contentOverflowY">scroll</Property>
+      <Property name="width">100%</Property>
       <Container>
-        <Property name="contentOverflowY">scroll</Property>
-        <Property name="contentOverflow">scroll</Property>
-        <Property name="contentOverflowX">scroll</Property>
+        <Property name="width">58%</Property>
         <TabControl>
           <ControlTab>
             <Property name="caption">运单数据</Property>
@@ -1185,7 +1181,6 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
               <Property name="readOnly">true</Property>
               <Property name="selectionMode">multiRows</Property>
               <Property name="rowSelectionProperty">checked</Property>
-              <Property name="width">650</Property>
               <RowNumColumn/>
               <DataColumn name="customerName">
                 <Property name="property">customerName</Property>
@@ -1314,15 +1309,12 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
         </TabControl>
       </Container>
       <Container>
-        <Property name="contentOverflowY">scroll</Property>
-        <Property name="contentOverflowX">scroll</Property>
-        <Property name="contentOverflow">scroll</Property>
+        <Property name="width">42%</Property>
         <TabControl>
           <ControlTab>
             <Property name="caption">重量</Property>
             <DataGrid id="dataShowGrid2">
               <Property name="dataSet">dsBizDispatchBillEntity</Property>
-              <Property name="width">500</Property>
               <Property name="readOnly">true</Property>
               <DataColumn>
                 <Property name="name">systemWeight</Property>
@@ -1374,7 +1366,6 @@ arg.processDefault = true;&#xD;
           <ControlTab>
             <Property name="caption">订单状态</Property>
             <DataGrid id="dataShowGrid3">
-              <Property name="width">500</Property>
               <Property name="readOnly">true</Property>
               <Property name="dataSet">dsBizDispatchBillEntity</Property>
               <DataColumn name="orderStatus">
@@ -1396,7 +1387,6 @@ arg.processDefault = true;&#xD;
           <ControlTab>
             <Property name="caption">调整地址</Property>
             <DataGrid id="dataShowGrid4">
-              <Property name="width">500</Property>
               <Property name="readOnly">true</Property>
               <Property name="dataSet">dsBizDispatchBillEntity</Property>
               <DataColumn>
