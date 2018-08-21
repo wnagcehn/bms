@@ -152,10 +152,4 @@ public interface IPriceContractService {
 	 */
 	List<PriceContractInfoEntity> queryByCustomerIdAndBizType(Map<String, String> param);
 	
-	/**
-	 * 根据合同下费用科目的模板编码
-	 * @param param
-	 * @return
-	 */
-	ContractDetailEntity queryTempByContractCodeAndSubjectId(Map<String, String> param);
 }

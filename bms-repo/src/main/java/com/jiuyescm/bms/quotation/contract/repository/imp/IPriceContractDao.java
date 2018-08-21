@@ -157,5 +157,5 @@ public interface IPriceContractDao {
 	 * @param param
 	 * @return
 	 */
-	ContractDetailEntity queryTempByContractCodeAndSubjectId(Map<String, String> param);
+	PriceContractItemEntity queryTempByContractCodeAndSubjectId(Map<String, String> param);
 }

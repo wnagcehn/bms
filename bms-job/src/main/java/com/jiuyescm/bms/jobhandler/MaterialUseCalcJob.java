@@ -26,7 +26,6 @@ import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStandardReqVoService;
 import com.jiuyescm.bms.general.service.SequenceService;
-import com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
@@ -39,6 +38,7 @@ import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
 
@@ -193,7 +193,7 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 		entity.setCalculateTime(time);
 		Map<String,Object> map=new HashMap<String,Object>();
 		String customerId=entity.getCustomerId();
-		entity.setNum(entity.getAdjustNum()==null?entity.getNum():entity.getAdjustNum());
+		entity.setNum(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());
 		entity.setCalculateTime(time);
 		/*boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
 		if(isInsert){
@@ -297,7 +297,7 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 			Map<String, String> param = new HashMap<>();
 			param.put("contractCode", contractEntity.getContractCode());
 			param.put("subjectId",SubjectId);
-			ContractDetailEntity cdEntity = priceContractService.queryTempByContractCodeAndSubjectId(param);
+			PriceContractItemEntity cdEntity = priceContractService.queryTempByContractCodeAndSubjectId(param);
 			if (null != cdEntity) {
 				//根据模板编码查出报价中的规则编号
 				Map<String, Object> cond = new HashMap<>();
@@ -307,8 +307,8 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 				Map<String, Object> con = new HashMap<>();
 				con.put("quotationNo", gtmEntity.getQuotationNo());
 				ruleEntity = receiveRuleRepository.queryOne(con);
-			}
-		    mapRule.put(customerId, ruleEntity);
+				mapRule.put(customerId, ruleEntity);
+			}	    
 		}
 		
 		if(ruleEntity == null){

@@ -444,7 +444,9 @@
 		and a.contract_type_code='CUSTOMER_CONTRACT' and b.del_flag=0;
     </select>
     
-    <select id="queryTempByContractCodeAndSubjectId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity">
-    	select * from price_contract_item WHERE subject_id=#{subjectId} and contract_code=#{contractCode}
+    <select id="queryTempByContractCodeAndSubjectId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">
+    	select id, contract_code as contractCode, biz_type_code as bizTypeCode, subject_id as subjectId, 
+    	template_id as templateId, creator, create_time as createTime, last_modifier as lastModifier, last_modify_time as lastModifyTime, del_flag as delFlag
+		from price_contract_item WHERE subject_id=#{subjectId} and contract_code=#{contractCode} and del_flag='0'
     </select>
 </mapper>
