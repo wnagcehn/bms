@@ -38,6 +38,7 @@ import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
 
@@ -192,7 +193,7 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 		entity.setCalculateTime(time);
 		Map<String,Object> map=new HashMap<String,Object>();
 		String customerId=entity.getCustomerId();
-		entity.setNum(entity.getAdjustNum()==null?entity.getNum():entity.getAdjustNum());
+		entity.setNum(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());
 		entity.setCalculateTime(time);
 		/*boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
 		if(isInsert){
