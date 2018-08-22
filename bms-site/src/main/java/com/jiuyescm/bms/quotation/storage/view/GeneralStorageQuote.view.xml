@@ -1113,6 +1113,7 @@ with (view.get(&quot;#dsStepList&quot;)){&#xD;
           <Property name="property">templateType</Property>
           <Property name="name">templateType</Property>
           <Property name="width">90</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">subjectName</Property>

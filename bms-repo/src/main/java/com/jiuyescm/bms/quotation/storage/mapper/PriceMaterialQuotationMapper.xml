@@ -89,6 +89,9 @@
 		<if test="(templateId != null and templateId !='')" >
 				and template_id = #{templateId}
 		</if>
+		<if test="(id != null and id !='')" >
+				and id != #{id}
+		</if>
 		order by id
     </select>
     
