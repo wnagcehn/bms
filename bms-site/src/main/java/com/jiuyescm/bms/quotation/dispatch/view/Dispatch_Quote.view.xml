@@ -1810,6 +1810,8 @@ var temperatureTypeCode = entity.get(&quot;temperatureTypeCode&quot;);&#xD;
 var productCase = entity.get(&quot;productCase&quot;);&#xD;
 var areaTypeCode = entity.get(&quot;areaTypeCode&quot;);&#xD;
 var deliverid = entity.get(&quot;deliverid&quot;);&#xD;
+&#xD;
+/**&#xD;
 if (&quot;GENERAL&quot; == priceType) {// 常规&#xD;
 	if (!isNullOrEmpty(timeliness) ||&#xD;
 			!isNullOrEmpty(temperatureTypeCode) ||&#xD;
@@ -1820,10 +1822,6 @@ if (&quot;GENERAL&quot; == priceType) {// 常规&#xD;
 		return;&#xD;
 	}&#xD;
 }else if(&quot;PRODUCT_CASE&quot; == priceType){// 特殊商品&#xD;
-	/*if (isNullOrEmpty(productCase)) {&#xD;
-		dorado.MessageBox.alert(&quot;特殊计费商品不能为空!&quot;);&#xD;
-		return;&#xD;
-	}*/&#xD;
 	if (!isNullOrEmpty(timeliness) ||&#xD;
 			!isNullOrEmpty(temperatureTypeCode) ||&#xD;
 			!isNullOrEmpty(areaTypeCode) ||&#xD;
@@ -1832,10 +1830,6 @@ if (&quot;GENERAL&quot; == priceType) {// 常规&#xD;
 		return;&#xD;
 	}&#xD;
 }else if(&quot;TEMPERATURE_CASE&quot; == priceType){// 温度&#xD;
-	/*if (isNullOrEmpty(temperatureTypeCode)) {&#xD;
-		dorado.MessageBox.alert(&quot;温度类型不能为空!&quot;);&#xD;
-		return;&#xD;
-	}*/&#xD;
 	if (!isNullOrEmpty(timeliness) ||&#xD;
 			!isNullOrEmpty(productCase) ||&#xD;
 			!isNullOrEmpty(areaTypeCode) ||&#xD;
@@ -1843,6 +1837,11 @@ if (&quot;GENERAL&quot; == priceType) {// 常规&#xD;
 		dorado.MessageBox.alert(&quot;时效、地域类型、特殊计费商品、特殊宅配商(全称)不能存在!&quot;);&#xD;
 		return;&#xD;
 	}&#xD;
+}&#xD;
+**/&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;servicename&quot;))){&#xD;
+	entity.set(&quot;serviceTypeCode&quot;, &quot;&quot;);&#xD;
 }&#xD;
 &#xD;
 view.id(&quot;updateAction&quot;).execute(function(result){&#xD;
@@ -1965,6 +1964,7 @@ view.id(&quot;updateAction&quot;).execute(function(result){&#xD;
             <Property name="trigger">triggerServiceType</Property>
             <Property name="editorWidth">170</Property>
             <Property name="width">270</Property>
+            <Property name="editable">true</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">

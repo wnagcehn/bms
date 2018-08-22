@@ -142,7 +142,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 				parameter.put("templateId", entity.getTemplateId());
 				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
 				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
-					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode())) {
+					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode()) && StringUtils.isBlank(priceMaterialQuotationEntity.getWarehouseId())) {
 						return " 未填写仓库的耗材不允许重复录入!";
 					}
 				}
@@ -201,9 +201,10 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			if (StringUtils.isEmpty(entity.getWarehouseId())) {
 				Map<String, Object> parameter = new HashMap<>();
 				parameter.put("templateId", entity.getTemplateId());
+				parameter.put("id", entity.getId());
 				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
 				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
-					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode())) {
+					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode()) && StringUtils.isBlank(priceMaterialQuotationEntity.getWarehouseId())) {
 						return "未填写仓库的耗材不允许重复录入!";
 					}
 				}
