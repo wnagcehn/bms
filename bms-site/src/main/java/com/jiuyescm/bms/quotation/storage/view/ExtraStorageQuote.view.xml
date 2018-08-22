@@ -100,6 +100,7 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
         </Property>
+        <Property name="defaultValue">C</Property>
       </PropertyDef>
       <PropertyDef name="param1">
         <Property></Property>
@@ -504,6 +505,7 @@ with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
           <Property name="property">templateType</Property>
           <Property name="name">templateType</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
           <Property name="name">storageTemplateType</Property>
@@ -571,7 +573,8 @@ with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
             <AutoFormElement>
               <Property name="name">templateType</Property>
               <Property name="property">templateType</Property>
-              <Property name="editable">false</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
@@ -672,6 +675,8 @@ view.get(&quot;#dsStorageExtraType.data&quot;).clear();&#xD;
           <AutoFormElement>
             <Property name="name">templateType</Property>
             <Property name="property">templateType</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
