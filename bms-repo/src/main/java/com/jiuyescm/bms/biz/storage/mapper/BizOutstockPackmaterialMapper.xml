@@ -194,19 +194,8 @@
 	
     <select id="queryPriceGroupCount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-        SELECT
-	b.*, m.unit_price AS unitPrice
-FROM
-	(
-		SELECT
-			customer_id,
-			warehouse_code,
-			consumer_material_code,
-			SUM(num) AS num
-		FROM
-			biz_outstock_packmaterial
-		WHERE
-			del_flag = '0'
+        select customer_name,warehouse_name,consumer_material_code,is_calculated,count(0) as num  FROM biz_outstock_packmaterial
+		where 1=1
 		 <if test="(feesNo != null and feesNo !='')" >
 			and fees_no = #{feesNo,jdbcType=VARCHAR}
 		</if>
@@ -234,18 +223,7 @@ FROM
 		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
 			and consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
 		</if>
-		GROUP BY
-			customer_id,
-			warehouse_code,
-			consumer_material_code
-	) b
-LEFT JOIN price_general_template p ON p.customerId = b.customer_id
-AND p.del_flag = '0'
-AND p.storage_template_type = 'STORAGE_MATERIAL_PRICE_TEMPLATE'
-LEFT JOIN price_storage_material m ON CONCAT(p.id,'') = m.template_id
-AND m.material_code = b.consumer_material_code
-AND m.warehouse_id = b.warehouse_code
-AND m.del_flag = '0'
+		GROUP BY customer_name,warehouse_name,consumer_material_code,is_calculated
 	</select>
 	
 	
