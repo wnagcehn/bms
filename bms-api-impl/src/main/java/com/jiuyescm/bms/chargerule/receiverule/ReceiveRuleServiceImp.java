@@ -79,4 +79,10 @@ public class ReceiveRuleServiceImp implements IReceiveRuleService{
 		return receiveRuleRepository.queryRuleByPriceType(parameter);
 	}
 
+	@Override
+	public BillRuleReceiveEntity queryRule(Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return receiveRuleRepository.queryRule(parameter);
+	}
+
 }

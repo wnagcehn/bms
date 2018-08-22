@@ -211,9 +211,8 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 						
 			//------------------查询规则
 			conditionMap.clear();
-			conditionMap.put("customerid",entity.getCustomerid());
 			conditionMap.put("subjectId", subjectId);
-			ruleEntity=receiveRuleService.queryByCustomerId(conditionMap);
+			ruleEntity=receiveRuleService.queryRule(conditionMap);
 			if(ruleEntity == null){
 				entity.setRemark("规则未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
