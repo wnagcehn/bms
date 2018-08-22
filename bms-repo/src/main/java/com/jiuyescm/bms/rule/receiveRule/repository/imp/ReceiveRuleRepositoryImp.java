@@ -96,7 +96,7 @@ public class ReceiveRuleRepositoryImp extends MyBatisDao implements IReceiveRule
 
 	@Override
 	public List<BillRuleReceiveEntity> queryAll(Map<String, Object> parameter) {
-		List<BillRuleReceiveEntity> list=selectList("com.jiuyescm.bms.rule.receiveRule.mapper.ReceiveRuleMapper.queryAll", parameter);
+		List<BillRuleReceiveEntity> list=selectList("com.jiuyescm.bms.rule.receiveRule.mapper.ReceiveRuleMapper.queryAllRule", parameter);
 		return list;
 	}
 
