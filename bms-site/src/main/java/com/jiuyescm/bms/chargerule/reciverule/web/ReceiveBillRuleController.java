@@ -103,7 +103,7 @@ public class ReceiveBillRuleController{
 //					String templateNo =sequenceService.getBillNoOne(BillRuleReceiveEntity.class.getName(), "YGR", "00000");
 //					temp.setQuotationNo(templateNo);
 					if(temp.getSubjectName()!=null){
-						temp.setSubjectId(temp.getSubjectName());
+						temp.setSubjectId(temp.getSubjectId());
 					}
 					temp.setDelFlag("0");
 					temp.setCreator(userid);
@@ -112,14 +112,15 @@ public class ReceiveBillRuleController{
 				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
 					//此为修改商家合同信息
 					//根据名字查出对应的id
-					Map<String, Object> param=new HashMap<>();
-					if(StringUtils.isNotBlank(temp.getSubjectId())){
-						param.put("codeName", temp.getSubjectId());
-						List<SystemCodeEntity> list=systemCodeService.queryCodeList(param);
-						if(list!=null && list.size()>0){
-							temp.setSubjectId(list.get(0).getCode());
-						}	
-					}	
+//					Map<String, Object> param=new HashMap<>();
+//					if(StringUtils.isNotBlank(temp.getSubjectId())){
+//						param.put("codeName", temp.getSubjectId());
+//						List<SystemCodeEntity> list=systemCodeService.queryCodeList(param);
+//						if(list!=null && list.size()>0){
+//							temp.setSubjectId(list.get(0).getCode());
+//						}	
+//					}	
+					temp.setSubjectId(temp.getSubjectId());
 					temp.setLastModifier(userid);
 					temp.setLastModifyTime(nowdate);
 					receiveRuleService.updateRule(temp);

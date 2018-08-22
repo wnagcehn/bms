@@ -86,6 +86,17 @@
         </Property>
         <Property name="defaultValue">1</Property>
       </PropertyDef>
+      <PropertyDef name="ruleType">
+        <Property name="label">规则类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="rule_bms">bms规则</Property>
+              <Property name="rule_contract">合同在线规则</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="bizTypeCode">
@@ -280,8 +291,8 @@ view.get(&quot;#dsSystemCodeEntity&quot;).set(&quot;parameter&quot;,parameter).f
 &#xD;
 </ClientEvent>
       <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBillRuleReceiveEntity&quot;).getData(&quot;#&quot;);&#xD;
-data.set(&quot;subjectName&quot;,arg.selectedValue.get(&quot;code&quot;));&#xD;
-data.set(&quot;subjectId&quot;,arg.selectedValue.get(&quot;codeName&quot;));&#xD;
+data.set(&quot;subjectId&quot;,arg.selectedValue.get(&quot;code&quot;));&#xD;
+data.set(&quot;subjectName&quot;,arg.selectedValue.get(&quot;codeName&quot;));&#xD;
 &#xD;
 arg.processDefault = false;&#xD;
 </ClientEvent>
@@ -421,9 +432,15 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
           <Property name="property">bizTypeCode</Property>
           <Property name="width">100</Property>
         </DataColumn>
-        <DataColumn name="subjectId">
-          <Property name="property">subjectId</Property>
+        <DataColumn>
+          <Property name="property">subjectName</Property>
           <Property name="width">100</Property>
+          <Property name="name">subjectName</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">ruleType</Property>
+          <Property name="width">100</Property>
+          <Property name="name">ruleType</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">quoModus</Property>
@@ -493,43 +510,65 @@ view.id(&quot;updateRuleAction&quot;).execute(&#xD;
             <Property name="name">quotationNo</Property>
             <Property name="property">quotationNo</Property>
             <Property name="editable">true</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">quotationName</Property>
             <Property name="property">quotationName</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">bizTypeCode</Property>
             <Property name="property">bizTypeCode</Property>
+            <Property name="labelWidth">85</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">subjectName</Property>
+            <Property name="property">subjectName</Property>
+            <Property name="trigger">ddropFormQueryMoban</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">subjectId</Property>
             <Property name="property">subjectId</Property>
-            <Property name="trigger">ddropFormQueryMoban</Property>
+            <Property name="labelWidth">85</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">quoModus</Property>
             <Property name="property">quoModus</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">sortNo</Property>
             <Property name="property">sortNo</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">visible</Property>
             <Property name="property">visible</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">isDefault</Property>
             <Property name="property">isDefault</Property>
             <Property name="editorWidth">150</Property>
+            <Property name="labelWidth">85</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">ruleType</Property>
+            <Property name="property">ruleType</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">

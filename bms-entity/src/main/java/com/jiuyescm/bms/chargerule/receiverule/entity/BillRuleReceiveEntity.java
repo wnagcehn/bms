@@ -55,6 +55,8 @@ public class BillRuleReceiveEntity extends Rule implements IEntity{
 	
 	//新增一属性只做记录，不添加到数据库中
 	private String subjectName;
+	
+	private String ruleType;
 	public BillRuleReceiveEntity() {
 
 	}
@@ -282,6 +284,14 @@ public class BillRuleReceiveEntity extends Rule implements IEntity{
 
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public String getRuleType() {
+		return ruleType;
+	}
+
+	public void setRuleType(String ruleType) {
+		this.ruleType = ruleType;
 	}
     
 }

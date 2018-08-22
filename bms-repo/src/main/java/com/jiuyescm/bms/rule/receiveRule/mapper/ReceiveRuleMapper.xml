@@ -22,7 +22,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, quotationNo, quotationName, biz_type_code, subject_id, remark,instruction, creator, create_time, last_modifier, last_modify_time, del_flag, rule, quo_modus, sort_no, visible, is_default  isDefault
+        id, quotationNo, quotationName, biz_type_code, subject_id, remark,instruction, creator, create_time, last_modifier, last_modify_time, del_flag, rule, quo_modus, sort_no, visible, is_default  isDefault, rule_type ruleType
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -70,7 +70,7 @@
 			    and a.is_default=#{isDefault}
 		</if>
 		<if test="(ruleType != null and ruleType !='')" >
-				and rule_type = #{ruleType}
+				and a.rule_type = #{ruleType}
 		</if>
 		and a.del_flag = '0' and a.visible='0'
     </sql>
@@ -87,8 +87,9 @@
     <!-- 查询计费规则 新-->
     <select id="queryAllRule" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        select a.id id, quotationNo, quotationName, biz_type_code, b.code_name subjectId,a.subject_id subjectName, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction ,quo_modus, a.sort_no sort_no, visible, is_default isDefault
-        from bill_rule_receive a LEFT JOIN system_code b ON a.subject_id=b.`code` and b.status='0' where 1=1 
+        select a.id id, a.quotationNo, a.quotationName, a.biz_type_code bizTypeCode, a.subject_id subjectId, b.subject_name subjectName, a.remark, a.creator, a.create_time, a.last_modifier, a.last_modify_time, a.del_flag, a.rule,a.instruction ,a.quo_modus, a.sort_no sort_no, a.visible, a.is_default isDefault, a.rule_type as ruleType
+		from bill_rule_receive a LEFT JOIN bms_subject_info b ON a.subject_id=b.subject_code and b.del_flag='0' and b.in_out_typecode='INPUT'
+		where 1=1 
 		<include refid="baseSelectColumns" />
 		order by a.sort_no desc,a.create_time desc
     </select>
@@ -113,7 +114,7 @@
 
 	<!-- 创建新的计费规则 -->
 	<insert id="saveRule" parameterType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity">
-        insert into bill_rule_receive(quotationNo, quotationName, biz_type_code, subject_id, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction, quo_modus, sort_no, visible, is_default)
+        insert into bill_rule_receive(quotationNo, quotationName, biz_type_code, subject_id, remark, creator, create_time, last_modifier, last_modify_time, del_flag, rule,instruction, quo_modus, sort_no, visible, is_default, rule_type)
         values (
 		#{quotationNo,jdbcType=VARCHAR}, 
 		#{quotationName,jdbcType=VARCHAR}, 
@@ -130,7 +131,8 @@
 		#{quoModus,jdbcType=VARCHAR},
 		#{sortNo,jdbcType=INTEGER}, 
 		#{visible,jdbcType=VARCHAR}, 
-		#{isDefault,jdbcType=VARCHAR}
+		#{isDefault,jdbcType=VARCHAR},
+		#{ruleType,jdbcType=VARCHAR}
         )
     </insert>
     
@@ -154,6 +156,7 @@
 		<if test="sortNo != null" >sort_no=#{sortNo,jdbcType=INTEGER},</if>
 		<if test="visible != null" >visible=#{visible,jdbcType=VARCHAR},</if>
 		<if test="isDefault != null" >is_default=#{isDefault,jdbcType=VARCHAR},</if>
+		<if test="ruleType != null" >rule_type=#{ruleType,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>
