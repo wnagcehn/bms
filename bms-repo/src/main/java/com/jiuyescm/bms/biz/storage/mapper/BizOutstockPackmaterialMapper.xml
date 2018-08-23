@@ -195,7 +195,7 @@
     <select id="queryPriceGroupCount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         select customer_name,warehouse_name,consumer_material_code,is_calculated,count(0) as num  FROM biz_outstock_packmaterial
-		where 1=1
+		where 1=1  and del_flag = '0'
 		 <if test="(feesNo != null and feesNo !='')" >
 			and fees_no = #{feesNo,jdbcType=VARCHAR}
 		</if>
