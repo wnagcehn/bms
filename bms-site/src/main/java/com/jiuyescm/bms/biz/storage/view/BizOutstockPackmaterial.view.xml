@@ -237,6 +237,88 @@
         </Property>
         <Property name="label">计算状态</Property>
       </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property/>
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="specDesc">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="costIsCalculated">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="costFeesNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="costRemark">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="rowExcelNo">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="rowExcelName">
+        <Property/>
+      </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskEntity">
       <Property name="creationType">com.jiuyescm.bms.base.file.entity.FileExportTaskEntity</Property>
@@ -1340,6 +1422,10 @@ view.get(&quot;#exportTemplateAction&quot;).set(&quot;parameter&quot;,condition)
                   <Property name="dataSet">dsMaterialPriceGroupCountList</Property>
                   <Property name="readOnly">true</Property>
                   <Property name="supportsPaging">false</Property>
+<<<<<<< HEAD
+=======
+                  <RowNumColumn/>
+>>>>>>> feature/v1.3.9
                   <DataColumn name="customerName">
                     <Property name="property">customerName</Property>
                   </DataColumn>
