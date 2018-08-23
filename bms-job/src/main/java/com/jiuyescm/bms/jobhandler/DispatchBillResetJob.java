@@ -97,7 +97,7 @@ public class DispatchBillResetJob extends IJobHandler{
 			entity.setExtattr4(updateEntity.getExtattr4());
 			entity.setExtattr5(updateEntity.getExtattr5());
 			entity.setExternalNo(updateEntity.getExternalNo());
-			entity.setFeesNo(updateEntity.getFeesNo());
+			entity.setFeesNo(entity.getFeesNo());
 			entity.setId(Long.valueOf(String.valueOf(updateEntity.getId())));
 			entity.setIsCalculated("0");
 			entity.setLastModifier(updateEntity.getLastModifier());
