@@ -58,6 +58,7 @@ import com.jiuyescm.bms.biz.storage.entity.ReturnData;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.common.entity.CalculateVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
+import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
@@ -1765,28 +1766,6 @@ public class BizOutstockPackmaterialController {
 	
 	private void appendSheet(POIUtil poiUtil, HSSFWorkbook hssfWorkbook,
 			String sheetName, String path, List<BizOutstockPackmaterialEntity> list) throws IOException {
-		
-		//start
-		Map<String, String> wareHouseMap = new HashMap<String, String>();
-		Map<String, String> customerMap = new HashMap<String, String>();
-		//仓库
-		List<WarehouseVo> wareHouseList = warehouseService.queryAllWarehouse();
-		if(wareHouseList != null && wareHouseList.size()>0){
-			for(WarehouseVo wareHouse : wareHouseList){
-				wareHouseMap.put(wareHouse.getWarehouseid(),wareHouse.getWarehousename());
-			}
-		}
-		//商家
-		PageInfo<CustomerVo> tmpPageInfo = customerService.query(null, 0, Integer.MAX_VALUE);
-		if (tmpPageInfo != null && tmpPageInfo.getList() != null && tmpPageInfo.getList().size()>0) {
-			for(CustomerVo customer : tmpPageInfo.getList()){
-				if(customer != null){
-					customerMap.put(customer.getCustomerid(),customer.getCustomername());
-				}
-			}
-		}
-		//end
-		
 		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
 		
@@ -1809,53 +1788,35 @@ public class BizOutstockPackmaterialController {
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "计算状态");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "isCalculated");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
         itemMap.put("title", "数量");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "num");
         headInfoList.add(itemMap);
         
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "单价");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "unitPrice");
-        headInfoList.add(itemMap);
+
 		
         List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
         Map<String, Object> dataItem = null;
         
-        for (BizOutstockPackmaterialEntity  entity: list) {
-        	
+        for (BizOutstockPackmaterialEntity  entity: list) {      	
         	dataItem = new HashMap<String, Object>();
-        	dataItem.put("customerName", customerMap.get(entity.getCustomerId()));
-        	dataItem.put("warehouseName", wareHouseMap.get(entity.getWarehouseCode()));
+        	dataItem.put("customerName", entity.getCustomerName());
+        	dataItem.put("warehouseName",entity.getWarehouseName());
         	dataItem.put("consumerMaterialCode", entity.getConsumerMaterialCode());
+        	dataItem.put("isCalculated", CalculateState.getMap().get(entity.getIsCalculated()));
         	dataItem.put("num", entity.getNum());
-        	dataItem.put("unitPrice", entity.getUnitPrice());
-        	
+        
         	dataList.add(dataItem);
         	
 		}
         
         poiUtil.exportExcelFilePath(poiUtil,hssfWorkbook,sheetName,path, headInfoList, dataList);
 	}
-	
-	public Map<String, String> getJyCustomer() {
-		PageInfo<CustomerVo> customerList=customerService.query(null, 0, Integer.MAX_VALUE);
-		List<CustomerVo> cList=customerList.getList();
-		Map<String, String> map = new LinkedHashMap<String,String>();
-		for (CustomerVo vo : cList) {
-			map.put(vo.getCustomerid(), vo.getCustomername());
-		}
-		return map;
-	}
-	
-	@DataProvider
-	public Map<String, String> getJyWarehouse() {
-		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
-		Map<String, String> map = new LinkedHashMap<String,String>();
-		for (WarehouseVo warehouseVo : warehouseVos) {
-			map.put(warehouseVo.getWarehouseid(), warehouseVo.getWarehousename());
-		}
-		return map;
-	}
+
 }
