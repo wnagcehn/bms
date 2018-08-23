@@ -1422,10 +1422,7 @@ view.get(&quot;#exportTemplateAction&quot;).set(&quot;parameter&quot;,condition)
                   <Property name="dataSet">dsMaterialPriceGroupCountList</Property>
                   <Property name="readOnly">true</Property>
                   <Property name="supportsPaging">false</Property>
-<<<<<<< HEAD
-=======
                   <RowNumColumn/>
->>>>>>> feature/v1.3.9
                   <DataColumn name="customerName">
                     <Property name="property">customerName</Property>
                   </DataColumn>
