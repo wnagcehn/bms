@@ -146,7 +146,7 @@
     <select id="getDispatchEntityByWaybillNo" parameterType="java.lang.String" resultMap="bizDispatchBillMap">
 		select
         carrier_id,adjust_weight,adjust_deliver_name,adjust_deliver_id, adjust_carrier_id, adjust_carrier_name,
-				adjust_province_id,adjust_city_id,adjust_district_id,order_status,origin_weight
+				adjust_province_id,adjust_city_id,adjust_district_id,order_status,origin_weight,fees_no
         from biz_dispatch_bill
         where waybill_no = #{waybillNo} and del_flag = 0
     </select>

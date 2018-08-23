@@ -228,9 +228,92 @@
       <PropertyDef name="num">
         <Property></Property>
         <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
         <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property/>
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="specDesc">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="costIsCalculated">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="costFeesNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="costRemark">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="rowExcelNo">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="rowExcelName">
+        <Property/>
       </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskEntity">
@@ -1336,28 +1419,21 @@ view.get(&quot;#exportTemplateAction&quot;).set(&quot;parameter&quot;,condition)
                   <Property name="readOnly">true</Property>
                   <Property name="supportsPaging">false</Property>
                   <RowNumColumn/>
-                  <DataColumn>
-                    <Property name="property">customerId</Property>
-                    <Property name="width">150</Property>
-                    <Property name="name">customerId</Property>
+                  <DataColumn name="customerName">
+                    <Property name="property">customerName</Property>
                   </DataColumn>
-                  <DataColumn>
-                    <Property name="property">warehouseCode</Property>
-                    <Property name="name">warehouseCode</Property>
+                  <DataColumn name="warehouseName">
+                    <Property name="property">warehouseName</Property>
                   </DataColumn>
                   <DataColumn>
                     <Property name="property">consumerMaterialCode</Property>
                     <Property name="name">consumerMaterialCode</Property>
                   </DataColumn>
-                  <DataColumn>
-                    <Property name="property">num</Property>
-                    <Property name="caption">数量</Property>
-                    <Property name="name">num</Property>
+                  <DataColumn name="isCalculated">
+                    <Property name="property">isCalculated</Property>
                   </DataColumn>
-                  <DataColumn>
-                    <Property name="name">unitPrice</Property>
-                    <Property name="property">unitPrice</Property>
-                    <Editor/>
+                  <DataColumn name="num">
+                    <Property name="property">num</Property>
                   </DataColumn>
                 </DataGrid>
               </Container>

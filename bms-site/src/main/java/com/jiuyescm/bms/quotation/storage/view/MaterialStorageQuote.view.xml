@@ -595,6 +595,7 @@ with (view.get(&quot;#dsStorageMaterialType&quot;)){&#xD;
           <Property name="property">templateType</Property>
           <Property name="name">templateType</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
           <Property name="name">storageTemplateType</Property>
@@ -682,8 +683,9 @@ view.get(&quot;#queryRuleAction&quot;).set(&quot;parameter&quot;,result).execute
             <AutoFormElement>
               <Property name="name">templateType</Property>
               <Property name="property">templateType</Property>
-              <Property name="editable">false</Property>
               <Property name="labelWidth">84</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="visible">false</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
@@ -805,6 +807,8 @@ view.get(&quot;#dsStorageMaterialType.data&quot;).clear();&#xD;
           <AutoFormElement>
             <Property name="name">templateType</Property>
             <Property name="property">templateType</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
