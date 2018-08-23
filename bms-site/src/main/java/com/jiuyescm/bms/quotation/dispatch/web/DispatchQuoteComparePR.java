@@ -218,6 +218,7 @@ public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDisp
 		try{
 			String path=getPath();
 			String templateName=parameter.get("templateName").toString();
+			//String carrierid=parameter.get("carrierid").toString();
 			HttpCommanExport commanExport=new HttpCommanExport(path);
 			ExportDataVoEntity voEntity=new ExportDataVoEntity();
 			voEntity.setTitleName(templateName);
