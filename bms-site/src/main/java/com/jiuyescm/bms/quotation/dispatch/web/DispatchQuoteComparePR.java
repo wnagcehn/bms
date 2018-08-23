@@ -263,7 +263,7 @@ public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDisp
 				map.put("firstWeightPrice", entity.getFirstWeightPrice());
 				map.put("continuedWeight", entity.getContinuedWeight());
 				map.put("continuedPrice", entity.getContinuedPrice());
-				map.put("timeliness", entity.getTimeliness());
+				map.put("servicename", entity.getServicename());
 				map.put("temperatureTypeCode", entity.getTemperatureTypeCode());
 				map.put("areaTypeCode", entity.getAreaTypeCode());
 				map.put("productCase", entity.getProductCase());
