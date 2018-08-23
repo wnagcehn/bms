@@ -248,6 +248,7 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getTemplateTypeMap&quot;).getResult()}</Property>
         </Property>
+        <Property name="defaultValue">C</Property>
       </PropertyDef>
       <PropertyDef name="param1">
         <Property></Property>
@@ -1160,6 +1161,7 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
           <Property name="property">templateType</Property>
           <Property name="name">templateType</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">deliver</Property>
@@ -1235,8 +1237,9 @@ view.id(&quot;mobanAddAction&quot;).execute(&#xD;
           <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">templateType</Property>
             <Property name="property">templateType</Property>
-            <Property name="editable">false</Property>
             <Property name="editorWidth">200</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:3">
@@ -1325,6 +1328,8 @@ view.id(&quot;mobanUpdateAction&quot;).execute(&#xD;
             <Property name="property">templateType</Property>
             <Property name="editable">false</Property>
             <Property name="editorWidth">200</Property>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:3">

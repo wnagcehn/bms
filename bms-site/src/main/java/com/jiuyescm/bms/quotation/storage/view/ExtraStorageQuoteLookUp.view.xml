@@ -376,6 +376,7 @@ with (view.get(&quot;#dsStorageExtraType&quot;)){&#xD;
           <Property name="property">templateType</Property>
           <Property name="name">templateType</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
           <Property name="name">storageTemplateType</Property>
