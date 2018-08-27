@@ -1,6 +1,7 @@
 
 package com.jiuyescm.bms.receivable.dispatch.service.imp;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,15 @@ public class BizDispatchBillServiceImpl extends MyBatisDao implements IBizDispat
 	@SuppressWarnings("unchecked")
 	public int updateBatch(List<BizDispatchBillEntity> list) {
 		return updateBatch("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.updatebizDispatchBillMap", list);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public int newUpdateBatch(List<BizDispatchBillEntity> list) {
+		// TODO Auto-generated method stub
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("list", list);                                                  
+		return update("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.newUpdatebizDispatchBillMap", map);
 	}
 
 	@Override
@@ -94,5 +104,7 @@ public class BizDispatchBillServiceImpl extends MyBatisDao implements IBizDispat
 		// TODO Auto-generated method stub
 		return this.update("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.updateByParam", condition);
 	}
+
+
 
 }
