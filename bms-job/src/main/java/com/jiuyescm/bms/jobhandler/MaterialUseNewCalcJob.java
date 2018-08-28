@@ -198,9 +198,8 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 		BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 		//获取合同在线查询条件
-		Map<String, Object> cond = feesCalcuService.ContractCalcuService(feeEntity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
-		ContractQuoteInfoVo vo = new ContractQuoteInfoVo();
-		ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(vo, cond);
+		Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+		ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
 		for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 			XxlJobLogger.log("报价信息 -- "+map);
 		}
