@@ -458,7 +458,7 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 		storageFeeEntity.setOrderNo(outstock.getOutstockNo());			//oms订单号
 		storageFeeEntity.setProductType("");							//商品类型
 		if(outstock.getTotalQuantity()!=null){
-			storageFeeEntity.setQuantity((new Double(outstock.getTotalQuantity())).intValue());//商品数量
+			storageFeeEntity.setQuantity(outstock.getTotalQuantity());//商品数量
 		}
 		
 		storageFeeEntity.setStatus("0");								//状态

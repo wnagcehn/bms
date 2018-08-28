@@ -345,7 +345,7 @@ public class InstockFeeCalcJob extends CommonCalcJob<BizInStockMasterEntity,Fees
 		
 		double num=DoubleUtil.isBlank(instock.getAdjustNum())?instock.getNum():instock.getAdjustNum();
 		if(!DoubleUtil.isBlank(num)){
-			storageFeeEntity.setQuantity(new Double(num).intValue());//商品数量
+			storageFeeEntity.setQuantity(num);//商品数量
 		}
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(instock.getCreateTime());

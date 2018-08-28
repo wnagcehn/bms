@@ -186,8 +186,7 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 	}
 
 	@Override
-	protected boolean validateData(BizOutstockPackmaterialEntity entity,
-			List<FeesReceiveStorageEntity> feesList) {
+	protected boolean validateData(BizOutstockPackmaterialEntity entity,List<FeesReceiveStorageEntity> feesList) {
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);
@@ -339,7 +338,7 @@ public class MaterialUseCalcJob  extends CommonCalcJob<BizOutstockPackmaterialEn
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setProductType("");							//商品类型
 		if(entity.getNum()!=null){
-			storageFeeEntity.setQuantity((new Double(entity.getNum())).intValue());//商品数量
+			storageFeeEntity.setQuantity(entity.getNum());//商品数量
 		}
 		storageFeeEntity.setStatus("0");								//状态
 		storageFeeEntity.setOrderNo(entity.getOutstockNo());

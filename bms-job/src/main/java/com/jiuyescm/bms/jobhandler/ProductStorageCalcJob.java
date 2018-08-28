@@ -115,9 +115,9 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 			//报价模板
 			PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);	
 			if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
-				storageFeeEntity.setQuantity((new Double(entity.getAqty())).intValue());
+				storageFeeEntity.setQuantity(entity.getAqty());
 			}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
-				storageFeeEntity.setQuantity((new Double(entity.getWeight()*entity.getAqty())).intValue());
+				storageFeeEntity.setQuantity(entity.getWeight()*entity.getAqty());
 			}
 
 			//计算方法
@@ -194,7 +194,7 @@ public class ProductStorageCalcJob extends CommonCalcJob<BizProductStorageEntity
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setProductType("");							//商品类型
 		if(entity.getAqty()!=null){
-			storageFeeEntity.setQuantity((new Double(entity.getAqty())).intValue());//商品数量
+			storageFeeEntity.setQuantity(entity.getAqty());//商品数量
 		}
 
 		storageFeeEntity.setStatus("0");								//状态

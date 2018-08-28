@@ -229,7 +229,7 @@ public class ProductPalletStorageCalcJob extends CommonCalcJob<BizProductPalletS
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setProductType("");							//商品类型
 		if(entity.getPalletNum()!=null){
-			storageFeeEntity.setQuantity((new Double(entity.getAdjustPalletNum()==null?entity.getPalletNum():entity.getAdjustPalletNum())).intValue());//商品数量
+			storageFeeEntity.setQuantity(entity.getAdjustPalletNum()==null?entity.getPalletNum():entity.getAdjustPalletNum());//商品数量
 		}
 		storageFeeEntity.setStatus("0");			
 		storageFeeEntity.setUnit("PALLETS");

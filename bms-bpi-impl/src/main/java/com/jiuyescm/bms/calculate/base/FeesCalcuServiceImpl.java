@@ -1,5 +1,8 @@
 package com.jiuyescm.bms.calculate.base;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
@@ -45,5 +48,33 @@ public class FeesCalcuServiceImpl implements IFeesCalcuService {
 			return new CalcuResultVo("succ","","计算成功",resultVo.getPrice(),resultVo.getQuoId(),resultVo.getMethod(),resultVo.getUnitPrice());
 		}
 	}
+
+	@Override
+	public Map<String, Object> ContractCalcuService(Object calcuObject,Object model,String rule,String ruleNo) {
+		
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("succ", "false");
+		try{
+			droolsCalcuServiceImpl.excute(rtnMap,calcuObject,model,rule,ruleNo);
+			rtnMap.put("succ", "true");
+		}
+		catch(Exception ex){
+			rtnMap.put("succ", "false");
+			logger.error("调用计费规则异常",ex);
+		}
+		return rtnMap;
+	}
+
+	@Override
+	public Map<String, Object> getContractCond(Object calcuObject,Object model, String rule, String ruleNo) {
+		String str = "calculate";
+		droolsCalcuServiceImpl.excute(str,calcuObject,model,rule,ruleNo);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> condMap = (Map<String, Object>)model;
+		logger.info(condMap);
+		return condMap;
+	}
+	
+	
 
 }

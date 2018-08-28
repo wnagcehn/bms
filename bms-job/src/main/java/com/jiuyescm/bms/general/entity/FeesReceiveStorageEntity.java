@@ -56,7 +56,7 @@ public class FeesReceiveStorageEntity implements IEntity {
 	// 外部商品编号
 	private String externalProductNo;
 	// 数量
-	private Integer quantity;
+	private Double quantity;
 	// 单位
 	private String unit;
 	// 重量
@@ -419,7 +419,7 @@ public class FeesReceiveStorageEntity implements IEntity {
 	/**
      * 数量
      */
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return this.quantity;
 	}
 
@@ -428,7 +428,7 @@ public class FeesReceiveStorageEntity implements IEntity {
      *
      * @param quantity
      */
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 	

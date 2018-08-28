@@ -67,6 +67,9 @@ public class JobParameterHandler {
 		        	cond.put("isCalculated", params[8].trim());//重算
 		        	XxlJobLogger.log("isCalculated-{0}",params[8].trim());
 		        }
+		        if(params.length>9){
+		        	cond.put("isCalcuContract", true);//重算
+		        } 
 			}
 			return cond;
 		}

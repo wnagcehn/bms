@@ -360,7 +360,7 @@ public class PackStorageCalcJob extends CommonCalcJob<BizPackStorageEntity,FeesR
 		
 		double num=DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum();
 		if(!DoubleUtil.isBlank(num)){
-			storageFeeEntity.setQuantity(new Double(num).intValue());//商品数量
+			storageFeeEntity.setQuantity(num);//商品数量
 		}
 		
 		storageFeeEntity.setStatus("0");		
