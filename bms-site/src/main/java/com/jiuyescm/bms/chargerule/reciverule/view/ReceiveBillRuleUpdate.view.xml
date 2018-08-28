@@ -11,10 +11,12 @@
       <PropertyDef name="quotationNo">
         <Property></Property>
         <Property name="label">规则编号</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="quotationName">
         <Property></Property>
         <Property name="label">规则名称</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="bizTypeCode">
         <Property></Property>
@@ -96,6 +98,8 @@
             </Entity>
           </Property>
         </Property>
+        <Property name="required">true</Property>
+        <Property name="defaultValue">rule_contract</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -118,6 +122,23 @@
       </PropertyDef>
       <PropertyDef name="subjectId">
         <Property name="label">费用科目：</Property>
+      </PropertyDef>
+      <PropertyDef name="ruleType">
+        <Property name="label">规则类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="rule_bms">bms规则</Property>
+              <Property name="rule_contract">合同在线规则</Property>
+            </Entity>
+          </Property>
+        </Property>
+        <Property name="defaultValue">rule_contract</Property>
+      </PropertyDef>
+      <PropertyDef name="quotationNo">
+        <Property></Property>
+        <Property name="label">规则编号</Property>
+        <Property name="required">false</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtSystemCodeEntity">
@@ -383,6 +404,11 @@ if(currentData){&#xD;
         <Property name="cols">*,*,*,*</Property>
         <Property name="dataType">dtCondition</Property>
         <AutoFormElement>
+          <Property name="name">quotationNo</Property>
+          <Property name="property">quotationNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
           <Property name="name">bizTypeCode</Property>
           <Property name="property">bizTypeCode</Property>
           <Editor/>
@@ -394,13 +420,8 @@ if(currentData){&#xD;
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">startTime</Property>
-          <Property name="property">startTime</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">endTime</Property>
-          <Property name="property">endTime</Property>
+          <Property name="name">ruleType</Property>
+          <Property name="property">ruleType</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -520,6 +541,13 @@ view.id(&quot;updateRuleAction&quot;).execute(&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">ruleType</Property>
+            <Property name="property">ruleType</Property>
+            <Property name="labelWidth">85</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="name">bizTypeCode</Property>
             <Property name="property">bizTypeCode</Property>
             <Property name="labelWidth">85</Property>
@@ -562,12 +590,6 @@ view.id(&quot;updateRuleAction&quot;).execute(&#xD;
             <Property name="name">isDefault</Property>
             <Property name="property">isDefault</Property>
             <Property name="editorWidth">150</Property>
-            <Property name="labelWidth">85</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">ruleType</Property>
-            <Property name="property">ruleType</Property>
             <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
