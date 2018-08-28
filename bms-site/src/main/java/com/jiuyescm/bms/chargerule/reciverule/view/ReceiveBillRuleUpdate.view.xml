@@ -470,12 +470,15 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
+          <Property name="width">200</Property>
         </DataColumn>
         <DataColumn name="sortNo">
           <Property name="property">sortNo</Property>
+          <Property name="width">80</Property>
         </DataColumn>
         <DataColumn name="isDefault">
           <Property name="property">isDefault</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
