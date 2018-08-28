@@ -118,7 +118,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	protected ContractQuoteInfoVo getContractForWhat(BizOutstockPackmaterialEntity entity) {
 		
 		
-		ContractQuoteQueryInfoVo queryVo1=new ContractQuoteQueryInfoVo();
+		/*ContractQuoteQueryInfoVo queryVo1=new ContractQuoteQueryInfoVo();
 		queryVo1.setBizTypeCode(ContractBizTypeEnum.DISTRIBUTION.getCode());
 		queryVo1.setCarrierId("1500000019");
 		queryVo1.setCurrentTime(Timestamp.valueOf("2018-08-28 00:00:00"));
@@ -129,11 +129,12 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		Map<String,Object> mapCondition=Maps.newHashMap();
 		mapCondition.put("e1", "北京01仓");
 		mapCondition.put("e2", "北京");
-		quoteInfoVo=contractQuoteInfoService.queryQuotes(quoteInfoVo, mapCondition);
+		quoteInfoVo=contractQuoteInfoService.queryQuotes(quoteInfoVo, mapCondition);*/
 		
 		
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerId());
+		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
 		queryVo.setWarehouseCode(entity.getWarehouseCode());

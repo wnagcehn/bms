@@ -26,6 +26,11 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	
 	protected ContractQuoteInfoVo contractQuoteInfoVo = null;
 
+	/**
+	 * 数据查询
+	 * @param map
+	 * @return
+	 */
 	protected abstract List<T> queryBillList(Map<String,Object> map);
 	
 	/**
