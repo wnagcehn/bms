@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +9,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Maps;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -20,6 +18,7 @@ import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
+import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
@@ -57,6 +56,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Autowired private IPriceMaterialQuotationRepository priceMaterialQuotationRepository;
 	@Autowired private IGenericTemplateRepository genericTemplateRepository;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
+	@Autowired private SequenceService sequenceService;
 	
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
@@ -64,7 +64,37 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	protected List<BizOutstockPackmaterialEntity> queryBillList(Map<String, Object> map) {
+		/*List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
+		return bizList;*/
+		
+		long operateTime = System.currentTimeMillis();
+		List<String> feesNos = new ArrayList<String>();
+		Map<String, Object> feesMap = new HashMap<String, Object>();
 		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
+		if(bizList == null || bizList.size() == 0){
+			
+		}
+		else{
+			for (BizOutstockPackmaterialEntity entity : bizList) {
+				if(StringUtils.isNotEmpty(entity.getFeesNo())){
+					feesNos.add(entity.getFeesNo());
+				}
+				else{
+					entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
+				}
+			}
+			try{
+				if(feesNos.size()>0){
+					feesMap.put("feesNos", feesNos);
+					feesReceiveStorageService.deleteBatch(feesMap);
+					long current = System.currentTimeMillis();// 系统开始时间
+					XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
+				}
+			}
+			catch(Exception ex){
+				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
+			}
+		}
 		return bizList;
 	}
 	
@@ -137,7 +167,6 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
-		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
@@ -152,71 +181,86 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Override
 	protected void calcuForBms(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
-		if(validateData(entity, feeEntity)){
-			if(mapCusPrice.containsKey(entity.getCustomerId())){
-				List<PriceMaterialQuotationEntity> list=mapCusPrice.get(entity.getCustomerId());
-				String id="";	
+		try{
+			if(validateData(entity, feeEntity)){
+				if(mapCusPrice.containsKey(entity.getCustomerId())){
+					List<PriceMaterialQuotationEntity> list=mapCusPrice.get(entity.getCustomerId());
+					String id="";	
 
-				if(StringUtils.isNotBlank(feeEntity.getWarehouseCode())){
-					for(PriceMaterialQuotationEntity vo:list){
-						if(feeEntity.getWarehouseCode().equals(vo.getWarehouseId())){				
-							feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
-							feeEntity.setUnitPrice(vo.getUnitPrice());
-							feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
-							id=vo.getId()+"";
-							break;
+					if(StringUtils.isNotBlank(feeEntity.getWarehouseCode())){
+						for(PriceMaterialQuotationEntity vo:list){
+							if(feeEntity.getWarehouseCode().equals(vo.getWarehouseId())){				
+								feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
+								feeEntity.setUnitPrice(vo.getUnitPrice());
+								feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
+								id=vo.getId()+"";
+								break;
+							}
 						}
 					}
-				}
-					
-				if(StringUtils.isBlank(id)){
-					for(PriceMaterialQuotationEntity vo:list){
-						if(StringUtils.isBlank(vo.getWarehouseId())){
-							feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
-							feeEntity.setUnitPrice(vo.getUnitPrice());
-							feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
-							id=vo.getId()+"";
+						
+					if(StringUtils.isBlank(id)){
+						for(PriceMaterialQuotationEntity vo:list){
+							if(StringUtils.isBlank(vo.getWarehouseId())){
+								feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
+								feeEntity.setUnitPrice(vo.getUnitPrice());
+								feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
+								id=vo.getId()+"";
+							}
 						}
 					}
-				}
-				feeEntity.setParam3(id);
-				if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
-					feeEntity.setIsCalculated(CalculateState.Finish.getCode());
-					entity.setIsCalculated(CalculateState.Finish.getCode());
-					XxlJobLogger.log("计算成功，费用【{0}】",feeEntity.getCost());
-				}else{
-					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					entity.setIsCalculated(CalculateState.Finish.getCode());
-					XxlJobLogger.log("计算不成功，费用【0】");
+					feeEntity.setParam3(id);
+					if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
+						feeEntity.setIsCalculated(CalculateState.Finish.getCode());
+						entity.setIsCalculated(CalculateState.Finish.getCode());
+						XxlJobLogger.log("计算成功，费用【{0}】",feeEntity.getCost());
+					}else{
+						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						entity.setIsCalculated(CalculateState.Finish.getCode());
+						XxlJobLogger.log("计算不成功，费用【0】");
+					}
 				}
 			}
+		}
+		catch(Exception ex){
+			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			XxlJobLogger.log("系统异常，费用【0】");
 		}
 	}
 	
 	@Override
 	protected void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
-		Map<String, Object> con = new HashMap<>();
-		con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
-		BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
-		//获取合同在线查询条件
-		Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
-		ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
-		for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
-			XxlJobLogger.log("报价信息 -- "+map);
-		}
-		//调用规则计算费用
-		Map<String, Object> feesMap = feesCalcuService.ContractCalcuService(feeEntity, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+		try{
+			Map<String, Object> con = new HashMap<>();
+			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
+			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
+			//获取合同在线查询条件
+			Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
+				XxlJobLogger.log("报价信息 -- "+map);
+			}
+			//调用规则计算费用
+			Map<String, Object> feesMap = feesCalcuService.ContractCalcuService(feeEntity, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 
-		if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
-			feeEntity.setIsCalculated(CalculateState.Finish.getCode());
-			entity.setIsCalculated(CalculateState.Finish.getCode());
-			XxlJobLogger.log("计算成功，费用【{0}】",feeEntity.getCost());
+			if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
+				feeEntity.setIsCalculated(CalculateState.Finish.getCode());
+				entity.setIsCalculated(CalculateState.Finish.getCode());
+				XxlJobLogger.log("计算成功，费用【{0}】",feeEntity.getCost());
+			}
+			else{
+				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				XxlJobLogger.log("计算不成功，费用【0】");
+			}
 		}
-		else{
-			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+		catch(Exception ex){
+			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			XxlJobLogger.log("计算不成功，费用【0】");
 		}
+		
 	}
 	
 	protected boolean validateData(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
