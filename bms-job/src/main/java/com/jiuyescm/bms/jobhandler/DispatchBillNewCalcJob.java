@@ -385,7 +385,7 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 	protected void saveBatchData(List<BizDispatchBillEntity> billList,List<FeesReceiveDispatchEntity> feesList) {
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
-		bizDispatchBillService.updateBatch(billList);
+		bizDispatchBillService.newUpdateBatch(billList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
@@ -422,14 +422,24 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		String subjectId=getSubjectId(getCarrierId(entity));
 		
 		XxlJobLogger.log("验证数据时物流商-- 【{0}】  ",entity.getChargeCarrierId());
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("验证物流商  耗时【{0}】毫秒 ",(current - start));	
 		
 		String customerId=entity.getCustomerid();
-		boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
+		/*boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
 		if(isInsert){
 			String feesNo =sequenceService.getBillNoOne(FeesReceiveDispatchEntity.class.getName(), "PSFY", "0000000000");
 			entity.setFeesNo(feesNo);
-		}
+		}*/
+		
+		start = System.currentTimeMillis();
+		
 		FeesReceiveDispatchEntity feeEntity = initfeeEntity(entity);
+		
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("初始化费用  耗时【{0}】毫秒 ",(current - start));	
+		
+		
 		feeEntity.setCalculateTime(time);
 		
 		if(StringUtils.isEmpty(subjectId)){
@@ -442,12 +452,17 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 		}
 		XxlJobLogger.log("费用科目编号:"+ subjectId);
 		
+		start = System.currentTimeMillis();// 操作开始时间
 		//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
 		double newThrowWeight=getNewThrowWeight(entity);
 		//将新泡重赋值
 		//entity.setThrowWeight(newThrowWeight);
 		entity.setCorrectThrowWeight(newThrowWeight);
 		
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("泡重获取  耗时【{0}】毫秒 ",(current - start));	
+		
+		start = System.currentTimeMillis();// 操作开始时间
 		//先进行判断是否是不计算的运单
 		//**********************************如果是不计算配送费用的宅配商,费用表照常写入，费用表中的计费重量置为空，实际重量为运单表中的但金额至0*****
 		boolean isExe = true; //默认计算
@@ -512,7 +527,10 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 				return false;
 			}
 		}
-				
+		
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("不计算判断  耗时【{0}】毫秒 ",(current - start));
+		
 		start = System.currentTimeMillis();// 操作开始时间
 		String provinceId="";
 		String cityId="";
@@ -823,13 +841,14 @@ public class DispatchBillNewCalcJob extends CommonCalcJob<BizDispatchBillEntity,
 	public double getNewThrowWeight(BizDispatchBillEntity entity){
 		double throwWeight=0d;
 		try{
+			//验证是否存在签约服务
 			Map<String,Object> condition=new HashMap<String,Object>();
 			condition.put("waybillNo", entity.getWaybillNo());
 			Double volumn=bizOutstockPackmaterialRepository.getMaxVolum(condition);
 			if(!DoubleUtil.isBlank(volumn)){
 				throwWeight=(double)volumn/6000;
 				throwWeight=(double)Math.round(throwWeight*100)/100;
-			}
+			}			
 		}catch(Exception ex){ 
 			XxlJobLogger.log("获取泡重失败:{1}",ex.getMessage());
 		}

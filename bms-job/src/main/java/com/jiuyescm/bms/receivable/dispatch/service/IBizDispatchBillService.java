@@ -38,6 +38,13 @@ public interface IBizDispatchBillService {
      * @return
      */
 	public int updateBatch(List<BizDispatchBillEntity> list);
+	
+	/**
+	 * 新更新
+	 * @param list
+	 * @return
+	 */
+	public int newUpdateBatch(List<BizDispatchBillEntity> list);
 
 	public Map<String, Object> InitReqVo(BizDispatchBillEntity entity,Map<String, String> param);
 	

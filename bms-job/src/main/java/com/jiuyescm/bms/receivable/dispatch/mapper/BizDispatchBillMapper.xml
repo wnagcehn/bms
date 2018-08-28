@@ -252,6 +252,65 @@
         where id=#{id}
     </update>
     
+    <update id="newUpdatebizDispatchBillMap" parameterType="java.util.Map"> 
+	    update biz_dispatch_bill
+	    <trim prefix="set" suffixOverrides=",">
+	        <trim prefix="fees_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.feesNo != null" >
+                      when id=#{biz.id} then #{biz.feesNo}
+                    </if>
+                </foreach>
+            </trim>
+    	    <trim prefix="is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.isCalculated != null" >
+                       when id=#{biz.id} then #{biz.isCalculated}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="remark =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.remark != null" >
+                      when id=#{biz.id} then #{biz.remark}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calculateTime != null" >
+                      when id=#{biz.id} then #{biz.calculateTime}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="origin_carrier_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.originCarrierName != null" >
+                      when id=#{biz.id} then #{biz.originCarrierName}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="origin_carrier_id =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.originCarrierId != null" >
+                      when id=#{biz.id} then #{biz.originCarrierId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="correct_throw_weight =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.correctThrowWeight != null" >
+                      when id=#{biz.id} then #{biz.correctThrowWeight}
+                    </if>
+                </foreach>
+            </trim>
+    	</trim>
+	    where id in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+            #{biz.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+    
     <select id="queryChangeCusList" resultType="String">
     	select customerid from bms_carrier_change_customer where 1=1
     </select>
