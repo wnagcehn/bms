@@ -1016,9 +1016,8 @@ if (data != null) {&#xD;
 var adjustWeight=entity.get(&quot;adjustWeight&quot;);&#xD;
 //alert(&quot;调整重量&quot;+adjustWeight);&#xD;
 &#xD;
-if(undefined==adjustWeight || adjustWeight==''){&#xD;
-	dorado.MessageBox.alert(&quot;请填写调整重量!&quot;);&#xD;
-	return;&#xD;
+if(undefined==adjustWeight || adjustWeight=='' || adjustWeight==null){&#xD;
+	entity.set(&quot;adjustWeight&quot;, 0);&#xD;
 }&#xD;
 &#xD;
 if (isNaN(adjustWeight)) {&#xD;
@@ -1128,7 +1127,7 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
             <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement id="adjustWeight">
             <Property name="property">adjustWeight</Property>
             <Property name="name">adjustWeight</Property>
             <Editor/>
