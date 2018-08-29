@@ -124,7 +124,6 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 			try{
 				List<F> feesList = new ArrayList<F>();
 				for (T t : listT) {
-					
 					btime= System.currentTimeMillis();// 操作开始时间
 					
 					F f = initFeeEntity(t); //初始化费用对象 获取计算参数，如：计费重量，计费数量，计费物流商等待
