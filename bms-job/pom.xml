@@ -43,9 +43,9 @@
 		</dependency>
 		
 		<dependency>
-		  <groupId>com.jiuyescm.contract</groupId>
-		  <artifactId>contract-api</artifactId>
-		  <version>0.0.1-SNAPSHOT</version>
+			<groupId>com.jiuyescm.contract</groupId>
+			<artifactId>contract-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
