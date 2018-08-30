@@ -113,7 +113,7 @@ public class InstockHandWorkFeeCalcJob extends CommonCalcJob<BizInstockHandworkE
 				PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);
                 // 如果计费单位是 件
 				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					amount=stepQuoEntity.getUnitPrice();
+					amount=num*stepQuoEntity.getUnitPrice();
 					storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 				}else{
 					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
