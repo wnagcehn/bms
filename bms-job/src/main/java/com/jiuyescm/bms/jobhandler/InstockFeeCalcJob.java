@@ -114,7 +114,7 @@ public class InstockFeeCalcJob extends CommonCalcJob<BizInStockMasterEntity,Fees
                 // 如果计费单位是 件
 				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 					storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-					amount=stepQuoEntity.getUnitPrice();
+					amount=num*stepQuoEntity.getUnitPrice();
 				}else{
 					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 				}
