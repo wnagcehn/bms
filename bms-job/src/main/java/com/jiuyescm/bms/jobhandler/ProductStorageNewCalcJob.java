@@ -3,6 +3,7 @@ package com.jiuyescm.bms.jobhandler;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStandardReqVoService;
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
+import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
@@ -64,6 +66,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	@Autowired private IBmsGroupService bmsGroupService;
 	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
+	@Autowired private ISystemCodeService systemCodeService;
 	
 	List<SystemCodeEntity> scList;
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
@@ -72,11 +75,29 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	List<String> cusList=null;
 	String priceType="";
+	List<SystemCodeEntity> systemCodeList=null;
+	Map<String, String> temMap=null;
 	
 	@Override
 	protected List<BizProductStorageEntity> queryBillList(Map<String, Object> map) {
 		List<BizProductStorageEntity> bizList = bizProductStorageService.query(map);
+		//有待计算的数据时初始化配置
+		if(bizList.size()>0){
+			initConf();
+		}
 		return bizList;	
+	}
+	
+	protected void initConf(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeCode", "NO_FEES_DELIVER");
+		List<SystemCodeEntity> systemCodeList = systemCodeService.querySysCodes(map);
+		temMap =new LinkedHashMap<String,String>();
+		if(systemCodeList!=null && systemCodeList.size()>0){
+			for(int i=0;i<systemCodeList.size();i++){
+				map.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
+			}
+		}
 	}
 	
 	@Override
@@ -109,6 +130,10 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 		storageFeeEntity.setFeesNo(entity.getFeesNo());		
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setDelFlag("0");
+		//转换温度
+		if(StringUtils.isNotBlank(entity.getTemperature())){
+			entity.setTemperature(temMap.get(entity.getTemperature()));
+		}
 		return storageFeeEntity;
 	}
 
@@ -242,17 +267,20 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 			if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
 				feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setIsCalculated(CalculateState.Finish.getCode());
+				entity.setRemark("计算成功");
 				XxlJobLogger.log("计算成功，费用【{0}】",feeEntity.getCost());
 			}
 			else{
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setRemark("计算不成功，费用【0】");
 				XxlJobLogger.log("计算不成功，费用【0】");
 			}
 		}
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			entity.setRemark("计算不成功，费用【0】");
 			XxlJobLogger.log("计算不成功，费用【0】");
 		}
 		

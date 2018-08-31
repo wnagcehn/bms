@@ -16,4 +16,9 @@ public class Utility {
    public static void helper(final KnowledgeHelper drools){
 	   logger.info(String.format("rule triggered: %s" , drools.getRule().getName()));
    }
+   
+   public static void print(String str){
+		System.out.println(str);
+   }
+   
 }
