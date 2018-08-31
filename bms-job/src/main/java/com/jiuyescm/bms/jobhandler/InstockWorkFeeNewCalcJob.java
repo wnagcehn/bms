@@ -191,11 +191,15 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	@Override
 	protected void calcuForContract(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
 		Map<String, Object> con = new HashMap<>();
+		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 		BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 		//获取合同在线查询条件
 		Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 		ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+//		if (null != rtnQuoteInfoVo.getQuoteMaps()) {
+//			list.add(rtnQuoteInfoVo.getQuoteMaps().get(0));
+//		}
 		for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 			XxlJobLogger.log("报价信息 -- "+map);
 		}

@@ -120,6 +120,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
+		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{

@@ -627,6 +627,8 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			newEntity.setTemplateName(entity.getTemplateName());
 			newEntity.setCustomerId(entity.getCustomerId());
 			newEntity.setCustomerName(entity.getCustomerName());
+			newEntity.setQuotationNo(entity.getQuotationNo());
+			//newEntity.setQuotationName(entity.getQuotationName());
 			newEntity.setTemplateType(entity.getTemplateType());
 			newEntity.setCreateTime(JAppContext.currentTimestamp());
 			newEntity.setCreator(JAppContext.currentUserName());
