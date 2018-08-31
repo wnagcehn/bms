@@ -49,14 +49,14 @@ public class FeesCalcuServiceImpl implements IFeesCalcuService {
 		}
 	}
 
-	@Override
+	@Override                                           
 	public Map<String, Object> ContractCalcuService(Object calcuObject,Object model,String rule,String ruleNo) {
 		
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
-		rtnMap.put("succ", "false");
-		try{
+		//rtnMap.put("succ", "false");
+		try{                                       
 			droolsCalcuServiceImpl.excute(rtnMap,calcuObject,model,rule,ruleNo);
-			rtnMap.put("succ", "true");
+			//rtnMap.put("succ", "true");
 		}
 		catch(Exception ex){
 			rtnMap.put("succ", "false");
