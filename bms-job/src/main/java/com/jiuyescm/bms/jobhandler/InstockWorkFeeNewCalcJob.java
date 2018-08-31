@@ -61,7 +61,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
 	String priceType="";
-	
+
 	// 查询业务数据
 	@Override
 	protected List<BizInStockMasterEntity> queryBillList(Map<String, Object> map) {
@@ -72,7 +72,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	// 初始化
 	@Override
 	protected FeesReceiveStorageEntity initFeeEntity(BizInStockMasterEntity instock) {
-		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
+		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		
 		double num=DoubleUtil.isBlank(instock.getAdjustNum())?instock.getNum():instock.getAdjustNum();
 		if(!DoubleUtil.isBlank(num)){
