@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.mapper.BizPackStorageTempMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizPackStorageTempEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+	    <result column="cur_time" property="curTime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="pallet_num" property="palletNum" jdbcType="DECIMAL" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+	    <result column="temperature_type_name" property="temperatureTypeName" jdbcType="VARCHAR" />
+	    <result column="adjust_pallet_num" property="adjustPalletNum" jdbcType="DECIMAL" />
+	    <result column="rowExcelNo" property="rowExcelNo" jdbcType="INTEGER" />
+	    <result column="rowExcelName" property="rowExcelName" jdbcType="VARCHAR" />
+    </resultMap>
+	  
+    <select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageTempEntity">
+        select cur_time, warehouse_name, customer_name, temperature_type_name,a.rowExcelNo,a.rowExcelName
+        from biz_pack_storage_temp
+        where 1=1
+		where a.task_id=#{taskId} and b.del_flag=0 limit #{errorCount}
+    </select>
+
+   
+
+    <insert id="save" parameterType="com.jiuyescm.bms.entity.entity.BizPackStorageTempEntity">
+        insert into biz_pack_storage_temp(task_id, cur_time, warehouse_code, warehouse_name, customerid, customer_name, pallet_num, creator, create_time, is_calculated,del_flag, write_time, temperature_type_code, temperature_type_name, adjust_pallet_num, rowExcelNo, rowExcelName)
+        values 
+         <foreach item="item" index="index" collection="list" separator=",">
+        	(
+			#{item.taskId}, 
+			#{item.curTime}, 
+			#{item.warehouseCode}, 
+			#{item.warehouseName}, 
+			#{item.customerid}, 
+			#{item.customerName}, 
+			#{item.palletNum}, 
+			#{item.creator}, 
+			#{item.createTime}, 
+			#{item.isCalculated}, 
+			#{item.delFlag}, 
+			#{item.writeTime}, 
+			#{item.temperatureTypeCode}, 
+			#{item.temperatureTypeName}, 
+			#{item.adjustPalletNum}, 
+			#{item.rowExcelNo}, 
+			#{item.rowExcelName}
+        )
+        </foreach>
+    </insert>
+    
+</mapper>
