@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsBizInstockInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增ID</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustQty">
+        <Property name="label">商品调整数量</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustBox">
+        <Property name="label">商品调整箱数</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustWeight">
+        <Property name="label">商品调整重量</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId">
+        <Property name="label">修改者Id</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">未计算</Property>
+              <Property name="1">已计算</Property>
+              <Property name="99">待重算</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="calculateTime">
+        <Property name="label">费用计算时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="instockNo">
+        <Property/>
+        <Property name="label">入库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNum">
+        <Property/>
+        <Property name="label">外部单号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property/>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property/>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property/>
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="instockType">
+        <Property/>
+        <Property name="label">入库类型</Property>
+      </PropertyDef>
+      <PropertyDef name="totalQty">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">商品数量</Property>
+      </PropertyDef>
+      <PropertyDef name="totalBox">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">商品箱数</Property>
+      </PropertyDef>
+      <PropertyDef name="totalWeight">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">商品重量</Property>
+      </PropertyDef>
+      <PropertyDef name="receiver">
+        <Property/>
+        <Property name="label">收货人</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property/>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsBizInstockInfoEntityQuery">
+      <PropertyDef name="instockNo">
+        <Property/>
+        <Property name="label">入库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNum">
+        <Property/>
+        <Property name="label">外部单号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property/>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property/>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">是否作废</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createEndTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsBizInstockInfoEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBmsBizInstockInfoEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsBizInstockInfoEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsBizInstockInfoEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                //刷新&#xD;
+								var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBmsBizInstockInfoEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsBizInstockInfoEntity">
+      <Property name="dataType">[dtBmsBizInstockInfoEntity]</Property>
+      <Property name="dataProvider">bmsBizInstockInfoController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsBizInstockInfoEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsBizInstockInfoEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsBizInstockInfoEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="queryForm">
+        <ClientEvent name="onReady">&#xD;
+	var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set({&#xD;
+		createTime:firstDay,&#xD;
+		createEndTime:lastDay&#xD;
+	});&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsBmsBizInstockInfoEntityQuery</Property>
+        <AutoFormElement>
+          <Property name="name">instockNo</Property>
+          <Property name="property">instockNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">externalNum</Property>
+          <Property name="property">externalNum</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">warehouseCode</Property>
+          <Property name="property">warehouseCode</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">delFlag</Property>
+          <Property name="property">delFlag</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createEndTime</Property>
+          <Property name="property">createEndTime</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsBmsBizInstockInfoEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="feesNo">
+          <Property name="property">feesNo</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="instockNo">
+          <Property name="property">instockNo</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="externalNum">
+          <Property name="property">externalNum</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="warehouseName">
+          <Property name="property">warehouseName</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="adjustQty">
+          <Property name="property">adjustQty</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="adjustBox">
+          <Property name="property">adjustBox</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="adjustWeight">
+          <Property name="property">adjustWeight</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="totalQty">
+          <Property name="property">totalQty</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="totalBox">
+          <Property name="property">totalBox</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="totalWeight">
+          <Property name="property">totalWeight</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="instockType">
+          <Property name="property">instockType</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="receiver">
+          <Property name="property">receiver</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="isCalculated">
+          <Property name="property">isCalculated</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="calculateTime">
+          <Property name="property">calculateTime</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+        <DataColumn name="lastModifierId">
+          <Property name="property">lastModifierId</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+          <Property name="width">90</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsBizInstockInfoEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">180</Property>
+      <Property name="width">300</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+alert(entity.get(&quot;adjustQty&quot;));&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustQty&quot;))){&#xD;
+	entity.set(&quot;adjustQty&quot;, 0);&#xD;
+}&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustBox&quot;))){&#xD;
+	entity.set(&quot;adjustBox&quot;, 0);&#xD;
+}&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustWeight&quot;))){&#xD;
+	entity.set(&quot;adjustWeight&quot;, 0);&#xD;
+}&#xD;
+view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBmsBizInstockInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBmsBizInstockInfoEntity</Property>
+          <Property name="dataType">dtBmsBizInstockInfoEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustQty</Property>
+            <Property name="property">adjustQty</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustBox</Property>
+            <Property name="property">adjustBox</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustWeight</Property>
+            <Property name="property">adjustWeight</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsBizInstockInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bmsBizInstockInfoController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsBizInstockInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">bmsBizInstockInfoController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsBizInstockInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerCus">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>
