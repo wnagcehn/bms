@@ -28,19 +28,18 @@ import com.jiuyescm.bms.correct.BmsMarkingProductsEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
-import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
-import com.jiuyescm.bms.general.service.IStandardReqVoService;
 import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
-import com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchEntity;
+import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 import com.jiuyescm.bms.quotation.dispatch.repository.IPriceDispatchDao;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.mdm.carrier.api.ICarrierService;
@@ -68,7 +67,6 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	@Autowired private IPriceDispatchDao iPriceDispatchDao;
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
-	@Autowired private IStandardReqVoService standardReqVoServiceImpl;
 	@Autowired private ICarrierService carrierService;
 	@Autowired private IBmsGroupService bmsGroupService;
 	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
@@ -79,10 +77,8 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	
 	private String BizTypeCode = "DISPATCH"; //配送费编码
 	private String contractTypeCode="CUSTOMER_CONTRACT";
-	private String quoType = "C";//默认使用常规报价
 	
 	private String _subjectCode = "de_delivery_amount";
-	//private String chargeCarrierId="";
 	
 	List<SystemCodeEntity> scList = null;
 	List<SystemCodeEntity> no_fees_delivers = null;
@@ -91,10 +87,11 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	List<String> changeCusList=null;
 	Map<String, String> carrierMap=null;
 	Map<String,BigDecimal> metrialVolumMap=null;
+	List<String> cancelCusList=null;
 	
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
-		XxlJobLogger.log("dispatchBillCalcJob start.");
+		XxlJobLogger.log("dispatchBillNewCalcJob start.");
 		return super.CalcJob(params);
 	}
 	
@@ -105,8 +102,7 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	}
 
 	@Override
-	protected void initConf(List<BizDispatchBillEntity> billList)
-			throws Exception {
+	protected void initConf(List<BizDispatchBillEntity> billList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("typeCode", "DISPATCH_COMPANY");
 		scList = systemCodeService.querySysCodes(map);
@@ -132,71 +128,55 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		if(bmsGroup!=null){
 			changeCusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 		}
-
+		//指定需要计算取消状态单子的商家
+		map= new HashMap<String, Object>();
+		map.put("groupCode", "calculate_cancel_customer");
+		map.put("bizType", "group_customer");
+		BmsGroupVo bmsCancelCus=bmsGroupService.queryOne(map);
+		if(bmsCancelCus!=null){
+			cancelCusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
+		}
+			
 		//物流商
 		carrierMap=getCarrier();
-		
 		metrialVolumMap=getMetrialVolum();
-		delete(billList);
 	}
-	private void delete(List<BizDispatchBillEntity> billList){
-		List<String> feesNos = new ArrayList<String>();
-		Map<String, Object> feesMap = new HashMap<String, Object>();
-		for (BizDispatchBillEntity entity : billList) {
-			if(StringUtils.isNotEmpty(entity.getFeesNo())){
-				feesNos.add(entity.getFeesNo());
-			}
-			else{
-				entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
-			}
-		}
-		try{
-			if(feesNos.size()>0){
-				feesMap.put("feesNos", feesNos);
-				long operateTime = System.currentTimeMillis();
-				feesReceiveDispatchService.deleteBatch(feesMap);
-				long current = System.currentTimeMillis();// 系统开始时间
-				XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
-			}
-		}
-		catch(Exception ex){
-			XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-		}
-	}
+	
+	
 	/**
 	 * 顺丰以外物流商的报价
 	 * @param entity
 	 * @return
 	 */
-	private List<PriceMainDispatchEntity> queryPriceByCustomer(
-			BizDispatchBillEntity entity,String subjectId) {
+	private List<BmsQuoteDispatchDetailVo> queryPriceByCustomer(BizDispatchBillEntity entity,String subjectId) {
 		PriceContractInfoEntity contractEntity=mapContact.get(entity.getCustomerid());
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("contractCode",contractEntity.getContractCode());
 		map.put("subjectId",subjectId);
 		map.put("wareHouseId", entity.getWarehouseCode());
 		map.put("province", entity.getReceiveProvinceId());
-		List<PriceMainDispatchEntity> priceList = iPriceDispatchDao.queryAllByTemplateId(map);
-		return priceList;
+		map.put("weight", entity.getWeight());
+		List<BmsQuoteDispatchDetailVo> price = jobPriceContractInfoService.queryAllByTemplateId(map);
+		return price;
 	}
 	
 	/**
 	 * 顺丰对应的报价
 	 * @return
 	 */
-	private List<PriceMainDispatchEntity> queryShunfengPrice(BizDispatchBillEntity entity,String subjectId){
+	private List<BmsQuoteDispatchDetailVo> queryShunfengPrice(BizDispatchBillEntity entity,String subjectId,String customerId){
 		//获取顺丰标准商家
 		//指定的商家
 		try {
 			Map<String, Object> map= new HashMap<String, Object>();
-			String customerId=queryShunfengCustomer();
 			if(StringUtils.isNotBlank(customerId)){
 				map.put("customerId", customerId);
 				map.put("subjectId", subjectId);
 				map.put("wareHouseId", entity.getWarehouseCode());
 				map.put("province", entity.getReceiveProvinceId());
-				List<PriceMainDispatchEntity> priceList = iPriceDispatchDao.queryShunfengDispatch(map);
-				return priceList;
+				map.put("weight", entity.getWeight());
+				List<BmsQuoteDispatchDetailVo> price =jobPriceContractInfoService.queryShunfengDispatch(map);
+				return price;
 			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -206,13 +186,48 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		return null;
 	}
 	
-	private List<PriceMainDispatchEntity> getQuoEntites(BizDispatchBillEntity entity,String subjectId){
-		List<PriceMainDispatchEntity> list=null;
+	/**
+	 * 获取报价
+	 * @param entity
+	 * @param subjectId
+	 * @return
+	 */
+	private List<BmsQuoteDispatchDetailVo> getQuoEntites(BizDispatchBillEntity entity,String subjectId){
+		//标准商家id
+		String standCustomerId="";
+		List<BmsQuoteDispatchDetailVo> list=new ArrayList<>();
 		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			list=queryShunfengPrice(entity,subjectId);
+			standCustomerId=queryShunfengCustomer();
+			if(StringUtils.isNotBlank(standCustomerId)){
+				list=queryShunfengPrice(entity,subjectId,standCustomerId);
+			}
 		}else{
 			list=queryPriceByCustomer(entity,subjectId);
 		}
+
+		//如果有多条,走筛选规则
+		if(list.size()>0){
+			//走地址筛选
+			list=handNewBizDispatch(list, entity);
+			if(list.size()==0){
+				return list;
+			}
+			
+			//根据报价形式查询到对应的筛选规则
+			Map<String,Object> map=new HashMap<String,Object>();
+		
+			String quote_id = QuoteFilter(entity, list, null);
+			if(quote_id == null){
+				return null;
+			}
+			List<BmsQuoteDispatchDetailVo> list1 = new ArrayList<BmsQuoteDispatchDetailVo>();
+			map.clear();
+			map.put("id",quote_id);		
+			BmsQuoteDispatchDetailVo bmsQuote=jobPriceContractInfoService.queryNewOne(map);	
+			list1.add(bmsQuote);
+			return list1;
+		}
+		
 		return list;
 	}
 	@Override
@@ -225,13 +240,14 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 			
 			entity.setCalculateTime(JAppContext.currentTimestamp());
 			feeEntity.setCalculateTime(entity.getCalculateTime());
-			CalcuReqVo<PriceMainDispatchEntity> reqVo = new CalcuReqVo<PriceMainDispatchEntity>();
-			reqVo.setBizData(entity);
 			String subjectId=getSubjectId(entity.getChargeCarrierId());
 			XxlJobLogger.log("计算时获取到的计费物流商-- 【{0}】",entity.getChargeCarrierId());
+	
+			BmsQuoteDispatchDetailVo price=new BmsQuoteDispatchDetailVo();
+			
 			//获取报价
-			List<PriceMainDispatchEntity> priceList=getQuoEntites(entity,subjectId);		
-			if(priceList == null || priceList.size() == 0){ //
+			List<BmsQuoteDispatchDetailVo> priceList=getQuoEntites(entity,subjectId);		
+			if(priceList == null || priceList.size()==0){ //
 				if("SHUNFENG_DISPATCH".equals(subjectId)){
 					XxlJobLogger.log("顺丰标准报价,仓库【{0}】,省份【{1}】报价未配置",entity.getWarehouseName(),entity.getReceiveProvinceId());
 					entity.setRemark(String.format("顺丰标准报价,仓库【%s】,省份【%s】报价未配置",entity.getWarehouseName(),entity.getReceiveProvinceId()));
@@ -244,13 +260,34 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 				feesList.add(feeEntity);
 				return;
 			}
-			handBizDispatch(priceList,entity);
+			
+			if(priceList.size()>1){ //
+				if("SHUNFENG_DISPATCH".equals(subjectId)){
+					XxlJobLogger.log("顺丰标准报价,仓库【{0}】,省份【{1}】报价存在多条",entity.getWarehouseName(),entity.getReceiveProvinceId());
+					entity.setRemark(String.format("顺丰标准报价,仓库【%s】,省份【%s】报价存在多条",entity.getWarehouseName(),entity.getReceiveProvinceId()));
+				}else{
+					XxlJobLogger.log("商家【{0}】,仓库【{1}】,省份【{2}】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
+					entity.setRemark(String.format("商家【%s】,仓库【%s】,省份【%s】报价存在多条",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId()));
+				}
+				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				feesList.add(feeEntity);
+				return;
+			}
+			
+			if(priceList.size()==1){
+				price=priceList.get(0);
+			}
+			
+			CalcuReqVo<BmsQuoteDispatchDetailVo> reqVo = new CalcuReqVo<BmsQuoteDispatchDetailVo>();
+			reqVo.setBizData(entity);
+			
+		/*	handBizDispatch(priceList,entity);*/
 			current = System.currentTimeMillis();
 			XxlJobLogger.log("验证报价耗时：【{0}】毫秒  ",(current - start));
 			start = System.currentTimeMillis();// 系统开始时间
-			
-			//获取规则
-			BillRuleReceiveEntity ruleEntity=queryRuleByCustomer(entity.getCustomerid(),subjectId);
+		
+			BillRuleReceiveEntity ruleEntity=queryRuleByPrice("YGR11111111");
 			if(ruleEntity == null){
 				XxlJobLogger.log("规则未配置");
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -263,7 +300,7 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 			XxlJobLogger.log("验证规则耗时：【{0}】毫秒  ,规则编号【{1}】",(current - start),ruleEntity.getQuotationNo());
 			start = System.currentTimeMillis();// 系统开始时间
 			feeEntity.setRuleNo(ruleEntity.getQuotationNo()); 
-			reqVo.setQuoEntites(priceList);
+			reqVo.setQuoEntity(price);
 			reqVo.setRuleNo(ruleEntity.getQuotationNo());
 			reqVo.setRuleStr(ruleEntity.getRule());
 		
@@ -276,23 +313,14 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 				Map<String,Object> acondition=new HashMap<String,Object>();				
 				acondition.put("id", resultVo.getQuoId());
 				XxlJobLogger.log("此时的报价id"+resultVo.getQuoId());
-				PriceMainDispatchEntity price=jobPriceContractInfoService.queryOne(acondition);
-				if(StringUtils.isNotBlank(priceId) && price!=null){
-					if("第二阶梯".equals(resultVo.getMsg())){
-						feeEntity.setWeightLimit(price.getWeightLimit());   	  //重量界限
-						feeEntity.setUnitPrice(resultVo.getUnitPrice()==null?price.getUnitPrice():resultVo.getUnitPrice());			  //单价
-						feeEntity.setHeadWeight(price.getExtra1()==null?0.0d:Double.valueOf(price.getExtra1()));    	  //首重
-						feeEntity.setHeadPrice(price.getExtra2()==null?0.0d:Double.valueOf(price.getExtra2()));	  //首重价格
-						feeEntity.setContinuedWeight(price.getExtra3()==null?0.0d:Double.valueOf(price.getExtra3())); //续重
-						feeEntity.setContinuedPrice(price.getExtra4()==null?0.0d:Double.valueOf(price.getExtra4()));   //续重价格
-					}else{
-						feeEntity.setWeightLimit(price.getWeightLimit());   	  //重量界限
-						feeEntity.setUnitPrice(price.getUnitPrice());			  //单价
-						feeEntity.setHeadWeight(price.getFirstWeight());    	  //首重
-						feeEntity.setHeadPrice(price.getFirstWeightPrice());	  //首重价格
-						feeEntity.setContinuedWeight(price.getContinuedWeight()); //续重
-						feeEntity.setContinuedPrice(price.getContinuedPrice());   //续重价格							
-					}
+				BmsQuoteDispatchDetailVo bmsQuote=jobPriceContractInfoService.queryNewOne(acondition);
+				if(StringUtils.isNotBlank(priceId) && bmsQuote!=null){
+					feeEntity.setWeightLimit(bmsQuote.getWeightLimit());   	  //重量界限
+					feeEntity.setUnitPrice(bmsQuote.getUnitPrice());			  //单价
+					feeEntity.setHeadWeight(bmsQuote.getFirstWeight());    	  //首重
+					feeEntity.setHeadPrice(bmsQuote.getFirstWeightPrice());	  //首重价格
+					feeEntity.setContinuedWeight(bmsQuote.getContinuedWeight()); //续重
+					feeEntity.setContinuedPrice(bmsQuote.getContinuedPrice());   //续重价格							
 				}else{
 					feeEntity.setWeightLimit(0.0d);   	  //重量界限
 					feeEntity.setUnitPrice(0.0d);			  //单价
@@ -338,28 +366,31 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	}
 
 	@Override
-	protected void saveBatchData(List<BizDispatchBillEntity> billList,
-			List<FeesReceiveDispatchEntity> feesList) {
+	protected void saveBatchData(List<BizDispatchBillEntity> billList,List<FeesReceiveDispatchEntity> feesList) {
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
-		bizDispatchBillService.updateBatch(billList);
+		bizDispatchBillService.newUpdateBatch(billList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveDispatchService.InsertBatch(feesList);
+		feesReceiveDispatchService.updateBatch(feesList);
 		current = System.currentTimeMillis();
-		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒 ",(current - start));
+		XxlJobLogger.log("更新费用数据耗时：【{0}】毫秒 ",(current - start));
 	}
 
 	@Override
-	protected boolean validateData(BizDispatchBillEntity entity,
-			List<FeesReceiveDispatchEntity> feesList) {
+	protected boolean validateData(BizDispatchBillEntity entity,List<FeesReceiveDispatchEntity> feesList) {
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);
 		Map<String,Object> map=new HashMap<String,Object>();
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
+		
+		//将原始重量(OriginWeight)转换后赋值给新的运单重量（TotalWeight,业务数据保存时保存newTotalWeight）
+		/*entity.setNewTotalWeight(getNewTotalWeight(entity.getOriginWeight()));
+		entity.setTotalWeight(entity.getNewTotalWeight());*/
+		
 		//String subjectId="";
 		//物流商的判断
 		/*if(StringUtils.isBlank(entity.getAdjustCarrierId())){
@@ -375,14 +406,24 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		String subjectId=getSubjectId(getCarrierId(entity));
 		
 		XxlJobLogger.log("验证数据时物流商-- 【{0}】  ",entity.getChargeCarrierId());
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("验证物流商  耗时【{0}】毫秒 ",(current - start));	
 		
 		String customerId=entity.getCustomerid();
-		boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
+		/*boolean isInsert = StringUtils.isEmpty(entity.getFeesNo())?true:false; //true-新增  false-更新
 		if(isInsert){
 			String feesNo =sequenceService.getBillNoOne(FeesReceiveDispatchEntity.class.getName(), "PSFY", "0000000000");
 			entity.setFeesNo(feesNo);
-		}
+		}*/
+		
+		start = System.currentTimeMillis();
+		
 		FeesReceiveDispatchEntity feeEntity = initfeeEntity(entity);
+		
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("初始化费用  耗时【{0}】毫秒 ",(current - start));	
+		
+		
 		feeEntity.setCalculateTime(time);
 		
 		if(StringUtils.isEmpty(subjectId)){
@@ -395,12 +436,17 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		}
 		XxlJobLogger.log("费用科目编号:"+ subjectId);
 		
+		start = System.currentTimeMillis();// 操作开始时间
 		//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
 		double newThrowWeight=getNewThrowWeight(entity);
 		//将新泡重赋值
-		entity.setThrowWeight(newThrowWeight);
+		//entity.setThrowWeight(newThrowWeight);
+		entity.setCorrectThrowWeight(newThrowWeight);
 		
-
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("泡重获取  耗时【{0}】毫秒 ",(current - start));	
+		
+		start = System.currentTimeMillis();// 操作开始时间
 		//先进行判断是否是不计算的运单
 		//**********************************如果是不计算配送费用的宅配商,费用表照常写入，费用表中的计费重量置为空，实际重量为运单表中的但金额至0*****
 		boolean isExe = true; //默认计算
@@ -449,6 +495,25 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 				return false;
 			}
 		}
+		
+		//判断取消的单子是否继续计算
+		if(StringUtils.isNotBlank(entity.getOrderStatus()) && "CLOSE".equals(entity.getOrderStatus())){
+			if(cancelCusList.contains(customerId)){ // 在cancelCusList中存在，不计费
+				entity.setRemark("该运单是不需要计算的商家取消运单，金额置0");
+				feeEntity.setAmount(0.0d);
+				feeEntity.setTotalWeight(getBizTotalWeight(entity));
+				feeEntity.setChargedWeight(0d);
+				entity.setIsCalculated(CalculateState.No_Exe.getCode());
+				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+				feeEntity.setOtherSubjectCode(_subjectCode);
+				feeEntity.setSubjectCode(_subjectCode);
+				feesList.add(feeEntity);
+				return false;
+			}
+		}
+		
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("不计算判断  耗时【{0}】毫秒 ",(current - start));
 		
 		start = System.currentTimeMillis();// 操作开始时间
 		String provinceId="";
@@ -530,7 +595,7 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 						else{
 							XxlJobLogger.log("--------此单为顺丰非同城  按泡重计费--------");
 							//泡重不存在
-							if(DoubleUtil.isBlank(entity.getThrowWeight())){
+							if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
 								if (hasCorrect) {
 									double dd = getResult(correctWeight);
 									entity.setWeight(dd);
@@ -558,7 +623,7 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 								//泡重存在时
 								if (hasCorrect) {
 									// 有纠正重量时比较 泡重和 纠正重量
-									if(correctWeight >= entity.getThrowWeight()){
+									if(correctWeight >= entity.getCorrectThrowWeight()){
 										// 纠正重量大于抛重重量，按纠正重量算
 										double dd = getResult(correctWeight);
 										entity.setWeight(dd);
@@ -566,31 +631,31 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 										double resultWeight = compareWeight(entity.getTotalWeight(), 
 												getResult(entity.getTotalWeight()), correctWeight);
 										entity.setTotalWeight(resultWeight);
-									}else if(correctWeight < entity.getThrowWeight()){
+									}else if(correctWeight < entity.getCorrectThrowWeight()){
 										// 纠正重量小于抛重时，按抛重算
-										double dd = getResult(entity.getThrowWeight());
+										double dd = getResult(entity.getCorrectThrowWeight());
 										entity.setWeight(dd);//计费重量
-										entity.setTotalWeight(entity.getThrowWeight()); //实际重量 eg:5.1
+										entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 									}
 								}else {
 									if(!DoubleUtil.isBlank(entity.getTotalWeight())){
 										// 没有纠正重量时比较 泡重和 实际重量
-										if(entity.getTotalWeight() >= entity.getThrowWeight()){
+										if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
 											// 运单重量大于抛重时，按运单重量算
 											double dd = getResult(entity.getTotalWeight());
 											entity.setWeight(dd);
 											entity.setTotalWeight(entity.getTotalWeight());
-										}else if(entity.getTotalWeight() < entity.getThrowWeight()){
+										}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
 											// 运单重量小于抛重时，按抛重算
-											double dd = getResult(entity.getThrowWeight());
+											double dd = getResult(entity.getCorrectThrowWeight());
 											entity.setWeight(dd);//计费重量
-											entity.setTotalWeight(entity.getThrowWeight()); //实际重量 eg:5.1
+											entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 										}
 									}else{
 										//实际重量为空时，直接取泡重
-										double dd = getResult(entity.getThrowWeight());
+										double dd = getResult(entity.getCorrectThrowWeight());
 										entity.setWeight(dd);
-										entity.setTotalWeight(entity.getThrowWeight());
+										entity.setTotalWeight(entity.getCorrectThrowWeight());
 									}
 								}
 							}						
@@ -661,9 +726,6 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 			}
 		}
 		
-		current = System.currentTimeMillis();
-		XxlJobLogger.log("地址匹配   耗时【{0}】毫秒 ",(current - start));	
-		
 		//此时费用写入计费重量
 		feeEntity.setChargedWeight(entity.getWeight());
 		
@@ -675,20 +737,9 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 			feesList.add(feeEntity);
 			return false;
 		}
-		
-		
-		/*Double totalWeight =entity.getTotalWeight();
-		if(null!=entity.getAdjustWeight()){
-			totalWeight = entity.getAdjustWeight();
-		}
-		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			//顺丰配送优先取调整重量，再去抛重,最后取系统重量
-			totalWeight = entity.getAdjustWeight()==null?(throwWeight==null?entity.getTotalWeight():throwWeight):entity.getAdjustWeight();
-			double dd = getResult(totalWeight);
-			entity.setWeight(dd);
-		}else{
-			entity.setWeight(Math.ceil(totalWeight));
-		}*/
+			
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("地址匹配   耗时【{0}】毫秒 ",(current - start));	
 		
 		//顺丰的不校验合同和是否签约服务
 		if(!"SHUNFENG_DISPATCH".equals(subjectId)){
@@ -737,16 +788,51 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		return true;
 	}
 	
+
+	/*public double getNewTotalWeight(Double originWeight){
+			
+		//1、宅配重量如果前2位小数是0,存在第三位小数的，直接抹掉；
+	    //   比如:3.0056, 那么变成 3
+		//2、对于第一位小数位是0的，第二位不是0,在原重量上加0.1；
+	    //   比如3.015, 那么变成3.115
+		//	   比如3.01，    那么变成3.11
+		double totalWeight=0d;
+		if(!DoubleUtil.isBlank(originWeight)){
+			String weightString=originWeight+"";
+			if(weightString.contains(".0")){
+				String value=weightString.substring(weightString.indexOf("."));
+				if(value.length()>2){
+					String v=value.substring(value.indexOf(".")+2,value.indexOf(".")+3);
+					Double val=Double.valueOf(v);
+					if(val==0){
+						totalWeight=Math.floor(originWeight);
+					}else{
+						BigDecimal   a1   =BigDecimal.valueOf(originWeight);
+						BigDecimal   a2  =new BigDecimal(0.1);
+						totalWeight=a1.add(a2).doubleValue();
+					}
+				}else{
+					totalWeight=originWeight;
+				}		
+			}else{
+				totalWeight=originWeight;
+			}	
+		}
+		return totalWeight;	
+		
+	}*/
+	
 	public double getNewThrowWeight(BizDispatchBillEntity entity){
 		double throwWeight=0d;
 		try{
+			//验证是否存在签约服务
 			Map<String,Object> condition=new HashMap<String,Object>();
 			condition.put("waybillNo", entity.getWaybillNo());
 			Double volumn=bizOutstockPackmaterialRepository.getMaxVolum(condition);
 			if(!DoubleUtil.isBlank(volumn)){
 				throwWeight=(double)volumn/6000;
 				throwWeight=(double)Math.round(throwWeight*100)/100;
-			}
+			}			
 		}catch(Exception ex){ 
 			XxlJobLogger.log("获取泡重失败:{1}",ex.getMessage());
 		}
@@ -775,16 +861,10 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	 * @param subjectId
 	 * @return
 	 */
-	private BillRuleReceiveEntity queryRuleByCustomer(String customerId,
-			String subjectId) {
-		//判断是否是顺丰,是顺丰取标准商家
-		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			customerId=queryShunfengCustomer();
-		}
+	private BillRuleReceiveEntity queryRuleByPrice(String mark) {
 		Map<String,Object> map=new HashMap<String,Object>();
-		map.put("customerid",customerId);
-		map.put("subjectId",subjectId);
-		return receiveRuleRepository.queryByCustomerId(map);
+		map.put("quotationNo",mark);
+		return receiveRuleRepository.queryOne(map);
 	}
 
 	/**
@@ -908,7 +988,6 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		return subjectID;
 	}
 	
- 	
  	public double getBizTotalWeight(BizDispatchBillEntity entity){	
  		
  		double totalWeight=0;
@@ -935,6 +1014,7 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		
 		return totalWeight;
  	}
+ 	
  	
  	/**
 	 * 获取顺丰标准报价对应的商家id
@@ -982,10 +1062,11 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		feeEntity.setDeliveryDate(entity.getCreateTime());
 		feeEntity.setOutstockNo(entity.getOutstockNo());		// 出库单号
 		feeEntity.setWarehouseCode(entity.getWarehouseCode());	// 仓库ID
+		feeEntity.setWarehouseName(entity.getWarehouseName());  // 仓库名称
 		feeEntity.setCustomerid(entity.getCustomerid());		// 商家ID
 		feeEntity.setCustomerName(entity.getCustomerName());	//商家名称
 		feeEntity.setDeliveryid(entity.getDeliverid());         // 物流商ID
-		feeEntity.setDeliverName(entity.getDeliverName());
+		feeEntity.setDeliverName(entity.getDeliverName());		//物流商名称
 		
 		//物流商变更修改
 		XxlJobLogger.log("保存到费用时的计费物流商-- 【{0}】",entity.getChargeCarrierId());
@@ -1054,11 +1135,11 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		feeEntity.setHeadWeight(0.0d);
 		feeEntity.setHeadPrice(0.0d);
 		feeEntity.setContinuedWeight(0.0d);
-		feeEntity.setContinuedPrice(0.0d);		
+		feeEntity.setContinuedPrice(0.0d);	
 		return feeEntity;
 		
 	}
-	public void handBizDispatch(List<PriceMainDispatchEntity> priceList,BizDispatchBillEntity bizEntity){
+	public void handBizDispatch(List<BmsQuoteDispatchDetailVo> priceList,BizDispatchBillEntity bizEntity){
 		//判断该地址是否存在于报价中，为空时则为空
 		//获取此时业务数据的市区
 		String bizCity=bizEntity.getReceiveCityId();
@@ -1066,11 +1147,7 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		
 		boolean city=false;
 		boolean area=false;
-		for(PriceMainDispatchEntity mainDispatchEntity : priceList){				
-			//获取到此时的仓库
-			if(!mainDispatchEntity.getStartWarehouseId().equals(bizEntity.getWarehouseCode())){
-				continue;
-			}
+		for(BmsQuoteDispatchDetailVo mainDispatchEntity : priceList){				
 			
 			//获取报价此时的市ID
 			String dispatchCityId=mainDispatchEntity.getCityId();
@@ -1119,6 +1196,97 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 	}
 	
 	/**
+	 * 根据省市区获取报价
+	 * @param priceList
+	 * @param bizEntity
+	 * @return
+	 */
+	public List<BmsQuoteDispatchDetailVo> handNewBizDispatch(List<BmsQuoteDispatchDetailVo> priceList,BizDispatchBillEntity bizEntity){
+		
+		List<BmsQuoteDispatchDetailVo> list=new ArrayList<BmsQuoteDispatchDetailVo>();
+		
+		//获取此时业务数据的市区
+		String bizCity=bizEntity.getReceiveCityId();
+		String bizArea=bizEntity.getReceiveDistrictId();
+		
+		Map<Long,BmsQuoteDispatchDetailVo> map=new HashMap<>();
+		
+		Map<Integer,String> newPrice=new HashMap<Integer,String>();
+		
+		//报价形式
+		//匹配上          1
+		//空值             2
+		//匹配不上      3
+		for(BmsQuoteDispatchDetailVo mainDispatchEntity : priceList){				
+			map.put(mainDispatchEntity.getId(), mainDispatchEntity);
+			String biaoshi="1";
+			
+			//获取报价此时的市ID
+			String dispatchCityId=mainDispatchEntity.getCityId();
+			//获取报价此时的区ID
+			String dispatchAreaId=mainDispatchEntity.getAreaId();
+						
+			//判断区
+			if(StringUtils.isNotBlank(dispatchAreaId)){
+				if(dispatchAreaId.equals(bizArea)){
+					biaoshi+="1";
+				}else{
+					biaoshi+="3";
+				}
+			}else{
+				biaoshi+="2";
+			}
+			
+			
+			//判断市
+			if(StringUtils.isNotBlank(dispatchCityId)){
+				if(dispatchCityId.equals(bizCity)){
+					biaoshi+="1";
+				}else{
+					biaoshi+="3";
+				}
+			}else{
+				biaoshi+="2";
+			}
+			
+			int b=Integer.parseInt(biaoshi);
+			if(newPrice.containsKey(b)){
+				newPrice.put(b, newPrice.get(b)+","+mainDispatchEntity.getId());
+			}else{
+				newPrice.put(b, mainDispatchEntity.getId().toString());
+			}			
+		}
+		
+		
+		Integer minValue=new Integer(0);
+		for(Integer num:newPrice.keySet()){
+			if(minValue==0 || num<minValue){
+				minValue=num;
+			}	
+		}
+		
+		BmsQuoteDispatchDetailVo vo=new BmsQuoteDispatchDetailVo();
+		
+		if(!(minValue+"").contains("3")){
+			String result=newPrice.get(minValue);
+			if(result.contains(",")){
+				String[] array=result.split(",");
+				for (int a = 0; a < array.length; a++) {		
+					Long value=Long.valueOf(array[a]);
+					vo=map.get(value);
+					list.add(vo);				
+			     }		
+			}else{
+				Long value=Long.valueOf(result);
+				vo=map.get(value);
+				list.add(vo);			
+			}
+		}
+		
+		return list;	
+	}
+	
+	/**
 	 * 顺丰运费计算规则（超重1.4kg时 用续费重量*1.5, ;超重1.6kg时 用续重*2计算）
 	 * @param weight
 	 * @return
@@ -1142,79 +1310,6 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 			c=a;
 		}
 		return c;
-	}
-
-	@Override
-	protected void calcuStandardService(List<BizDispatchBillEntity> billList) {
-		for (BizDispatchBillEntity entity : billList) {
-			if(CalculateState.Quote_Miss.getCode().equals(entity.getIsCalculated())){
-				try{
-					calcu(entity);
-				}
-				catch(Exception ex){
-					XxlJobLogger.log("采用【标准报价】计算异常 "+ ex.getMessage());	
-				}
-			}
-		}
-	}
-	
-	
-	@SuppressWarnings("rawtypes")
-	private void calcu(BizDispatchBillEntity entity){
-		long start = System.currentTimeMillis();// 系统开始时间
-		//String subjectId = getSubjectId(entity.getAdjustCarrierId()==null?entity.getCarrierId():entity.getAdjustCarrierId());
-		String subjectId=getSubjectId(entity.getChargeCarrierId());
-		String wareHouseId = entity.getWarehouseCode();
-		String province = entity.getReceiveProvinceId();
-		CalcuReqVo reqVo = standardReqVoServiceImpl.getDispatchReceiveReqVo(subjectId,wareHouseId,province);
-		if("true".equals(reqVo.getParams().get("succ"))){
-			XxlJobLogger.log("消息【{0}】 规则编号【{1}】",reqVo.getParams().get("msg").toString(),reqVo.getRuleNo());	
-			reqVo.setBizData(entity);
-			CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
-			if("succ".equals(resultVo.getSuccess())){
-				FeesReceiveDispatchEntity FeeEntity = new FeesReceiveDispatchEntity();	
-				String priceId=resultVo.getQuoId();
-				//写入首重续重
-				Map<String,Object> acondition=new HashMap<String,Object>();				
-				acondition.put("id", resultVo.getQuoId());
-				XxlJobLogger.log("此时的报价id"+resultVo.getQuoId());
-				PriceMainDispatchEntity price=jobPriceContractInfoService.queryOne(acondition);
-				if(StringUtils.isNotBlank(priceId) && price!=null){
-					FeeEntity.setWeightLimit(price.getWeightLimit());   	  //重量界限
-					FeeEntity.setUnitPrice(price.getUnitPrice());			  //单价
-					FeeEntity.setHeadWeight(price.getFirstWeight());    	  //首重
-					FeeEntity.setHeadPrice(price.getFirstWeightPrice());	  //首重价格
-					FeeEntity.setContinuedWeight(price.getContinuedWeight()); //续重
-					FeeEntity.setContinuedPrice(price.getContinuedPrice());   //续重价格							
-				}else{
-					FeeEntity.setWeightLimit(0.0d);   	  //重量界限
-					FeeEntity.setUnitPrice(0.0d);			  //单价
-					FeeEntity.setHeadWeight(0.0d);    	  //首重
-					FeeEntity.setHeadPrice(0.0d);	  //首重价格
-					FeeEntity.setContinuedWeight(0.0d); //续重
-					FeeEntity.setContinuedPrice(0.0d);   //续重价格
-				}
-				FeeEntity.setFeesNo(entity.getFeesNo());
-				FeeEntity.setParam1(TemplateTypeEnum.STANDARD.getCode());
-				FeeEntity.setParam2(resultVo.getMethod());//
-				FeeEntity.setPriceId(resultVo.getQuoId());
-				FeeEntity.setIsCalculated(CalculateState.Finish.getCode());
-				FeeEntity.setAmount(resultVo.getPrice().doubleValue());
-				entity.setRemark("计算成功");
-				entity.setIsCalculated(CalculateState.Finish.getCode());
-				feesReceiveDispatchService.update(FeeEntity);
-			}
-			else{
-				entity.setRemark("【标准报价】费用计算失败:"+resultVo.getMsg());
-			}
-		}
-		else{
-			XxlJobLogger.log(reqVo.getParams().get("msg").toString());	
-			entity.setRemark((String) reqVo.getParams().get("msg"));
-		}
-		bizDispatchBillService.update(entity);
-		long current = System.currentTimeMillis();;// 当前系统时间
-		XxlJobLogger.log("【标准报价】调用规则引擎   耗时【{0}】毫秒  费用【{1}】 ",(current - start));	
 	}
 
 	/**
@@ -1248,4 +1343,59 @@ public class DispatchBillCalcJob extends CommonCalcJob<BizDispatchBillEntity,Fee
 		
 		return mMap;
 	}
+	
+	/**
+	 * 报价帅选
+	 * @param entity 业务数据
+	 * @param list   报价列表
+	 * @param priorities 优先级
+	 * @return
+	 */
+	public String QuoteFilter(BizDispatchBillEntity entity,List<BmsQuoteDispatchDetailVo> list,List<String> priorities){
+		
+		if(list==null || list.size() == 0){
+			return null;
+		}
+
+		Integer level = 33;
+		
+		String id="";
+		
+		String temperature_code = StringUtil.isEmpty(entity.getTemperatureTypeCode())?"":entity.getTemperatureTypeCode();
+		String service_type_code = StringUtil.isEmpty(entity.getServiceTypeCode())?"":entity.getServiceTypeCode();
+		for (BmsQuoteDispatchDetailVo vo : list) {
+			//=====================================温度判断=================================
+			String temperature_quote = StringUtil.isEmpty(vo.getTemperatureTypeCode())?"":vo.getTemperatureTypeCode();
+			String service_type_quote = StringUtil.isEmpty(vo.getServiceTypeCode())?"":vo.getServiceTypeCode();
+			
+			if(!temperature_code.equals(temperature_quote) && StringUtils.isNotEmpty(temperature_quote)){
+				continue;//温度不匹配
+			}
+			if(!service_type_code.equals(service_type_quote) && StringUtils.isNotEmpty(service_type_quote)){
+				continue;//仓库不匹配
+			}
+			Integer temperaturelevel = temperature_code.equals(temperature_quote)?1:2; //温度优先级
+			Integer serviceTypelevel = service_type_code.equals(service_type_quote)?1:2;		//仓库优先级
+			
+			Integer temLevel = Integer.valueOf(temperaturelevel.toString()+serviceTypelevel.toString());
+			if(temLevel<level){
+				level = temLevel;
+				id = vo.getId()+"";
+			}
+		}
+		
+		if(level == 33){
+			return null;
+		}
+		else{
+			return id;
+		}
+	}
+
+	@Override
+	protected void calcuStandardService(List<BizDispatchBillEntity> billList) {
+		
+	}
+	
+	
 }
