@@ -63,6 +63,7 @@
     	<jms:listener destination="BMS_FILE_EXPORT_QUEUE" ref="bmsFileExportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK" ref="bmsPackmaterialImportTaskListenerNew"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListenerNew"/>
+    	<jms:listener destination="BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK" ref="bmsPalletImportListener"/>
     </jms:listener-container>
    
 </beans>
