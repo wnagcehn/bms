@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.biz.storage.entity;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;
@@ -28,7 +27,7 @@ public class BizProductPalletStorageTempEntity implements IEntity {
 	// TemperatureTypeName
 	private String temperatureTypeName;
 	// PalletNum
-	private BigDecimal palletNum;
+	private Double palletNum;
 	// IsCalculated
 	private String isCalculated;
 	// 创建者
@@ -42,7 +41,7 @@ public class BizProductPalletStorageTempEntity implements IEntity {
 	// 写入BMS时间
 	private Timestamp writeTime;
 	// AdjustPalletNum
-	private BigDecimal adjustPalletNum;
+	private Double adjustPalletNum;
 	// excel行号
 	private Integer rowExcelNo;
 	// excel列名
@@ -197,22 +196,6 @@ public class BizProductPalletStorageTempEntity implements IEntity {
 	}
 	
 	/**
-     * PalletNum
-     */
-	public BigDecimal getPalletNum() {
-		return this.palletNum;
-	}
-
-    /**
-     * PalletNum
-     *
-     * @param palletNum
-     */
-	public void setPalletNum(BigDecimal palletNum) {
-		this.palletNum = palletNum;
-	}
-	
-	/**
      * IsCalculated
      */
 	public String getIsCalculated() {
@@ -308,22 +291,23 @@ public class BizProductPalletStorageTempEntity implements IEntity {
 		this.writeTime = writeTime;
 	}
 	
-	/**
-     * AdjustPalletNum
-     */
-	public BigDecimal getAdjustPalletNum() {
-		return this.adjustPalletNum;
+
+	public Double getPalletNum() {
+		return palletNum;
 	}
 
-    /**
-     * AdjustPalletNum
-     *
-     * @param adjustPalletNum
-     */
-	public void setAdjustPalletNum(BigDecimal adjustPalletNum) {
+	public void setPalletNum(Double palletNum) {
+		this.palletNum = palletNum;
+	}
+
+	public Double getAdjustPalletNum() {
+		return adjustPalletNum;
+	}
+
+	public void setAdjustPalletNum(Double adjustPalletNum) {
 		this.adjustPalletNum = adjustPalletNum;
 	}
-	
+
 	/**
      * excel行号
      */

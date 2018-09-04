@@ -24,40 +24,38 @@
 	  
     <select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity">
         select a.stock_time, a.warehouse_name, a.customer_name, a.temperature_type_name,a.rowExcelNo,a.rowExcelName
-        from biz_pack_storage_temp a
-        left join biz_pack_storage b on a.customerid = b.customerid 
-        								and a.stock_time = b.stock_time 
-										and a.warehouse_code = b.warehouse_code 
-										and a.temperature_type_code = b.temperature_type_code
-		where a.task_id=#{taskId} and b.del_flag=0 limit #{errorCount}
+		from biz_product_pallet_storage_temp a inner join biz_product_pallet_storage b
+		on a.customerid = b.customerid and a.stock_time = b.stock_time and a.warehouse_code = b.warehouse_code and a.temperature_type_code = b.temperature_type_code
+		where 1=1 and a.del_flag='0' and b.del_flag=0 and a.task_id=#{taskId}
     </select>
 
-   
-
-    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity">
-        insert into biz_pack_storage_temp(task_id, cur_time, warehouse_code, warehouse_name, customerid, customer_name, pallet_num, creator, create_time, is_calculated,del_flag, write_time, temperature_type_code, temperature_type_name, adjust_pallet_num, rowExcelNo, rowExcelName)
+    <insert id="save" parameterType="java.util.List">
+        insert into biz_product_pallet_storage_temp(task_id, stock_time, warehouse_code, warehouse_name, customerid, customer_name, temperature_type_code, temperature_type_name, pallet_num, is_calculated, creator, create_time, del_flag, write_time, adjust_pallet_num, rowExcelNo, rowExcelName)
         values 
          <foreach item="item" index="index" collection="list" separator=",">
         	(
-			#{item.taskId}, 
-			#{item.stockTime}, 
-			#{item.warehouseCode}, 
-			#{item.warehouseName}, 
-			#{item.customerid}, 
-			#{item.customerName}, 
-			#{item.palletNum}, 
-			#{item.creator}, 
-			#{item.createTime}, 
-			#{item.isCalculated}, 
-			#{item.delFlag}, 
-			#{item.writeTime}, 
-			#{item.temperatureTypeCode}, 
-			#{item.temperatureTypeName}, 
-			#{item.adjustPalletNum}, 
-			#{item.rowExcelNo}, 
-			#{item.rowExcelName}
+				#{item.taskId,jdbcType=VARCHAR}, 
+				#{item.stockTime,jdbcType=TIMESTAMP}, 
+				#{item.warehouseCode,jdbcType=VARCHAR}, 
+				#{item.warehouseName,jdbcType=VARCHAR}, 
+				#{item.customerid,jdbcType=VARCHAR}, 
+				#{item.customerName,jdbcType=VARCHAR}, 
+				#{item.temperatureTypeCode,jdbcType=VARCHAR}, 
+				#{item.temperatureTypeName,jdbcType=VARCHAR}, 
+				#{item.palletNum,jdbcType=DECIMAL}, 
+				#{item.isCalculated,jdbcType=VARCHAR}, 
+				#{item.creator,jdbcType=VARCHAR}, 
+				#{item.createTime,jdbcType=TIMESTAMP}, 
+				#{item.delFlag,jdbcType=VARCHAR}, 
+				#{item.writeTime,jdbcType=TIMESTAMP}, 
+				#{item.adjustPalletNum,jdbcType=DECIMAL}, 
+				#{item.rowExcelNo,jdbcType=INTEGER}, 
+				#{item.rowExcelName,jdbcType=VARCHAR}
         )
         </foreach>
     </insert>
     
+    <delete id="deleteBybatchNum" parameterType="java.util.Map">
+    	delete from biz_product_pallet_storage_temp where task_id=#{taskId}
+    </delete>
 </mapper>

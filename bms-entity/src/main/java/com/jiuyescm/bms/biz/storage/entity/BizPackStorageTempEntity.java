@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.biz.storage.entity;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;
@@ -25,7 +24,7 @@ public class BizPackStorageTempEntity implements IEntity {
 	// 商家名称
 	private String customerName;
 	// PalletNum
-	private BigDecimal palletNum;
+	private Double palletNum;
 	// 创建者
 	private String creator;
 	// 创建时间
@@ -39,11 +38,13 @@ public class BizPackStorageTempEntity implements IEntity {
 	// 温度类型
 	private String temperatureTypeName;
 	// AdjustPalletNum
-	private BigDecimal adjustPalletNum;
+	private Double adjustPalletNum;
 	// excel行号
 	private Integer rowExcelNo;
 	// excel列名
 	private String rowExcelName;
+	//作废标识
+	private String delFlag;
 
 	public BizPackStorageTempEntity() {
 
@@ -162,22 +163,6 @@ public class BizPackStorageTempEntity implements IEntity {
 	}
 	
 	/**
-     * PalletNum
-     */
-	public BigDecimal getPalletNum() {
-		return this.palletNum;
-	}
-
-    /**
-     * PalletNum
-     *
-     * @param palletNum
-     */
-	public void setPalletNum(BigDecimal palletNum) {
-		this.palletNum = palletNum;
-	}
-	
-	/**
      * 创建者
      */
 	public String getCreator() {
@@ -274,22 +259,6 @@ public class BizPackStorageTempEntity implements IEntity {
 	}
 	
 	/**
-     * AdjustPalletNum
-     */
-	public BigDecimal getAdjustPalletNum() {
-		return this.adjustPalletNum;
-	}
-
-    /**
-     * AdjustPalletNum
-     *
-     * @param adjustPalletNum
-     */
-	public void setAdjustPalletNum(BigDecimal adjustPalletNum) {
-		this.adjustPalletNum = adjustPalletNum;
-	}
-	
-	/**
      * excel行号
      */
 	public Integer getRowExcelNo() {
@@ -319,6 +288,30 @@ public class BizPackStorageTempEntity implements IEntity {
      */
 	public void setRowExcelName(String rowExcelName) {
 		this.rowExcelName = rowExcelName;
+	}
+
+	public Double getPalletNum() {
+		return palletNum;
+	}
+
+	public void setPalletNum(Double palletNum) {
+		this.palletNum = palletNum;
+	}
+
+	public Double getAdjustPalletNum() {
+		return adjustPalletNum;
+	}
+
+	public void setAdjustPalletNum(Double adjustPalletNum) {
+		this.adjustPalletNum = adjustPalletNum;
+	}
+
+	public String getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
 	}
     
 }

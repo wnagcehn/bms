@@ -9,10 +9,12 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizPackStorageRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -173,5 +175,15 @@ public class BizPackStorageRepositoryImpl extends MyBatisDao implements IBizPack
 	@Override
 	public int updateBatch(List<BizPackStorageEntity> list) {
 		return updateBatch("com.jiuyescm.bms.biz.storage.BizPackStorageEntityMapper.updateBatch",list);
+	}
+
+	@Override
+	public int saveTempData(String taskId) {
+		// TODO Auto-generated method stub
+	 SqlSession session = getSqlSessionTemplate();
+	 Map<String,String> map=Maps.newHashMap();
+	 map.put("taskId", taskId);
+	 return session.insert("com.jiuyescm.bms.biz.storage.BizPackStorageEntityMapper.saveDataFromTemp", map);
+
 	}
 }

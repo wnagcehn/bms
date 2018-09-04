@@ -24,13 +24,11 @@
     </resultMap>
 	  
     <select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageTempEntity">
-        select cur_time, warehouse_name, customer_name, temperature_type_name,a.rowExcelNo,a.rowExcelName
-        from biz_pack_storage_temp
-        where 1=1
-		where a.task_id=#{taskId} and b.del_flag=0 limit #{errorCount}
+        select a.cur_time, a.warehouse_name, a.customer_name, a.temperature_type_name,a.rowExcelNo,a.rowExcelName
+        from biz_pack_storage_temp a INNER JOIN biz_pack_storage b
+        on a.customerid=b.customerid and a.cur_time=b.cur_time and a.warehouse_code=b.warehouse_code and a.temperature_type_code=b.temperature_type_code
+        where 1=1 and a.del_flag='0' and b.del_flag='0' and task_id=#{taskId}
     </select>
-
-   
 
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageTempEntity">
         insert into biz_pack_storage_temp(task_id, cur_time, warehouse_code, warehouse_name, customerid, customer_name, pallet_num, creator, create_time, is_calculated,del_flag, write_time, temperature_type_code, temperature_type_name, adjust_pallet_num, rowExcelNo, rowExcelName)
@@ -58,4 +56,7 @@
         </foreach>
     </insert>
     
+    <delete id="deleteBybatchNum" parameterType="java.util.Map">
+    	delete from biz_pack_storage_temp where task_id=#{taskId}
+    </delete>
 </mapper>

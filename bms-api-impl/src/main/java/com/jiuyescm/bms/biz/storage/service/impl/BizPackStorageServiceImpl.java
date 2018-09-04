@@ -138,4 +138,10 @@ public class BizPackStorageServiceImpl implements IBizPackStorageService {
 	public BizPackStorageEntity queryOneByParam(BizPackStorageEntity entity) {
 		return bizPackStorageRepository.queryOneByParam(entity);
 	}
+
+	@Override
+	public int saveTempData(String taskId) {
+		// TODO Auto-generated method stub
+		return bizPackStorageRepository.saveTempData(taskId);
+	}
 }

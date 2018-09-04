@@ -323,5 +323,10 @@
 			AND ((pallet_num = 0.000000 AND aqty != 0.000000) or (pallet_num != 0.000000 AND aqty = 0.000000))
 		</if>
     </select>
-    
+     
+    <insert id="saveDataFromTemp" parameterType="java.util.Map">
+    	insert into biz_product_pallet_storage(stock_time, warehouse_code, warehouse_name, customerid, customer_name, temperature_type_code, temperature_type_name, pallet_num, is_calculated, creator, create_time, del_flag, write_time, adjust_pallet_num)
+		select  stock_time, warehouse_code, warehouse_name, customerid, customer_name, temperature_type_code, temperature_type_name, pallet_num, is_calculated, creator, create_time, del_flag, write_time, adjust_pallet_num
+		from biz_product_pallet_storage_temp where task_id=#{taskId}                             
+    </insert>
 </mapper>
