@@ -40,6 +40,26 @@
         <Property name="dataType">int</Property>
         <Property name="label">运输类</Property>
       </PropertyDef>
+      <PropertyDef name="isSepWarehouse">
+        <Property name="dataType">boolean</Property>
+        <Property name="defaultValue">true</Property>
+        <Property name="label">耗材分仓显示</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskEntity">
       <Property name="creationType">com.jiuyescm.bms.base.file.entity.FileExportTaskEntity</Property>
@@ -127,6 +147,20 @@
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
         <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="label">年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="label">月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="required">false</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskCondition">
@@ -346,6 +380,11 @@ if(taskState==2){&#xD;
       </DataGrid>
     </Container>
     <Dialog id="dialogBill">
+      <ClientEvent name="onShow">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
       <Property name="caption">生成预账单</Property>
       <Property name="width">400</Property>
       <Property name="height">200</Property>
@@ -391,23 +430,29 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
         </Button>
       </Buttons>
       <Children>
-        <AutoForm>
+        <AutoForm id="AutoForm">
           <Property name="dataSet">dsCondition</Property>
           <Property name="cols">*</Property>
           <AutoFormElement>
-            <Property name="name">startDate</Property>
-            <Property name="property">startDate</Property>
+            <Property name="name">year</Property>
+            <Property name="property">year</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">endDate</Property>
-            <Property name="property">endDate</Property>
+            <Property name="name">month</Property>
+            <Property name="property">month</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">customerId</Property>
             <Property name="property">customerId</Property>
             <Property name="trigger">triggerCustomer</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">isSepWarehouse</Property>
+            <Property name="property">isSepWarehouse</Property>
+            <Property name="labelWidth">100</Property>
             <Editor/>
           </AutoFormElement>
         </AutoForm>

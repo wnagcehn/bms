@@ -173,9 +173,9 @@
     
      <select id="queryAll" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
-        select
-        <include refid="baseColumns" />
-        from biz_dispatch_pay_bill a
+        select a.*, s.servicename as servicename from biz_dispatch_pay_bill a
+		LEFT JOIN pub_carrier_servicetype s on a.service_type_code=s.servicecode 
+		and a.carrier_id=s.carrierid and s.delflag='0'
         where 1=1
 		<include refid="baseSelectColumns" />
     </select>

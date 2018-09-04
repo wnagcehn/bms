@@ -239,14 +239,20 @@
       <Property name="closeable">false</Property>
       <Buttons>
         <Button>
-          <ClientEvent name="onClick">view.get(&quot;#saveAction&quot;).execute(function(){&#xD;
-	dorado.MessageBox.alert(&quot;保存成功&quot;);&#xD;
-	var parameter=view.get(&quot;#dsBmsCorrectAsynTaskQuery.data&quot;).current;&#xD;
-	with(view.get(&quot;#dsBmsCorrectAsynTaskEntity&quot;)){&#xD;
-		set(&quot;parameter&quot;,parameter);&#xD;
-		flushAsync();&#xD;
-	}&#xD;
-	view.id(&quot;dialogTask&quot;).hide();&#xD;
+          <ClientEvent name="onClick">view.get(&quot;#saveAction&quot;).execute(function(result){&#xD;
+	if(result[&quot;fail&quot;]){&#xD;
+		dorado.MessageBox.alert(result[&quot;fail&quot;]);&#xD;
+		view.id(&quot;dialogTask&quot;).hide();&#xD;
+		return;&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;保存成功&quot;);&#xD;
+		var parameter=view.get(&quot;#dsBmsCorrectAsynTaskQuery.data&quot;).current;&#xD;
+		with(view.get(&quot;#dsBmsCorrectAsynTaskEntity&quot;)){&#xD;
+			set(&quot;parameter&quot;,parameter);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.id(&quot;dialogTask&quot;).hide();&#xD;
+	}	&#xD;
 });&#xD;
 </ClientEvent>
           <Property name="caption">保存</Property>

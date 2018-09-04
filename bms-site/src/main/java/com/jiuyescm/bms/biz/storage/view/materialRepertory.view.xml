@@ -470,6 +470,30 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
           <Property name="caption">批量修改</Property>
           <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
         </ToolBarButton>
+        <MenuButton>
+          <Property name="caption">导出下载</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+          <MenuItem>
+            <ClientEvent name="onClick">var data={&#xD;
+	bizType:&quot;IMPORT&quot;,&#xD;
+	taskType:&quot;BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK&quot;&#xD;
+}&#xD;
+var taskType = &quot;BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK&quot;;&#xD;
+var param=&quot;?taskType=&quot;+taskType;&#xD;
+view.get(&quot;#detailFrame&quot;).set(&quot;userData&quot;,data);&#xD;
+view.get(&quot;#detailFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.file.upload.view.BmsFileAsynTaskLookUp.d&quot;+param);&#xD;
+&#xD;
+var dialog = view.get(&quot;#dialogAsynDownloadDetails&quot;);&#xD;
+dialog.set(&quot;width&quot;, document.body.clientWidth-150);&#xD;
+dialog.set(&quot;height&quot;, document.body.clientHeight);&#xD;
+dialog.set(&quot;caption&quot;,&quot;文件下载&quot;);&#xD;
+dialog.show();&#xD;
+&#xD;
+</ClientEvent>
+            <Property name="caption">异步导入结果</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+          </MenuItem>
+        </MenuButton>
       </ToolBar>
       <AutoForm id="queryConditionFrm">
         <ClientEvent name="onReady">&#xD;
@@ -1274,5 +1298,18 @@ if(taskState==2){&#xD;
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
+    <Dialog id="dialogAsynDownloadDetails">
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Property name="center">false</Property>
+      <Property name="offsetLeft">50</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="detailFrame">
+          <Property name="userData"></Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

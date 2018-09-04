@@ -566,7 +566,7 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("adjustBoxnum", entity.getAdjustBoxnum());
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
-	        	dataItem.put("expresstype", entity.getExpresstype());
+	        	//dataItem.put("expresstype", entity.getExpresstype());
 	        	dataItem.put("servicename", entity.getServicename());
 	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
 	        	dataItem.put("sendCityId", entity.getSendCityId());        	
