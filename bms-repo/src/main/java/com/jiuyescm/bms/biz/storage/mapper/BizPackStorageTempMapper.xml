@@ -32,7 +32,7 @@
 
    
 
-    <insert id="save" parameterType="com.jiuyescm.bms.entity.entity.BizPackStorageTempEntity">
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageTempEntity">
         insert into biz_pack_storage_temp(task_id, cur_time, warehouse_code, warehouse_name, customerid, customer_name, pallet_num, creator, create_time, is_calculated,del_flag, write_time, temperature_type_code, temperature_type_name, adjust_pallet_num, rowExcelNo, rowExcelName)
         values 
          <foreach item="item" index="index" collection="list" separator=",">
