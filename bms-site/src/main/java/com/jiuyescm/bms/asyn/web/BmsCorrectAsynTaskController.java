@@ -8,9 +8,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.activemq.filter.function.makeListFunction;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,6 +34,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -52,6 +55,9 @@ public class BmsCorrectAsynTaskController {
 
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
+	
+	@Resource
+	private IBmsGroupCustomerService bmsGroupCustomerService;
 	
 	private static final String BMS_CORRECT_ASYN_TASK = "BMS.CORRECT.ASYN.TASK";
 	
@@ -101,8 +107,8 @@ public class BmsCorrectAsynTaskController {
 	    return uuid;
 	}
 	@DataResolver
-	public void save(BmsCorrectAsynTaskVo voEntity) throws Exception {
-		
+	public Map<String, String> save(BmsCorrectAsynTaskVo voEntity) throws Exception {
+		Map<String, String> result = new HashMap<>();
 		SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmss");
 		//String taskId=format.format(JAppContext.currentTimestamp())+"_"+JAppContext.currentUserID();
 		if(StringUtils.isNotBlank(voEntity.getYear())&&StringUtils.isNotBlank(voEntity.getMonth())){
@@ -113,6 +119,9 @@ public class BmsCorrectAsynTaskController {
 		    voEntity.setStartDate(startDate);
 		    voEntity.setEndDate(endDate);
 		}
+		// 查询不需要运单纠正的商家
+		List<String> notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(176);
+		
 		if(StringUtils.isBlank(voEntity.getCustomerId())){
 			Map<String,Object> conditionMap=Maps.newHashMap();
 			conditionMap.put("startDate", voEntity.getStartDate());
@@ -120,28 +129,42 @@ public class BmsCorrectAsynTaskController {
 			List<String> customerIdList=bmsCorrectAsynTaskService.queryCorrectCustomerList(conditionMap);
 			List<BmsCorrectAsynTaskVo> voList=new ArrayList<BmsCorrectAsynTaskVo>();
 			if(customerIdList==null||customerIdList.size()==0){
-				return ;
+				return result;
 			}
-			for(String customerId:customerIdList){
-				BmsCorrectAsynTaskVo vo=new BmsCorrectAsynTaskVo();
-				vo.setCreator(JAppContext.currentUserName());
-				vo.setCreateTime(JAppContext.currentTimestamp());
-				vo.setDelFlag("0");
-				vo.setTaskId(getUuid());
-				vo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-				format=new SimpleDateFormat("yyyyMM");
-				vo.setStartDate(voEntity.getStartDate());
-				vo.setEndDate(voEntity.getEndDate());
-				vo.setCreateMonth(format.format(voEntity.getStartDate()));
-				vo.setCustomerId(customerId);
-				vo.setTaskName(voEntity.getTaskName());
-				vo.setTaskRate(voEntity.getTaskRate());
-				if(!bmsCorrectAsynTaskService.existTask(vo)){
-					voList.add(vo);
+			
+			if (notCurCustList != null && notCurCustList.size() > 0) { 
+				for (String customerId:customerIdList) {
+					boolean exe = false;
+					for(String notCurCust : notCurCustList){
+						if (notCurCust.equals(customerId)) {
+							exe = true;
+							break;
+						}
+					}
+					if (!exe) {
+						BmsCorrectAsynTaskVo vo=new BmsCorrectAsynTaskVo();
+						vo.setCreator(JAppContext.currentUserName());
+						vo.setCreateTime(JAppContext.currentTimestamp());
+						vo.setDelFlag("0");
+						vo.setTaskId(getUuid());
+						vo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+						format=new SimpleDateFormat("yyyyMM");
+						vo.setStartDate(voEntity.getStartDate());
+						vo.setEndDate(voEntity.getEndDate());
+						vo.setCreateMonth(format.format(voEntity.getStartDate()));
+						vo.setCustomerId(customerId);
+						vo.setTaskName(voEntity.getTaskName());
+						vo.setTaskRate(voEntity.getTaskRate());
+						if(!bmsCorrectAsynTaskService.existTask(vo)){
+							voList.add(vo);
+						}
+					}
 				}
 			}
+			
 			if(voList.size()>0){
 				bmsCorrectAsynTaskService.saveBatch(voList);
+				result.put("success", "保存成功！");
 				for(BmsCorrectAsynTaskVo vo:voList){
 					try{
 						final String msg = vo.getTaskId();
@@ -153,13 +176,22 @@ public class BmsCorrectAsynTaskController {
 						});
 					}catch(Exception e){
 						logger.error("send MQ:",e);
+						result.put("fail", "MQ发送失败！");
 					}
 				
 				}
 				
+				return result;
+				
 			}
 			
 		}else{
+			for (String notCurCust : notCurCustList) {
+				if (notCurCust.equals(voEntity.getCustomerId())) {
+					result.put("fail", "该商家不参与运单纠正！");
+					return result;
+				}
+			}
 			if(!bmsCorrectAsynTaskService.existTask(voEntity)){
 				voEntity.setCreator(JAppContext.currentUserName());
 				voEntity.setCreateTime(JAppContext.currentTimestamp());
@@ -170,19 +202,24 @@ public class BmsCorrectAsynTaskController {
 				voEntity.setCreateMonth(format.format(voEntity.getStartDate()));
 				voEntity.setTaskRate(0);
 				bmsCorrectAsynTaskService.save(voEntity);
-				
-				final String msg = voEntity.getTaskId();
-				jmsQueueTemplate.send(BMS_CORRECT_ASYN_TASK, new MessageCreator() {
-					@Override
-					public Message createMessage(Session session) throws JMSException {
-						return session.createTextMessage(msg);
-					}
-				});
+				result.put("success", "保存成功!");
+				try {
+					final String msg = voEntity.getTaskId();
+					jmsQueueTemplate.send(BMS_CORRECT_ASYN_TASK, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(msg);
+						}
+					});
+				} catch (Exception e) {
+					logger.error("send MQ:",e);
+					result.put("fail", "MQ发送异常");
+				}
+
 			}
 			
-		}
-		
-	
+		}	
+		return result;
 	}
 	
 }

@@ -185,6 +185,8 @@ public class BizDispatchBillPayEntity implements IEntity {
 	//新的实际重量
 	private Double newTotalWeight;
 	
+	private String servicename;
+	
 	//报价list
 	private List<PriceOutMainDispatchEntity> priceList;	
 	public String getAdjustDeliverid() {
@@ -1131,6 +1133,14 @@ public class BizDispatchBillPayEntity implements IEntity {
 	public void setNewTotalWeight(Double newTotalWeight) {
 		this.newTotalWeight = newTotalWeight;
 	}
-  
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
+	}
+    
 	
 }

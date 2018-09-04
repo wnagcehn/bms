@@ -7,16 +7,15 @@ import java.util.Map;
  * 耗材异步导入任务类型枚举类
  * @author yangss
  */
-public enum BmsPackmaterialTaskTypeEnum {
+public enum BmsPackmaterialTaskTypeNewEnum {
 	
-	IMPORTBATCH("BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK", "耗材导入-系统模板"),
-	IMPORTWMS("BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK", "耗材导入-wms模板"),
+	IMPORT("BMS.QUEUE.PACKMATERIALIMPORT.TASK", "耗材导入"),
 	IMPORT_PACK("BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK", "商品/耗材按托库存");
 
 	private String code;
 	private String desc;
 	
-	private BmsPackmaterialTaskTypeEnum(String code, String desc){
+	private BmsPackmaterialTaskTypeNewEnum(String code, String desc){
 		this.setCode(code);
 		this.setDesc(desc);
 	}
@@ -35,8 +34,7 @@ public enum BmsPackmaterialTaskTypeEnum {
 	
 	private static Map<String,String> maps = new LinkedHashMap<String,String>();
 	static{
-		maps.put(IMPORTBATCH.getCode(), IMPORTBATCH.getDesc());
-		maps.put(IMPORTWMS.getCode(), IMPORTWMS.getDesc());
+		maps.put(IMPORT.getCode(), IMPORT.getDesc());
 		maps.put(IMPORT_PACK.getCode(), IMPORT_PACK.getDesc());
 	}
 	public static Map<String,String> getMap(){

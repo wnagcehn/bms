@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -141,9 +142,29 @@ public class BuinessDataExportController extends BaseController {
 	}
 
 	@DataResolver
-	public String asynExport(Map<String, Object> param) {
+	public String asynExport(Map<String, Object> param) throws ParseException {
 		if (null == param) {
 			return MessageConstant.QUERY_PARAM_NULL_MSG;
+		}
+		String year = "";
+		String month = "";
+		if (param.containsKey("year") && param.containsKey("month")) {
+			year = param.get("year").toString();
+			month = param.get("month").toString();
+		}
+		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
+			String startDateStr = year + "-" + month + "-01 00:00:00";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date startDate = sdf.parse(startDateStr);
+			//Date endDate = DateUtils.addMonths(startDate, 1);
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.YEAR, Integer.parseInt(year));
+			cal.set(Calendar.MONTH, Integer.parseInt(month)-1);
+			int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+			cal.set(Calendar.DAY_OF_MONTH, lastDay);
+			Date endDate = cal.getTime();
+			param.put("startDate", startDate);
+			param.put("endDate", endDate);
 		}
 		String customerId = param.get("customerId").toString();
 		Timestamp startDate = DateUtil.formatTimestamp(param.get("startDate"));
@@ -249,9 +270,13 @@ public class BuinessDataExportController extends BaseController {
 		List<String> warehouseList = queryPreBillWarehouse(condition);
 		// 存储费
 		handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
-
-		// 耗材费
-		handMaterial(xssfWorkbook, poiUtil, condition, filePath);
+		
+		// 耗材费(是否分仓)
+		if ((Boolean)condition.get("isSepWarehouse") == true) {
+			handMaterial(xssfWorkbook, poiUtil, condition, filePath);
+		}else {			
+			handMaterialNotSepWareHouse(xssfWorkbook, poiUtil, condition, filePath);
+		}
 
 		// 增值
 		handAdd(xssfWorkbook, poiUtil, condition, filePath);
@@ -376,7 +401,7 @@ public class BuinessDataExportController extends BaseController {
 	}
 
 	/**
-	 * 耗材
+	 * 耗材(分仓)
 	 * 
 	 * @param xssfWorkbook
 	 * @param poiUtil
@@ -544,6 +569,180 @@ public class BuinessDataExportController extends BaseController {
 					headPackMaterialMapList, dataPackMaterialList);
 		}
 
+	}
+	
+	/**
+	 * 耗材(不分仓)
+	 * 
+	 * @param xssfWorkbook
+	 * @param poiUtil
+	 * @param condition
+	 * @param filePath
+	 * @throws Exception
+	 */
+	private void handMaterialNotSepWareHouse(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil,
+			Map<String, Object> condition, String filePath) throws Exception {
+		List<Map<String, Object>> dataPackMaterialList = null;
+		List<Map<String, Object>> headPackMaterialMapList = null;
+		
+		List<BizOutstockPackmaterialEntity> warehouseList = bizOutstockPackmaterialServiceImpl
+				.queryAllWarehouseFromBizData(condition);
+		for (BizOutstockPackmaterialEntity entity : warehouseList) {
+			int pageNo = 1;
+			int size = 20000;
+			boolean doLoop = true;
+			List<FeesReceiveMaterial> dataList = new ArrayList<FeesReceiveMaterial>();
+			condition.put("warehouseCode", entity.getWarehouseCode());
+			List<PubMaterialInfoVo> materialInfoList = getAllMaterial();
+			List<BizOutstockPackmaterialEntity> ListHead = bizOutstockPackmaterialServiceImpl
+					.getMaterialCodeFromBizData(condition);
+			List<String> materialCodeList = getMaterialCodeList(ListHead);
+			headPackMaterialMapList = getHeadPackMaterialMap(
+					materialCodeList, materialInfoList);
+
+			while (doLoop) {
+				PageInfo<FeesReceiveMaterial> packMaterialList = bizOutstockPackmaterialServiceImpl
+						.queryMaterialFromBizData(condition, pageNo, size);
+				if (packMaterialList.getList().size() < size) {
+					doLoop = false;
+				} else {
+					pageNo += 1;
+				}
+
+				dataList.addAll(packMaterialList.getList());
+			}
+
+			if (dataList.size() == 0) {
+				continue;
+			}
+
+			dataPackMaterialList = new ArrayList<Map<String, Object>>();
+			for (FeesReceiveMaterial materialEntity : dataList) {
+				boolean flag = false;
+				Map<String, Object> matchMap = null;
+				for (Map<String, Object> map : dataPackMaterialList) {
+					if (map.get("waybillNo").equals(
+							materialEntity.getWaybillNo())) {
+						flag = true;
+						matchMap = map;
+						break;
+					}
+				}
+				if (flag) {
+					// 检查耗材类型
+					String marterialType = getMaterialType(materialInfoList,
+							materialEntity.getProductNo());
+					if (matchMap.containsKey(marterialType + "_name")) {
+						matchMap.put(
+								marterialType + "_name",
+								matchMap.get(marterialType + "_name") + ","
+										+ materialEntity.getProductName() == null ? ""
+										: materialEntity.getProductName());
+						if (materialEntity.getProductNo().contains("GB")) {
+							matchMap.put(
+									marterialType + "_count",
+									matchMap.get(marterialType + "_count")
+											+ "," + materialEntity.getWeight() == null ? ""
+											: Double.valueOf(materialEntity.getWeight()));
+						} else {
+							matchMap.put(
+									marterialType + "_count",
+									matchMap.get(marterialType + "_count")
+											+ ","
+											+ materialEntity.getQuantity() == null ? ""
+											: Double.valueOf(materialEntity.getQuantity()));
+						}
+						matchMap.put(marterialType + "_cost",
+								matchMap.get(marterialType + "_cost") + ","
+										+ materialEntity.getCost() == null ? ""
+										: Double.valueOf(materialEntity.getCost()));
+						double totleCost = matchMap.get("totalCost") == null ? 0d
+								: Double.parseDouble(matchMap.get("totalCost")
+										.toString());
+						totleCost += materialEntity.getCost() == null ? 0d
+								: Double.valueOf(materialEntity.getCost());
+						matchMap.put("totalCost", totleCost);// 金额
+					} else {
+						matchMap.put(marterialType + "_name",
+								materialEntity.getProductName() == null ? ""
+										: materialEntity.getProductName());
+						if (materialEntity.getProductNo().contains("GB")) {
+							matchMap.put(marterialType + "_count",
+									materialEntity.getWeight() == null ? ""
+											: Double.valueOf(materialEntity.getWeight()));
+						} else {
+							matchMap.put(marterialType + "_count",
+									materialEntity.getQuantity() == null ? ""
+											: Double.valueOf(materialEntity.getQuantity()));
+						}
+						matchMap.put(marterialType + "_code",
+								materialEntity.getProductNo());
+						matchMap.put(marterialType + "_type",
+								materialEntity.getSpecDesc());
+						matchMap.put(marterialType + "_unitprice",
+								materialEntity.getUnitPrice() == null ? ""
+										: Double.valueOf(materialEntity.getUnitPrice()));
+						matchMap.put(marterialType + "_cost", materialEntity
+								.getCost() == null ? "" : Double.valueOf(materialEntity.getCost()));
+						double totleCost = matchMap.get("totalCost") == null ? 0d
+								: Double.parseDouble(matchMap.get("totalCost")
+										.toString());
+						totleCost += materialEntity.getCost() == null ? 0d
+								: materialEntity.getCost();
+						matchMap.put("totalCost", totleCost);// 金额
+					}
+				} else {
+					Map<String, Object> dataItem = new HashMap<String, Object>();
+					dataItem.put("warehouseName",
+							materialEntity.getWarehouseName());
+					dataItem.put("customerName",
+							materialEntity.getCustomerName());
+					dataItem.put("waybillNo", materialEntity.getWaybillNo());
+					dataItem.put("outstockNo", materialEntity.getOutstockNo());
+					dataItem.put("totalqty", materialEntity.getTotalqty());
+					dataItem.put("productDetail",
+							materialEntity.getProductDetail());
+					dataItem.put("externalNo", materialEntity.getExternalNo());
+					dataItem.put("carrierName", materialEntity.getCarrierName());
+					dataItem.put("createTime", materialEntity.getCreateTime());
+					dataItem.put("receiveProvinceId",
+							materialEntity.getReceiveProvinceId());
+					dataItem.put("receiveCityId",
+							materialEntity.getReceiveCityId());
+					dataItem.put("receiveDetailAddress",
+							materialEntity.getReceiveDetailAddress());
+					String marterialType = getMaterialType(materialInfoList,
+							materialEntity.getProductNo());
+					dataItem.put(marterialType + "_name",
+							materialEntity.getProductName());
+					dataItem.put(marterialType + "_code",
+							materialEntity.getProductNo());
+					dataItem.put(marterialType + "_type",
+							materialEntity.getSpecDesc());
+					if (materialEntity.getProductNo().contains("GB")) {
+						dataItem.put(marterialType + "_count", materialEntity
+								.getWeight() == null ? "" : Double.valueOf(materialEntity
+								.getWeight()));
+					} else {
+						dataItem.put(marterialType + "_count", materialEntity
+								.getQuantity() == null ? "" : Double.valueOf(materialEntity
+								.getQuantity()));
+					}
+					dataItem.put(marterialType + "_unitprice", materialEntity
+							.getUnitPrice() == null ? "" : Double.valueOf(materialEntity
+							.getUnitPrice()));
+					dataItem.put(marterialType + "_cost", materialEntity
+							.getCost() == null ? "" :Double.valueOf(materialEntity.getCost()));
+					dataItem.put("totalCost", materialEntity.getCost());// 金额
+					dataPackMaterialList.add(dataItem);
+				}
+
+			}
+		}
+		if (headPackMaterialMapList != null && dataPackMaterialList != null) {
+			poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook,"耗材使用费",
+					headPackMaterialMapList, dataPackMaterialList);
+		}		
 	}
 
 	private List<PubMaterialInfoVo> getAllMaterial() {

@@ -270,6 +270,9 @@
       <PropertyDef name="adjustDistrictId">
         <Property name="label">调整区</Property>
       </PropertyDef>
+      <PropertyDef name="servicename">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1033,6 +1036,12 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
         <DataColumn name="carrierName">
           <Property name="property">carrierName</Property>
           <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">servicename</Property>
+          <Property name="property">servicename</Property>
+          <Property name="width">90</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn>
           <Property name="name">adjustCarrierName</Property>

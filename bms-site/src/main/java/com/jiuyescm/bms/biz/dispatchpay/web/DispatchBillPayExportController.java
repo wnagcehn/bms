@@ -296,6 +296,12 @@ public class DispatchBillPayExportController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "物流产品类型");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "servicename");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
         itemMap.put("title", "快递业务类型");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "expresstype");
@@ -350,6 +356,7 @@ public class DispatchBillPayExportController extends BaseController{
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("deliverName", entity.getDeliverName());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
+	        	dataItem.put("servicename", entity.getServicename());
 	        	dataItem.put("expresstype", entity.getExpresstype());
 	        	dataItem.put("receiveName", entity.getReceiveName());
 	        	String provinceId="";

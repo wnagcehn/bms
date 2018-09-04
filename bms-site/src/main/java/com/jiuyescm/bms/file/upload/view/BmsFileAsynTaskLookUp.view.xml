@@ -34,7 +34,7 @@
         <Property></Property>
         <Property name="label">任务类型</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsFileAsynTaskController#getFileAsynTaskTypeMap&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsFileAsynTaskController#getFileAsynTaskTypeNewMap&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="fileRows">
@@ -86,7 +86,7 @@
         <Property></Property>
         <Property name="label">任务类型</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsFileAsynTaskController#getFileAsynTaskTypeMap&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsFileAsynTaskController#getFileAsynTaskTypeNewMap&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="taskStatus">
@@ -119,6 +119,18 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var taskType= GetQueryString(&quot;taskType&quot;);&#xD;
+if(taskType != null &amp;&amp; taskType !='' &amp;&amp; taskType != &quot;undefined&quot;){&#xD;
+	view.get(&quot;#dsCondition.data&quot;).current.set(&quot;taskType&quot;,taskType);&#xD;
+	view.id(&quot;taskType&quot;).set(&quot;readOnly&quot;,true);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+function GetQueryString(name){&#xD;
+	 var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;); &#xD;
+     var r = window.location.search.substr(1).match(reg);&#xD;
+     if(r!=null)return  unescape(r[2]); return null;&#xD;
+	}</ClientEvent>
     <DataSet id="dsBmsFileAsynTaskVo">
       <Property name="dataType">[dtBmsFileAsynTaskVo]</Property>
       <Property name="dataProvider">bmsFileAsynTaskController#query</Property>
@@ -257,9 +269,10 @@ view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,end
       <Property name="cols">*,*,*</Property>
       <Property name="labelWidth">80</Property>
       <Property name="dataSet">dsCondition</Property>
-      <AutoFormElement>
+      <AutoFormElement id="taskType">
         <Property name="name">taskType</Property>
         <Property name="property">taskType</Property>
+        <Property name="readOnly">false</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -297,6 +310,7 @@ view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,end
           <Property name="property">taskId</Property>
           <Property name="name">taskId</Property>
           <Property name="visible">true</Property>
+          <Property name="width">100</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">taskName</Property>

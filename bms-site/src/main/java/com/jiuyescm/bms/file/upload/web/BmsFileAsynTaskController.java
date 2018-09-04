@@ -30,6 +30,7 @@ import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeEnum;
+import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeNewEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
@@ -139,6 +140,15 @@ public class BmsFileAsynTaskController {
 	@DataProvider
 	public Map<String,String> getFileAsynTaskTypeMap(){
 		return BmsPackmaterialTaskTypeEnum.getMap();
+	}
+	
+	/**
+	 * 获取文件类型
+	 * @return
+	 */
+	@DataProvider
+	public Map<String,String> getFileAsynTaskTypeNewMap(){
+		return BmsPackmaterialTaskTypeNewEnum.getMap();
 	}
 	
 	/**

@@ -53,6 +53,7 @@ import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialTempService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeEnum;
+import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeNewEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
 import com.jiuyescm.bms.common.enumtype.type.ExeclOperateTypeEnum;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
@@ -524,7 +525,7 @@ public class BizOutstockPackmaterialImportBatchController {
 		taskEntity.setTaskName(fileName.substring(0, fileName.lastIndexOf(".")));
 		taskEntity.setTaskRate(0);
 		taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
-		taskEntity.setTaskType(BmsPackmaterialTaskTypeEnum.IMPORTBATCH.getCode());
+		taskEntity.setTaskType(BmsPackmaterialTaskTypeNewEnum.IMPORT.getCode());
 		taskEntity.setBizType(ExeclOperateTypeEnum.IMPORT.getCode());
 //		taskEntity.setFileRows(xssfSheet.getLastRowNum());
 		taskEntity.setOriginFileName(fileName);
