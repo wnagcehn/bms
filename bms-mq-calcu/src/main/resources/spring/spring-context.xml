@@ -8,13 +8,11 @@
 
 	<context:component-scan base-package="com.jiuyescm.bms"/>  
 
-	<import resource="classpath*:applicationContext-config.xml" />
-	<import resource="classpath*:applicationContext-datasource.xml" />
-	<import resource="classpath*:spring-bdf2-datasource.xml" />
+	<import resource="classpath:spring/spring-config.xml" />
+	<import resource="classpath:spring/spring-datasource.xml" />
 	<import resource="classpath*:spring-redis.xml" />
 	<import resource="classpath*:spring-lock.xml" />
-	<import resource="classpath*:spring-fastdfs.xml"/>
-    <import resource="classpath*:applicationContext-consumer.xml" />    
-    <import resource="classpath*:applicationContext-activeMQ.xml" />
+    <import resource="classpath:spring/spring-dubbo.xml" />  
+    <import resource="classpath:spring/spring-activeMQ.xml" />
 </beans>
  
