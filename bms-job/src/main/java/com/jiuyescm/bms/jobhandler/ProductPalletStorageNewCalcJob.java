@@ -175,6 +175,8 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
+			XxlJobLogger.log("查询出的合同在线结果",JSONObject.fromObject(modelEntity));
+
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("合同在线无此合同",ex);
@@ -256,7 +258,9 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			//获取合同在线查询条件
 			Map<String, Object> cond = feesCalcuService.ContractCalcuService(biz, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			XxlJobLogger.log("获取报价参数",cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			XxlJobLogger.log("获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("报价信息 -- "+map);
 			}
@@ -277,7 +281,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			biz.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("计算不成功，费用【0】");
+			XxlJobLogger.log("计算不成功，费用0",ex);
 		}
 		
 	}
