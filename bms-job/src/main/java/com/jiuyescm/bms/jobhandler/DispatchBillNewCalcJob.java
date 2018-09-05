@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -460,48 +462,45 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("地址匹配   耗时【{0}】毫秒 ",(current - start));	
 		
-		//顺丰的不校验合同和是否签约服务
-		if(!"SHUNFENG_DISPATCH".equals(SubjectId)){
-			//********************获合同编号********************//
-			PriceContractInfoEntity contractEntity = null;
-			if(mapContact.containsKey(customerId)){
-				contractEntity=mapContact.get(customerId);
-			}else{
-				map.clear();
-				map.put("customerid",customerId);
-				map.put("contractTypeCode", contractTypeCode);
-				contractEntity = jobPriceContractInfoService.queryContractByCustomer(map);
-				mapContact.put(customerId,contractEntity);
-			}
-		
-			if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
-				XxlJobLogger.log(String.format("未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
-				entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-				feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-				entity.setRemark(String.format("未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
-				return false;
-			}
-			current = System.currentTimeMillis();
-			XxlJobLogger.log("验证合同   耗时【{0}】毫秒  合同编号 【{1}】",(current - start),contractEntity.getContractCode());
-			start = System.currentTimeMillis();// 系统开始时间
-			
-			//验证是否存在签约服务
-			start = System.currentTimeMillis();// 操作开始时间
+		//********************获合同编号********************//
+		PriceContractInfoEntity contractEntity = null;
+		if(mapContact.containsKey(customerId)){
+			contractEntity=mapContact.get(customerId);
+		}else{
 			map.clear();
-			map.put("contractCode", contractEntity.getContractCode());
-			map.put("bizTypeCode", BizTypeCode);
-			map.put("subjectId", SubjectId);
-			List<PriceContractItemEntity> contractItemEntities = priceContractItemRepository.query(map);
-		    if(contractItemEntities == null || contractItemEntities.size()==0){
-		    	XxlJobLogger.log(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
-				return false;
-		    }
-		    current = System.currentTimeMillis();
-			XxlJobLogger.log("验证签签约服务   耗时【{1}】毫秒 ",(current - start));	
+			map.put("customerid",customerId);
+			map.put("contractTypeCode", contractTypeCode);
+			contractEntity = jobPriceContractInfoService.queryContractByCustomer(map);
+			mapContact.put(customerId,contractEntity);
 		}
+	
+		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
+			XxlJobLogger.log(String.format("未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
+			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
+			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
+			entity.setRemark(String.format("未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
+			return false;
+		}
+		current = System.currentTimeMillis();
+		XxlJobLogger.log("验证合同   耗时【{0}】毫秒  合同编号 【{1}】",(current - start),contractEntity.getContractCode());
+		start = System.currentTimeMillis();// 系统开始时间
+		
+		//验证是否存在签约服务
+		start = System.currentTimeMillis();// 操作开始时间
+		map.clear();
+		map.put("contractCode", contractEntity.getContractCode());
+		map.put("bizTypeCode", BizTypeCode);
+		map.put("subjectId", SubjectId);
+		List<PriceContractItemEntity> contractItemEntities = priceContractItemRepository.query(map);
+	    if(contractItemEntities == null || contractItemEntities.size()==0){
+	    	XxlJobLogger.log(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
+			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			entity.setRemark(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
+			return false;
+	    }
+	    current = System.currentTimeMillis();
+		XxlJobLogger.log("验证签签约服务   耗时【{1}】毫秒 ",(current - start));	
 		return true;
 	}
 	
@@ -597,6 +596,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		queryVo.setSubjectCode("de_delivery_amount");
 		
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
+		
+		XxlJobLogger.log("查询合同在线参数",JSONObject.fromObject(queryVo));
+			
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
 		}
@@ -624,26 +626,16 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				//获取报价
 				List<BmsQuoteDispatchDetailVo> priceList=getQuoEntites(entity,subjectId);		
 				if(priceList == null || priceList.size()==0){ //
-					if("SHUNFENG_DISPATCH".equals(subjectId)){
-						XxlJobLogger.log("顺丰标准报价,仓库【{0}】,省份【{1}】报价未配置",entity.getWarehouseName(),entity.getReceiveProvinceId());
-						entity.setRemark(String.format("顺丰标准报价,仓库【%s】,省份【%s】报价未配置",entity.getWarehouseName(),entity.getReceiveProvinceId()));
-					}else{
-						XxlJobLogger.log("商家【{0}】,仓库【{1}】,省份【{2}】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
-						entity.setRemark(String.format("商家【%s】,仓库【%s】,省份【%s】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId()));
-					}
+					XxlJobLogger.log("商家【{0}】,仓库【{1}】,省份【{2}】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
+					entity.setRemark(String.format("商家【%s】,仓库【%s】,省份【%s】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId()));			
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					return;
 				}
 				
-				if(priceList.size()>1){ //
-					if("SHUNFENG_DISPATCH".equals(subjectId)){
-						XxlJobLogger.log("顺丰标准报价,仓库【{0}】,省份【{1}】报价存在多条",entity.getWarehouseName(),entity.getReceiveProvinceId());
-						entity.setRemark(String.format("顺丰标准报价,仓库【%s】,省份【%s】报价存在多条",entity.getWarehouseName(),entity.getReceiveProvinceId()));
-					}else{
-						XxlJobLogger.log("商家【{0}】,仓库【{1}】,省份【{2}】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
-						entity.setRemark(String.format("商家【%s】,仓库【%s】,省份【%s】报价存在多条",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId()));
-					}
+				if(priceList.size()>1){ //			
+					XxlJobLogger.log("商家【{0}】,仓库【{1}】,省份【{2}】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
+					entity.setRemark(String.format("商家【%s】,仓库【%s】,省份【%s】报价存在多条",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId()));				
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					return;
@@ -783,16 +775,17 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	 */
 	private List<BmsQuoteDispatchDetailVo> getQuoEntites(BizDispatchBillEntity entity,String subjectId){
 		//标准商家id
-		String standCustomerId="";
+		
 		List<BmsQuoteDispatchDetailVo> list=new ArrayList<>();
+		/*String standCustomerId="";
 		if("SHUNFENG_DISPATCH".equals(subjectId)){
 			standCustomerId=queryShunfengCustomer();
 			if(StringUtils.isNotBlank(standCustomerId)){
 				list=queryShunfengPrice(entity,subjectId,standCustomerId);
 			}
-		}else{
+		}else{*/
 			list=queryPriceByCustomer(entity,subjectId);
-		}
+		/*}*/
 
 		//如果有多条,走筛选规则
 		if(list.size()>0){
@@ -804,7 +797,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			
 			//根据报价形式查询到对应的筛选规则
 			Map<String,Object> map=new HashMap<String,Object>();
-			String priceType="";
+			/*String priceType="";
 			//判断报价形式
 			if("SHUNFENG_DISPATCH".equals(subjectId)){
 				if(StringUtils.isNotBlank(standCustomerId)){
@@ -819,7 +812,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 					map.put("subjectId",subjectId);
 					priceType=jobPriceContractInfoService.queryPriceType(map);
 				}		
-			}
+			}*/
 			
 			String quote_id = QuoteFilter(entity, list, null);
 			if(quote_id == null){
