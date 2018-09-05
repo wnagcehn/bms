@@ -612,6 +612,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	@Override
 	protected void calcuForBms(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
+		XxlJobLogger.log("bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
 				long start = System.currentTimeMillis();// 系统开始时间
@@ -688,6 +689,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	@Override
 	protected void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
+		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<String, Object>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode().trim());

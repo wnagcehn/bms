@@ -183,6 +183,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	
 	@Override
 	protected void calcuForBms(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
+		XxlJobLogger.log("bms计算");
 		//合同报价校验  false-不通过  true-通过
 		if(validateData(entity, feeEntity)){
 			if(mapCusPrice.containsKey(entity.getCustomerid())){
@@ -253,6 +254,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 
 	@Override
 	protected void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
+		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());

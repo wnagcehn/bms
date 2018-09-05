@@ -136,6 +136,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	
 	@Override
 	protected void calcuForBms(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
+		XxlJobLogger.log("bms计算");
 		//合同报价校验  false-不通过  true-通过
 		try{
 			if(validateData(entity, feeEntity)){
@@ -202,6 +203,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	protected void calcuForContract(BizInStockMasterEntity biz,
 			FeesReceiveStorageEntity fee) {
 		// TODO Auto-generated method stub
+		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());

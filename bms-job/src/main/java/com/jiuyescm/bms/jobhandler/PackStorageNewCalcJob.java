@@ -149,6 +149,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	}
 	@Override
 	protected void calcuForBms(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+		XxlJobLogger.log("bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
 				String customerId=entity.getCustomerid();
@@ -226,6 +227,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	}
 	@Override
 	protected void calcuForContract(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());

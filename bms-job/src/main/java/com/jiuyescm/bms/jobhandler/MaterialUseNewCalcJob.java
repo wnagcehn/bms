@@ -184,6 +184,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Override
 	protected void calcuForBms(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
+		XxlJobLogger.log("bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
 				if(mapCusPrice.containsKey(entity.getCustomerId())){
@@ -234,6 +235,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	protected void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
+		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
