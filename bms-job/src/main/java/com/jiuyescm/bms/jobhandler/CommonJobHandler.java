@@ -143,6 +143,7 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 							calcuForBms(t, f);
 						}
 						else{
+							XxlJobLogger.log("规则编号【{0}】", contractQuoteInfoVo.getRuleCode().trim());
 							calcuForContract(t,f);
 						}
 					}
