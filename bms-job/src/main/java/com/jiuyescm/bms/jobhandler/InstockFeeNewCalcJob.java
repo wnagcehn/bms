@@ -209,6 +209,12 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
+			if (null == ruleEntity) {
+				biz.setRemark("合同在线规则未绑定");
+				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				biz.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				XxlJobLogger.log("计算不成功，合同在线规则未绑定");
+			}
 			//获取合同在线查询条件
 			Map<String, Object> cond = feesCalcuService.ContractCalcuService(biz, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			XxlJobLogger.log("获取报价参数",cond);
