@@ -10,6 +10,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -36,8 +37,11 @@ import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
 import com.jiuyescm.contract.quote.vo.ContractQuoteInfoVo;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 import com.jiuyescm.exception.BizException;
+import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
 
+@JobHander(value="packStorageNewCalcJob")
+@Service
 public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity,FeesReceiveStorageEntity> {
 
 	private String SubjectId = "wh_material_storage";		//费用类型-耗材存储费 编码 1003原编码
