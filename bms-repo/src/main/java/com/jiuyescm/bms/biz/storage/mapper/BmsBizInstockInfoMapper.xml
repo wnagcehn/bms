@@ -46,42 +46,55 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		o.warehouse_name as warehouseName, o.customer_id as customerId,
 		o.customer_name as customerName, o.instock_type as instockType,
 		o.total_box as totalBox, o.total_qty as totalQty, o.total_weight as totalWeight,
-		o.receiver, o.creator, o.create_time as createTime, o.write_time as writeTime
+		o.receiver, o.creator, o.create_time as createTime, o.write_time as writeTime,
+		s.subject_code as subjectCode, s.charge_box as chargeBox, s.charge_qty as chargeQty,
+		s.charge_sku as chargeSku, s.charge_weight as chargeWeight, s.charge_carrier_id as chargeCarrierId,
+		s.quote_id as quoteId, s.amount, s.derate_amount as derateAmount, s.unit_price as unitPrice,
+		s.first_num as firstNum, s.first_price as firstPrice, s.continue_num as continueNum,
+		s.continue_price as continuePrice, s.calcu_status as calcuStatus, 
+		s.calcu_msg as calcuMsg, s.charge_unit as chargeUnit
 		from bms_biz_instock_info i
 		LEFT JOIN bms_biz_instock_origin o on i.fees_no=o.fees_no
+		INNER JOIN bms_fees_storage s on s.fees_no=i.fees_no
         where 1 = 1
         	<if test=" id != null and id !='' ">
-				and id = #{id}
+				and i.id = #{id}
 			</if>
         	<if test=" feesNo != null and feesNo !='' ">
-				and fees_no = #{feesNo}
+				and i.fees_no = #{feesNo}
 			</if>
 			<if test=" instockNo != null and instockNo !='' ">
-				and instock_no = #{instockNo}
+				and o.instock_no = #{instockNo}
 			</if>
         	<if test=" externalNum != null and externalNum !='' ">
-				and external_num = #{externalNum}
+				and i.external_num = #{externalNum}
 			</if>
 			<if test=" warehouseCode != null and warehouseCode !='' ">
-				and warehouse_code = #{warehouseCode}
+				and i.warehouse_code = #{warehouseCode}
 			</if>
         	<if test=" warehouseName != null and warehouseName !='' ">
-				and warehouse_name = #{warehouseName}
+				and i.warehouse_name = #{warehouseName}
 			</if>
         	<if test=" customerId != null and customerId !='' ">
-				and customer_id = #{customerId}
+				and i.customer_id = #{customerId}
 			</if>
         	<if test=" customerName != null and customerName !='' ">
-				and customer_name = #{customerName}
+				and i.customer_name = #{customerName}
 			</if>
         	<if test=" delFlag != null and delFlag !='' ">
-				and del_flag = #{delFlag}
+				and i.del_flag = #{delFlag}
 			</if>
 			<if test="createTime != null and createTime !='' " >
-				and <![CDATA[create_time >= #{createTime}]]>
+				and <![CDATA[o.create_time >= #{createTime}]]>
 			</if>
 			<if test="createEndTime != null and createEndTime !='' " >
-				and <![CDATA[create_time <= #{createEndTime}]]>
+				and <![CDATA[o.create_time <= #{createEndTime}]]>
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				and i.is_calculated = #{isCalculated}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				and s.subject_code = #{subjectCode}
 			</if>
     </select>
 
@@ -102,20 +115,49 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
     <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">
         update bms_biz_instock_info
         <trim prefix="set" suffixOverrides=",">
-			<if test=" adjustQty != null and adjustQty !='' ">
 				adjust_qty = #{adjustQty,jdbcType=DECIMAL},
-			</if>
-			<if test=" adjustBox != null and adjustBox !='' ">
-				adjust_box = #{adjustBox,jdbcType=DECIMAL},
-			</if>
-			<if test=" adjustWeight != null and adjustWeight !='' ">
+				adjust_box = #{adjustBox,jdbcType=DECIMAL},				
 				adjust_weight = #{adjustWeight,jdbcType=DECIMAL},
-			</if>
 			<if test=" delFlag != null and delFlag !='' ">
 				del_flag = #{delFlag,jdbcType=VARCHAR},
 			</if>
+			<if test=" lastModifierId != null and lastModifierId !='' ">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
         </trim>
         where id = #{id}
+    </update>
+    
+    	<!-- 更新 -->
+    <update id="updateBatch" parameterType="java.util.Map">
+        update bms_biz_instock_info
+        <trim prefix="set" suffixOverrides=",">
+			adjust_qty = #{adjustQty,jdbcType=DECIMAL},
+			adjust_box = #{adjustBox,jdbcType=DECIMAL},			
+			adjust_weight = #{adjustWeight,jdbcType=DECIMAL},
+			<if test=" lastModifierId != null">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifier != null">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where fees_no=(SELECT fees_no from bms_biz_instock_origin WHERE instock_no=#{instockNo,jdbcType=VARCHAR})
     </update>
 
 	<!-- 删除 -->

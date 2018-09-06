@@ -13,12 +13,15 @@
       </PropertyDef>
       <PropertyDef name="adjustQty">
         <Property name="label">商品调整数量</Property>
+        <Property name="dataType">double</Property>
       </PropertyDef>
       <PropertyDef name="adjustBox">
         <Property name="label">商品调整箱数</Property>
+        <Property name="dataType">double</Property>
       </PropertyDef>
       <PropertyDef name="adjustWeight">
         <Property name="label">商品调整重量</Property>
+        <Property name="dataType">double</Property>
       </PropertyDef>
       <PropertyDef name="lastModifierId">
         <Property name="label">修改者Id</Property>
@@ -29,9 +32,6 @@
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
         <Property name="dataType">DateTime</Property>
-      </PropertyDef>
-      <PropertyDef name="delFlag">
-        <Property name="label">作废标识</Property>
       </PropertyDef>
       <PropertyDef name="isCalculated">
         <Property name="label">计算状态</Property>
@@ -53,31 +53,31 @@
         <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="instockNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">入库单号</Property>
       </PropertyDef>
       <PropertyDef name="externalNum">
-        <Property/>
+        <Property></Property>
         <Property name="label">外部单号</Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库</Property>
       </PropertyDef>
       <PropertyDef name="warehouseName">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库名称</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家Id</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="instockType">
-        <Property/>
+        <Property></Property>
         <Property name="label">入库类型</Property>
       </PropertyDef>
       <PropertyDef name="totalQty">
@@ -93,37 +93,16 @@
         <Property name="label">商品重量</Property>
       </PropertyDef>
       <PropertyDef name="receiver">
-        <Property/>
+        <Property></Property>
         <Property name="label">收货人</Property>
       </PropertyDef>
       <PropertyDef name="creator">
-        <Property/>
+        <Property></Property>
         <Property name="label">创建人</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
         <Property name="dataType">DateTime</Property>
-      </PropertyDef>
-    </DataType>
-    <DataType name="dtBmsBizInstockInfoEntityQuery">
-      <PropertyDef name="instockNo">
-        <Property/>
-        <Property name="label">入库单号</Property>
-      </PropertyDef>
-      <PropertyDef name="externalNum">
-        <Property/>
-        <Property name="label">外部单号</Property>
-      </PropertyDef>
-      <PropertyDef name="warehouseCode">
-        <Property/>
-        <Property name="label">仓库</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
-        </Property>
-      </PropertyDef>
-      <PropertyDef name="customerId">
-        <Property/>
-        <Property name="label">商家</Property>
       </PropertyDef>
       <PropertyDef name="delFlag">
         <Property name="label">是否作废</Property>
@@ -136,6 +115,107 @@
           </Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeWeight">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">计费重量</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeBox">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">计费箱数</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeQty">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">计费商品数量</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeSku">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">计费sku数量</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeCarrierId">
+        <Property></Property>
+        <Property name="label">计费物流商id</Property>
+      </PropertyDef>
+      <PropertyDef name="quoteId">
+        <Property></Property>
+        <Property name="label">计费报价id</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">减免金额</Property>
+      </PropertyDef>
+      <PropertyDef name="calcuStatus">
+        <Property></Property>
+        <Property name="label">计算状态二级编码</Property>
+      </PropertyDef>
+      <PropertyDef name="calcuMsg">
+        <Property></Property>
+        <Property name="label">计算说明</Property>
+      </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">单价</Property>
+      </PropertyDef>
+      <PropertyDef name="firstNum">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">首量</Property>
+      </PropertyDef>
+      <PropertyDef name="firstPrice">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">首价</Property>
+      </PropertyDef>
+      <PropertyDef name="continueNum">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">续量</Property>
+      </PropertyDef>
+      <PropertyDef name="continuePrice">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">续价</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeUnit">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">计费单位</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsBizInstockInfoEntityQuery">
+      <PropertyDef name="instockNo">
+        <Property></Property>
+        <Property name="label">入库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNum">
+        <Property></Property>
+        <Property name="label">外部单号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">是否作废</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
         <Property name="dataType">DateTime</Property>
@@ -143,6 +223,36 @@
       <PropertyDef name="createEndTime">
         <Property name="label">~</Property>
         <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">未计算</Property>
+              <Property name="1">已计算</Property>
+              <Property name="99">待重算</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property></Property>
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupSubjectController#queryGroupSubject&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -162,6 +272,7 @@
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
       </ToolBarButton>
+      <Separator/>
       <ToolBarButton id="btnModify">
         <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsBizInstockInfoEntity.data&quot;);&#xD;
                 if(data.current){&#xD;
@@ -172,6 +283,19 @@
                 }</ClientEvent>
         <Property name="caption">修改</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="updateBatch">
+        <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).show();</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        <Property name="caption">批量更新</Property>
+        <Property name="tags">批量更新重量、物流商、宅配商</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnTemplateUpdate">
+        <ClientEvent name="onClick">view.get(&quot;#updateTemplateAction&quot;).execute();	&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">更新模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnRemove">
@@ -209,6 +333,9 @@
       <Property name="dataType">[dtBmsBizInstockInfoEntityQuery]</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
     <Container>
       <AutoForm id="queryForm">
@@ -274,6 +401,16 @@
           <Property name="property">createEndTime</Property>
           <Editor/>
         </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">isCalculated</Property>
+          <Property name="property">isCalculated</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectCode</Property>
+          <Property name="property">subjectCode</Property>
+          <Editor/>
+        </AutoFormElement>
       </AutoForm>
     </Container>
     <Container>
@@ -289,15 +426,15 @@
         </DataColumn>
         <DataColumn name="feesNo">
           <Property name="property">feesNo</Property>
-          <Property name="width">90</Property>
+          <Property name="width">110</Property>
         </DataColumn>
         <DataColumn name="instockNo">
           <Property name="property">instockNo</Property>
-          <Property name="width">90</Property>
+          <Property name="width">110</Property>
         </DataColumn>
         <DataColumn name="externalNum">
           <Property name="property">externalNum</Property>
-          <Property name="width">90</Property>
+          <Property name="width">120</Property>
         </DataColumn>
         <DataColumn name="warehouseName">
           <Property name="property">warehouseName</Property>
@@ -369,7 +506,7 @@
         </DataColumn>
         <DataColumn name="lastModifyTime">
           <Property name="property">lastModifyTime</Property>
-          <Property name="width">90</Property>
+          <Property name="width">130</Property>
         </DataColumn>
         <DataColumn name="delFlag">
           <Property name="property">delFlag</Property>
@@ -378,6 +515,74 @@
         <DataColumn name="remark">
           <Property name="property">remark</Property>
           <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn name="subjectCode">
+          <Property name="property">subjectCode</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="chargeWeight">
+          <Property name="property">chargeWeight</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="chargeBox">
+          <Property name="property">chargeBox</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="chargeQty">
+          <Property name="property">chargeQty</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="chargeSku">
+          <Property name="property">chargeSku</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="chargeCarrierId">
+          <Property name="property">chargeCarrierId</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="quoteId">
+          <Property name="property">quoteId</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="amount">
+          <Property name="property">amount</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="derateAmount">
+          <Property name="property">derateAmount</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="calcuStatus">
+          <Property name="property">calcuStatus</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="calcuMsg">
+          <Property name="property">calcuMsg</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="unitPrice">
+          <Property name="property">unitPrice</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="firstNum">
+          <Property name="property">firstNum</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="firstPrice">
+          <Property name="property">firstPrice</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="continueNum">
+          <Property name="property">continueNum</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="continuePrice">
+          <Property name="property">continuePrice</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="chargeUnit">
+          <Property name="property">chargeUnit</Property>
+          <Property name="width">100</Property>
         </DataColumn>
       </DataGrid>
     </Container>
@@ -390,7 +595,6 @@
       <Buttons>
         <Button id="btnSave">
           <ClientEvent name="onClick">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
-alert(entity.get(&quot;adjustQty&quot;));&#xD;
 if(isNullOrEmpty(entity.get(&quot;adjustQty&quot;))){&#xD;
 	entity.set(&quot;adjustQty&quot;, 0);&#xD;
 }&#xD;
@@ -497,5 +701,175 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <Dialog id="updateWayBillDialog">
+      <ClientEvent name="onShow">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+//view.get(&quot;#updateCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">批量更新</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="updateCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="ufileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="uimportBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">importBtn</Property>
+            <Property name="property">importBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="uimportBtn2">
+                <Property name="action">updateWayBillAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="uprogressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="uimportProgressBar"/>
+        <AjaxAction id="ugetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">trunkWaybillController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="usetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">trunkWaybillController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="updateWayBillAction">
+          <ClientEvent name="onFileUploaded">//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
+		view.get(&quot;#updateWayBillDialog&quot;).hide();	&#xD;
+		var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsBmsBizInstockInfoEntity&quot;)){&#xD;
+			set(&quot;parameter&quot;, data);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_uprogressLabel&quot;).show();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).show();&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#ugetProgress&quot;);&#xD;
+var setAction = view.get(&quot;#usetProgress&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+			&#xD;
+			var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsBizInstockInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+&#xD;
+$(&quot;#d_ufileName input&quot;).val(fname);&#xD;
+//view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+</ClientEvent>
+          <Property name="fileResolver">bmsBizInstockInfoController#importUpdate</Property>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">5MB</Property>
+          <Filters>
+            <Filter>
+              <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+              <Property name="title">Excel文件</Property>
+            </Filter>
+          </Filters>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="errorMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="width">540</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="updateTemplateAction">
+      <Property name="fileProvider">bmsBizInstockInfoController#downloadTemplateUpdate</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

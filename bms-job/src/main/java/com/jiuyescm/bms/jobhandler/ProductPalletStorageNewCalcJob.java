@@ -252,6 +252,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			//获取合同在线查询条件
 			Map<String, Object> cond = feesCalcuService.ContractCalcuService(biz, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			XxlJobLogger.log("condition -- "+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("报价信息 -- "+map);

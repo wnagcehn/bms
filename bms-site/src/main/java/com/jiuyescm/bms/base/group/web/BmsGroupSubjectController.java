@@ -14,6 +14,7 @@ import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.group.BmsGroupSubjectEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
@@ -175,5 +176,18 @@ public class BmsGroupSubjectController {
 		}
 		return list;
 	}
-
+	
+	@DataProvider
+	public Map<String, String> queryGroupSubject(){
+		Map<String, String> map = Maps.newLinkedHashMap();
+		List<BmsGroupSubjectEntity> list = bmsGroupSubjectService.queryGroupSubject();
+		if (null == list || list.size() == 0) {
+			Map<String, String> newMap = new HashMap<>();
+			return newMap;
+		}
+		for (BmsGroupSubjectEntity bmsGroupSubjectEntity : list) {
+			map.put(bmsGroupSubjectEntity.getSubjectCode(), bmsGroupSubjectEntity.getSubjectName());
+		}
+		return map;
+	}
 }

@@ -56,6 +56,7 @@ public class FeesCalcuServiceImpl implements IFeesCalcuService {
 		//rtnMap.put("succ", "false");
 		try{                                       
 			droolsCalcuServiceImpl.excute(rtnMap,calcuObject,model,rule,ruleNo);
+			logger.info(calcuObject);
 			//rtnMap.put("succ", "true");
 		}
 		catch(Exception ex){

@@ -15,18 +15,8 @@ import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockInfoRepository;
  * 
  */
 @Repository("bmsBizInstockInfoRepository")
-public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao<BmsBizInstockInfoEntity> implements IBmsBizInstockInfoRepository {
+public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsBizInstockInfoRepository {
 
-	/**
-	 * 根据id查询
-	 * @param id
-	 * @return
-	 * @throws Exception
-	*/
-    @Override
-    public BmsBizInstockInfoEntity findById(Long id) {
-        return selectOne("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.findById", id);
-    }
 	
 	/**
 	 * 分页查询
@@ -39,6 +29,7 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao<BmsBizInstockInf
                 pageNo, pageSize));
         return new PageInfo<BmsBizInstockInfoEntity>(list);
     }
+	
     
     /**
 	 * 查询
@@ -80,6 +71,16 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao<BmsBizInstockInf
     public BmsBizInstockInfoEntity delete(BmsBizInstockInfoEntity entity) {
     	update("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.update", entity);
     	return entity;
+    }
+    
+	/**
+	 * 批量更新
+	 * @param entity
+	 * @return
+	 */
+    @Override
+    public int updateBatch(List<Map<String, Object>> list) {
+       return updateBatch("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.updateBatch", list);
     }
 	
 }

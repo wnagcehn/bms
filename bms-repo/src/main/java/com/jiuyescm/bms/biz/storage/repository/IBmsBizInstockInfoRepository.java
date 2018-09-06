@@ -12,8 +12,6 @@ import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
  */
 public interface IBmsBizInstockInfoRepository {
 
-    BmsBizInstockInfoEntity findById(Long id);
-	
 	PageInfo<BmsBizInstockInfoEntity> query(Map<String, Object> condition,
 		int pageNo, int pageSize);
 
@@ -24,5 +22,12 @@ public interface IBmsBizInstockInfoRepository {
     BmsBizInstockInfoEntity update(BmsBizInstockInfoEntity entity);
 
 	BmsBizInstockInfoEntity delete(BmsBizInstockInfoEntity entity);
+	
+	/**
+	 * 批量更新
+	 * @param list
+	 * @return
+	 */
+	int updateBatch(List<Map<String, Object>> list);
 
 }

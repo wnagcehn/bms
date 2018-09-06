@@ -51,7 +51,13 @@ public class BmsGroupSubjectRepositoryImpl extends MyBatisDao<BmsGroupSubjectEnt
 				queryCondition, new RowBounds(pageNo, pageSize));
 		return new PageInfo<BmsGroupSubEntity>(list);
 	}
-
+	
+	@Override
+	public List<BmsGroupSubjectEntity> queryGroupSubject(BmsGroupSubjectEntity entity){
+		List<BmsGroupSubjectEntity> list = selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupSubjectMapper.queryGroupSubject", entity);
+		return list;
+	}
+	
 	@Override
 	public List<String> checkSubjectCodeExist(int groupId,
 			List<String> subjectCodeList) {

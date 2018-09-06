@@ -26,5 +26,7 @@ public interface IBmsGroupSubjectService {
 	Map<String,String> getSubject(String groupCode);
 
 	List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(Map<String, Object> param);
+	
+	List<BmsGroupSubjectEntity> queryGroupSubject();
 
 }

@@ -20,11 +20,11 @@ public class BmsBizInstockInfoEntity implements IEntity {
 	// 费用编号
 	private String feesNo;
 	// 商品调整数量
-	private BigDecimal adjustQty;
+	private Double adjustQty;
 	// 商品调整箱数
-	private BigDecimal adjustBox;
+	private Double adjustBox;
 	// 商品调整重量
-	private BigDecimal adjustWeight;
+	private Double adjustWeight;
 	// 修改者id
 	private String lastModifierId;
 	// 修改者
@@ -68,6 +68,38 @@ public class BmsBizInstockInfoEntity implements IEntity {
 	private Timestamp createTime;
 	// 写入BMS时间
 	private Timestamp writeTime;
+	
+	// 费用科目
+	private String subjectCode;
+	// 计费重量
+	private BigDecimal chargeWeight;
+	// 计费箱数
+	private BigDecimal chargeBox;
+	// 计费商品数量
+	private BigDecimal chargeQty;
+	// 计费sku数量
+	private BigDecimal chargeSku;
+	// 计费物流商id
+	private String chargeCarrierId;
+	// 计费报价ID
+	private String quoteId;
+	// 金额
+	private BigDecimal amount;
+	// 减免金额
+	private BigDecimal derateAmount;
+	// 计算状态二级编码 1-合同不存在 2-报价缺失 3-数据异常 4-系统错误
+	private String calcuStatus;
+	// 计算说明
+	private String calcuMsg;
+	
+	private BigDecimal unitPrice;
+	private BigDecimal firstNum;
+	private BigDecimal firstPrice;
+	private BigDecimal continueNum;
+	private BigDecimal continuePrice;
+	private BigDecimal chargeUnit;
+	
+	private String modReason;
 
 	public BmsBizInstockInfoEntity() {
 		super();
@@ -89,30 +121,30 @@ public class BmsBizInstockInfoEntity implements IEntity {
 		this.feesNo = feesNo;
 	}
 	
-	public BigDecimal getAdjustQty() {
-		return this.adjustQty;
+	public Double getAdjustQty() {
+		return adjustQty;
 	}
 
-	public void setAdjustQty(BigDecimal adjustQty) {
+	public void setAdjustQty(Double adjustQty) {
 		this.adjustQty = adjustQty;
 	}
-	
-	public BigDecimal getAdjustBox() {
-		return this.adjustBox;
+
+	public Double getAdjustBox() {
+		return adjustBox;
 	}
 
-	public void setAdjustBox(BigDecimal adjustBox) {
+	public void setAdjustBox(Double adjustBox) {
 		this.adjustBox = adjustBox;
 	}
-	
-	public BigDecimal getAdjustWeight() {
-		return this.adjustWeight;
+
+	public Double getAdjustWeight() {
+		return adjustWeight;
 	}
 
-	public void setAdjustWeight(BigDecimal adjustWeight) {
+	public void setAdjustWeight(Double adjustWeight) {
 		this.adjustWeight = adjustWeight;
 	}
-	
+
 	public String getLastModifierId() {
 		return this.lastModifierId;
 	}
@@ -279,6 +311,150 @@ public class BmsBizInstockInfoEntity implements IEntity {
 
 	public void setWriteTime(Timestamp writeTime) {
 		this.writeTime = writeTime;
+	}
+
+	public String getSubjectCode() {
+		return subjectCode;
+	}
+
+	public void setSubjectCode(String subjectCode) {
+		this.subjectCode = subjectCode;
+	}
+
+	public BigDecimal getChargeWeight() {
+		return chargeWeight;
+	}
+
+	public void setChargeWeight(BigDecimal chargeWeight) {
+		this.chargeWeight = chargeWeight;
+	}
+
+	public BigDecimal getChargeBox() {
+		return chargeBox;
+	}
+
+	public void setChargeBox(BigDecimal chargeBox) {
+		this.chargeBox = chargeBox;
+	}
+
+	public BigDecimal getChargeQty() {
+		return chargeQty;
+	}
+
+	public void setChargeQty(BigDecimal chargeQty) {
+		this.chargeQty = chargeQty;
+	}
+
+	public BigDecimal getChargeSku() {
+		return chargeSku;
+	}
+
+	public void setChargeSku(BigDecimal chargeSku) {
+		this.chargeSku = chargeSku;
+	}
+
+	public String getChargeCarrierId() {
+		return chargeCarrierId;
+	}
+
+	public void setChargeCarrierId(String chargeCarrierId) {
+		this.chargeCarrierId = chargeCarrierId;
+	}
+
+	public String getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(String quoteId) {
+		this.quoteId = quoteId;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public BigDecimal getDerateAmount() {
+		return derateAmount;
+	}
+
+	public void setDerateAmount(BigDecimal derateAmount) {
+		this.derateAmount = derateAmount;
+	}
+
+	public String getCalcuStatus() {
+		return calcuStatus;
+	}
+
+	public void setCalcuStatus(String calcuStatus) {
+		this.calcuStatus = calcuStatus;
+	}
+
+	public String getCalcuMsg() {
+		return calcuMsg;
+	}
+
+	public void setCalcuMsg(String calcuMsg) {
+		this.calcuMsg = calcuMsg;
+	}
+
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public BigDecimal getFirstNum() {
+		return firstNum;
+	}
+
+	public void setFirstNum(BigDecimal firstNum) {
+		this.firstNum = firstNum;
+	}
+
+	public BigDecimal getFirstPrice() {
+		return firstPrice;
+	}
+
+	public void setFirstPrice(BigDecimal firstPrice) {
+		this.firstPrice = firstPrice;
+	}
+
+	public BigDecimal getContinueNum() {
+		return continueNum;
+	}
+
+	public void setContinueNum(BigDecimal continueNum) {
+		this.continueNum = continueNum;
+	}
+
+	public BigDecimal getContinuePrice() {
+		return continuePrice;
+	}
+
+	public void setContinuePrice(BigDecimal continuePrice) {
+		this.continuePrice = continuePrice;
+	}
+
+	public BigDecimal getChargeUnit() {
+		return chargeUnit;
+	}
+
+	public void setChargeUnit(BigDecimal chargeUnit) {
+		this.chargeUnit = chargeUnit;
+	}
+
+	public String getModReason() {
+		return modReason;
+	}
+
+	public void setModReason(String modReason) {
+		this.modReason = modReason;
 	}
     
 }
