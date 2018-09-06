@@ -177,20 +177,14 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 	}
 	
 	@Override
-	public List<BmsGroupSubjectEntity> queryGroupSubject() {
+	public List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId() {
 		List<BmsGroupSubjectEntity> list = null;
 		try {
-			Map<String,Object> map= new HashMap<String, Object>();
-			map.put(GROUPCODE, "subject_discount_receive");
-			map.put(BIZTYPE, BMSSUBJECT);
-			BmsGroupEntity bmsGroup=bmsGroupRepository.queryOne(map);
-			if(bmsGroup!=null){
-				BmsGroupSubjectEntity entity = new BmsGroupSubjectEntity();		
-				entity.setGroupId(bmsGroup.getId());
-				list=bmsGroupSubjectRepository.queryGroupSubject(entity);
-				if (list.isEmpty()) {
-					return null;
-				}
+			BmsGroupSubjectEntity entity = new BmsGroupSubjectEntity();		
+			entity.setGroupId(177);
+			list=bmsGroupSubjectRepository.queryGroupSubjectByGroupId(entity);
+			if (list.isEmpty()) {
+				return null;
 			}
 		} catch (Exception e) {
 			logger.error("queryGroupSubject:",e);

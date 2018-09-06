@@ -47,7 +47,7 @@ public abstract class BmsCommonImportListener implements MessageListener{
 	
 	protected abstract String[] initColumnsNamesForNeed();
 	
-	protected abstract boolean batchHander();
+	protected abstract boolean batchHander(BmsFileAsynTaskVo taskEntity,BmsMaterialImportTask bmsMaterialImportTaskCommon) throws Exception;
 	
 	@Override
 	public void onMessage(Message message) {
@@ -132,7 +132,7 @@ public abstract class BmsCommonImportListener implements MessageListener{
 			return;
 		}
 		
-		batchHander();
+		batchHander(taskEntity,bmsMaterialImportTaskCommon);
 		
 	}
 	

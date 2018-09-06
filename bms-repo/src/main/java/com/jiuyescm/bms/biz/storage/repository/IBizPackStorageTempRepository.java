@@ -19,4 +19,10 @@ public interface IBizPackStorageTempRepository {
      */
     void saveBatch(List<BizPackStorageTempEntity> list);
 
+    /**
+     * 根据批次号删除数据
+     * @param taskId
+     * @return
+     */
+    public int deleteBybatchNum(String taskId);
 }

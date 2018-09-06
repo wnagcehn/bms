@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -167,10 +170,12 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
-		
+		XxlJobLogger.log("查询合同在线参数",JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
+			XxlJobLogger.log("查询出的合同在线结果",JSONObject.fromObject(modelEntity));
+
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("合同在线无此合同",ex);
@@ -181,6 +186,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Override
 	protected void calcuForBms(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
+		XxlJobLogger.log("bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
 				if(mapCusPrice.containsKey(entity.getCustomerId())){
@@ -231,13 +237,16 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	protected void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
+		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			//获取合同在线查询条件
 			Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			XxlJobLogger.log("获取报价参数",cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			XxlJobLogger.log("获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("报价信息 -- "+map);
 			}
@@ -258,7 +267,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("计算不成功，费用【0】");
+			XxlJobLogger.log("计算不成功，费用0",ex);
 		}
 		
 	}

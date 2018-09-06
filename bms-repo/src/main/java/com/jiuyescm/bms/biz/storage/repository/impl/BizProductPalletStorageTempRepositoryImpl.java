@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizProductPalletStorageTempRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -34,6 +35,16 @@ public class BizProductPalletStorageTempRepositoryImpl extends MyBatisDao<BizPro
 		SqlSession session = getSqlSessionTemplate();
 		int ret = session.insert("com.jiuyescm.bms.biz.storage.mapper.BizProductPalletStorageTempMapper.save", list);
 		logger.info("保存行数【"+ret+"】");
+	}
+
+	@Override
+	public int deleteBybatchNum(String taskId) {
+		// TODO Auto-generated method stub
+		Map<String,String> map=Maps.newHashMap();
+		map.put("taskId", taskId);
+		int k=this.delete("com.jiuyescm.bms.biz.storage.mapper.BizProductPalletStorageTempMapper.deleteBybatchNum", map);
+		logger.info("删除耗材临时表 行数【"+k+"】,批次号【"+taskId+"】");
+		return k;
 	}
 	
 	

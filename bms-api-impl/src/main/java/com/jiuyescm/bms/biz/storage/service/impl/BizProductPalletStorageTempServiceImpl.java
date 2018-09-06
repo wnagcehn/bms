@@ -1,7 +1,6 @@
 package com.jiuyescm.bms.biz.storage.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,12 @@ public class BizProductPalletStorageTempServiceImpl implements IBizProductPallet
 	@Override
 	public void saveBatch(List<BizProductPalletStorageTempEntity> list) {
 		bizProductPalletStorageTempRepository.saveBatch(list);;
+	}
+
+	@Override
+	public int deleteBybatchNum(String taskId) {
+		// TODO Auto-generated method stub
+		return bizProductPalletStorageTempRepository.deleteBybatchNum(taskId);
 	}
 	
 	

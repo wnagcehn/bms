@@ -53,8 +53,8 @@ public class BmsGroupSubjectRepositoryImpl extends MyBatisDao<BmsGroupSubjectEnt
 	}
 	
 	@Override
-	public List<BmsGroupSubjectEntity> queryGroupSubject(BmsGroupSubjectEntity entity){
-		List<BmsGroupSubjectEntity> list = selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupSubjectMapper.queryGroupSubject", entity);
+	public List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId(BmsGroupSubjectEntity entity){
+		List<BmsGroupSubjectEntity> list = selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupSubjectMapper.queryGroupSubjectByGroupId", entity);
 		return list;
 	}
 	

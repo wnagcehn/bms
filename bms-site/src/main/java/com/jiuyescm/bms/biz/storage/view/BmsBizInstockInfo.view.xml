@@ -118,6 +118,9 @@
       <PropertyDef name="subjectCode">
         <Property></Property>
         <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupSubjectController#queryGroupSubject&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="chargeWeight">
         <Property name="dataType">BigDecimal</Property>

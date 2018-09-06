@@ -17,5 +17,12 @@ public interface IBizProductPalletStorageTempService {
      * @param list
      */
     void saveBatch(List<BizProductPalletStorageTempEntity> list);
+    
+    /**
+     * 根据批次号删除数据
+     * @param taskId
+     * @return
+     */
+    public int deleteBybatchNum(String taskId);
 
 }

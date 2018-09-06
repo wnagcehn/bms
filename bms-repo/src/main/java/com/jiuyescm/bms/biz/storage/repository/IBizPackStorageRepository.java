@@ -59,5 +59,5 @@ public interface IBizPackStorageRepository {
 	 int updateBatch(List<BizPackStorageEntity> list);
 
 	public List<BizPackStorageEntity> queryAllBycurTime(Map<String, Object> map);
-
+	int saveTempData(String taskId);
 }

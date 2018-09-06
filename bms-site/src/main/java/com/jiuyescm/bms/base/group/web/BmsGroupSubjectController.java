@@ -180,7 +180,7 @@ public class BmsGroupSubjectController {
 	@DataProvider
 	public Map<String, String> queryGroupSubject(){
 		Map<String, String> map = Maps.newLinkedHashMap();
-		List<BmsGroupSubjectEntity> list = bmsGroupSubjectService.queryGroupSubject();
+		List<BmsGroupSubjectEntity> list = bmsGroupSubjectService.queryGroupSubjectByGroupId();
 		if (null == list || list.size() == 0) {
 			Map<String, String> newMap = new HashMap<>();
 			return newMap;

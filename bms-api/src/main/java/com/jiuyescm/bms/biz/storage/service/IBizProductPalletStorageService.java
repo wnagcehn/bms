@@ -64,5 +64,7 @@ public interface IBizProductPalletStorageService {
 	PageInfo<BizProductPalletStorageEntity> queryStorageDiff(Map<String, Object> condition, int pageNo, int pageSize);
 	
 	List<BizProductPalletStorageEntity> queryStorageDiff(Map<String, Object> condition);
+	
+	int saveTempData(String taskId);
 
 }

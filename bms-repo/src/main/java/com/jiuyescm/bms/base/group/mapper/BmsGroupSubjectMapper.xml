@@ -91,4 +91,11 @@
 		</set>
 	    where id=#{id}
     </update>
+    
+    <select id="queryGroupSubjectByGroupId" parameterType="com.jiuyescm.bms.base.group.BmsGroupSubjectEntity" resultType="com.jiuyescm.bms.base.group.BmsGroupSubjectEntity">
+		select a.id,a.group_id,a.subject_id,a.sort_no,a.creator,a.create_time,a.last_modifier,a.last_modify_time,a.del_flag,b.subject_code,b.subject_name,b.in_out_typecode,b.biz_typecode,b.fees_type
+		from bms_group_subject a 
+		inner JOIN bms_subject_info b on a.subject_id=b.id
+		where 1=1 and ifnull(a.del_flag,'0')='0' and ifnull(b.del_flag,'0')='0' and a.group_id = #{groupId}
+	</select>
 </mapper>

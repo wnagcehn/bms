@@ -1,7 +1,6 @@
 package com.jiuyescm.bms.biz.storage.repository;
 
 import java.util.List;
-import java.util.Map;
 
 import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity;
 
@@ -19,5 +18,12 @@ public interface IBizProductPalletStorageTempRepository {
      * @param list
      */
     void saveBatch(List<BizProductPalletStorageTempEntity> list);
+    
+    /**
+     * 根据批次号删除数据
+     * @param taskId
+     * @return
+     */
+    public int deleteBybatchNum(String taskId);
 
 }

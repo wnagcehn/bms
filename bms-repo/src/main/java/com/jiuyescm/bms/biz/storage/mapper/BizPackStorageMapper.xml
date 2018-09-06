@@ -254,7 +254,13 @@
     
      <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
         update biz_pack_storage set
-			adjust_pallet_num=#{palletNum,jdbcType=DOUBLE}
-			 where id=#{id}
+		adjust_pallet_num=#{palletNum,jdbcType=DOUBLE}
+		where id=#{id}
     </update>
+    
+    <insert id="saveDataFromTemp" parameterType="java.util.Map">
+		insert into biz_pack_storage(cur_time, warehouse_code, warehouse_name, customerid, customer_name, pallet_num, creator, create_time, is_calculated, del_flag, write_time, temperature_type_code, temperature_type_name, adjust_pallet_num)
+		select cur_time, warehouse_code, warehouse_name, customerid, customer_name, pallet_num, creator, create_time, is_calculated, del_flag, write_time, temperature_type_code, temperature_type_name, adjust_pallet_num
+		from biz_pack_storage_temp where task_id=#{taskId} 
+    </insert>
 </mapper>

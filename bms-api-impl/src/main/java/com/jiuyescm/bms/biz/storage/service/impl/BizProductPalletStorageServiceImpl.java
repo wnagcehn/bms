@@ -187,6 +187,12 @@ public class BizProductPalletStorageServiceImpl implements IBizProductPalletStor
 	public List<BizProductPalletStorageEntity> queryStorageDiff(Map<String, Object> condition) {
 		return bizProductPalletStorageRepository.queryStorageDiff(condition);
 	}
+
+	@Override
+	public int saveTempData(String taskId) {
+		// TODO Auto-generated method stub
+		return bizProductPalletStorageRepository.saveTempData(taskId);
+	}
 	
 	
 }

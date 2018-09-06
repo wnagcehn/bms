@@ -59,4 +59,5 @@ public interface IBizPackStorageService {
 
 	List<BizPackStorageEntity> queryAllBycurTime(Map<String, Object> map);
 
+	int saveTempData(String taskId);
 }

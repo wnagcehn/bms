@@ -214,7 +214,7 @@
 				#{item.customerName}, 
 				#{item.consumerMaterialCode}, 
 				#{item.consumerMaterialName}, 
-				#{item.warehouseCode}, 
+				#{item.warehouseCode},
 				#{item.warehouseName}, 
 				#{item.num}, 
 				#{item.adjustNum}, 
