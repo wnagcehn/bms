@@ -248,6 +248,12 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 		BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
+		if (null == ruleEntity) {
+			entity.setRemark("合同在线规则未配置");
+			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			XxlJobLogger.log("计算不成功，合同在线规则未配置");
+		}
 		//获取合同在线查询条件
 		Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 		XxlJobLogger.log("获取报价参数",cond);

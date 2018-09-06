@@ -159,9 +159,9 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setDelFlag("0");
 		//转换温度
-		if(StringUtils.isNotBlank(entity.getTemperatureTypeCode())){
-			entity.setTemperatureTypeName(temMap.get(entity.getTemperatureTypeCode()));
-		}
+//		if(StringUtils.isNotBlank(entity.getTemperatureTypeCode())){
+//			entity.setTemperatureTypeName(temMap.get(entity.getTemperatureTypeCode()));
+//		}
 		return storageFeeEntity;
 	}
 	
@@ -280,6 +280,12 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
+			if (null == ruleEntity) {
+				biz.setRemark("合同在线规则未配置");
+				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				biz.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				XxlJobLogger.log("计算不成功，合同在线规则未配置");
+			}
 			//获取合同在线查询条件
 			Map<String, Object> cond = feesCalcuService.ContractCalcuService(biz, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			XxlJobLogger.log("获取报价参数"+cond.toString());
