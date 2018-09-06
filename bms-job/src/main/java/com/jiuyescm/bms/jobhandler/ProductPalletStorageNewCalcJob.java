@@ -3,6 +3,7 @@ package com.jiuyescm.bms.jobhandler;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
@@ -74,6 +76,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	List<String> cusList=null;
 	String priceType="";
+	Map<String, String> temMap=null;
 	
 	
 	@Override
@@ -108,8 +111,24 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
 			}
 		}
+		
+		if(bizList.size()>0){
+			initConf();
+		}
 		return bizList;
 		
+	}
+	
+	protected void initConf(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeCode", "NO_FEES_DELIVER");
+		List<SystemCodeEntity> systemCodeList = systemCodeService.querySysCodes(map);
+		temMap =new LinkedHashMap<String,String>();
+		if(systemCodeList!=null && systemCodeList.size()>0){
+			for(int i=0;i<systemCodeList.size();i++){
+				map.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
+			}
+		}
 	}
 	
 	@Override
@@ -139,6 +158,10 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		storageFeeEntity.setFeesNo(entity.getFeesNo());
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setDelFlag("0");
+		//转换温度
+		if(StringUtils.isNotBlank(entity.getTemperatureTypeCode())){
+			entity.setTemperatureTypeName(temMap.get(entity.getTemperatureTypeCode()));
+		}
 		return storageFeeEntity;
 	}
 	
@@ -171,10 +194,13 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
-		XxlJobLogger.log("查询合同在线参数",JSONObject.fromObject(queryVo));
+		queryVo.setWarehouseCode(entity.getWarehouseCode());
+		XxlJobLogger.log("查询合同在线参数"+JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
+			XxlJobLogger.log("查询出的合同在线结果"+JSONObject.fromObject(modelEntity));
+
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("合同在线无此合同",ex);
@@ -256,7 +282,9 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			//获取合同在线查询条件
 			Map<String, Object> cond = feesCalcuService.ContractCalcuService(biz, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			XxlJobLogger.log("获取报价参数"+cond.toString());
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			XxlJobLogger.log("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("报价信息 -- "+map);
 			}
@@ -277,7 +305,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			biz.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("计算不成功，费用【0】");
+			XxlJobLogger.log("计算不成功，费用0"+ex);
 		}
 		
 	}
