@@ -605,7 +605,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("查询出的合同在线结果",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("合同在线无此合同",ex);
+			XxlJobLogger.log("合同在线无此合同--"+ex.getMessage());
 		}
 		return modelEntity;
 	}
