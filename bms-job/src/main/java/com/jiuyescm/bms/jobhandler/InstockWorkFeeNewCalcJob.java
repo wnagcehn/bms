@@ -119,7 +119,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
-		XxlJobLogger.log("查询合同在线参数"+JSONObject.fromObject(queryVo));
+		XxlJobLogger.log("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
