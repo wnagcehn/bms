@@ -31,11 +31,18 @@ public interface IBizAddFeeRepository {
     
     int saveList(List<BizAddFeeEntity> addList);
     
-    int updateList(List<BizAddFeeEntity> updateList);
+    void updateList(List<BizAddFeeEntity> updateList);
     
     BizAddFeeEntity selectOne(Map<String, Object> param);
     
     public List<BizAddFeeEntity> queryList(Map<String, Object> condition);
     
     public BizAddFeeEntity queryWms(Map<String, Object> param);
+    
+    /**
+     * 定时任务查询业务数据
+     * @param condition
+     * @return
+     */
+	List<BizAddFeeEntity> querybizAddFee(Map<String, Object> condition);
 }

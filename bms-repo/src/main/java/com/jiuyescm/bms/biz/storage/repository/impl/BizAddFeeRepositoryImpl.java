@@ -68,8 +68,12 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 	}
 
 	@Override
-	public int updateList(List<BizAddFeeEntity> updateList) {
-		return updateBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update",updateList);
+	public void updateList(List<BizAddFeeEntity> updateList) {
+		try {
+			this.updateBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update",updateList);
+		} catch (Exception ex) {
+			logger.error("批量更新主表异常"+ex.getMessage());
+		}	
 	}
 
 	@Override
@@ -86,6 +90,11 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 	public BizAddFeeEntity queryWms(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		return (BizAddFeeEntity) selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.queryWms", param);
+	}
+	
+	@Override
+	public List<BizAddFeeEntity> querybizAddFee(Map<String, Object> condition) {
+		return selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.querybizAddFee",condition);
 	}
 	
 }

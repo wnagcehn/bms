@@ -263,4 +263,28 @@
     <select id="queryWms" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
     	select <include refid="baseColumns" />  from  biz_add_fee where wms_id=#{wmsId,jdbcType=VARCHAR}
     </select>
+    
+    <select id="querybizAddFee" parameterType="java.util.Map" resultMap="baseResultMap">
+    	select a.id, a.wms_id, a.operation_time, a.warehouse_code,
+		a.warehouse_name, a.customerid, a.customer_name,a.num, a.fees_no,
+		a.fees_type, a.fees_unit, a.item, a.is_calculated, a.creator,
+		a.create_time, a.last_modifier, a.last_modify_time, a.del_flag,
+		a.calculate_time, a.write_time, a.adjust_num, a.fees_type_name, a.remark,
+		a.external_no
+		from biz_add_fee a
+		where a.del_flag = 0 
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = concat(${isCalculated})
+		</if>
+		LIMIT #{num}
+    </select>
 </mapper>
