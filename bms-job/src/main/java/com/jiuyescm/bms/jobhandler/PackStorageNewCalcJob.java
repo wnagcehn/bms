@@ -141,6 +141,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
+		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		XxlJobLogger.log("查询合同在线参数",JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{

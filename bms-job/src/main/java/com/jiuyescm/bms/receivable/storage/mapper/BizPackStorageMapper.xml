@@ -41,7 +41,8 @@
 		select 
 			id,warehouse_code,warehouse_name,customerid,customer_name,
 			pack_no,pack_name,qty,pallet_num,fees_no,is_calculated,
-			data_num,temperature_type_code,temperature_type_name,cur_time, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_pallet_num
+			data_num,temperature_type_code,temperature_type_name,cur_time, extattr1, 
+			extattr2, extattr3, extattr4, extattr5,adjust_pallet_num,create_time
 		from biz_pack_storage where del_flag = '0'
 		<if test="(beginTime != null and beginTime !='')" >
 			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
