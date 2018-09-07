@@ -245,8 +245,9 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 				XxlJobLogger.log("计算不成功，合同在线规则未绑定");
 			}
 			//获取合同在线查询条件
-			Map<String, Object> cond = feesCalcuService.ContractCalcuService(entity, contractQuoteInfoVo.getUniqueMap(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
-			XxlJobLogger.log("获取报价参数",cond);
+			Map<String, Object> cond = new HashMap<String, Object>();
+			feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			XxlJobLogger.log("获取报价参数"+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
 			XxlJobLogger.log("获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {

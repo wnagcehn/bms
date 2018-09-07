@@ -53,11 +53,9 @@ public class FeesCalcuServiceImpl implements IFeesCalcuService {
 	public Map<String, Object> ContractCalcuService(Object calcuObject,Object model,String rule,String ruleNo) {
 		
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
-		//rtnMap.put("succ", "false");
 		try{                                       
-			droolsCalcuServiceImpl.excute(rtnMap,calcuObject,model,rule,ruleNo);
+			droolsCalcuServiceImpl.excute(null,calcuObject,model,rule,ruleNo);
 			logger.info(calcuObject);
-			//rtnMap.put("succ", "true");
 		}
 		catch(Exception ex){
 			rtnMap.put("succ", "false");
