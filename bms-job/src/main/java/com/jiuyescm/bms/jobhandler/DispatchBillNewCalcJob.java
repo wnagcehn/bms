@@ -597,7 +597,6 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		queryVo.setCarrierServiceType(entity.getServiceTypeCode());
 		
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
-		
 		XxlJobLogger.log("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
 			
 		try{
@@ -730,7 +729,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("计算不成功，费用【0】",ex);
+			XxlJobLogger.log("计算不成功，费用【0】{0}",ex.getMessage());
 			entity.setRemark("计算不成功，费用【0】");
 		}
 		
