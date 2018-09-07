@@ -149,28 +149,13 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 
 	@Override
 	protected ContractQuoteInfoVo getContractForWhat(BizOutstockPackmaterialEntity entity) {
-		
-		
-		/*ContractQuoteQueryInfoVo queryVo1=new ContractQuoteQueryInfoVo();
-		queryVo1.setBizTypeCode(ContractBizTypeEnum.DISTRIBUTION.getCode());
-		queryVo1.setCarrierId("1500000019");
-		queryVo1.setCurrentTime(Timestamp.valueOf("2018-08-28 00:00:00"));
-		queryVo1.setCustomerId("SubSJ000014");
-		queryVo1.setSubjectCode("de_delivery_amount");
-		queryVo1.setWarehouseCode("");
-		ContractQuoteInfoVo quoteInfoVo=contractQuoteInfoService.queryUniqueColumns(queryVo1);
-		Map<String,Object> mapCondition=Maps.newHashMap();
-		mapCondition.put("e1", "北京01仓");
-		mapCondition.put("e2", "北京");
-		quoteInfoVo=contractQuoteInfoService.queryQuotes(quoteInfoVo, mapCondition);*/
-		
-		
+
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerId());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
-		XxlJobLogger.log("查询合同在线参数",JSONObject.fromObject(queryVo));
+		XxlJobLogger.log("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);

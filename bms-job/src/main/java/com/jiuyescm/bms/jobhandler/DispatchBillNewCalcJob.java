@@ -594,10 +594,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		queryVo.setCarrierId(entity.getCarrierId());
 		queryVo.setSubjectCode("de_delivery_amount");
+		queryVo.setCarrierServiceType(entity.getServiceTypeCode());
 		
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		
-		XxlJobLogger.log("查询合同在线参数",JSONObject.fromObject(queryVo));
+		XxlJobLogger.log("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
 			
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
@@ -605,7 +606,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("查询出的合同在线结果",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("合同在线无此合同",ex);
+			XxlJobLogger.log("合同在线无此合同--"+ex.getMessage());
 		}
 		return modelEntity;
 	}
