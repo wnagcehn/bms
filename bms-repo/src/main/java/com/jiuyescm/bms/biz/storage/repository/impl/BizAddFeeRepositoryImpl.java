@@ -68,12 +68,13 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 	}
 
 	@Override
-	public void updateList(List<BizAddFeeEntity> updateList) {
+	public int updateList(List<BizAddFeeEntity> updateList) {
 		try {
-			this.updateBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update",updateList);
+			return this.updateBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update",updateList);
 		} catch (Exception ex) {
 			logger.error("批量更新主表异常"+ex.getMessage());
 		}	
+		return 0;
 	}
 
 	@Override

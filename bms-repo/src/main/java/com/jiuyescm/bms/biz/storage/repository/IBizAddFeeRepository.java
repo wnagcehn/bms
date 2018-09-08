@@ -31,7 +31,7 @@ public interface IBizAddFeeRepository {
     
     int saveList(List<BizAddFeeEntity> addList);
     
-    void updateList(List<BizAddFeeEntity> updateList);
+    int updateList(List<BizAddFeeEntity> updateList);
     
     BizAddFeeEntity selectOne(Map<String, Object> param);
     
