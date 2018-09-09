@@ -29,7 +29,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 	<select id="findById" resultType="java.lang.Long">
         select
         <include refid="BASE_COLUMNS_ALL" />
-        from bms_biz_instock_record
+        from biz_instock_record
         where id = #{id}
     </select>
 	
@@ -38,7 +38,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
         resultType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockRecordEntity">
         select
         <include refid="BASE_COLUMNS_ALL" />
-        from bms_biz_instock_record
+        from biz_instock_record
         where 1 = 1
         	<if test=" id != null and id !='' ">
 				and id = #{id}
@@ -83,7 +83,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">
-        insert into bms_biz_instock_record(
+        insert into bms_instock_record(
         	<include refid="BASE_COLUMNS_WITHOUT_ID" />
     	)
         values (
@@ -105,7 +105,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 
 	<!-- 更新 -->
     <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockRecordEntity">
-        update bms_biz_instock_record
+        update biz_instock_record
         <trim prefix="set" suffixOverrides=",">
 			<if test=" feesNo != null and feesNo !='' ">
 				fees_no = #{feesNo,jdbcType=VARCHAR},
@@ -149,7 +149,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 
 	<!-- 删除 -->
     <delete id="delete" parameterType="java.lang.Long">
-        delete from bms_biz_instock_record 
+        delete from biz_instock_record 
         where id = #{id}
     </delete>
 </mapper>
