@@ -83,7 +83,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">
-        insert into bms_instock_record(
+        insert into biz_instock_record(
         	<include refid="BASE_COLUMNS_WITHOUT_ID" />
     	)
         values (

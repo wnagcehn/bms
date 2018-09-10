@@ -325,5 +325,10 @@ public class FeesReceiveStorageServiceImpl implements IFeesReceiveStorageService
 	public List<FeesReceiveStorageEntity> queryPreBillMaterialStorage(Map<String, Object> condition) {
 		return feesReceiveStorageRepository.queryPreBillMaterialStorage(condition);
 	}
+	
+	@Override
+	public List<FeesReceiveStorageEntity> queryByFeesNo(String FeesNo){
+		return feesReceiveStorageRepository.queryByFeesNo(FeesNo);
+	}
 
 }

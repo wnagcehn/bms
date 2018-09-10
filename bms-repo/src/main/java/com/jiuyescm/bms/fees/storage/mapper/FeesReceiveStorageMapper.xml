@@ -48,7 +48,7 @@
   
     <sql id="baseColumns">
         id,creator, create_time, last_modifier, last_modify_time, fees_no, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, cost_type, subject_code, other_subject_code,tempreture_type, product_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, cost,biz_type, param1, param2, param3, param4, param6, rule_no, bill_no, 
-        status,operate_time,biz_id,derate_amount,ifnull(cost,0)-ifnull(derate_amount,0) as receipt_amount, del_flag
+        status,operate_time,biz_id,derate_amount,ifnull(cost,0)-ifnull(derate_amount,0) as receipt_amount, del_flag, calcu_msg, is_calculated
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -949,5 +949,15 @@
 			 #{item}
 		</foreach>
     </delete>
+    
+    <select id="queryByFeesNo" parameterType="java.lang.String"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        <include refid="baseColumns" />
+        from fees_receive_storage
+        where 1=1 and del_flag='0'
+		and fees_no=#{feesNo}
+		order by create_time desc
+    </select>
     
 </mapper>

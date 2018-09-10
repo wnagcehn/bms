@@ -129,6 +129,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	//详细备注
 	private String remarkContent;
 	
+	private String calcuMsg;
+	
 	public Long getId() {
 		return id;
 	}
@@ -845,6 +847,14 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setExternalNo(String externalNo) {
 		this.externalNo = externalNo;
+	}
+
+	public String getCalcuMsg() {
+		return calcuMsg;
+	}
+
+	public void setCalcuMsg(String calcuMsg) {
+		this.calcuMsg = calcuMsg;
 	}
 	
 	

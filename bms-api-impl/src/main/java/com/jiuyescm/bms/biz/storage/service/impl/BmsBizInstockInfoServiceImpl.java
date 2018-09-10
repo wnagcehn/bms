@@ -104,5 +104,26 @@ public class BmsBizInstockInfoServiceImpl implements IBmsBizInstockInfoService {
     public int updateBatch(List<Map<String, Object>> list){
     	return bmsBizInstockInfoRepository.updateBatch(list);
     }
+    
+    /**
+     * 重算
+     * @param param
+     * @return
+     */
+	@Override
+	public int reCalculate(List<BmsBizInstockInfoEntity> list) {
+		return bmsBizInstockInfoRepository.reCalculate(list);
+	}
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @return
+	 */
+	@Override
+    public PageInfo<BmsBizInstockInfoEntity> groupCount(Map<String, Object> condition,
+            int pageNo, int pageSize){
+		return bmsBizInstockInfoRepository.groupCount(condition, pageNo, pageSize);
+	}
 	
 }

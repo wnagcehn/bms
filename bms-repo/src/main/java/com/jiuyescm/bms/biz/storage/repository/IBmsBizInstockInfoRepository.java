@@ -29,5 +29,19 @@ public interface IBmsBizInstockInfoRepository {
 	 * @return
 	 */
 	int updateBatch(List<Map<String, Object>> list);
+	
+	/**
+	 * 重算
+	 * @param param
+	 * @return
+	 */
+	int reCalculate(List<BmsBizInstockInfoEntity> list);
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @return
+	 */
+	PageInfo<BmsBizInstockInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
 
 }

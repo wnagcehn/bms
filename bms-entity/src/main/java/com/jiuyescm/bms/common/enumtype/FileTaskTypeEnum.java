@@ -20,6 +20,7 @@ public enum FileTaskTypeEnum {
 	FEE_ABNORMAL("abnormal", "异常费"),
 	BIZ_PRODUCT("product", "商品库存"),
 	BIZ_PRODUCT_PALLET("pro_pallet", "商品按托库存"),
+	BIZ_INSTOCK_INFO("instock_info", "入库单信息"),
 	BIZ_PACK("pack", "耗材库存"),
 	BIZ_PRO_OUTSTOCK("pro_outstock", "商品出库单"),
 	BIZ_PACK_OUTSTOCK("pack_outstock", "耗材出库明细"),

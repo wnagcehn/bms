@@ -180,4 +180,11 @@ public interface IFeesReceiveStorageRepository {
 	 * @return
 	 */
 	public List<FeesReceiveStorageEntity> queryPreBillMaterialStorage(Map<String, Object> condition);
+	
+	/**
+	 * 根据FeesNo查数据
+	 * @param FeesNo
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryByFeesNo(String FeesNo);
 }

@@ -40,6 +40,18 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
     public List<BmsBizInstockInfoEntity> query(Map<String, Object> condition){
 		return selectList("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.query", condition);
 	}
+	
+    /**
+	 * 分组统计
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public PageInfo<BmsBizInstockInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize){
+		List<BmsBizInstockInfoEntity> list = selectList("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.groupCount", condition, new RowBounds(
+                pageNo, pageSize));
+		return new PageInfo<BmsBizInstockInfoEntity>(list);
+	}
 
 	/**
 	 * 保存
@@ -82,5 +94,21 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
     public int updateBatch(List<Map<String, Object>> list) {
        return updateBatch("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.updateBatch", list);
     }
+    
+    /**
+     * 重算
+     * @param param
+     * @return
+     */
+	@Override
+	public int reCalculate(List<BmsBizInstockInfoEntity> list) {
+		try{
+			updateBatch("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.retryForCalcu", list);
+			return 1;
+		}
+		catch(Exception ex){
+			return 0;
+		}
+	}
 	
 }
