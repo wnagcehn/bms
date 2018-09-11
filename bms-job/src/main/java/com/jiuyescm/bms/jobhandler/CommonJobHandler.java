@@ -24,6 +24,17 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	//合同在线启动开关 true-开启  false-关闭(不考虑合同在线）
 	public boolean contract_switch = false;
 	
+	/**
+	 * 计费科目列表
+	 */
+	public String[] subjects = null;
+	
+	
+	/**
+	 * 当前需要计算的科目
+	 */
+	public String SubjectId = null;
+	
 	protected ContractQuoteInfoVo contractQuoteInfoVo = null;
 
 	/**
@@ -34,11 +45,26 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	protected abstract List<T> queryBillList(Map<String,Object> map);
 	
 	/**
+	 * 初始化 业务数据需要计算的费用科目
+	 * @return
+	 */
+	protected abstract String[] initSubjects();
+	
+	/**
 	 * 初始化费用对象  此阶段可以获取到 费用的计算参数 如：计费重量，计费数量，计费物流商等等
 	 * @param t
 	 * @return
 	 */
 	protected abstract F initFeeEntity(T t);
+	
+	/**
+	 * 是否参与科目费用计算
+	 * @param t
+	 * @return
+	 * false-不参与费用计算，费用表无需写入
+	 * true-参与费用计算，无论是否计算成功，都要写入费用表
+	 */
+	protected abstract boolean isJoin(T t);
 	
 	/**
 	 * 是否计算费用 此阶段应在 验证合同之前就执行 （应用场景：有些特殊单据无论有无合同，均不计算费用）
@@ -120,43 +146,53 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 		
 		List<List<T>> pageT=ListTool.splitList(billList, 200);//200个数据一组分页
 		boolean flag=true;
-		for(List<T> listT:pageT){
-			try{
-				List<F> feesList = new ArrayList<F>();
-				for (T t : listT) {
-					btime= System.currentTimeMillis();// 操作开始时间
-					
-					F f = initFeeEntity(t); //初始化费用对象 获取计算参数，如：计费重量，计费数量，计费物流商等待
-					feesList.add(f);
-					//进行赋值判断前，先校验数据本身是否需要费用计算
-					if(isNoExe(t,f) == true){
-						continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-					}
-					if(contract_switch == false){ 
-						//如果合同在线开关未开启,直接走bms逻辑，不需要去合同在线查找合同；
-						calcuForBms(t, f);
-					}
-					else{
-						//如果合同在线开关开启，需要先去合同在线查找合同，如果存在，走合同在线逻辑，不存在则走bms逻辑
-						contractQuoteInfoVo = getContractForWhat(t);
-						if(contractQuoteInfoVo == null || StringUtil.isEmpty(contractQuoteInfoVo.getTemplateCode())){
+		subjects = initSubjects();
+		for (String subject_code : subjects) {
+			SubjectId = subject_code;
+			
+			for(List<T> listT:pageT){
+				try{
+					List<F> feesList = new ArrayList<F>();
+					for (T t : listT) {
+						btime= System.currentTimeMillis();// 操作开始时间
+						
+						if(isJoin(t) == false){
+							continue;
+						}
+						
+						F f = initFeeEntity(t); //初始化费用对象 获取计算参数，如：计费重量，计费数量，计费物流商等待
+						feesList.add(f);
+						//进行赋值判断前，先校验数据本身是否需要费用计算
+						if(isNoExe(t,f) == true){
+							continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
+						}
+						if(contract_switch == false){ 
+							//如果合同在线开关未开启,直接走bms逻辑，不需要去合同在线查找合同；
 							calcuForBms(t, f);
 						}
 						else{
-							XxlJobLogger.log("规则编号【{0}】", contractQuoteInfoVo.getRuleCode().trim());
-							calcuForContract(t,f);
+							//如果合同在线开关开启，需要先去合同在线查找合同，如果存在，走合同在线逻辑，不存在则走bms逻辑
+							contractQuoteInfoVo = getContractForWhat(t);
+							if(contractQuoteInfoVo == null || StringUtil.isEmpty(contractQuoteInfoVo.getTemplateCode())){
+								calcuForBms(t, f);
+							}
+							else{
+								XxlJobLogger.log("规则编号【{0}】", contractQuoteInfoVo.getRuleCode().trim());
+								calcuForContract(t,f);
+							}
 						}
+						XxlJobLogger.log("单条费用计算耗时：【{0}】毫秒 ",(System.currentTimeMillis() - btime));
 					}
-					XxlJobLogger.log("单条费用计算耗时：【{0}】毫秒 ",(System.currentTimeMillis() - btime));
+					
+					btime= System.currentTimeMillis();// 操作开始时间
+					updateBatch(listT,feesList);
+					XxlJobLogger.log("更新数据总耗时：【{0}】毫秒 ",(System.currentTimeMillis() - btime));
+				}catch(Exception  e){
+					flag=false;
+					XxlJobLogger.log("【处理异常】原因:" +e);
 				}
-				
-				btime= System.currentTimeMillis();// 操作开始时间
-				updateBatch(listT,feesList);
-				XxlJobLogger.log("更新数据总耗时：【{0}】毫秒 ",(System.currentTimeMillis() - btime));
-			}catch(Exception  e){
-				flag=false;
-				XxlJobLogger.log("【处理异常】原因:" +e);
 			}
+			
 		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("总耗时：【{0}】毫秒  ",(current - start));

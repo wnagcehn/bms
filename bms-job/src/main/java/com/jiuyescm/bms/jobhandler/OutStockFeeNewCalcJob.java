@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleIfStatement.Else;
 import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -48,7 +49,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEntity,FeesReceiveStorageEntity> {
 	
-	private String SubjectId = "wh_b2c_work";		//费用类型-B2C订单操作费 1004原编码
+	//private String SubjectId = "wh_b2c_work";		//费用类型-B2C订单操作费 1004原编码
 	
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IBizOutstockMasterService bizOutstockMasterService;
@@ -74,6 +75,29 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	protected List<BizOutstockMasterEntity> queryBillList(Map<String, Object> map) {
 		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
 		return bizList;		
+	}
+	
+	@Override
+	protected String[] initSubjects() {
+		//这里的科目应该在科目组中配置,动态查询
+		//wh_b2c_work(B2C订单操作费 )    wh_b2b_work(B2B订单操作费)     wh_b2b_handwork(出库装车费)
+		String[] strs = {"wh_b2c_work","wh_b2b_work","wh_b2b_handwork"};
+		return strs;
+	}
+	
+	@Override
+	protected boolean isJoin(BizOutstockMasterEntity entity) {
+		//如果是【B2B订单操作费】 或【出库装车费】,并且是B2B出库单   ( B2bFlag 0-B2C  1-B2B)
+		if(("wh_b2b_work".equals(SubjectId) ||"wh_b2b_handwork".equals(SubjectId)) 
+				&& "1".equals(entity.getB2bFlag())){
+			return true;
+		}
+		else if("wh_b2c_work".equals(SubjectId) && "0".equals(entity.getB2bFlag())){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	// 初始化
