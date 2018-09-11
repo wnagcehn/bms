@@ -149,7 +149,7 @@
 			<if test="bizId != null" >biz_id=#{bizId,jdbcType=VARCHAR},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 		</set>
-        where fees_no=#{feesNo} and del_flag='0'
+        where fees_no=#{feesNo} and subject_code=#{subjectCode} and del_flag='0'
     </update>
     
     <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">

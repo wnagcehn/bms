@@ -1,7 +1,6 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleIfStatement.Else;
-import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -32,7 +30,6 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
-import com.jiuyescm.bms.receivable.storage.service.IBizInstockMasterService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -62,6 +59,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	@Autowired private IFeesCalcuService feesCalcuService;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
 	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
@@ -74,15 +72,27 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	@Override
 	protected List<BizOutstockMasterEntity> queryBillList(Map<String, Object> map) {
 		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
-		return bizList;		
+		return bizList;
 	}
 	
 	@Override
 	protected String[] initSubjects() {
 		//这里的科目应该在科目组中配置,动态查询
 		//wh_b2c_work(B2C订单操作费 )    wh_b2b_work(B2B订单操作费)     wh_b2b_handwork(出库装车费)
-		String[] strs = {"wh_b2c_work","wh_b2b_work","wh_b2b_handwork"};
-		return strs;
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_outstock");
+		if(map==null){
+			String[] strs = {"wh_b2c_work","wh_b2b_work","wh_b2b_handwork"};
+			return strs;
+		}else{
+			int i=0;
+			String[] strs=new String[map.size()];
+			for(String value:map.keySet()){
+				strs[i]=value;	
+				i++;
+			}
+			return strs;
+		}
+		
 	}
 	
 	@Override
