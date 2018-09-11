@@ -64,7 +64,6 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
 	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
-	Map<String,BillRuleReceiveEntity> mapRule=null;
 	
 	String priceType="";
 
@@ -72,7 +71,15 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	@Override
 	protected List<BizOutstockMasterEntity> queryBillList(Map<String, Object> map) {
 		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
+		if(bizList.size()>0){
+			initConf();
+		}
 		return bizList;
+	}
+	protected void initConf(){
+		mapCusPrice=new HashMap<String,PriceGeneralQuotationEntity>();
+		mapCusStepPrice=new HashMap<String,PriceStepQuotationEntity>();
+		mapContact=new HashMap<String,PriceContractInfoEntity>();
 	}
 	
 	@Override
@@ -219,6 +226,8 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 						amount=entity.getTotalQuantity()*generalEntity.getUnitPrice();
 					}else if("SKU".equals(unit)){//按sku
 						amount=entity.getTotalVarieties()*generalEntity.getUnitPrice();
+					}else if("CARTON".equals(unit)){
+						amount=entity.getBoxnum()*generalEntity.getUnitPrice();
 					}
 					storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
 					storageFeeEntity.setParam3(generalEntity.getId()+"");
@@ -245,7 +254,15 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 						}else{
 							amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 						}
-					}				
+					}else if("CARTON".equals(unit)){//按箱
+						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+							amount=stepQuoEntity.getUnitPrice();
+							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+						}else{
+							amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+						}
+						amount=entity.getBoxnum()*generalEntity.getUnitPrice();
+					}			
 					//判断封顶价
 					if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
 						if(stepQuoEntity.getCapPrice()<amount){
@@ -472,7 +489,9 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	    current = System.currentTimeMillis();
 	    XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒",(current - start));
 	    start = System.currentTimeMillis();// 系统开始时间
-	    feesReceiveStorageService.updateBatch(feesList);
+	    if(feesList.size()>0){
+		    feesReceiveStorageService.updateBatch(feesList);
+	    }
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 		

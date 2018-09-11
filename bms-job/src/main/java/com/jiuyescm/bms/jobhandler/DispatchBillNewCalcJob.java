@@ -620,7 +620,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		queryVo.setCarrierId(entity.getCarrierId());
 		queryVo.setSubjectCode("de_delivery_amount");
-		queryVo.setCarrierServiceType(entity.getServiceTypeCode());
+		//queryVo.setCarrierServiceType(entity.getServiceTypeCode());
 		
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		XxlJobLogger.log("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
