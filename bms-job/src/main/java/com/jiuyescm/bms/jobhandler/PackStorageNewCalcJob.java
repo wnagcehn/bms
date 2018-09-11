@@ -12,6 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -44,7 +46,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity,FeesReceiveStorageEntity> {
 
-	private String SubjectId = "wh_material_storage";		//费用类型-耗材存储费 编码 1003原编码
+	//private String SubjectId = "wh_material_storage";		//费用类型-耗材存储费 编码 1003原编码
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
 	Map<String,List<PriceStepQuotationEntity>> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
@@ -62,6 +64,8 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	@Autowired private IFeesCalcuService feesCalcuService;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+
 	
 	@Override
 	protected List<BizPackStorageEntity> queryBillList(Map<String, Object> map) {
@@ -130,6 +134,30 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		return feeEntity;
 		
 	}
+	
+	@Override
+	protected String[] initSubjects() {
+		Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_pack_storage");
+		if (maps.size() == 0) {
+			String[] str = {"wh_material_storage"};
+			return str;
+		}	
+		String[] strs = new String[maps.size()];
+		int i = 0;
+		for (String val : maps.keySet()) {
+			if (i < maps.keySet().size()) {
+				strs[i] = val;
+				i++;
+			}
+		}
+		return strs;
+	}
+
+	@Override
+	protected boolean isJoin(BizPackStorageEntity t) {
+		return true;
+	}
+	
 	@Override
 	protected boolean isNoExe(BizPackStorageEntity t, FeesReceiveStorageEntity f) {
 		return false;

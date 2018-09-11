@@ -375,4 +375,16 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 		
 	}
+
+	@Override
+	protected String[] initSubjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean isJoin(BizInStockMasterEntity t) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

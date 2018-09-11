@@ -13,7 +13,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -47,7 +49,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesReceiveStorageEntity> {
 	
-	private String SubjectId = null;// 增值费
+	//private String SubjectId = null;// 增值费
 	
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IPriceContractInfoService jobPriceContractInfoService;
@@ -61,6 +63,8 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	@Autowired private IBizAddFeeRepository bizAddFeeRepository;
 	@Autowired private IGenericTemplateRepository genericTemplateRepository;
 	@Autowired private IPriceExtraQuotationRepository priceExtraQuotationRepository;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+
 	
 	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
@@ -107,7 +111,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	protected FeesReceiveStorageEntity initFeeEntity(BizAddFeeEntity entity) {
 		
 		//费用科目赋值
-		SubjectId = entity.getFeesType();
+		//SubjectId = entity.getFeesType();
 		
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
     	fee.setFeesNo(entity.getFeesNo());
@@ -139,6 +143,32 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		fee.setStatus("0");
 		fee.setExternalProductNo(entity.getExternalNo());
 		return fee;
+	}
+	
+	@Override
+	protected String[] initSubjects() {
+		Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_add_fee");
+		if (maps.size() == 0) {
+			String[] str = {"wh_product_refreeze", "wh_overtime_instock", "wh_full_check",
+							"wh_paste_label", "wh_fruit_devanning", "wh_prepackaging",
+							"wh_invoice_make", "wh_charge_pack", "wh_gift_bag",
+							"wh_overtime_work", "wh_return_storage", "wh_icebag_refreeze"};
+			return str;
+		}	
+		String[] strs = new String[maps.size()];
+		int i = 0;
+		for (String val : maps.keySet()) {
+			if (i < maps.keySet().size()) {
+				strs[i] = val;
+				i++;
+			}
+		}
+		return strs;
+	}
+
+	@Override
+	protected boolean isJoin(BizAddFeeEntity t) {
+		return true;
 	}
 	
 	// 判断是否有不计算费用的

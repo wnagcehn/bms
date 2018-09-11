@@ -267,6 +267,7 @@ public class BmsBizInstockInfoController {
 		String username = JAppContext.currentUserName();
 		
 		List<BmsBizInstockInfoEntity> infoLists = new ArrayList<BmsBizInstockInfoEntity>();
+		Map<String, Object> dataMap = new HashMap<>();
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
         	Map<String, Object> condition = new HashMap<>();
         	Map<String,Object> map0 = new HashMap<String,Object>();
@@ -275,9 +276,8 @@ public class BmsBizInstockInfoController {
 			XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 			if(xssfRow==null){
 				int lieshu = rowNum + 1;
-				setMessage(infoList, rowNum+1,"第"+lieshu+"列空行！");
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行空行！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
 			}
 			
 			String instockNo = getCellValue(xssfRow.getCell(0));
@@ -287,11 +287,18 @@ public class BmsBizInstockInfoController {
 			// 入库单号（必填）
 			if(StringUtils.isEmpty(instockNo)) {
 				int lieshu = rowNum + 1;
-				setMessage(infoList, rowNum+1,"第"+lieshu+"列入库单号为空值！");
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行入库单号为空值！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
 			}
-						
+			
+			//入库单号重复性校验
+			if (dataMap.containsKey(instockNo)) {
+				setMessage(infoList, rowNum+1,"第"+(rowNum+1)+"行入库单号重复！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			}else {
+				dataMap.put(instockNo, xssfRow);
+			}
+			
 			//调整数量、箱数、重量都为空
 			if(StringUtils.isBlank(adjustQty) && 
 					StringUtils.isBlank(adjustBox) && 
@@ -299,16 +306,14 @@ public class BmsBizInstockInfoController {
 				// 除instockNo外，其他更新字段都为空
 				setMessage(infoList, rowNum+1,"没有需要调整的内容！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
 			}
 			// 调整数量
 			if(StringUtils.isNotBlank(adjustQty)) {
 				boolean isNumber = ExportUtil.isNumber(adjustQty);
 				if(!isNumber) {
 					int lieshu = rowNum + 1;
-					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					setMessage(infoList, rowNum+1,"第"+lieshu+"行非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					map0.put("adjustQty", adjustQty);
 				}
@@ -321,9 +326,8 @@ public class BmsBizInstockInfoController {
 				boolean isNumber = ExportUtil.isNumber(adjustWeight);
 				if(!isNumber) {
 					int lieshu = rowNum + 1;
-					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					setMessage(infoList, rowNum+1,"第"+lieshu+"行非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					map0.put("adjustWeight", adjustWeight);
 				}
@@ -336,14 +340,17 @@ public class BmsBizInstockInfoController {
 				boolean isNumber = ExportUtil.isNumber(adjustBox);
 				if(!isNumber) {
 					int lieshu = rowNum + 1;
-					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					setMessage(infoList, rowNum+1,"第"+lieshu+"行非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					map0.put("adjustBox", adjustBox);
 				}
 			}else {
 				map0.put("adjustBox", BigDecimal.ZERO);
+			}
+			
+			if (map.size() != 0) {
+				continue;
 			}
 			
 			map0.put("instockNo", instockNo);
@@ -381,6 +388,9 @@ public class BmsBizInstockInfoController {
 			entity.setLastModifyTime(nowdate);
 			infoLists.add(entity);
         }
+        if (map.size() != 0) {
+			return map;
+		}
         DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
         
         int num = 0;
