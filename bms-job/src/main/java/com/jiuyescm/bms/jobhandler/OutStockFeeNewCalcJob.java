@@ -131,7 +131,10 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		
 		
 		//塞品种数
-		storageFeeEntity.setVarieties(outstock.getResizeVarieties()==null?outstock.getTotalVarieties().intValue():outstock.getResizeVarieties().intValue());
+		Double varieties=outstock.getResizeVarieties()==null?outstock.getTotalVarieties():outstock.getResizeVarieties();
+		if(!DoubleUtil.isBlank(varieties)){
+			storageFeeEntity.setVarieties(varieties.intValue());
+		}
 		//塞件数
 		storageFeeEntity.setQuantity(outstock.getResizeNum()==null?outstock.getTotalQuantity():outstock.getResizeNum());
 		//塞重量
