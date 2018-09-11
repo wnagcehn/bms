@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,6 +39,17 @@ public class BizOutstockMasterRepositoryImpl extends MyBatisDao implements IBizO
         PageInfo<BizOutstockMasterEntity> pageInfo = new PageInfo<BizOutstockMasterEntity>(list);
         return pageInfo;
     }
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public PageInfo<BizOutstockMasterEntity> queryNew(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+	    List<BizOutstockMasterEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.queryNew", condition, new RowBounds(
+                pageNo, pageSize));
+        PageInfo<BizOutstockMasterEntity> pageInfo = new PageInfo<BizOutstockMasterEntity>(list);
+        return pageInfo;
+	}
 
     @Override
     public BizOutstockMasterEntity findById(Long id) {
@@ -62,6 +74,7 @@ public class BizOutstockMasterRepositoryImpl extends MyBatisDao implements IBizO
         delete("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.delete", id);
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public PageInfo<BizOutstockMasterEntity> queryGroup(Map<String, Object> condition, int pageNo, int pageSize) {
 		  List<BizOutstockMasterEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.queryGroup", condition, new RowBounds(
@@ -125,5 +138,13 @@ public class BizOutstockMasterRepositoryImpl extends MyBatisDao implements IBizO
 	public List<String> queryAllWarehouseId(Map<String, Object> condition) {
 		return (List<String>)this.selectList("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.queryAllWarehouseId", condition);
 	}
-	
+
+	@Override
+	public int updateBatch(List<BizOutstockMasterEntity> list) {
+		// TODO Auto-generated method stub
+		Map<String,Object> con=new HashMap<String, Object>();
+		con.put("list", list);
+		return update("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.updateBatch", con);
+	}
+
 }

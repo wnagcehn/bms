@@ -136,17 +136,50 @@
 		<include refid="baseSelectColumns" />
     </select>
     
+    <select id="queryNew" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        select a.id,
+		a.customer_name,a.warehouse_name,a.external_no,a.outstock_no,a.waybill_no,a.fees_no,
+		a.bill_type_name,a.creator,a.create_time,a.carrier_name,a.deliver_name,a.temperature_type_name,
+		a.b2b_flag,a.total_quantity,a.total_varieties,a.boxnum,a.total_weight,a.resize_num,a.resize_varieties,
+		a.adjust_boxnum,a.resize_weight,a.product_detail,
+		b.subject_code,b.is_calculated,b.calcu_msg,b.calculate_time,b.unit,b.cost
+		 from biz_outstock_master a LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no
+		where a.del_flag='0' and b.del_flag='0'
+	  <include refid="baseSelectColumns" />
+    </select>
+    
+    
      <select id="queryGroup" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
-		select warehouse_name,customer_name,temperature_type_name,COUNT(*) as total_quantity 
-		from 
-       ( 
-       select warehouse_name,customer_name,temperature_type_name 
-       from biz_outstock_master a
-       where del_flag = 0
-		<include refid="baseSelectColumns" /> 
-		) q 
-		group by warehouse_name,customer_name,temperature_type_name
+		select a.customer_name,a.is_calculated,COUNT(0) as total_quantity  
+		from fees_receive_storage a INNER JOIN biz_outstock_master b on a.fees_no=b.fees_no
+		where 1=1 and a.del_flag='0' and b.del_flag='0'
+		<if test="(customerid != null and customerid !='')" >
+				and a.customer_id = #{customerid}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time <![CDATA[<= ]]>#{endTime}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='' and isCalculated !='ALL')" >
+				and a.is_calculated = #{isCalculated}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and a.subject_code = #{subjectCode}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and b.outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and b.waybill_no = #{waybillNo}
+		</if>
+		 GROUP BY a.customer_name,a.is_calculated
     </select>
 
     <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
@@ -241,9 +274,49 @@
 <if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
 <if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 <if test="adjustBoxnum != null" >adjust_boxnum=#{adjustBoxnum,jdbcType=INTEGER},</if>
+<if test="resizeVarieties != null" >resize_varieties=#{resizeVarieties,jdbcType=INTEGER},</if>
 		</set>
         where id=#{id}
     </update>
+
+	<update id="updateBatch" parameterType="java.util.Map">
+		 update biz_outstock_master
+	    <trim prefix="set" suffixOverrides=",">
+    	    <trim prefix="resize_num =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.resizeNum != null" >
+                       when waybill_no=#{biz.waybillNo} then #{biz.resizeNum}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="resize_varieties =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.resizeVarieties!= null" >
+                      when waybill_no=#{biz.waybillNo} then #{biz.resizeVarieties}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="adjust_boxnum =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.adjustBoxnum != null" >
+                      when waybill_no=#{biz.waybillNo} then #{biz.adjustBoxnum}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="resize_weight =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.resizeWeight != null" >
+                      when waybill_no=#{biz.waybillNo} then #{biz.resizeWeight }
+                    </if>
+                </foreach>
+            </trim>
+    	</trim>
+	    where waybill_no in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+            #{biz.waybillNo,jdbcType=VARCHAR}
+        </foreach>
+	</update>
+
 
     <delete id="delete" parameterType="java.lang.Integer">
         delete from biz_outstock_master where

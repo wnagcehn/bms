@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockMasterRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockMasterService;
@@ -85,7 +84,16 @@ public class BizOutstockMasterServiceImpl implements IBizOutstockMasterService {
 		return bizOutstockMasterRepository.queryAllWarehouseId(condition);
 	}
 
-	
+	@Override
+	public PageInfo<BizOutstockMasterEntity> queryNew(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		return bizOutstockMasterRepository.queryNew(condition, pageNo, pageSize);
+	}
 
-	
+	@Override
+	public int updateBatch(List<BizOutstockMasterEntity> list) {
+		// TODO Auto-generated method stub
+		return bizOutstockMasterRepository.updateBatch(list);
+	}	
 }

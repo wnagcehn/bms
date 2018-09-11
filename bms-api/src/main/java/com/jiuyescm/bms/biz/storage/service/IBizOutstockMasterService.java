@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 
 /**
@@ -21,12 +20,17 @@ public interface IBizOutstockMasterService {
 
     PageInfo<BizOutstockMasterEntity> query(Map<String, Object> condition, int pageNo,
             int pageSize);
+    
+    PageInfo<BizOutstockMasterEntity> queryNew(Map<String, Object> condition, int pageNo,
+            int pageSize);
 
     BizOutstockMasterEntity findById(Long id);
 
     BizOutstockMasterEntity save(BizOutstockMasterEntity entity);
 
     int update(BizOutstockMasterEntity entity);
+    
+    int updateBatch(List<BizOutstockMasterEntity> list);
 
     void delete(Long id);
     

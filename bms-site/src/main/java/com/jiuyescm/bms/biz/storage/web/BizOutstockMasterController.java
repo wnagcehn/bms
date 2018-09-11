@@ -5,7 +5,10 @@
 package com.jiuyescm.bms.biz.storage.web;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +19,11 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,6 +31,11 @@ import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.DownloadFile;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileProvider;
+import com.bstek.dorado.uploader.annotation.FileResolver;
+import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
@@ -35,19 +47,24 @@ import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.bms.common.entity.CalculateVo;
+import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
+import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
+import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
+import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.framework.lock.Lock;
 
 /**
  * 
@@ -78,7 +95,10 @@ public class BizOutstockMasterController extends BaseController{
 	private SequenceService sequenceService;
 	@Resource
 	private IFileExportTaskService fileExportTaskService;
-	
+	@Resource
+	private Lock lock;
+	@Resource
+	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 
 	@DataProvider
 	public BizOutstockMasterEntity findById(Long id) throws Exception {
@@ -110,7 +130,7 @@ public class BizOutstockMasterController extends BaseController{
 				param.put("billTypeName", "");
 			}
 		}
-		PageInfo<BizOutstockMasterEntity> pageInfo = bizOutstockMasterService.query(param, page.getPageNo(), page.getPageSize());
+		PageInfo<BizOutstockMasterEntity> pageInfo = bizOutstockMasterService.queryNew(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
@@ -139,7 +159,7 @@ public class BizOutstockMasterController extends BaseController{
 		double  w = entity.getResizeWeight()==null?0: entity.getResizeWeight().doubleValue()+(entity.getTotalWeight()==null?0:entity.getTotalWeight().doubleValue());
 		
 		double  n = entity.getResizeNum()==null?0:entity.getResizeNum() + (entity.getTotalQuantity()==null?0:entity.getTotalQuantity());
-		
+			
 		if(w<=0||n<=0){
 			result.setCode("fail");
 			result.setData("调整数量或重量不能小于0");
@@ -383,14 +403,6 @@ public class BizOutstockMasterController extends BaseController{
 		String customerId = param.get("customerid").toString();
         try {
         	//校验该费用是否已生成Excel文件
-        	Map<String, Object> queryEntity = new HashMap<String, Object>();
-        	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PRO_OUTSTOCK.getCode());
-        	queryEntity.put("customerid", customerId);
-        	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
-        	if (StringUtils.isNotEmpty(existDel)) {
-        		return existDel;
-        	}
-        	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
         			FileTaskTypeEnum.BIZ_PRO_OUTSTOCK.getCode() + customerId + FileConstant.SUFFIX_XLSX;
@@ -495,7 +507,7 @@ public class BizOutstockMasterController extends BaseController{
 		boolean doLoop = true;
 		while (doLoop) {			
 			PageInfo<BizOutstockMasterEntity> pageInfo = 
-					bizOutstockMasterService.query(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+					bizOutstockMasterService.queryNew(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
 			if (null != pageInfo && pageInfo.getList().size() > 0) {
 				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
 					doLoop = false;
@@ -524,15 +536,11 @@ public class BizOutstockMasterController extends BaseController{
 	public List<Map<String, Object>> getBizHead(){
 		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "订单号");
-		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "outstockNo");
-		headInfoList.add(itemMap);
-        
+		
 		itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "费用编号");
-        itemMap.put("columnWidth", 50);
-        itemMap.put("dataKey", "feesNo");
+        itemMap.put("title", "商家名称");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "customerName");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -540,23 +548,34 @@ public class BizOutstockMasterController extends BaseController{
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "warehouseName");
         headInfoList.add(itemMap);
-        
+	        
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "外部单号");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "externalNo");
         headInfoList.add(itemMap);
-        
+		
+		itemMap.put("title", "出库单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "outstockNo");
+		headInfoList.add(itemMap);
+		
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "商家名称");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "customerName");
+        itemMap.put("title", "运单号");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "waybillNo");
+        headInfoList.add(itemMap);
+        
+		itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "商品明细");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "productDetail");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "宅配商名称");
+        itemMap.put("title", "单据类型");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "deliverName");
+        itemMap.put("dataKey", "billTypeName");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -566,15 +585,9 @@ public class BizOutstockMasterController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "运单号");
+        itemMap.put("title", "宅配商名称");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "waybillNo");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "是否拆箱");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "unpacking");
+        itemMap.put("dataKey", "deliverName");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -584,39 +597,56 @@ public class BizOutstockMasterController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "单据类型名称");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "billTypeName");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "B2B标识");
+        itemMap.put("title", "B2C标识");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "b2bFlag");
         headInfoList.add(itemMap);
-        
+
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "总重量");
+        itemMap.put("title", "计费单位");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "totalWeight");
+        itemMap.put("dataKey", "unit");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "总数量");
+        itemMap.put("title", "出库件数");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "totalQuantity");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "总品种数");
+        itemMap.put("title", "出库品种数");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "totalVarieties");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "调整数量");
+        itemMap.put("title", "出库箱数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "boxnum");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库重量");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "totalWeight");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "调整件数");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "resizeNum");
+        headInfoList.add(itemMap);
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "调整品种数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "resizeVarieties");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "调整箱数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "adjustBoxnum");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -626,63 +656,450 @@ public class BizOutstockMasterController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "状态");
+        itemMap.put("title", "订单操作费");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "isCalculated");
+        itemMap.put("dataKey", "orderCost");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "创建时间");
+        itemMap.put("title", "订单操作费计算状态");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "orderIsCalculate");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "订单操作费计算时间");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "orderCalculateTime");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "订单操作费计算备注");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "orderCalMsg");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>(); 
+        itemMap.put("title", "出库装车费"); 
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "outHandCost");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库装车费计算状态");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "outHandIsCalculate");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库装车费计算时间");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "outHandCalculateTime");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库装车费计算备注");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "outHandCalMsg");
+        headInfoList.add(itemMap);
+        
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "创建人");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "creator");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "运单创建时间");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "createTime");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "费用计算时间");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "calculateTime");
-        headInfoList.add(itemMap);
-        
-        itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "备注");
-        itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "remark");
         headInfoList.add(itemMap);
 		
         return headInfoList;
 	}
 	
 	private List<Map<String, Object>> getBizHeadItem(List<BizOutstockMasterEntity> list){
-		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	        Map<String, Object> dataItem = null;
+	        Map<String,Map<String, Object>> entityMap=new HashMap<String,Map<String, Object>>();
 	        Map<String, String> calculateMap = CalculateState.getMap();
 	        for (BizOutstockMasterEntity entity : list) {
-	        	dataItem = new HashMap<String, Object>();
-	        	dataItem.put("outstockNo", entity.getOutstockNo());
-	        	dataItem.put("feesNo", entity.getFeesNo());
-	        	dataItem.put("warehouseName", entity.getWarehouseName());
-	        	dataItem.put("externalNo", entity.getExternalNo());
-	        	dataItem.put("customerName", entity.getCustomerName());
-	        	dataItem.put("deliverName", entity.getDeliverName());
-	        	dataItem.put("carrierName", entity.getCarrierName());
-	        	dataItem.put("waybillNo", entity.getWaybillNo());
-	        	dataItem.put("unpacking", entity.getUnpacking());
-	        	dataItem.put("temperatureTypeName", entity.getTemperatureTypeName());
-	        	dataItem.put("billTypeName", entity.getBillTypeName());
-	        	dataItem.put("b2bFlag", entity.getB2bFlag());
-	        	dataItem.put("totalWeight", entity.getTotalWeight());
-	        	dataItem.put("totalQuantity", entity.getTotalQuantity());
-	        	dataItem.put("totalVarieties", entity.getTotalVarieties());
-	        	dataItem.put("resizeNum", entity.getResizeNum());
-	        	dataItem.put("resizeWeight", entity.getResizeWeight());
-	        	dataItem.put("isCalculated", calculateMap.get(entity.getIsCalculated()));
-	        	dataItem.put("createTime", entity.getCreateTime());
-	        	dataItem.put("calculateTime", entity.getCalculateTime());
-	        	dataItem.put("remark", entity.getRemark());
-	        	dataList.add(dataItem);
-			}
-	        
+	        	if(!entityMap.containsKey(entity.getWaybillNo())){
+	        		dataItem = new HashMap<String, Object>();
+		        	dataItem.put("customerName", entity.getCustomerName());
+		        	dataItem.put("warehouseName", entity.getWarehouseName());
+		        	dataItem.put("externalNo", entity.getExternalNo());
+		        	dataItem.put("outstockNo", entity.getOutstockNo());
+		        	dataItem.put("waybillNo", entity.getWaybillNo());
+		        	dataItem.put("productDetail", entity.getProductDetail());
+		        	dataItem.put("billTypeName", entity.getBillTypeName());
+		        	dataItem.put("carrierName", entity.getCarrierName());
+		        	dataItem.put("deliverName", entity.getDeliverName());
+		        	dataItem.put("temperatureTypeName", entity.getTemperatureTypeName());
+		        	dataItem.put("b2bFlag", entity.getB2bFlag());
+		        	dataItem.put("unit", entity.getUnit());
+		        	dataItem.put("totalQuantity", entity.getTotalQuantity());
+		        	dataItem.put("totalVarieties", entity.getTotalVarieties());
+		        	dataItem.put("boxnum", entity.getBoxnum());	        	
+		        	dataItem.put("totalWeight", entity.getTotalWeight());
+		        	dataItem.put("resizeNum", entity.getResizeNum());
+		        	dataItem.put("resizeVarieties", entity.getResizeVarieties());
+		        	dataItem.put("adjustBoxnum", entity.getAdjustBoxnum());
+		        	dataItem.put("resizeWeight", entity.getResizeWeight());
+		        	 	
+		        	//如果是B2C订单操作费
+		        	if("0".equals(entity.getB2bFlag())){
+		        		dataItem.put("orderCost", entity.getCost());
+		        		dataItem.put("orderIsCalculate", calculateMap.get(entity.getIsCalculated()));
+		        		dataItem.put("orderCalculateTime", entity.getCalculateTime());
+		        		dataItem.put("orderCalMsg", entity.getCalcuMsg());
+		        	}else if("1".equals(entity.getB2bFlag())){
+		        		//B2B订单操作费（区分是订单操作费还是出库装车费）
+		        		if("wh_b2b_work".equals(entity.getSubjectCode())){
+		        			dataItem.put("orderCost", entity.getCost());
+			        		dataItem.put("orderIsCalculate", calculateMap.get(entity.getIsCalculated()));
+			        		dataItem.put("orderCalculateTime", entity.getCalculateTime());
+			        		dataItem.put("orderCalMsg", entity.getCalcuMsg());
+		        		}else if("wh_b2b_handwork".equals(entity.getSubjectCode())){
+		        			dataItem.put("outHandCost", entity.getCost());
+			        		dataItem.put("outHandIsCalculate",calculateMap.get(entity.getIsCalculated()));
+			        		dataItem.put("outHandCalculateTime", entity.getCalculateTime());
+			        		dataItem.put("outHandCalMsg", entity.getCalcuMsg());
+		        		}
+		        	}
+		        	dataItem.put("creator", entity.getCreator());
+		        	dataItem.put("createTime", entity.getCreateTime());
+		        	dataList.add(dataItem);
+		        	entityMap.put(entity.getWaybillNo(), dataItem);
+	        	}else{
+	        		Map<String, Object> data=entityMap.get(entity.getWaybillNo());
+	            	//如果是B2C订单操作费
+		        	if("0".equals(entity.getB2bFlag())){
+		        		data.put("orderCost", entity.getCost());
+		        		data.put("orderIsCalculate", calculateMap.get(entity.getIsCalculated()));
+		        		data.put("orderCalculateTime", entity.getCalculateTime());
+		        		data.put("orderCalMsg", entity.getCalcuMsg());
+		        	}else if("1".equals(entity.getB2bFlag())){
+		        		//B2B订单操作费（区分是订单操作费还是出库装车费）
+		        		if("wh_b2b_work".equals(entity.getSubjectCode())){
+		        			data.put("orderCost", entity.getCost());
+		        			data.put("orderIsCalculate", calculateMap.get(entity.getIsCalculated()));
+		        			data.put("orderCalculateTime", entity.getCalculateTime());
+		        			data.put("orderCalMsg", entity.getCalcuMsg());
+		        		}else if("wh_b2b_handwork".equals(entity.getSubjectCode())){
+		        			data.put("outHandCost", entity.getCost());
+		        			data.put("outHandIsCalculate",calculateMap.get(entity.getIsCalculated()));
+		        			data.put("outHandCalculateTime", entity.getCalculateTime());
+		        			data.put("outHandCalMsg", entity.getCalcuMsg());
+		        		}
+		        	}
+		        	dataItem.put("creator", entity.getCreator());
+		        	dataItem.put("createTime", entity.getCreateTime());
+	        	}	
+			}	        
 		return dataList;
 	}
 	
+	
+	/**
+	 * 批量更新
+	 * @param file
+	 * @param parameter
+	 * @return
+	 * @throws Exception
+	 */
+	@FileResolver
+	public Map<String, Object> importUpdate(final UploadFile file,final Map<String, Object> parameter) throws Exception {
+		//String deliver=(String)parameter.get("deliver");
+		 Map<String, Object> remap=new HashMap<String, Object>();
+		// 校验信息（报错提示）
+	/*	final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
+		
+		String lockString=Tools.getMd5("BMS_QUO_IMPORT_INSTOCK_UPDATE"+JAppContext.currentUserName());
+		remap=lock.lock(lockString, 300, new LockCallback<Map<String, Object>>() {
+
+			@Override
+			public Map<String, Object> handleObtainLock() {
+				Map<String, Object> map=new HashMap<String, Object>();
+				try {*/
+		 remap=importUpdateWeightLock(file,parameter);
+				/*} catch (Exception e) {
+					ErrorMessageVo errorVo = new ErrorMessageVo();
+					errorVo.setMsg("系统错误:"+e.getMessage());
+					   //写入日志
+				     BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+					 bmsErrorLogInfoEntity.setClassName("BmsBizInstockInfoController");
+					 bmsErrorLogInfoEntity.setMethodName("importUpdate");
+					 bmsErrorLogInfoEntity.setIdentify("进入锁之前异常");
+					 bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+					 bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+					 bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+					infoList.add(errorVo);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				}
+				return map;
+			}
+
+			@Override
+			public Map<String, Object> handleNotObtainLock()
+					throws LockCantObtainException {
+				Map<String, Object> map=new HashMap<String, Object>();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("出库单导入功能已被其他用户占用，请稍后重试；");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+
+			@Override
+			public Map<String, Object> handleException(
+					LockInsideExecutedException e)
+					throws LockInsideExecutedException {
+				Map<String, Object> map=new HashMap<String, Object>();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("系统异常，请稍后重试!");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			
+		});*/
+		return remap;
+	}
+	
+	@FileResolver
+	public Map<String, Object> importUpdateWeightLock(UploadFile file, Map<String, Object> parameter){
+		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 10);
+		// 校验信息（报错提示）
+		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
+		ErrorMessageVo errorVo = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		XSSFWorkbook xssfWorkbook = null;
+		try {
+			xssfWorkbook = new XSSFWorkbook(file.getInputStream());
+		} catch (IOException e) {
+			//写入日志
+			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+			bmsErrorLogInfoEntity.setClassName("bizOutstockMasterController");
+			bmsErrorLogInfoEntity.setMethodName("importUpdateWeightLock");
+			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+		}
+		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
+		
+		if(xssfSheet==null)
+			return null;
+		
+		int cols = xssfSheet.getRow(0).getPhysicalNumberOfCells();
+		
+		if(cols>5){
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
+			errorVo = new ErrorMessageVo();
+			errorVo.setMsg("Excel导入格式错误请参考标准模板检查!");
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		
+		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 100);
+		
+		Timestamp nowdate = JAppContext.currentTimestamp();
+		String username = JAppContext.currentUserName();
+		
+		List<BizOutstockMasterEntity> infoLists = new ArrayList<BizOutstockMasterEntity>();
+        for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
+        	BizOutstockMasterEntity entity = new BizOutstockMasterEntity();
+        	
+			XSSFRow xssfRow = xssfSheet.getRow(rowNum);
+			if(xssfRow==null){
+				int lieshu = rowNum + 1;
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列空行！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			
+			String waybillNo = getCellValue(xssfRow.getCell(0));
+			String resizeNum=getCellValue(xssfRow.getCell(1));
+			String resizeVarieties=getCellValue(xssfRow.getCell(2));
+			String adjustBoxnum=getCellValue(xssfRow.getCell(3));
+			String resizeWeight=getCellValue(xssfRow.getCell(4));
+			// 运单号（必填）
+			if(StringUtils.isEmpty(waybillNo)) {
+				int lieshu = rowNum + 1;
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列运单号为空值！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+						
+			//调整数量、调整品种数、调整箱数、调整重量都为空
+			if(StringUtils.isBlank(resizeNum) && 
+					StringUtils.isBlank(resizeVarieties) && 
+					StringUtils.isBlank(adjustBoxnum) && 
+					StringUtils.isBlank(resizeWeight)){
+				// 除instockNo外，其他更新字段都为空
+				setMessage(infoList, rowNum+1,"没有需要调整的内容！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			// 调整数量
+			if(StringUtils.isNotBlank(resizeNum)) {
+				boolean isNumber = ExportUtil.isNumber(resizeNum);
+				if(!isNumber) {
+					int lieshu = rowNum + 1;
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}else{
+					entity.setResizeNum(Double.valueOf(resizeNum));
+				}
+			}
+			
+			// 调整品种数
+			if(StringUtils.isNotBlank(resizeVarieties)) {
+				boolean isNumber = ExportUtil.isNumber(resizeVarieties);
+				if(!isNumber) {
+					int lieshu = rowNum + 1;
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}else{
+					entity.setResizeVarieties(Double.valueOf(resizeVarieties));
+				}
+			}
+			
+			// 调整箱数
+			if(StringUtils.isNotBlank(adjustBoxnum)) {
+				boolean isNumber = ExportUtil.isNumber(adjustBoxnum);
+				if(!isNumber) {
+					int lieshu = rowNum + 1;
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}else{
+					entity.setAdjustBoxnum(Integer.valueOf(adjustBoxnum));
+				}
+			}
+			//调整重量
+			if(StringUtils.isNotBlank(resizeWeight)) {
+				boolean isNumber = ExportUtil.isNumber(adjustBoxnum);
+				if(!isNumber) {
+					int lieshu = rowNum + 1;
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}else{
+					entity.setResizeWeight(Double.valueOf(resizeWeight));				}
+			}
+
+			entity.setLastModifier(username);
+			entity.setLastModifyTime(nowdate);
+			entity.setWaybillNo(waybillNo);
+			infoLists.add(entity);
+        }
+        DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
+        
+        int num = 0;
+        String message = null;
+        try {
+			num = bizOutstockMasterService.updateBatch(infoLists);
+		} catch (Exception e) {
+		     message = e.getMessage();
+		     logger.error("更新失败", e);
+		}
+        if(num==0){
+        	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
+			errorVo = new ErrorMessageVo();
+			if(message!=null){
+				errorVo.setMsg(message);
+			}else{
+				errorVo.setMsg("更新失败!");
+				errorVo.setLineNo(2);
+			}
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			
+			return map;
+        }else{
+        	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+			return map;
+        }
+	}
+	
+	/**
+	 * 获取单元格的值
+	 * 
+	 * @param cell
+	 * @return
+	 */
+	public String getCellValue(Cell cell) {
+
+		if (cell == null)
+			return "";
+
+		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+
+			return cell.getStringCellValue();
+
+		} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+
+			return String.valueOf(cell.getBooleanCellValue());
+
+		} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+
+			return cell.getCellFormula();
+
+		} else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			DecimalFormat df = new DecimalFormat("#.####");
+			return String.valueOf(df.format(cell.getNumericCellValue()));
+
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * 批量更新模板下载
+	 * @param parameter
+	 * @return
+	 * @throws IOException
+	 */
+	@FileProvider
+	public DownloadFile downloadTemplateUpdate(Map<String, String> parameter) throws IOException {
+		InputStream is = DoradoContext.getCurrent().getServletContext().getResourceAsStream("/WEB-INF/templates/storage/outstock_updatebatch_template.xlsx");
+		return new DownloadFile("出库单信息更新模板.xlsx", is);
+	}
+	
+	private void setMessage(List<ErrorMessageVo> errorList, int lineNo,String msg) {
+		ErrorMessageVo errorVo;
+		errorVo =new ErrorMessageVo();
+		errorVo.setLineNo(lineNo);
+		errorVo.setMsg(msg);
+		errorList.add(errorVo);
+	}
+	
+	
+	@Expose
+	public int getProgress() {
+		Object progressFlag = DoradoContext.getAttachedRequest().getSession().getAttribute("progressFlag");
+		if (progressFlag == null){
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 0);
+			return 1;
+		}
+		return (int)(DoradoContext.getAttachedRequest().getSession().getAttribute("progressFlag")); 
+	}
+    
+	@Expose
+	public void setProgress() {
+		Object progressFlag = DoradoContext.getAttachedRequest().getSession().getAttribute("progressFlag");
+		if (progressFlag == null){
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 0);
+		 
+		} else {
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 0);
+		} 
+	}
 }

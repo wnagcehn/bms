@@ -98,6 +98,8 @@ public class BizOutstockMasterEntity implements IEntity {
   	private String price;
   	//调整数量
   	private Double resizeNum;
+  	//调整品种数
+  	private Double resizeVarieties;
 
   	// 写入BMS时间
  	private Timestamp writeTime;
@@ -121,6 +123,17 @@ public class BizOutstockMasterEntity implements IEntity {
 	private Integer boxnum;
 	
 	private Integer adjustBoxnum;
+	
+	
+	//新增费用表中字段
+	//费用科目
+	private String subjectCode;
+	//计费单位
+	private String unit;
+	//金额
+	private Double cost;
+	//计算备注
+	private String calcuMsg;
 	
 	public Integer getBoxnum() {
 		return boxnum;
@@ -800,4 +813,46 @@ public class BizOutstockMasterEntity implements IEntity {
 	public void setextattr5(String extattr5) {
 		this.extattr5 = extattr5;
 	}
+
+	public String getSubjectCode() {
+		return subjectCode;
+	}
+
+	public void setSubjectCode(String subjectCode) {
+		this.subjectCode = subjectCode;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public Double getCost() {
+		return cost;
+	}
+
+	public void setCost(Double cost) {
+		this.cost = cost;
+	}
+
+	public Double getResizeVarieties() {
+		return resizeVarieties;
+	}
+
+	public void setResizeVarieties(Double resizeVarieties) {
+		this.resizeVarieties = resizeVarieties;
+	}
+
+	public String getCalcuMsg() {
+		return calcuMsg;
+	}
+
+	public void setCalcuMsg(String calcuMsg) {
+		this.calcuMsg = calcuMsg;
+	}
+	
+	
 }

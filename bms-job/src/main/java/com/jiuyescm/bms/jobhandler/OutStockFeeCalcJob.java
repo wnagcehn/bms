@@ -155,6 +155,7 @@ public class OutStockFeeCalcJob extends CommonCalcJob<BizOutstockMasterEntity,Fe
 				break;
 			}
 			
+			storageFeeEntity.setUnit(unit);
 			storageFeeEntity.setCost(BigDecimal.valueOf(amount));
 			storageFeeEntity.setParam4(priceType);
 			storageFeeEntity.setBizType(entity.getextattr1());//用于判断是否是遗漏数据

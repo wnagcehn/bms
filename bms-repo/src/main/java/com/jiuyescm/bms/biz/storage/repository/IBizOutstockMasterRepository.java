@@ -22,6 +22,10 @@ public interface IBizOutstockMasterRepository {
 	public PageInfo<BizOutstockMasterEntity> query(Map<String, Object> condition,
             int pageNo, int pageSize);
 
+    
+    PageInfo<BizOutstockMasterEntity> queryNew(Map<String, Object> condition, int pageNo,
+            int pageSize);
+	
     public BizOutstockMasterEntity findById(Long id);
 
     public BizOutstockMasterEntity save(BizOutstockMasterEntity entity);
@@ -45,5 +49,7 @@ public interface IBizOutstockMasterRepository {
 	 public BizOutstockMasterEntity queryExceptionOne(Map<String,Object> condition);
 
 	public List<String> queryAllWarehouseId(Map<String, Object> condition);
+	
+	 int updateBatch(List<BizOutstockMasterEntity> list);
 
 }
