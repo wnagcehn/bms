@@ -95,4 +95,11 @@ public interface IFeesReceiveStorageService {
 	 * @return
 	 */
 	List<String> queryPreBillWarehouse(Map<String,Object> param);
+	
+	/**
+	 * 根据费用编号查询
+	 * @param FeesNo
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryByFeesNo(String FeesNo);
 }

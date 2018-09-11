@@ -42,6 +42,8 @@ public class BmsBizInstockInfoEntity implements IEntity {
 	
 	// 入库单号
 	private String instockNo;
+	// 收件确认时间
+	private Timestamp instockDate;
 	// 外部单号
 	private String externalNum;
 	// 仓库编码
@@ -55,11 +57,11 @@ public class BmsBizInstockInfoEntity implements IEntity {
 	// 入库类型
 	private String instockType;
 	// 商品数量
-	private BigDecimal totalQty;
+	private Double totalQty;
 	// 商品箱数
-	private BigDecimal totalBox;
+	private Double totalBox;
 	// 商品重量
-	private BigDecimal totalWeight;
+	private Double totalWeight;
 	// 收货人
 	private String receiver;
 	// 创建者
@@ -97,9 +99,22 @@ public class BmsBizInstockInfoEntity implements IEntity {
 	private BigDecimal firstPrice;
 	private BigDecimal continueNum;
 	private BigDecimal continuePrice;
-	private BigDecimal chargeUnit;
+	private String chargeUnit;
 	
 	private String modReason;
+	
+	//导入字段
+	private String instockWorkFee;
+	private String instockWorkFeeCalStatus;
+	private String instockWorkFeeRemark;
+	private String instockXHFee;
+	private String instockXHFeeCalStatus;
+	private String instockXHFeeRemark;
+	
+	//分组统计总数
+	private String totalNum;
+	
+	private Double cost;
 
 	public BmsBizInstockInfoEntity() {
 		super();
@@ -257,27 +272,28 @@ public class BmsBizInstockInfoEntity implements IEntity {
 		this.instockType = instockType;
 	}
 
-	public BigDecimal getTotalQty() {
+
+	public Double getTotalQty() {
 		return totalQty;
 	}
 
-	public void setTotalQty(BigDecimal totalQty) {
+	public void setTotalQty(Double totalQty) {
 		this.totalQty = totalQty;
 	}
 
-	public BigDecimal getTotalBox() {
+	public Double getTotalBox() {
 		return totalBox;
 	}
 
-	public void setTotalBox(BigDecimal totalBox) {
+	public void setTotalBox(Double totalBox) {
 		this.totalBox = totalBox;
 	}
 
-	public BigDecimal getTotalWeight() {
+	public Double getTotalWeight() {
 		return totalWeight;
 	}
 
-	public void setTotalWeight(BigDecimal totalWeight) {
+	public void setTotalWeight(Double totalWeight) {
 		this.totalWeight = totalWeight;
 	}
 
@@ -441,11 +457,11 @@ public class BmsBizInstockInfoEntity implements IEntity {
 		this.continuePrice = continuePrice;
 	}
 
-	public BigDecimal getChargeUnit() {
+	public String getChargeUnit() {
 		return chargeUnit;
 	}
 
-	public void setChargeUnit(BigDecimal chargeUnit) {
+	public void setChargeUnit(String chargeUnit) {
 		this.chargeUnit = chargeUnit;
 	}
 
@@ -455,6 +471,78 @@ public class BmsBizInstockInfoEntity implements IEntity {
 
 	public void setModReason(String modReason) {
 		this.modReason = modReason;
+	}
+
+	public Timestamp getInstockDate() {
+		return instockDate;
+	}
+
+	public void setInstockDate(Timestamp instockDate) {
+		this.instockDate = instockDate;
+	}
+
+	public String getInstockWorkFee() {
+		return instockWorkFee;
+	}
+
+	public void setInstockWorkFee(String instockWorkFee) {
+		this.instockWorkFee = instockWorkFee;
+	}
+
+	public String getInstockWorkFeeCalStatus() {
+		return instockWorkFeeCalStatus;
+	}
+
+	public void setInstockWorkFeeCalStatus(String instockWorkFeeCalStatus) {
+		this.instockWorkFeeCalStatus = instockWorkFeeCalStatus;
+	}
+
+	public String getInstockWorkFeeRemark() {
+		return instockWorkFeeRemark;
+	}
+
+	public void setInstockWorkFeeRemark(String instockWorkFeeRemark) {
+		this.instockWorkFeeRemark = instockWorkFeeRemark;
+	}
+
+	public String getInstockXHFee() {
+		return instockXHFee;
+	}
+
+	public void setInstockXHFee(String instockXHFee) {
+		this.instockXHFee = instockXHFee;
+	}
+
+	public String getInstockXHFeeCalStatus() {
+		return instockXHFeeCalStatus;
+	}
+
+	public void setInstockXHFeeCalStatus(String instockXHFeeCalStatus) {
+		this.instockXHFeeCalStatus = instockXHFeeCalStatus;
+	}
+
+	public String getInstockXHFeeRemark() {
+		return instockXHFeeRemark;
+	}
+
+	public void setInstockXHFeeRemark(String instockXHFeeRemark) {
+		this.instockXHFeeRemark = instockXHFeeRemark;
+	}
+
+	public String getTotalNum() {
+		return totalNum;
+	}
+
+	public void setTotalNum(String totalNum) {
+		this.totalNum = totalNum;
+	}
+
+	public Double getCost() {
+		return cost;
+	}
+
+	public void setCost(Double cost) {
+		this.cost = cost;
 	}
     
 }
