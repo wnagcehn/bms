@@ -1000,18 +1000,15 @@ public class BizOutstockMasterController extends BaseController{
 			entity.setLastModifier(username);
 			entity.setLastModifyTime(nowdate);
 			entity.setWaybillNo(waybillNo);
+			entity.setIsCalculated("99");
 			infoLists.add(entity);
 		}
-
-  
-        
+ 
         //如果有错误信息
         if(map.get(ConstantInterface.ImportExcelStatus.IMP_ERROR)!=null){
         	return map;
         }
-        
-        
-        
+         
         DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
         
         int num = 0;

@@ -115,7 +115,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		//de_delivery_amount(运费 )
 		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_dispatch");
 		if(map==null){
-			String[] strs = {"wh_product_storage"};
+			String[] strs = {"de_delivery_amount"};
 			return strs;
 		}else{
 			int i=0;
