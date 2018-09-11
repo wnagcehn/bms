@@ -65,6 +65,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private Double volume;
 	// 品种数
 	private Integer varieties;
+	//箱数
+	private Integer box;
 	// 单价
 	private Double unitPrice;
 	// 续件价格
@@ -727,5 +729,15 @@ public class FeesReceiveStorageEntity implements IEntity {
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
 	}
+
+	public Integer getBox() {
+		return box;
+	}
+
+	public void setBox(Integer box) {
+		this.box = box;
+	}
+
+
     
 }

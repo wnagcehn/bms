@@ -127,6 +127,7 @@
 			<if test="productName != null" >product_name=#{productName,jdbcType=VARCHAR},</if>
 			<if test="externalProductNo != null" >external_product_no=#{externalProductNo,jdbcType=VARCHAR},</if>
 			<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER},</if>
+			<if test="box != null" >box=#{box,jdbcType=DOUBLE},</if>
 			<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
 			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
 			<if test="volume != null" >volume=#{volume,jdbcType=DOUBLE},</if>

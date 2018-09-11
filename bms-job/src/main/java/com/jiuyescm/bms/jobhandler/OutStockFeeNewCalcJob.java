@@ -128,17 +128,20 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		storageFeeEntity.setWarehouseCode(outstock.getWarehouseCode());	//仓库ID
 		storageFeeEntity.setWarehouseName(outstock.getWarehouseName());	//仓库名称
 		storageFeeEntity.setOrderType(outstock.getBillTypeName());		//订单类型
-		if(null!=outstock.getTotalVarieties()){
-			storageFeeEntity.setVarieties(outstock.getTotalVarieties().intValue());
-		}
-		storageFeeEntity.setOrderNo(outstock.getOutstockNo());			//oms订单号
-		storageFeeEntity.setProductType("");							//商品类型
-		if(outstock.getResizeNum()!=null){
-			storageFeeEntity.setQuantity(outstock.getResizeNum()==null?outstock.getTotalQuantity():outstock.getResizeNum());//商品数量
-		}
 		
+		
+		//塞品种数
+		storageFeeEntity.setVarieties(outstock.getResizeVarieties()==null?outstock.getTotalVarieties().intValue():outstock.getResizeVarieties().intValue());
+		//塞件数
+		storageFeeEntity.setQuantity(outstock.getResizeNum()==null?outstock.getTotalQuantity():outstock.getResizeNum());
+		//塞重量
+		storageFeeEntity.setWeight(outstock.getResizeWeight()==null?outstock.getTotalWeight():outstock.getResizeWeight());
+		//塞箱数
+		storageFeeEntity.setBox(outstock.getAdjustBoxnum()==null?outstock.getBoxnum():outstock.getAdjustBoxnum());
+		
+		storageFeeEntity.setOrderNo(outstock.getOutstockNo());			//oms订单号
+		storageFeeEntity.setProductType("");							//商品类型		
 		storageFeeEntity.setStatus("0");								//状态
-		storageFeeEntity.setWeight(outstock.getTotalWeight());
 		storageFeeEntity.setOperateTime(outstock.getCreateTime());
 		storageFeeEntity.setCostType("FEE_TYPE_GENEARL");
 		storageFeeEntity.setUnitPrice(0d);
@@ -201,13 +204,6 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 				entity.setCalculateTime(JAppContext.currentTimestamp());
 				storageFeeEntity.setCalculateTime(entity.getCalculateTime());
 				String customerId=entity.getCustomerid();	
-		/*		if(null!=entity.getAdjustBoxnum()){//如果调整的不为空 则调整算钱
-					entity.setBoxnum(entity.getAdjustBoxnum());
-				}
-				//原编码1007
-				if("wh_b2b_work".equals(SubjectId)&&null!=entity.getBoxnum()){
-					storageFeeEntity.setQuantity(entity.getBoxnum());
-				}*/
 				
 				//报价模板
 				PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);
@@ -223,11 +219,11 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 					if("BILL".equals(unit)){//按单
 						amount=generalEntity.getUnitPrice();				
 					}else if("ITEMS".equals(unit)){//按件				
-						amount=entity.getTotalQuantity()*generalEntity.getUnitPrice();
+						amount=storageFeeEntity.getQuantity()*generalEntity.getUnitPrice();
 					}else if("SKU".equals(unit)){//按sku
-						amount=entity.getTotalVarieties()*generalEntity.getUnitPrice();
+						amount=storageFeeEntity.getVarieties()*generalEntity.getUnitPrice();
 					}else if("CARTON".equals(unit)){
-						amount=entity.getBoxnum()*generalEntity.getUnitPrice();
+						amount=storageFeeEntity.getBox()*generalEntity.getUnitPrice();
 					}
 					storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
 					storageFeeEntity.setParam3(generalEntity.getId()+"");
@@ -242,26 +238,25 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 						amount=stepQuoEntity.getUnitPrice();
 					}else if("ITEMS".equals(unit)){//按件	
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=stepQuoEntity.getUnitPrice();
+							amount=storageFeeEntity.getQuantity()*stepQuoEntity.getUnitPrice();
 							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						}else{
-							amount=stepQuoEntity.getFirstNum()<entity.getTotalQuantity()?stepQuoEntity.getFirstPrice()+(entity.getTotalQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getQuantity()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 						}
 					}else if("SKU".equals(unit)){//按sku
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=stepQuoEntity.getUnitPrice();
+							amount=storageFeeEntity.getVarieties()*stepQuoEntity.getUnitPrice();
 							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						}else{
-							amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getVarieties()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 						}
 					}else if("CARTON".equals(unit)){//按箱
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=stepQuoEntity.getUnitPrice();
+							amount=storageFeeEntity.getBox()*stepQuoEntity.getUnitPrice();
 							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						}else{
-							amount=stepQuoEntity.getFirstNum()<entity.getTotalVarieties()?stepQuoEntity.getFirstPrice()+(entity.getTotalVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getBox()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 						}
-						amount=entity.getBoxnum()*generalEntity.getUnitPrice();
 					}			
 					//判断封顶价
 					if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
