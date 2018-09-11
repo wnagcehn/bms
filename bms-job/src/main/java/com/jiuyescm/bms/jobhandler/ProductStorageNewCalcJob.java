@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -69,6 +70,8 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private ISystemCodeService systemCodeService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+
 	
 	List<SystemCodeEntity> scList;
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
@@ -88,6 +91,30 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 			initConf();
 		}
 		return bizList;	
+	}
+	
+	@Override
+	protected String[] initSubjects() {
+		//这里的科目应该在科目组中配置,动态查询
+		//wh_product_storage(商品存储费 )
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_product");
+		if(map==null){
+			String[] strs = {"wh_product_storage"};
+			return strs;
+		}else{
+			int i=0;
+			String[] strs=new String[map.size()];
+			for(String value:map.keySet()){
+				strs[i]=value;	
+				i++;
+			}
+			return strs;
+		}
+	}
+	
+	@Override
+	protected boolean isJoin(BizProductStorageEntity entity) {
+		return true;		
 	}
 	
 	protected void initConf(){

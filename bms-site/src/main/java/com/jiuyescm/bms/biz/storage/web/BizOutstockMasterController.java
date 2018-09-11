@@ -910,6 +910,9 @@ public class BizOutstockMasterController extends BaseController{
 		String username = JAppContext.currentUserName();
 		
 		List<BizOutstockMasterEntity> infoLists = new ArrayList<BizOutstockMasterEntity>();
+		
+		Map<String,Integer> checkMap=new HashMap<>();
+		
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
         	BizOutstockMasterEntity entity = new BizOutstockMasterEntity();
         	
@@ -918,22 +921,30 @@ public class BizOutstockMasterController extends BaseController{
 				int lieshu = rowNum + 1;
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列空行！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
+				continue;
 			}
-			
+			int lieshu = rowNum + 1;
 			String waybillNo = getCellValue(xssfRow.getCell(0));
 			String resizeNum=getCellValue(xssfRow.getCell(1));
 			String resizeVarieties=getCellValue(xssfRow.getCell(2));
 			String adjustBoxnum=getCellValue(xssfRow.getCell(3));
 			String resizeWeight=getCellValue(xssfRow.getCell(4));
 			// 运单号（必填）
-			if(StringUtils.isEmpty(waybillNo)) {
-				int lieshu = rowNum + 1;
+			if(StringUtils.isEmpty(waybillNo)) {			
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列运单号为空值！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
+				continue;
 			}
-						
+			
+			//运单号重复性校验
+			if(checkMap.containsKey(waybillNo)){				
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行运单号和第"+checkMap.get(waybillNo)+"行运单号重复");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				checkMap.put(waybillNo, lieshu);
+				continue;
+			}else{
+				checkMap.put(waybillNo, lieshu);
+			}
 			//调整数量、调整品种数、调整箱数、调整重量都为空
 			if(StringUtils.isBlank(resizeNum) && 
 					StringUtils.isBlank(resizeVarieties) && 
@@ -942,16 +953,14 @@ public class BizOutstockMasterController extends BaseController{
 				// 除instockNo外，其他更新字段都为空
 				setMessage(infoList, rowNum+1,"没有需要调整的内容！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
+				continue;
 			}
 			// 调整数量
 			if(StringUtils.isNotBlank(resizeNum)) {
 				boolean isNumber = ExportUtil.isNumber(resizeNum);
 				if(!isNumber) {
-					int lieshu = rowNum + 1;
 					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					entity.setResizeNum(Double.valueOf(resizeNum));
 				}
@@ -961,10 +970,8 @@ public class BizOutstockMasterController extends BaseController{
 			if(StringUtils.isNotBlank(resizeVarieties)) {
 				boolean isNumber = ExportUtil.isNumber(resizeVarieties);
 				if(!isNumber) {
-					int lieshu = rowNum + 1;
 					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					entity.setResizeVarieties(Double.valueOf(resizeVarieties));
 				}
@@ -974,10 +981,8 @@ public class BizOutstockMasterController extends BaseController{
 			if(StringUtils.isNotBlank(adjustBoxnum)) {
 				boolean isNumber = ExportUtil.isNumber(adjustBoxnum);
 				if(!isNumber) {
-					int lieshu = rowNum + 1;
 					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					entity.setAdjustBoxnum(Integer.valueOf(adjustBoxnum));
 				}
@@ -986,10 +991,8 @@ public class BizOutstockMasterController extends BaseController{
 			if(StringUtils.isNotBlank(resizeWeight)) {
 				boolean isNumber = ExportUtil.isNumber(adjustBoxnum);
 				if(!isNumber) {
-					int lieshu = rowNum + 1;
 					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
 				}else{
 					entity.setResizeWeight(Double.valueOf(resizeWeight));				}
 			}
@@ -998,7 +1001,17 @@ public class BizOutstockMasterController extends BaseController{
 			entity.setLastModifyTime(nowdate);
 			entity.setWaybillNo(waybillNo);
 			infoLists.add(entity);
+		}
+
+  
+        
+        //如果有错误信息
+        if(map.get(ConstantInterface.ImportExcelStatus.IMP_ERROR)!=null){
+        	return map;
         }
+        
+        
+        
         DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
         
         int num = 0;

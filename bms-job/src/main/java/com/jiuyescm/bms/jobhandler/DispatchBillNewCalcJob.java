@@ -17,6 +17,7 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
@@ -80,13 +81,15 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	@Autowired private IBizOutstockPackmaterialRepository bizOutstockPackmaterialRepository;
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+
 	
 	private String BizTypeCode = "DISPATCH"; //配送费编码
 	private String contractTypeCode="CUSTOMER_CONTRACT";
 	
 	private String _subjectCode = "de_delivery_amount";
 	
-	private String SubjectId="";
+	private String subject="";
 	
 	List<SystemCodeEntity> scList = null;
 	List<SystemCodeEntity> no_fees_delivers = null;
@@ -106,6 +109,29 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		return billList;
 	}
 
+	@Override
+	protected String[] initSubjects() {  
+		//这里的科目应该在科目组中配置,动态查询
+		//de_delivery_amount(运费 )
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_dispatch");
+		if(map==null){
+			String[] strs = {"wh_product_storage"};
+			return strs;
+		}else{
+			int i=0;
+			String[] strs=new String[map.size()];
+			for(String value:map.keySet()){
+				strs[i]=value;	
+				i++;
+			}
+			return strs;
+		}
+	}
+	
+	@Override
+	protected boolean isJoin(BizDispatchBillEntity entity) {
+		return true;
+	}
 	
 	protected void initConf(){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -151,7 +177,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		FeesReceiveDispatchEntity feeEntity = new FeesReceiveDispatchEntity();
 		//计费参数获取
         //1)***********************获取计费物流商******************************
-		SubjectId=getSubjectId(getCarrierId(entity));	
+		subject=getSubjectId(getCarrierId(entity));	
 		XxlJobLogger.log("验证数据时物流商-- 【{0}】  ",entity.getChargeCarrierId());
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("验证物流商  耗时【{0}】毫秒 ",(current - start));	
@@ -182,7 +208,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			districtId=entity.getReceiveDistrictId();
 		}
 		//如果是顺丰配送 匹配标准地址
-		if("SHUNFENG_DISPATCH".equals(SubjectId)){
+		if("SHUNFENG_DISPATCH".equals(subject)){
 			RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
 			RegionVo matchVo = omsAddressService.queryNameByAlias(vo);
 			if ((StringUtils.isNotBlank(provinceId) && StringUtils.isBlank(matchVo.getProvince())) ||
@@ -428,14 +454,14 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 
 		feeEntity.setCalculateTime(time);
 		
-		if(StringUtils.isEmpty(SubjectId)){
+		if(StringUtils.isEmpty(subject)){
 			XxlJobLogger.log(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getChargeCarrierId()));
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setRemark(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getChargeCarrierId()));
 			return false;
 		}
-		XxlJobLogger.log("费用科目编号:"+ SubjectId);
+		XxlJobLogger.log("费用科目编号:"+ subject);
 		
 		start = System.currentTimeMillis();// 操作开始时间
 		//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
@@ -490,7 +516,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		map.clear();
 		map.put("contractCode", contractEntity.getContractCode());
 		map.put("bizTypeCode", BizTypeCode);
-		map.put("subjectId", SubjectId);
+		map.put("subjectId", subject);
 		List<PriceContractItemEntity> contractItemEntities = priceContractItemRepository.query(map);
 	    if(contractItemEntities == null || contractItemEntities.size()==0){
 	    	XxlJobLogger.log(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
