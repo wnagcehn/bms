@@ -53,7 +53,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductPalletStorageEntity,FeesReceiveStorageEntity> {
 
-	private String SubjectId = "wh_product_storage";		//费用类型-商品按托存储费 1002原编码 wh_product_pallet_storage
+	//private String SubjectId = "wh_product_storage";		//费用类型-商品按托存储费 1002原编码 wh_product_pallet_storage
 
 	@Autowired private IBizProductPalletStorageService bizProductPalletStorageService;
 	@Autowired private SequenceService sequenceService;
