@@ -13,7 +13,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
@@ -48,7 +50,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntity,FeesReceiveStorageEntity>{
 
-	private String SubjectId = "wh_instock_service";//费用类型-入库验收服务费 编码 1001旧编码
+	//private String SubjectId = "wh_instock_service";//费用类型-入库验收服务费 编码 1001旧编码
 	
 	@Autowired private IBizInstockMasterService bizInstockMasterService;
 	@Autowired private IBizInstockDetailService bizInstockDetailService;
@@ -63,6 +65,8 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	@Autowired private IStandardReqVoService standardReqVoServiceImpl;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+
 	
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
 	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
@@ -107,6 +111,29 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setDelFlag("0");
 		return storageFeeEntity;
+	}
+	
+	@Override
+	protected String[] initSubjects() {
+		Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_instock");
+		if (maps.size() == 0) {
+			String[] str = {"wh_instock_work", "wh_b2c_handwork"};
+			return str;
+		}	
+		String[] strs = new String[maps.size()];
+		int i = 0;
+		for (String val : maps.keySet()) {
+			if (i < maps.keySet().size()) {
+				strs[i] = val;
+				i++;
+			}
+		}
+		return strs;
+	}
+
+	@Override
+	protected boolean isJoin(BizInStockMasterEntity t) {
+		return true;
 	}
 	
 	@Override

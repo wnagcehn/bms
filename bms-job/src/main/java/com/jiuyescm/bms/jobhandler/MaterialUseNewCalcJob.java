@@ -12,6 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.group.BmsGroupSubjectServiceImpl;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
@@ -46,7 +48,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmaterialEntity,FeesReceiveStorageEntity> {
 
-	private String SubjectId = "wh_material_use";//费用类型-耗材使用费编码
+	//private String SubjectId = "wh_material_use";//费用类型-耗材使用费编码
 	
 	@Autowired private IBizOutstockPackmaterialService bizOutstockPackmaterialService;
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
@@ -60,6 +62,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Autowired private IGenericTemplateRepository genericTemplateRepository;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
 	@Autowired private SequenceService sequenceService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
@@ -131,6 +134,31 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		storageFeeEntity.setDelFlag("0");
 		return storageFeeEntity;
 	}
+	
+
+	@Override
+	protected String[] initSubjects() {
+		Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_material_use");
+		if (maps.size() == 0) {
+			String[] str = {"wh_material_use"};
+			return str;
+		}	
+		String[] strs = new String[maps.size()];
+		int i = 0;
+		for (String val : maps.keySet()) {
+			if (i < maps.keySet().size()) {
+				strs[i] = val;
+				i++;
+			}
+		}
+		return strs;
+	}
+
+	@Override
+	protected boolean isJoin(BizOutstockPackmaterialEntity t) {
+		return true;
+	}
+
 	
 	@Override
 	protected boolean isNoExe(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
@@ -352,7 +380,6 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 		
 	}
-
 	
 
 	
