@@ -45,7 +45,6 @@ import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.system.BaseController;
-import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
@@ -919,10 +918,11 @@ public class BuinessDataExportController extends BaseController {
 	 */
 	private void handOutstock(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
 			String filePath) throws Exception {
+		List<String> list=new ArrayList<>();
 		int pageNo = 1;
 		int lineNo = 1;
 		boolean doLoop = true;
-		while (doLoop) {			
+		while (doLoop) {
 			PageInfo<FeesReceiveStorageEntity> pageInfo = 
 					feesReceiveStorageService.queryOutStockPage(condition, pageNo, FileConstant.EXPORTPAGESIZE);
 			if (null != pageInfo && pageInfo.getList().size() > 0) {
@@ -936,8 +936,8 @@ public class BuinessDataExportController extends BaseController {
 			}
 			
 			//头、内容信息
-			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList());
+			List<Map<String, Object>> headDetailMapList = getOutHead(); 
+			List<Map<String, Object>> dataDetailList = getOutHeadItem(pageInfo.getList());
 			
 			poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, FileTaskTypeEnum.BIZ_PRO_OUTSTOCK.getDesc(), 
 					lineNo, headDetailMapList, dataDetailList);
@@ -950,7 +950,7 @@ public class BuinessDataExportController extends BaseController {
 	/**
 	 * 出库单
 	 */
-	public List<Map<String, Object>> getBizHead(){
+	public List<Map<String, Object>> getOutHead(){
 		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
 
@@ -1011,20 +1011,20 @@ public class BuinessDataExportController extends BaseController {
         
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "B2B订单操作费");
-        itemMap.put("columnWidth", 50);
+        itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "orderCost");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "出库装车费");
-        itemMap.put("columnWidth", 50);
+        itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "outHandCost");
         headInfoList.add(itemMap);
         
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getBizHeadItem(List<FeesReceiveStorageEntity> list){
+	private List<Map<String, Object>> getOutHeadItem(List<FeesReceiveStorageEntity> list){
 		 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	        Map<String, Object> dataItem = null;
 	        Map<String,Map<String, Object>> entityMap=new HashMap<String,Map<String, Object>>();
@@ -1036,7 +1036,6 @@ public class BuinessDataExportController extends BaseController {
 		        	dataItem.put("customerName", entity.getCustomerName() );
 		        	dataItem.put("orderType", entity.getOrderType());
 		        	dataItem.put("outstockNo", entity.getOutstockNo());
-		        	dataItem.put("tempretureType", entity.getTempretureType());
 		        	dataItem.put("tempretureType", entity.getTempretureType());
 	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
 	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
