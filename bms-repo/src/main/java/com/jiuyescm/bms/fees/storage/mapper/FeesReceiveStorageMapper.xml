@@ -524,6 +524,7 @@
 			a.bill_type_name as costType,
 			a.outstock_no as outstockNo,
 			a.temperature_type_name as tempretureType,
+			b.subject_code as subjectCode,
 			b.weight,
 			b.quantity,
 			b.box,

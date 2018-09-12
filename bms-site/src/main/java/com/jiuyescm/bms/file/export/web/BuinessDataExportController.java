@@ -1062,7 +1062,6 @@ public class BuinessDataExportController extends BaseController {
 	 */
 	private void handOutstock(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
 			String filePath) throws Exception {
-		List<String> list=new ArrayList<>();
 		int pageNo = 1;
 		int lineNo = 1;
 		boolean doLoop = true;
