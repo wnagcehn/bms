@@ -228,6 +228,18 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 		this.updateBatch("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.updateDiscountAmountBatch", feesList);
 	}
 
+	
+
+	@Override
+	public PageInfo<FeesReceiveStorageEntity> queryOutStockPage(
+			Map<String, Object> parameter, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		List<FeesReceiveStorageEntity> list = selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryOutStockPage", parameter, new RowBounds(
+                pageNo, pageSize));
+		PageInfo<FeesReceiveStorageEntity> pageInfo = new PageInfo<FeesReceiveStorageEntity>(list);
+		return pageInfo;
+	}
+	
 	@Override
 	public PageInfo<FeesReceiveStorageEntity> queryStoragePage(
 			Map<String, Object> parameter, int pageNo, int pageSize) {
@@ -443,5 +455,6 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 	public List<FeesReceiveStorageEntity> queryByFeesNo(String FeesNo){
 		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryByFeesNo", FeesNo);
 	}
+
 
 }

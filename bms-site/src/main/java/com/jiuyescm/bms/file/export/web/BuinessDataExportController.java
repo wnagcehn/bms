@@ -45,6 +45,7 @@ import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.system.BaseController;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
@@ -265,6 +266,9 @@ public class BuinessDataExportController extends BaseController {
 
 		// 配送费
 		handDispatch(xssfWorkbook, poiUtil, condition, filePath);
+		
+		handOutstock(xssfWorkbook, poiUtil, condition, filePath);
+		
 		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 50);
 
 		List<String> warehouseList = queryPreBillWarehouse(condition);
@@ -903,6 +907,160 @@ public class BuinessDataExportController extends BaseController {
 		List<Map<String, Object>> itemMap = getDispathItemMap(dataList);
 		poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook, "宅配", headMap, itemMap);
 	}
+	
+	/**
+	 * 出库单
+	 * 
+	 * @param xssfWorkbook
+	 * @param poiUtil
+	 * @param condition
+	 * @param filePath
+	 * @throws Exception
+	 */
+	private void handOutstock(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
+			String filePath) throws Exception {
+		int pageNo = 1;
+		int lineNo = 1;
+		boolean doLoop = true;
+		while (doLoop) {			
+			PageInfo<FeesReceiveStorageEntity> pageInfo = 
+					feesReceiveStorageService.queryOutStockPage(condition, pageNo, FileConstant.EXPORTPAGESIZE);
+			if (null != pageInfo && pageInfo.getList().size() > 0) {
+				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
+					doLoop = false;
+				}else {
+					pageNo += 1; 
+				}
+			}else {
+				doLoop = false;
+			}
+			
+			//头、内容信息
+			List<Map<String, Object>> headDetailMapList = getBizHead(); 
+			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList());
+			
+			poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, FileTaskTypeEnum.BIZ_PRO_OUTSTOCK.getDesc(), 
+					lineNo, headDetailMapList, dataDetailList);
+			if (null != pageInfo && pageInfo.getList().size() > 0) {
+				lineNo += pageInfo.getList().size();
+			}
+		}
+	}
+
+	/**
+	 * 出库单
+	 */
+	public List<Map<String, Object>> getBizHead(){
+		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> itemMap = new HashMap<String, Object>();
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "仓库名称");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "warehouseName");
+        headInfoList.add(itemMap);
+		
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "发货时间");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "createTime");
+        headInfoList.add(itemMap);
+        
+		itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "商家名称");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "customerName");
+        headInfoList.add(itemMap);
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "单据类型");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "orderType");
+        headInfoList.add(itemMap);
+        
+        
+		itemMap.put("title", "出库单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "outstockNo");
+		headInfoList.add(itemMap);
+        
+		itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "温度类型");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tempretureType");
+        headInfoList.add(itemMap);
+	        
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库件数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "quantity");
+        headInfoList.add(itemMap);
+		
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库箱数");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "box");
+        headInfoList.add(itemMap);
+        
+		itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库重量");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "weight");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "B2B订单操作费");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "orderCost");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "出库装车费");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "outHandCost");
+        headInfoList.add(itemMap);
+        
+        return headInfoList;
+	}
+	
+	private List<Map<String, Object>> getBizHeadItem(List<FeesReceiveStorageEntity> list){
+		 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	        Map<String, Object> dataItem = null;
+	        Map<String,Map<String, Object>> entityMap=new HashMap<String,Map<String, Object>>();
+	        for (FeesReceiveStorageEntity entity : list) {
+	        	if(!entityMap.containsKey(entity.getWaybillNo())){
+	        		dataItem = new HashMap<String, Object>();
+		        	dataItem.put("warehouseName", entity.getWarehouseName());
+		        	dataItem.put("createTime", entity.getCreateTime());
+		        	dataItem.put("customerName", entity.getCustomerName() );
+		        	dataItem.put("orderType", entity.getOrderType());
+		        	dataItem.put("outstockNo", entity.getOutstockNo());
+		        	dataItem.put("tempretureType", entity.getTempretureType());
+		        	dataItem.put("tempretureType", entity.getTempretureType());
+	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
+	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
+	        			dataItem.put("orderCost", entity.getCost());
+	        		}else if("wh_b2b_handwork".equals(entity.getSubjectCode())){
+	        			dataItem.put("outHandCost", entity.getCost());
+	        		}
+		        	dataList.add(dataItem);
+		        	entityMap.put(entity.getWaybillNo(), dataItem);
+	        	}else{
+	        		Map<String, Object> data=entityMap.get(entity.getWaybillNo());
+	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
+	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
+	        			data.put("orderCost", entity.getCost());
+	        		}else if("wh_b2b_handwork".equals(entity.getSubjectCode())){
+	        			data.put("outHandCost", entity.getCost());
+	        		}
+	        	}	
+			}	        
+		return dataList;
+	}
+	
+	
+	
 
 	/**
 	 * 预账单仓储

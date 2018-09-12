@@ -58,6 +58,16 @@ public interface IFeesReceiveStorageRepository {
 
 	public int deleteFeesBill(FeesBillEntity entity);
 
+	/**
+	 * 查询出库费用
+	 * @param parameter
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<FeesReceiveStorageEntity> queryOutStockPage(
+			Map<String, Object> parameter, int pageNo, int pageSize);
+	
 	public PageInfo<FeesReceiveStorageEntity> querystorageDetailByBillNo(
 			String billno,int pageNo,int pageSize);
 	

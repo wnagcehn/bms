@@ -331,4 +331,11 @@ public class FeesReceiveStorageServiceImpl implements IFeesReceiveStorageService
 		return feesReceiveStorageRepository.queryByFeesNo(FeesNo);
 	}
 
+	@Override
+	public PageInfo<FeesReceiveStorageEntity> queryOutStockPage(
+			Map<String, Object> parameter, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		return feesReceiveStorageRepository.queryOutStockPage(parameter, pageNo, pageSize);
+	}
+
 }

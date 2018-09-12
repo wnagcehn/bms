@@ -74,6 +74,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private Double weight;
 	// 体积
 	private Double volume;
+	//箱数
+	private Double box;
 	// 品种数
 	private Integer varieties;
 	// 单价
@@ -130,6 +132,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private String remarkContent;
 	
 	private String calcuMsg;
+	//出库单号
+	private String outstockNo;
 	
 	public Long getId() {
 		return id;
@@ -855,6 +859,22 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setCalcuMsg(String calcuMsg) {
 		this.calcuMsg = calcuMsg;
+	}
+
+	public String getOutstockNo() {
+		return outstockNo;
+	}
+
+	public void setOutstockNo(String outstockNo) {
+		this.outstockNo = outstockNo;
+	}
+
+	public Double getBox() {
+		return box;
+	}
+
+	public void setBox(Double box) {
+		this.box = box;
 	}
 	
 	

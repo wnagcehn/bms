@@ -42,6 +42,16 @@ public interface IFeesReceiveStorageService {
 		
 	int deleteEntity(String feesNo);
 
+	/**
+	 * 查询出库费用
+	 * @param parameter
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<FeesReceiveStorageEntity> queryOutStockPage(
+			Map<String, Object> parameter, int pageNo, int pageSize);
+	
 	PageInfo<FeesReceiveStorageEntity> queryProductStoragePage(
 			Map<String, Object> parameter, int pageNo, int pageSize);
 
