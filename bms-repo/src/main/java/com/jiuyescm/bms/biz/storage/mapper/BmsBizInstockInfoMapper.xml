@@ -91,6 +91,32 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 				and s.subject_code = #{subjectCode}
 			</if>
     </select>
+    
+    <select id="queryForBill" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select
+        i.warehouse_name as warehouseName,
+        i.instock_date as instockDate,
+        i.customer_name as customerName,
+        i.instock_type as instockType,
+        i.instock_no as instockNo,
+        s.quantity,
+        s.box,
+        s.weight,
+        s.cost
+ 		from biz_instock_info i
+		INNER JOIN fees_receive_storage s on s.fees_no=i.fees_no
+        where 1 = 1
+        	<if test=" customerId != null and customerId !='' ">
+				and i.customer_id = #{customerId}
+			</if>
+			<if test="createTime != null and createTime !='' " >
+				and <![CDATA[i.create_time >= #{startTime}]]>
+			</if>
+			<if test="createEndTime != null and createEndTime !='' " >
+				and <![CDATA[i.create_time <= #{endTime}]]>
+			</if>
+    </select>
 
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">

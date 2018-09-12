@@ -2,6 +2,7 @@ package com.jiuyescm.bms.file.export.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -46,8 +47,10 @@ import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
+import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
+import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
@@ -99,6 +102,8 @@ public class BuinessDataExportController extends BaseController {
 	private IPubMaterialInfoService pubMaterialInfoService;
 	@Resource
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Resource
+	private IBmsBizInstockInfoService bmsBizInstockInfoService;
 
 	private static final int PAGESIZE = 10000;
 	FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
@@ -274,6 +279,9 @@ public class BuinessDataExportController extends BaseController {
 		// 存储费
 		handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
 		
+		//入库
+		handInstock(xssfWorkbook, poiUtil, condition, filePath);
+		
 		// 耗材费(是否分仓)
 		if ((Boolean)condition.get("isSepWarehouse") == true) {
 			handMaterial(xssfWorkbook, poiUtil, condition, filePath);
@@ -293,6 +301,142 @@ public class BuinessDataExportController extends BaseController {
 		updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), 100);
 		logger.info("====预账单导出：" + "[" + condition.get("customerName").toString() + "]" + "写入Excel end.==总耗时："
 				+ (System.currentTimeMillis() - beginTime));
+	}
+	
+	private void handInstock(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
+			String filePath) throws IOException {
+		int pageNo = 1;
+		int instockLineNo = 1;
+		boolean doLoop = true;
+		while (doLoop) {
+			PageInfo<FeesReceiveStorageEntity> instockList = bmsBizInstockInfoService.queryForBill(condition, pageNo, PAGESIZE);
+			if (null != instockList && instockList.getList().size() > 0) {
+				if (instockList.getList().size() < PAGESIZE) {
+					doLoop = false;
+				} else {
+					pageNo += 1;
+				}
+			} else {
+				doLoop = false;
+			}
+
+			List<Map<String, Object>> headInstockList = getInstockHead();
+			List<Map<String, Object>> dataInstockList = getInstockItem(instockList.getList());
+
+			if (!(pageNo == 1 && (instockList == null || instockList.getList().size() <= 0))) {
+				poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, "入库", instockLineNo, headInstockList, dataInstockList);
+				if (null != instockList && instockList.getList().size() > 0) {
+					instockLineNo += instockList.getList().size();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 入库-title
+	 */
+	private List<Map<String, Object>> getInstockHead() {
+		List<Map<String, Object>> headInfoList = new ArrayList<Map<String, Object>>();
+		Map<String, Object> itemMap = new HashMap<String, Object>();
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "仓库名称");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "warehouseName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "收货确认时间");
+		itemMap.put("columnWidth", 35);
+		itemMap.put("dataKey", "instockDate");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "商家名称");
+		itemMap.put("columnWidth", 40);
+		itemMap.put("dataKey", "customerName");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "单据类型");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "instockType");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "入库单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "instockNo");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "入库件数");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "totalQty");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "入库箱数");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "totalBox");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "入库重量");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "totalWeight");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "入库操作费");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "instockAmount");
+		headInfoList.add(itemMap);
+
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "入库卸货费");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "b2cAmount");
+		headInfoList.add(itemMap);
+
+		return headInfoList;
+	}
+	
+	/**
+	 * 入库-content
+	 */
+	private List<Map<String, Object>> getInstockItem(List<FeesReceiveStorageEntity> list) {
+		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+		Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
+		DateFormat sdff = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Map<String, Object> dataItem = null;
+		for (FeesReceiveStorageEntity entity : list) {
+			if (map.containsKey(entity.getInstockNo())) {
+				if ("wh_instock_work".equals(entity.getSubjectCode())) {
+					map.get(entity.getInstockNo()).put("instockAmount", entity.getCost()!=null?entity.getCost().doubleValue():BigDecimal.ZERO);
+				}else if ("wh_b2c_handwork".equals(entity.getSubjectCode())) {
+					map.get(entity.getInstockNo()).put("b2cAmount", entity.getCost()!=null?entity.getCost().doubleValue():BigDecimal.ZERO);
+				}
+			}else {
+				dataItem = new HashMap<String, Object>();
+				dataItem.put("warehouseName", entity.getWarehouseName());
+				dataItem.put("instockDate", sdff.format(entity.getInstockDate()));
+				dataItem.put("customerName", entity.getCustomerName());
+				dataItem.put("instockType", entity.getInstockType());
+				dataItem.put("instockNo", entity.getInstockNo());
+				dataItem.put("totalQty", entity.getQuantity());
+				dataItem.put("totalBox", entity.getBox());
+				dataItem.put("totalWeight", entity.getWeight());
+				if ("wh_instock_work".equals(entity.getSubjectCode())) {
+					dataItem.put("instockAmount", entity.getCost()!=null?entity.getCost().doubleValue():BigDecimal.ZERO);
+				}else if ("wh_b2c_handwork".equals(entity.getSubjectCode())) {
+					dataItem.put("b2cAmount", entity.getCost()!=null?entity.getCost().doubleValue():BigDecimal.ZERO);
+				}
+				map.put(entity.getInstockNo(), dataItem);
+				dataList.add(dataItem);
+			}			
+		}
+		return dataList;
 	}
 
 	private Date addDay(int days, Date dt) {

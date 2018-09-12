@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 
 /**
  * ..Service
@@ -43,5 +44,14 @@ public interface IBmsBizInstockInfoService {
 	 * @return
 	 */
 	PageInfo<BmsBizInstockInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 为预账单查询
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<FeesReceiveStorageEntity> queryForBill(Map<String, Object> condition, int pageNo, int pageSize);
 
 }

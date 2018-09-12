@@ -135,6 +135,14 @@ public class FeesReceiveStorageEntity implements IEntity {
 	//出库单号
 	private String outstockNo;
 	
+	//入库单号
+	private String instockNo;
+	//单据类型
+	private String instockType;
+	//收货确定时间
+	private Timestamp instockDate;
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -875,6 +883,30 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setBox(Double box) {
 		this.box = box;
+	}
+
+	public String getInstockNo() {
+		return instockNo;
+	}
+
+	public void setInstockNo(String instockNo) {
+		this.instockNo = instockNo;
+	}
+
+	public String getInstockType() {
+		return instockType;
+	}
+
+	public void setInstockType(String instockType) {
+		this.instockType = instockType;
+	}
+
+	public Timestamp getInstockDate() {
+		return instockDate;
+	}
+
+	public void setInstockDate(Timestamp instockDate) {
+		this.instockDate = instockDate;
 	}
 	
 	

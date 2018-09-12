@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockInfoRepository;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 
 /**
  * ..RepositoryImpl
@@ -30,7 +31,18 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
         return new PageInfo<BmsBizInstockInfoEntity>(list);
     }
 	
-    
+	/**
+	 * 账单查询
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public PageInfo<FeesReceiveStorageEntity> queryForBill(Map<String, Object> condition, int pageNo, int pageSize) {
+        List<FeesReceiveStorageEntity> list = selectList("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.queryForBill", condition, new RowBounds(
+                pageNo, pageSize));
+        return new PageInfo<FeesReceiveStorageEntity>(list);
+    }
+	
     /**
 	 * 查询
 	 * @param page
