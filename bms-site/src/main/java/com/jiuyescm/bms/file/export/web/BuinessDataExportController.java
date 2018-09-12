@@ -1180,6 +1180,9 @@ public class BuinessDataExportController extends BaseController {
 		        	dataItem.put("orderType", entity.getOrderType());
 		        	dataItem.put("outstockNo", entity.getOutstockNo());
 		        	dataItem.put("tempretureType", temMap.get(entity.getTempretureType()));
+		        	dataItem.put("quantity", entity.getQuantity());
+		        	dataItem.put("box", entity.getBox());
+		        	dataItem.put("weight", entity.getWeight());
 	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
 	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
 	        			dataItem.put("orderCost", entity.getCost());
