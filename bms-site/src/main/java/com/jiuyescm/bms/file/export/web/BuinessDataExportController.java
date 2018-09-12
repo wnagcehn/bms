@@ -1082,7 +1082,7 @@ public class BuinessDataExportController extends BaseController {
 			List<Map<String, Object>> headDetailMapList = getOutHead(); 
 			List<Map<String, Object>> dataDetailList = getOutHeadItem(pageInfo.getList(),temMap);
 			
-			poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, FileTaskTypeEnum.BIZ_PRO_OUTSTOCK.getDesc(), 
+			poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, "TB", 
 					lineNo, headDetailMapList, dataDetailList);
 			if (null != pageInfo && pageInfo.getList().size() > 0) {
 				lineNo += pageInfo.getList().size();
