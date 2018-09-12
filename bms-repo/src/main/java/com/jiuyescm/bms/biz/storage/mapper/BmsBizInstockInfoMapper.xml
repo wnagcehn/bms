@@ -103,7 +103,8 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
         s.quantity,
         s.box,
         s.weight,
-        s.cost
+        s.cost,
+        s.subject_code as subjectCode
  		from biz_instock_info i
 		INNER JOIN fees_receive_storage s on s.fees_no=i.fees_no
         where 1 = 1
