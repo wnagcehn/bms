@@ -516,7 +516,7 @@
         where id=#{id}
     </update>
 
-	<select id="queryOutStockPage" parameterType="Map" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+	<select id="queryOutStockPage" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
 		select 
 	       	a.warehouse_name as warehouseName,
 	        a.create_time as createTime,
