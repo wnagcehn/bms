@@ -517,20 +517,23 @@
     </update>
 
 	<select id="queryOutStockPage" parameterType="Map" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
-			select 
- 	       		a.warehouse_name,
- 	        	a.create_time,
-				a.customer_name,
-				a.bill_type_name,
-				a.outstock_no,
-				a.temperature_type_name,
-				b.weight,
-				b.quantity,
-				b.box,
-				b.varieties,
-				b.cost
-		    from biz_outstock_master a LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no
-		    where a.del_flag='0' and b.del_flag='0'
+		select 
+	       	a.warehouse_name as warehouseName,
+	        a.create_time as createTime,
+			a.customer_name as customerName,
+			a.bill_type_name as costType,
+			a.outstock_no as outstockNo,
+			a.temperature_type_name as tempretureType,
+			b.weight,
+			b.quantity,
+			b.box,
+			b.varieties,
+			b.cost
+	    from biz_outstock_master a inner JOIN fees_receive_storage b on a.fees_no=b.fees_no
+	     where a.del_flag='0' and b.del_flag='0'
+	     and a.customerid=#{customerId} 
+	     and a.create_time>=#{startTime} and <![CDATA[a.create_time<#{endTime}]]>
+         and b.subject_code in ('wh_b2b_work','wh_b2b_handwork')
 	</select>
 
     <select id="queryStoragePage" parameterType="Map" resultMap="baseResultMap">
