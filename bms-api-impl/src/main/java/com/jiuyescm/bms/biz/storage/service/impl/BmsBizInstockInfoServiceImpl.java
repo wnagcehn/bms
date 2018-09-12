@@ -15,6 +15,7 @@ import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockRecordRepository;
 import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 
 /**
@@ -42,6 +43,17 @@ public class BmsBizInstockInfoServiceImpl implements IBmsBizInstockInfoService {
     public PageInfo<BmsBizInstockInfoEntity> query(Map<String, Object> condition,
             int pageNo, int pageSize) {
         return bmsBizInstockInfoRepository.query(condition, pageNo, pageSize);
+    }
+    
+	/**
+	 * 为预账单查询
+	 * @param page
+	 * @param param
+	 */
+    @Override
+    public PageInfo<FeesReceiveStorageEntity> queryForBill(Map<String, Object> condition,
+            int pageNo, int pageSize) {
+        return bmsBizInstockInfoRepository.queryForBill(condition, pageNo, pageSize);
     }
     
      /**
