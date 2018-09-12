@@ -515,29 +515,26 @@ public class StroageStepQuoteController {
 			PriceStepQuotationEntity p=prodList.get(i);
 			lineNo=lineNo+1;
 			
-			
-			//判断仓库id是否在仓库表中维护 并将此仓库返回,将id回填			
-			for(WarehouseVo entity:wareHouselist){
-				if(entity.getWarehousename().equals(p.getWarehouseCode())){
-					p.setWarehouseCode(entity.getWarehouseid());
-					break;
+			if(StringUtils.isNotBlank(p.getWarehouseCode())){
+				//判断仓库id是否在仓库表中维护 并将此仓库返回,将id回填			
+				for(WarehouseVo entity:wareHouselist){
+					if(entity.getWarehousename().equals(p.getWarehouseCode())){
+						p.setWarehouseCode(entity.getWarehouseid());
+						break;
+					}
 				}
 			}
-			if(StringUtils.isBlank(p.getWarehouseCode())){
-				setMessage(infoList, lineNo,"仓库id没有在仓库表中维护!");
-			}
 			
-			
-			if(p.getNumLower()==null || DoubleUtil.isBlank(p.getNumLower())){
+			if(p.getNumLower()==null){
 				setMessage(infoList, lineNo,"下限不能为空");
 				continue;
 			}
 
-			if(p.getNumUpper()==null || DoubleUtil.isBlank(p.getNumUpper())){
+			if(p.getNumUpper()==null){
 				setMessage(infoList, lineNo,"上限不能为空");
 				continue;
-			}
-
+			}						
+			
 			if(p.getNumUpper().doubleValue()<=p.getNumLower().doubleValue()){
 				setMessage(infoList, lineNo,"上限必须大于下限");
 			}
