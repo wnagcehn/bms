@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.json.JSONObject;
 
@@ -28,7 +29,9 @@ import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
+import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
+import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceMaterialQuotationRepository;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
@@ -68,38 +71,42 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	Map<String,List<PriceMaterialQuotationEntity>> mapCusPrice=null;
 	
+	protected void initConf(){
+		mapCusPrice=new ConcurrentHashMap<String,List<PriceMaterialQuotationEntity>>();
+		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
+		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
+	}
+	
+
 	@Override
-	protected List<BizOutstockPackmaterialEntity> queryBillList(Map<String, Object> map) {
-		/*List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
-		return bizList;*/
-		
-		long operateTime = System.currentTimeMillis();
+	public Integer deleteFeesBatch(List<BizOutstockPackmaterialEntity> list) {
 		List<String> feesNos = new ArrayList<String>();
 		Map<String, Object> feesMap = new HashMap<String, Object>();
-		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
-		if(bizList == null || bizList.size() == 0){
-			
+		for (BizOutstockPackmaterialEntity entity : list) {
+			if(StringUtils.isNotEmpty(entity.getFeesNo())){
+				feesNos.add(entity.getFeesNo());
+			}
+			else{
+				entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
+			}
 		}
-		else{
-			for (BizOutstockPackmaterialEntity entity : bizList) {
-				if(StringUtils.isNotEmpty(entity.getFeesNo())){
-					feesNos.add(entity.getFeesNo());
-				}
-				else{
-					entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
-				}
+		try{
+			if(feesNos.size()>0){
+				feesMap.put("feesNos", feesNos);
+				feesReceiveStorageService.deleteBatch(feesMap);
 			}
-			try{
-				if(feesNos.size()>0){
-					feesMap.put("feesNos", feesNos);
-					feesReceiveStorageService.deleteBatch(feesMap);
-					long current = System.currentTimeMillis();// 系统开始时间
-					XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
-				}
-			}
-			catch(Exception ex){
-				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-			}
+		}
+		catch(Exception ex){
+			XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
+		}
+		return null;
+	}
+	
+	@Override
+	protected List<BizOutstockPackmaterialEntity> queryBillList(Map<String, Object> map) {
+		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
+		if(bizList.size() > 0){
+			initConf();
 		}
 		return bizList;
 	}
@@ -293,10 +300,6 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 	
 	protected boolean validateData(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
-		
-		mapContact=new HashMap<String,PriceContractInfoEntity>();
-		mapRule=new HashMap<String,BillRuleReceiveEntity>();	
-		mapCusPrice=new HashMap<String,List<PriceMaterialQuotationEntity>>();
 		
 		long start = System.currentTimeMillis();// 开始时间
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());

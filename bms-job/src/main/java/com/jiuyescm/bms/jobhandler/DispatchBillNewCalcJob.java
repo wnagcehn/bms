@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.json.JSONObject;
 
@@ -21,6 +22,7 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -30,7 +32,9 @@ import com.jiuyescm.bms.correct.BmsMarkingProductsEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveDispatchService;
+import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.general.service.SequenceService;
@@ -82,7 +86,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
-
+	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
 	
 	private String BizTypeCode = "DISPATCH"; //配送费编码
 	private String contractTypeCode="CUSTOMER_CONTRACT";
@@ -114,7 +118,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		//这里的科目应该在科目组中配置,动态查询
 		//de_delivery_amount(运费 )
 		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_dispatch");
-		if(map==null){
+		if(map.size() == 0){
 			String[] strs = {"de_delivery_amount"};
 			return strs;
 		}else{
@@ -145,7 +149,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		map.put("typeCode", "MONTH_FEE_COUNT");
 		monthFeeList = systemCodeService.querySysCodes(map);
 		
-		mapContact=new HashMap<String,PriceContractInfoEntity>();
+		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
 		
 		//指定的商家
 		map= new HashMap<String, Object>();
@@ -166,6 +170,30 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			
 		//物流商
 		carrierMap=getCarrier();
+	}
+	
+	@Override
+	public Integer deleteFeesBatch(List<BizDispatchBillEntity> list) {
+		Map<String, Object> feesMap = new HashMap<String, Object>();
+		List<String> feesNos = new ArrayList<String>();
+		for (BizDispatchBillEntity entity : list) {
+			if(StringUtils.isNotEmpty(entity.getFeesNo())){
+				feesNos.add(entity.getFeesNo());
+			}
+			else{
+				entity.setFeesNo(sequenceService.getBillNoOne(BizDispatchBillEntity.class.getName(), "STO", "0000000000"));
+			}
+		}
+		try{
+			if(feesNos.size()>0){
+				feesMap.put("feesNos", feesNos);
+				feesReceiveStorageService.deleteBatch(feesMap);
+			}
+		}
+		catch(Exception ex){
+			XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
+		}
+		return null;
 	}
 	
 	
@@ -875,7 +903,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveDispatchService.updateBatch(feesList);
+		feesReceiveDispatchService.InsertBatch(feesList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新费用数据耗时：【{0}】毫秒 ",(current - start));
 	}

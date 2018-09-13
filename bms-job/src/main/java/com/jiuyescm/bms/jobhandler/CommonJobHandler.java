@@ -56,6 +56,8 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler{
 	 */
 	protected abstract String[] initSubjects();
 	
+	public abstract Integer deleteFeesBatch(List<T> list);
+	
 	/**
 	 * 初始化费用对象  此阶段可以获取到 费用的计算参数 如：计费重量，计费数量，计费物流商等等
 	 * @param t

@@ -35,6 +35,7 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 			List<List<T>> pageT=ListTool.splitList(list, 200);//200个数据一组分页
 			for(List<T> listT:pageT){
 				try{
+					calcJob.deleteFeesBatch(listT);
 					List<F> feesList = new ArrayList<F>();
 					for (T t : listT) {
 						start= System.currentTimeMillis();// 操作开始时间

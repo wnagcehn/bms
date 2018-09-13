@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.storage.entity.BizInStockDetailEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.receivable.storage.service.IBizInstockMasterService;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -43,6 +44,11 @@ public class BizInstockMasterServiceImpl extends MyBatisDao implements IBizInsto
 	@Override
 	public void updateInstockBatch(List<BizInStockMasterEntity> entities) {
 		this.updateBatch("com.jiuyescm.bms.receivable.storage.BizInstockMasterMapper.updatebizInstockMaster", entities);
+	}
+	
+	@Override
+	public void updateInstockBatchByFees(List<FeesReceiveStorageEntity> entities) {
+		this.updateBatch("com.jiuyescm.bms.receivable.storage.BizInstockMasterMapper.updatebizInstockMasterByFees", entities);
 	}
 
 	@Override

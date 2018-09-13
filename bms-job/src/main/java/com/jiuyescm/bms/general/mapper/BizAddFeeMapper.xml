@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper" >
-    <resultMap id="baseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.BizAddFeeEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.general.entity.BizAddFeeEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="operation_time" property="operationTime" jdbcType="TIMESTAMP" />
@@ -125,7 +125,7 @@
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+        resultType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         select
         <include refid="baseColumns" />
         from biz_add_fee
@@ -134,7 +134,7 @@
     </select>
     
     <select id="queryRecount" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+        resultType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         select
         <include refid="baseColumns" />
         from biz_add_fee
@@ -142,14 +142,14 @@
 		<include refid="reCountSelectColumns" />
     </select>
 
-    <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    <select id="findById" resultType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         select
         <include refid="baseColumns" />
         from biz_add_fee
         where id=#{id} 
     </select>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         insert into biz_add_fee(wms_id,operation_time, warehouse_code, warehouse_name, customerid, customer_name, num, fees_no, fees_type,fees_type_name,fees_unit, item, is_calculated, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, adjust_num,remark, external_no,service_content,remark_content)
         values (
 #{wmsId,jdbcType=VARCHAR},
@@ -181,7 +181,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    <update id="update" parameterType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         update biz_add_fee 
 		<set >
 
@@ -231,7 +231,7 @@
         </if>
     </update>
     
-    <update id="updateByFees" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+    <update id="updateByFees" parameterType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         update biz_add_fee 
 		<set >
 			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
@@ -250,7 +250,7 @@
         id=#{id}
     </delete>
     
-    <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    <update id="updateBatch" parameterType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         update biz_add_fee
 		<set>
 		<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
@@ -264,7 +264,7 @@
         where  id=#{id}
     </update>
     
-    <select id="selectOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    <select id="selectOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
         select <include refid="baseColumns" />  from  biz_add_fee 
         where operation_time=#{operationTime,jdbcType=TIMESTAMP}  
         and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
@@ -274,7 +274,7 @@
         limit 1
     </select>
     
-    <select id="queryWms" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    <select id="queryWms" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BizAddFeeEntity">
     	select <include refid="baseColumns" />  from  biz_add_fee where wms_id=#{wmsId,jdbcType=VARCHAR}
     </select>
     

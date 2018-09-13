@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 /**
  * 
  * @author cjw
@@ -35,5 +36,11 @@ public interface IBizOutstockMasterService {
     public void updateOutstockBatch(List<BizOutstockMasterEntity> OutStocks);
     
     List<Map<String,String>>  getTypeList(String type);
+    
+    /**
+     * 根据费用表数据批量更新业务表
+     * @param OutStocks
+     */
+	void updateOutstockBatchByFees(List<FeesReceiveStorageEntity> OutStocks);
 
 }

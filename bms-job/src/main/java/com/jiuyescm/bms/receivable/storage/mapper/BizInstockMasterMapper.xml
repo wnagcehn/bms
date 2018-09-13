@@ -95,6 +95,17 @@
         where id=#{id}
     </update> 
     
+    <update id="updatebizInstockMasterByFees" parameterType ="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+    	update biz_instock_master 
+    	<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="calcuMsg != null" >remark=#{calcuMsg,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where fees_no=#{feesNo}
+    </update> 
+    
     <select id="queryInstockDetailByMaster" parameterType="java.lang.String" resultMap="bizInstockDetailMap">
     	select instock_no,product_id,product_name,sum(num) as num 
     	from biz_instock_detail where instock_no = #{instockNo}

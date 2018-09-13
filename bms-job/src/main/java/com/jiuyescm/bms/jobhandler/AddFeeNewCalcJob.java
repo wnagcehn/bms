@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.json.JSONObject;
 
@@ -14,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
+import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
+import com.jiuyescm.bms.general.service.IBizAddFeeService;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.SequenceService;
@@ -60,7 +62,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	
 	@Autowired private SequenceService sequenceService;
-	@Autowired private IBizAddFeeRepository bizAddFeeRepository;
+	@Autowired private IBizAddFeeService bizAddFeeService;
 	@Autowired private IGenericTemplateRepository genericTemplateRepository;
 	@Autowired private IPriceExtraQuotationRepository priceExtraQuotationRepository;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
@@ -71,37 +73,20 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	Map<String,GenericTemplateEntity> mapCusPrice=null;
 	String priceType="";
-
+	
+	protected void initConf(){
+		mapCusPrice=new ConcurrentHashMap<String,GenericTemplateEntity>();
+		mapCusStepPrice=new ConcurrentHashMap<String,PriceStepQuotationEntity>();
+		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
+		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
+	}
+	
 	// 查询业务数据
 	@Override
-	protected List<BizAddFeeEntity> queryBillList(Map<String, Object> map) {
-		long operateTime = System.currentTimeMillis();
-		List<String> feesNos = new ArrayList<String>();
-		Map<String, Object> feesMap = new HashMap<String, Object>();
-		List<BizAddFeeEntity> bizList = bizAddFeeRepository.querybizAddFee(map);
-		if(bizList == null || bizList.size() == 0){
-			
-		}
-		else{
-			for (BizAddFeeEntity entity : bizList) {
-				if(StringUtils.isNotEmpty(entity.getFeesNo())){
-					feesNos.add(entity.getFeesNo());
-				}
-				else{
-					entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
-				}
-			}
-			try{
-				if(feesNos.size()>0){
-					feesMap.put("feesNos", feesNos);
-					feesReceiveStorageService.deleteBatch(feesMap);
-					long current = System.currentTimeMillis();// 系统开始时间
-					XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
-				}
-			}
-			catch(Exception ex){
-				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-			}
+	protected List<BizAddFeeEntity> queryBillList(Map<String, Object> map) {		
+		List<BizAddFeeEntity> bizList = bizAddFeeService.querybizAddFee(map);
+		if(bizList.size()>0){
+			initConf();
 		}
 		return bizList;
 	}
@@ -289,11 +274,6 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	protected boolean validateData(BizAddFeeEntity entity,
 			FeesReceiveStorageEntity storageFeeEntity) {
 		
-		mapCusStepPrice=new HashMap<String,PriceStepQuotationEntity>();
-		mapCusPrice=new HashMap<String,GenericTemplateEntity>();
-		mapContact=new HashMap<String,PriceContractInfoEntity>();
-		mapRule=new HashMap<String,BillRuleReceiveEntity>();
-		
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);
@@ -379,13 +359,36 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
-		bizAddFeeRepository.updateList(ts);
+		bizAddFeeService.updateList(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
 		feesReceiveStorageService.InsertBatch(fs);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
-		
+	}
+
+	@Override
+	public Integer deleteFeesBatch(List<BizAddFeeEntity> list) {
+		List<String> feesNos = new ArrayList<String>();
+		Map<String, Object> feesMap = new HashMap<String, Object>();
+		for (BizAddFeeEntity entity : list) {
+			if(StringUtils.isNotEmpty(entity.getFeesNo())){
+				feesNos.add(entity.getFeesNo());
+			}
+			else{
+				entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
+			}
+		}
+		try{
+			if(feesNos.size()>0){
+				feesMap.put("feesNos", feesNos);
+				feesReceiveStorageService.deleteBatch(feesMap);
+			}
+		}
+		catch(Exception ex){
+			XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
+		}
+		return null;
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockDetailEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockMasterService;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -59,6 +60,16 @@ public class BizOutstockMasterServiceImpl extends MyBatisDao implements IBizOuts
 	public void updateOutstockBatch(List<BizOutstockMasterEntity> OutStocks) {
 		try{
 			this.updateBatch("com.jiuyescm.bms.receivable.storage.BizOutstockMasterMapper.updateCalculate", OutStocks);
+		}
+		catch(Exception ex){
+			XxlJobLogger.log("【订单操作费订单任务】更新主表异常"+ex.getMessage());
+		}
+	}
+	
+	@Override
+	public void updateOutstockBatchByFees(List<FeesReceiveStorageEntity> OutStocks) {
+		try{
+			this.updateBatch("com.jiuyescm.bms.receivable.storage.BizOutstockMasterMapper.updateCalculateByFees", OutStocks);
 		}
 		catch(Exception ex){
 			XxlJobLogger.log("【订单操作费订单任务】更新主表异常"+ex.getMessage());
