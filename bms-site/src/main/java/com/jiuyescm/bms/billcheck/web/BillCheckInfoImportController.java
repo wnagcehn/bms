@@ -188,12 +188,12 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 			//销售员
 			if(StringUtils.isNotBlank(vo.getSellerName())){
 				if(userMap.containsKey(vo.getSellerName())){
-					UserVO userVO=(UserVO) userMap.get(vo.getSellerName());
-					vo.setSellerId(userVO.getUsername());
-					//销售员需要带出区域
-					if(StringUtils.isNotBlank(vo.getSellerId())){
-						String groupName=bmsGroupUserService.checkExistGroupName(vo.getSellerId());
-						vo.setArea(groupName);
+					//通过销售员名称获取人员信息
+					List<UserVO> userList=userService.findUsers("", vo.getSellerName());
+					if(userList.size()>0){
+						UserVO sellerVo=userList.get(0);
+						vo.setSellerId(sellerVo.getUsername());
+						vo.setArea(sellerVo.getDeptName());
 					}	
 				}else{
 					mes+="销售员不存在;";

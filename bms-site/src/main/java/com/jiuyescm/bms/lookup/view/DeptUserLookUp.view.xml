@@ -110,6 +110,7 @@
     <DataSet id="dsDept">
       <Property name="dataProvider">deptGroupController#loadDataByParent</Property>
       <Property name="dataType">[dataTypeDept]</Property>
+      <Property name="loadMode">lazy</Property>
     </DataSet>
     <DataSet id="dsUserQuery">
       <ClientEvent name="onCreate">view.get(&quot;#dsUserQuery&quot;).insert();&#xD;
@@ -121,7 +122,7 @@
       <Property name="dataProvider">deptGroupController#queryAllUserByDept</Property>
     </DataSet>
     <DataTree id="dataTreeDept" layoutConstraint="left">
-      <ClientEvent name="onDoubleClick">var currentEitity = view.get(&quot;#dataTreeDept&quot;).get(&quot;currentEntity&quot;);&#xD;
+      <ClientEvent name="onClick">var currentEitity = view.get(&quot;#dataTreeDept&quot;).get(&quot;currentEntity&quot;);&#xD;
 var data=view.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
 data.set(&quot;deptName&quot;,currentEitity.get(&quot;deptName&quot;));&#xD;
 data.set(&quot;deptId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
@@ -141,14 +142,7 @@ ds.set(&quot;parameter&quot;,data).flushAsync();</ClientEvent>
     </DataTree>
     <AutoForm>
       <Property name="dataSet">dsUserQuery</Property>
-      <Property name="cols">*,*,*,50,50</Property>
-      <AutoFormElement>
-        <Property name="name">deptName</Property>
-        <Property name="property">deptName</Property>
-        <Property name="editable">false</Property>
-        <Property name="readOnly">true</Property>
-        <Editor/>
-      </AutoFormElement>
+      <Property name="cols">*,*,50,50</Property>
       <AutoFormElement>
         <Property name="name">userId</Property>
         <Property name="property">userId</Property>
@@ -161,6 +155,8 @@ ds.set(&quot;parameter&quot;,data).flushAsync();</ClientEvent>
       </AutoFormElement>
       <Button>
         <ClientEvent name="onClick">var data=view.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+data.set(&quot;deptId&quot;,&quot;&quot;);&#xD;
+data.set(&quot;deptName&quot;,&quot;&quot;);&#xD;
 var ds=view.get(&quot;#dsUser&quot;);&#xD;
 ds.set(&quot;parameter&quot;,data).flushAsync();&#xD;
 </ClientEvent>
@@ -200,6 +196,9 @@ if (data != null) {&#xD;
 }</ClientEvent>
       <Property name="dataSet">dsUser</Property>
       <Property name="readOnly">true</Property>
+      <DataColumn name="deptName">
+        <Property name="property">deptName</Property>
+      </DataColumn>
       <DataColumn name="username">
         <Property name="property">username</Property>
       </DataColumn>

@@ -555,6 +555,7 @@ public class BizOutstockMasterController extends BaseController{
         itemMap.put("dataKey", "externalNo");
         headInfoList.add(itemMap);
 		
+        itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "出库单号");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "outstockNo");

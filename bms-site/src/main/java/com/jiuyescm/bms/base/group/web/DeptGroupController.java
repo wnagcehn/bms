@@ -75,6 +75,8 @@ public class DeptGroupController {
 			if(StringUtils.isNotBlank(userName)){
 				list=queryByUserName(list,userName);
 			}
+		}else{
+			    list=accountUserService.findUsers(userId,userName);
 		}
 		return list;
 	}

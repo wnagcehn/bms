@@ -1434,10 +1434,6 @@ if(index==3){&#xD;
               <Property name="property">deptName</Property>
               <Property name="width">80</Property>
             </DataColumn>
-            <DataColumn name="deptCode">
-              <Property name="property">deptCode</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
             <DataColumn name="firstClassName">
               <Property name="property">firstClassName</Property>
               <Property name="width">80</Property>
@@ -1980,18 +1976,21 @@ view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
                   <Property name="name">balanceName</Property>
                   <Property name="property">balanceName</Property>
                   <Property name="trigger">triggerUserBalance</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:1">
                   <Property name="name">sellerName</Property>
                   <Property name="property">sellerName</Property>
                   <Property name="trigger">triggerUserSeller</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:1">
                   <Property name="name">projectManagerName</Property>
                   <Property name="property">projectManagerName</Property>
                   <Property name="trigger">triggerUserProject</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:1">
