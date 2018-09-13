@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.json.JSONObject;
 
@@ -31,6 +32,7 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
+import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.receivable.storage.service.IBizPackStorageService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.common.utils.DoubleUtil;
@@ -65,37 +67,19 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
-
+	
+	protected void initConf(){
+		mapCusPrice=new ConcurrentHashMap<String,PriceGeneralQuotationEntity>();
+		mapCusStepPrice=new ConcurrentHashMap<String,List<PriceStepQuotationEntity>>();
+		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
+		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
+	}
 	
 	@Override
 	protected List<BizPackStorageEntity> queryBillList(Map<String, Object> map) {
-		long operateTime = System.currentTimeMillis();
-		List<String> feesNos = new ArrayList<String>();
-		Map<String, Object> feesMap = new HashMap<String, Object>();
-		List<BizPackStorageEntity> bizList = bizPackStorageService.query(map);
-		if(bizList == null || bizList.size() == 0){
-			
-		}
-		else{
-			for (BizPackStorageEntity entity : bizList) {
-				if(StringUtils.isNotEmpty(entity.getFeesNo())){
-					feesNos.add(entity.getFeesNo());
-				}
-				else{
-					entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
-				}
-			}
-			try{
-				if(feesNos.size()>0){
-					feesMap.put("feesNos", feesNos);
-					feesReceiveStorageService.deleteBatch(feesMap);
-					long current = System.currentTimeMillis();// 系统开始时间
-					XxlJobLogger.log("批量删除费用成功 耗时【{0}】毫秒 删除条数【{1}】",(current-operateTime),feesNos.size());
-				}
-			}
-			catch(Exception ex){
-				XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
-			}
+		List<BizPackStorageEntity> bizList = bizPackStorageService.query(map);		
+		if(bizList.size()>0){
+			initConf();
 		}
 		return bizList;
 	}
@@ -309,10 +293,8 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		bizPackStorageService.updateBatch(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
-		start = System.currentTimeMillis();// 系统开始时间
-		for(FeesReceiveStorageEntity feeEntity:fs){
-			feesReceiveStorageService.Insert(feeEntity);
-		}
+		start = System.currentTimeMillis();// 系统开始时
+		feesReceiveStorageService.InsertBatch(fs);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒",(current - start));
 	}
@@ -435,6 +417,30 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		XxlJobLogger.log("验证报价耗时：【{0}】毫秒  ",(current - start));
 		return true;
 
+	}
+
+	@Override
+	public Integer deleteFeesBatch(List<BizPackStorageEntity> list) {
+		List<String> feesNos = new ArrayList<String>();
+		Map<String, Object> feesMap = new HashMap<String, Object>();
+		for (BizPackStorageEntity entity : list) {
+			if(StringUtils.isNotEmpty(entity.getFeesNo())){
+				feesNos.add(entity.getFeesNo());
+			}
+			else{
+				entity.setFeesNo(sequenceService.getBillNoOne(FeesReceiveStorageEntity.class.getName(), "STO", "0000000000"));
+			}
+		}
+		try{
+			if(feesNos.size()>0){
+				feesMap.put("feesNos", feesNos);
+				feesReceiveStorageService.deleteBatch(feesMap);
+			}
+		}
+		catch(Exception ex){
+			XxlJobLogger.log("批量删除费用失败-- {1}",ex.getMessage());
+		}
+		return null;
 	}
 
 }

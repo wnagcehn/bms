@@ -117,6 +117,18 @@
         where id=#{id}
     </update>
     
+    <!-- 新定时任务更新业务数据 -->
+    <update id="updateCalculateByFees" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        update biz_outstock_master 
+		<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="calcuMsg != null" >remark=#{calcuMsg,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where fees_no=#{feesNo}
+    </update>
+    
     <!-- 查询出库单字表 -->
     <select id="queryOutStockDetail" parameterType="java.lang.String" resultMap="baseChildResultMap">
         select id,outstock_no,product_code,product_name,temperature_code,num,resize_num 

@@ -101,6 +101,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private String bizId;
 	// 删除标志
 	private String delFlag;
+	//计算备注
+	private String calcuMsg;
 
 	public String getBizId() {
 		return bizId;
@@ -736,6 +738,14 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setBox(Integer box) {
 		this.box = box;
+	}
+
+	public String getCalcuMsg() {
+		return calcuMsg;
+	}
+
+	public void setCalcuMsg(String calcuMsg) {
+		this.calcuMsg = calcuMsg;
 	}
 
 

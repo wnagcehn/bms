@@ -387,4 +387,10 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public Integer deleteFeesBatch(List<BizInStockMasterEntity> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
