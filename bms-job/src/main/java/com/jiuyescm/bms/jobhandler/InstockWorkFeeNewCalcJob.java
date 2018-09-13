@@ -73,7 +73,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	
 	// 初始化
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BizInStockMasterEntity instock) {
+	public FeesReceiveStorageEntity initFeeEntity(BizInStockMasterEntity instock) {
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		
 		double num=DoubleUtil.isBlank(instock.getAdjustNum())?instock.getNum():instock.getAdjustNum();
@@ -105,13 +105,13 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	
 	// 判断是否有不计算费用的
 	@Override
-	protected boolean isNoExe(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity) {
 		return false;
 	}
 	
 	// 合同在线获取模板
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizInStockMasterEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizInStockMasterEntity entity) {
 
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
@@ -133,7 +133,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	
 	// 根据bms计算
 	@Override
-	protected void calcuForBms(BizInStockMasterEntity entity,FeesReceiveStorageEntity storageFeeEntity){
+	public void calcuForBms(BizInStockMasterEntity entity,FeesReceiveStorageEntity storageFeeEntity){
 		XxlJobLogger.log("bms计算");
 		//合同报价校验  false-不通过  true-通过
 		if(validateData(entity, storageFeeEntity)){
@@ -193,7 +193,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	}
 	
 	@Override
-	protected void calcuForContract(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForContract(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("合同在线计算");
 		Map<String, Object> con = new HashMap<>();
 		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -362,7 +362,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	}
 
 	@Override
-	protected void updateBatch(List<BizInStockMasterEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizInStockMasterEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
@@ -383,7 +383,7 @@ public class InstockWorkFeeNewCalcJob extends CommonJobHandler<BizInStockMasterE
 	}
 
 	@Override
-	protected boolean isJoin(BizInStockMasterEntity t) {
+	public boolean isJoin(BizInStockMasterEntity t) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -105,7 +105,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 	
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BizOutstockPackmaterialEntity entity) {
+	public FeesReceiveStorageEntity initFeeEntity(BizOutstockPackmaterialEntity entity) {
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(entity.getCreateTime());
@@ -155,13 +155,13 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 
 	@Override
-	protected boolean isJoin(BizOutstockPackmaterialEntity t) {
+	public boolean isJoin(BizOutstockPackmaterialEntity t) {
 		return true;
 	}
 
 	
 	@Override
-	protected boolean isNoExe(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
 		if(entity.getConsumerMaterialCode()!=null && entity.getConsumerMaterialCode().contains("FSD")){
 			BizDispatchBillEntity biz=bizDispatchBillService.getDispatchEntityByWaybillNo(entity.getWaybillNo());
 			if(biz!=null && "1500000015".equals(biz.getCarrierId())){
@@ -176,7 +176,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizOutstockPackmaterialEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizOutstockPackmaterialEntity entity) {
 
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerId());
@@ -197,7 +197,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 	
 	@Override
-	protected void calcuForBms(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForBms(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
 		XxlJobLogger.log("bms计算");
 		try{
@@ -249,7 +249,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 	
 	@Override
-	protected void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
@@ -367,7 +367,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 
 	@Override
-	protected void updateBatch(List<BizOutstockPackmaterialEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizOutstockPackmaterialEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间

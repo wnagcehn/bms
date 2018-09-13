@@ -4,17 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import com.jiuyescm.bms.common.BillingCallable;
 import com.jiuyescm.bms.common.JobParameterHandler;
-import com.jiuyescm.bms.common.tool.ListTool;
-import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.contract.quote.vo.ContractQuoteInfoVo;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 
 
-public abstract class CommonJobHandler<T,F> extends IJobHandler {
+public abstract class CommonJobHandler<T,F> extends IJobHandler{
+	
+	@Autowired public ThreadPoolTaskExecutor threadPoolTaskExecutor;  
 	
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -35,7 +41,7 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	 */
 	public String SubjectId = null;
 	
-	protected ContractQuoteInfoVo contractQuoteInfoVo = null;
+	public ContractQuoteInfoVo contractQuoteInfoVo = null;
 
 	/**
 	 * 数据查询
@@ -55,7 +61,7 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	 * @param t
 	 * @return
 	 */
-	protected abstract F initFeeEntity(T t);
+	public abstract F initFeeEntity(T t);
 	
 	/**
 	 * 是否参与科目费用计算
@@ -64,7 +70,7 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	 * false-不参与费用计算，费用表无需写入
 	 * true-参与费用计算，无论是否计算成功，都要写入费用表
 	 */
-	protected abstract boolean isJoin(T t);
+	public abstract boolean isJoin(T t);
 	
 	/**
 	 * 是否计算费用 此阶段应在 验证合同之前就执行 （应用场景：有些特殊单据无论有无合同，均不计算费用）
@@ -72,21 +78,21 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	 * @param f 费用数据对象
 	 * @return true-不计算费用   false-计算费用
 	 */
-	protected abstract boolean isNoExe(T t,F f);
+	public abstract boolean isNoExe(T t,F f);
 	
 	/**
 	 * 获取合同信息
 	 * @param t 业务数据对象
 	 * @return contract-合同信息在合同在线维护  bms-合同信息在bms维护
 	 */
-	protected abstract ContractQuoteInfoVo getContractForWhat(T t);
+	public abstract ContractQuoteInfoVo getContractForWhat(T t);
 	
 	/**
 	 * bms逻辑计算
 	 * @param t
 	 * @param f
 	 */
-	protected abstract void calcuForBms(T t,F f);
+	public abstract void calcuForBms(T t,F f);
 	
 	/**
 	 * 合同在线逻辑计算
@@ -94,14 +100,14 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 	 * @param f
 	 * @param vo
 	 */
-	protected abstract void calcuForContract(T t,F f);
+	public abstract void calcuForContract(T t,F f);
 	
 	/**
 	 * 批量更新
 	 * @param ts
 	 * @param fs
 	 */
-	protected abstract void updateBatch(List<T> ts,List<F> fs);
+	public abstract void updateBatch(List<T> ts,List<F> fs);
 
 	
 	protected ReturnT<String> CalcJob(String[] params){
@@ -144,55 +150,18 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 			return ReturnT.SUCCESS;// 出现异常直接终止
 		}
 		
-		List<List<T>> pageT=ListTool.splitList(billList, 200);//200个数据一组分页
+		//List<List<T>> pageT=ListTool.splitList(billList, 200);//200个数据一组分页
 		boolean flag=true;
 		subjects = initSubjects();
 		for (String subject_code : subjects) {
 			SubjectId = subject_code;
-			
-			for(List<T> listT:pageT){
-				try{
-					List<F> feesList = new ArrayList<F>();
-					for (T t : listT) {
-						btime= System.currentTimeMillis();// 操作开始时间
-						
-						if(isJoin(t) == false){
-							continue;
-						}
-						
-						F f = initFeeEntity(t); //初始化费用对象 获取计算参数，如：计费重量，计费数量，计费物流商等待
-						feesList.add(f);
-						//进行赋值判断前，先校验数据本身是否需要费用计算
-						if(isNoExe(t,f) == true){
-							continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-						}
-						if(contract_switch == false){ 
-							//如果合同在线开关未开启,直接走bms逻辑，不需要去合同在线查找合同；
-							calcuForBms(t, f);
-						}
-						else{
-							//如果合同在线开关开启，需要先去合同在线查找合同，如果存在，走合同在线逻辑，不存在则走bms逻辑
-							contractQuoteInfoVo = getContractForWhat(t);
-							if(contractQuoteInfoVo == null || StringUtil.isEmpty(contractQuoteInfoVo.getTemplateCode())){
-								calcuForBms(t, f);
-							}
-							else{
-								XxlJobLogger.log("规则编号【{0}】", contractQuoteInfoVo.getRuleCode().trim());
-								calcuForContract(t,f);
-							}
-						}
-						XxlJobLogger.log("单条费用计算耗时：【{0}】毫秒 ",(System.currentTimeMillis() - btime));
-					}
-					
-					btime= System.currentTimeMillis();// 操作开始时间
-					updateBatch(listT,feesList);
-					XxlJobLogger.log("更新数据总耗时：【{0}】毫秒 ",(System.currentTimeMillis() - btime));
-				}catch(Exception  e){
-					flag=false;
-					XxlJobLogger.log("【处理异常】原因:" +e);
-				}
+			try{
+				flag = threadProcessBilling(billList,this);
 			}
-			
+			catch(Exception ex){
+				XxlJobLogger.log("程序异常{0}",ex);
+				return  ReturnT.FAIL;
+			}
 		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("总耗时：【{0}】毫秒  ",(current - start));
@@ -203,6 +172,57 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler {
 			XxlJobLogger.log("==================================执行结束:失败==============================================");
 			return  ReturnT.FAIL;
 		}
+	}
+	
+	/**
+	 * 启动多线程执行: 数据校验，数据计算，入库保存
+	 * @param billList
+	 * @param calcJob
+	 * @return
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public boolean threadProcessBilling(List<T> billList,CommonJobHandler<T,F> calcJob) throws InterruptedException, ExecutionException{  
+
+		//接收集合各段的 执行的返回结果 
+	    List<Future<Boolean>> futureList = new ArrayList<Future<Boolean>>();  
+	    //集合总条数
+	    int size = billList.size();  
+	    //将集合切分的线程数
+	    int sunSum = 10;
+	    int listStart,listEnd;  
+	    //当总条数不足10条时 用总条数 当做线程切分值
+	    if(sunSum > size){  
+	        sunSum = 1;  
+	    }  
+	    //定义子线程
+	    BillingCallable<T,F> billingCallable ;  
+	    boolean ret = true;
+	    //将list切分10份 多线程执行
+	    for (int i = 0; i < sunSum; i++) {  
+	    	//计算切割  开始和结束
+	        listStart = size / sunSum * i ;  
+	        listEnd = size / sunSum * ( i + 1 );  
+	        //最后一段线程会 出现与其他线程不等的情况
+	        if(i == sunSum - 1){  
+	            listEnd = size;  
+	        }  
+	        //线程切断
+	        List<T> sunList = billList.subList(listStart,listEnd);   
+	        billingCallable = new BillingCallable<T,F>(i,sunList, calcJob);  
+	        //多线程执行
+	        futureList.add(threadPoolTaskExecutor.submit(billingCallable));  
+	    }  
+	    //对各个线程段结果进行解析
+	    for(Future<Boolean> future : futureList){  
+	        if(null != future && future.get()){  
+	        	XxlJobLogger.log("执行成功");
+	        }else{  
+	        	XxlJobLogger.log("执行失败");
+	        	ret = false;
+	        }  
+	    }
+	    return ret;
 	}
 	
 }

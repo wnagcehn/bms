@@ -100,7 +100,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		return bizList;
 	}
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BizPackStorageEntity entity) {
+	public FeesReceiveStorageEntity initFeeEntity(BizPackStorageEntity entity) {
 		
 		FeesReceiveStorageEntity feeEntity = new FeesReceiveStorageEntity();	
 		feeEntity.setCreator("system");
@@ -154,16 +154,16 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	}
 
 	@Override
-	protected boolean isJoin(BizPackStorageEntity t) {
+	public boolean isJoin(BizPackStorageEntity t) {
 		return true;
 	}
 	
 	@Override
-	protected boolean isNoExe(BizPackStorageEntity t, FeesReceiveStorageEntity f) {
+	public boolean isNoExe(BizPackStorageEntity t, FeesReceiveStorageEntity f) {
 		return false;
 	}
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizPackStorageEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizPackStorageEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
@@ -182,7 +182,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		return modelEntity;
 	}
 	@Override
-	protected void calcuForBms(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public void calcuForBms(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
 		XxlJobLogger.log("bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
@@ -260,7 +260,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		
 	}
 	@Override
-	protected void calcuForContract(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public void calcuForContract(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
 		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
@@ -303,7 +303,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		
 	}
 	@Override
-	protected void updateBatch(List<BizPackStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizPackStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		bizPackStorageService.updateBatch(ts);

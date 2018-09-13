@@ -129,7 +129,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	@Override
-	protected boolean isJoin(BizDispatchBillEntity entity) {
+	public boolean isJoin(BizDispatchBillEntity entity) {
 		return true;
 	}
 	
@@ -170,7 +170,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	
 	@Override
-	protected FeesReceiveDispatchEntity initFeeEntity(BizDispatchBillEntity entity){
+	public FeesReceiveDispatchEntity initFeeEntity(BizDispatchBillEntity entity){
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		
@@ -532,7 +532,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	
 	@Override
-	protected boolean isNoExe(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity) {
+	public boolean isNoExe(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity) {
 		//如果初始化的时候已经更新计算状态了，则直接返回
 		if(StringUtils.isNotBlank(feeEntity.getIsCalculated())){
 			return true;
@@ -611,7 +611,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizDispatchBillEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizDispatchBillEntity entity) {
 			
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
@@ -637,7 +637,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	@Override
-	protected void calcuForBms(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
+	public void calcuForBms(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
 		XxlJobLogger.log("bms计算");
 		try{
@@ -715,7 +715,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	@Override
-	protected void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
+	public void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
 		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<String, Object>();
@@ -868,7 +868,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	@Override
-	protected void updateBatch(List<BizDispatchBillEntity> billList,List<FeesReceiveDispatchEntity> feesList) {
+	public void updateBatch(List<BizDispatchBillEntity> billList,List<FeesReceiveDispatchEntity> feesList) {
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		bizDispatchBillService.newUpdateBatch(billList);

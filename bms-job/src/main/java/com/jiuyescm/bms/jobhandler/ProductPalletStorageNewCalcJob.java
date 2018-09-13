@@ -143,7 +143,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	}
 	
 	@Override
-	protected boolean isJoin(BizProductPalletStorageEntity entity) {
+	public boolean isJoin(BizProductPalletStorageEntity entity) {
 		return true;		
 	}
 	
@@ -160,7 +160,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	}
 	
 	@Override
-    protected FeesReceiveStorageEntity initFeeEntity(BizProductPalletStorageEntity entity){
+	public FeesReceiveStorageEntity initFeeEntity(BizProductPalletStorageEntity entity){
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
 
 		storageFeeEntity.setCreator("system");
@@ -194,7 +194,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	}
 	
 	@Override
-	protected boolean isNoExe(BizProductPalletStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BizProductPalletStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
 		//指定的商家
 		Map<String,Object> map= new HashMap<String, Object>();
 		map.put("groupCode", "customer_unit");
@@ -216,7 +216,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	}
 	
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizProductPalletStorageEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizProductPalletStorageEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerId());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
@@ -237,7 +237,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	}
 	
 	@Override
-	protected void calcuForBms(BizProductPalletStorageEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForBms(BizProductPalletStorageEntity entity,FeesReceiveStorageEntity feeEntity){
 		//合同报价校验  false-不通过  true-通过
 		XxlJobLogger.log("bms计算");
 		try{
@@ -300,7 +300,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 
 
 	@Override
-	protected void calcuForContract(BizProductPalletStorageEntity biz,
+	public void calcuForContract(BizProductPalletStorageEntity biz,
 			FeesReceiveStorageEntity fee) {
 		// TODO Auto-generated method stub
 		XxlJobLogger.log("合同在线计算");
@@ -475,7 +475,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	}
 	
 	@Override
-	protected void updateBatch(List<BizProductPalletStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizProductPalletStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间

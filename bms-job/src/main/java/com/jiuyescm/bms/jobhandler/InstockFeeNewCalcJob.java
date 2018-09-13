@@ -81,7 +81,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BizInStockMasterEntity instock){
+	public FeesReceiveStorageEntity initFeeEntity(BizInStockMasterEntity instock){
 		
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		
@@ -131,18 +131,18 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 
 	@Override
-	protected boolean isJoin(BizInStockMasterEntity t) {
+	public boolean isJoin(BizInStockMasterEntity t) {
 		return true;
 	}
 	
 	@Override
-	protected boolean isNoExe(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity) {
 
 		return false;
 	}
 	
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizInStockMasterEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizInStockMasterEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
@@ -162,7 +162,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	protected void calcuForBms(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForBms(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("bms计算");
 		//合同报价校验  false-不通过  true-通过
 		try{
@@ -227,7 +227,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 
 
 	@Override
-	protected void calcuForContract(BizInStockMasterEntity biz,
+	public void calcuForContract(BizInStockMasterEntity biz,
 			FeesReceiveStorageEntity fee) {
 		// TODO Auto-generated method stub
 		XxlJobLogger.log("合同在线计算");
@@ -396,7 +396,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	protected void updateBatch(List<BizInStockMasterEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizInStockMasterEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间

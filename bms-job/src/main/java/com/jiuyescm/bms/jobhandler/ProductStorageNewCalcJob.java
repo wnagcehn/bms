@@ -113,7 +113,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	}
 	
 	@Override
-	protected boolean isJoin(BizProductStorageEntity entity) {
+	public boolean isJoin(BizProductStorageEntity entity) {
 		return true;		
 	}
 	
@@ -130,7 +130,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	}
 	
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BizProductStorageEntity entity){		
+	public FeesReceiveStorageEntity initFeeEntity(BizProductStorageEntity entity){		
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(entity.getCreateTime());
@@ -167,7 +167,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	}
 
 	@Override
-	protected boolean isNoExe(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
 		//指定的商家
 		Map<String,Object> map= new HashMap<String, Object>();
 		map.put("groupCode", "customer_unit");
@@ -190,7 +190,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	
 	
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizProductStorageEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizProductStorageEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
@@ -210,7 +210,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	}
 	
 	@Override
-	protected void calcuForBms(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForBms(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("bms计算");
 		//合同报价校验  false-不通过  true-通过
 		if(validateData(entity, feeEntity)){
@@ -281,7 +281,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	}
 
 	@Override
-	protected void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
@@ -330,7 +330,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	
 	
 	@Override
-	protected void updateBatch(List<BizProductStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizProductStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间

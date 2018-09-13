@@ -108,7 +108,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	
 	// 初始化
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BizAddFeeEntity entity) {
+	public FeesReceiveStorageEntity initFeeEntity(BizAddFeeEntity entity) {
 		
 		//费用科目赋值
 		//SubjectId = entity.getFeesType();
@@ -167,19 +167,19 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	}
 
 	@Override
-	protected boolean isJoin(BizAddFeeEntity t) {
+	public boolean isJoin(BizAddFeeEntity t) {
 		return true;
 	}
 	
 	// 判断是否有不计算费用的
 	@Override
-	protected boolean isNoExe(BizAddFeeEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BizAddFeeEntity entity,FeesReceiveStorageEntity feeEntity) {
 		return false;
 	}
 	
 	// 合同在线获取模板
 	@Override
-	protected ContractQuoteInfoVo getContractForWhat(BizAddFeeEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BizAddFeeEntity entity) {
 
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
@@ -201,7 +201,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	
 	// 根据bms计算
 	@Override
-	protected void calcuForBms(BizAddFeeEntity entity,FeesReceiveStorageEntity storageFeeEntity){
+	public void calcuForBms(BizAddFeeEntity entity,FeesReceiveStorageEntity storageFeeEntity){
 		XxlJobLogger.log("bms计算");
 		//合同报价校验  false-不通过  true-通过
 		if(validateData(entity, storageFeeEntity)){
@@ -246,7 +246,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	}
 	
 	@Override
-	protected void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("合同在线计算");
 		Map<String, Object> con = new HashMap<>();
 		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -375,7 +375,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	 * 批量更新
 	 */
 	@Override
-	protected void updateBatch(List<BizAddFeeEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BizAddFeeEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
