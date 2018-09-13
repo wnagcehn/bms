@@ -29,4 +29,12 @@
 	<import resource="classpath:spring/spring-dubbo.xml" />
 	<import resource="classpath:spring/spring-datasource.xml" />
 
+	<bean id="threadPoolTaskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!--初始线程池大小 -->
+		<property name="corePoolSize" value="10" />
+		<!--最大线程池大小 -->
+		<property name="maxPoolSize" value="30" />
+	</bean>
+	
 </beans>
