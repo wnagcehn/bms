@@ -41,7 +41,6 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler{
 	 */
 	public String SubjectId = null;
 	
-	public ContractQuoteInfoVo contractQuoteInfoVo = null;
 
 	/**
 	 * 数据查询
@@ -96,13 +95,8 @@ public abstract class CommonJobHandler<T,F> extends IJobHandler{
 	 */
 	public abstract void calcuForBms(T t,F f);
 	
-	/**
-	 * 合同在线逻辑计算
-	 * @param t
-	 * @param f
-	 * @param vo
-	 */
-	public abstract void calcuForContract(T t,F f);
+	
+	public abstract void calcu(T t,F f);
 	
 	/**
 	 * 批量更新

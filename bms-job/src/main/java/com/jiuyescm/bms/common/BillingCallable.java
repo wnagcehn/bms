@@ -56,14 +56,15 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 						}
 						else{
 							//如果合同在线开关开启，需要先去合同在线查找合同，如果存在，走合同在线逻辑，不存在则走bms逻辑
-							calcJob.contractQuoteInfoVo = calcJob.getContractForWhat(t);
+							calcJob.calcu(t, f);
+							/*calcJob.contractQuoteInfoVo = calcJob.getContractForWhat(t);
 							if(calcJob.contractQuoteInfoVo == null || StringUtil.isEmpty(calcJob.contractQuoteInfoVo.getTemplateCode())){
 								calcJob.calcuForBms(t, f);
 							}
 							else{
 								XxlJobLogger.log("规则编号【{0}】", calcJob.contractQuoteInfoVo.getRuleCode().trim());
 								calcJob.calcuForContract(t,f);
-							}
+							}*/
 						}
 					}
 					start= System.currentTimeMillis();// 操作开始时间

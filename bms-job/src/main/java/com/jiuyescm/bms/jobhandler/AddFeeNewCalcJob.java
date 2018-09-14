@@ -37,6 +37,7 @@ import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepos
 import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -162,6 +163,19 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		return false;
 	}
 	
+	@Override
+	public void calcu(BizAddFeeEntity entity, FeesReceiveStorageEntity feeEntity) {
+		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
+		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
+			calcuForBms(entity, feeEntity);
+		}
+		else{
+			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
+			calcuForContract(entity,feeEntity,modelEntity);
+		}
+		
+	}
+	
 	// 合同在线获取模板
 	@Override
 	public ContractQuoteInfoVo getContractForWhat(BizAddFeeEntity entity) {
@@ -230,8 +244,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		}
 	}
 	
-	@Override
-	public void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity feeEntity){
+	private void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo){
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		Map<String, Object> con = new HashMap<>();
 		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
