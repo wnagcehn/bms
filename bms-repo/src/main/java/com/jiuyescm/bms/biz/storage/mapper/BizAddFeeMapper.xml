@@ -230,20 +230,6 @@
         	and wms_id=#{wmsId}
         </if>
     </update>
-    
-    <update id="updateByFees" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
-        update biz_add_fee 
-		<set >
-			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
-			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
-			<if test="calcuMsg != null" >remark=#{calcuMsg,jdbcType=VARCHAR},</if>
-			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-		</set>
-        where 1=1
-        <if test="feesNo != null" >
-       		 and fees_no=#{feesNo,jdbcType=VARCHAR}
-        </if>
-    </update>
 
     <delete id="delete" parameterType="java.lang.Integer">
         delete from biz_add_fee where
