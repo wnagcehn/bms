@@ -536,7 +536,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			map.put("customerid",customerId);
 			map.put("contractTypeCode", contractTypeCode);
 			contractEntity = jobPriceContractInfoService.queryContractByCustomer(map);
-			mapContact.put(customerId,contractEntity);
+			if(contractEntity!=null){
+				mapContact.put(customerId,contractEntity);
+			}
 		}
 	
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
