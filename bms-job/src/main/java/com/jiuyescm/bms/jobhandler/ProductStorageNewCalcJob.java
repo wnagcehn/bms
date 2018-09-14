@@ -19,12 +19,6 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
-import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
-<<<<<<< HEAD
-import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
-=======
-import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity;
->>>>>>> f6bdee7049c5a4417d6d7a39df7160d5aa841988
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -216,19 +210,6 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	}
 	
 	@Override
-	public void calcu(BizProductStorageEntity entity, FeesReceiveStorageEntity feeEntity) {
-		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
-		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
-			calcuForBms(entity, feeEntity);
-		}
-		else{
-			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
-			calcuForContract(entity,feeEntity,modelEntity);
-		}
-		
-	}
-	
-	@Override
 	public ContractQuoteInfoVo getContractForWhat(BizProductStorageEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
@@ -319,10 +300,6 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 		}
 	}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> f6bdee7049c5a4417d6d7a39df7160d5aa841988
 	public void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo){
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		try{
