@@ -154,20 +154,20 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
-		XxlJobLogger.log("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
+		XxlJobLogger.log("-->"+entity.getId()+"查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
-			XxlJobLogger.log("查询出的合同在线结果",JSONObject.fromObject(modelEntity));
+			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("合同在线无此合同",ex);
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同",ex);
 		}
 		return modelEntity;
 	}
 	@Override
 	public void calcuForBms(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
-		XxlJobLogger.log("bms计算");
+		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
 				String customerId=entity.getCustomerid();
@@ -195,7 +195,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 						feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 						entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 						entity.setRemark("系统错误，报价帅选异常");
-						XxlJobLogger.log("系统错误，报价帅选异常");
+						XxlJobLogger.log("-->"+entity.getId()+"系统错误，报价帅选异常");
 						return;
 					}
 					else{
@@ -239,13 +239,13 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());	
 			entity.setRemark(ex.getMessage());
-			XxlJobLogger.log("bms计算异常--",ex);
+			XxlJobLogger.log("-->"+entity.getId()+"bms计算异常--",ex);
 		}
 		
 	}
 	@Override
 	public void calcuForContract(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
-		XxlJobLogger.log("合同在线计算");
+		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
@@ -254,16 +254,16 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 				entity.setRemark("合同在线规则未绑定");
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				XxlJobLogger.log("计算不成功，合同在线规则未绑定");
+				XxlJobLogger.log("-->"+entity.getId()+"计算不成功，合同在线规则未绑定");
 			}
 			//获取合同在线查询条件
 			Map<String, Object> cond = new HashMap<String, Object>();
 			feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
-			XxlJobLogger.log("获取报价参数"+cond);
+			XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
-			XxlJobLogger.log("获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
+			XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
-				XxlJobLogger.log("报价信息 -- "+map);
+				XxlJobLogger.log("-->"+entity.getId()+"报价信息 -- "+map);
 			}
 			//调用规则计算费用
 			Map<String, Object> feesMap = feesCalcuService.ContractCalcuService(feeEntity, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
@@ -271,18 +271,18 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
 				feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setIsCalculated(CalculateState.Finish.getCode());
-				XxlJobLogger.log("计算成功，费用【{0}】",feeEntity.getCost());
+				XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getCost());
 			}
 			else{
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				XxlJobLogger.log("计算不成功，费用【0】");
+				XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用【0】");
 			}
 		}
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("计算不成功，费用0",ex);
+			XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用0",ex);
 		}
 		
 	}
@@ -305,7 +305,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
-		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
+		XxlJobLogger.log("-->"+entity.getId()+"数据主键ID:【{0}】  ",entity.getId());
 		
 		//----验证合同
 		PriceContractInfoEntity contractEntity = null;
@@ -322,13 +322,13 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		    mapContact.put(entity.getCustomerid(), contractEntity);
 		}
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
-			XxlJobLogger.log(String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
+			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			entity.setRemark(String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
 			return false;
 		}
-		XxlJobLogger.log("验证合同   耗时【{0}】毫秒  合同编号 【{1}】",(System.currentTimeMillis() - start),contractEntity.getContractCode());
+		XxlJobLogger.log("-->"+entity.getId()+"验证合同   耗时【{0}】毫秒  合同编号 【{1}】",(System.currentTimeMillis() - start),contractEntity.getContractCode());
 		
 		//----验证签约服务
 		start = System.currentTimeMillis();
@@ -337,13 +337,13 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		map.put("subjectId", SubjectId);
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
-			XxlJobLogger.log("未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerid());
+			XxlJobLogger.log("-->"+entity.getId()+"未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerid());
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			entity.setRemark("未签约服务");
 			return false;
 		}
-		XxlJobLogger.log("验证签约服务耗时：【{0}】毫秒  ",(System.currentTimeMillis() - start));		
+		XxlJobLogger.log("-->"+entity.getId()+"验证签约服务耗时：【{0}】毫秒  ",(System.currentTimeMillis() - start));		
 		
 		start = System.currentTimeMillis();// 系统开始时间
 		
@@ -362,7 +362,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			quoTemplete=mapCusPrice.get(customerId);
 		}
 		if(quoTemplete==null){
-			XxlJobLogger.log("报价未配置");
+			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			entity.setRemark("报价未配置");
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -383,7 +383,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			list=repository.queryPriceStepByQuatationId(map);
 			
 			if(list==null || list.size() == 0){
-				XxlJobLogger.log("阶梯报价未配置");
+				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setRemark("阶梯报价未配置");
@@ -398,23 +398,23 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			mapCusStepPrice.put(customerId,price);
 			
 			if(price==null){
-				XxlJobLogger.log("阶梯报价未配置");
+				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setRemark("阶梯报价未配置");
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				return  false;
 			}*/
 		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
-			XxlJobLogger.log("一口价计费");
+			XxlJobLogger.log("-->"+entity.getId()+"一口价计费");
 		}else{//报价类型缺失
-			XxlJobLogger.log("报价类型未知");
+			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			entity.setRemark("报价【"+quoTemplete.getQuotationNo()+"】类型未知");
 			return  false;
 		}
 		current = System.currentTimeMillis();
-		XxlJobLogger.log("验证报价耗时：【{0}】毫秒  ",(current - start));
+		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
 		return true;
 
 	}

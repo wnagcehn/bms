@@ -180,9 +180,7 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 	public List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId() {
 		List<BmsGroupSubjectEntity> list = null;
 		try {
-			BmsGroupSubjectEntity entity = new BmsGroupSubjectEntity();		
-			entity.setGroupId(177);
-			list=bmsGroupSubjectRepository.queryGroupSubjectByGroupId(entity);
+			list=bmsGroupSubjectRepository.queryGroupSubjectByGroupId();
 			if (list.isEmpty()) {
 				return null;
 			}

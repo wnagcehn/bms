@@ -26,6 +26,6 @@ public interface IBmsGroupSubjectRepository {
 
 	List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(BmsGroupSubjectEntity entity);
 
-	List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId(BmsGroupSubjectEntity entity);
+	List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId();
 
 }
