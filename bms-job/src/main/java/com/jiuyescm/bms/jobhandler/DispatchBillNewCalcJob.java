@@ -22,7 +22,6 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
-import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -32,7 +31,6 @@ import com.jiuyescm.bms.correct.BmsMarkingProductsEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
-import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
@@ -135,6 +133,19 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	@Override
 	public boolean isJoin(BizDispatchBillEntity entity) {
 		return true;
+	}
+	
+	@Override
+	public void calcu(BizDispatchBillEntity entity, FeesReceiveDispatchEntity feeEntity) {
+		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
+		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
+			calcuForBms(entity, feeEntity);
+		}
+		else{
+			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
+			calcuForContract(entity,feeEntity,modelEntity);
+		}
+		
 	}
 	
 	protected void initConf(){
@@ -637,7 +648,6 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 
 		return false;
 	}
-	
 	@Override
 	public ContractQuoteInfoVo getContractForWhat(BizDispatchBillEntity entity) {
 			
@@ -742,8 +752,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 	}
 	
-	@Override
-	public void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity){
+	public void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo){
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<String, Object>();

@@ -20,6 +20,7 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
+import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -41,6 +42,7 @@ import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepos
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
 import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -117,6 +119,20 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	@Override
 	public boolean isJoin(BizProductStorageEntity entity) {
 		return true;		
+	}
+	
+	
+	@Override
+	public void calcu(BizProductStorageEntity entity, FeesReceiveStorageEntity feeEntity) {
+		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
+		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
+			calcuForBms(entity, feeEntity);
+		}
+		else{
+			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
+			calcuForContract(entity,feeEntity,modelEntity);
+		}
+		
 	}
 	
 	protected void initConf(){
@@ -287,8 +303,8 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 		}
 	}
 
-	@Override
-	public void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity){
+
+	public void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo){
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
