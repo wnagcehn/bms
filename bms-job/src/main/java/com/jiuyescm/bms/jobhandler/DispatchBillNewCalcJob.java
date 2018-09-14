@@ -656,10 +656,10 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
 			
-			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果"+JSONObject.fromObject(modelEntity));
+			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果【{0}】",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同--"+ex.getMessage());
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同【{0}】",ex.getMessage());
 		}
 		return modelEntity;
 	}
@@ -760,7 +760,8 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
-			XxlJobLogger.log("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
+			XxlJobLogger.log("获取合同在线报价结果【{0}】",JSONObject.fromObject(rtnQuoteInfoVo));
+			
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("-->"+entity.getId()+"报价信息 -- "+map);
 			}
