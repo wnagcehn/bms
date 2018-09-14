@@ -187,7 +187,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		try{
 			if(feesNos.size()>0){
 				feesMap.put("feesNos", feesNos);
-				feesReceiveStorageService.deleteBatch(feesMap);
+				feesReceiveDispatchService.deleteBatch(feesMap);
 			}
 		}
 		catch(Exception ex){
