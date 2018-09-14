@@ -305,7 +305,9 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 			map.put("customerid", customerId);
 			map.put("contractTypeCode", "CUSTOMER_CONTRACT");
 		    contractEntity = jobPriceContractInfoService.queryContractByCustomer(map);
-		    mapContact.put(customerId, contractEntity);
+		    if(contractEntity!=null){
+			    mapContact.put(customerId, contractEntity);
+		    }
 		}
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
 			XxlJobLogger.log(String.format("-->"+entity.getId()+"未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));

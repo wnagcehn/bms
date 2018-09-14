@@ -357,7 +357,9 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			aCondition.put("customerid",customerId);
 			aCondition.put("contractTypeCode", "CUSTOMER_CONTRACT");
 		    contractEntity = jobPriceContractInfoService.queryContractByCustomer(aCondition);
-		    mapContact.put(customerId, contractEntity);
+		    if(contractEntity!=null){
+			    mapContact.put(customerId, contractEntity);
+		    }
 		}
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到有效合同  订单号【%s】--商家【%s】", entity.getId(),customerId));

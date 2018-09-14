@@ -388,7 +388,9 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 			aCondition.put("customerid", entity.getCustomerid());
 			aCondition.put("contractTypeCode", "CUSTOMER_CONTRACT");
 		    contractEntity = jobPriceContractInfoService.queryContractByCustomer(aCondition);
-		    mapContact.put(entity.getCustomerid(), contractEntity);
+		    if(contractEntity!=null){
+			    mapContact.put(entity.getCustomerid(), contractEntity);
+		    }
 		}
 		
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
