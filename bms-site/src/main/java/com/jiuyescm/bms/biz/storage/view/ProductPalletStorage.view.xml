@@ -871,11 +871,7 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
         <ProgressBar id="importProgressBar"/>
         <AjaxAction id="getProgress">
           <Property name="modal">false</Property>
-          <Property name="service">bizPackStorageController#getProgress</Property>
-        </AjaxAction>
-        <AjaxAction id="setProgress">
-          <Property name="modal">false</Property>
-          <Property name="service">bizPackStorageController#setProgress</Property>
+          <Property name="service">productPalletStorageController#getProgress</Property>
         </AjaxAction>
         <UploadAction id="uploadProductPalletStorageAction">
           <ClientEvent name="onFileUploaded">view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
@@ -907,35 +903,54 @@ if(data.succ!=null){&#xD;
 $(&quot;#d_importProgressBar&quot;).show();&#xD;
 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
 view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
-var action = view.get(&quot;#getProgress&quot;);&#xD;
-var setAction = view.get(&quot;#setProgress&quot;);&#xD;
 var oldVal = 0;&#xD;
 var getProgress = function() {&#xD;
+	var action = view.get(&quot;#getProgress&quot;);&#xD;
 	action.execute(function (res) {&#xD;
-		&#xD;
-		if (oldVal != res) {&#xD;
-			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
-				view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
-			}&#xD;
-		}&#xD;
-		oldVal = res;&#xD;
-		if (res == 999) {&#xD;
+		switch(res){&#xD;
+			case 0:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;开始处理Excel&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 10);&#xD;
+			break;&#xD;
+			case 1:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;验证模板........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 20);&#xD;
+			break;&#xD;
+			case 2:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;读取Excel。。。。。。。&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 40);&#xD;
+			break;&#xD;
+			case 3:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;验证数据........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 60);&#xD;
+			break;&#xD;
+			case 4:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;保存数据........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 80);&#xD;
+			break;&#xD;
+			case 5:&#xD;
 			clearInterval(progressJob);&#xD;
-			//设置为 0&#xD;
-			setAction.execute(function (res) {  });&#xD;
+			resetProgress();&#xD;
 			view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
-			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
-		}&#xD;
-		if (res == 1000) {&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;保存成功........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 100);&#xD;
+			break;&#xD;
+			case 6:&#xD;
 			clearInterval(progressJob);&#xD;
-			//设置为 0&#xD;
-			setAction.execute(function (res) {  });&#xD;
+			resetProgress();&#xD;
 			view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
-			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, &quot;导入失败........&quot;);&#xD;
+			view.get(&quot;#importProgressBar&quot;).set(&quot;value&quot;, 99);&#xD;
+			break;&#xD;
+			default:&#xD;
+			view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;, res);&#xD;
+			break;&#xD;
 		}&#xD;
 	});&#xD;
 };&#xD;
-&#xD;
+function resetProgress(){&#xD;
+	view.get(&quot;#ajaxsetProgress&quot;).execute();	&#xD;
+}&#xD;
 var progressJob = setInterval(getProgress, 500);</ClientEvent>
           <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
 $(&quot;#d_fileName input&quot;).val(fname);&#xD;
@@ -951,6 +966,10 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
             </Filter>
           </Filters>
         </UploadAction>
+        <AjaxAction id="ajaxsetProgress">
+          <Property name="service">productPalletStorageController#resetProgress</Property>
+          <Property name="modal">false</Property>
+        </AjaxAction>
       </Children>
       <Tools/>
     </Dialog>

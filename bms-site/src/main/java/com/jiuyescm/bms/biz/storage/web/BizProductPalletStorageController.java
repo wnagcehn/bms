@@ -38,6 +38,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bstek.bdf2.core.context.ContextHolder;
@@ -66,7 +68,6 @@ import com.jiuyescm.bms.biz.storage.service.IBizPackStorageService;
 import com.jiuyescm.bms.biz.storage.service.IBizProductPalletStorageService;
 import com.jiuyescm.bms.common.entity.CalculateVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
-import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeEnum;
 import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeNewEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
 import com.jiuyescm.bms.common.enumtype.type.ExeclOperateTypeEnum;
@@ -948,11 +949,12 @@ public class BizProductPalletStorageController{
 	 * @return
 	 * @throws IOException
 	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public Map<String,Object> importFileAsyn(UploadFile file, Map<String, Object> parameter) throws Exception{
-		setProgress("0");
+		setProgress(0);
 		Map<String, Object> map = Maps.newHashMap();
 		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
-		setProgress("1");
+		setProgress(1);
 		String extendFileName="";
 		if(file.getFileName().contains("xlsx")){
 			extendFileName="xlsx";
@@ -982,7 +984,7 @@ public class BizProductPalletStorageController{
 		String fullPath = storePath.getFullPath();
 		String resultFullPath = resultStorePath.getFullPath();
 		if (StringUtils.isBlank(fullPath) || StringUtils.isBlank(resultFullPath)) {
-			setProgress("6");
+			setProgress(6);
 			infoList.add(new ErrorMessageVo(1, "Excel 导入数据上传文件系统失败，请稍后重试"));
 			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			return map;
@@ -1008,7 +1010,7 @@ public class BizProductPalletStorageController{
 		taskEntity.setCreateTime(JAppContext.currentTimestamp());
 		int saveNum = bmsFileAsynTaskService.save(taskEntity);
 		if (saveNum <= 0) {
-			setProgress("6");
+			setProgress(6);
 			infoList.add(new ErrorMessageVo(1, "Excel 导入数据生成任务失败"));
 			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			return map;
@@ -1023,7 +1025,7 @@ public class BizProductPalletStorageController{
 			}
 		});
 		
-		setProgress("5");
+		setProgress(5);
 		map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "操作成功");
 		return map;
 	}

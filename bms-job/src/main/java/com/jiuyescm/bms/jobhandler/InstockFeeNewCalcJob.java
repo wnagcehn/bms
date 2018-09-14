@@ -287,7 +287,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 			feesCalcuService.ContractCalcuService(biz, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			XxlJobLogger.log("-->"+biz.getId()+"获取报价参数"+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
-			XxlJobLogger.log("-->"+biz.getId()+"获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
+			XxlJobLogger.log("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("-->"+biz.getId()+"报价信息 -- "+map);
 			}
