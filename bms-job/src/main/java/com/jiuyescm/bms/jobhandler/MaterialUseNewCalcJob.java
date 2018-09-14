@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.jiuyescm.bms.base.group.BmsGroupSubjectServiceImpl;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -37,6 +38,7 @@ import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepositor
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -183,6 +185,19 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 
 	@Override
+	public void calcu(BizOutstockPackmaterialEntity entity, FeesReceiveStorageEntity feeEntity) {
+		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
+		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
+			calcuForBms(entity, feeEntity);
+		}
+		else{
+			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
+			calcuForContract(entity,feeEntity,modelEntity);
+		}
+		
+	}
+	
+	@Override
 	public ContractQuoteInfoVo getContractForWhat(BizOutstockPackmaterialEntity entity) {
 
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
@@ -255,8 +270,8 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		}
 	}
 	
-	@Override
-	public void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity){
+
+	public void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo){
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();

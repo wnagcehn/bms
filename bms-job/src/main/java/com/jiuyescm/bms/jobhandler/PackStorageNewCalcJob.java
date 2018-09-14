@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -35,6 +36,7 @@ import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationReposito
 import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.receivable.storage.service.IBizPackStorageService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
 import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
@@ -146,6 +148,20 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	public boolean isNoExe(BizPackStorageEntity t, FeesReceiveStorageEntity f) {
 		return false;
 	}
+	
+	@Override
+	public void calcu(BizPackStorageEntity entity, FeesReceiveStorageEntity feeEntity) {
+		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
+		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
+			calcuForBms(entity, feeEntity);
+		}
+		else{
+			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
+			calcuForContract(entity,feeEntity,modelEntity);
+		}
+		
+	}
+	
 	@Override
 	public ContractQuoteInfoVo getContractForWhat(BizPackStorageEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
@@ -243,8 +259,8 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		}
 		
 	}
-	@Override
-	public void calcuForContract(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
+
+	public void calcuForContract(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo) {
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		try{
 			Map<String, Object> con = new HashMap<>();
