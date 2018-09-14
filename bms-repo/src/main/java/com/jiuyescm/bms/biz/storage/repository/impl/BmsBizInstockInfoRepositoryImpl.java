@@ -112,6 +112,7 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
      * @param param
      * @return
      */
+	@SuppressWarnings("unchecked")
 	@Override
 	public int reCalculate(List<BmsBizInstockInfoEntity> list) {
 		try{

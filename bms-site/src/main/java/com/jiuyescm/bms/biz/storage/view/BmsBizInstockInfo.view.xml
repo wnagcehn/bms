@@ -370,7 +370,20 @@
       </DataPilot>
       <Separator/>
       <ToolBarButton id="btnQuery">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBmsBizInstockInfoEntity&quot;);
+var tmpFormCondition=view.get(&quot;#queryForm&quot;);
+
+var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;createTime&quot;);
+var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;createEndTime&quot;);
+
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){
+ 	if(cre.getTime()>end.getTime()){
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);
+		return;
+	}
+}
+
+var data = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;
 				with (view.get(&quot;#dsBmsBizInstockInfoEntity&quot;)){
 					set(&quot;parameter&quot;, data);
 					flushAsync();
@@ -419,6 +432,12 @@ if(data.get(&quot;createTime&quot;)==&quot;&quot;||data.get(&quot;createTime&quo
         <ClientEvent name="onClick">var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
 var datas = view.get(&quot;#dsBmsBizInstockInfoEntityQuery.data&quot;).current;&#xD;
 &#xD;
+if(isNullOrEmpty(datas.get(&quot;customerId&quot;)))&#xD;
+{&#xD;
+	dorado.MessageBox.alert(&quot;商家不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
 retryAction.set(&quot;parameter&quot;,datas);&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
@@ -429,6 +448,15 @@ dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
 		}&#xD;
 	});&#xD;
 });&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}&#xD;
 </ClientEvent>
         <Property name="caption">重算</Property>
         <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>

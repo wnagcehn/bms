@@ -871,11 +871,11 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
         <ProgressBar id="importProgressBar"/>
         <AjaxAction id="getProgress">
           <Property name="modal">false</Property>
-          <Property name="service">productPalletStorageController#getProgress</Property>
+          <Property name="service">bizPackStorageController#getProgress</Property>
         </AjaxAction>
         <AjaxAction id="setProgress">
           <Property name="modal">false</Property>
-          <Property name="service">productPalletStorageController#resetProgress</Property>
+          <Property name="service">bizPackStorageController#setProgress</Property>
         </AjaxAction>
         <UploadAction id="uploadProductPalletStorageAction">
           <ClientEvent name="onFileUploaded">view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
@@ -892,9 +892,14 @@ if(data.error!=null){&#xD;
 }&#xD;
 if(data.succ!=null){&#xD;
 	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
-	with (view.get(&quot;#dataSetProductPalletStorage&quot;)){&#xD;
-		flushAsync();&#xD;
-	}&#xD;
+	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
+		view.get(&quot;#ImportPalletDialog&quot;).hide();&#xD;
+		var condition = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
+		with (view.get(&quot;#dataSetProductPalletStorage&quot;)){&#xD;
+			set(&quot;parameter&quot;, condition);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>

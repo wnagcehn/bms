@@ -471,7 +471,7 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
           <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
         </ToolBarButton>
         <MenuButton>
-          <Property name="caption">导出下载</Property>
+          <Property name="caption">导入下载</Property>
           <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
           <MenuItem>
             <ClientEvent name="onClick">var data={&#xD;

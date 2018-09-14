@@ -901,7 +901,7 @@ public class BmsBizInstockInfoController {
 	@Expose
 	public String reCalculate(Map<String, Object> param){
 		List<BmsBizInstockInfoEntity> list = bmsBizInstockInfoService.query(param);
-		if (null == list || list.size() < 0) {
+		if (null == list || list.size() == 0) {
 			return "没有数据重算";
 		}
 		if(bmsBizInstockInfoService.reCalculate(list) == 0){
