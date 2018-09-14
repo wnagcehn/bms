@@ -156,7 +156,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			calcuForBms(entity, feeEntity);
 		}
 		else{
-			XxlJobLogger.log("规则编号【{0}】", modelEntity.getRuleCode().trim());
+			XxlJobLogger.log("-->"+entity.getId()+"规则编号：  ", modelEntity.getRuleCode().trim());
 			calcuForContract(entity,feeEntity,modelEntity);
 		}
 		
