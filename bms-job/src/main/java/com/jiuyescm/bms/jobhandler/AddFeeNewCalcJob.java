@@ -183,7 +183,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
-		queryVo.setSubjectCode(SubjectId);
+		queryVo.setSubjectCode(entity.getFeesType());
 		queryVo.setCurrentTime(entity.getCreateTime());
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		XxlJobLogger.log("-->"+entity.getId()+"查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
@@ -193,7 +193,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果【{0}】",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同"+ex.getMessage());
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
 		}
 		return modelEntity;
 	}

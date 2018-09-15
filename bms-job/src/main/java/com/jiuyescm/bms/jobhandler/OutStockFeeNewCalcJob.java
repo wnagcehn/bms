@@ -379,6 +379,8 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			XxlJobLogger.log("-->"+entity.getId()+"计算不成功，合同在线规则未绑定");
 		}
 		//获取合同在线查询条件
+		XxlJobLogger.log("-->"+entity.getId()+"计算时查询出的合同在线结果【{0}】",JSONObject.fromObject(contractQuoteInfoVo));
+
 		Map<String, Object> cond = new HashMap<String, Object>();
 		feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 		XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
