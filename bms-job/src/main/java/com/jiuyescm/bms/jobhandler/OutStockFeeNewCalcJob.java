@@ -262,7 +262,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果【{0}】",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同【{0}】",ex);
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同"+ex.getMessage());
 		}
 		return modelEntity;
 	}
