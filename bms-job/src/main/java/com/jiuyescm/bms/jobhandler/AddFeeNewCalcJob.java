@@ -170,7 +170,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 			calcuForBms(entity, feeEntity);
 		}
 		else{
-			XxlJobLogger.log("-->"+entity.getId()+"规则编号：  ", modelEntity.getRuleCode().trim());
+			XxlJobLogger.log("-->"+entity.getId()+"规则编号【{0}】 ", modelEntity.getRuleCode().trim());
 			calcuForContract(entity,feeEntity,modelEntity);
 		}
 		
@@ -186,14 +186,14 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
-		XxlJobLogger.log("-->"+entity.getId()+"查询合同在线参数",JSONObject.fromObject(queryVo));
+		XxlJobLogger.log("-->"+entity.getId()+"查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
 		ContractQuoteInfoVo modelEntity = new ContractQuoteInfoVo();
 		try{
 			modelEntity = contractQuoteInfoService.queryUniqueColumns(queryVo);
-			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果",JSONObject.fromObject(modelEntity));
+			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果【{0}】",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同",ex);
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同【{0}】",ex);
 		}
 		return modelEntity;
 	}
@@ -264,7 +264,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 //		if (null != rtnQuoteInfoVo.getQuoteMaps()) {
 //			list.add(rtnQuoteInfoVo.getQuoteMaps().get(0));
 //		}
-		XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价结果",JSONObject.fromObject(rtnQuoteInfoVo));
+		XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价结果【{0}】",JSONObject.fromObject(rtnQuoteInfoVo));
 		for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 			XxlJobLogger.log("-->"+entity.getId()+"报价信息 -- "+map);
 		}
