@@ -262,7 +262,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果【{0}】",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同"+ex.getMessage());
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
 		}
 		return modelEntity;
 	}
@@ -379,8 +379,6 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			XxlJobLogger.log("-->"+entity.getId()+"计算不成功，合同在线规则未绑定");
 		}
 		//获取合同在线查询条件
-		XxlJobLogger.log("-->"+entity.getId()+"计算时查询出的合同在线结果【{0}】",JSONObject.fromObject(contractQuoteInfoVo));
-
 		Map<String, Object> cond = new HashMap<String, Object>();
 		feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 		XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
@@ -579,5 +577,4 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  更新行数【{1}】  费用科目【{2}】",(current - start),feesList.size(),SubjectId);
 		}
 	}
-
 }

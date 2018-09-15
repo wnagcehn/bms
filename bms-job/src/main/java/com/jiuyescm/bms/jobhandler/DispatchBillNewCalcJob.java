@@ -142,7 +142,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			calcuForBms(entity, feeEntity);
 		}
 		else{
-			XxlJobLogger.log("-->"+entity.getId()+"规则编号：  ", modelEntity.getRuleCode().trim());
+			XxlJobLogger.log("-->"+entity.getId()+"规则编号：  "+modelEntity.getRuleCode().trim());
 			calcuForContract(entity,feeEntity,modelEntity);
 		}
 		
@@ -671,7 +671,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("-->"+entity.getId()+"查询出的合同在线结果【{0}】",JSONObject.fromObject(modelEntity));
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同【{0}】",ex.getMessage());
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
 		}
 		return modelEntity;
 	}
