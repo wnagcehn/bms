@@ -3,8 +3,6 @@ package com.jiuyescm.bms.jobhandler;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,19 +10,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.drools.compiler.lang.dsl.DSLMapParser.entry_return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
-import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
@@ -121,7 +116,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("typeCode", "TEMPERATURE_TYPE");
 		List<SystemCodeEntity> systemCodeList = systemCodeService.querySysCodes(map);
-		temMap =new LinkedHashMap<String,String>();
+		temMap =new ConcurrentHashMap<String,String>();
 		if(systemCodeList!=null && systemCodeList.size()>0){
 			for(int i=0;i<systemCodeList.size();i++){
 				temMap.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
@@ -218,13 +213,20 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setBizId(String.valueOf(outstock.getId()));//业务数据主键
 		storageFeeEntity.setFeesNo(outstock.getFeesNo());
+		
+		XxlJobLogger.log("-->"+outstock.getId()+"温度类型的map【{0}】",temMap);
+
+		
 		if(StringUtils.isEmpty(outstock.getTemperatureTypeCode())){
 			outstock.setTemperatureTypeCode("LD");
 			storageFeeEntity.setTempretureType("LD");
 		}
 		else{
 			storageFeeEntity.setTempretureType(outstock.getTemperatureTypeCode());
+			
 			outstock.setTemperatureTypeName(temMap.get(outstock.getTemperatureTypeCode()));
+			
+			XxlJobLogger.log("-->"+outstock.getId()+"业务数据中温度类型",outstock.getTemperatureTypeName());
 		}
 		if(StringUtils.isEmpty(outstock.getTemperatureTypeName())){
 			outstock.setTemperatureTypeName("冷冻");
