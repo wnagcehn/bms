@@ -54,13 +54,18 @@ public class BizPackStorageServiceImpl implements IBizPackStorageService {
     }
 
     @Override
-    public void delete(Long id) {
-        bizPackStorageRepository.delete(id);
+    public int delete(BizPackStorageEntity entity) {
+        return bizPackStorageRepository.delete(entity);
     }
 
 	@Override
 	public int saveList(List<BizPackStorageEntity> list) {
 		return bizPackStorageRepository.saveList(list);
+	}
+	
+	@Override
+    public int checkIsNotExist(BizPackStorageEntity entity) {
+		return bizPackStorageRepository.checkIsNotExist(entity);
 	}
 
 	@Override

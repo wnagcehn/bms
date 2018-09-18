@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity;
+import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 
 /**
@@ -58,8 +59,8 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
     }
 
     @Override
-    public void delete(Long id) {
-        delete("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.delete", id);
+    public void delete(BizAddFeeEntity entity) {
+    	update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update", entity);
     }
 
 	@Override
@@ -96,6 +97,18 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 	@Override
 	public List<BizAddFeeEntity> querybizAddFee(Map<String, Object> condition) {
 		return selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.querybizAddFee",condition);
+	}
+	
+    /**
+	 * 分组统计
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize){
+		List<BizAddFeeEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.groupCount", condition, new RowBounds(
+                pageNo, pageSize));
+		return new PageInfo<BizAddFeeEntity>(list);
 	}
 	
 }

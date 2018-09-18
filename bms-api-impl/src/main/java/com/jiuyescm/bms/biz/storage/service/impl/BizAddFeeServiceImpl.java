@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
 
@@ -55,8 +56,8 @@ public class BizAddFeeServiceImpl implements IBizAddFeeService {
     }
 
     @Override
-    public void delete(Long id) {
-        bizAddFeeRepository.delete(id);
+    public void delete(BizAddFeeEntity entity) {
+        bizAddFeeRepository.delete(entity);
     }
 
 	@Override
@@ -108,6 +109,17 @@ public class BizAddFeeServiceImpl implements IBizAddFeeService {
 	@Override
 	public List<BizAddFeeEntity> queryList(Map<String, Object> condition) {
 		return bizAddFeeRepository.queryList(condition);
+	}
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @return
+	 */
+	@Override
+    public PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition,
+            int pageNo, int pageSize){
+		return bizAddFeeRepository.groupCount(condition, pageNo, pageSize);
 	}
 	
 }

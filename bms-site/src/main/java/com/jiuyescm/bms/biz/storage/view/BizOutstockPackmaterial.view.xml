@@ -596,7 +596,7 @@ action.set(&quot;parameter&quot;,datas).execute(function(data){&#xD;
           </ControlMenuItem>
         </MenuButton>
         <Separator/>
-        <ToolBarButton id="groupCount">
+        <MenuButton>
           <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
 if(data){&#xD;
 	if(isNullOrEmpty(data.get(&quot;startTime&quot;))){&#xD;
@@ -640,7 +640,13 @@ function isNullOrEmpty(e) {&#xD;
 }</ClientEvent>
           <Property name="caption">分组统计</Property>
           <Property name="icon">url(>skin>common/icons.gif) -240px -40px</Property>
-        </ToolBarButton>
+          <ControlMenuItem>
+            <ClientEvent name="onClick">view.get(&quot;#calErrorDialog&quot;).show();&#xD;
+</ClientEvent>
+            <Property name="icon">url(>skin>common/icons.gif) -240px -40px</Property>
+            <Property name="caption">计算失败统计</Property>
+          </ControlMenuItem>
+        </MenuButton>
         <Separator/>
         <ToolBarButton id="btnUpdateCalculate">
           <ClientEvent name="onClick">var validRetryAction = view.get(&quot;#validRetryAction&quot;);&#xD;
@@ -1814,6 +1820,22 @@ var progressJob = setInterval(getProgress, 500);</ClientEvent>
       <Buttons/>
       <Children>
         <IFrame id="detailFrame"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerCalError">
+      <ClientEvent name="onExecute">view.get(&quot;#calErrorDialog&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <Dialog id="calErrorDialog">
+      <Property name="width">800</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">计算失败统计</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="carrierSelectSubView">
+          <Property name="subView">com.jiuyescm.bms.billcheck.view.BizOutstockPackCalError</Property>
+        </SubViewHolder>
       </Children>
       <Tools/>
     </Dialog>

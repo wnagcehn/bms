@@ -84,4 +84,13 @@ public interface IBizOutstockPackmaterialRepository {
 	Double getMaxVolum(Map<String,Object> condition);
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);
+	
+	/**
+	 * 非成功统计
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BizOutstockPackmaterialEntity> queryErrorCal(Map<String, Object> condition, int pageNo, int pageSize);
 }

@@ -61,8 +61,13 @@ public class BizPackStorageRepositoryImpl extends MyBatisDao implements IBizPack
     }
 
     @Override
-    public void delete(Long id) {
-        delete("com.jiuyescm.bms.biz.storage.BizPackStorageEntityMapper.delete", id);
+    public int delete(BizPackStorageEntity entity) {
+        return super.delete("com.jiuyescm.bms.biz.storage.BizPackStorageEntityMapper.update", entity);
+    }
+    
+    @Override
+    public int checkIsNotExist(BizPackStorageEntity entity) {
+        return (int) this.selectOne("com.jiuyescm.bms.biz.storage.BizPackStorageEntityMapper.checkIsNotExist", entity);
     }
 
 	@Override

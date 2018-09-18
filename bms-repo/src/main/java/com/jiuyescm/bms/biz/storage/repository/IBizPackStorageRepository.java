@@ -26,8 +26,6 @@ public interface IBizPackStorageRepository {
     public BizPackStorageEntity save(BizPackStorageEntity entity);
 
     public int update(BizPackStorageEntity entity);
-
-    public void delete(Long id);
     
     int saveList(List<BizPackStorageEntity> list);
     
@@ -60,4 +58,13 @@ public interface IBizPackStorageRepository {
 
 	public List<BizPackStorageEntity> queryAllBycurTime(Map<String, Object> map);
 	int saveTempData(String taskId);
+
+	int delete(BizPackStorageEntity entity);
+	
+	/**
+	 * 校验是否存在
+	 * @param param
+	 * @return
+	 */
+	int checkIsNotExist(BizPackStorageEntity entity);
 }

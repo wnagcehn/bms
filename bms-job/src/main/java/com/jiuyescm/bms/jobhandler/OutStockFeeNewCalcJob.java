@@ -263,6 +263,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
+			entity.setRemark(ex.getMessage());
 		}
 		return modelEntity;
 	}
@@ -414,7 +415,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		long current = 0l;// 当前系统时间
 		entity.setCalculateTime(JAppContext.currentTimestamp());
 		
-		//==============判断是否是B2B，B2B暂不计算
+	/*	//==============判断是否是B2B，B2B暂不计算
 		if("1".equals(entity.getB2bFlag())){
 			XxlJobLogger.log("-->"+entity.getId()+String.format("B2B订单暂不支持计算  订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
 			entity.setIsCalculated(CalculateState.No_Exe.getCode());
@@ -423,7 +424,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			storageFeeEntity.setCalcuMsg(String.format("B2B订单暂不支持计算   订单号【%s】--商家【%s】", entity.getId(),entity.getCustomerid()));
 			//feesList.add(storageFeeEntity);
 			return false;
-		}
+		}*/
 		
 		//=========================验证合同================
 		PriceContractInfoEntity contractEntity =null;

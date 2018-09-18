@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -122,16 +123,25 @@ public class BizPackStorageController extends BaseController{
 
 	@DataResolver
 	public void save(BizPackStorageEntity entity) {
+		String username = JAppContext.currentUserName();
 		if (entity.getId() == null) {
+			entity.setCreator(username);
 			bizPackStorageService.save(entity);
 		} else {
+			entity.setLastModifier(username);
 			bizPackStorageService.update(entity);
 		}
 	}
 
 	@DataResolver
 	public void delete(BizPackStorageEntity entity) {
-		bizPackStorageService.delete(entity.getId());
+		entity.setLastModifier(JAppContext.currentUserName());
+		entity.setDelFlag("1");
+		try {
+			bizPackStorageService.delete(entity);
+		} catch (Exception e) {
+			logger.error("删除异常", e);
+		}
 	}
 	
 	@DataResolver
@@ -531,6 +541,12 @@ public class BizPackStorageController extends BaseController{
 			}
 			if(bpps.getQty() != null && bpps.getQty()<0){
 				setMessage(infoList, lineNo,"数量不能小于0!");
+			}
+			
+			//校验数据库中是否存在
+			int num = bizPackStorageService.checkIsNotExist(dataList.get(i));
+			if (num > 0) {
+				setMessage(infoList, lineNo,"数据库中已存在，请勿重复导入!");
 			}
 			
 			bpps.setIsCalculated(String.valueOf(ConstantInterface.Calculate.CALCULATE_NO));

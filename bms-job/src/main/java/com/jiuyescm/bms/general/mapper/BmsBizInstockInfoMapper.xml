@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.BmsBizInstockInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+		   	<result column="adjust_qty" property="adjustQty" jdbcType="DECIMAL" />
+		   	<result column="adjust_box" property="adjustBox" jdbcType="DECIMAL" />
+		   	<result column="adjust_weight" property="adjustWeight" jdbcType="DECIMAL" />
+		   	<result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
+		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		   	<result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+		   	<result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier, last_modify_time, del_flag, is_calculated, calculate_time, remark,
+        instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_name, instock_type, total_qty, total_box, total_weight, receiver, creator, create_time, write_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier, last_modify_time, del_flag, is_calculated, calculate_time, remark,
+instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_name, instock_type, total_qty, total_box, total_weight, receiver, creator, create_time, write_time
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_instock_info
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+        select i.id, i.fees_no as feesNo, i.adjust_qty as adjustQty,
+		i.adjust_box as adjustBox, i.adjust_weight as adjustWeight,
+		i.last_modifier as lastModifier, i.last_modifier_id as lastModifierId,
+		i.del_flag as delFlag,
+		i.calculate_time as calculateTime, i.remark, i.instock_no as instockNo,
+		i.external_num as externalNum, i.warehouse_code as warehouseCode,
+		i.warehouse_name as warehouseName, i.customer_id as customerId,
+		i.customer_name as customerName, i.instock_type as instockType,
+		i.total_box as totalBox, i.total_qty as totalQty, i.total_weight as totalWeight,
+		i.receiver, i.creator, i.create_time as createTime, i.write_time as writeTime,
+		s.subject_code as subjectCode, s.box as chargeBox, s.quantity as chargeQty,
+		s.varieties as chargeSku, s.weight as chargeWeight,
+		s.cost as amount, s.derate_amount as derateAmount, s.unit_price as unitPrice,
+		s.first_num as firstNum, s.first_price as firstPrice, s.continue_num as continueNum,
+		s.continue_price as continuePrice, s.is_calculated as isCalculated,
+		s.calcu_msg as calcuMsg, s.unit as chargeUnit, i.instock_date as instockDate,
+		s.cost as cost
+ 		from biz_instock_info i
+		INNER JOIN fees_receive_storage s on s.fees_no=i.fees_no
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and i.id = #{id}
+			</if>
+        	<if test=" feesNo != null and feesNo !='' ">
+				and i.fees_no = #{feesNo}
+			</if>
+			<if test=" instockNo != null and instockNo !='' ">
+				and i.instock_no = #{instockNo}
+			</if>
+        	<if test=" externalNum != null and externalNum !='' ">
+				and i.external_num = #{externalNum}
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				and i.warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and i.customer_id = #{customerId}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and i.del_flag = #{delFlag}
+			</if>
+			<if test="createTime != null and createTime !='' " >
+				and <![CDATA[i.create_time >= #{createTime}]]>
+			</if>
+			<if test="createEndTime != null and createEndTime !='' " >
+				and <![CDATA[i.create_time <= #{createEndTime}]]>
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				and s.is_calculated = #{isCalculated}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				and s.subject_code = #{subjectCode}
+			</if>
+    </select>
+    
+    <select id="queryForBill" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        select
+        i.warehouse_name as warehouseName,
+        i.instock_date as instockDate,
+        i.customer_name as customerName,
+        i.instock_type as instockType,
+        i.instock_no as instockNo,
+        s.quantity,
+        s.box,
+        s.weight,
+        s.cost,
+        s.subject_code as subjectCode
+ 		from biz_instock_info i
+		INNER JOIN fees_receive_storage s on s.fees_no=i.fees_no
+        where 1 = 1
+        	<if test=" customerId != null and customerId !='' ">
+				and i.customer_id = #{customerId}
+			</if>
+			<if test="createTime != null and createTime !='' " >
+				and <![CDATA[i.create_time >= #{startTime}]]>
+			</if>
+			<if test="createEndTime != null and createEndTime !='' " >
+				and <![CDATA[i.create_time <= #{endTime}]]>
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+        insert into biz_instock_info(
+        	adjust_qty, adjust_box, adjust_weight
+    	)
+        values (
+
+			#{adjustQty,jdbcType=DECIMAL}, 
+			#{adjustBox,jdbcType=DECIMAL}, 
+			#{adjustWeight,jdbcType=DECIMAL}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+        update biz_instock_info
+        <trim prefix="set" suffixOverrides=",">
+				adjust_qty = #{adjustQty,jdbcType=DECIMAL},
+				adjust_box = #{adjustBox,jdbcType=DECIMAL},				
+				adjust_weight = #{adjustWeight,jdbcType=DECIMAL},
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifierId != null and lastModifierId !='' ">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    	<!-- 更新 -->
+    <update id="updateBatch" parameterType="java.util.Map">
+        update biz_instock_info
+        <trim prefix="set" suffixOverrides=",">
+			adjust_qty = #{adjustQty,jdbcType=DECIMAL},
+			adjust_box = #{adjustBox,jdbcType=DECIMAL},			
+			adjust_weight = #{adjustWeight,jdbcType=DECIMAL},
+			<if test=" lastModifierId != null">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifier != null">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where instock_no=#{instockNo,jdbcType=VARCHAR}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_instock_info 
+        where id = #{id}
+    </delete>
+    
+    <update id="retryForCalcu" parameterType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+        update biz_instock_info i set i.is_calculated = 99 where i.del_flag = 0
+			<if test=" instockNo != null and instockNo !='' ">
+				and i.instock_no = #{instockNo}
+			</if>
+    </update>
+    
+    <select id="groupCount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+    	select i.customer_name, s.is_calculated, COUNT(*) as totalNum from fees_receive_storage s
+		LEFT JOIN biz_instock_info i on i.fees_no=s.fees_no
+		WHERE 1=1 and i.del_flag='0'
+		<if test=" instockNo != null and instockNo !='' ">
+			and i.instock_no = #{instockNo}
+		</if>
+       	<if test=" externalNum != null and externalNum !='' ">
+			and i.external_num = #{externalNum}
+		</if>
+		<if test=" warehouseCode != null and warehouseCode !='' ">
+			and i.warehouse_code = #{warehouseCode}
+		</if>
+       	<if test=" customerId != null and customerId !='' ">
+			and i.customer_id = #{customerId}
+		</if>
+       	<if test=" delFlag != null and delFlag !='' ">
+			and i.del_flag = #{delFlag}
+		</if>
+		<if test="createTime != null and createTime !='' " >
+			and <![CDATA[i.create_time >= #{createTime}]]>
+		</if>
+		<if test="createEndTime != null and createEndTime !='' " >
+			and <![CDATA[i.create_time <= #{createEndTime}]]>
+		</if>
+		<if test=" isCalculated != null and isCalculated !='' ">
+			and s.is_calculated = #{isCalculated}
+		</if>
+		<if test=" subjectCode != null and subjectCode !='' ">
+			and s.subject_code = #{subjectCode}
+		</if>
+		GROUP BY s.is_calculated
+		order by totalNum desc
+    </select>
+    
+    <select id="querybizInstockInfo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+    	select
+    	id, fees_no as feesNo, adjust_qty as adjustQty, 
+    	adjust_box as adjustBox, adjust_weight as adjustWeight,
+    	last_modifier_id as lastModifierId, last_modifier as lastModifier, 
+    	last_modify_time as lastModifyTime, del_flag as delFlag, 
+    	is_calculated as isCalculated, calculate_time as calculateTime, remark,
+        instock_no as instockNo, external_num as externalNum, 
+        warehouse_code as warehouseCode, warehouse_name as warehouseName, 
+        customer_id as customerId, customer_name as customerName, 
+        instock_type as instockType, total_qty as totalQty, total_box as totalBox, 
+        total_weight as totalWeight, receiver, creator, create_time as createTime, write_time as writeTime
+		from biz_instock_info
+		where del_flag='0'
+		<if test="(beginTime != null and beginTime !='')" >
+			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = concat(${isCalculated})
+		</if>
+		LIMIT #{num}
+    </select>
+    
+    <update id="updatebizInstockInfoByFees" parameterType ="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+    	update biz_instock_info
+    	<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="calcuMsg != null" >remark=#{calcuMsg,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where fees_no=#{feesNo}
+    </update> 
+    
+</mapper>

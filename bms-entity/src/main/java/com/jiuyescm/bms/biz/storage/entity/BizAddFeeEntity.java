@@ -75,6 +75,10 @@ public class BizAddFeeEntity implements IEntity {
 	private String serviceContent;
 	//详细备注
 	private String remarkContent;
+	//金额
+	private Double cost;
+	
+	private Integer totalNum;
 	
 	public String getFeesTypeName() {
 		return feesTypeName;
@@ -462,6 +466,22 @@ public class BizAddFeeEntity implements IEntity {
 
 	public void setRemarkContent(String remarkContent) {
 		this.remarkContent = remarkContent;
+	}
+
+	public Double getCost() {
+		return cost;
+	}
+
+	public void setCost(Double cost) {
+		this.cost = cost;
+	}
+
+	public Integer getTotalNum() {
+		return totalNum;
+	}
+
+	public void setTotalNum(Integer totalNum) {
+		this.totalNum = totalNum;
 	}
 
 	
