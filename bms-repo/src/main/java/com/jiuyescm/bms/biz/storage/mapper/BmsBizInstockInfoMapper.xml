@@ -197,8 +197,8 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
     <select id="groupCount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">
     	select i.customer_name, s.is_calculated, COUNT(*) as totalNum from fees_receive_storage s
-		LEFT JOIN biz_instock_info i on i.fees_no=s.fees_no
-		WHERE 1=1 and i.del_flag='0'
+		LEFT JOIN biz_instock_info i on i.fees_no=s.fees_no and i.del_flag = '0'
+		WHERE 1=1
 		<if test=" instockNo != null and instockNo !='' ">
 			and i.instock_no = #{instockNo}
 		</if>
@@ -226,7 +226,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		<if test=" subjectCode != null and subjectCode !='' ">
 			and s.subject_code = #{subjectCode}
 		</if>
-		GROUP BY s.is_calculated
+		GROUP BY i.customer_name, s.is_calculated
 		order by totalNum desc
     </select>
     
