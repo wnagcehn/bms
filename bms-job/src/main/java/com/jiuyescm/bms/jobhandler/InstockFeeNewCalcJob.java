@@ -102,6 +102,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		try{
 			if(feesNos.size()>0){
 				feesMap.put("feesNos", feesNos);
+				feesMap.put("subjectId", SubjectId);
 				feesReceiveStorageService.deleteBatch(feesMap);
 			}
 		}
