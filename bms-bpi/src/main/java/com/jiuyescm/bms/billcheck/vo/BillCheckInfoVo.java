@@ -160,6 +160,7 @@ public class BillCheckInfoVo implements IEntity {
 	//新增字段，不存表
 	//超期状态
 	private String overStatus;
+	private String warnMessage;
 	
 	public BillCheckInfoVo() {
 
@@ -1028,6 +1029,14 @@ public class BillCheckInfoVo implements IEntity {
 
 	public void setOverStatus(String overStatus) {
 		this.overStatus = overStatus;
+	}
+
+	public String getWarnMessage() {
+		return warnMessage;
+	}
+
+	public void setWarnMessage(String warnMessage) {
+		this.warnMessage = warnMessage;
 	}
    
 	

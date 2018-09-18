@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
-import com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.BillReceiptFollowEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
@@ -30,7 +29,6 @@ import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
-import com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -169,11 +167,34 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 			List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
 	    	for(BillCheckInfoEntity entity : pageInfo.getList()) {
 	    		BillCheckInfoVo vo = new BillCheckInfoVo(); 		
-	            PropertyUtils.copyProperties(vo, entity);        
+	            PropertyUtils.copyProperties(vo, entity);  
+	            vo.setWarnMessage("预警");
 	    		voList.add(vo);
 	    	}
 	    	result.setList(voList);
-	    	PropertyUtils.copyProperties(result, pageInfo);   
+		} catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+    	
+		return result;
+	}
+	
+	@Override
+	public PageInfo<BillCheckInfoVo> queryWarnList(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		PageInfo<BillCheckInfoEntity> pageInfo=billCheckInfoRepository.queryWarnList(condition, pageNo, pageSize);
+		PageInfo<BillCheckInfoVo> result=new PageInfo<BillCheckInfoVo>();
+		
+		try {
+			List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
+	    	for(BillCheckInfoEntity entity : pageInfo.getList()) {
+	    		BillCheckInfoVo vo = new BillCheckInfoVo(); 		
+	            PropertyUtils.copyProperties(vo, entity);  
+	            vo.setWarnMessage("预警");
+	    		voList.add(vo);
+	    	}
+	    	result.setList(voList);
 		} catch (Exception ex) {
             logger.error("转换失败:{0}",ex);
         }
