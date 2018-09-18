@@ -38,6 +38,17 @@
         </Property>
         <Property name="label">数据类型</Property>
       </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">是否作废</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dataType">
       <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity</Property>
@@ -86,9 +97,6 @@
         <Property name="label">创建者</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="delFlag">
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="palletNum">
@@ -159,6 +167,17 @@
       </PropertyDef>
       <PropertyDef name="adjustPalletNum">
         <Property name="label">调整托数</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">是否作废</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
@@ -339,6 +358,26 @@ with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
 		}</ClientEvent>
           <Property name="caption">修改</Property>
           <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton id="delete">
+          <ClientEvent name="onClick">var currentData=view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
+if(currentData){&#xD;
+	var mes=&quot;是否确定要删除&quot;;&#xD;
+	dorado.MessageBox.confirm(mes,function(){&#xD;
+		var action=view.get(&quot;#deleteAction&quot;);&#xD;
+		action.execute(function(){&#xD;
+			dorado.MessageBox.alert(&quot;删除成功!&quot;);&#xD;
+			var data=view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			view.get(&quot;#dsQuotaList&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">删除</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
         </ToolBarButton>
         <Separator/>
         <ToolBarButton id="btnTemplateDownload">
@@ -558,6 +597,11 @@ var nowdays = new Date();&#xD;
           <Property name="property">extattr1</Property>
           <Editor/>
         </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">delFlag</Property>
+          <Property name="property">delFlag</Property>
+          <Editor/>
+        </AutoFormElement>
       </AutoForm>
       <Container>
         <DataGrid id="dg_QuotaList">
@@ -657,6 +701,11 @@ arg.processDefault = true;</ClientEvent>
           <DataColumn name="extattr1">
             <Property name="property">extattr1</Property>
             <Property name="width">160</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">delFlag</Property>
+            <Property name="width">90</Property>
+            <Property name="name">delFlag</Property>
           </DataColumn>
         </DataGrid>
       </Container>
@@ -1330,5 +1379,12 @@ if(taskState==2){&#xD;
       </Children>
       <Tools/>
     </Dialog>
+    <UpdateAction id="deleteAction">
+      <Property name="dataResolver">bizPackStorageController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsQuotaList</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>

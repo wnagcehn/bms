@@ -165,7 +165,7 @@ public class BizProductPalletStorageController{
 	
 	@Autowired
 	private IBmsFileAsynTaskService bmsFileAsynTaskService;
-	
+		
 	String sessionId=JAppContext.currentUserID()+"_import_productPalletStorage";
 	final String nameSpace="com.jiuyescm.bms.biz.storage.web.BizProductPalletStorageController";
 

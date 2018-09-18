@@ -15,14 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
+import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStandardReqVoService;
@@ -52,7 +53,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 
 @JobHander(value="instockFeeNewCalcJob")
 @Service
-public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntity,FeesReceiveStorageEntity>{
+public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEntity,FeesReceiveStorageEntity>{
 
 	//private String SubjectId = "wh_instock_service";//费用类型-入库验收服务费 编码 1001旧编码
 	
@@ -70,6 +71,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Autowired private IBmsBizInstockInfoRepository bmsBizInstockInfoRepository;
 
 	
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
@@ -86,15 +88,15 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	public Integer deleteFeesBatch(List<BizInStockMasterEntity> list) {
+	public Integer deleteFeesBatch(List<BmsBizInstockInfoEntity> list) {
 		Map<String, Object> feesMap = new HashMap<String, Object>();
 		List<String> feesNos = new ArrayList<String>();
-		for (BizInStockMasterEntity entity : list) {
+		for (BmsBizInstockInfoEntity entity : list) {
 			if(StringUtils.isNotEmpty(entity.getFeesNo())){
 				feesNos.add(entity.getFeesNo());
 			}
 			else{
-				entity.setFeesNo(sequenceService.getBillNoOne(BizInStockMasterEntity.class.getName(), "STO", "0000000000"));
+				entity.setFeesNo(sequenceService.getBillNoOne(BmsBizInstockInfoEntity.class.getName(), "STO", "0000000000"));
 			}
 		}
 		try{
@@ -111,8 +113,9 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	protected List<BizInStockMasterEntity> queryBillList(Map<String, Object> map) {
-		List<BizInStockMasterEntity> bizList = bizInstockMasterService.getInStockMasterList(map);
+	protected List<BmsBizInstockInfoEntity> queryBillList(Map<String, Object> map) {
+		List<BmsBizInstockInfoEntity> bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
+		//List<BmsBizInstockInfoEntity> bizList = bizInstockMasterService.getInStockMasterList(map);
 		if (bizList.size()>0) {
 			initConf();
 		}
@@ -120,17 +123,17 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	public FeesReceiveStorageEntity initFeeEntity(BizInStockMasterEntity instock){
+	public FeesReceiveStorageEntity initFeeEntity(BmsBizInstockInfoEntity instock){
 		
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		
-		double num=DoubleUtil.isBlank(instock.getAdjustNum())?instock.getNum():instock.getAdjustNum();
+		double num=DoubleUtil.isBlank(instock.getAdjustQty())?instock.getTotalQty():instock.getAdjustQty();
 		if(!DoubleUtil.isBlank(num)){
 			storageFeeEntity.setQuantity(num);//商品数量
 		}
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(instock.getCreateTime());
-		storageFeeEntity.setCustomerId(instock.getCustomerid());		//商家ID
+		storageFeeEntity.setCustomerId(instock.getCustomerId());		//商家ID
 		storageFeeEntity.setCustomerName(instock.getCustomerName());	//商家名称
 		storageFeeEntity.setWarehouseCode(instock.getWarehouseCode());	//仓库ID
 		storageFeeEntity.setWarehouseName(instock.getWarehouseName());	//仓库名称
@@ -170,18 +173,18 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 
 	@Override
-	public boolean isJoin(BizInStockMasterEntity t) {
+	public boolean isJoin(BmsBizInstockInfoEntity t) {
 		return true;
 	}
 	
 	@Override
-	public boolean isNoExe(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity) {
+	public boolean isNoExe(BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity feeEntity) {
 
 		return false;
 	}
 	
 	@Override
-	public void calcu(BizInStockMasterEntity entity, FeesReceiveStorageEntity feeEntity) {
+	public void calcu(BmsBizInstockInfoEntity entity, FeesReceiveStorageEntity feeEntity) {
 		ContractQuoteInfoVo modelEntity = getContractForWhat(entity);
 		if(modelEntity == null || StringUtil.isEmpty(modelEntity.getTemplateCode())){
 			calcuForBms(entity, feeEntity);
@@ -194,9 +197,9 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	public ContractQuoteInfoVo getContractForWhat(BizInStockMasterEntity entity) {
+	public ContractQuoteInfoVo getContractForWhat(BmsBizInstockInfoEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
-		queryVo.setCustomerId(entity.getCustomerid());
+		queryVo.setCustomerId(entity.getCustomerId());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(SubjectId);
 		queryVo.setCurrentTime(entity.getCreateTime());
@@ -209,26 +212,27 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
+			entity.setRemark(ex.getMessage());
 		}
 		return modelEntity;
 	}
 	
 	@Override
-	public void calcuForBms(BizInStockMasterEntity entity,FeesReceiveStorageEntity feeEntity){
+	public void calcuForBms(BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity feeEntity){
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		//合同报价校验  false-不通过  true-通过
 		try{
 			if(validateData(entity, feeEntity)){
-				if(mapCusPrice.containsKey(entity.getCustomerid())){
+				if(mapCusPrice.containsKey(entity.getCustomerId())){
 					entity.setCalculateTime(JAppContext.currentTimestamp());
 					feeEntity.setCalculateTime(entity.getCalculateTime());
-					String customerId=entity.getCustomerid();
+					String customerId=entity.getCustomerId();
 			
 					//报价模板
 					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);
 					
 					//数量
-					double num=DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum();
+					double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
 							
 					//计算方法
 					double amount=0d;
@@ -263,7 +267,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 					
 					feeEntity.setCost(BigDecimal.valueOf(amount));
 					feeEntity.setParam4(priceType);
-					feeEntity.setBizType(entity.getextattr1());//判断是否是遗漏数据
+					//feeEntity.setBizType(entity.getextattr1());//判断是否是遗漏数据
 					entity.setRemark("计算成功");
 					entity.setIsCalculated(CalculateState.Finish.getCode());
 					feeEntity.setCalcuMsg("计算成功");
@@ -280,7 +284,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 
 
-	public void calcuForContract(BizInStockMasterEntity biz,FeesReceiveStorageEntity fee,ContractQuoteInfoVo contractQuoteInfoVo) {
+	public void calcuForContract(BmsBizInstockInfoEntity biz,FeesReceiveStorageEntity fee,ContractQuoteInfoVo contractQuoteInfoVo) {
 		// TODO Auto-generated method stub
 		XxlJobLogger.log("-->"+biz.getId()+"合同在线计算");
 		fee.setCalculateTime(JAppContext.currentTimestamp());
@@ -330,14 +334,14 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 		
 	}
 	
-	protected boolean validateData(BizInStockMasterEntity entity,
+	protected boolean validateData(BmsBizInstockInfoEntity entity,
 			FeesReceiveStorageEntity feeEntity) {
 		
 		XxlJobLogger.log("-->"+entity.getId()+"数据主键ID:【{0}】  ",entity.getId());
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);
 		Map<String,Object> map=new HashMap<String,Object>();
-		String customerId=entity.getCustomerid();
+		String customerId=entity.getCustomerId();
 		feeEntity.setCalculateTime(time);
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
@@ -372,7 +376,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 		contractItems_map.put("subjectId", SubjectId);
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
-			XxlJobLogger.log("-->"+entity.getId()+"未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerid());
+			XxlJobLogger.log("-->"+entity.getId()+"未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerId());
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			entity.setRemark("未签约服务");
@@ -414,7 +418,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 			map.clear();
 			map.put("quotationId", priceGeneral.getId());
 			//根据报价单位判断
-			map.put("num", DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());			
+			map.put("num", DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty());			
 			//查询出的所有子报价
 			list=repository.queryPriceStepByQuatationId(map);
 			
@@ -457,12 +461,12 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BizInStockMasterEntit
 	}
 	
 	@Override
-	public void updateBatch(List<BizInStockMasterEntity> ts,List<FeesReceiveStorageEntity> fs) {
+	public void updateBatch(List<BmsBizInstockInfoEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		if (fs.size() > 0) {
-			bizInstockMasterService.updateInstockBatchByFees(fs);
+			bmsBizInstockInfoRepository.updateInstockBatchByFees(fs);
 			current = System.currentTimeMillis();
 			XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 			start = System.currentTimeMillis();// 系统开始时间

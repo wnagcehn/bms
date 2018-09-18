@@ -27,8 +27,6 @@ public interface IBizPackStorageService {
 
     int update(BizPackStorageEntity entity);
 
-    void delete(Long id);
-
     int saveList(List<BizPackStorageEntity> list);
     
     PageInfo<BizPackStorageEntity> queryGroup(Map<String, Object> condition, int pageNo,
@@ -60,4 +58,13 @@ public interface IBizPackStorageService {
 	List<BizPackStorageEntity> queryAllBycurTime(Map<String, Object> map);
 
 	int saveTempData(String taskId);
+
+	int delete(BizPackStorageEntity entity);
+	
+	/**
+	 * 校验是否存在
+	 * @param param
+	 * @return
+	 */
+	int checkIsNotExist(BizPackStorageEntity entity);
 }

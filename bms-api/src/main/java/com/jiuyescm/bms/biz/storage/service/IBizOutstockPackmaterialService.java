@@ -91,4 +91,13 @@ public interface IBizOutstockPackmaterialService {
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);
 	
+	/**
+	 * 非计算成功统计
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BizOutstockPackmaterialEntity> queryErrorCal(Map<String, Object> condition, int pageNo, int pageSize);
+	
 }
