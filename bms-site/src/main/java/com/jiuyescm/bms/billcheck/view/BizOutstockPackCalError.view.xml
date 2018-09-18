@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtConditions">
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="2">系统错误</Property>
+              <Property name="3">合同不存在</Property>
+              <Property name="4">报价缺失</Property>
+            </Entity>
+          </Property>
+        </Property>
+        <Property name="defaultValue"> </Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="createEndTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">~</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtMaterialCalErrorEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity</Property>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="consumerMaterialCode">
+        <Property></Property>
+        <Property name="label">耗材编码</Property>
+      </PropertyDef>
+      <PropertyDef name="consumerMaterialName">
+        <Property></Property>
+        <Property name="label">耗材名称</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property></Property>
+        <Property name="dataType">Double</Property>
+        <Property name="label">数量</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="wmsId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dbname">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="2">系统错误</Property>
+              <Property name="3">合同不存在</Property>
+              <Property name="4">报价缺失</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="price">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="contractCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="specDesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="extattr5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="costIsCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="costFeesNo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="costRemark">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="rowExcelNo">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="rowExcelName">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsConditions">
+      <ClientEvent name="onCreate">view.get(&quot;#dsConditions&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtConditions]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsMaterialCalErrorList">
+      <Property name="dataType">[dtMaterialCalErrorEntity]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bizOutstockPackmaterialController#queryErrorCal</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsMaterialCalErrorList</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsConditions.data&quot;).current;&#xD;
+&#xD;
+if(data.get(&quot;createTime&quot;)>data.get(&quot;createEndTime&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;开始时间不能大于结束时间!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+with (view.get(&quot;#dsMaterialCalErrorList&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}	</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="action">export2ReportAction</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <ClientEvent name="onReady">    var nowdays = new Date();&#xD;
+	var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+	var lastMonth = nowdays.getMonth()-2;&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+	&#xD;
+	if(lastMonth==0)&#xD;
+    {&#xD;
+        lastMonth=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (lastMonth &lt; 10) {&#xD;
+        lastMonth = &quot;0&quot; + lastMonth;&#xD;
+    }&#xD;
+	&#xD;
+    var firstDay = year + &quot;-&quot; + lastMonth + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set({&#xD;
+		createTime:firstDay,&#xD;
+		createEndTime:lastDay&#xD;
+	});&#xD;
+</ClientEvent>
+      <Property name="dataSet">dsConditions</Property>
+      <Property name="dataType">dtConditions</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">isCalculated</Property>
+        <Property name="property">isCalculated</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createTime</Property>
+        <Property name="property">createTime</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createEndTime</Property>
+        <Property name="property">createEndTime</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="dataList">
+        <Property name="dataSet">dsMaterialCalErrorList</Property>
+        <Property name="showFooter">false</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn>
+          <Property name="name">id</Property>
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">customerName</Property>
+          <Property name="property">customerName</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">warehouseCode</Property>
+          <Property name="property">warehouseCode</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">warehouseName</Property>
+          <Property name="property">warehouseName</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">consumerMaterialCode</Property>
+          <Property name="property">consumerMaterialCode</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">isCalculated</Property>
+          <Property name="property">isCalculated</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">num</Property>
+          <Property name="property">num</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dataList</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+  </View>
+</ViewConfig>

@@ -72,6 +72,12 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 			Map<String, Object> condition, int pageNo, int pageSize) {
 		return repository.queryWarehouseGroupCount(condition, pageNo, pageSize);
 	}
+	
+	@Override
+	public PageInfo<BizOutstockPackmaterialEntity> queryErrorCal(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		return repository.queryErrorCal(condition, pageNo, pageSize);
+	}
 
 	@Override
 	public PageInfo<BizOutstockPackmaterialEntity> queryPriceGroupCount(

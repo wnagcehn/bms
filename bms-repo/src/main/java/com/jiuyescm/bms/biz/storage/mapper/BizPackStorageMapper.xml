@@ -81,6 +81,9 @@
 		<if test="(extattr1 != null and extattr1 !='')" >
 				and a.extattr1 = #{extattr1}
 		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and a.del_flag = #{delFlag}
+		</if>
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
@@ -112,6 +115,24 @@
         from biz_pack_storage
         where id=#{id} 
     </select>
+    
+    <select id="checkIsNotExist" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity"
+        resultType="java.lang.Integer">
+        select count(*) from biz_pack_storage
+        where 1=1 and del_flag = '0'
+        <if test="curTime != null and curTime !='' " >
+			and cur_time = #{curTime}
+		</if>
+		<if test="warehouseCode != null and warehouseCode !='' " >
+			and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="customerid != null and customerid !=''" >
+			and customerid = #{customerid}
+		</if>
+		<if test="temperatureTypeCode != null and temperatureTypeCode !=''" >
+			and temperature_type_code = #{temperatureTypeCode}
+		</if>
+   	</select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity">
         insert into biz_pack_storage(pallet_num,adjust_pallet_num,data_num,wms_id, cur_time, warehouse_code, warehouse_name, customerid, customer_name, temperature_type_code,temperature_type_name, pack_no, pack_name, qty, fees_no, dbname, remark, creator, create_time, last_modifier, last_modify_time,write_time, is_calculated, calculate_time, del_flag)

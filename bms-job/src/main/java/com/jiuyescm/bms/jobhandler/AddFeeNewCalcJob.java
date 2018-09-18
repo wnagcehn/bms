@@ -219,8 +219,9 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 				//一口价				
 	            //费用 = 商品数量*模板单价
 				Map<String, Object> param = new HashMap<>();
-				param.put("templateId", generalEntity.getId().toString());			
-				List<PriceExtraQuotationEntity> extraList= priceExtraQuotationRepository.queryPrice(param);
+				param.put("templateId", generalEntity.getId().toString());
+				param.put("subjectId", SubjectId);
+				List<PriceExtraQuotationEntity> extraList= priceExtraQuotationRepository.queryPriceByParam(param);
 				if (extraList == null || extraList.size() <= 0) {
 					entity.setIsCalculated(CalculateState.Other.getCode());
 					storageFeeEntity.setIsCalculated(CalculateState.Other.getCode());

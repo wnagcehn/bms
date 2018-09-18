@@ -85,6 +85,7 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 
 @Controller("bizOutstockPackmaterialController")
@@ -754,6 +755,19 @@ public class BizOutstockPackmaterialController {
 			param.put("isCalculated", null);
 		}
 		PageInfo<BizOutstockPackmaterialEntity> pageInfo = service.queryWarehouseGroupCount(param, page.getPageNo(), page.getPageSize());
+		if (null != pageInfo) {
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int) pageInfo.getTotal());
+		}
+	}
+	
+	@DataProvider
+	public void queryErrorCal(Page<BizOutstockPackmaterialEntity> page, Map<String, Object> param){
+		if("".equals(param.get("isCalculated")) || param.get("isCalculated") == null){
+			String[] arr = new String[]{"2","3","4"};
+			param.put("isCalculateds", arr);
+		}
+		PageInfo<BizOutstockPackmaterialEntity> pageInfo = service.queryErrorCal(param, page.getPageNo(), page.getPageSize());
 		if (null != pageInfo) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
