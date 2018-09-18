@@ -176,7 +176,6 @@
 		<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
 			 		#{item}
 		</foreach>
-		<if test="subjectId != null" >and subject_code = #{subjectId}</if>
     </delete>
     
     <select id="ValidFeesNo" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity" resultMap ="feesReceiveStorageMap">
