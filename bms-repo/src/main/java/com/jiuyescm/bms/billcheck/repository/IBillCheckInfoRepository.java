@@ -12,6 +12,16 @@ public interface IBillCheckInfoRepository {
 	PageInfo<BillCheckInfoEntity> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 	
+	/**
+	 * 分页查询预警账单
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BillCheckInfoEntity> queryWarn(Map<String, Object> condition, int pageNo,
+            int pageSize);
+	
 	PageInfo<BillCheckInfoEntity> queryByInvoiceNo(Map<String, Object> condition, int pageNo,
             int pageSize);
 	

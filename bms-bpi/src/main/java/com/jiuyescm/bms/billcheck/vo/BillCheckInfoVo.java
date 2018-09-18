@@ -157,6 +157,10 @@ public class BillCheckInfoVo implements IEntity {
 	//调整金额
 	private BigDecimal adjustMoney;
 	
+	//新增字段，不存表
+	//超期状态
+	private String overStatus;
+	
 	public BillCheckInfoVo() {
 
 	}
@@ -1016,6 +1020,14 @@ public class BillCheckInfoVo implements IEntity {
 
 	public void setOverdueDate(Date overdueDate) {
 		this.overdueDate = overdueDate;
+	}
+
+	public String getOverStatus() {
+		return overStatus;
+	}
+
+	public void setOverStatus(String overStatus) {
+		this.overStatus = overStatus;
 	}
    
 	

@@ -20,6 +20,17 @@ public interface IBillCheckInfoService {
 	PageInfo<BillCheckInfoVo> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 	
+	
+	/**
+	 * 分页查询预警账单
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BillCheckInfoVo> queryWarn(Map<String, Object> condition, int pageNo,
+            int pageSize);
+	
 	/**
 	 * 对账主表的回款反馈信息
 	 * @param condition

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.BillReceiptFollowEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
@@ -29,8 +30,10 @@ import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
+import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 
 @Service("billCheckInfoService")
@@ -46,6 +49,9 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	public PageInfo<BillCheckInfoVo> query(Map<String, Object> condition,
 			int pageNo, int pageSize) {
 		try {
+			
+			long current=JAppContext.currentTimestamp().getTime();
+			
 			PageInfo<BillCheckInfoEntity> pageInfo=new PageInfo<BillCheckInfoEntity>();
 			if(condition!=null && condition.get("invoiceNo")!=null && condition.get("followType")!=""){
 				//发票号不为空时，需要根据发票号去查询子票再查询主表
@@ -111,6 +117,37 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	    		if(adjustEntity!=null){
 	    			entity.setAdjustMoney(adjustEntity.getAdjustAmount()==null?m:adjustEntity.getAdjustAmount());
 	    		}
+	    		//判断超期状态
+	    		//开票30天内:正常
+	    		//开票30天以上,小于45天:临期--包含30天
+	    		//超期:开票45天以上,包含45天;
+	    		if("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate()!=null){
+	    			//需要开票时用开票时间去判断
+	    			long time=entity.getInvoiceDate().getTime();
+	    			
+	    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
+		    		if(days>=0 && days<30){
+		    			entity.setOverStatus("正常");
+		    		}else if(days>=30 && days<45){
+		    			entity.setOverStatus("临期");
+		    		}else if(days>=45){
+		    			entity.setOverStatus("超期");
+		    		}	
+	    			
+	    		}else if("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate()!=null){
+	    			long time=entity.getConfirmDate().getTime();
+	    			
+	    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
+		    		if(days>=0 && days<30){
+		    			entity.setOverStatus("正常");
+		    		}else if(days>=30 && days<45){
+		    			entity.setOverStatus("临期");
+		    		}else if(days>=45){
+		    			entity.setOverStatus("超期");
+		    		}	
+	    		}
+	    		
+	    		
 	    	}
 	    	
 	    	result.setList(voList);
@@ -121,6 +158,29 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		return null;
 	}
 
+	@Override
+	public PageInfo<BillCheckInfoVo> queryWarn(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		PageInfo<BillCheckInfoEntity> pageInfo=billCheckInfoRepository.queryWarn(condition, pageNo, pageSize);
+		PageInfo<BillCheckInfoVo> result=new PageInfo<BillCheckInfoVo>();
+		
+		try {
+			List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
+	    	for(BillCheckInfoEntity entity : pageInfo.getList()) {
+	    		BillCheckInfoVo vo = new BillCheckInfoVo(); 		
+	            PropertyUtils.copyProperties(vo, entity);        
+	    		voList.add(vo);
+	    	}
+	    	result.setList(voList);
+	    	PropertyUtils.copyProperties(result, pageInfo);   
+		} catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+    	
+		return result;
+	}
+	
 	@Override
 	public List<BillCheckAdjustInfoVo> queryAdjust(Map<String, Object> condition) {
 		List<BillCheckAdjustInfoEntity> list=billCheckInfoRepository.queryAdjust(condition);
