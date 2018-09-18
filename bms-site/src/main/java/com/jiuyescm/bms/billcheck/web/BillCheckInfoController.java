@@ -804,6 +804,28 @@ public class BillCheckInfoController{
 	}
 	
 	/**
+	 * 
+	 */
+	/**
+	 * 分页查询预警账单
+	 * 
+	 * @param page
+	 * @param param
+	 */
+	@DataProvider
+	public void queryWarn(Page<BillCheckInfoVo> page, Map<String, Object> param) {		
+
+		if (param == null){
+			param = new HashMap<String, Object>();
+		}						
+		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.queryWarn(param, page.getPageNo(), page.getPageSize());
+		if (pageInfo != null) {
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int) pageInfo.getTotal());
+		}	
+	}
+	
+	/**
 	 * 文件上传
 	 * @param file
 	 * @param parameter

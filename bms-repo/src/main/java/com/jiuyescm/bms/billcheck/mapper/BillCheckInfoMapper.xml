@@ -223,6 +223,12 @@
 		<include refid="baseSelectColumns" />
     </select>
     
+    <select id="queryWarn" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select <include refid="baseColumns" /> 
+        from bill_check_info where 1=1 and del_flag='0' and bill_status='TB_RECEIPT' GROUP BY invoice_name HAVING COUNT(DISTINCT create_month)>=3
+    </select>
+    
     <select id="queryList" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
         select

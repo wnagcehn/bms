@@ -31,6 +31,16 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public PageInfo<BillCheckInfoEntity> queryWarn(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryWarn", condition,new RowBounds(pageNo,pageSize));
+		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
+		return page;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public PageInfo<BillCheckInfoEntity> queryByInvoiceNo(
 			Map<String, Object> condition, int pageNo, int pageSize) {
 		// TODO Auto-generated method stub

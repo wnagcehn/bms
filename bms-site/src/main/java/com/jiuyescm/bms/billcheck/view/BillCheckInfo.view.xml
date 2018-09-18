@@ -342,6 +342,13 @@
       <PropertyDef name="checked">
         <Property name="label">State</Property>
       </PropertyDef>
+      <PropertyDef name="overdueDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="overStatus">
+        <Property></Property>
+        <Property name="label">超期状态</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInvoice">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo</Property>
@@ -762,6 +769,8 @@
     <DataSet id="dsErrorMessageVo">
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
+    <DataSet id="dsBillCheckWarn"/>
+    <DataSet id="dsBillCheckWarnDetail"/>
     <ToolBar>
       <DataPilot>
         <Property name="itemCodes">pages,pageSize</Property>
@@ -1428,6 +1437,20 @@ if(index==3){&#xD;
             </DataColumn>
             <DataColumn name="invoiceStatus">
               <Property name="property">invoiceStatus</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="overStatus">
+              <ClientEvent name="onRenderCell">var overStatus=arg.data.get(&quot;overStatus&quot;);&#xD;
+if(!isNullOrEmpty(overStatus)){&#xD;
+	if(overStatus==&quot;临期&quot;){&#xD;
+		arg.dom.style.color = &quot;blue&quot;;&#xD;
+	}else if(overStatus==&quot;超期&quot;){&#xD;
+		arg.dom.style.color = &quot;red&quot;;&#xD;
+	}	&#xD;
+}&#xD;
+&#xD;
+arg.processDefault = true;</ClientEvent>
+              <Property name="property">overStatus</Property>
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="deptName">
@@ -3027,5 +3050,52 @@ if (data != null) {&#xD;
       <Property name="caption">导出</Property>
       <Property name="parameter"></Property>
     </DownloadAction>
+    <Dialog id="dialogWarn">
+      <ClientEvent name="onClose">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onHide">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="width">400</Property>
+      <Property name="caption">预警</Property>
+      <Property name="height">400</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dsBillCheckInfo=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+var dsBillCheckLog=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
+&#xD;
+dsBillCheckInfo.set(&quot;operDesc&quot;,&quot;作废账单&quot;+dsBillCheckLog.get(&quot;operateDesc&quot;));&#xD;
+view.id(&quot;updateBillStatus&quot;).execute(&#xD;
+	function(result){&#xD;
+		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.id(&quot;dialogCancel&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">确认</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dialogCancel&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <SplitPanel>
+          <Property name="direction">top</Property>
+          <MainControl>
+            <Container>
+              <DataPilot>
+                <Property name="dataSet">dsBillCheckWarn</Property>
+              </DataPilot>
+              <DataGrid id="dataBillCheckWarn">
+                <Property name="dataSet">dsBillCheckWarn</Property>
+              </DataGrid>
+            </Container>
+          </MainControl>
+          <SideControl/>
+        </SplitPanel>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>
