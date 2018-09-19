@@ -223,13 +223,13 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		//合同报价校验  false-不通过  true-通过
 		try{
 			if(validateData(entity, feeEntity)){
-				if(mapCusPrice.containsKey(entity.getCustomerId())){
+				if(mapCusPrice.containsKey(entity.getCustomerId()+SubjectId)){
 					entity.setCalculateTime(JAppContext.currentTimestamp());
 					feeEntity.setCalculateTime(entity.getCalculateTime());
 					String customerId=entity.getCustomerId();
 			
 					//报价模板
-					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);
+					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
 					
 					//数量
 					double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
@@ -389,16 +389,16 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		/*验证报价 报价*/
 		start = System.currentTimeMillis();// 系统开始时间
 		PriceGeneralQuotationEntity quoTemplete=null;
-		if(!mapCusPrice.containsKey(customerId)){
+		if(!mapCusPrice.containsKey(customerId+SubjectId)){
 			map.clear();
 			map.put("subjectId",SubjectId);
 			map.put("quotationNo", contractItems.get(0).getTemplateId());
 			quoTemplete=priceGeneralQuotationRepository.query(map);
 			if(quoTemplete != null){
-				mapCusPrice.put(customerId, quoTemplete);//加入缓存
+				mapCusPrice.put(customerId+SubjectId, quoTemplete);//加入缓存
 			}
 		}else{
-			quoTemplete=mapCusPrice.get(customerId);
+			quoTemplete=mapCusPrice.get(customerId+SubjectId);
 		}
 		if(quoTemplete==null){
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
