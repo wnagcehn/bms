@@ -280,7 +280,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 				String customerId=entity.getCustomerid();	
 				
 				//报价模板
-				PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);
+				PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
 				//计费单位 
 				String unit=generalEntity.getFeeUnitCode();
 				//计算方法
@@ -493,17 +493,17 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		start = System.currentTimeMillis();// 验证报价是否配置
 		/*验证报价 报价*/
 		PriceGeneralQuotationEntity quoTemplete = null;
-		if(!mapCusPrice.containsKey(customerId)){ //内存不包含，查询报价模板
+		if(!mapCusPrice.containsKey(customerId+SubjectId)){ //内存不包含，查询报价模板
 			map.clear();
 			map.put("subjectId",SubjectId);
 			map.put("quotationNo", contractItems.get(0).getTemplateId());
 			quoTemplete=priceGeneralQuotationRepository.query(map);
 			if(quoTemplete != null){
-				mapCusPrice.put(customerId, quoTemplete);//加入缓存
+				mapCusPrice.put(customerId+SubjectId, quoTemplete);//加入缓存
 			}
 		}
 		else{
-			quoTemplete=mapCusPrice.get(customerId);
+			quoTemplete=mapCusPrice.get(customerId+SubjectId);
 		}
 		if(quoTemplete==null){
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
