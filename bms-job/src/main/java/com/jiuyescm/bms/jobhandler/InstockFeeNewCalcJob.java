@@ -131,6 +131,9 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		if(!DoubleUtil.isBlank(num)){
 			storageFeeEntity.setQuantity(num);//商品数量
 		}
+		//重量
+		Double weight = DoubleUtil.isBlank(instock.getAdjustWeight())?instock.getTotalWeight():instock.getAdjustWeight();
+		storageFeeEntity.setWeight(weight);
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(instock.getCreateTime());
 		storageFeeEntity.setCustomerId(instock.getCustomerId());		//商家ID
@@ -230,7 +233,8 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			
 					//报价模板
 					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
-					
+					//计费单位 
+					String unit=generalEntity.getFeeUnitCode();
 					//数量
 					double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
 							
@@ -239,18 +243,50 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 					switch(priceType){
 					case "PRICE_TYPE_NORMAL"://一口价				
 			            //如果计费单位是 件 -> 费用 = 商品数量*模板单价
-						amount=num*generalEntity.getUnitPrice();							
+						//如果计费单位是 箱 -> 费用 = 商品箱数*模板单价
+						//如果计费单位是 吨 -> 费用 = 商品重量*模板单价/1000
+						//如果计费单位是 千克 -> 费用 = 商品重量*模板单价
+						if ("ITEMS".equals(unit)) {
+							amount=num*generalEntity.getUnitPrice();
+						}else if ("CARTON".equals(unit)) {
+							amount=feeEntity.getBox()*generalEntity.getUnitPrice();
+						}else if ("TONS".equals(unit)) {
+							if ((double)feeEntity.getWeight()/1000 < 1) {
+								amount=1d*generalEntity.getUnitPrice();
+							}else {
+								amount=(double)feeEntity.getWeight()*generalEntity.getUnitPrice()/1000;
+							}						
+						}else if ("KILOGRAM".equals(unit)) {
+							amount=feeEntity.getWeight()*generalEntity.getUnitPrice();
+						}
 						feeEntity.setUnitPrice(generalEntity.getUnitPrice());
 						feeEntity.setParam3(generalEntity.getId()+"");
 						break;
 					case "PRICE_TYPE_STEP"://阶梯价
 						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);
 		                // 如果计费单位是 件
-						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-							amount=num*stepQuoEntity.getUnitPrice();
-						}else{
-							amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+						if ("ITEMS".equals(unit)) {//按件
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+								amount=num*stepQuoEntity.getUnitPrice();
+							}else{
+								amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							}
+						}else if ("TONS".equals(unit)) {//按吨
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=(double)feeEntity.getWeight()*stepQuoEntity.getUnitPrice()/1000;
+								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<feeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(feeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+								amount=(double)amount/1000;
+							}		
+						}else if("CARTON".equals(unit)){//按箱
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=feeEntity.getBox()*stepQuoEntity.getUnitPrice();
+								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<feeEntity.getBox()?stepQuoEntity.getFirstPrice()+(feeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							}
 						}
 						//判断封顶价
 						if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){

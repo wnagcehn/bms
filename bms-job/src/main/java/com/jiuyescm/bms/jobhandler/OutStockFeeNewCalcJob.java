@@ -301,7 +301,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 					}else if("KILOGRAM".equals(unit)){
 						amount=storageFeeEntity.getWeight()*generalEntity.getUnitPrice();
 					}else if("TONS".equals(unit)){
-						amount=storageFeeEntity.getWeight()*generalEntity.getUnitPrice()/1000;
+						amount=(double)storageFeeEntity.getWeight()*generalEntity.getUnitPrice()/1000;
 					}
 					storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
 					storageFeeEntity.setParam3(generalEntity.getId()+"");
@@ -344,11 +344,11 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 						}
 					}else if("TONS".equals(unit)){//按吨
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=storageFeeEntity.getWeight()*stepQuoEntity.getUnitPrice()/1000;
+							amount=(double)storageFeeEntity.getWeight()*stepQuoEntity.getUnitPrice()/1000;
 							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						}else{
 							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-							amount=amount/1000;
+							amount=(double)amount/1000;
 						}					
 					}			
 					//判断封顶价
