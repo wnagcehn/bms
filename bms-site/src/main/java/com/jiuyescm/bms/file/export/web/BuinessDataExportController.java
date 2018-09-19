@@ -1219,6 +1219,7 @@ public class BuinessDataExportController extends BaseController {
 			List<String> warehouseList) {
 		for (String warehouseCode : warehouseList) {
 			int conIndex = 0;
+			int newIndex = 0;
 			parameter.put("warehouseCode", warehouseCode);
 
 			Set<Timestamp> set = new HashSet<Timestamp>();
@@ -1227,6 +1228,16 @@ public class BuinessDataExportController extends BaseController {
 			List<FeesReceiveStorageEntity> palletList = feesReceiveStorageService.queryPreBillStorage(parameter);
 			for (FeesReceiveStorageEntity entity : palletList) {
 				conIndex++;
+				if (!set.contains(entity.getCreateTime())) {
+					set.add(entity.getCreateTime());
+				}
+			}
+			
+			// 商品按件存储
+			List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
+			for (FeesReceiveStorageEntity entity : itemsList) {
+				conIndex++;
+				newIndex++;
 				if (!set.contains(entity.getCreateTime())) {
 					set.add(entity.getCreateTime());
 				}

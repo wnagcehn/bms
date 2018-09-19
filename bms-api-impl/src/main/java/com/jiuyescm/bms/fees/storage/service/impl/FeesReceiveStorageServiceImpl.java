@@ -322,6 +322,11 @@ public class FeesReceiveStorageServiceImpl implements IFeesReceiveStorageService
 	}
 	
 	@Override
+	public List<FeesReceiveStorageEntity> queryPreBillStorageByItems(Map<String, Object> condition) {
+		return feesReceiveStorageRepository.queryPreBillStorageByItems(condition);
+	}
+	
+	@Override
 	public List<FeesReceiveStorageEntity> queryPreBillMaterialStorage(Map<String, Object> condition) {
 		return feesReceiveStorageRepository.queryPreBillMaterialStorage(condition);
 	}
