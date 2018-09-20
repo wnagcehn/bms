@@ -38,7 +38,7 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="importType">
-        <Property/>
+        <Property></Property>
         <Property name="label">导入类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;reportCustomerController#getImportType&quot;).getResult()}</Property>
@@ -783,7 +783,7 @@ view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
       <Property name="width">460</Property>
       <Buttons>
         <Button id="updateCloseBtn">
-          <ClientEvent name="onClick">view.get(&quot;#updateBatchDialog&quot;).hide();</ClientEvent>
+          <ClientEvent name="onClick">view.get(&quot;#importDialog&quot;).hide();</ClientEvent>
           <Property name="caption">关闭</Property>
         </Button>
       </Buttons>
@@ -832,6 +832,14 @@ view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
 //注意这里&#xD;
 var data= arg.returnValue;&#xD;
 &#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+&#xD;
 if(data.succ!=null){&#xD;
 	view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
 	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
@@ -840,33 +848,14 @@ if(data.succ!=null){&#xD;
 		var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
 		var year=condition.get(&quot;year&quot;);&#xD;
 		var month=condition.get(&quot;month&quot;);&#xD;
-		if(isNullOrEmpty(year)){&#xD;
-			dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
-			return;&#xD;
-		}&#xD;
-		if(isNullOrEmpty(month)){&#xD;
-			dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
-			return;&#xD;
-		}&#xD;
-		&#xD;
-		if(!isNullOrEmpty(month)){&#xD;
-			if(month.length==1){&#xD;
-				month='0'+month;&#xD;
-			}&#xD;
-		}&#xD;
+&#xD;
 		condition.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
 		&#xD;
 		var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
 		tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();&#xD;
 	});&#xD;
 }&#xD;
-if(data.error!=null){&#xD;
-	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
-     dataSet.setData(data.error);&#xD;
-	 view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
-     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
-	 return;&#xD;
-}&#xD;
+&#xD;
 &#xD;
 </ClientEvent>
           <ClientEvent name="onFilesAdded">$(&quot;#d_uprogressLabel&quot;).show();&#xD;
@@ -925,6 +914,27 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
             </Filter>
           </Filters>
         </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="errorMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="width">540</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+            <Property name="editable">false</Property>
+          </DataColumn>
+        </DataGrid>
       </Children>
       <Tools/>
     </Dialog>
