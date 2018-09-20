@@ -1221,6 +1221,7 @@ public class BuinessDataExportController extends BaseController {
 		for (String warehouseCode : warehouseList) {
 			int conIndex = 0;
 			int newIndex = 0;
+			int moveindex = 0;
 			parameter.put("warehouseCode", warehouseCode);
 
 			Set<Timestamp> set = new TreeSet<Timestamp>();
