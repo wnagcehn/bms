@@ -10,6 +10,7 @@
 	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
 	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="import_type" property="importType" jdbcType="VARCHAR" />    
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	    <result column="creator" property="creator" jdbcType="VARCHAR" />
 	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -19,7 +20,7 @@
     </resultMap>
     
     <sql id="baseColumns">
-        id, create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type, remark, creator, create_time, last_modifier, last_modify_time, del_flag
+        id, create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type,import_type, remark, creator, create_time, last_modifier, last_modify_time, del_flag
     </sql>
     
     <sql id="baseSelectColumns">
@@ -43,6 +44,9 @@
 		</if>
 		<if test="(bizType != null and bizType !='')" >
 				and biz_type = #{bizType}
+		</if>
+		<if test="(importType != null and importType !='')" >
+				and import_type = #{importType}
 		</if>
 		<if test="(remark != null and remark !='')" >
 				and remark = #{remark}
@@ -68,6 +72,7 @@
         from report_warehouse_customer
         where 1=1 and del_flag ='0'
 		<include refid="baseSelectColumns" />
+		order by create_time desc
     </select>
     
     <select id="queryOne" parameterType="java.util.Map"
@@ -90,7 +95,7 @@
     </select>
     
     <insert id="save" parameterType="com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity">
-        insert into report_warehouse_customer(create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type, remark, creator, create_time, last_modifier, last_modify_time, del_flag)
+        insert into report_warehouse_customer(create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type,import_type, remark, creator, create_time, last_modifier, last_modify_time, del_flag)
         values (
 			#{createMonth,jdbcType=VARCHAR}, 
 			#{warehouseCode,jdbcType=VARCHAR}, 
@@ -98,6 +103,7 @@
 			#{customerId,jdbcType=VARCHAR}, 
 			#{customerName,jdbcType=VARCHAR}, 
 			#{bizType,jdbcType=VARCHAR}, 
+			#{importType,jdbcType=VARCHAR},
 			#{remark,jdbcType=VARCHAR}, 
 			#{creator,jdbcType=VARCHAR}, 
 			#{createTime,jdbcType=TIMESTAMP}, 
@@ -116,6 +122,7 @@
 			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
 			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
 			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="importType != null" >import_type=#{importType,jdbcType=VARCHAR},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
 			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>

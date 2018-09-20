@@ -1,25 +1,43 @@
 package com.jiuyescm.bms.base.reportCustomer.web;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.DownloadFile;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileProvider;
+import com.bstek.dorado.uploader.annotation.FileResolver;
+import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService;
 import com.jiuyescm.bms.base.reportCustomer.vo.ReportWarehouseCustomerVo;
 import com.jiuyescm.bms.common.constants.MessageConstant;
+import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.system.ResponseVo;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.ConstantInterface;
 
 @Controller("reportCustomerController")
 public class ReportCustomerController {
@@ -63,41 +81,16 @@ public class ReportCustomerController {
 			}
 			//重复性校验
 			//根据仓库精确匹配
-			if(StringUtils.isNotBlank(entity.getWarehouseCode())){
-				Map<String,Object> condition=new HashMap<String,Object>();
-				condition.put("createMonth", entity.getCreateMonth());
-				condition.put("customerId", entity.getCustomerId());
-				condition.put("warehouseCode", entity.getWarehouseCode());
-				condition.put("bizType", entity.getBizType());
-				ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
-				if(vo!=null){
-					return new ResponseVo(ResponseVo.FAIL, "商家仓库当前月份已存在");
-				}
-				
-				condition=new HashMap<String,Object>();
-				condition.put("createMonth", entity.getCreateMonth());
-				condition.put("customerId", entity.getCustomerId());
-				condition.put("warehouseCode", "");
-				condition.put("bizType", entity.getBizType());
-				ReportWarehouseCustomerVo vo2=reportWarehouseCustomerService.queryOne(condition);
-				if(vo2!=null){
-					return new ResponseVo(ResponseVo.FAIL, "商家已存在");
-				}
+			Map<String,Object> condition=new HashMap<String,Object>();
+			condition.put("createMonth", entity.getCreateMonth());
+			condition.put("customerId", entity.getCustomerId());
+			condition.put("warehouseCode", entity.getWarehouseCode());
+			condition.put("bizType", entity.getBizType());
+			ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
+			if(vo!=null){
+				return new ResponseVo(ResponseVo.FAIL, "商家仓库当前月份已存在");
 			}
-			
-			if(StringUtils.isBlank(entity.getWarehouseCode())){
-				Map<String,Object> condition=new HashMap<String,Object>();
-				condition.put("createMonth", entity.getCreateMonth());
-				condition.put("customerId", entity.getCustomerId());
-				condition.put("bizType", entity.getBizType());
-				ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
-				if(vo!=null){
-					return new ResponseVo(ResponseVo.FAIL, "商家已存在");
-				}
-			}
-			
-			
-			//不根据仓库匹配			
+					
 			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setLastModifier(JAppContext.currentUserName());
@@ -128,26 +121,14 @@ public class ReportCustomerController {
 			
 			Map<String,Object> condition=new HashMap<String,Object>();
 			//根据仓库精确匹配
-			if(StringUtils.isNotBlank(temp.getWarehouseCode())){
-				condition.put("createMonth", temp.getCreateMonth());
-				condition.put("customerId", temp.getCustomerId());
-				condition.put("warehouseCode", temp.getWarehouseCode());
-				condition.put("bizType", temp.getBizType());
-				ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
-				if(vo!=null && vo.getId()!=null && !vo.getId().equals(temp.getId())){
-					return new ResponseVo(ResponseVo.FAIL, "商家仓库当前月份已存在");
-				}
-			}
-			condition=new HashMap<String,Object>();
 			condition.put("createMonth", temp.getCreateMonth());
 			condition.put("customerId", temp.getCustomerId());
-			condition.put("warehouseCode", "");
+			condition.put("warehouseCode", temp.getWarehouseCode());
 			condition.put("bizType", temp.getBizType());
 			ReportWarehouseCustomerVo vo=reportWarehouseCustomerService.queryOne(condition);
 			if(vo!=null && vo.getId()!=null && !vo.getId().equals(temp.getId())){
-				return new ResponseVo(ResponseVo.FAIL, "商家已存在");
+				return new ResponseVo(ResponseVo.FAIL, "商家仓库当前月份已存在");
 			}
-			
 			
 			temp.setLastModifier(JAppContext.currentUserName());
 			temp.setLastModifyTime(JAppContext.currentTimestamp());
@@ -207,37 +188,14 @@ public class ReportCustomerController {
 				vo.setCreateMonth(vo.getDate());
 				//重复性校验
 				//根据仓库精确匹配
-				if(StringUtils.isNotBlank(vo.getWarehouseCode())){
-					Map<String,Object> condition=new HashMap<String,Object>();
-					condition.put("createMonth", vo.getCreateMonth());
-					condition.put("customerId", vo.getCustomerId());
-					condition.put("warehouseCode", vo.getWarehouseCode());
-					condition.put("bizType", vo.getBizType());
-					ReportWarehouseCustomerVo re=reportWarehouseCustomerService.queryOne(condition);
-					if(re!=null){
-						return "复制的数据已存在";
-					}
-					
-					condition=new HashMap<String,Object>();
-					condition.put("createMonth", vo.getCreateMonth());
-					condition.put("customerId", vo.getCustomerId());
-					condition.put("warehouseCode", "");
-					condition.put("bizType", vo.getBizType());
-					ReportWarehouseCustomerVo re2=reportWarehouseCustomerService.queryOne(condition);
-					if(re2!=null){
-						return "复制的数据已存在";
-					}
-				}
-				
-				if(StringUtils.isBlank(vo.getWarehouseCode())){
-					Map<String,Object> condition=new HashMap<String,Object>();
-					condition.put("createMonth", vo.getCreateMonth());
-					condition.put("customerId", vo.getCustomerId());
-					condition.put("bizType", vo.getBizType());
-					ReportWarehouseCustomerVo re3=reportWarehouseCustomerService.queryOne(condition);
-					if(re3!=null){
-						return "复制的数据已存在";
-					}
+				Map<String,Object> condition=new HashMap<String,Object>();
+				condition.put("createMonth", vo.getCreateMonth());
+				condition.put("customerId", vo.getCustomerId());
+				condition.put("warehouseCode", vo.getWarehouseCode());
+				condition.put("bizType", vo.getBizType());
+				ReportWarehouseCustomerVo re=reportWarehouseCustomerService.queryOne(condition);
+				if(re!=null){
+					return "复制的数据已存在";
 				}
 			}
 			
@@ -257,5 +215,248 @@ public class ReportCustomerController {
 		return "SUCC";	
 	}
 	
+	@DataProvider
+	public Map<String,String> getImportType(){
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("1", "应导入");
+		mapValue.put("0", "免导入");
+		return mapValue;
+	}
 	
+	/**
+	 * 免商家导入导入模板
+	 * 
+	 * @param parameter
+	 * @return
+	 * @throws IOException
+	 */
+	@FileProvider
+	public DownloadFile getTemplate(Map<String, String> parameter) throws IOException {
+		InputStream is = DoradoContext.getCurrent().getServletContext().getResourceAsStream("/WEB-INF/templates/customer_import_template.xlsx");
+		return new DownloadFile("免商家导入导入模板.xlsx", is);
+	}
+
+	
+	@FileResolver
+	public Map<String, Object> importExcel(UploadFile file, Map<String, Object> parameter){
+		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 10);
+		// 校验信息（报错提示）
+		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
+		ErrorMessageVo errorVo = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		XSSFWorkbook xssfWorkbook = null;
+		try {
+			xssfWorkbook = new XSSFWorkbook(file.getInputStream());
+		} catch (IOException e) {
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
+			errorVo = new ErrorMessageVo();
+			errorVo.setMsg("Excel读取失败!");
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
+		
+		if(xssfSheet==null)
+			return null;
+		
+		int cols = xssfSheet.getRow(0).getPhysicalNumberOfCells();
+		
+		if(cols>5){
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
+			errorVo = new ErrorMessageVo();
+			errorVo.setMsg("Excel导入格式错误请参考标准模板检查!");
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		
+		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 100);
+		
+		Timestamp nowdate = JAppContext.currentTimestamp();
+		String username = JAppContext.currentUserName();
+		
+		List<ReportWarehouseCustomerVo> infoLists = new ArrayList<ReportWarehouseCustomerVo>();
+		
+		Map<String,Integer> checkMap=new HashMap<>();
+		
+        for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
+        	
+        	ReportWarehouseCustomerVo  entity=new  ReportWarehouseCustomerVo();
+        	int lieshu = rowNum + 1;
+			XSSFRow xssfRow = xssfSheet.getRow(rowNum);
+			if(xssfRow==null){
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列空行！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+		
+			String createMonth = getCellValue(xssfRow.getCell(0));
+			String warehouseName=getCellValue(xssfRow.getCell(1));
+			String customerName=getCellValue(xssfRow.getCell(2));
+			String importType=getCellValue(xssfRow.getCell(3));
+			String bizType=getCellValue(xssfRow.getCell(4));
+			String remark=getCellValue(xssfRow.getCell(5));
+			// 设置日期（必填）
+			if(StringUtils.isEmpty(createMonth)) {			
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列设置日期不能为空！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			// 仓库名称（必填）
+			if(StringUtils.isEmpty(warehouseName)) {			
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列仓库名称不能为空！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			// 商家（必填）
+			if(StringUtils.isEmpty(customerName)) {			
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列商家不能为空！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			// 导入类型（必填）
+			if(StringUtils.isEmpty(importType)) {			
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列导入类型不能为空！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			// 业务类型（必填）
+			if(StringUtils.isEmpty(bizType)) {			
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列业务类型不能为空！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			// 备注（必填）
+			if(StringUtils.isEmpty(remark)) {			
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列备注不能为空！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			
+			//Excel重复性校验
+			if(checkMap.containsKey(createMonth+"&"+warehouseName+"&"+customerName+"&"+importType+"&"+bizType+"&"+remark)){				
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行数据和第"+checkMap.get(createMonth+"&"+warehouseName+"&"+customerName+"&"+importType+"&"+bizType+"&"+remark)+"行数据重复");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				checkMap.put(createMonth+"&"+warehouseName+"&"+customerName+"&"+importType+"&"+bizType+"&"+remark, lieshu);
+				continue;
+			}else{
+				checkMap.put(createMonth+"&"+warehouseName+"&"+customerName+"&"+importType+"&"+bizType+"&"+remark, lieshu);
+			}
+			
+			//数据表重复校验
+			Map<String,Object> condition=new HashMap<String,Object>();
+			condition.put("createMonth", createMonth);
+			condition.put("warehouseName", warehouseName);
+			condition.put("customerName", customerName);
+			condition.put("bizType", bizType);
+			ReportWarehouseCustomerVo data=reportWarehouseCustomerService.queryOne(condition);
+			if(data!=null){
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行数据在表中已存在");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			
+			entity.setLastModifier(username);
+			entity.setLastModifyTime(nowdate);
+			entity.setDelFlag("0");
+			infoLists.add(entity);
+		}
+ 
+        //如果有错误信息
+        if(map.get(ConstantInterface.ImportExcelStatus.IMP_ERROR)!=null){
+        	return map;
+        }
+         
+        DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
+        
+        int num = 0;
+        String message = null;
+        try {
+			num = reportWarehouseCustomerService.saveList(infoLists);
+		} catch (Exception e) {
+		     message = e.getMessage();
+		     logger.error("更新失败", e);
+		}
+        if(num==0){
+        	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
+			errorVo = new ErrorMessageVo();
+			if(message!=null){
+				errorVo.setMsg(message);
+			}else{
+				errorVo.setMsg("更新失败!");
+				errorVo.setLineNo(2);
+			}
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			
+			return map;
+        }else{
+        	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+			return map;
+        }
+	}
+	
+	/**
+	 * 获取单元格的值
+	 * 
+	 * @param cell
+	 * @return
+	 */
+	public String getCellValue(Cell cell) {
+
+		if (cell == null)
+			return "";
+
+		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+
+			return cell.getStringCellValue();
+
+		} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+
+			return String.valueOf(cell.getBooleanCellValue());
+
+		} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+
+			return cell.getCellFormula();
+
+		} else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			DecimalFormat df = new DecimalFormat("#.####");
+			return String.valueOf(df.format(cell.getNumericCellValue()));
+
+		}
+		return "";
+	}
+	
+	private void setMessage(List<ErrorMessageVo> errorList, int lineNo,String msg) {
+		ErrorMessageVo errorVo;
+		errorVo =new ErrorMessageVo();
+		errorVo.setLineNo(lineNo);
+		errorVo.setMsg(msg);
+		errorList.add(errorVo);
+	}
+	
+	
+	@Expose
+	public int getProgress() {
+		Object progressFlag = DoradoContext.getAttachedRequest().getSession().getAttribute("progressFlag");
+		if (progressFlag == null){
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 0);
+			return 1;
+		}
+		return (int)(DoradoContext.getAttachedRequest().getSession().getAttribute("progressFlag")); 
+	}
+    
+	@Expose
+	public void setProgress() {
+		Object progressFlag = DoradoContext.getAttachedRequest().getSession().getAttribute("progressFlag");
+		if (progressFlag == null){
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 0);
+		 
+		} else {
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 0);
+		} 
+	}
 }
