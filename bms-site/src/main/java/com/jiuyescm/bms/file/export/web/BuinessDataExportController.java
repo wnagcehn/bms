@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
@@ -1219,14 +1220,25 @@ public class BuinessDataExportController extends BaseController {
 			List<String> warehouseList) {
 		for (String warehouseCode : warehouseList) {
 			int conIndex = 0;
+			int newIndex = 0;
 			parameter.put("warehouseCode", warehouseCode);
 
-			Set<Timestamp> set = new HashSet<Timestamp>();
+			Set<Timestamp> set = new TreeSet<Timestamp>();
 
 			// 商品按托存储
 			List<FeesReceiveStorageEntity> palletList = feesReceiveStorageService.queryPreBillStorage(parameter);
 			for (FeesReceiveStorageEntity entity : palletList) {
 				conIndex++;
+				if (!set.contains(entity.getCreateTime())) {
+					set.add(entity.getCreateTime());
+				}
+			}
+			
+			// 商品按件存储
+			List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
+			for (FeesReceiveStorageEntity entity : itemsList) {
+				conIndex++;
+				newIndex++;
 				if (!set.contains(entity.getCreateTime())) {
 					set.add(entity.getCreateTime());
 				}
@@ -1267,66 +1279,38 @@ public class BuinessDataExportController extends BaseController {
 			Cell cell2 = row0.createCell(2);
 			cell2.setCellValue("库存板数");
 			cell2.setCellStyle(style);
-			Cell cell7 = row0.createCell(7);
+			Cell cell3 = row0.createCell(8);
+			cell3.setCellStyle(style);
+			cell3.setCellValue("库存件数");
+			Cell cell4 = row0.createCell(9);
+			cell4.setCellStyle(style);
+			cell4.setCellValue("入库板数");
+			Cell cell5 = row0.createCell(10);
+			cell5.setCellValue("出库板数");
+			cell5.setCellStyle(style);
+			Cell cell6 = row0.createCell(11);
+			cell6.setCellValue("仓储费/托/元");
+			cell6.setCellStyle(style);
+			Cell cell7 = row0.createCell(17);
+			cell7.setCellValue("存储费按件小计/元");
 			cell7.setCellStyle(style);
-			cell7.setCellValue("库存件数");
-			Cell cell8 = row0.createCell(8);
+			Cell cell8 = row0.createCell(18);
+			cell8.setCellValue("处置费按件小件/元");
 			cell8.setCellStyle(style);
-			cell8.setCellValue("入库板数");
-			Cell cell9 = row0.createCell(9);
+			Cell cell9 = row0.createCell(19);
+			cell9.setCellValue("收入合计");
 			cell9.setCellStyle(style);
-			cell9.setCellValue("入库件数");
-			Cell cell10 = row0.createCell(10);
-			cell10.setCellStyle(style);
-			cell10.setCellValue("入库重量");
-			Cell cell11 = row0.createCell(11);
-			cell11.setCellValue("出库板数");
-			cell11.setCellStyle(style);
-			Cell cell12 = row0.createCell(12);
-			cell12.setCellValue("2B出库板数");
-			cell12.setCellStyle(style);
-			Cell cell13 = row0.createCell(13);
-			cell13.setCellValue("2B出库重量");
-			cell13.setCellStyle(style);
-			Cell cell14 = row0.createCell(14);
-			cell14.setCellValue("出库件数");
-			cell14.setCellStyle(style);
-			Cell cell15 = row0.createCell(15);
-			cell15.setCellValue("出库订单数");
-			cell15.setCellStyle(style);
-			Cell cell16 = row0.createCell(16);
-			cell16.setCellValue("撤销订单数");
-			cell16.setCellStyle(style);
-			Cell cell17 = row0.createCell(17);
-			cell17.setCellValue("装卸费/吨/元");
-			cell17.setCellStyle(style);
-			Cell cell18 = row0.createCell(19);
-			cell18.setCellValue("仓储费/托/元");
-			cell18.setCellStyle(style);
-			Cell cell19 = row0.createCell(24);
-			cell19.setCellValue("操作费/单/元");
-			cell19.setCellStyle(style);
-			Cell cell20 = row0.createCell(26);
-			cell20.setCellValue("收入合计");
-			cell20.setCellStyle(style);
 
 			sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 6));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 7, 7));
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 7));
 			sheet.addMergedRegion(new CellRangeAddress(0, 2, 8, 8));
 			sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
 			sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 12, 12));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 13, 13));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 14, 14));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 15, 15));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 16, 16));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 17, 18));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 19, 23));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 24, 25));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 26, 26));
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 11, 16));
+			sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+			sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+			sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
 
 			Row row1 = sheet.createRow(1);
 			row1.setHeight((short) (25 * 20));
@@ -1348,59 +1332,49 @@ public class BuinessDataExportController extends BaseController {
 			cell25.setCellStyle(style);
 
 			Cell cell26 = row1.createCell(6);
-			cell26.setCellValue("包材");
+			cell26.setCellValue("常温包材");
 			cell26.setCellStyle(style);
+			
+			Cell cell28 = row1.createCell(7);
+			cell28.setCellValue("冷冻包材");
+			cell28.setCellStyle(style);
 
-			Cell cellk24 = row1.createCell(17);
-			cellk24.setCellValue("入库装卸费");
-			cellk24.setCellStyle(style);
-
-			Cell cellk25 = row1.createCell(18);
-			cellk25.setCellValue("2B入库装卸费");
-			cellk25.setCellStyle(style);
-
-			Cell cellk26 = row1.createCell(19);
-			cellk26.setCellValue("冷冻费小计/元");
-			cellk26.setCellStyle(style);
-
-			Cell cellk27 = row1.createCell(20);
-			cellk27.setCellValue("冷藏费小计/元");
-			cellk27.setCellStyle(style);
-
-			Cell cellk28 = row1.createCell(21);
-			cellk28.setCellValue("恒温费小计/元");
-			cellk28.setCellStyle(style);
-
-			Cell cellk29 = row1.createCell(22);
-			cellk29.setCellValue("常温费小计/元");
+			Cell cellk29 = row1.createCell(11);
+			cellk29.setCellValue("冷冻费小计/元");
 			cellk29.setCellStyle(style);
 
-			Cell cellk30 = row1.createCell(23);
-			cellk30.setCellValue("包材费小计/元");
+			Cell cellk30 = row1.createCell(12);
+			cellk30.setCellValue("冷藏费小计/元");
 			cellk30.setCellStyle(style);
 
-			Cell cellk31 = row1.createCell(24);
-			cellk31.setCellValue("操作费/元");
+			Cell cellk31 = row1.createCell(13);
+			cellk31.setCellValue("恒温费小计/元");
 			cellk31.setCellStyle(style);
 
-			Cell cellk32 = row1.createCell(25);
-			cellk32.setCellValue("撤销订单费/元");
+			Cell cellk32 = row1.createCell(14);
+			cellk32.setCellValue("常温费小计/元");
 			cellk32.setCellStyle(style);
+
+			Cell cellk33 = row1.createCell(15);
+			cellk33.setCellValue("常温包材费小计/元");
+			cellk33.setCellStyle(style);
+			
+			Cell cellk34 = row1.createCell(16);
+			cellk34.setCellValue("冷冻包材费小计/元");
+			cellk34.setCellStyle(style);
 
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 2, 2));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 3, 3));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 4, 4));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 5, 5));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 18, 18));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 19, 19));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 20, 20));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 21, 21));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 22, 22));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 23, 23));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 24, 24));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 25, 25));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
 
 			Row row3 = sheet.createRow(3);
 			row3.setHeight((short) (20 * 20));
@@ -1442,13 +1416,14 @@ public class BuinessDataExportController extends BaseController {
 
 			int rowIndex = 4;
 			double totalcost = 0.0;
-			double packcost = 0.0;
+			double cwpackcost = 0.0;
+			double otherpackcost = 0.0;
 			double ldcost = 0.0;
 			double lccost = 0.0;
 			double hwcost = 0.0;
 			double cwcost = 0.0;
-			double zxfcost = 0.0;
-			double xhfcost = 0.0;
+			double ccfcost = 0.0;
+			double czfcost = 0.0;
 
 			for (int i = 0; i < dateList.size(); i++) {
 				double rowCost = 0.0;
@@ -1487,19 +1462,19 @@ public class BuinessDataExportController extends BaseController {
 						// 列小计
 						double cost = entity.getCost().doubleValue();
 						if ("LD".equals(tempretureType)) {
-							Cell cell49 = row.createCell(19);
+							Cell cell49 = row.createCell(12);
 							cell49.setCellValue(cost);
 							ldcost = ldcost + cost;
 						} else if ("LC".equals(tempretureType)) {
-							Cell cell49 = row.createCell(20);
+							Cell cell49 = row.createCell(13);
 							cell49.setCellValue(cost);
 							lccost = lccost + cost;
 						} else if ("HW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(21);
+							Cell cell49 = row.createCell(14);
 							cell49.setCellValue(cost);
 							hwcost = hwcost + cost;
 						} else if ("CW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(22);
+							Cell cell49 = row.createCell(15);
 							cell49.setCellValue(cost);
 							cwcost = cwcost + cost;
 						}
@@ -1507,52 +1482,73 @@ public class BuinessDataExportController extends BaseController {
 						rowCost = rowCost + cost;
 					}
 				}
-
+				
+				Integer index = new Integer(0);
+				double costIndex = 0.0;
 				// 耗材
 				for (FeesReceiveStorageEntity entity : packList) {
+					
+					double materialCost = entity.getCost().doubleValue();
+					
 					if (entity.getCreateTime().equals(timestamp)) {
-						Cell cell46 = row.createCell(6);
-						cell46.setCellValue(entity.getQuantity());
+						//1.常温--常温
+						//2.冷冻--冷冻、冷藏、恒温
+						if ("CW".equals(entity.getTempretureType())) {
+							Cell cell46 = row.createCell(6);
+							cell46.setCellValue(entity.getQuantity());
+							
+							Cell cell49 = row.createCell(15);
+							cell49.setCellValue(materialCost);
+							
+						}else {
+							Cell cell46 = row.createCell(7);
+							cell46.setCellValue(entity.getQuantity()+index);
+							index = entity.getQuantity()+index;
+							
+							Cell cell49 = row.createCell(16);
+							cell49.setCellValue(materialCost+costIndex);
+							costIndex = costIndex + materialCost;
+						}
 
-						double materialCost = entity.getCost().doubleValue();
-						Cell cell49 = row.createCell(23);
-						cell49.setCellValue(materialCost);
-
-						rowCost = rowCost + materialCost;
-						packcost = packcost + materialCost;
+						rowCost = rowCost + materialCost+costIndex;
+						cwpackcost = cwpackcost + materialCost;
+						otherpackcost = otherpackcost + costIndex;
 					}
 				}
 
 				// 总计
 				totalcost = rowCost + totalcost;
 				// 行小计
-				Cell cell49 = row.createCell(26);
+				Cell cell49 = row.createCell(19);
 				cell49.setCellValue(rowCost);
 			}
 
 			Row row = sheet.createRow(rowIndex);
-			Cell cellLast0 = row.createCell(19);
+			Cell cellLast0 = row.createCell(11);
 			cellLast0.setCellValue(ldcost);
 
-			Cell cellLast1 = row.createCell(20);
+			Cell cellLast1 = row.createCell(12);
 			cellLast1.setCellValue(lccost);
 
-			Cell cellLast6 = row.createCell(21);
+			Cell cellLast6 = row.createCell(13);
 			cellLast6.setCellValue(hwcost);
 
-			Cell cellLast2 = row.createCell(22);
+			Cell cellLast2 = row.createCell(14);
 			cellLast2.setCellValue(cwcost);
 
-			Cell cellLast3 = row.createCell(23);
-			cellLast3.setCellValue(packcost);
-
-			Cell cellLast4 = row.createCell(18);
-			cellLast4.setCellValue(zxfcost);
+			Cell cellLast3 = row.createCell(15);
+			cellLast3.setCellValue(cwpackcost);
+			
+			Cell cellLast4 = row.createCell(16);
+			cellLast4.setCellValue(otherpackcost);
 
 			Cell cellLast5 = row.createCell(17);
-			cellLast5.setCellValue(xhfcost);
+			cellLast5.setCellValue(ccfcost);
 
-			Cell cellLast = row.createCell(26);
+			Cell cellLast7 = row.createCell(18);
+			cellLast7.setCellValue(czfcost);
+
+			Cell cellLast = row.createCell(19);
 			cellLast.setCellValue(totalcost);
 		}
 	}

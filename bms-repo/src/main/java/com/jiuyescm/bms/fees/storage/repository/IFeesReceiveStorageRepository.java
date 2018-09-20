@@ -178,7 +178,7 @@ public interface IFeesReceiveStorageRepository {
 	public List<String> queryPreBillWarehouse(Map<String,Object> param);
 	
 	/**
-	 * 预账单仓储费
+	 * 预账单仓储费(按托)
 	 * @param condition
 	 * @return
 	 */
@@ -197,4 +197,11 @@ public interface IFeesReceiveStorageRepository {
 	 * @return
 	 */
 	List<FeesReceiveStorageEntity> queryByFeesNo(String FeesNo);
+	
+	/**
+	 * 预账单仓储费(按件)
+	 * @param condition
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryPreBillStorageByItems(Map<String, Object> parameter);
 }
