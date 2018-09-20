@@ -822,7 +822,7 @@
     <select id="queryPreBillMaterialStorage" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
         select bps.create_time as createTime, bps.customerid as customerId, bps.customer_name as customerName, 
-        	bps.warehouse_code as warehouseCode, bps.temperature_type_code,
+        	bps.warehouse_code as warehouseCode, bps.temperature_type_code as tempretureType,
         	bps.pallet_num as quantity, frs.unit, frs.unit_price as unitPrice,
 			ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
 			ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount

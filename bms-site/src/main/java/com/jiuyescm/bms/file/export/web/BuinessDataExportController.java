@@ -1224,6 +1224,7 @@ public class BuinessDataExportController extends BaseController {
 			int moveindex = 0;
 			parameter.put("warehouseCode", warehouseCode);
 
+			//
 			Set<Timestamp> set = new TreeSet<Timestamp>();
 
 			// 商品按托存储
@@ -1417,15 +1418,17 @@ public class BuinessDataExportController extends BaseController {
 
 			int rowIndex = 4;
 			double totalcost = 0.0;
-			double cwpackcost = 0.0;
-			double otherpackcost = 0.0;
 			double ldcost = 0.0;
 			double lccost = 0.0;
 			double hwcost = 0.0;
 			double cwcost = 0.0;
 			double ccfcost = 0.0;
 			double czfcost = 0.0;
-
+			double cwpackcost = 0.0;
+			double ldCost = 0.0;
+			double colcost = 0.0;
+			double prodcost = 0.0;
+			
 			for (int i = 0; i < dateList.size(); i++) {
 				double rowCost = 0.0;
 				Timestamp timestamp = dateList.get(i);
@@ -1486,12 +1489,15 @@ public class BuinessDataExportController extends BaseController {
 				
 				Integer index = new Integer(0);
 				double costIndex = 0.0;
+				double cwCostIndex = 0.0;
+				double rowcolCost = 0.0;
+				double cwCost = 0.0;
 				// 耗材
 				for (FeesReceiveStorageEntity entity : packList) {
 					
-					double materialCost = entity.getCost().doubleValue();
-					
 					if (entity.getCreateTime().equals(timestamp)) {
+						
+						double materialCost = entity.getCost().doubleValue();
 						//1.常温--常温
 						//2.冷冻--冷冻、冷藏、恒温
 						if ("CW".equals(entity.getTempretureType())) {
@@ -1500,23 +1506,44 @@ public class BuinessDataExportController extends BaseController {
 							
 							Cell cell49 = row.createCell(15);
 							cell49.setCellValue(materialCost);
-							
+							//累加行
+							cwCost = cwCost+materialCost;
+							//累加列
+							cwpackcost = cwpackcost+materialCost;
 						}else {
-							Cell cell46 = row.createCell(7);
-							cell46.setCellValue(entity.getQuantity()+index);
+							Cell cell47 = row.createCell(7);
+							cell47.setCellValue(entity.getQuantity()+index);
 							index = entity.getQuantity()+index;
 							
-							Cell cell49 = row.createCell(16);
-							cell49.setCellValue(materialCost+costIndex);
-							costIndex = costIndex + materialCost;
+							Cell cell50 = row.createCell(16);
+							cell50.setCellValue(materialCost+ldCost);
+							//累加行
+							ldCost = materialCost+ldCost;
+							//累加列
+							colcost = colcost + materialCost;
 						}
-
-						rowCost = rowCost + materialCost+costIndex;
-						cwpackcost = cwpackcost + materialCost;
-						otherpackcost = otherpackcost + costIndex;
+						rowcolCost = cwCost+ldCost;
+					}else {
+						ldCost = 0.0;
 					}
 				}
-
+				
+				//商品存储费（按件）
+				for (FeesReceiveStorageEntity entity : itemsList) {
+					if (entity.getCreateTime().equals(timestamp)) {
+						//库存件数
+						double productCost = entity.getCost().doubleValue();
+						Cell cell60 = row.createCell(8);
+						cell60.setCellValue(entity.getQuantity());
+						//存储费按件小计
+						Cell cell61 = row.createCell(17);
+						cell61.setCellValue(productCost);
+						rowCost = rowCost+productCost;
+						ccfcost = ccfcost+productCost;
+					}
+				}
+				
+				rowCost = rowCost+rowcolCost;
 				// 总计
 				totalcost = rowCost + totalcost;
 				// 行小计
@@ -1541,7 +1568,7 @@ public class BuinessDataExportController extends BaseController {
 			cellLast3.setCellValue(cwpackcost);
 			
 			Cell cellLast4 = row.createCell(16);
-			cellLast4.setCellValue(otherpackcost);
+			cellLast4.setCellValue(colcost);
 
 			Cell cellLast5 = row.createCell(17);
 			cellLast5.setCellValue(ccfcost);
