@@ -31,6 +31,8 @@ public class ReportWarehouseCustomerEntity implements IEntity {
 	private String customerName;
 	// 业务类型
 	private String bizType;
+	//导入类型
+	private String importType;
 	// 备注
 	private String remark;
 	// 创建人
@@ -254,6 +256,14 @@ public class ReportWarehouseCustomerEntity implements IEntity {
      */
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getImportType() {
+		return importType;
+	}
+
+	public void setImportType(String importType) {
+		this.importType = importType;
 	}
     
 }

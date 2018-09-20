@@ -37,6 +37,13 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;CUSTOMER_BIZTYPE&quot;)}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="importType">
+        <Property/>
+        <Property name="label">导入类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCustomerController#getImportType&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
       <PropertyDef name="remark">
         <Property></Property>
         <Property name="label">备注</Property>
@@ -92,6 +99,17 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;CUSTOMER_BIZTYPE&quot;)}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCopyEntity">
       <PropertyDef name="year">
@@ -108,8 +126,24 @@
         </Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
     <DataSet id="dsEntity">
       <Property name="dataType">[dtEntity]</Property>
       <Property name="dataProvider">reportCustomerController#query</Property>
@@ -122,6 +156,9 @@
     <DataSet id="dsCopyEntity">
       <ClientEvent name="onCreate">view.get(&quot;#dsCopyEntity&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCopyEntity]</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -247,6 +284,19 @@ view.get(&quot;#copyDialog&quot;).show();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
         <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnDownloadTemplate">
+        <ClientEvent name="onClick">view.get(&quot;#downloadMoBanAction&quot;).execute();	&#xD;
+</ClientEvent>
+        <Property name="caption">模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnImport">
+        <ClientEvent name="onClick">view.get(&quot;#importDialog&quot;).show();</ClientEvent>
+        <Property name="caption">导入</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+      </ToolBarButton>
     </ToolBar>
     <AutoForm id="queryForm">
       <Property name="dataSet">dsCondition</Property>
@@ -265,6 +315,17 @@ view.get(&quot;#copyDialog&quot;).show();</ClientEvent>
       <AutoFormElement>
         <Property name="name">bizType</Property>
         <Property name="property">bizType</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="trigger">triggerCustomer2</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -286,6 +347,9 @@ view.get(&quot;#copyDialog&quot;).show();</ClientEvent>
         </DataColumn>
         <DataColumn name="bizType">
           <Property name="property">bizType</Property>
+        </DataColumn>
+        <DataColumn name="importType">
+          <Property name="property">importType</Property>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
@@ -337,7 +401,11 @@ if(isNullOrEmpty(entity.get(&quot;bizType&quot;))){&#xD;
 	dorado.MessageBox.alert(&quot;业务类型必填!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
+//仓库必填&#xD;
+if(isNullOrEmpty(entity.get(&quot;warehouseCode&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;仓库必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 &#xD;
 entity.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
 &#xD;
@@ -394,6 +462,11 @@ view.id(&quot;addAction&quot;).execute(&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">importType</Property>
+            <Property name="property">importType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
             <Property name="name">remark</Property>
             <Property name="property">remark</Property>
             <Editor/>
@@ -442,7 +515,11 @@ if(isNullOrEmpty(entity.get(&quot;bizType&quot;))){&#xD;
 	dorado.MessageBox.alert(&quot;业务类型必填!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
+//仓库必填&#xD;
+if(isNullOrEmpty(entity.get(&quot;warehouseCode&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;仓库必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 view.id(&quot;updateAction&quot;).execute(&#xD;
 	function(result){	&#xD;
 		alertMsg(result.code, result.message);&#xD;
@@ -482,6 +559,8 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
           <AutoFormElement layoutConstraint="colSpan:2">
             <Property name="name">customerName</Property>
             <Property name="property">customerName</Property>
+            <Property name="trigger">triggerCustomer</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">
@@ -492,6 +571,11 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
           <AutoFormElement layoutConstraint="colSpan:2">
             <Property name="name">bizType</Property>
             <Property name="property">bizType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">importType</Property>
+            <Property name="property">importType</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:2">
@@ -649,5 +733,200 @@ arg.data=view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);</ClientEv
       <Property name="userData"></Property>
       <Property name="extension">xlsx</Property>
     </Export2ReportAction>
+    <Trigger id="triggerCustomer2">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer2&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer2">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <DownloadAction id="downloadMoBanAction">
+      <Property name="fileProvider">reportCustomerController#getTemplate</Property>
+      <Property name="target">workspace</Property>
+    </DownloadAction>
+    <Dialog id="importDialog">
+      <ClientEvent name="onShow">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+//view.get(&quot;#updateCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">批量更新</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="updateCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#updateBatchDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="ufileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="uimportBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">importBtn</Property>
+            <Property name="property">importBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="uimportBtn2">
+                <Property name="action">importAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="uprogressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="uimportProgressBar"/>
+        <AjaxAction id="ugetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">reportCustomerController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="usetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">reportCustomerController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="importAction">
+          <ClientEvent name="onFileUploaded">//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
+		view.get(&quot;#importDialog&quot;).hide();	&#xD;
+		&#xD;
+		var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+		var year=condition.get(&quot;year&quot;);&#xD;
+		var month=condition.get(&quot;month&quot;);&#xD;
+		if(isNullOrEmpty(year)){&#xD;
+			dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		if(isNullOrEmpty(month)){&#xD;
+			dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		if(!isNullOrEmpty(month)){&#xD;
+			if(month.length==1){&#xD;
+				month='0'+month;&#xD;
+			}&#xD;
+		}&#xD;
+		condition.set(&quot;createMonth&quot;, year + &quot;-&quot; +month);&#xD;
+		&#xD;
+		var tmpDataSet=view.get(&quot;#dsEntity&quot;);&#xD;
+		tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();&#xD;
+	});&#xD;
+}&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_uprogressLabel&quot;).show();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).show();&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#ugetProgress&quot;);&#xD;
+var setAction = view.get(&quot;#usetProgress&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+			&#xD;
+			var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
+				set(&quot;parameter&quot;, data);&#xD;
+				flushAsync();&#xD;
+			}	&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+&#xD;
+$(&quot;#d_ufileName input&quot;).val(fname);&#xD;
+//view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+</ClientEvent>
+          <Property name="fileResolver">reportCustomerController#importExcel</Property>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">5MB</Property>
+          <Filters>
+            <Filter>
+              <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+              <Property name="title">Excel文件</Property>
+            </Filter>
+          </Filters>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>
