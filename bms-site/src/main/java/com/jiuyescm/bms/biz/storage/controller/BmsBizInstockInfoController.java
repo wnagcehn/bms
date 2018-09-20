@@ -362,7 +362,7 @@ public class BmsBizInstockInfoController {
 			//组装数据
 			condition.put("instockNo", instockNo);
 			List<BmsBizInstockInfoEntity> lists = bmsBizInstockInfoService.query(condition);
-			entity.setFeesNo(lists.get(0).getFeesNo());
+			//entity.setFeesNo(lists.get(0).getFeesNo());
 			entity.setInstockNo(instockNo);
 			if (StringUtils.isBlank(adjustBox)) {
 				entity.setAdjustBox(0d);

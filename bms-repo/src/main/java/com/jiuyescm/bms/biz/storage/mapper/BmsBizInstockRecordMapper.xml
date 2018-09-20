@@ -84,11 +84,13 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">
         insert into biz_instock_record(
-        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+			instock_no, adjust_qty, adjust_box, adjust_weight, 
+			last_modifier_id, last_modifier, last_modify_time, 
+			mod_reason, del_flag, is_calculated, calculate_time, remark
     	)
         values (
 
-			#{feesNo,jdbcType=VARCHAR}, 
+			#{instockNo,jdbcType=VARCHAR}, 
 			#{adjustQty,jdbcType=DECIMAL}, 
 			#{adjustBox,jdbcType=DECIMAL}, 
 			#{adjustWeight,jdbcType=DECIMAL}, 
