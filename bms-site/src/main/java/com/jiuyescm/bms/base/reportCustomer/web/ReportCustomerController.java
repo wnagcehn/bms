@@ -10,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,6 +32,8 @@ import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService;
 import com.jiuyescm.bms.base.reportCustomer.vo.ReportWarehouseCustomerVo;
 import com.jiuyescm.bms.common.constants.MessageConstant;
@@ -38,6 +42,10 @@ import com.jiuyescm.bms.common.system.ResponseVo;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.mdm.customer.api.ICustomerService;
+import com.jiuyescm.mdm.customer.vo.CustomerVo;
+import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 @Controller("reportCustomerController")
 public class ReportCustomerController {
@@ -47,6 +55,14 @@ public class ReportCustomerController {
 	
 	@Autowired
 	private IReportWarehouseCustomerService reportWarehouseCustomerService;
+	
+	@Autowired
+	private IWarehouseService warehouseService;
+	
+	@Autowired 
+	private ICustomerService customerService;
+	
+	@Resource private ISystemCodeService systemCodeService;
 	
 	/**
 	 * 查询
@@ -263,7 +279,7 @@ public class ReportCustomerController {
 		
 		int cols = xssfSheet.getRow(0).getPhysicalNumberOfCells();
 		
-		if(cols>5){
+		if(cols>6){
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 			errorVo = new ErrorMessageVo();
 			errorVo.setMsg("Excel导入格式错误请参考标准模板检查!");
@@ -280,7 +296,12 @@ public class ReportCustomerController {
 		List<ReportWarehouseCustomerVo> infoLists = new ArrayList<ReportWarehouseCustomerVo>();
 		
 		Map<String,Integer> checkMap=new HashMap<>();
-		
+		//仓库信息
+		List<WarehouseVo>  wareHouselist  = warehouseService.queryAllWarehouse();
+		//获取所有的商家名称
+		List<CustomerVo> customerList=getCustomerList();
+		//所有的业务类型
+		Map<String,String> bizMap=getBizMap();
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
         	
         	ReportWarehouseCustomerVo  entity=new  ReportWarehouseCustomerVo();
@@ -309,30 +330,64 @@ public class ReportCustomerController {
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列仓库名称不能为空！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				continue;
+			}else{
+				//判断仓库id是否在仓库表中维护 并将此仓库返回,将id回填			
+				for(WarehouseVo vo:wareHouselist){
+					if(vo.getWarehousename().equals(warehouseName)){
+						entity.setWarehouseCode(vo.getWarehouseid());
+						entity.setWarehouseName(warehouseName);
+						break;
+					}
+				}
+				
+				if(StringUtils.isBlank(entity.getWarehouseCode())){
+					setMessage(infoList, rowNum+1,"仓库名称"+warehouseName+"没有在仓库表中维护!");
+				}
 			}
 			// 商家（必填）
 			if(StringUtils.isEmpty(customerName)) {			
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列商家不能为空！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				continue;
+			}else{
+				//=======================校验商家名称开始=======================
+				for(CustomerVo vo:customerList){
+					if(vo.getCustomername().equals(customerName)){
+						entity.setCustomerId(vo.getCustomerid());
+						entity.setCustomerName(customerName);
+						break;
+					}
+				}
+				if(StringUtils.isBlank(entity.getWarehouseCode())){
+					setMessage(infoList, rowNum+1,"商家名称"+customerName+"没有在商家表中维护!");
+				}
 			}
+			
 			// 导入类型（必填）
 			if(StringUtils.isEmpty(importType)) {			
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列导入类型不能为空！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				continue;
+			}else{
+				if("应导入".equals(importType)){
+					entity.setImportType("1");
+				}else if("免导入".equals(importType)){
+					entity.setImportType("0");
+				}else{
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列导入类型不存在！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					continue;
+				}
 			}
 			// 业务类型（必填）
 			if(StringUtils.isEmpty(bizType)) {			
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列业务类型不能为空！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				continue;
-			}
-			// 备注（必填）
-			if(StringUtils.isEmpty(remark)) {			
-				setMessage(infoList, rowNum+1,"第"+lieshu+"列备注不能为空！");
-				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				continue;
+			}else{
+				if(bizMap.containsKey(bizType)){
+					entity.setBizType(bizMap.get(bizType));
+				}
 			}
 			
 			//Excel重复性校验
@@ -358,6 +413,10 @@ public class ReportCustomerController {
 				continue;
 			}
 			
+			entity.setCreateMonth(createMonth);
+			entity.setRemark(remark);
+			entity.setCreator(username);
+			entity.setCreateTime(nowdate);
 			entity.setLastModifier(username);
 			entity.setLastModifyTime(nowdate);
 			entity.setDelFlag("0");
@@ -399,6 +458,25 @@ public class ReportCustomerController {
         }
 	}
 	
+	
+	/**
+	 * 所有的商家信息
+	 */
+	public List<CustomerVo> getCustomerList(){
+		//获取所有的商家名称
+		PageInfo<CustomerVo> customerList=customerService.query(null, 0, Integer.MAX_VALUE);
+		List<CustomerVo> cList=customerList.getList();
+		return cList;	
+	}
+	@DataProvider
+	public Map<String, String> getBizMap() {  
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> codeList = systemCodeService.findEnumList("CUSTOMER_BIZTYPE");
+		for (SystemCodeEntity code : codeList){
+			mapValue.put(code.getCodeName(),code.getCode());
+		}
+		return mapValue;
+	}
 	/**
 	 * 获取单元格的值
 	 * 
