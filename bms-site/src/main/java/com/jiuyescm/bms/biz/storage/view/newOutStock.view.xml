@@ -87,10 +87,10 @@
       </PropertyDef>
       <PropertyDef name="totalWeight">
         <Property name="dataType">Double</Property>
-        <Property name="label">总重量</Property>
+        <Property name="label">总重量(kg)</Property>
       </PropertyDef>
       <PropertyDef name="resizeWeight">
-        <Property name="label">调整重量</Property>
+        <Property name="label">调整重量(kg)</Property>
       </PropertyDef>
       <PropertyDef name="totalQuantity">
         <Property name="dataType">Double</Property>
