@@ -44,5 +44,12 @@ public interface IReportWarehouseBizImportService {
      * @return
      */
     int updateReport(List<ReportWarehouseCustomerEntity> list);
+    
+    /**
+     * 插入应导入的商家仓库
+     * @param param
+     * @return
+     */
+    int insertReport(Map<String, Object> param);
 
 }

@@ -22,6 +22,7 @@
 	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
 	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="import_type" property="importType" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	    <result column="creator" property="creator" jdbcType="VARCHAR" />
 	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -139,8 +140,8 @@
     </update>
     
     <select id="queryWareList" parameterType="java.util.Map" resultMap="baseMap">
-    	select id, create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type, remark, creator, create_time, last_modifier, last_modify_time,del_flag
-    	from report_warehouse_customer where 1=1 and del_flag='0' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+    	select id, create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type,import_type, remark, creator, create_time, last_modifier, last_modify_time,del_flag
+    	from report_warehouse_customer where 1=1 and del_flag='0' and import_type='0' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
     </select>
     
     <update id="updateReport" parameterType="com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity">
@@ -150,4 +151,11 @@
 			and warehouse_code=#{warehouseCode}
 		</if>
     </update>
+    
+    <insert id="insertReport" parameterType="java.util.Map">
+    	INSERT into report_warehouse_biz_import 
+    	       (import_date,warehouse_code,biz_type,import_type,customer_id,create_time,del_flag)
+		select create_month,warehouse_code,biz_type,'THEORY',customer_id,#{createTime,jdbcType=TIMESTAMP},#{delFlag} 
+		from report_warehouse_customer where 1=1 and del_flag='0' and import_type='1' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+    </insert>
 </mapper>
