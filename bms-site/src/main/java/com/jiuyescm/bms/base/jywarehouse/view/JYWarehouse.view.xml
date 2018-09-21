@@ -164,24 +164,6 @@ with (view.get(&quot;#dsWarehouseRegionRuleEntity&quot;)){&#xD;
       <DataColumn name="isDropDisplay">
         <Property name="property">isDropDisplay</Property>
       </DataColumn>
-      <DataColumn id="province">
-        <Property name="name">province</Property>
-        <Property name="property">region.province</Property>
-        <Property name="visible">false</Property>
-        <Editor/>
-      </DataColumn>
-      <DataColumn id="city">
-        <Property name="name">city</Property>
-        <Property name="property">region.city</Property>
-        <Property name="visible">false</Property>
-        <Editor/>
-      </DataColumn>
-      <DataColumn id="district">
-        <Property name="name">district</Property>
-        <Property name="property">region.district</Property>
-        <Property name="visible">false</Property>
-        <Editor/>
-      </DataColumn>
       <DataColumn name="regionid">
         <Property name="property">regionid</Property>
         <Property name="width">80</Property>
@@ -210,6 +192,12 @@ with (view.get(&quot;#dsWarehouseRegionRuleEntity&quot;)){&#xD;
       <DataColumn name="virtualflag">
         <Property name="property">virtualflag</Property>
         <Property name="width">90</Property>
+      </DataColumn>
+      <DataColumn name="province">
+        <Property name="property">province</Property>
+      </DataColumn>
+      <DataColumn name="city">
+        <Property name="property">city</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">delflag</Property>
