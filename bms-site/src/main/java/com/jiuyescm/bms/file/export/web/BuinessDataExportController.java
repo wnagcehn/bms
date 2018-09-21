@@ -1221,7 +1221,8 @@ public class BuinessDataExportController extends BaseController {
 		for (String warehouseCode : warehouseList) {
 			int conIndex = 0;
 			int newIndex = 0;
-			int moveindex = 0;
+			int move1 = 0;
+			int move2 = 0;
 			parameter.put("warehouseCode", warehouseCode);
 
 			//
@@ -1281,38 +1282,73 @@ public class BuinessDataExportController extends BaseController {
 			Cell cell2 = row0.createCell(2);
 			cell2.setCellValue("库存板数");
 			cell2.setCellStyle(style);
-			Cell cell3 = row0.createCell(8);
-			cell3.setCellStyle(style);
-			cell3.setCellValue("库存件数");
-			Cell cell4 = row0.createCell(9);
+			
+			//如果商品按件存储有数据，展示入库件数/存储费小计列
+			if (newIndex > 0) {
+				
+				Cell cell3 = row0.createCell(8);
+				cell3.setCellStyle(style);
+				cell3.setCellValue("库存件数");
+				
+				Cell cell7 = row0.createCell(17);
+				cell7.setCellValue("存储费按件小计/元");
+				cell7.setCellStyle(style);
+				
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 7));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 8, 8));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 11, 16));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
+				
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+				
+			}else {
+				move1 = 1;
+				move2 = 2;
+				
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 7));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 8, 8));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 10, 15));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 16, 16));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+				
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 10, 10));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+			}
+			
+			Cell cell4 = row0.createCell(9-move1);
 			cell4.setCellStyle(style);
 			cell4.setCellValue("入库板数");
-			Cell cell5 = row0.createCell(10);
+			Cell cell5 = row0.createCell(10-move1);
 			cell5.setCellValue("出库板数");
 			cell5.setCellStyle(style);
-			Cell cell6 = row0.createCell(11);
+			Cell cell6 = row0.createCell(11-move1);
 			cell6.setCellValue("仓储费/托/元");
 			cell6.setCellStyle(style);
-			Cell cell7 = row0.createCell(17);
-			cell7.setCellValue("存储费按件小计/元");
-			cell7.setCellStyle(style);
-			Cell cell8 = row0.createCell(18);
+
+			Cell cell8 = row0.createCell(18-move2);
 			cell8.setCellValue("处置费按件小件/元");
 			cell8.setCellStyle(style);
-			Cell cell9 = row0.createCell(19);
+			Cell cell9 = row0.createCell(19-move2);
 			cell9.setCellValue("收入合计");
 			cell9.setCellStyle(style);
-
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 7));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 8, 8));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 11, 16));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
-			sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
 
 			Row row1 = sheet.createRow(1);
 			row1.setHeight((short) (25 * 20));
@@ -1341,27 +1377,27 @@ public class BuinessDataExportController extends BaseController {
 			cell28.setCellValue("冷冻包材");
 			cell28.setCellStyle(style);
 
-			Cell cellk29 = row1.createCell(11);
+			Cell cellk29 = row1.createCell(11-move1);
 			cellk29.setCellValue("冷冻费小计/元");
 			cellk29.setCellStyle(style);
 
-			Cell cellk30 = row1.createCell(12);
+			Cell cellk30 = row1.createCell(12-move1);
 			cellk30.setCellValue("冷藏费小计/元");
 			cellk30.setCellStyle(style);
 
-			Cell cellk31 = row1.createCell(13);
+			Cell cellk31 = row1.createCell(13-move1);
 			cellk31.setCellValue("恒温费小计/元");
 			cellk31.setCellStyle(style);
 
-			Cell cellk32 = row1.createCell(14);
+			Cell cellk32 = row1.createCell(14-move1);
 			cellk32.setCellValue("常温费小计/元");
 			cellk32.setCellStyle(style);
 
-			Cell cellk33 = row1.createCell(15);
+			Cell cellk33 = row1.createCell(15-move1);
 			cellk33.setCellValue("常温包材费小计/元");
 			cellk33.setCellStyle(style);
 			
-			Cell cellk34 = row1.createCell(16);
+			Cell cellk34 = row1.createCell(16-move1);
 			cellk34.setCellValue("冷冻包材费小计/元");
 			cellk34.setCellStyle(style);
 
@@ -1371,12 +1407,6 @@ public class BuinessDataExportController extends BaseController {
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 5, 5));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
 
 			Row row3 = sheet.createRow(3);
 			row3.setHeight((short) (20 * 20));
@@ -1466,19 +1496,19 @@ public class BuinessDataExportController extends BaseController {
 						// 列小计
 						double cost = entity.getCost().doubleValue();
 						if ("LD".equals(tempretureType)) {
-							Cell cell49 = row.createCell(12);
+							Cell cell49 = row.createCell(12-move1);
 							cell49.setCellValue(cost);
 							ldcost = ldcost + cost;
 						} else if ("LC".equals(tempretureType)) {
-							Cell cell49 = row.createCell(13);
+							Cell cell49 = row.createCell(13-move1);
 							cell49.setCellValue(cost);
 							lccost = lccost + cost;
 						} else if ("HW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(14);
+							Cell cell49 = row.createCell(14-move1);
 							cell49.setCellValue(cost);
 							hwcost = hwcost + cost;
 						} else if ("CW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(15);
+							Cell cell49 = row.createCell(15-move1);
 							cell49.setCellValue(cost);
 							cwcost = cwcost + cost;
 						}
@@ -1504,7 +1534,7 @@ public class BuinessDataExportController extends BaseController {
 							Cell cell46 = row.createCell(6);
 							cell46.setCellValue(entity.getQuantity());
 							
-							Cell cell49 = row.createCell(15);
+							Cell cell49 = row.createCell(15-move1);
 							cell49.setCellValue(materialCost);
 							//累加行
 							cwCost = cwCost+materialCost;
@@ -1515,7 +1545,7 @@ public class BuinessDataExportController extends BaseController {
 							cell47.setCellValue(entity.getQuantity()+index);
 							index = entity.getQuantity()+index;
 							
-							Cell cell50 = row.createCell(16);
+							Cell cell50 = row.createCell(16-move1);
 							cell50.setCellValue(materialCost+ldCost);
 							//累加行
 							ldCost = materialCost+ldCost;
@@ -1547,36 +1577,38 @@ public class BuinessDataExportController extends BaseController {
 				// 总计
 				totalcost = rowCost + totalcost;
 				// 行小计
-				Cell cell49 = row.createCell(19);
+				Cell cell49 = row.createCell(19-move2);
 				cell49.setCellValue(rowCost);
 			}
 
 			Row row = sheet.createRow(rowIndex);
-			Cell cellLast0 = row.createCell(11);
+			Cell cellLast0 = row.createCell(11-move1);
 			cellLast0.setCellValue(ldcost);
 
-			Cell cellLast1 = row.createCell(12);
+			Cell cellLast1 = row.createCell(12-move1);
 			cellLast1.setCellValue(lccost);
 
-			Cell cellLast6 = row.createCell(13);
+			Cell cellLast6 = row.createCell(13-move1);
 			cellLast6.setCellValue(hwcost);
 
-			Cell cellLast2 = row.createCell(14);
+			Cell cellLast2 = row.createCell(14-move1);
 			cellLast2.setCellValue(cwcost);
 
-			Cell cellLast3 = row.createCell(15);
+			Cell cellLast3 = row.createCell(15-move1);
 			cellLast3.setCellValue(cwpackcost);
 			
-			Cell cellLast4 = row.createCell(16);
+			Cell cellLast4 = row.createCell(16-move1);
 			cellLast4.setCellValue(colcost);
-
-			Cell cellLast5 = row.createCell(17);
-			cellLast5.setCellValue(ccfcost);
-
-			Cell cellLast7 = row.createCell(18);
+			
+			if (newIndex > 0) {
+				Cell cellLast5 = row.createCell(17);
+				cellLast5.setCellValue(ccfcost);
+			}
+			
+			Cell cellLast7 = row.createCell(18-move2);
 			cellLast7.setCellValue(czfcost);
 
-			Cell cellLast = row.createCell(19);
+			Cell cellLast = row.createCell(19-move2);
 			cellLast.setCellValue(totalcost);
 		}
 	}
