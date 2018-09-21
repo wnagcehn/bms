@@ -13,10 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jiuyescm.bms.base.group.BmsGroupSubjectServiceImpl;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
-import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -30,9 +28,7 @@ import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
-import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
-import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceMaterialQuotationRepository;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
@@ -106,8 +102,10 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	protected List<BizOutstockPackmaterialEntity> queryBillList(Map<String, Object> map) {
+		Long current = System.currentTimeMillis();
 		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
-		if(bizList.size() > 0){
+		if(bizList!=null && bizList.size() > 0){
+			XxlJobLogger.log("【配送运单】查询行数【{0}】耗时【{1}】",bizList.size(),(System.currentTimeMillis()-current));
 			initConf();
 		}
 		return bizList;

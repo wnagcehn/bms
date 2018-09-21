@@ -15,18 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
-import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
-import com.jiuyescm.bms.general.service.IStandardReqVoService;
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
@@ -36,7 +33,6 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
-import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.receivable.storage.service.IBizInstockDetailService;
 import com.jiuyescm.bms.receivable.storage.service.IBizInstockMasterService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
@@ -67,7 +63,6 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
-	@Autowired private IStandardReqVoService standardReqVoServiceImpl;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
@@ -114,9 +109,10 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 	
 	@Override
 	protected List<BmsBizInstockInfoEntity> queryBillList(Map<String, Object> map) {
+		Long current = System.currentTimeMillis();
 		List<BmsBizInstockInfoEntity> bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
-		//List<BmsBizInstockInfoEntity> bizList = bizInstockMasterService.getInStockMasterList(map);
-		if (bizList.size()>0) {
+		if (bizList!=null && bizList.size()>0) {
+			XxlJobLogger.log("【配送运单】查询行数【{0}】耗时【{1}】",bizList.size(),(System.currentTimeMillis()-current));
 			initConf();
 		}
 		return bizList;

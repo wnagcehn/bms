@@ -84,9 +84,11 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	
 	// 查询业务数据
 	@Override
-	protected List<BizAddFeeEntity> queryBillList(Map<String, Object> map) {		
+	protected List<BizAddFeeEntity> queryBillList(Map<String, Object> map) {	
+		Long current = System.currentTimeMillis();
 		List<BizAddFeeEntity> bizList = bizAddFeeService.querybizAddFee(map);
-		if(bizList.size()>0){
+		if(bizList!=null && bizList.size()>0){
+			XxlJobLogger.log("【配送运单】查询行数【{0}】耗时【{1}】",bizList.size(),(System.currentTimeMillis()-current));
 			initConf();
 		}
 		return bizList;

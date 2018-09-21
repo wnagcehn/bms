@@ -27,7 +27,6 @@ import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
-import com.jiuyescm.bms.general.service.IStandardReqVoService;
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
 import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.general.service.SequenceService;
@@ -65,7 +64,6 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	@Autowired private IPriceStepQuotationRepository  repository;
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
-	@Autowired private IStandardReqVoService standardReqVoServiceImpl;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private ISystemCodeService systemCodeService;
 	@Autowired private IBmsGroupService bmsGroupService;
@@ -85,8 +83,10 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	
 	@Override
 	protected List<BizProductPalletStorageEntity> queryBillList(Map<String, Object> map) {
+		Long current = System.currentTimeMillis();
 		List<BizProductPalletStorageEntity> bizList = bizProductPalletStorageService.query(map);
-		if(bizList.size()>0){
+		if(bizList!=null && bizList.size() > 0){
+			XxlJobLogger.log("【配送运单】查询行数【{0}】耗时【{1}】",bizList.size(),(System.currentTimeMillis()-current));
 			initConf();
 		}
 		return bizList;

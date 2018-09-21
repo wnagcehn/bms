@@ -6,7 +6,6 @@ import java.util.concurrent.Callable;
 
 import com.jiuyescm.bms.common.tool.ListTool;
 import com.jiuyescm.bms.jobhandler.CommonJobHandler;
-import com.jiuyescm.bs.util.StringUtil;
 import com.xxl.job.core.log.XxlJobLogger;
 
 public class BillingCallable<T,F> implements Callable<Boolean> {
@@ -37,10 +36,10 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 			for(List<T> listT:pageT){
 				try{
 					start= System.currentTimeMillis();
-					XxlJobLogger.log("************** 删除行数【{0}】**************",listT.size());
+					XxlJobLogger.log("************** 【{0}】删除行数【{1}】**************",calcJob.SubjectId,listT.size());
 					calcJob.deleteFeesBatch(listT);
 					end = System.currentTimeMillis();
-					XxlJobLogger.log("************** 删除费用耗时【{0}】 毫秒**************",(end-start));
+					XxlJobLogger.log("************** 【{0}】删除费用耗时【{1}】 毫秒**************",calcJob.SubjectId,(end-start));
 					List<F> feesList = new ArrayList<F>();
 					for (T t : listT) {
 						start= System.currentTimeMillis();// 操作开始时间
@@ -75,7 +74,7 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 					start= System.currentTimeMillis();// 操作开始时间
 					calcJob.updateBatch(listT,feesList);
 					end = System.currentTimeMillis();
-					XxlJobLogger.log("************** 更新耗时【{0}】 毫秒**************",(end-start));
+					XxlJobLogger.log("************** 【{0}】更新耗时【{1}】 毫秒**************",calcJob.SubjectId,(end-start));
 				}catch(Exception  e){
 					flag=false;
 					XxlJobLogger.log("【处理异常】原因:" +e);
