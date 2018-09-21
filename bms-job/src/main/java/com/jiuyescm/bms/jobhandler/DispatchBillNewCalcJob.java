@@ -91,7 +91,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	private String _subjectCode = "de_delivery_amount";
 	
-	private String subject="";
+	//private String subject="";
 	
 	List<SystemCodeEntity> scList = null;
 	List<SystemCodeEntity> no_fees_delivers = null;
@@ -216,7 +216,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		FeesReceiveDispatchEntity feeEntity = new FeesReceiveDispatchEntity();
 		//计费参数获取
         //1)***********************获取计费物流商******************************
-		subject=getSubjectId(getCarrierId(entity));	
+		String subject=getSubjectId(getCarrierId(entity));	
 		XxlJobLogger.log("-->"+entity.getId()+"验证数据时物流商-- 【{0}】  ",entity.getChargeCarrierId());
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证物流商  耗时【{0}】毫秒 ",(current - start));	
@@ -488,7 +488,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		String customerId=entity.getCustomerid();
-		
+		String subject=getSubjectId(entity.getChargeCarrierId());
 		start = System.currentTimeMillis();
 
 		feeEntity.setCalculateTime(time);
