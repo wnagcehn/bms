@@ -103,9 +103,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	@Override
 	protected List<BizDispatchBillEntity> queryBillList(Map<String, Object> map) {
+		Long current = System.currentTimeMillis();
 		List<BizDispatchBillEntity> billList = bizDispatchBillService.query(map);
 		//有待计算的数据时初始化配置
-		if(billList.size()>0){
+		if(billList!=null && billList.size()>0){
+			XxlJobLogger.log("【配送运单】查询行数【{0}】耗时【{1}】",billList.size(),(System.currentTimeMillis()-current));
 			initConf();
 		}
 		return billList;

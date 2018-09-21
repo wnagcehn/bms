@@ -382,7 +382,7 @@ public class BuinessDataExportController extends BaseController {
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "入库重量");
+		itemMap.put("title", "入库重量(吨)");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "totalWeight");
 		headInfoList.add(itemMap);
@@ -426,7 +426,7 @@ public class BuinessDataExportController extends BaseController {
 				dataItem.put("instockNo", entity.getInstockNo());
 				dataItem.put("totalQty", entity.getQuantity());
 				dataItem.put("totalBox", entity.getBox());
-				dataItem.put("totalWeight", entity.getWeight());
+				dataItem.put("totalWeight", (double)entity.getWeight()/1000);
 				if ("wh_instock_work".equals(entity.getSubjectCode())) {
 					dataItem.put("instockAmount", entity.getCost()!=null?entity.getCost().doubleValue():BigDecimal.ZERO);
 				}else if ("wh_b2c_handwork".equals(entity.getSubjectCode())) {
@@ -1082,10 +1082,12 @@ public class BuinessDataExportController extends BaseController {
 			List<Map<String, Object>> headDetailMapList = getOutHead(); 
 			List<Map<String, Object>> dataDetailList = getOutHeadItem(pageInfo.getList(),temMap);
 			
-			poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, "TB", 
-					lineNo, headDetailMapList, dataDetailList);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				lineNo += pageInfo.getList().size();
+			
+			if (!(pageNo == 1 && (pageInfo == null || pageInfo.getList().size() <= 0))) {
+				poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook, "TB", lineNo, headDetailMapList, dataDetailList);
+				if (null != pageInfo && pageInfo.getList().size() > 0) {
+					lineNo += pageInfo.getList().size();
+				}
 			}
 		}
 	}
@@ -1147,7 +1149,7 @@ public class BuinessDataExportController extends BaseController {
         headInfoList.add(itemMap);
         
 		itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "出库重量");
+        itemMap.put("title", "出库重量(吨)");
         itemMap.put("columnWidth", 50);
         itemMap.put("dataKey", "weight");
         headInfoList.add(itemMap);
@@ -1182,7 +1184,7 @@ public class BuinessDataExportController extends BaseController {
 		        	dataItem.put("tempretureType", temMap.get(entity.getTempretureType()));
 		        	dataItem.put("quantity", entity.getQuantity());
 		        	dataItem.put("box", entity.getBox());
-		        	dataItem.put("weight", entity.getWeight());
+		        	dataItem.put("weight", (double)entity.getWeight()/1000);
 	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
 	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
 	        			dataItem.put("orderCost", entity.getCost());

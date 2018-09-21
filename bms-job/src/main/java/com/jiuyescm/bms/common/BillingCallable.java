@@ -6,7 +6,6 @@ import java.util.concurrent.Callable;
 
 import com.jiuyescm.bms.common.tool.ListTool;
 import com.jiuyescm.bms.jobhandler.CommonJobHandler;
-import com.jiuyescm.bs.util.StringUtil;
 import com.xxl.job.core.log.XxlJobLogger;
 
 public class BillingCallable<T,F> implements Callable<Boolean> {
@@ -27,6 +26,7 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 	public Boolean call() throws Exception {
 		XxlJobLogger.log("************** 费用科目【{0}】 pageIndex【{1}】 size【{2}】",calcJob.SubjectId,pageIndex,list.size());
 		long start = System.currentTimeMillis();// 系统开始时间
+		long end = System.currentTimeMillis();// 系统结束时间
 		
 		boolean flag=true;
 		
@@ -35,7 +35,11 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 			List<List<T>> pageT=ListTool.splitList(list, 200);//200个数据一组分页
 			for(List<T> listT:pageT){
 				try{
+					start= System.currentTimeMillis();
+					XxlJobLogger.log("************** 【{0}】删除行数【{1}】**************",calcJob.SubjectId,listT.size());
 					calcJob.deleteFeesBatch(listT);
+					end = System.currentTimeMillis();
+					XxlJobLogger.log("************** 【{0}】删除费用耗时【{1}】 毫秒**************",calcJob.SubjectId,(end-start));
 					List<F> feesList = new ArrayList<F>();
 					for (T t : listT) {
 						start= System.currentTimeMillis();// 操作开始时间
@@ -69,6 +73,8 @@ public class BillingCallable<T,F> implements Callable<Boolean> {
 					}
 					start= System.currentTimeMillis();// 操作开始时间
 					calcJob.updateBatch(listT,feesList);
+					end = System.currentTimeMillis();
+					XxlJobLogger.log("************** 【{0}】更新耗时【{1}】 毫秒**************",calcJob.SubjectId,(end-start));
 				}catch(Exception  e){
 					flag=false;
 					XxlJobLogger.log("【处理异常】原因:" +e);
