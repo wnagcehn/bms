@@ -288,7 +288,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				//根据仓库获取发件人省市
 			    WarehouseVo wareVo=wareMap.get(entity.getWarehouseCode());
 			    if(wareVo!=null){
-			    	entity.setSendProvinceId(wareVo.getProvice());
+			    	entity.setSendProvinceId(wareVo.getProvince());
 			    	entity.setSendCityId(wareVo.getCity());
 			    	
 					if(StringUtils.isNotBlank(entity.getSendProvinceId()) && StringUtils.isNotBlank(entity.getSendCityId())){
