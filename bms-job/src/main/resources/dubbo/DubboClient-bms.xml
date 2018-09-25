@@ -15,6 +15,6 @@
 	<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialInfoService" version="1.0.0" id="pubMaterialInfoService" timeout="1200000" check="false" />	
 	<dubbo:reference interface="com.jiuyescm.mdm.carrier.api.ICarrierService" version="1.0.0" id="carrierService" timeout="1200000" check="false" />			
 	<dubbo:reference interface="com.jiuyescm.mdm.customer.api.ICustomerService" version="1.0.0" id="customerService" timeout="1200000" check="false" />	
-	
+	<dubbo:reference interface="com.jiuyescm.mdm.warehouse.api.IWarehouseService" version="1.0.0" id="warehouseService" timeout="1200000" check="false"/>
 	<dubbo:reference interface="com.jiuyescm.contract.quote.api.IContractQuoteInfoService" version="1.0.0" id="contractQuoteInfoService" timeout="1200000" check="false" />
 </beans>							
