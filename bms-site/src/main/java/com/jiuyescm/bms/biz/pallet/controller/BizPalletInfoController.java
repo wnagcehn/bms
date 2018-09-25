@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
@@ -32,6 +34,7 @@ import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
@@ -489,4 +492,66 @@ public class BizPalletInfoController {
 		return "操作成功! 正在重算...";
 	}
 	
+	/**
+	 * 导入模板下载
+	 * @param parameter
+	 * @return
+	 * @throws IOException
+	 */
+	@FileProvider
+	public DownloadFile accquireTemplate(Map<String, String> parameter) throws IOException {
+		InputStream is = DoradoContext.getCurrent().getServletContext().getResourceAsStream("/WEB-INF/templates/storage/pallet_storage_import_template.xlsx");
+		return new DownloadFile("托数管理导入模板.xlsx", is);
+	}
+	
+	/**
+	 * 导入
+	 */
+//	@FileResolver
+//	public Map<String, Object> importPalletTemplate(final UploadFile file,final Map<String, Object> parameter) throws Exception {
+//		// 校验信息（报错提示）
+//		final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
+//
+//		String userId=ContextHolder.getLoginUserName();
+//		String lockString=Tools.getMd5(userId + "BMS_QUE_PALLET_STORAGE_IMPORT");
+//		Map<String, Object> remap = lock.lock(lockString, 300, new LockCallback<Map<String, Object>>() {
+//
+//			@Override
+//			public Map<String, Object> handleObtainLock() {
+//				Map<String, Object> map = Maps.newHashMap();
+//				try {
+//				   map = importFileAsyn(file,parameter);
+//				   return map;
+//				} catch (Exception e) {
+//					ErrorMessageVo errorVo = new ErrorMessageVo();
+//					errorVo.setMsg(e.getMessage());
+//					infoList.add(errorVo);		
+//					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//					return map;
+//				}
+//			}
+//
+//			@Override
+//			public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
+//				Map<String, Object> map = Maps.newHashMap();
+//				ErrorMessageVo errorVo = new ErrorMessageVo();
+//				errorVo.setMsg("托数导入功能已被其他用户占用，请稍后重试；");
+//				infoList.add(errorVo);
+//				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//				return map;
+//			}
+//
+//			@Override
+//			public Map<String, Object> handleException(LockInsideExecutedException e)
+//					throws LockInsideExecutedException {
+//				Map<String, Object> map = Maps.newHashMap();
+//				ErrorMessageVo errorVo = new ErrorMessageVo();
+//				errorVo.setMsg("系统异常，请稍后重试!");
+//				infoList.add(errorVo);
+//				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//				return map;
+//			}
+//		});
+//		return remap;
+//	}
 }
