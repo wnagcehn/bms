@@ -148,6 +148,14 @@
       <Property></Property>
       <Property name="label">仓库编码</Property>
     </PropertyDef>
+    <PropertyDef name="province">
+      <Property/>
+      <Property name="label">省</Property>
+    </PropertyDef>
+    <PropertyDef name="city">
+      <Property/>
+      <Property name="label">市</Property>
+    </PropertyDef>
   </DataType>
   <DataType name="dtWarehouseRegionRuleEntity" meta="x:313;y:10">
     <Property name="matchType">com.jiuyescm.bms.pub.warehouse.entity.WarehouseRegionRuleEntity</Property>

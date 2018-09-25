@@ -43,6 +43,11 @@ public class BmsWarehouseVo implements Serializable,Comparable<BmsWarehouseVo> {
 	private String modperson;
 	// 修改时间
 	private java.sql.Timestamp modtime;
+	//省
+	private String province;
+	//市
+	private String city;
+	
 	public Integer getDisplayLevel() {
 		return displayLevel;
 	}
@@ -156,6 +161,19 @@ public class BmsWarehouseVo implements Serializable,Comparable<BmsWarehouseVo> {
 	}
 	public void setModtime(java.sql.Timestamp modtime) {
 		this.modtime = modtime;
+	}
+	
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
 	}
 	@Override
 	public int compareTo(BmsWarehouseVo o) {
