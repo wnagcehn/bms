@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBizPalletInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="curTime">
+        <Property name="label">日期(2018-01-01)</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">托数类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="product">商品存储托数</Property>
+              <Property name="material">耗材存储托数</Property>
+              <Property name="instock">入库托数</Property>
+              <Property name="outstock">出库托数</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库编号</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="label">托数</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustPalletNum">
+        <Property name="label">调整托数</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property name="label">费用编码</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId">
+        <Property name="label">创建者id</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId">
+        <Property name="label">修改者id</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="calculateTime">
+        <Property name="label">费用计算时间</Property>
+      </PropertyDef>
+      <PropertyDef name="writeTime">
+        <Property name="label">写入BMS时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标志 0-未作废 1-已作废</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="cost">
+        <Property name="label">金额</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="wh_disposal">处置费</Property>
+              <Property name="wh_product_storage">商品存储费</Property>
+              <Property name="wh_material_storage">耗材存储费</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBizPalletInfoEntityQuery">
+      <PropertyDef name="curTime">
+        <Property name="label">日期(2018-01-01)</Property>
+      </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">托数类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="product">商品存储托数</Property>
+              <Property name="material">耗材存储托数</Property>
+              <Property name="instock">入库托数</Property>
+              <Property name="outstock">出库托数</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="label">仓库</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property name="label">温度编码</Property>
+      </PropertyDef>
+      <PropertyDef name="palletNum">
+        <Property name="label">托数</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustPalletNum">
+        <Property name="label">调整托数</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property name="label">费用编码</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId">
+        <Property name="label">创建者id</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId">
+        <Property name="label">修改者id</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="calculateTime">
+        <Property name="label">费用计算时间</Property>
+      </PropertyDef>
+      <PropertyDef name="writeTime">
+        <Property name="label">写入BMS时间</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标志 0-未作废 1-已作废</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="createEndTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用科目</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBizPalletInfoEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBizPalletInfoEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">编辑</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizPalletInfoEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                //刷新&#xD;
+								var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="action">export2ReportAction</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBizPalletInfoEntity">
+      <Property name="dataType">[dtBizPalletInfoEntity]</Property>
+      <Property name="dataProvider">bizPalletInfoController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBizPalletInfoEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBizPalletInfoEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBizPalletInfoEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="queryForm">
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsBizPalletInfoEntityQuery</Property>
+        <AutoFormElement>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">warehouseCode</Property>
+          <Property name="property">warehouseCode</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">feesNo</Property>
+          <Property name="property">feesNo</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">isCalculated</Property>
+          <Property name="property">isCalculated</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">bizType</Property>
+          <Property name="property">bizType</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">subjectCode</Property>
+          <Property name="property">subjectCode</Property>
+          <Property name="trigger">triggerCustomer</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createEndTime</Property>
+          <Property name="property">createEndTime</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsBizPalletInfoEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="curTime">
+          <Property name="property">curTime</Property>
+        </DataColumn>
+        <DataColumn name="warehouseCode">
+          <Property name="property">warehouseCode</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+        </DataColumn>
+        <DataColumn name="temperatureTypeCode">
+          <Property name="property">temperatureTypeCode</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">subjectCode</Property>
+          <Property name="name">subjectCode</Property>
+        </DataColumn>
+        <DataColumn name="bizType">
+          <Property name="property">bizType</Property>
+        </DataColumn>
+        <DataColumn name="palletNum">
+          <Property name="property">palletNum</Property>
+        </DataColumn>
+        <DataColumn name="adjustPalletNum">
+          <Property name="property">adjustPalletNum</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">cost</Property>
+          <Property name="name">cost</Property>
+        </DataColumn>
+        <DataColumn name="isCalculated">
+          <Property name="property">isCalculated</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="feesNo">
+          <Property name="property">feesNo</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+        <DataColumn name="warehouseName">
+          <Property name="property">warehouseName</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="creatorId">
+          <Property name="property">creatorId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="lastModifierId">
+          <Property name="property">lastModifierId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="calculateTime">
+          <Property name="property">calculateTime</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="writeTime">
+          <Property name="property">writeTime</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBizPalletInfoEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">100</Property>
+      <Property name="width">300</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBizPalletInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBizPalletInfoEntity</Property>
+          <Property name="dataType">dtBizPalletInfoEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustPalletNum</Property>
+            <Property name="property">adjustPalletNum</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bizPalletInfoController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBizPalletInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">bizPalletInfoController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBizPalletInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dataGridProductPalletStorage</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+  </View>
+</ViewConfig>
