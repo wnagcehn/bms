@@ -46,8 +46,10 @@
 		<wms.version>1.0.1-SNAPSHOT</wms.version>
 		<log.version>1.0.0</log.version>
 		<drools.version>6.4.0.Final</drools.version>
+		<mdm.version>1.0.0-SNAPSHOT</mdm.version>
 		<snapshotDependencyAllowed>true</snapshotDependencyAllowed>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
 	</properties>
 	
 	<dependencies>

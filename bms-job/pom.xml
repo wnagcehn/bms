@@ -33,19 +33,20 @@
 		<dependency>
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-customer-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
+			<!-- <version>${mdm.version}</version> -->
 		</dependency>
 		
 	 	<dependency>
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-carrier-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-warehouse-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
