@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
+import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 
 /**
  * ..RepositoryImpl
@@ -15,18 +16,8 @@ import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
  * 
  */
 @Repository("bizPalletInfoRepository")
-public class BizPalletInfoRepositoryImpl extends MyBatisDao<BizPalletInfoEntity> implements IBizPalletInfoRepository {
+public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalletInfoRepository {
 
-	/**
-	 * 根据id查询
-	 * @param id
-	 * @return
-	 * @throws Exception
-	*/
-    @Override
-    public BizPalletInfoEntity findById(Long id) {
-        return selectOne("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.findById", id);
-    }
 	
 	/**
 	 * 分页查询
@@ -81,5 +72,44 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao<BizPalletInfoEntity>
     	update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.update", entity);
     	return entity;
     }
+    
+    /**
+     * 重算
+     * @param param
+     * @return
+     */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int reCalculate(List<BizPalletInfoEntity> list) {
+		try{
+			updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.retryForCalcu", list);
+			return 1;
+		}
+		catch(Exception ex){
+			return 0;
+		}
+	}
 	
+	/**
+	 * 批量更新
+	 * @param entity
+	 * @return
+	 */
+    @Override
+    public int updateBatch(List<Map<String, Object>> list) {
+       return updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.updateBatch", list);
+    }
+	
+    /**
+	 * 分组统计
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public PageInfo<BizPalletInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize){
+		List<BizPalletInfoEntity> list = selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.groupCount", condition, new RowBounds(
+                pageNo, pageSize));
+		return new PageInfo<BizPalletInfoEntity>(list);
+	}
+    
 }

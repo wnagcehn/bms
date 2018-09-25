@@ -32,9 +32,9 @@ public class BizPalletInfoEntity implements IEntity {
 	// 温度编码
 	private String temperatureTypeCode;
 	// 托数
-	private BigDecimal palletNum;
+	private Double palletNum;
 	// 调整托数
-	private BigDecimal adjustPalletNum;
+	private Double adjustPalletNum;
 	// 费用编码
 	private String feesNo;
 	// 创建者
@@ -63,6 +63,7 @@ public class BizPalletInfoEntity implements IEntity {
 	private Double cost;
 	
 	private String subjectCode;
+	private String subjectName;
 
 	public BizPalletInfoEntity() {
 		super();
@@ -132,22 +133,22 @@ public class BizPalletInfoEntity implements IEntity {
 		this.temperatureTypeCode = temperatureTypeCode;
 	}
 	
-	public BigDecimal getPalletNum() {
-		return this.palletNum;
+	public Double getPalletNum() {
+		return palletNum;
 	}
 
-	public void setPalletNum(BigDecimal palletNum) {
+	public void setPalletNum(Double palletNum) {
 		this.palletNum = palletNum;
 	}
-	
-	public BigDecimal getAdjustPalletNum() {
-		return this.adjustPalletNum;
+
+	public Double getAdjustPalletNum() {
+		return adjustPalletNum;
 	}
 
-	public void setAdjustPalletNum(BigDecimal adjustPalletNum) {
+	public void setAdjustPalletNum(Double adjustPalletNum) {
 		this.adjustPalletNum = adjustPalletNum;
 	}
-	
+
 	public String getFeesNo() {
 		return this.feesNo;
 	}
@@ -258,6 +259,14 @@ public class BizPalletInfoEntity implements IEntity {
 
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
     
 }

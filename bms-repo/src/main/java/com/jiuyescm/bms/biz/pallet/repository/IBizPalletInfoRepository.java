@@ -11,8 +11,6 @@ import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
  * 
  */
 public interface IBizPalletInfoRepository {
-
-    BizPalletInfoEntity findById(Long id);
 	
 	PageInfo<BizPalletInfoEntity> query(Map<String, Object> condition,
 		int pageNo, int pageSize);
@@ -24,5 +22,28 @@ public interface IBizPalletInfoRepository {
     BizPalletInfoEntity update(BizPalletInfoEntity entity);
 
 	BizPalletInfoEntity delete(BizPalletInfoEntity entity);
+	
+	/**
+	 * 重算
+	 * @param list
+	 * @return
+	 */
+	int reCalculate(List<BizPalletInfoEntity> list);
+	
+	/**
+	 * 批量更新
+	 * @param list
+	 * @return
+	 */
+	int updateBatch(List<Map<String, Object>> list);
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BizPalletInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
 
 }

@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
+import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 
 /**
  * ..ServiceImpl
@@ -19,17 +20,6 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
 
 	@Autowired
     private IBizPalletInfoRepository bizPalletInfoRepository;
-
-	/**
-	 * 根据id查询
-	 * @param id
-	 * @return
-	 * @throws Exception
-	*/
-	@Override
-    public BizPalletInfoEntity findById(Long id) {
-        return bizPalletInfoRepository.findById(id);
-    }
 	
 	/**
 	 * 分页查询
@@ -80,5 +70,36 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
     public BizPalletInfoEntity delete(BizPalletInfoEntity entity) {
         return bizPalletInfoRepository.delete(entity);
     }
+    
+    /**
+     * 批量更新
+     * @param list
+     * @return
+     */
+    @Override
+    public int updateBatch(List<Map<String, Object>> list){
+    	return bizPalletInfoRepository.updateBatch(list);
+    }
+    
+    /**
+     * 重算
+     * @param param
+     * @return
+     */
+	@Override
+	public int reCalculate(List<BizPalletInfoEntity> list) {
+		return bizPalletInfoRepository.reCalculate(list);
+	}
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @return
+	 */
+	@Override
+    public PageInfo<BizPalletInfoEntity> groupCount(Map<String, Object> condition,
+            int pageNo, int pageSize){
+		return bizPalletInfoRepository.groupCount(condition, pageNo, pageSize);
+	}
 	
 }

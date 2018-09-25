@@ -195,6 +195,40 @@
         <Property name="label">费用科目</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtPalletGroup">
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectCode">
+        <Property name="label">费用类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupSubjectController#queryGroupSubject&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="totalNum">
+        <Property name="label">数量</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtErrorMessageVo">
+      <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
+      <PropertyDef name="lineNo">
+        <Property name="dataType">int</Property>
+        <Property name="label">行号</Property>
+      </PropertyDef>
+      <PropertyDef name="msg">
+        <Property></Property>
+        <Property name="label">消息</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ToolBar>
@@ -224,6 +258,71 @@
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
       </ToolBarButton>
       <Separator/>
+      <ToolBarButton id="btnGroup">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+if(data.get(&quot;createTime&quot;)==&quot;&quot;||data.get(&quot;createTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;创建日期不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(data.get(&quot;createEndTime&quot;)==&quot;&quot;||data.get(&quot;createEndTime&quot;)==null){&#xD;
+		dorado.MessageBox.alert(&quot;结束日期不能为空!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	if(data.get(&quot;createTime&quot;)>data.get(&quot;createEndTime&quot;)){&#xD;
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束日期!&quot;);&#xD;
+		return;&#xD;
+	} &#xD;
+&#xD;
+	with (view.get(&quot;#dsPalletGroup&quot;)){&#xD;
+		set(&quot;parameter&quot;, data);&#xD;
+		flushAsync();&#xD;
+	}&#xD;
+	view.get(&quot;#dialogGroup&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="caption">分组统计</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -60px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnUpdateCalculate">
+        <ClientEvent name="onClick">var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
+var datas = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(datas.get(&quot;customerId&quot;)))&#xD;
+{&#xD;
+	dorado.MessageBox.alert(&quot;商家不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+retryAction.set(&quot;parameter&quot;,datas);&#xD;
+&#xD;
+dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
+	retryAction.execute(function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
+//定义一个函数，判断参数是否为空&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">重算</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
+        <Property name="visible">true</Property>
+      </ToolBarButton>
+      <ToolBarButton id="updateBatch">
+        <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).show();</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        <Property name="caption">批量更新</Property>
+        <Property name="tags">批量更新重量、物流商、宅配商</Property>
+      </ToolBarButton>
       <ToolBarButton id="btnRemove">
         <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizPalletInfoEntity.data&quot;);&#xD;
                 var currentData = datas.current;&#xD;
@@ -246,6 +345,13 @@
         <Property name="caption">删除</Property>
         <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
       </ToolBarButton>
+      <ToolBarButton id="btnTemplateUpdate">
+        <ClientEvent name="onClick">view.get(&quot;#updateTemplateAction&quot;).execute();	&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">更新模板下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+      </ToolBarButton>
       <ToolBarButton id="btnExport">
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
@@ -264,6 +370,14 @@
       <Property name="dataType">[dtBizPalletInfoEntityQuery]</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsPalletGroup">
+      <Property name="dataType">[dtPalletGroup]</Property>
+      <Property name="dataProvider">bizPalletInfoController#queryGroup</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsErrorMessageVo">
+      <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
     <Container>
       <AutoForm id="queryForm">
@@ -513,10 +627,212 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DownloadAction id="updateTemplateAction">
+      <Property name="fileProvider">bizPalletInfoController#downloadTemplateUpdate</Property>
+    </DownloadAction>
+    <Dialog id="dialogGroup">
+      <Property name="caption">分组统计</Property>
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Buttons/>
+      <Children>
+        <ToolBar>
+          <ToolBarButton id="btnExport2">
+            <Property name="caption">导出</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+            <Property name="action">export1ReportAction</Property>
+          </ToolBarButton>
+        </ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsPalletGroup</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <DataGrid>
+          <Property name="dataSet">dsPalletGroup</Property>
+          <Property name="readOnly">true</Property>
+          <RowNumColumn/>
+          <DataColumn name="customerName">
+            <Property name="property">customerName</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">warehouseName</Property>
+            <Property name="property">warehouseName</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="name">subjectCode</Property>
+            <Property name="property">subjectCode</Property>
+          </DataColumn>
+          <DataColumn name="isCalculated">
+            <Property name="property">isCalculated</Property>
+          </DataColumn>
+          <DataColumn name="totalNum">
+            <Property name="property">totalNum</Property>
+            <Property name="align">center</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="RetryAction">
+      <Property name="service">bizPalletInfoController#reCalculate</Property>
+    </AjaxAction>
+    <Dialog id="updateWayBillDialog">
+      <ClientEvent name="onShow">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+//view.get(&quot;#updateCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,false);</ClientEvent>
+      <ClientEvent name="onClose">$(&quot;#d_uprogressLabel&quot;).hide();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).hide();&#xD;
+$(&quot;#d_ufileName input&quot;).val(&quot;&quot;);&#xD;
+view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+</ClientEvent>
+      <Property name="caption">批量更新</Property>
+      <Property name="closeable">false</Property>
+      <Property name="height">180</Property>
+      <Property name="width">460</Property>
+      <Buttons>
+        <Button id="updateCloseBtn">
+          <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <AutoFormElement id="ufileName">
+            <Property name="label">文件名称</Property>
+            <Property name="hintWidth">0</Property>
+            <Property name="name">fileName</Property>
+            <Property name="property">fileName</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showHint">false</Property>
+            <Property name="width">300</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="uimportBtn" layoutConstraint="align:right">
+            <Property name="hintWidth">0</Property>
+            <Property name="name">importBtn</Property>
+            <Property name="property">importBtn</Property>
+            <Property name="showHint">false</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="width">80</Property>
+            <Editor>
+              <Button id="uimportBtn2">
+                <Property name="action">updateWayBillAction</Property>
+                <Property name="caption">导入</Property>
+              </Button>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Label id="uprogressLabel">
+          <Property name="text">请不要关闭当前页面，系统正在处理数据，请耐心等待...</Property>
+          <Property name="width">350</Property>
+        </Label>
+        <ProgressBar id="uimportProgressBar"/>
+        <AjaxAction id="ugetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">trunkWaybillController#getProgress</Property>
+        </AjaxAction>
+        <AjaxAction id="usetProgress">
+          <Property name="modal">false</Property>
+          <Property name="service">trunkWaybillController#setProgress</Property>
+        </AjaxAction>
+        <UploadAction id="updateWayBillAction">
+          <ClientEvent name="onFileUploaded">//导入Excel之后，在这里拿到上传成功之后的返回值 例如java方法里返回Map值这里获得数据后会映射成json&#xD;
+//注意这里&#xD;
+var data= arg.returnValue;&#xD;
+if(data.succ!=null){&#xD;
+	view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
+		view.get(&quot;#updateWayBillDialog&quot;).hide();	&#xD;
+		var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
+			set(&quot;parameter&quot;, data);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+if(data.error!=null){&#xD;
+	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
+     dataSet.setData(data.error);&#xD;
+	 view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
+	 return;&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+          <ClientEvent name="onFilesAdded">$(&quot;#d_uprogressLabel&quot;).show();&#xD;
+$(&quot;#d_uimportProgressBar&quot;).show();&#xD;
+view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;, &quot;请不要关闭当前页面，系统正在处理数据，请耐心等待...&quot;);&#xD;
+view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, 0);&#xD;
+var action = view.get(&quot;#ugetProgress&quot;);&#xD;
+var setAction = view.get(&quot;#usetProgress&quot;);&#xD;
+var oldVal = 0;&#xD;
+var getProgress = function() {&#xD;
+	action.execute(function (res) {&#xD;
+		&#xD;
+		if (oldVal != res) {&#xD;
+			for (oldVal; oldVal &lt;= res; oldVal++) {&#xD;
+				view.get(&quot;#uimportProgressBar&quot;).set(&quot;value&quot;, res/10);&#xD;
+			}&#xD;
+		}&#xD;
+		oldVal = res;&#xD;
+		if (res == 999) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
+		}&#xD;
+		if (res == 1000) {&#xD;
+			clearInterval(progressJob);&#xD;
+			//设置为 0&#xD;
+			setAction.execute(function (res) {  });&#xD;
+			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
+			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
+			&#xD;
+			var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+var progressJob = setInterval(getProgress, 500);</ClientEvent>
+          <ClientEvent name="beforeFileUpload">var fname = arg.file.name;&#xD;
+&#xD;
+$(&quot;#d_ufileName input&quot;).val(fname);&#xD;
+//view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+//view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
+</ClientEvent>
+          <Property name="fileResolver">bizPallectInfoController#importUpdate</Property>
+          <Property name="caption">导入Excel</Property>
+          <Property name="maxFileSize">5MB</Property>
+          <Filters>
+            <Filter>
+              <Property name="extensions">xls,xlsx,XLS,XLSX</Property>
+              <Property name="title">Excel文件</Property>
+            </Filter>
+          </Filters>
+        </UploadAction>
+      </Children>
+      <Tools/>
+    </Dialog>
     <Export2ReportAction id="export2ReportAction">
       <Property name="caption">导出Excel数据</Property>
       <Property name="dataScope">serverAll</Property>
       <Property name="template">dataGridProductPalletStorage</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
+    <Export2ReportAction id="export1ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">DataGridGroup</Property>
       <Property name="dataFontSize">10</Property>
       <Property name="maxSize">100000</Property>
     </Export2ReportAction>
