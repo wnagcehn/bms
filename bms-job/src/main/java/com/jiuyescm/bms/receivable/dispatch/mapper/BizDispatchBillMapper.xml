@@ -304,6 +304,22 @@
                     </if>
                 </foreach>
             </trim>
+            <trim prefix="send_province_id =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.sendProvinceId != null" >
+                      when id=#{biz.id} then #{biz.sendProvinceId}
+                      
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="send_city_id =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.sendCityId != null" >
+                      when id=#{biz.id} then #{biz.sendCityId}
+                      
+                    </if>
+                </foreach>
+            </trim>
     	</trim>
 	    where id in
         <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">

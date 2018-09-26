@@ -259,6 +259,15 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			cityId=entity.getReceiveCityId();
 			districtId=entity.getReceiveDistrictId();
 		}
+		
+		//根据仓库获取发件人省市
+	    WarehouseVo wareVo=wareMap.get(entity.getWarehouseCode());
+	    if(wareVo!=null){
+	    	entity.setSendProvinceId(wareVo.getProvince());
+	    	entity.setSendCityId(wareVo.getCity());
+	    }
+		
+		
 		//如果是顺丰配送 匹配标准地址
 		if("SHUNFENG_DISPATCH".equals(subject)){
 			RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
@@ -286,32 +295,43 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			}
 			else{
 				//顺丰非同城按抛重计费  如果发件人【省】【市】有值 并且与收件人省市一致  则为顺丰同城
-				//如果发件人【省】【市】有值
-				//根据仓库获取发件人省市
-			    WarehouseVo wareVo=wareMap.get(entity.getWarehouseCode());
-			    if(wareVo!=null){
-			    	entity.setSendProvinceId(wareVo.getProvince());
-			    	entity.setSendCityId(wareVo.getCity());
-			    	
-					if(StringUtils.isNotBlank(entity.getSendProvinceId()) && StringUtils.isNotBlank(entity.getSendCityId())){
-						RegionVo vo1 = new RegionVo(ReplaceChar(entity.getSendProvinceId()), ReplaceChar(entity.getSendCityId()),ReplaceChar(null));
-						RegionVo matchVo1 = omsAddressService.queryNameByAlias(vo1);
-		
-						if(matchVo1!=null && StringUtils.isNotBlank(matchVo1.getProvince()) && StringUtils.isNotBlank(matchVo1.getCity())){
-							//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
-							boolean hasCorrect = false;
-							double correctWeight = 0.0;
-							Map<String,Object> condition=new HashMap<String,Object>();
-							condition.put("waybillNo", entity.getWaybillNo());
-							BmsMarkingProductsEntity markEntity=bmsProductsWeightRepository.queryMarkVo(condition);
-							if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
-								hasCorrect = true;
-								correctWeight = markEntity.getCorrectWeight().doubleValue();
+				//如果发件人【省】【市】有值		    	
+				if(StringUtils.isNotBlank(entity.getSendProvinceId()) && StringUtils.isNotBlank(entity.getSendCityId())){
+					RegionVo vo1 = new RegionVo(ReplaceChar(entity.getSendProvinceId()), ReplaceChar(entity.getSendCityId()),ReplaceChar(null));
+					RegionVo matchVo1 = omsAddressService.queryNameByAlias(vo1);
+	
+					if(matchVo1!=null && StringUtils.isNotBlank(matchVo1.getProvince()) && StringUtils.isNotBlank(matchVo1.getCity())){
+						//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
+						boolean hasCorrect = false;
+						double correctWeight = 0.0;
+						Map<String,Object> condition=new HashMap<String,Object>();
+						condition.put("waybillNo", entity.getWaybillNo());
+						BmsMarkingProductsEntity markEntity=bmsProductsWeightRepository.queryMarkVo(condition);
+						if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
+							hasCorrect = true;
+							correctWeight = markEntity.getCorrectWeight().doubleValue();
+						}
+						
+						//发件人省市 与收件人省市相等
+						if(entity.getReceiveProvinceId().equals(matchVo1.getProvince()) && entity.getReceiveCityId().equals(matchVo1.getCity())){
+							XxlJobLogger.log("-->"+entity.getId()+"--------此单为顺丰同城  按普通重量计费--------");
+							if (hasCorrect) {
+								double dd = getResult(correctWeight);
+								entity.setWeight(dd);
+								// 有纠正重量，比较纠正重量和运单重量是否相等
+								double resultWeight = compareWeight(entity.getTotalWeight(), 
+										getResult(entity.getTotalWeight()), correctWeight);
+								entity.setTotalWeight(resultWeight);
+							}else {
+								double dd = getResult(entity.getTotalWeight());
+								entity.setWeight(dd);
+								entity.setTotalWeight(entity.getTotalWeight());
 							}
-							
-							//发件人省市 与收件人省市相等
-							if(entity.getReceiveProvinceId().equals(matchVo1.getProvince()) && entity.getReceiveCityId().equals(matchVo1.getCity())){
-								XxlJobLogger.log("-->"+entity.getId()+"--------此单为顺丰同城  按普通重量计费--------");
+						}
+						else{
+							XxlJobLogger.log("-->"+entity.getId()+"--------此单为顺丰非同城  按泡重计费--------");
+							//泡重不存在
+							if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
 								if (hasCorrect) {
 									double dd = getResult(correctWeight);
 									entity.setWeight(dd);
@@ -320,98 +340,74 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 											getResult(entity.getTotalWeight()), correctWeight);
 									entity.setTotalWeight(resultWeight);
 								}else {
-									double dd = getResult(entity.getTotalWeight());
-									entity.setWeight(dd);
-									entity.setTotalWeight(entity.getTotalWeight());
+									if(!DoubleUtil.isBlank(entity.getTotalWeight())){
+										double dd = getResult(entity.getTotalWeight());
+										entity.setWeight(dd);
+										//实际重量存在时取实际重量
+										entity.setTotalWeight(entity.getTotalWeight());
+									}else{
+										XxlJobLogger.log("-->"+entity.getId()+"--------顺丰非同城，纠正重量，泡重和实际重量都不存在，无法计算--------");
+										entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+										feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+										entity.setRemark("顺丰非同城，泡重和实际重量都不存在，无法计算");
+									}
 								}
-							}
-							else{
-								XxlJobLogger.log("-->"+entity.getId()+"--------此单为顺丰非同城  按泡重计费--------");
-								//泡重不存在
-								if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
-									if (hasCorrect) {
+								
+							}else{
+								//泡重存在时
+								if (hasCorrect) {
+									// 有纠正重量时比较 泡重和 纠正重量
+									if(correctWeight >= entity.getCorrectThrowWeight()){
+										// 纠正重量大于抛重重量，按纠正重量算
 										double dd = getResult(correctWeight);
 										entity.setWeight(dd);
 										// 有纠正重量，比较纠正重量和运单重量是否相等
 										double resultWeight = compareWeight(entity.getTotalWeight(), 
 												getResult(entity.getTotalWeight()), correctWeight);
 										entity.setTotalWeight(resultWeight);
-									}else {
-										if(!DoubleUtil.isBlank(entity.getTotalWeight())){
+									}else if(correctWeight < entity.getCorrectThrowWeight()){
+										// 纠正重量小于抛重时，按抛重算
+										double dd = getResult(entity.getCorrectThrowWeight());
+										entity.setWeight(dd);//计费重量
+										entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
+									}
+								}else {
+									if(!DoubleUtil.isBlank(entity.getTotalWeight())){
+										// 没有纠正重量时比较 泡重和 实际重量
+										if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
+											// 运单重量大于抛重时，按运单重量算
 											double dd = getResult(entity.getTotalWeight());
 											entity.setWeight(dd);
-											//实际重量存在时取实际重量
 											entity.setTotalWeight(entity.getTotalWeight());
-										}else{
-											XxlJobLogger.log("-->"+entity.getId()+"--------顺丰非同城，纠正重量，泡重和实际重量都不存在，无法计算--------");
-											entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-											feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-											entity.setRemark("顺丰非同城，泡重和实际重量都不存在，无法计算");
-										}
-									}
-									
-								}else{
-									//泡重存在时
-									if (hasCorrect) {
-										// 有纠正重量时比较 泡重和 纠正重量
-										if(correctWeight >= entity.getCorrectThrowWeight()){
-											// 纠正重量大于抛重重量，按纠正重量算
-											double dd = getResult(correctWeight);
-											entity.setWeight(dd);
-											// 有纠正重量，比较纠正重量和运单重量是否相等
-											double resultWeight = compareWeight(entity.getTotalWeight(), 
-													getResult(entity.getTotalWeight()), correctWeight);
-											entity.setTotalWeight(resultWeight);
-										}else if(correctWeight < entity.getCorrectThrowWeight()){
-											// 纠正重量小于抛重时，按抛重算
+										}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
+											// 运单重量小于抛重时，按抛重算
 											double dd = getResult(entity.getCorrectThrowWeight());
 											entity.setWeight(dd);//计费重量
 											entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 										}
-									}else {
-										if(!DoubleUtil.isBlank(entity.getTotalWeight())){
-											// 没有纠正重量时比较 泡重和 实际重量
-											if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
-												// 运单重量大于抛重时，按运单重量算
-												double dd = getResult(entity.getTotalWeight());
-												entity.setWeight(dd);
-												entity.setTotalWeight(entity.getTotalWeight());
-											}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
-												// 运单重量小于抛重时，按抛重算
-												double dd = getResult(entity.getCorrectThrowWeight());
-												entity.setWeight(dd);//计费重量
-												entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
-											}
-										}else{
-											//实际重量为空时，直接取泡重
-											double dd = getResult(entity.getCorrectThrowWeight());
-											entity.setWeight(dd);
-											entity.setTotalWeight(entity.getCorrectThrowWeight());
-										}
+									}else{
+										//实际重量为空时，直接取泡重
+										double dd = getResult(entity.getCorrectThrowWeight());
+										entity.setWeight(dd);
+										entity.setTotalWeight(entity.getCorrectThrowWeight());
 									}
-								}						
-							}
-						}else{
-							XxlJobLogger.log("-->"+entity.getId()+"--------顺丰发件人省或市地址不对 计算失败--------");
-							entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-							feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-							entity.setRemark("顺丰发件人省或市地址不对 计算失败");
+								}
+							}						
 						}
-						
-					}
-					else{
-						XxlJobLogger.log("-->"+entity.getId()+"--------顺丰发件人省或市为空 计算失败--------");
+					}else{
+						XxlJobLogger.log("-->"+entity.getId()+"--------顺丰发件人省或市地址不对 计算失败--------");
 						entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 						feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-						entity.setRemark("顺丰发件人省或市为空 计算失败");
-					}	
-			    	
-			    }else{
-			    	XxlJobLogger.log("-->"+entity.getId()+"--------仓库不存在 计算失败--------");
+						entity.setRemark("顺丰发件人省或市地址不对 计算失败");
+					}
+					
+				}
+				else{
+					XxlJobLogger.log("-->"+entity.getId()+"--------顺丰发件人省或市为空 计算失败--------");
 					entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 					feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-					entity.setRemark("仓库不存在 计算失败");
-			    }	
+					entity.setRemark("顺丰发件人省或市为空 计算失败");
+				}	 
 			}
 		}else{
 			RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
