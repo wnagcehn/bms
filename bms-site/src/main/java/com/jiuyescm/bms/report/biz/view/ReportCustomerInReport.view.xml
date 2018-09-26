@@ -33,10 +33,10 @@
         <Property name="label">统计月份</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="lastMonthStorage">
@@ -48,15 +48,15 @@
         <Property name="label">本月库存</Property>
       </PropertyDef>
       <PropertyDef name="minInTime">
-        <Property/>
+        <Property></Property>
         <Property name="label">最早入仓时间</Property>
       </PropertyDef>
       <PropertyDef name="maxOutTime">
-        <Property/>
+        <Property></Property>
         <Property name="label">最晚出仓时间</Property>
       </PropertyDef>
       <PropertyDef name="isCalculated">
-        <Property/>
+        <Property></Property>
         <Property name="label">计算状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
@@ -73,6 +73,14 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth()+1;&#xD;
+if(month==13){&#xD;
+	month=1;&#xD;
+}&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;createYear&quot;,year);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;createMonth&quot;,month);</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
 </ClientEvent>
@@ -91,37 +99,19 @@
       </DataPilot>
       <ToolBarButton id="btnQuery">
         <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+if(isNullOrEmpty(condition.get(&quot;createYear&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;统计年份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 var tmpDataSet=view.get(&quot;#dsReportCustomerInOut&quot;);&#xD;
 tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
         <Property name="caption">查询</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
-        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
-&#xD;
-var year=condition.get(&quot;year&quot;);&#xD;
-var month=condition.get(&quot;month&quot;);&#xD;
-&#xD;
-if(isNullOrEmpty(year)){&#xD;
-	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-if(isNullOrEmpty(month)){&#xD;
-	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-&#xD;
-if(!isNullOrEmpty(month)){&#xD;
-	if(month.length==1){&#xD;
-		month='0'+month;&#xD;
-	}&#xD;
-}&#xD;
-condition.set(&quot;importDate&quot;, year + &quot;-&quot; +month);&#xD;
-&#xD;
-view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
-        <Property name="visible">false</Property>
+        <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="queryForm">
@@ -177,5 +167,12 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
         </DataColumn>
       </DataGrid>
     </Container>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">warehouseImportGrid</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
   </View>
 </ViewConfig>
