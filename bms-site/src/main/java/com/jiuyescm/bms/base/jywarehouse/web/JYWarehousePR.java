@@ -76,6 +76,8 @@ public class JYWarehousePR {
 			vo.setWarehouseid(entity.getWarehouseid());
 			vo.setWarehousename(entity.getWarehousename());
 			vo.setZipcode(entity.getZipcode());
+			vo.setProvince(entity.getProvince());
+			vo.setCity(entity.getCity());
 			reList.add(vo);
 		}
 		return reList;

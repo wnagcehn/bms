@@ -149,11 +149,11 @@
       <Property name="label">仓库编码</Property>
     </PropertyDef>
     <PropertyDef name="province">
-      <Property/>
+      <Property></Property>
       <Property name="label">省</Property>
     </PropertyDef>
     <PropertyDef name="city">
-      <Property/>
+      <Property></Property>
       <Property name="label">市</Property>
     </PropertyDef>
   </DataType>

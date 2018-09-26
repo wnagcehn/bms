@@ -158,6 +158,12 @@ with (view.get(&quot;#dsWarehouseRegionRuleEntity&quot;)){&#xD;
         <Property name="property">warehousename</Property>
         <Property name="width">100</Property>
       </DataColumn>
+      <DataColumn name="province">
+        <Property name="property">province</Property>
+      </DataColumn>
+      <DataColumn name="city">
+        <Property name="property">city</Property>
+      </DataColumn>
       <DataColumn name="displayLevel">
         <Property name="property">displayLevel</Property>
       </DataColumn>
@@ -192,12 +198,6 @@ with (view.get(&quot;#dsWarehouseRegionRuleEntity&quot;)){&#xD;
       <DataColumn name="virtualflag">
         <Property name="property">virtualflag</Property>
         <Property name="width">90</Property>
-      </DataColumn>
-      <DataColumn name="province">
-        <Property name="property">province</Property>
-      </DataColumn>
-      <DataColumn name="city">
-        <Property name="property">city</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">delflag</Property>
