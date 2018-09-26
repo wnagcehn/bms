@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="cur_time" property="curTime" jdbcType="DATE" />
+		   	<result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+		   	<result column="pallet_num" property="palletNum" jdbcType="DECIMAL" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="rowExcelNo" property="rowExcelNo" jdbcType="INTEGER" />
+		   	<result column="rowExcelName" property="rowExcelName" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, creator, creator_id, create_time, write_time, rowExcelNo, rowExcelName
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, creator, creator_id, create_time, write_time, rowExcelNo, rowExcelName
+    </sql>
+	
+	<select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+        select a.cur_time, a.warehouse_name, a.customer_name, 
+        a.temperature_type_code,a.rowExcelNo,a.rowExcelName
+		from biz_pallet_info_temp a 
+		inner join biz_pallet_info b on a.customer_id = b.customer_id 
+		and a.cur_time = b.cur_time and a.warehouse_code = b.warehouse_code 
+		and a.temperature_type_code = b.temperature_type_code
+		where 1=1 and b.del_flag=0 and a.task_id=#{taskId}
+    </select>
+	
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_pallet_info_temp
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_pallet_info_temp
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" taskId != null and taskId !='' ">
+				and task_id = #{taskId}
+			</if>
+        	<if test=" curTime != null and curTime !='' ">
+				and cur_time = #{curTime}
+			</if>
+        	<if test=" bizType != null and bizType !='' ">
+				and biz_type = #{bizType}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+				and temperature_type_code = #{temperatureTypeCode}
+			</if>
+        	<if test=" palletNum != null and palletNum !='' ">
+				and pallet_num = #{palletNum}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" creatorId != null and creatorId !='' ">
+				and creator_id = #{creatorId}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+        	<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				and rowExcelNo = #{rowExcelNo}
+			</if>
+        	<if test=" rowExcelName != null and rowExcelName !='' ">
+				and rowExcelName = #{rowExcelName}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+        insert into biz_pallet_info_temp(
+			task_id, cur_time, biz_type, warehouse_code, warehouse_name, 
+			customer_id, customer_name, temperature_type_code, pallet_num, 
+			creator, creator_id, create_time, write_time, rowExcelNo, rowExcelName
+    	)
+        values 
+        <foreach item="item" index="index" collection="list" separator=",">
+        (
+			#{item.taskId,jdbcType=VARCHAR}, 
+			#{item.curTime,jdbcType=DATE}, 
+			#{item.bizType,jdbcType=VARCHAR}, 
+			#{item.warehouseCode,jdbcType=VARCHAR}, 
+			#{item.warehouseName,jdbcType=VARCHAR}, 
+			#{item.customerId,jdbcType=VARCHAR}, 
+			#{item.customerName,jdbcType=VARCHAR}, 
+			#{item.temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{item.palletNum,jdbcType=DECIMAL}, 
+			#{item.creator,jdbcType=VARCHAR}, 
+			#{item.creatorId,jdbcType=VARCHAR}, 
+			#{item.createTime,jdbcType=TIMESTAMP}, 
+			#{item.writeTime,jdbcType=TIMESTAMP}, 
+			#{item.rowExcelNo,jdbcType=INTEGER}, 
+			#{item.rowExcelName,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+        update biz_pallet_info_temp
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" taskId != null and taskId !='' ">
+				task_id = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test=" curTime != null and curTime !='' ">
+				cur_time = #{curTime,jdbcType=DATE},
+			</if>
+			<if test=" bizType != null and bizType !='' ">
+				biz_type = #{bizType,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseName != null and warehouseName !='' ">
+				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+				temperature_type_code = #{temperatureTypeCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" palletNum != null and palletNum !='' ">
+				pallet_num = #{palletNum,jdbcType=DECIMAL},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" creatorId != null and creatorId !='' ">
+				creator_id = #{creatorId,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				rowExcelNo = #{rowExcelNo,jdbcType=INTEGER},
+			</if>
+			<if test=" rowExcelName != null and rowExcelName !='' ">
+				rowExcelName = #{rowExcelName,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBybatchNum" parameterType="java.util.Map">
+    	delete from biz_pallet_info_temp where task_id=#{taskId}
+    </delete>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_pallet_info_temp 
+        where id = #{id}
+    </delete>
+    
+   	<insert id="saveDataFromTemp" parameterType="java.util.Map">
+    	insert into biz_pallet_info(cur_time, biz_type,warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, is_calculated, creator, creator_id, create_time, del_flag, write_time)
+		select  cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, '0', creator, creator_id, create_time, '0', write_time
+		from biz_pallet_info_temp where task_id=#{taskId}                           
+    </insert>
+</mapper>

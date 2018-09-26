@@ -54,14 +54,14 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		s.cost as cost, s.subject_code as subjectCode
 		from biz_pallet_info p
 		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
-		WHERE 1=1
+		WHERE 1=1 and p.del_flag='0'
         	<if test=" id != null and id !='' ">
 				and p.id = #{id}
 			</if>
         	<if test=" curTime != null and curTime !='' ">
 				and p.cur_time = #{curTime}
 			</if>
-        	<if test=" bizType != null and bizType !='' ">
+        	<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
 				and p.biz_type = #{bizType}
 			</if>
         	<if test=" warehouseCode != null and warehouseCode !='' ">
@@ -78,9 +78,6 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			</if>
         	<if test=" isCalculated != null and isCalculated !='' ">
 				and s.is_calculated = #{isCalculated}
-			</if>
-        	<if test=" delFlag != null and delFlag !='' ">
-				and p.del_flag = #{delFlag}
 			</if>
 			<if test=" subjectCode != null and subjectCode !='' ">
 				and s.subject_code = #{subjectCode}
@@ -166,8 +163,8 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 				del_flag = #{delFlag,jdbcType=VARCHAR},
 			</if>
         </trim>
-        where cur_time=#{curTime} and customer_name=#{customerId}
-        and warehouse_name=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
+        where cur_time=#{curTime} and customer_id=#{customerId}
+        and warehouse_code=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
         and biz_type=#{bizType}
     </update>
     
@@ -216,4 +213,5 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         delete from biz_pallet_info 
         where id = #{id}
     </delete>
+    
 </mapper>

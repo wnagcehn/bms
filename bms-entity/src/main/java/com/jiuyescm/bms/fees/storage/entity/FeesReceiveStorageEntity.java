@@ -68,6 +68,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private String externalProductNo;
 	// 数量
 	private Integer quantity;
+	//调整数量
+	private Integer adjustNum;
 	// 单位
 	private String unit;
 	// 重量
@@ -907,6 +909,14 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setInstockDate(Timestamp instockDate) {
 		this.instockDate = instockDate;
+	}
+
+	public Integer getAdjustNum() {
+		return adjustNum;
+	}
+
+	public void setAdjustNum(Integer adjustNum) {
+		this.adjustNum = adjustNum;
 	}
 	
 	

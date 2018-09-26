@@ -204,4 +204,11 @@ public interface IFeesReceiveStorageRepository {
 	 * @return
 	 */
 	List<FeesReceiveStorageEntity> queryPreBillStorageByItems(Map<String, Object> parameter);
+	
+	/**
+	 * 预账单处置费
+	 * @param parameter
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryPreBillPallet(Map<String, Object> parameter);
 }

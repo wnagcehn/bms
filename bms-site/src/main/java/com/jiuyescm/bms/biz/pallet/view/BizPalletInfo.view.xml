@@ -9,15 +9,16 @@
         <Property name="label">id</Property>
       </PropertyDef>
       <PropertyDef name="curTime">
-        <Property name="label">日期(2018-01-01)</Property>
+        <Property name="label">库存日期</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
         <Property name="label">托数类型</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Entity>
-              <Property name="product">商品存储托数</Property>
-              <Property name="material">耗材存储托数</Property>
+              <Property name="product">商品托数</Property>
+              <Property name="material">耗材托数</Property>
               <Property name="instock">入库托数</Property>
               <Property name="outstock">出库托数</Property>
             </Entity>
@@ -62,6 +63,7 @@
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
         <Property name="label">修改者</Property>
@@ -71,6 +73,7 @@
       </PropertyDef>
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="isCalculated">
         <Property name="label">计算状态</Property>
@@ -109,19 +112,14 @@
     <DataType name="dtBizPalletInfoEntityQuery">
       <PropertyDef name="curTime">
         <Property name="label">日期(2018-01-01)</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="bizType">
         <Property name="label">托数类型</Property>
         <Property name="mapping">
-          <Property name="mapValues">
-            <Entity>
-              <Property name="product">商品存储托数</Property>
-              <Property name="material">耗材存储托数</Property>
-              <Property name="instock">入库托数</Property>
-              <Property name="outstock">出库托数</Property>
-            </Entity>
-          </Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;BIZ_TYPE&quot;)}</Property>
         </Property>
+        <Property name="defaultValue">ALL</Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
         <Property name="label">仓库</Property>
@@ -168,6 +166,7 @@
       </PropertyDef>
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="isCalculated">
         <Property name="label">计算状态</Property>
@@ -193,6 +192,15 @@
       </PropertyDef>
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="wh_material_storage">耗材存储费</Property>
+              <Property name="wh_disposal">处置费</Property>
+              <Property name="wh_product_storage">商品存储费</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtPalletGroup">
@@ -247,13 +255,28 @@
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnModify">
-        <ClientEvent name="onClick">var data=view.get(&quot;#dsBizPalletInfoEntity.data&quot;);&#xD;
-                if(data.current){&#xD;
-                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
-					&#xD;
-                }else{&#xD;
-                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
-                }</ClientEvent>
+        <ClientEvent name="onClick">				&#xD;
+var selectDatas = view.get(&quot;#palletDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length > 1) {&#xD;
+    dorado.MessageBox.alert(&quot;只能选择一条数据!&quot;); &#xD;
+    return;&#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条数据&quot;);&#xD;
+    return;&#xD;
+} &#xD;
+var data=null;&#xD;
+view.get(&quot;#dsBizPalletInfoEntity.data&quot;).each(function(entity){ &#xD;
+    if(entity.get(&quot;id&quot;) == (selectDatas[0]).get(&quot;id&quot;)){&#xD;
+	    view.get(&quot;#dsBizPalletInfoEntity.data&quot;).setCurrent(entity); &#xD;
+	    data=entity;&#xD;
+    } &#xD;
+}); &#xD;
+if(null == data){&#xD;
+    dorado.MessageBox.alert(&quot;异常，请刷新重试&quot;);&#xD;
+    return;&#xD;
+} &#xD;
+&#xD;
+view.get(&quot;#dialogEdit&quot;).show();</ClientEvent>
         <Property name="caption">编辑</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
       </ToolBarButton>
@@ -282,13 +305,6 @@ if(data.get(&quot;createTime&quot;)==&quot;&quot;||data.get(&quot;createTime&quo
 </ClientEvent>
         <Property name="caption">分组统计</Property>
         <Property name="icon">url(>skin>common/icons.gif) -20px -60px</Property>
-      </ToolBarButton>
-      <ToolBarButton id="btnTemplateDownload">
-        <ClientEvent name="onClick">view.get(&quot;#downloadTemplateAction&quot;).execute();	&#xD;
-&#xD;
-</ClientEvent>
-        <Property name="caption">导入模板下载</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnUpdateCalculate">
         <ClientEvent name="onClick">var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
@@ -324,6 +340,30 @@ function isNullOrEmpty(e) {&#xD;
         <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
         <Property name="visible">true</Property>
       </ToolBarButton>
+      <MenuButton>
+        <Property name="caption">模板下载</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
+        <ControlMenuItem>
+          <ClientEvent name="onClick">view.get(&quot;#downloadTemplateAction&quot;).execute();	&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">导入模板下载</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
+        </ControlMenuItem>
+        <ControlMenuItem>
+          <ClientEvent name="onClick">view.get(&quot;#updateTemplateAction&quot;).execute();	&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">更新模板下载</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+        </ControlMenuItem>
+      </MenuButton>
+      <ToolBarButton id="btnTemplateImport">
+        <ClientEvent name="onClick">view.get(&quot;#ImportPalletDialog&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+        <Property name="caption">导入</Property>
+      </ToolBarButton>
       <ToolBarButton id="updateBatch">
         <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).show();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
@@ -332,32 +372,28 @@ function isNullOrEmpty(e) {&#xD;
       </ToolBarButton>
       <ToolBarButton id="btnRemove">
         <ClientEvent name="onClick">var datas = view.get(&quot;#dsBizPalletInfoEntity.data&quot;);&#xD;
-                var currentData = datas.current;&#xD;
-                if(currentData){&#xD;
-                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
-                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
-                            callback:function(success){&#xD;
-                                //刷新&#xD;
-								var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
-								with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
-									set(&quot;parameter&quot;, data);&#xD;
-									flushAsync();&#xD;
-								}&#xD;
-                            }&#xD;
-                        });&#xD;
-                    });&#xD;
-                }else{&#xD;
-                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
-                }</ClientEvent>
+        var currentData = datas.current;&#xD;
+		var selectData = view.get(&quot;#palletDataGrid&quot;).get(&quot;selection&quot;);&#xD;
+        if(currentData){&#xD;
+			if (selectData.length &lt; 1) {&#xD;
+				dorado.MessageBox.alert(&quot;请至少选择一条数据&quot;);&#xD;
+			}&#xD;
+			else {&#xD;
+				dorado.MessageBox.confirm(&quot;是否确定要废除此条记录?&quot;, function(){&#xD;
+					view.get(&quot;#deleteAction&quot;).execute({&#xD;
+						callback: function(success){&#xD;
+							with (view.get(&quot;#dsBizPalletInfoEntity&quot;)) {&#xD;
+								flushAsync();&#xD;
+							}&#xD;
+						}&#xD;
+					});&#xD;
+				});&#xD;
+			}&#xD;
+        }else{&#xD;
+              dorado.MessageBox.alert(&quot;请首先选择要废除的记录!&quot;);&#xD;
+        }</ClientEvent>
         <Property name="caption">删除</Property>
         <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
-      </ToolBarButton>
-      <ToolBarButton id="btnTemplateUpdate">
-        <ClientEvent name="onClick">view.get(&quot;#updateTemplateAction&quot;).execute();	&#xD;
-&#xD;
-</ClientEvent>
-        <Property name="caption">更新模板下载</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
         <Property name="caption">导出</Property>
@@ -388,6 +424,28 @@ function isNullOrEmpty(e) {&#xD;
     </DataSet>
     <Container>
       <AutoForm id="queryForm">
+        <ClientEvent name="onReady">&#xD;
+	var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set({&#xD;
+		createTime:firstDay,&#xD;
+		createEndTime:lastDay&#xD;
+	});&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
         <Property name="createPrivateDataSet">true</Property>
         <Property name="cols">*,*,*,*</Property>
         <Property name="labelWidth">65</Property>
@@ -408,7 +466,6 @@ function isNullOrEmpty(e) {&#xD;
         <AutoFormElement>
           <Property name="name">feesNo</Property>
           <Property name="property">feesNo</Property>
-          <Property name="trigger">triggerCustomer</Property>
           <Property name="showHint">false</Property>
           <Editor/>
         </AutoFormElement>
@@ -421,14 +478,13 @@ function isNullOrEmpty(e) {&#xD;
         <AutoFormElement>
           <Property name="name">bizType</Property>
           <Property name="property">bizType</Property>
-          <Property name="trigger">triggerCustomer</Property>
           <Property name="showHint">false</Property>
+          <Property name="editable">false</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">subjectCode</Property>
           <Property name="property">subjectCode</Property>
-          <Property name="trigger">triggerCustomer</Property>
           <Property name="showHint">false</Property>
           <Editor/>
         </AutoFormElement>
@@ -447,11 +503,12 @@ function isNullOrEmpty(e) {&#xD;
       </AutoForm>
     </Container>
     <Container>
-      <DataGrid>
+      <DataGrid id="palletDataGrid">
         <Property name="dataSet">dsBizPalletInfoEntity</Property>
         <Property name="stretchColumnsMode">auto</Property>
         <Property name="readOnly">true</Property>
-        <IndicatorColumn/>
+        <Property name="selectionMode">multiRows</Property>
+        <RowSelectorColumn/>
         <RowNumColumn/>
         <DataColumn name="id">
           <Property name="property">id</Property>
@@ -459,47 +516,61 @@ function isNullOrEmpty(e) {&#xD;
         </DataColumn>
         <DataColumn name="curTime">
           <Property name="property">curTime</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="warehouseCode">
           <Property name="property">warehouseCode</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="temperatureTypeCode">
           <Property name="property">temperatureTypeCode</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">subjectCode</Property>
           <Property name="name">subjectCode</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="bizType">
           <Property name="property">bizType</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="palletNum">
           <Property name="property">palletNum</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="adjustPalletNum">
           <Property name="property">adjustPalletNum</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">cost</Property>
           <Property name="name">cost</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="isCalculated">
           <Property name="property">isCalculated</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="remark">
           <Property name="property">remark</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="feesNo">
           <Property name="property">feesNo</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="createTime">
           <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
         </DataColumn>
         <DataColumn name="warehouseName">
           <Property name="property">warehouseName</Property>
@@ -543,7 +614,7 @@ function isNullOrEmpty(e) {&#xD;
       <ClientEvent name="onClose">view.id(&quot;dsBizPalletInfoEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="caption">数据维护</Property>
       <Property name="center">true</Property>
-      <Property name="height">100</Property>
+      <Property name="height">130</Property>
       <Property name="width">300</Property>
       <Buttons>
         <Button id="btnSave">
@@ -604,6 +675,7 @@ var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
       </UpdateItem>
     </UpdateAction>
     <UpdateAction id="deleteAction">
+      <ClientEvent name="onGetUpdateData">arg.data=view.get(&quot;#palletDataGrid&quot;).get(&quot;selection&quot;);</ClientEvent>
       <Property name="successMessage">数据删除成功！</Property>
       <Property name="dataResolver">bizPalletInfoController#delete</Property>
       <UpdateItem>
@@ -816,7 +888,7 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
 //view.get(&quot;#d_uimportBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
 //view.get(&quot;#d_updateCloseBtn&quot;).set(&quot;disabled&quot;,true);&#xD;
 </ClientEvent>
-          <Property name="fileResolver">bizPallectInfoController#importUpdate</Property>
+          <Property name="fileResolver">bizPalletInfoController#importUpdate</Property>
           <Property name="caption">导入Excel</Property>
           <Property name="maxFileSize">5MB</Property>
           <Filters>
@@ -832,7 +904,7 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
     <Export2ReportAction id="export2ReportAction">
       <Property name="caption">导出Excel数据</Property>
       <Property name="dataScope">serverAll</Property>
-      <Property name="template">dataGridProductPalletStorage</Property>
+      <Property name="template">palletDataGrid</Property>
       <Property name="dataFontSize">10</Property>
       <Property name="maxSize">100000</Property>
     </Export2ReportAction>
@@ -847,7 +919,7 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
       <Property name="fileProvider">bizPalletInfoController#accquireTemplate</Property>
       <Property name="target">workspace</Property>
     </DownloadAction>
-    <Dialog id="ImportPackDialog">
+    <Dialog id="ImportPalletDialog">
       <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;
 $(&quot;#d_importProgressBar&quot;).hide();&#xD;
 $(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
@@ -860,13 +932,13 @@ $(&quot;#d_importProgressBar&quot;).hide();&#xD;
 $(&quot;#d_fileName input&quot;).val(&quot;&quot;);&#xD;
 view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
 </ClientEvent>
-      <Property name="caption">耗材库存导入</Property>
+      <Property name="caption">托数导入</Property>
       <Property name="closeable">false</Property>
       <Property name="height">180</Property>
       <Property name="width">460</Property>
       <Buttons>
         <Button id="importCloseBtn">
-          <ClientEvent name="onClick">view.get(&quot;#ImportPackDialog&quot;).hide();</ClientEvent>
+          <ClientEvent name="onClick">view.get(&quot;#ImportPalletDialog&quot;).hide();</ClientEvent>
           <Property name="caption">关闭</Property>
         </Button>
       </Buttons>
@@ -904,7 +976,7 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
         <ProgressBar id="importProgressBar"/>
         <AjaxAction id="getProgress">
           <Property name="modal">false</Property>
-          <Property name="service">productPalletStorageController#getProgress</Property>
+          <Property name="service">bizPalletInfoController#getProgress</Property>
         </AjaxAction>
         <UploadAction id="uploadMaterialAction">
           <ClientEvent name="onFileUploaded">view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
@@ -916,15 +988,15 @@ if(data.error!=null){&#xD;
 	 var dataSet=view.get(&quot;#dsErrorMessageVo&quot;);&#xD;
      dataSet.setData(data.error);&#xD;
 	 view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入失败！&quot;);&#xD;
-     view.get(&quot;#errorProductMsgDialog&quot;).show();&#xD;
+     view.get(&quot;#errorMsgDialog&quot;).show();&#xD;
 	 return;&#xD;
 }&#xD;
 if(data.succ!=null){&#xD;
 	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
 	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
-		view.get(&quot;#ImportPackDialog&quot;).hide();&#xD;
-		var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
-		with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
+		view.get(&quot;#ImportPalletDialog&quot;).hide();&#xD;
+		var condition = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+		with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
 			set(&quot;parameter&quot;, condition);&#xD;
 			flushAsync();&#xD;
 		}&#xD;
@@ -989,7 +1061,7 @@ var progressJob = setInterval(getProgress, 500);</ClientEvent>
 $(&quot;#d_fileName input&quot;).val(fname);&#xD;
 view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
 view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEvent>
-          <Property name="fileResolver">productPalletStorageController#importProductPalletTemplate</Property>
+          <Property name="fileResolver">bizPalletInfoController#importPalletTemplate</Property>
           <Property name="caption">导入Excel</Property>
           <Property name="maxFileSize">5MB</Property>
           <Filters>
@@ -1000,9 +1072,28 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
           </Filters>
         </UploadAction>
         <AjaxAction id="ajaxsetProgress">
-          <Property name="service">productPalletStorageController#resetProgress</Property>
+          <Property name="service">bizPalletInfoController#resetProgress</Property>
           <Property name="modal">false</Property>
         </AjaxAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="errorMsgDialog">
+      <Property name="caption">消息提示!</Property>
+      <Property name="width">540</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid id="errorMsgGrid">
+          <Property name="dataSet">dsErrorMessageVo</Property>
+          <DataColumn name="lineNo">
+            <Property name="property">lineNo</Property>
+            <Property name="width">30</Property>
+          </DataColumn>
+          <DataColumn name="msg">
+            <Property name="property">msg</Property>
+          </DataColumn>
+        </DataGrid>
       </Children>
       <Tools/>
     </Dialog>

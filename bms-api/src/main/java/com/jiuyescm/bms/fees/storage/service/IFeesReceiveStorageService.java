@@ -119,4 +119,11 @@ public interface IFeesReceiveStorageService {
 	 * @return
 	 */
 	List<FeesReceiveStorageEntity> queryPreBillStorageByItems(Map<String, Object> condition);
+	
+	/**
+	 * 处置费
+	 * @param condition
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryPreBillPallet(Map<String, Object> condition);
 }

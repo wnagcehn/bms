@@ -21,7 +21,7 @@ public interface IBizPalletInfoService {
 
     BizPalletInfoEntity update(BizPalletInfoEntity entity);
     
-	BizPalletInfoEntity delete(BizPalletInfoEntity entity);
+	int delete(List<BizPalletInfoEntity> list);
 	
 	/**
 	 * 分组统计
@@ -45,5 +45,6 @@ public interface IBizPalletInfoService {
 	 * @return
 	 */
 	int updateBatch(List<Map<String, Object>> list);
+
 
 }

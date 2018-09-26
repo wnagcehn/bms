@@ -427,7 +427,7 @@ public class BuinessDataExportController extends BaseController {
 				dataItem.put("instockNo", entity.getInstockNo());
 				dataItem.put("totalQty", entity.getQuantity());
 				dataItem.put("totalBox", entity.getBox());
-				dataItem.put("totalWeight", (double)entity.getWeight()/1000);
+				dataItem.put("totalWeight", entity.getWeight() == null ? "":(double)entity.getWeight()/1000);
 				if ("wh_instock_work".equals(entity.getSubjectCode())) {
 					dataItem.put("instockAmount", entity.getCost()!=null?entity.getCost().doubleValue():BigDecimal.ZERO);
 				}else if ("wh_b2c_handwork".equals(entity.getSubjectCode())) {
@@ -1185,7 +1185,7 @@ public class BuinessDataExportController extends BaseController {
 		        	dataItem.put("tempretureType", temMap.get(entity.getTempretureType()));
 		        	dataItem.put("quantity", entity.getQuantity());
 		        	dataItem.put("box", entity.getBox());
-		        	dataItem.put("weight", (double)entity.getWeight()/1000);
+		        	dataItem.put("weight", entity.getWeight() == null?"":(double)entity.getWeight()/1000);
 	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
 	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
 	        			dataItem.put("orderCost", entity.getCost());
@@ -1244,6 +1244,15 @@ public class BuinessDataExportController extends BaseController {
 			for (FeesReceiveStorageEntity entity : itemsList) {
 				conIndex++;
 				newIndex++;
+				if (!set.contains(entity.getCreateTime())) {
+					set.add(entity.getCreateTime());
+				}
+			}
+			
+			// 处置费
+			List<FeesReceiveStorageEntity> disposalList = feesReceiveStorageService.queryPreBillPallet(parameter);
+			for (FeesReceiveStorageEntity entity : disposalList) {
+				conIndex++;
 				if (!set.contains(entity.getCreateTime())) {
 					set.add(entity.getCreateTime());
 				}
@@ -1460,6 +1469,11 @@ public class BuinessDataExportController extends BaseController {
 			double ldCost = 0.0;
 			double colcost = 0.0;
 			double prodcost = 0.0;
+			double paCost = 0.0;
+			double incost = 0.0;
+			double incolCost = 0.0;
+			double outcost = 0.0;
+			double outcolCost = 0.0;
 			
 			for (int i = 0; i < dateList.size(); i++) {
 				double rowCost = 0.0;
@@ -1559,22 +1573,53 @@ public class BuinessDataExportController extends BaseController {
 						ldCost = 0.0;
 					}
 				}
-				
-				//商品存储费（按件）
-				for (FeesReceiveStorageEntity entity : itemsList) {
+				int pIndex = 0;
+				//处置费
+				for (FeesReceiveStorageEntity entity : disposalList) {
 					if (entity.getCreateTime().equals(timestamp)) {
-						//库存件数
-						double productCost = entity.getCost().doubleValue();
-						Cell cell60 = row.createCell(8);
-						cell60.setCellValue(entity.getQuantity());
-						//存储费按件小计
-						Cell cell61 = row.createCell(17);
-						cell61.setCellValue(productCost);
-						rowCost = rowCost+productCost;
-						ccfcost = ccfcost+productCost;
+						double palletCost = entity.getCost().doubleValue();
+						if ("instock".equals(entity.getBizType())) {
+							//入库件数
+							Cell cell70 = row.createCell(9-move1);
+							cell70.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
+						}else if ("outstock".equals(entity.getBizType())) {
+							//出库件数
+							Cell cell71 = row.createCell(10-move1);
+							cell71.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
+						}else {
+							continue;
+						}		
+						//处置费小计
+						Cell cell72 = row.createCell(18-move2);
+						cell72.setCellValue(palletCost+incost);
+						//累加行
+						incost = rowcolCost+palletCost;
+						//累加列
+						czfcost = czfcost+palletCost;
+						
+						rowcolCost = incost;
+					}else {
+						incost = 0.0;
 					}
 				}
 				
+				if (newIndex > 0) {
+					//商品存储费（按件）
+					for (FeesReceiveStorageEntity entity : itemsList) {
+						if (entity.getCreateTime().equals(timestamp)) {
+							//库存件数
+							double productCost = entity.getCost().doubleValue();
+							Cell cell60 = row.createCell(8);
+							cell60.setCellValue(entity.getQuantity());
+							//存储费按件小计
+							Cell cell61 = row.createCell(17);
+							cell61.setCellValue(productCost);
+							rowCost = rowCost+productCost;
+							ccfcost = ccfcost+productCost;
+						}
+					}
+				}
+			
 				rowCost = rowCost+rowcolCost;
 				// 总计
 				totalcost = rowCost + totalcost;
