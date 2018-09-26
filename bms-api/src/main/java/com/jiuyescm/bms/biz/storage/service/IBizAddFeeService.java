@@ -26,12 +26,21 @@ public interface IBizAddFeeService {
 
     BizAddFeeEntity update(BizAddFeeEntity entity);
 
-    void delete(Long id);
-    
     int saveorUpdateList(List<BizAddFeeEntity> addList,List<BizAddFeeEntity> updateList);
     
     void  updateFee(List<BizAddFeeEntity> updateList);
     
      List<BizAddFeeEntity> queryList(Map<String, Object> condition);
+
+	void delete(BizAddFeeEntity entity);
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
 
 }

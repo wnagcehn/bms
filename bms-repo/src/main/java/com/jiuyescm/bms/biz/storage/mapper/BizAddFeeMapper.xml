@@ -126,11 +126,69 @@
 	  
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-        select
-        <include refid="baseColumns" />
-        from biz_add_fee
-        where 1=1
-		<include refid="baseSelectColumns" />
+        select a.*, s.cost as cost, s.unit_price as unitPrice from biz_add_fee a
+		LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no and s.del_flag='0'
+		WHERE 1=1
+		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(startTime != null and endTime !='')" >
+			    and a.create_time >= #{startTime} and  <![CDATA[a.create_time <= #{endTime}]]>
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and a.warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and a.customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and a.customer_name = #{customerName}
+		</if>
+		<if test="(num != null and num !='')" >
+				and a.num = #{num}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and a.fees_type = #{feesType}
+		</if>
+		<if test="(feesUnit != null and feesUnit !='')" >
+				and a.fees_unit = #{feesUnit}
+		</if>
+		<if test="(item != null and item !='')" >
+				and a.item = #{item}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and a.is_calculated = #{isCalculated}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and a.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and a.create_time >= #{createTime} add <![CDATA[a.create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and a.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and a.del_flag = #{delFlag}
+		</if>
+		<if test="(calculateTime != null and calculateTime !='')" >
+			    and a.calculate_time >= #{calculateTime} add <![CDATA[a.calculate_time <= #{calculateTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and a.write_time >= #{writeTime} add <![CDATA[a.write_time <= #{writeTime}]]>
+		</if>
+		<if test="(adjustNum != null and adjustNum !='')" >
+				and a.adjust_num = #{adjustNum}
+		</if>
     </select>
     
     <select id="queryRecount" parameterType="java.util.Map"
@@ -251,8 +309,10 @@
     </update>
     
     <select id="selectOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-        select <include refid="baseColumns" />  from  biz_add_fee 
-        where operation_time=#{operationTime,jdbcType=TIMESTAMP}  
+        select <include refid="baseColumns" />  
+        from  biz_add_fee 
+        where 1=1 and del_flag='0'
+        and operation_time=#{operationTime,jdbcType=TIMESTAMP}  
         and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
         and customerid=#{customerid,jdbcType=VARCHAR}
         and fees_type=#{feesType,jdbcType=VARCHAR}
@@ -286,5 +346,34 @@
 			and is_calculated = concat(${isCalculated})
 		</if>
 		LIMIT #{num}
+    </select>
+    
+    <select id="groupCount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    	select a.customer_name, a.fees_type_name, 
+		s.is_calculated, COUNT(*) as totalNum
+		from fees_receive_storage s
+		LEFT JOIN biz_add_fee a on a.fees_no=s.fees_no and a.del_flag='0'
+		WHERE 1=1
+		<if test=" warehouseCode != null and warehouseCode !='' ">
+			and a.warehouse_code = #{warehouseCode}
+		</if>
+       	<if test=" customerid != null and customerid !='' ">
+			and a.customerid = #{customerid}
+		</if>
+		<if test="startTime != null and startTime !='' " >
+			and <![CDATA[a.create_time >= #{startTime}]]>
+		</if>
+		<if test="endTime != null and endTime !='' " >
+			and <![CDATA[a.create_time <= #{endTime}]]>
+		</if>
+		<if test=" isCalculated != null and isCalculated !='' ">
+			and s.is_calculated = #{isCalculated}
+		</if>
+		<if test=" feesType != null and feesType !='' ">
+			and a.fees_type = #{feesType}
+		</if>
+		GROUP BY a.customer_name, s.is_calculated, a.fees_type_name
+		ORDER BY totalNum DESC
     </select>
 </mapper>

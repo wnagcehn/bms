@@ -349,6 +349,10 @@
         <Property></Property>
         <Property name="label">超期状态</Property>
       </PropertyDef>
+      <PropertyDef name="warnMessage">
+        <Property></Property>
+        <Property name="label">预警信息</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInvoice">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo</Property>
@@ -769,8 +773,17 @@
     <DataSet id="dsErrorMessageVo">
       <Property name="dataType">[dtErrorMessageVo]</Property>
     </DataSet>
-    <DataSet id="dsBillCheckWarn"/>
-    <DataSet id="dsBillCheckWarnDetail"/>
+    <DataSet id="dsBillCheckWarn">
+      <Property name="dataProvider">billCheckInfoController#queryWarn</Property>
+      <Property name="dataType">[dtBillCheckInfo]</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckWarnDetail">
+      <Property name="dataType">[dtBillCheckInfo]</Property>
+      <Property name="dataProvider">billCheckInfoController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
     <ToolBar>
       <DataPilot>
         <Property name="itemCodes">pages,pageSize</Property>
@@ -994,6 +1007,11 @@ if(data.current){&#xD;
         <Property name="caption">确认账单</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
         <Property name="visible">false</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnWarn">
+        <ClientEvent name="onClick">view.get(&quot;#dialogWarn&quot;).show();</ClientEvent>
+        <Property name="caption">预警</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnReceipt">
         <ClientEvent name="onClick">view.get(&quot;#finishAction&quot;).execute(function(result){&#xD;
@@ -3053,25 +3071,14 @@ if (data != null) {&#xD;
     <Dialog id="dialogWarn">
       <ClientEvent name="onClose">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <ClientEvent name="onHide">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
-      <Property name="width">400</Property>
+      <Property name="width">800</Property>
       <Property name="caption">预警</Property>
-      <Property name="height">400</Property>
+      <Property name="height">500</Property>
       <Buttons>
         <Button>
-          <ClientEvent name="onClick">var dsBillCheckInfo=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
-var dsBillCheckLog=view.get(&quot;#dsBillCheckLog.data&quot;).current;&#xD;
-&#xD;
-dsBillCheckInfo.set(&quot;operDesc&quot;,&quot;作废账单&quot;+dsBillCheckLog.get(&quot;operateDesc&quot;));&#xD;
-view.id(&quot;updateBillStatus&quot;).execute(&#xD;
-	function(result){&#xD;
-		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
-			flushAsync();&#xD;
-		}&#xD;
-		view.id(&quot;dialogCancel&quot;).hide();&#xD;
-	}&#xD;
-);</ClientEvent>
+          <ClientEvent name="onClick">view.get(&quot;#downloadWarnAction&quot;).execute();</ClientEvent>
           <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
-          <Property name="caption">确认</Property>
+          <Property name="caption">导出</Property>
         </Button>
         <Button>
           <ClientEvent name="onClick">view.get(&quot;#dialogCancel&quot;).hide();</ClientEvent>
@@ -3081,21 +3088,232 @@ view.id(&quot;updateBillStatus&quot;).execute(&#xD;
       </Buttons>
       <Children>
         <SplitPanel>
-          <Property name="direction">top</Property>
+          <Property name="direction">right</Property>
+          <Property name="position">580</Property>
           <MainControl>
             <Container>
               <DataPilot>
                 <Property name="dataSet">dsBillCheckWarn</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
               </DataPilot>
               <DataGrid id="dataBillCheckWarn">
+                <ClientEvent name="onDataRowClick">var entity=view.get(&quot;#dsBillCheckWarn.data&quot;).current;&#xD;
+&#xD;
+//日志记录&#xD;
+with (view.get(&quot;#dsBillCheckWarnDetail&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		invoiceName:entity.get(&quot;invoiceName&quot;),&#xD;
+		billStatus:&quot;TB_RECEIPT&quot;&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}&#xD;
+</ClientEvent>
                 <Property name="dataSet">dsBillCheckWarn</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="invoiceName">
+                  <Property name="property">invoiceName</Property>
+                </DataColumn>
+                <DataColumn name="warnMessage">
+                  <Property name="property">warnMessage</Property>
+                </DataColumn>
               </DataGrid>
             </Container>
           </MainControl>
-          <SideControl/>
+          <SideControl>
+            <Container>
+              <DataPilot>
+                <Property name="dataSet">dsBillCheckWarnDetail</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+              </DataPilot>
+              <DataGrid>
+                <Property name="dataSet">dsBillCheckWarnDetail</Property>
+                <Property name="readOnly">true</Property>
+                <RowNumColumn/>
+                <DataColumn name="createMonth">
+                  <ClientEvent name="onRenderFooterCell">arg.dom.innerHTML=&quot;合计:&quot;;</ClientEvent>
+                  <Property name="property">createMonth</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="invoiceName">
+                  <Property name="property">invoiceName</Property>
+                  <Property name="width">130</Property>
+                </DataColumn>
+                <DataColumn name="billName">
+                  <Property name="property">billName</Property>
+                  <Property name="width">130</Property>
+                </DataColumn>
+                <DataColumn name="billStartTime">
+                  <Property name="property">billStartTime</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="billStatus">
+                  <Property name="property">billStatus</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="billCheckStatus">
+                  <Property name="property">billCheckStatus</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="balanceName">
+                  <Property name="property">balanceName</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="projectName">
+                  <Property name="property">projectName</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="area">
+                  <Property name="property">area</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="sellerName">
+                  <Property name="property">sellerName</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="projectManagerName">
+                  <Property name="property">projectManagerName</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="invoiceStatus">
+                  <Property name="property">invoiceStatus</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="overStatus">
+                  <ClientEvent name="onRenderCell">var overStatus=arg.data.get(&quot;overStatus&quot;);&#xD;
+if(!isNullOrEmpty(overStatus)){&#xD;
+	if(overStatus==&quot;临期&quot;){&#xD;
+		arg.dom.style.color = &quot;blue&quot;;&#xD;
+	}else if(overStatus==&quot;超期&quot;){&#xD;
+		arg.dom.style.color = &quot;red&quot;;&#xD;
+	}	&#xD;
+}&#xD;
+&#xD;
+arg.processDefault = true;</ClientEvent>
+                  <Property name="property">overStatus</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="deptName">
+                  <Property name="property">deptName</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="firstClassName">
+                  <Property name="property">firstClassName</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="bizTypeName">
+                  <Property name="property">bizTypeName</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="confirmDate">
+                  <Property name="property">confirmDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="expectAmount">
+                  <Property name="property">expectAmount</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="confirmAmount">
+                  <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalConfirmAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+                  <Property name="property">confirmAmount</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="invoiceAmount">
+                  <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalInvoiceAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+                  <Property name="property">invoiceAmount</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="invoiceDate">
+                  <Property name="property">invoiceDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="expectReceiptDate">
+                  <Property name="property">expectReceiptDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="unReceiptAmount">
+                  <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalUnReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+                  <Property name="property">unReceiptAmount</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="invoiceUnReceiptAmount">
+                  <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalInvoiceUnReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+                  <Property name="property">invoiceUnReceiptAmount</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="confirmUnInvoiceAmount">
+                  <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalConfirmUnInvoiceAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+                  <Property name="property">confirmUnInvoiceAmount</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="receiptAmount">
+                  <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+                  <Property name="property">receiptAmount</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="receiptDate">
+                  <Property name="property">receiptDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="adjustMoney">
+                  <Property name="property">adjustMoney</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="isapplyBad">
+                  <Property name="property">isapplyBad</Property>
+                  <Property name="width">80</Property>
+                  <Property name="align">center</Property>
+                </DataColumn>
+                <DataColumn name="billExcelUrl">
+                  <Property name="property">billExcelUrl</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="remark">
+                  <Property name="property">remark</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </SideControl>
         </SplitPanel>
       </Children>
       <Tools/>
     </Dialog>
+    <DownloadAction id="downloadWarnAction">
+      <Property name="fileProvider">billCheckInfoController#exportWarn</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

@@ -27,8 +27,6 @@ public interface IBizAddFeeRepository {
 
     public BizAddFeeEntity update(BizAddFeeEntity entity);
 
-    public void delete(Long id);
-    
     int saveList(List<BizAddFeeEntity> addList);
     
     int updateList(List<BizAddFeeEntity> updateList);
@@ -45,4 +43,15 @@ public interface IBizAddFeeRepository {
      * @return
      */
 	List<BizAddFeeEntity> querybizAddFee(Map<String, Object> condition);
+
+	void delete(BizAddFeeEntity entity);
+	
+	/**
+	 * 分组统计
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
 }

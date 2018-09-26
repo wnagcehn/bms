@@ -86,4 +86,5 @@
 		 <dubbo:reference id="bmsProductsMaterialService" interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialService" version="1.0.0" registry="bms"/>	 
 		 <dubbo:reference id="bmsQuoteDispatchDetailService" interface="com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="reportWarehouseCustomerService" interface="com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="reportCustomerService" interface="com.jiuyescm.bms.report.biz.service.IReportCustomerService" version="1.0.0" registry="bms"/>
 </beans> 

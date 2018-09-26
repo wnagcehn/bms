@@ -39,6 +39,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
@@ -133,7 +134,12 @@ public class BizAddFeeController {
 
 	@DataResolver
 	public void delete(BizAddFeeEntity entity) {
-		bizAddFeeService.delete(entity.getId());
+		entity.setDelFlag("1");
+		try {
+			bizAddFeeService.delete(entity);
+		} catch (Exception e) {
+			logger.error("删除失败！", e);
+		}	
 	}
 	/**
 	 * 导入模板下载
@@ -625,7 +631,20 @@ public class BizAddFeeController {
 				return "操作成功! 正在重算...";
 		 }else{
 			 return "未查询到要重算的数据...";
-		 }
-		 
+		 }	 
+	}
+	
+	/**
+	 * 分组统计
+	 * @param param
+	 * @return
+	 */
+	@DataProvider
+	public void queryGroup(Page<BizAddFeeEntity> page, Map<String, Object> param){
+		PageInfo<BizAddFeeEntity> pageInfo = bizAddFeeService.groupCount(param, page.getPageNo(), page.getPageSize());
+		if (pageInfo != null) {
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int) pageInfo.getTotal());
+		}
 	}
 }

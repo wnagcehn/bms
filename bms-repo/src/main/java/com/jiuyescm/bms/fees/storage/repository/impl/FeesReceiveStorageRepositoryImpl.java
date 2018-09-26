@@ -447,6 +447,11 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 	}
 	
 	@Override
+	public List<FeesReceiveStorageEntity> queryPreBillStorageByItems(Map<String, Object> parameter) {
+		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryPreBillStorageByItems", parameter);
+	}
+	
+	@Override
 	public List<FeesReceiveStorageEntity> queryPreBillMaterialStorage(Map<String, Object> parameter) {
 		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryPreBillMaterialStorage", parameter);
 	}

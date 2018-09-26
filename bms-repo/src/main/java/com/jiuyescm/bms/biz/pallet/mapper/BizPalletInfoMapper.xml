@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="cur_time" property="curTime" jdbcType="TIMESTAMP" />
+		   	<result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+		   	<result column="pallet_num" property="palletNum" jdbcType="DECIMAL" />
+		   	<result column="adjust_pallet_num" property="adjustPalletNum" jdbcType="DECIMAL" />
+		   	<result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		   	<result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+		   	<result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, adjust_pallet_num, fees_no, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, is_calculated, calculate_time, write_time, del_flag, remark
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, adjust_pallet_num, fees_no, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, is_calculated, calculate_time, write_time, del_flag, remark
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_pallet_info
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+        select
+		p.id, p.cur_time, p.biz_type, p.warehouse_code, p.warehouse_name,
+		p.customer_id, p.customer_name, p.temperature_type_code, 
+		p.pallet_num, p.adjust_pallet_num, p.fees_no, p.creator, p.creator_id, 
+		p.create_time, p.last_modifier, p.last_modifier_id, p.last_modify_time, 
+		s.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
+		s.cost as cost, s.subject_code as subjectCode
+		from biz_pallet_info p
+		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
+		WHERE 1=1
+        	<if test=" id != null and id !='' ">
+				and p.id = #{id}
+			</if>
+        	<if test=" curTime != null and curTime !='' ">
+				and p.cur_time = #{curTime}
+			</if>
+        	<if test=" bizType != null and bizType !='' ">
+				and p.biz_type = #{bizType}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and p.warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and p.customer_id = #{customerId}
+			</if>
+			<if test="createTime != null and createTime !=''" >
+				and p.create_time <![CDATA[ >= ]]> #{createTime}
+			</if>
+			<if test="createEndTime != null and createEndTime !=''" >
+				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
+			</if>
+        	<if test=" isCalculated != null and isCalculated !='' ">
+				and s.is_calculated = #{isCalculated}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and p.del_flag = #{delFlag}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				and s.subject_code = #{subjectCode}
+			</if>
+			<if test=" feesNo != null and feesNo !='' ">
+				and s.fees_no = #{feesNo}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+        insert into biz_pallet_info(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{curTime,jdbcType=TIMESTAMP}, 
+			#{bizType,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{palletNum,jdbcType=DECIMAL}, 
+			#{adjustPalletNum,jdbcType=DECIMAL}, 
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{creatorId,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifierId,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+        update biz_pallet_info
+        <trim prefix="set" suffixOverrides=",">
+			adjust_pallet_num = #{adjustPalletNum,jdbcType=DECIMAL},		
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifierId != null and lastModifierId !='' ">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <!-- 批量更新 -->
+    <update id="updateBatch" parameterType="java.util.Map">
+        update biz_pallet_info
+        <trim prefix="set" suffixOverrides=",">
+			adjust_pallet_num = #{adjustPalletNum,jdbcType=DECIMAL},			
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifierId != null and lastModifierId !='' ">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where cur_time=#{curTime} and customer_name=#{customerId}
+        and warehouse_name=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
+        and biz_type=#{bizType}
+    </update>
+    
+    <!-- 重算 -->
+    <update id="retryForCalcu" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+        update biz_pallet_info i set i.is_calculated = 99 where i.del_flag = 0
+		and i.id = #{id}
+    </update>
+    
+    <!-- 分组统计 -->
+    <select id="groupCount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+    	select i.customer_name, i.warehouse_name, s.subject_code, s.is_calculated, COUNT(*) as totalNum from fees_receive_storage s
+		LEFT JOIN biz_pallet_info i on i.fees_no=s.fees_no and i.del_flag = '0'
+		WHERE 1=1
+		<if test=" bizType != null and bizType !='' ">
+			and i.biz_type = #{bizType}
+		</if>
+       	<if test=" warehouseCode != null and warehouseCode !='' ">
+			and i.warehouse_code = #{warehouseCode}
+		</if>
+       	<if test=" customerId != null and customerId !='' ">
+			and i.customer_id = #{customerId}
+		</if>
+		<if test="createTime != null and createTime !=''" >
+			and i.create_time <![CDATA[ >= ]]> #{createTime}
+		</if>
+		<if test="createEndTime != null and createEndTime !=''" >
+			and i.create_time <![CDATA[ <= ]]> #{createEndTime}
+		</if>
+       	<if test=" isCalculated != null and isCalculated !='' ">
+			and s.is_calculated = #{isCalculated}
+		</if>
+       	<if test=" delFlag != null and delFlag !='' ">
+			and i.del_flag = #{delFlag}
+		</if>
+		<if test=" subjectCode != null and subjectCode !='' ">
+			and s.subject_code = #{subjectCode}
+		</if>
+		GROUP BY i.customer_name, i.warehouse_code, s.subject_code, s.is_calculated
+		order by totalNum desc
+    </select>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_pallet_info 
+        where id = #{id}
+    </delete>
+</mapper>

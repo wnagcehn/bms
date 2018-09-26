@@ -796,11 +796,33 @@
 		order by bp.fees_no
     </select>
     
+        <!-- 预账单仓储费(按件) -->
+    <select id="queryPreBillStorageByItems" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        select bp.create_time as createTime, bp.customerid as customerId, bp.customer_name as customerName,
+		bp.warehouse_code as warehouseCode, bp.temperature as tempretureType,
+		bp.aqty as quantity, frs.unit, frs.unit_price as unitPrice,
+		ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
+		ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount
+		from biz_product_storage bp
+		LEFT JOIN fees_receive_storage frs on bp.fees_no = frs.fees_no AND frs.del_flag = '0'
+		WHERE bp.del_flag = '0'
+		AND bp.customerid = #{customerId}
+		AND bp.create_time <![CDATA[>=]]> #{startTime}
+		AND bp.create_time <![CDATA[<]]> #{endTime}
+		AND frs.unit='ITEMS'
+		AND frs.subject_code = 'wh_product_storage'
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			AND bp.warehouse_code = #{warehouseCode}
+		</if>
+		order by bp.fees_no
+    </select>
+    
     <!-- 预账单耗材存储费 -->
     <select id="queryPreBillMaterialStorage" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
         select bps.create_time as createTime, bps.customerid as customerId, bps.customer_name as customerName, 
-        	bps.warehouse_code as warehouseCode,
+        	bps.warehouse_code as warehouseCode, bps.temperature_type_code as tempretureType,
         	bps.pallet_num as quantity, frs.unit, frs.unit_price as unitPrice,
 			ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
 			ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount

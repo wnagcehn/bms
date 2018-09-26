@@ -818,11 +818,41 @@ public class BillCheckInfoController{
 		if (param == null){
 			param = new HashMap<String, Object>();
 		}						
-		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.queryWarn(param, page.getPageNo(), page.getPageSize());
-		if (pageInfo != null) {
-			page.setEntities(pageInfo.getList());
-			page.setEntityCount((int) pageInfo.getTotal());
-		}	
+		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.queryWarn(param, page.getPageNo(), page.getPageSize());	
+		PageInfo<BillCheckInfoVo> newPageInfo =getNew(pageInfo);	
+		page.setEntities(newPageInfo.getList());
+		page.setEntityCount((int) newPageInfo.getTotal());	
+	}
+	
+	/**
+	 * 根据权限获取预警账单
+	 */
+	public PageInfo<BillCheckInfoVo> getNew(PageInfo<BillCheckInfoVo> pageInfo){
+		List<String> userIds=new ArrayList<String>();
+		BmsGroupUserVo groupUser=bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+		
+		PageInfo<BillCheckInfoVo> result=new PageInfo<BillCheckInfoVo>();
+		List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
+		
+		if(groupUser!=null && pageInfo!=null && pageInfo.getList().size()>0){//加入權限組
+			//判断是否是管理员
+			if("0".equals(groupUser.getAdministrator())){//管理员
+				return pageInfo;	
+			}else{//非管理员
+				userIds=bmsGroupUserService.queryContainUserIds(groupUser);	
+				if(userIds.size()>0){
+					for(BillCheckInfoVo entity : pageInfo.getList()){
+						if(userIds.contains(entity.getSellerId())){
+							voList.add(entity);
+						}
+					}
+					result.setList(voList);
+					return result;
+				}
+			}		
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -1228,4 +1258,291 @@ public class BillCheckInfoController{
 		}
 		return systemCodeEntity.getExtattr1();
 	}
+	
+	
+	
+	
+	
+	/**
+	 * 账单导出
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@FileProvider
+	public DownloadFile exportWarn(Map<String,Object> param) throws Exception{
+		long beginTime = System.currentTimeMillis();
+    	logger.info("====对账账单导出：写入Excel begin.");
+    	
+    	Map<String, Object> dictcodeMap=new HashMap<String, Object>();
+		try {
+//			String filePath =getName() + FileConstant.SUFFIX_XLSX;
+			//如果存放上传文件的目录不存在就新建
+			String path = getPath();
+			File storeFolder = new File(path);
+			if(!storeFolder.isDirectory()){
+				storeFolder.mkdirs();
+			}
+			
+			// 如果文件存在直接删除，重新生成
+			String fileName = "对账收款账单" + FileConstant.SUFFIX_XLSX;
+			String filePath = path + FileConstant.SEPARATOR + fileName;
+			File file = new File(filePath);
+			if (file.exists()) {
+				file.delete();
+			}
+			
+			POISXSSUtil poiUtil = new POISXSSUtil();
+	    	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
+	    		    		    	
+	        //对账账单
+	    	handWarn(poiUtil, workbook, filePath, param,dictcodeMap);
+	    	
+	    	//最后写到文件
+	    	poiUtil.write2FilePath(workbook, filePath);
+	    		    	
+	    	logger.info("====对账账单导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
+
+	    	InputStream is = new FileInputStream(filePath);
+	    	return new DownloadFile(fileName, is);
+		} catch (Exception e) {
+			//bmsErrorLogInfoService.
+			logger.error("对账账单导出失败", e);
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 对账收款信息导出
+	 * @param poiUtil
+	 * @param workbook
+	 * @param path
+	 * @param billno
+	 * @throws Exception
+	 */
+	private void handWarn(POISXSSUtil poiUtil, SXSSFWorkbook workbook, 
+			String path, Map<String, Object> param,Map<String, Object> dictcodeMap)throws Exception{
+		int pageNo = 1;
+		boolean doLoop = true;
+		logger.info("对账收款信息导出...");
+        List<BillCheckInfoVo> dataList = new  ArrayList<BillCheckInfoVo>();
+		
+		while (doLoop) {
+			PageInfo<BillCheckInfoVo> pageInfo=new PageInfo<BillCheckInfoVo>();		
+			if (param == null){
+				param = new HashMap<String, Object>();
+			}									
+			pageInfo = billCheckInfoService.queryWarnList(param, pageNo, pageSize);	
+			PageInfo<BillCheckInfoVo> newPageInfo =getNew(pageInfo);	
+			if (null != newPageInfo && newPageInfo.getList().size() > 0) {
+				if (newPageInfo.getList().size() < pageSize) {
+					doLoop = false;
+				}else {
+					pageNo += 1; 
+				}
+				dataList.addAll(pageInfo.getList());
+			}else {
+				doLoop = false;
+			}
+		}
+		if(dataList.size()==0){
+			return;
+		}
+		logger.info("对账收款导出生成sheet。。。");
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		Sheet sheet = poiUtil.getXSSFSheet(workbook,"对账收款");
+		
+		sheet.setColumnWidth(1, 4000);
+		sheet.setColumnWidth(2, 4000);
+		sheet.setColumnWidth(3, 3500);
+		sheet.setColumnWidth(8, 3800);
+		sheet.setColumnWidth(9, 3800);
+		sheet.setColumnWidth(11, 3800);
+		sheet.setColumnWidth(12, 3800);
+		sheet.setColumnWidth(17, 3800);
+		sheet.setColumnWidth(20, 3800);
+		sheet.setColumnWidth(21, 3800);
+		sheet.setColumnWidth(22, 3800);
+		sheet.setColumnWidth(23, 4000);
+		sheet.setColumnWidth(26, 3800);
+		
+		Font font = workbook.createFont();
+	    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		 CellStyle style = workbook.createCellStyle();
+		 style.setAlignment(CellStyle.ALIGN_CENTER);
+		 style.setWrapText(true);
+		 style.setFont(font);
+		 
+		 Row row0 = sheet.createRow(0);
+		 Cell cell0 = row0.createCell(0);
+		 cell0.setCellValue("业务月份");
+		 cell0.setCellStyle(style);
+		 Cell cell1 = row0.createCell(1);
+		 cell1.setCellValue("商家合同名称");
+		 cell1.setCellStyle(style);
+		 Cell cell2 = row0.createCell(2);
+		 cell2.setCellStyle(style);
+		 cell2.setCellValue("账单名称");
+		 Cell cell3 = row0.createCell(3);
+		 cell3.setCellValue("业务启动时间");
+		 cell3.setCellStyle(style);
+		 Cell cell4 = row0.createCell(4);
+		 cell4.setCellValue("账单状态");
+		 cell4.setCellStyle(style);
+		 Cell cell5 = row0.createCell(5);
+		 cell5.setCellValue("对账状态");
+		 cell5.setCellStyle(style);
+		 Cell cell6 = row0.createCell(6);
+		 cell6.setCellValue("开票状态");
+		 cell6.setCellStyle(style);
+		 Cell cell7 = row0.createCell(7);
+		 cell7.setCellValue("超期状态");
+		 cell7.setCellStyle(style);
+		 Cell cell8 = row0.createCell(8);
+		 cell8.setCellValue("是否预警");
+		 cell8.setCellStyle(style);
+		 Cell cell9 = row0.createCell(9);
+		 cell9.setCellValue("销售员名称");
+		 cell9.setCellStyle(style);
+		 Cell cell10 = row0.createCell(10);
+		 cell10.setCellValue("区域");
+		 cell10.setCellStyle(style);
+		 Cell cell11 = row0.createCell(11);
+		 cell11.setCellValue("最终确认额");
+		 cell11.setCellStyle(style);
+		 Cell cell12 = row0.createCell(12);
+		 cell12.setCellValue("确认日期");
+		 cell12.setCellStyle(style);
+		 Cell cell13 = row0.createCell(13);
+		 cell13.setCellValue("发票金额");
+		 cell13.setCellStyle(style);
+		 Cell cell14 = row0.createCell(14);
+		 cell14.setCellValue("开票日期");
+		 cell14.setCellStyle(style);
+		 Cell cell15 = row0.createCell(15);
+		 cell15.setCellValue("预计回款日期");
+		 cell15.setCellStyle(style);
+		 Cell cell16 = row0.createCell(16);
+		 cell16.setCellValue("收款金额");
+		 cell16.setCellStyle(style);
+		 Cell cell17 = row0.createCell(17);
+		 cell17.setCellValue("收款日期");
+		 cell17.setCellStyle(style);
+		 Cell cell18 = row0.createCell(18);
+		 cell18.setCellValue("结算员");
+		 cell18.setCellStyle(style);
+		 Cell cell19 = row0.createCell(19);
+		 cell19.setCellValue("项目管理员");
+		 cell19.setCellStyle(style);
+		 Cell cell20 = row0.createCell(20);
+		 cell20.setCellValue("责任部门编码");
+		 cell20.setCellStyle(style);
+		 Cell cell21 = row0.createCell(21);
+		 cell21.setCellValue("项目");
+		 cell21.setCellStyle(style);
+		 Cell cell22 = row0.createCell(22);
+		 cell22.setCellValue("一级品类");
+		 cell22.setCellStyle(style);
+		 Cell cell23 = row0.createCell(23);
+		 cell23.setCellValue("业务类型");
+		 cell23.setCellStyle(style);
+		 Cell cell24 = row0.createCell(24);
+		 cell24.setCellValue("预计金额");
+		 cell24.setCellStyle(style);
+		 Cell cell25 = row0.createCell(25);
+		 cell25.setCellValue("未收款金额");
+		 cell25.setCellStyle(style);
+		 Cell cell26 = row0.createCell(26);
+		 cell26.setCellValue("开票未回款金额");
+		 cell26.setCellStyle(style);
+		 Cell cell27 = row0.createCell(27);
+		 cell27.setCellValue("已确认未开票金额");
+		 cell27.setCellStyle(style);
+		 Cell cell28 = row0.createCell(28);
+		 cell28.setCellValue("调整金额");
+		 cell28.setCellStyle(style);
+		 Cell cell29 = row0.createCell(29);
+		 cell29.setCellValue("是否申请坏账");
+		 cell29.setCellStyle(style);
+		 Cell cell30 = row0.createCell(30);
+		 cell30.setCellValue("账单下载地址");
+		 cell30.setCellStyle(style);
+		 Cell cell31 = row0.createCell(31);
+		 cell31.setCellValue("备注");
+		 cell31.setCellStyle(style);
+		 
+		logger.info("对账导出给sheet赋值。。。");
+		int RowIndex = 1;
+		for(int i=0;i<dataList.size();i++){	
+			BillCheckInfoVo entity = dataList.get(i);
+			Row row = sheet.createRow(RowIndex);
+			RowIndex++;
+			Cell cel0 = row.createCell(0);
+			cel0.setCellValue(entity.getCreateMonth());
+			Cell cel1 = row.createCell(1);
+			cel1.setCellValue(entity.getInvoiceName());
+			Cell cel2 = row.createCell(2);
+			cel2.setCellValue(entity.getBillName());
+			Cell cel3 = row.createCell(3);
+			cel3.setCellValue(entity.getBillStartTime()==null?"":sdf.format(entity.getBillStartTime()));
+			Cell cel4 = row.createCell(4);
+			cel4.setCellValue(CheckBillStatusEnum.getMap().get(entity.getBillStatus()));
+			Cell cel5 = row.createCell(5);
+			cel5.setCellValue(BillCheckStateEnum.getMap().get(entity.getBillCheckStatus()));
+			Cell cel6 = row.createCell(6);
+			cel6.setCellValue(BillCheckInvoiceStateEnum.getMap().get(entity.getInvoiceStatus()));
+			Cell cel7 = row.createCell(7);
+			cel7.setCellValue(entity.getOverStatus());
+			Cell cel8 = row.createCell(8);
+			cel8.setCellValue(entity.getWarnMessage());
+			Cell cel9 = row.createCell(9);
+			cel9.setCellValue(entity.getSellerName());
+			Cell cel10 = row.createCell(10);
+			cel10.setCellValue(entity.getArea());
+			Cell cel11 = row.createCell(11);
+			cel11.setCellValue(entity.getConfirmAmount()==null?0d:entity.getConfirmAmount().doubleValue());
+			Cell cel12 = row.createCell(12);
+			cel12.setCellValue(entity.getConfirmDate()==null?"":sdf.format(entity.getConfirmDate()));
+			Cell cel13 = row.createCell(13);
+			cel13.setCellValue(entity.getInvoiceAmount()==null?0d:entity.getInvoiceAmount().doubleValue());
+			Cell cel14 = row.createCell(14);
+			cel14.setCellValue(entity.getInvoiceDate()==null?"":sdf.format(entity.getInvoiceDate()));
+			Cell cel15= row.createCell(15);
+			cel15.setCellValue(entity.getExpectReceiptDate()==null?"":sdf.format(entity.getExpectReceiptDate()));	
+			Cell cel16= row.createCell(16);
+			cel16.setCellValue(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount().doubleValue());	
+			Cell cel17= row.createCell(17);
+			cel17.setCellValue(entity.getReceiptDate()==null?"":sdf.format(entity.getReceiptDate()));	
+			Cell cel18 = row.createCell(18);
+			cel18.setCellValue(entity.getBalanceName());
+			Cell cel19 = row.createCell(19);
+			cel19.setCellValue(entity.getProjectManagerName());
+			Cell cel20 = row.createCell(20);
+			cel20.setCellValue(entity.getDeptName());
+			Cell cel21 = row.createCell(21);
+			cel21.setCellValue(entity.getProjectName());
+			Cell cel22 = row.createCell(22);
+			cel22.setCellValue(entity.getFirstClassName());
+			Cell cel23 = row.createCell(23);
+			cel23.setCellValue(entity.getBizTypeName());
+			Cell cel24 = row.createCell(24);
+			cel24.setCellValue(entity.getExpectAmount()==null?0d:entity.getExpectAmount().doubleValue());
+			Cell cel25 = row.createCell(25);
+			cel25.setCellValue(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());		
+			Cell cel26=  row.createCell(26);
+			cel26.setCellValue(entity.getInvoiceUnReceiptAmount()==null?0d:entity.getInvoiceUnReceiptAmount().doubleValue());			
+			Cell cel27=  row.createCell(27);
+			cel27.setCellValue(entity.getConfirmUnInvoiceAmount()==null?0d:entity.getConfirmUnInvoiceAmount().doubleValue());			
+			Cell cel28=  row.createCell(28);
+			cel28.setCellValue(entity.getAdjustMoney()==null?0d:entity.getAdjustMoney().doubleValue());			
+			Cell cel29=  row.createCell(29);
+			cel29.setCellValue("0".equals(entity.getIsapplyBad())?"否":"是");		
+			Cell cel30= row.createCell(30);
+			cel30.setCellValue(entity.getBillExcelUrl());		
+			Cell cel31= row.createCell(31);
+			cel31.setCellValue(entity.getRemark());
+		}
+	}
+	
 }

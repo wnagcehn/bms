@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="createYear">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">统计年份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">统计月份</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtReportCustomerInOut">
+      <Property name="creationType">com.jiuyescm.bms.report.vo.ReportCustomerInOutVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="createYear">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">统计年份</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">统计月份</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="lastMonthStorage">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">上月库存</Property>
+      </PropertyDef>
+      <PropertyDef name="curMonthStorage">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">本月库存</Property>
+      </PropertyDef>
+      <PropertyDef name="minInTime">
+        <Property></Property>
+        <Property name="label">最早入仓时间</Property>
+      </PropertyDef>
+      <PropertyDef name="maxOutTime">
+        <Property></Property>
+        <Property name="label">最晚出仓时间</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+        <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCalculateStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="calculateTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">计算时间</Property>
+      </PropertyDef>
+      <PropertyDef name="writeTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">统计时间</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsReportCustomerInOut">
+      <Property name="dataType">[dtReportCustomerInOut]</Property>
+      <Property name="dataProvider">reportCustomerInOutController#queryOut</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsReportCustomerInOut</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+var tmpDataSet=view.get(&quot;#dsReportCustomerInOut&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        <Property name="caption">查询</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+&#xD;
+var year=condition.get(&quot;year&quot;);&#xD;
+var month=condition.get(&quot;month&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(year)){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(month)){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(!isNullOrEmpty(month)){&#xD;
+	if(month.length==1){&#xD;
+		month='0'+month;&#xD;
+	}&#xD;
+}&#xD;
+condition.set(&quot;importDate&quot;, year + &quot;-&quot; +month);&#xD;
+&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="visible">false</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queryForm">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="labelSeparator">:</Property>
+      <AutoFormElement>
+        <Property name="name">createYear</Property>
+        <Property name="property">createYear</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">createMonth</Property>
+        <Property name="property">createMonth</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid id="warehouseImportGrid">
+        <Property name="dataSet">dsReportCustomerInOut</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="createYear">
+          <Property name="property">createYear</Property>
+        </DataColumn>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+        </DataColumn>
+        <DataColumn name="lastMonthStorage">
+          <Property name="property">lastMonthStorage</Property>
+        </DataColumn>
+        <DataColumn name="curMonthStorage">
+          <Property name="property">curMonthStorage</Property>
+        </DataColumn>
+        <DataColumn name="minInTime">
+          <Property name="property">minInTime</Property>
+        </DataColumn>
+        <DataColumn name="maxOutTime">
+          <Property name="property">maxOutTime</Property>
+        </DataColumn>
+        <DataColumn name="isCalculated">
+          <Property name="property">isCalculated</Property>
+        </DataColumn>
+        <DataColumn name="calculateTime">
+          <Property name="property">calculateTime</Property>
+        </DataColumn>
+        <DataColumn name="writeTime">
+          <Property name="property">writeTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

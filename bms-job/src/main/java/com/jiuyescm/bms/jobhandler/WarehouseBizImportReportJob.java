@@ -99,7 +99,9 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			List<ReportWarehouseCustomerEntity> list=reportWarehouseBizImportService.queryWareList(param);
 			if(list.size()>0){
 				reportWarehouseBizImportService.updateReport(list);
-			}		
+			}
+			//插入应导入仓库
+			reportWarehouseBizImportService.insertReport(param);
 		}
 		
         current = System.currentTimeMillis();

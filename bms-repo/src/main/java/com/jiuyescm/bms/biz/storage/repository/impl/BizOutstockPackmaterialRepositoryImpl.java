@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.biz.storage.repository.impl;
+﻿package com.jiuyescm.bms.biz.storage.repository.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -203,7 +203,9 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 	public int saveDataFromTemp(String batchNum) {
 		 SqlSession session = getSqlSessionTemplate();
 		 Map<String,String> map=Maps.newHashMap();
+
 		 map.put("batchNum", batchNum);
+
 		 return session.insert("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.saveDataFromTemp", map);
 	}
 
