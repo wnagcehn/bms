@@ -957,47 +957,53 @@ public class BillCheckInfoController{
 		boolean doLoop = true;
 		logger.info("对账收款信息导出...");
         List<BillCheckInfoVo> dataList = new  ArrayList<BillCheckInfoVo>();
-		
-		while (doLoop) {
-			PageInfo<BillCheckInfoVo> pageInfo=new PageInfo<BillCheckInfoVo>();
-			
-			if (param == null){
-				param = new HashMap<String, Object>();
-			}		
-			List<String> userIds=new ArrayList<String>();
-			BmsGroupUserVo groupUser=bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-			if(groupUser!=null){//加入權限組
-				//判断是否是管理员
-				if("0".equals(groupUser.getAdministrator())){//管理员
-					
-				}else{//非管理员
-					userIds=bmsGroupUserService.queryContainUserIds(groupUser);
-					StringBuffer user=new StringBuffer();
-					for(int i=0;i<userIds.size();i++){
-						if(i==userIds.size()-1){
-							user.append(userIds.get(i));
-						}else{
-							user.append(userIds.get(i)+"|");
-						}				
-					}
-					if(StringUtils.isNotBlank(user)){
-						param.put("userIds", user);
-					}
-				}		
+        
+		if (param == null){
+			param = new HashMap<String, Object>();
+		}		
+		List<String> userIds=new ArrayList<String>();
+		BmsGroupUserVo groupUser=bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+		if(groupUser!=null){//加入權限組
+			//判断是否是管理员
+			if("0".equals(groupUser.getAdministrator())){//管理员
 				
-				pageInfo= billCheckInfoService.query(param, pageNo, pageSize);
-				if (null != pageInfo && pageInfo.getList().size() > 0) {
-					if (pageInfo.getList().size() < pageSize) {
-						doLoop = false;
-					}else {
-						pageNo += 1; 
-					}
-					dataList.addAll(pageInfo.getList());
-				}else {
-					doLoop = false;
+			}else{//非管理员
+				userIds=bmsGroupUserService.queryContainUserIds(groupUser);
+				StringBuffer user=new StringBuffer();
+				for(int i=0;i<userIds.size();i++){
+					if(i==userIds.size()-1){
+						user.append(userIds.get(i));
+					}else{
+						user.append(userIds.get(i)+"|");
+					}				
 				}
-			}	
+				if(StringUtils.isNotBlank(user)){
+					param.put("userIds", user);
+				}
+			}
+			
+			while (doLoop) {
+				try {
+					PageInfo<BillCheckInfoVo> pageInfo= billCheckInfoService.query(param, pageNo, pageSize);
+					if (null != pageInfo && pageInfo.getList().size() > 0) {
+						if (pageInfo.getList().size() < pageSize) {
+							doLoop = false;
+						}else {
+							pageNo += 1; 
+						}
+						dataList.addAll(pageInfo.getList());
+					}else {
+						doLoop = false;
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					logger.error("对账账单导出失败", e);
+					doLoop=false;
+				}
+				
+			}
 		}
+
 		if(dataList.size()==0){
 			return;
 		}
@@ -1046,74 +1052,80 @@ public class BillCheckInfoController{
 		 cell5.setCellValue("对账状态");
 		 cell5.setCellStyle(style);
 		 Cell cell6 = row0.createCell(6);
-		 cell6.setCellValue("结算员");
+		 cell6.setCellValue("开票状态");
 		 cell6.setCellStyle(style);
 		 Cell cell7 = row0.createCell(7);
-		 cell7.setCellValue("项目");
+		 cell7.setCellValue("超期状态");
 		 cell7.setCellStyle(style);
 		 Cell cell8 = row0.createCell(8);
-		 cell8.setCellValue("区域");
+		 cell8.setCellValue("销售员名称");
 		 cell8.setCellStyle(style);
 		 Cell cell9 = row0.createCell(9);
-		 cell9.setCellValue("销售员名称");
+		 cell9.setCellValue("区域");
 		 cell9.setCellStyle(style);
 		 Cell cell10 = row0.createCell(10);
-		 cell10.setCellValue("项目管理员");
+		 cell10.setCellValue("最终确认额");
 		 cell10.setCellStyle(style);
 		 Cell cell11 = row0.createCell(11);
-		 cell11.setCellValue("开票状态");
+		 cell11.setCellValue("确认日期");
 		 cell11.setCellStyle(style);
 		 Cell cell12 = row0.createCell(12);
-		 cell12.setCellValue("责任部门名称");
+		 cell12.setCellValue("发票金额");
 		 cell12.setCellStyle(style);
 		 Cell cell13 = row0.createCell(13);
-		 cell13.setCellValue("责任部门编码");
+		 cell13.setCellValue("开票日期");
 		 cell13.setCellStyle(style);
 		 Cell cell14 = row0.createCell(14);
-		 cell14.setCellValue("一级品类");
+		 cell14.setCellValue("预计回款日期");
 		 cell14.setCellStyle(style);
 		 Cell cell15 = row0.createCell(15);
-		 cell15.setCellValue("业务类型");
+		 cell15.setCellValue("收款金额");
 		 cell15.setCellStyle(style);
 		 Cell cell16 = row0.createCell(16);
-		 cell16.setCellValue("确认日期");
+		 cell16.setCellValue("收款日期");
 		 cell16.setCellStyle(style);
 		 Cell cell17 = row0.createCell(17);
-		 cell17.setCellValue("预计金额");
+		 cell17.setCellValue("结算员");
 		 cell17.setCellStyle(style);
 		 Cell cell18 = row0.createCell(18);
-		 cell18.setCellValue("最终确认额");
+		 cell18.setCellValue("项目管理员");
 		 cell18.setCellStyle(style);
-		 Cell cell19 = row0.createCell(19);
-		 cell19.setCellValue("发票金额");
+		 Cell cell19 = row0.createCell(12);
+		 cell19.setCellValue("责任部门名称");
 		 cell19.setCellStyle(style);
 		 Cell cell20 = row0.createCell(20);
-		 cell20.setCellValue("开票日期");
+		 cell20.setCellValue("项目");
 		 cell20.setCellStyle(style);
 		 Cell cell21 = row0.createCell(21);
-		 cell21.setCellValue("预计回款日期");
+		 cell21.setCellValue("一级品类");
 		 cell21.setCellStyle(style);
 		 Cell cell22 = row0.createCell(22);
-		 cell22.setCellValue("未收款金额");
+		 cell22.setCellValue("业务类型");
 		 cell22.setCellStyle(style);
 		 Cell cell23 = row0.createCell(23);
-		 cell23.setCellValue("开票未回款金额");
+		 cell23.setCellValue("预计金额");
 		 cell23.setCellStyle(style);
 		 Cell cell24 = row0.createCell(24);
-		 cell24.setCellValue("已确认未开票金额");
+		 cell24.setCellValue("未收款金额");
 		 cell24.setCellStyle(style);
 		 Cell cell25 = row0.createCell(25);
-		 cell25.setCellValue("收款金额");
+		 cell25.setCellValue("开票未回款金额");
 		 cell25.setCellStyle(style);
 		 Cell cell26 = row0.createCell(26);
-		 cell26.setCellValue("收款日期");
+		 cell26.setCellValue("已确认未开票金额");
 		 cell26.setCellStyle(style);
 		 Cell cell27 = row0.createCell(27);
-		 cell27.setCellValue("账单下载地址");
+		 cell27.setCellValue("调整金额");
 		 cell27.setCellStyle(style);
 		 Cell cell28 = row0.createCell(28);
-		 cell28.setCellValue("备注");
+		 cell28.setCellValue("是否申请坏账");
 		 cell28.setCellStyle(style);
+		 Cell cell29 = row0.createCell(29);
+		 cell29.setCellValue("账单下载地址");
+		 cell29.setCellStyle(style);
+		 Cell cell30 = row0.createCell(30);
+		 cell30.setCellValue("备注");
+		 cell30.setCellStyle(style);
 		 
 		logger.info("对账导出给sheet赋值。。。");
 		//确认金额总计
@@ -1146,53 +1158,55 @@ public class BillCheckInfoController{
 			Cell cel5 = row.createCell(5);
 			cel5.setCellValue(BillCheckStateEnum.getMap().get(entity.getBillCheckStatus()));
 			Cell cel6 = row.createCell(6);
-			cel6.setCellValue(entity.getBalanceName());
+			cel6.setCellValue(BillCheckInvoiceStateEnum.getMap().get(entity.getInvoiceStatus()));
 			Cell cel7 = row.createCell(7);
-			cel7.setCellValue(entity.getProjectName());
-			
+			cel7.setCellValue(entity.getOverStatus());
 			Cell cel8 = row.createCell(8);
-			cel8.setCellValue(entity.getArea());
-			
+			cel8.setCellValue(entity.getSellerName());
 			Cell cel9 = row.createCell(9);
-			cel9.setCellValue(entity.getSellerName());
+			cel9.setCellValue(entity.getArea());
 			Cell cel10 = row.createCell(10);
-			cel10.setCellValue(entity.getProjectManagerName());
+			cel10.setCellValue(entity.getConfirmAmount()==null?0d:entity.getConfirmAmount().doubleValue());
 			Cell cel11 = row.createCell(11);
-			cel11.setCellValue(BillCheckInvoiceStateEnum.getMap().get(entity.getInvoiceStatus()));
+			cel11.setCellValue(entity.getConfirmDate()==null?"":sdf.format(entity.getConfirmDate()));
 			Cell cel12 = row.createCell(12);
-			cel12.setCellValue(entity.getDeptName());
+			cel12.setCellValue(entity.getInvoiceAmount()==null?0d:entity.getInvoiceAmount().doubleValue());
 			Cell cel13 = row.createCell(13);
-			cel13.setCellValue(entity.getDeptCode());
-			Cell cel14 = row.createCell(14);
-			cel14.setCellValue(entity.getFirstClassName());
-			Cell cel15 = row.createCell(15);
-			cel15.setCellValue(entity.getBizTypeName());
-			Cell cel16 = row.createCell(16);
-			cel16.setCellValue(entity.getConfirmDate()==null?"":sdf.format(entity.getConfirmDate()));
+			cel13.setCellValue(entity.getInvoiceDate()==null?"":sdf.format(entity.getInvoiceDate()));
+			Cell cel14= row.createCell(14);
+			cel14.setCellValue(entity.getExpectReceiptDate()==null?"":sdf.format(entity.getExpectReceiptDate()));	
+			Cell cel15= row.createCell(15);
+			cel15.setCellValue(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount().doubleValue());					
+			Cell cel16= row.createCell(16);
+			cel16.setCellValue(entity.getReceiptDate()==null?"":sdf.format(entity.getReceiptDate()));					
 			Cell cel17 = row.createCell(17);
-			cel17.setCellValue(entity.getExpectAmount()==null?0d:entity.getExpectAmount().doubleValue());
+			cel17.setCellValue(entity.getBalanceName());
 			Cell cel18 = row.createCell(18);
-			cel18.setCellValue(entity.getConfirmAmount()==null?0d:entity.getConfirmAmount().doubleValue());
+			cel18.setCellValue(entity.getProjectManagerName());
 			Cell cel19 = row.createCell(19);
-			cel19.setCellValue(entity.getInvoiceAmount()==null?0d:entity.getInvoiceAmount().doubleValue());
+			cel19.setCellValue(entity.getDeptName());		
 			Cell cel20 = row.createCell(20);
-			cel20.setCellValue(entity.getInvoiceDate()==null?"":sdf.format(entity.getInvoiceDate()));
-			Cell cel21= row.createCell(21);
-			cel21.setCellValue(entity.getExpectReceiptDate()==null?"":sdf.format(entity.getExpectReceiptDate()));	
-			Cell cel22= row.createCell(22);
-			cel22.setCellValue(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());		
-			Cell cel23= row.createCell(23);
-			cel23.setCellValue(entity.getInvoiceUnReceiptAmount()==null?0d:entity.getInvoiceUnReceiptAmount().doubleValue());			
-			Cell cel24= row.createCell(24);
-			cel24.setCellValue(entity.getConfirmUnInvoiceAmount()==null?0d:entity.getConfirmUnInvoiceAmount().doubleValue());			
-			Cell cel25= row.createCell(25);
-			cel25.setCellValue(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount().doubleValue());					
-			Cell cel26= row.createCell(26);
-			cel26.setCellValue(entity.getReceiptDate()==null?"":sdf.format(entity.getReceiptDate()));			
-			Cell cel27= row.createCell(27);
-			cel27.setCellValue(entity.getBillExcelUrl());			
-			Cell cel28= row.createCell(28);
-			cel28.setCellValue(entity.getRemark());
+			cel20.setCellValue(entity.getProjectName());
+			Cell cel21 = row.createCell(21);
+			cel21.setCellValue(entity.getFirstClassName());
+			Cell cel22 = row.createCell(22);
+			cel22.setCellValue(entity.getBizTypeName());
+			Cell cel23 = row.createCell(23);
+			cel23.setCellValue(entity.getExpectAmount()==null?0d:entity.getExpectAmount().doubleValue());
+			Cell cel24 = row.createCell(24);
+			cel24.setCellValue(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());		
+			Cell cel25=  row.createCell(25);
+			cel25.setCellValue(entity.getInvoiceUnReceiptAmount()==null?0d:entity.getInvoiceUnReceiptAmount().doubleValue());			
+			Cell cel26=  row.createCell(26);
+			cel26.setCellValue(entity.getConfirmUnInvoiceAmount()==null?0d:entity.getConfirmUnInvoiceAmount().doubleValue());			
+			Cell cel27=  row.createCell(27);
+			cel27.setCellValue(entity.getAdjustMoney()==null?0d:entity.getAdjustMoney().doubleValue());			
+			Cell cel28=  row.createCell(28);
+			cel28.setCellValue("0".equals(entity.getIsapplyBad())?"否":"是");		
+			Cell cel29=  row.createCell(29);
+			cel29.setCellValue(entity.getBillExcelUrl());		
+			Cell cel30= row.createCell(30);
+			cel30.setCellValue(entity.getRemark());
 			
 			//确认金额总计
 			totalConfirmAmount+=(entity.getConfirmAmount()==null?0d:entity.getConfirmAmount().doubleValue());

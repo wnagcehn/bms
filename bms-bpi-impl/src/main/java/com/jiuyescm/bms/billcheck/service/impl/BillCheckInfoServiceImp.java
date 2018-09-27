@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,6 +50,11 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		try {
 			
 			long current=JAppContext.currentTimestamp().getTime();
+			
+			String overStatus="";
+			if(condition!=null && condition.get("overStatus")!=null){
+				overStatus=condition.get("overStatus").toString();
+			}
 			
 			PageInfo<BillCheckInfoEntity> pageInfo=new PageInfo<BillCheckInfoEntity>();
 			if(condition!=null && condition.get("invoiceNo")!=null && condition.get("followType")!=""){
@@ -145,7 +151,16 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		    		}	
 	    		}
 	    		
-	    		
+	    	}
+	    	List<BillCheckInfoVo> resultList = new ArrayList<BillCheckInfoVo>();
+	    	if(StringUtils.isNotBlank(overStatus)){
+	    		for(BillCheckInfoVo entity:voList){
+		    		if(overStatus.equals(entity.getOverStatus())){
+		    			resultList.add(entity);
+		    		}
+		    	}
+	    		result.setList(resultList);
+	    		return result;
 	    	}
 	    	
 	    	result.setList(voList);

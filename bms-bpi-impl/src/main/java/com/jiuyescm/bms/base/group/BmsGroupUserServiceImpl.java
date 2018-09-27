@@ -163,8 +163,9 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		try{
 			BmsGroupUserEntity groupUser=bmsGroupUserRepository.queryEntityByUserId(userId);
 			BmsGroupUserVo vo=new BmsGroupUserVo();
-			PropertyUtils.copyProperties(vo, groupUser);
-			
+			if(groupUser!=null){
+				PropertyUtils.copyProperties(vo, groupUser);
+			}		
 			return vo;
 		}catch(Exception e){
 			logger.error(e);

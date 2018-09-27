@@ -81,6 +81,19 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillReceiptFollowStateEnum&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="overStatus">
+        <Property></Property>
+        <Property name="label">超期状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="正常">正常</Property>
+              <Property name="临期">临期</Property>
+              <Property name="超期">超期</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInfo">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
@@ -1343,6 +1356,11 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Property name="property">followType</Property>
         <Editor/>
       </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">overStatus</Property>
+        <Property name="property">overStatus</Property>
+        <Editor/>
+      </AutoFormElement>
     </AutoForm>
     <SplitPanel>
       <Property name="direction">bottom</Property>
@@ -1433,26 +1451,6 @@ if(index==3){&#xD;
               <Property name="property">billCheckStatus</Property>
               <Property name="width">80</Property>
             </DataColumn>
-            <DataColumn name="balanceName">
-              <Property name="property">balanceName</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="projectName">
-              <Property name="property">projectName</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="area">
-              <Property name="property">area</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="sellerName">
-              <Property name="property">sellerName</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="projectManagerName">
-              <Property name="property">projectManagerName</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
             <DataColumn name="invoiceStatus">
               <Property name="property">invoiceStatus</Property>
               <Property name="width">80</Property>
@@ -1471,24 +1469,12 @@ arg.processDefault = true;</ClientEvent>
               <Property name="property">overStatus</Property>
               <Property name="width">80</Property>
             </DataColumn>
-            <DataColumn name="deptName">
-              <Property name="property">deptName</Property>
+            <DataColumn name="sellerName">
+              <Property name="property">sellerName</Property>
               <Property name="width">80</Property>
             </DataColumn>
-            <DataColumn name="firstClassName">
-              <Property name="property">firstClassName</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="bizTypeName">
-              <Property name="property">bizTypeName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="confirmDate">
-              <Property name="property">confirmDate</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="expectAmount">
-              <Property name="property">expectAmount</Property>
+            <DataColumn name="area">
+              <Property name="property">area</Property>
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="confirmAmount">
@@ -1499,6 +1485,10 @@ if(datas &amp;&amp; datas.getFirst()){&#xD;
 }&#xD;
 arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">confirmAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="confirmDate">
+              <Property name="property">confirmDate</Property>
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="invoiceAmount">
@@ -1517,6 +1507,48 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
             </DataColumn>
             <DataColumn name="expectReceiptDate">
               <Property name="property">expectReceiptDate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="receiptAmount">
+              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalReceiptAmount&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
+              <Property name="property">receiptAmount</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="receiptDate">
+              <Property name="property">receiptDate</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="balanceName">
+              <Property name="property">balanceName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="projectManagerName">
+              <Property name="property">projectManagerName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="deptName">
+              <Property name="property">deptName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="projectName">
+              <Property name="property">projectName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="firstClassName">
+              <Property name="property">firstClassName</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="bizTypeName">
+              <Property name="property">bizTypeName</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="expectAmount">
+              <Property name="property">expectAmount</Property>
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="unReceiptAmount">
@@ -1548,20 +1580,6 @@ if(datas &amp;&amp; datas.getFirst()){&#xD;
 arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">confirmUnInvoiceAmount</Property>
               <Property name="width">100</Property>
-            </DataColumn>
-            <DataColumn name="receiptAmount">
-              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
-var amount=0;&#xD;
-if(datas &amp;&amp; datas.getFirst()){&#xD;
-	amount = datas.getFirst().get(&quot;totalReceiptAmount&quot;);&#xD;
-}&#xD;
-arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
-              <Property name="property">receiptAmount</Property>
-              <Property name="width">80</Property>
-            </DataColumn>
-            <DataColumn name="receiptDate">
-              <Property name="property">receiptDate</Property>
-              <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="adjustMoney">
               <Property name="property">adjustMoney</Property>
