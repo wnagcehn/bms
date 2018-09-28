@@ -353,6 +353,12 @@
       <PropertyDef name="correctThrowWeight">
         <Property name="label">纠正泡重</Property>
       </PropertyDef>
+      <PropertyDef name="adjustServiceTypeCode">
+        <Property name="label">调整物流产品类型</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustServiceTypeName">
+        <Property name="label">调整物流产品类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1007,7 +1013,7 @@ if (data != null) {&#xD;
     <Dialog id="dialogBillEdit">
       <ClientEvent name="onClose">view.id(&quot;dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <Property name="width">600</Property>
-      <Property name="height">370</Property>
+      <Property name="height">410</Property>
       <Property name="caption">调整运单</Property>
       <Buttons>
         <Button id="btnSave">
@@ -1164,6 +1170,28 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
             <Property name="editable">true</Property>
             <Editor/>
           </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustServiceTypeName</Property>
+            <Property name="property">adjustServiceTypeName</Property>
+            <Property name="trigger">triggerServiceType</Property>
+            <Property name="labelWidth">70</Property>
+            <Property name="labelSpacing">13</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="visible">false</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="name">adjustServiceTypeCode</Property>
+            <Property name="property">adjustServiceTypeCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">servicename</Property>
+            <Property name="property">servicename</Property>
+            <Property name="labelWidth">70</Property>
+            <Property name="labelSpacing">13</Property>
+            <Editor/>
+          </AutoFormElement>
         </AutoForm>
       </Children>
       <Tools/>
@@ -1236,6 +1264,12 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
                 <Property name="property">servicename</Property>
                 <Property name="name">servicename</Property>
                 <Property name="width">130</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="width">130</Property>
+                <Property name="name">adjustServiceTypeName</Property>
+                <Property name="property">adjustServiceTypeName</Property>
+                <Editor/>
               </DataColumn>
               <DataColumn name="receiveTime">
                 <Property name="property">receiveTime</Property>
@@ -2134,5 +2168,64 @@ if(data!=null){&#xD;
       <ClientEvent name="onExecute">view.get(&quot;#carrierSelectDialog&quot;).show();&#xD;
 </ClientEvent>
     </Trigger>
+    <Trigger id="triggerServiceType">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsBizDispatchBillEntity&quot;).getData();&#xD;
+&#xD;
+//调整物流商/实际物流商&#xD;
+var adjustCarrierId=data.current.get(&quot;adjustCarrierId&quot;);&#xD;
+var carrierid=data.current.get(&quot;carrierId&quot;);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectServiceType&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsPubCarrierServicetypeEntity.data&quot;);&#xD;
+subviewData.clear();&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsPubCarrierServicetypeEntityQuery.data&quot;).current;&#xD;
+&#xD;
+if(!isNullOrEmpty(adjustCarrierId)){&#xD;
+	ds.set(&quot;carrierid&quot;,adjustCarrierId);&#xD;
+}else{&#xD;
+	ds.set(&quot;carrierid&quot;,carrierid);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsPubCarrierServicetypeEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelServiceType&quot;).show();&#xD;
+&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelServiceType">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectServiceType.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsBizDispatchBillEntity&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        adjustServiceTypeCode:data.get(&quot;servicecode&quot;),&#xD;
+		adjustServiceTypeName:data.get(&quot;servicename&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">物流产品类型选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectServiceType">
+          <Property name="subView">com.jiuyescm.bms.base.servicetype.view.ServicetypeLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

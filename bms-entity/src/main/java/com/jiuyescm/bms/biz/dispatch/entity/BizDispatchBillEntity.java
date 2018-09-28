@@ -206,6 +206,9 @@ public class BizDispatchBillEntity implements IEntity {
 	
 	private Double correctThrowWeight;
 	
+	private String adjustServiceTypeCode;
+	private String adjustServiceTypeName;
+
 	public BizDispatchBillEntity() {
 
 	}
@@ -1289,8 +1292,20 @@ public class BizDispatchBillEntity implements IEntity {
 		this.correctThrowWeight = correctThrowWeight;
 	}
 
+	public String getAdjustServiceTypeCode() {
+		return adjustServiceTypeCode;
+	}
 
-	
-	
+	public void setAdjustServiceTypeCode(String adjustServiceTypeCode) {
+		this.adjustServiceTypeCode = adjustServiceTypeCode;
+	}
+
+	public String getAdjustServiceTypeName() {
+		return adjustServiceTypeName;
+	}
+
+	public void setAdjustServiceTypeName(String adjustServiceTypeName) {
+		this.adjustServiceTypeName = adjustServiceTypeName;
+	}
 	
 }
