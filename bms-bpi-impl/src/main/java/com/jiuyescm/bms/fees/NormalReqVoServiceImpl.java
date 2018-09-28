@@ -212,6 +212,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			//------------------查询规则
 			conditionMap.clear();
 			conditionMap.put("subjectId", subjectId);
+			conditionMap.put("ruleType", "rule_bms");
 			ruleEntity=receiveRuleService.queryRule(conditionMap);
 			if(ruleEntity == null){
 				entity.setRemark("规则未配置");
