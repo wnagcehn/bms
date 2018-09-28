@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.biz.pallet.entity;
+package com.jiuyescm.bms.general.entity;
 
 import java.sql.Timestamp;
 import java.math.BigDecimal;
@@ -64,8 +64,6 @@ public class BizPalletInfoEntity implements IEntity {
 	
 	private String subjectCode;
 	private String subjectName;
-	
-	private Integer totalNum;
 
 	public BizPalletInfoEntity() {
 		super();
@@ -269,14 +267,6 @@ public class BizPalletInfoEntity implements IEntity {
 
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
-	}
-
-	public Integer getTotalNum() {
-		return totalNum;
-	}
-
-	public void setTotalNum(Integer totalNum) {
-		this.totalNum = totalNum;
 	}
     
 }

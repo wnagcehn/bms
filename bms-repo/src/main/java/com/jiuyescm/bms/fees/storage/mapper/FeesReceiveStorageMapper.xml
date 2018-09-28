@@ -855,7 +855,7 @@
 		AND pi.create_time <![CDATA[>=]]> #{startTime}
 		AND pi.create_time <![CDATA[<]]> #{endTime}
 		AND frs.unit = 'PALLETS'
-		AND frs.subject_code = 'wh_disposal'
+		AND frs.subject_code in ('wh_disposal','wh_product_storage','wh_material_storage')
         <if test="(warehouseCode != null and warehouseCode !='')" >
 			AND pi.warehouse_code = #{warehouseCode}
 		</if>
