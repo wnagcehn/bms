@@ -4,7 +4,9 @@
     <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity" >
        		<id column="id" property="id" jdbcType="INTEGER" />
 		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="discount_type" property="discountType" jdbcType="VARCHAR" />
 		   	<result column="create_month" property="createMonth" jdbcType="VARCHAR" />
+		   	<result column="customer_type" property="customerType" jdbcType="VARCHAR" />
 		   	<result column="customerId" property="customerId" jdbcType="VARCHAR" />
 		   	<result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
 		   	<result column="biz_typecode" property="bizTypecode" jdbcType="VARCHAR" />
@@ -22,11 +24,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
+        id, task_id, discount_type,create_month, customer_type,customerId, carrier_id, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
+		task_id, discount_type, create_month, customer_type, customerId, carrier_id, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
     </sql>
 
 	<!-- 根据id查询 -->
@@ -43,7 +45,7 @@ task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
         select
-        d.id, d.task_id, d.create_month, d.customerId, d.biz_typecode, d.subject_code, d.task_name, 
+        d.id, d.task_id,d.discount_type, d.create_month, d.customer_type,d.customerId, d.biz_typecode, d.subject_code, d.task_name, 
         d.task_rate, d.task_status, d.creator, d.create_time, d.finish_time, d.del_flag, d.startDate, 
         d.endDate, d.remark, d.carrier_id, s.subject_name as subjectName, c.code_name as bizTypeName
         from bms_discount_asyn_task d
@@ -112,13 +114,14 @@ task_id, create_month, customerId, carrier_id, biz_typecode, subject_code, task_
         	<include refid="BASE_COLUMNS_WITHOUT_ID" />
     	)
         values (
-
 			#{taskId,jdbcType=VARCHAR}, 
+			#{discountType,jdbcType=VARCHAR}, 
 			#{createMonth,jdbcType=VARCHAR}, 
 			#{customerId,jdbcType=VARCHAR}, 
-			#{carrierId,jdbcType=VARCHAR}, 
-			#{bizTypecode,jdbcType=VARCHAR}, 
-			#{subjectCode,jdbcType=VARCHAR}, 
+			#{customerType,jdbcType=VARCHAR}, 		
+			#{carrierId,jdbcType=VARCHAR},
+			#{bizTypecode,jdbcType=VARCHAR},
+			#{subjectCode,jdbcType=VARCHAR},
 			#{taskName,jdbcType=VARCHAR}, 
 			#{taskRate,jdbcType=INTEGER}, 
 			#{taskStatus,jdbcType=VARCHAR}, 

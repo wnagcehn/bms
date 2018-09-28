@@ -56,6 +56,11 @@ public class PriceContractInfoEntity implements IEntity {
 	private String subjectId;
 	private String carrierId;
 	private String carrierName;
+	
+	//折扣方式
+	private String discountType;
+	//商家类型
+	private String customerType;
 	public PriceContractInfoEntity() {
 
 	}
@@ -347,5 +352,22 @@ public class PriceContractInfoEntity implements IEntity {
 	public void setSubjectId(String subjectId) {
 		this.subjectId = subjectId;
 	}
+
+	public String getDiscountType() {
+		return discountType;
+	}
+
+	public void setDiscountType(String discountType) {
+		this.discountType = discountType;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
     
+	
 }

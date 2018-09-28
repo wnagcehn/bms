@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.biz.discount.entity;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**
@@ -55,6 +56,10 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	private String carrierId;
 	
 	private String taskProcess;//任务进度
+	//折扣方式
+	private String discountType;
+	//商家类型
+	private String customerType;
 
 	public BmsDiscountAsynTaskEntity() {
 		super();
@@ -233,6 +238,22 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 
 	public void setBizTypeName(String bizTypeName) {
 		this.bizTypeName = bizTypeName;
+	}
+
+	public String getDiscountType() {
+		return discountType;
+	}
+
+	public void setDiscountType(String discountType) {
+		this.discountType = discountType;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
 	}
     
 	

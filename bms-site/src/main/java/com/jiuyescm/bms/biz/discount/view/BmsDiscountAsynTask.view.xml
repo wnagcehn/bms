@@ -102,6 +102,12 @@
       <PropertyDef name="bizTypeName">
         <Property name="label">业务类型</Property>
       </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="customerType">
+        <Property/>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">
       <PropertyDef name="year">
@@ -652,7 +658,9 @@ if(bizTypecode != undefined){&#xD;
 data.set({&#xD;
 	subjectName:arg.selectedValue.get(&quot;carrierName&quot;),&#xD;
 	subjectCode:arg.selectedValue.get(&quot;subjectId&quot;),&#xD;
-	carrierId:arg.selectedValue.get(&quot;carrierId&quot;)&#xD;
+	carrierId:arg.selectedValue.get(&quot;carrierId&quot;),&#xD;
+	discountType:arg.selectedValue.get(&quot;discountType&quot;),&#xD;
+	customerType:arg.selectedValue.get(&quot;customerType&quot;)&#xD;
 });&#xD;
 arg.processDefault = false;</ClientEvent>
       <Property name="autoOpen">true</Property>
