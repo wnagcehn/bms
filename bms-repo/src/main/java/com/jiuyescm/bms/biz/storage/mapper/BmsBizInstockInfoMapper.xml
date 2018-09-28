@@ -111,12 +111,8 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
         	<if test=" customerId != null and customerId !='' ">
 				and i.customer_id = #{customerId}
 			</if>
-			<if test="createTime != null and createTime !='' " >
-				and <![CDATA[i.create_time >= #{startTime}]]>
-			</if>
-			<if test="createEndTime != null and createEndTime !='' " >
-				and <![CDATA[i.create_time <= #{endTime}]]>
-			</if>
+		and <![CDATA[i.create_time >= #{startTime}]]>
+		and <![CDATA[i.create_time <= #{endTime}]]>
     </select>
 
 	<!-- 保存 -->
