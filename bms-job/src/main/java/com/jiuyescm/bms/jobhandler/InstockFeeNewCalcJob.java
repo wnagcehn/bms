@@ -466,8 +466,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			//封装数据的仓库和温度
 			map.clear();
 			map.put("warehouse_code", entity.getWarehouseCode());
-			price=storageQuoteFilterService.quoteFilter(list, map);
-			mapCusStepPrice.put(customerId,price);
+			price=storageQuoteFilterService.quoteFilter(list, map);			
 			
 			if(price==null){
 				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
@@ -476,6 +475,9 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 				entity.setRemark("阶梯报价未配置");
 				feeEntity.setCalcuMsg("阶梯报价未配置");
 				return  false;
+			}else {
+				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
+				mapCusStepPrice.put(customerId,price);
 			}
 		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
 			

@@ -556,18 +556,17 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			map.put("temperature_code", entity.getTemperatureTypeCode());
 			
 			price=storageQuoteFilterService.quoteFilter(list, map);
-			XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
-
-			mapCusStepPrice.put(customerId,price);
-
+			
 			if(price==null){
 				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setRemark("阶梯报价未配置");
 				storageFeeEntity.setCalcuMsg("阶梯报价未配置");
-				//feesList.add(storageFeeEntity);
 				return  false;
+			}else {
+				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
+				mapCusStepPrice.put(customerId,price);
 			}
 		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
 			

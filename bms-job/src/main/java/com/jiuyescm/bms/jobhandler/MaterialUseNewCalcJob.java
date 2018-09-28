@@ -371,13 +371,15 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		map.put("materialCode",entity.getConsumerMaterialCode());
 		map.put("warehouseId", entity.getWarehouseCode());
 		List<PriceMaterialQuotationEntity> materialList=priceMaterialQuotationRepository.queryMaterialQuatationByContract(map);
-		mapCusPrice.put(customerId, materialList);
+		
 		if(materialList==null||materialList.size()==0){
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			entity.setRemark("报价未配置");
 			return false;
+		}else {
+			mapCusPrice.put(customerId, materialList);
 		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
