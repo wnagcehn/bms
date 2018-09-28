@@ -99,13 +99,7 @@
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
         <Property name="mapping">
-          <Property name="mapValues">
-            <Entity>
-              <Property name="wh_disposal">处置费</Property>
-              <Property name="wh_product_storage">商品存储费</Property>
-              <Property name="wh_material_storage">耗材存储费</Property>
-            </Entity>
-          </Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;PALLET_CAL_FEE&quot;)}</Property>
         </Property>
       </PropertyDef>
     </DataType>
@@ -193,14 +187,9 @@
       <PropertyDef name="subjectCode">
         <Property name="label">费用科目</Property>
         <Property name="mapping">
-          <Property name="mapValues">
-            <Entity>
-              <Property name="wh_material_storage">耗材存储费</Property>
-              <Property name="wh_disposal">处置费</Property>
-              <Property name="wh_product_storage">商品存储费</Property>
-            </Entity>
-          </Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;PALLET_CAL_FEE&quot;)}</Property>
         </Property>
+        <Property name="defaultValue">ALL</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtPalletGroup">
@@ -213,7 +202,7 @@
       <PropertyDef name="subjectCode">
         <Property name="label">费用类型</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupSubjectController#queryGroupSubject&quot;).getResult(&quot;&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;PALLET_CAL_FEE&quot;)}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="isCalculated">
@@ -486,6 +475,7 @@ function isNullOrEmpty(e) {&#xD;
           <Property name="name">subjectCode</Property>
           <Property name="property">subjectCode</Property>
           <Property name="showHint">false</Property>
+          <Property name="editable">false</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
