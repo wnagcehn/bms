@@ -2146,6 +2146,10 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
       </Children>
       <Tools/>
     </Dialog>
+    <Trigger id="triggerCarrierSelect">
+      <ClientEvent name="onExecute">view.get(&quot;#carrierSelectDialog&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
     <Dialog id="carrierSelectDialog">
       <ClientEvent name="onHide">var data = this.get(&quot;#carrierSelectSubView.userData&quot;);&#xD;
 if(data!=null){&#xD;
@@ -2164,10 +2168,6 @@ if(data!=null){&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <Trigger id="triggerCarrierSelect">
-      <ClientEvent name="onExecute">view.get(&quot;#carrierSelectDialog&quot;).show();&#xD;
-</ClientEvent>
-    </Trigger>
     <Trigger id="triggerServiceType">
       <ClientEvent name="onExecute">var data = view.get(&quot;#dsBizDispatchBillEntity&quot;).getData();&#xD;
 &#xD;

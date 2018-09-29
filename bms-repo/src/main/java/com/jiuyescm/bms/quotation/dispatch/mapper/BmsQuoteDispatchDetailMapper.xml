@@ -195,6 +195,9 @@
 		<if test="(delFlag != null and delFlag !='')" >
 				and d.del_flag = #{delFlag}
 		</if>
+		<if test="(serviceTypeCode != null and serviceTypeCode !='')" >
+				and d.service_type_code = #{serviceTypeCode}
+		</if>
 		ORDER BY d.create_time desc,d.start_warehouse_id,d.province_id 
     </select>
 

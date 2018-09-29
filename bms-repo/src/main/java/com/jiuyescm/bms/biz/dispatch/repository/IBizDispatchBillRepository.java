@@ -98,5 +98,12 @@ public interface IBizDispatchBillRepository{
 	public List<String> queryWayBillNo(Map<String,Object> condition);
 	 
 	public List<BizDispatchBillEntity> queryNotCalculate(Map<String,Object> condition);
+	
+	/**
+	 * 根据运单号查询
+	 * @param aCondition
+	 * @return
+	 */
+	BizDispatchBillEntity queryByWayNo(Map<String, String> aCondition);
 
 }

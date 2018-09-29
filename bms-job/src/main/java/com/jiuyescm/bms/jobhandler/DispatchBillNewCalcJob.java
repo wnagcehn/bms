@@ -501,6 +501,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		feeEntity.setContinuedWeight(0.0d);
 		feeEntity.setContinuedPrice(0.0d);
 		feeEntity.setPriceId("");
+		feeEntity.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 		return feeEntity;
 		
 	}
