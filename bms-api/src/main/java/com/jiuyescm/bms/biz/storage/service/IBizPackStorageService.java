@@ -59,7 +59,7 @@ public interface IBizPackStorageService {
 
 	int saveTempData(String taskId);
 
-	int delete(BizPackStorageEntity entity);
+	void delete(BizPackStorageEntity entity);
 	
 	/**
 	 * 校验是否存在

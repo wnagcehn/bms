@@ -572,14 +572,14 @@ var nowdays = new Date();&#xD;
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">packNo</Property>
-          <Property name="property">packNo</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
           <Property name="name">isCalculated</Property>
           <Property name="property">isCalculated</Property>
           <Property name="editable">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">extattr1</Property>
+          <Property name="property">extattr1</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -590,11 +590,6 @@ var nowdays = new Date();&#xD;
         <AutoFormElement>
           <Property name="name">endTime</Property>
           <Property name="property">endTime</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">extattr1</Property>
-          <Property name="property">extattr1</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
