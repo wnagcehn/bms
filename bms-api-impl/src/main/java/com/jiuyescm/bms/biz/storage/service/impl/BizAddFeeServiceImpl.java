@@ -20,6 +20,9 @@ import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
+import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
+import com.jiuyescm.bms.fees.storage.repository.impl.FeesReceiveStorageRepositoryImpl;
 
 /**
  * 
@@ -33,6 +36,9 @@ public class BizAddFeeServiceImpl implements IBizAddFeeService {
 	
 	@Autowired
     private IBizAddFeeRepository bizAddFeeRepository;
+	
+	@Autowired
+	private IFeesReceiveStorageRepository feesReceiveStorageRepository;
 
     @Override
     public PageInfo<BizAddFeeEntity> query(Map<String, Object> condition,
@@ -54,10 +60,28 @@ public class BizAddFeeServiceImpl implements IBizAddFeeService {
     public BizAddFeeEntity update(BizAddFeeEntity entity) {
         return bizAddFeeRepository.update(entity);
     }
-
+    
+    /**
+     * 删除业务数据和费用
+     */
     @Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
     public void delete(BizAddFeeEntity entity) {
-        bizAddFeeRepository.delete(entity);
+    	FeesReceiveStorageEntity feeEntity = new FeesReceiveStorageEntity();
+    	feeEntity.setFeesNo(entity.getFeesNo());
+    	feeEntity.setDelFlag("1");
+    	try {
+    		bizAddFeeRepository.delete(entity);
+		} catch (Exception e) {
+			logger.error("业务数据删除失败", e);
+		}
+    	
+    	try {
+			feesReceiveStorageRepository.update(feeEntity);
+		} catch (Exception e) {
+			logger.error("费用删除失败", e);
+		}
+        
     }
 
 	@Override

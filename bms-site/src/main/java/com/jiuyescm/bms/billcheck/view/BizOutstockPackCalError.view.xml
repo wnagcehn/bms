@@ -219,7 +219,6 @@ with (view.get(&quot;#dsMaterialCalErrorList&quot;)){&#xD;
       <ClientEvent name="onReady">    var nowdays = new Date();&#xD;
 	var year = nowdays.getFullYear();&#xD;
     var month = nowdays.getMonth();&#xD;
-	var lastMonth = nowdays.getMonth()-2;&#xD;
     if(month==0)&#xD;
     {&#xD;
         month=12;&#xD;
@@ -229,16 +228,7 @@ with (view.get(&quot;#dsMaterialCalErrorList&quot;)){&#xD;
         month = &quot;0&quot; + month;&#xD;
     }&#xD;
 	&#xD;
-	if(lastMonth==0)&#xD;
-    {&#xD;
-        lastMonth=12;&#xD;
-        year=year-1;&#xD;
-    }&#xD;
-    if (lastMonth &lt; 10) {&#xD;
-        lastMonth = &quot;0&quot; + lastMonth;&#xD;
-    }&#xD;
-	&#xD;
-    var firstDay = year + &quot;-&quot; + lastMonth + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
     var myDate = new Date(year, month, 0);&#xD;
     var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
 	view.get(&quot;#formCondition.entity&quot;).set({&#xD;
@@ -248,7 +238,7 @@ with (view.get(&quot;#dsMaterialCalErrorList&quot;)){&#xD;
 </ClientEvent>
       <Property name="dataSet">dsConditions</Property>
       <Property name="dataType">dtConditions</Property>
-      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="cols">*,*,*</Property>
       <AutoFormElement>
         <Property name="name">customerId</Property>
         <Property name="property">customerId</Property>
