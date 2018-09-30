@@ -73,11 +73,10 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 	@Override
 	public PageInfo<BizOutstockPackmaterialEntity> queryErrorCal(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-//		List<BizOutstockPackmaterialEntity> list = 
-//				selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryErrorCal",
-//				condition, new RowBounds(pageNo, pageSize));
-//		return new PageInfo<BizOutstockPackmaterialEntity>(list);
-		return null;
+		List<BizOutstockPackmaterialEntity> list = 
+				selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryErrorCal",
+				condition, new RowBounds(pageNo, pageSize));
+		return new PageInfo<BizOutstockPackmaterialEntity>(list);
 	}
 
 	@Override
