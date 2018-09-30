@@ -13,11 +13,16 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizPackStorageRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizPackStorageService;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
+import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
+import com.jiuyescm.bms.fees.storage.repository.impl.FeesReceiveStorageRepositoryImpl;
 
 /**
  * 
@@ -31,6 +36,8 @@ public class BizPackStorageServiceImpl implements IBizPackStorageService {
 	
 	@Autowired
     private IBizPackStorageRepository bizPackStorageRepository;
+	@Autowired
+	private IFeesReceiveStorageRepository feesReceiveStorageRepository;
 
     @Override
     public PageInfo<BizPackStorageEntity> query(Map<String, Object> condition,
@@ -52,11 +59,28 @@ public class BizPackStorageServiceImpl implements IBizPackStorageService {
     public int update(BizPackStorageEntity entity) {
         return bizPackStorageRepository.update(entity);
     }
-
+    
+    /**
+     * 删除费用/删除业务数据
+     */
     @Override
-    public int delete(BizPackStorageEntity entity) {
-        return bizPackStorageRepository.delete(entity);
-    }
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+    public void delete(BizPackStorageEntity entity) {
+    	FeesReceiveStorageEntity feeEntity = new FeesReceiveStorageEntity();
+    	feeEntity.setFeesNo(entity.getFeesNo());
+    	feeEntity.setDelFlag(entity.getDelFlag());
+    	try {
+    		bizPackStorageRepository.delete(entity);
+		} catch (Exception e) {
+			logger.error("业务数据删除失败", e);
+		}
+    	
+    	try {
+			feesReceiveStorageRepository.update(feeEntity);
+		} catch (Exception e) {
+			logger.error("费用删除失败", e);
+		}
+    }   
 
 	@Override
 	public int saveList(List<BizPackStorageEntity> list) {
