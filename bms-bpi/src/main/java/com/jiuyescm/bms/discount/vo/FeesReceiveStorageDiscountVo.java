@@ -2,7 +2,7 @@
  * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
  *
  */
-package com.jiuyescm.bms.discount;
+package com.jiuyescm.bms.discount.vo;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -14,7 +14,7 @@ import com.jiuyescm.cfm.domain.IEntity;
  * @author stevenl
  * 
  */
-public class FeesReceiveDispatchDiscountEntity implements IEntity {
+public class FeesReceiveStorageDiscountVo implements IEntity {
 
     // TODO Change serialVersionUID by eclipse
     private static final long serialVersionUID = -1;
@@ -49,18 +49,14 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 	private String isCalculated;
 	// 计算时间
 	private Timestamp calculateTime;
+	// 报价id
+	private Long quoteId;
 	// 写入时间
 	private Timestamp writeTime;
 	// 计算说明
 	private String remark;
-	// 报价id
-	private Long quoteId;
-	//商家id
-	private String customerId;
-	//创建时间
-	private Timestamp createTime;
-	
-	public FeesReceiveDispatchDiscountEntity() {
+
+	public FeesReceiveStorageDiscountVo() {
 
 	}
 	
@@ -97,6 +93,38 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 	}
 	
 	/**
+     * 费用科目
+     */
+	public String getSubjectCode() {
+		return this.subjectCode;
+	}
+
+    /**
+     * 费用科目
+     *
+     * @param subjectCode
+     */
+	public void setSubjectCode(String subjectCode) {
+		this.subjectCode = subjectCode;
+	}
+	
+	/**
+     * 费用编号
+     */
+	public String getFeesNo() {
+		return this.feesNo;
+	}
+
+    /**
+     * 费用编号
+     *
+     * @param feesNo
+     */
+	public void setFeesNo(String feesNo) {
+		this.feesNo = feesNo;
+	}
+	
+	/**
      * 运单号
      */
 	public String getWaybillNo() {
@@ -110,6 +138,102 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
      */
 	public void setWaybillNo(String waybillNo) {
 		this.waybillNo = waybillNo;
+	}
+	
+	/**
+     * 整单折扣率
+     */
+	public BigDecimal getUnitRate() {
+		return this.unitRate;
+	}
+
+    /**
+     * 整单折扣率
+     *
+     * @param unitRate
+     */
+	public void setUnitRate(BigDecimal unitRate) {
+		this.unitRate = unitRate;
+	}
+	
+	/**
+     * 整单折扣价
+     */
+	public BigDecimal getUnitPrice() {
+		return this.unitPrice;
+	}
+
+    /**
+     * 整单折扣价
+     *
+     * @param unitPrice
+     */
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	
+	/**
+     * 首量折扣率
+     */
+	public BigDecimal getFirstRate() {
+		return this.firstRate;
+	}
+
+    /**
+     * 首量折扣率
+     *
+     * @param firstRate
+     */
+	public void setFirstRate(BigDecimal firstRate) {
+		this.firstRate = firstRate;
+	}
+	
+	/**
+     * 首量折扣价
+     */
+	public BigDecimal getFirstPrice() {
+		return this.firstPrice;
+	}
+
+    /**
+     * 首量折扣价
+     *
+     * @param firstPrice
+     */
+	public void setFirstPrice(BigDecimal firstPrice) {
+		this.firstPrice = firstPrice;
+	}
+	
+	/**
+     * 续量折扣率
+     */
+	public BigDecimal getContinueRate() {
+		return this.continueRate;
+	}
+
+    /**
+     * 续量折扣率
+     *
+     * @param continueRate
+     */
+	public void setContinueRate(BigDecimal continueRate) {
+		this.continueRate = continueRate;
+	}
+	
+	/**
+     * 续量折扣价
+     */
+	public BigDecimal getContinuePrice() {
+		return this.continuePrice;
+	}
+
+    /**
+     * 续量折扣价
+     *
+     * @param continuePrice
+     */
+	public void setContinuePrice(BigDecimal continuePrice) {
+		this.continuePrice = continuePrice;
 	}
 	
 	/**
@@ -177,6 +301,22 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 	}
 	
 	/**
+     * 报价id
+     */
+	public Long getQuoteId() {
+		return this.quoteId;
+	}
+
+    /**
+     * 报价id
+     *
+     * @param quoteId
+     */
+	public void setQuoteId(Long quoteId) {
+		this.quoteId = quoteId;
+	}
+	
+	/**
      * 写入时间
      */
 	public Timestamp getWriteTime() {
@@ -206,94 +346,6 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
      */
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
-
-	public Long getQuoteId() {
-		return quoteId;
-	}
-
-	public void setQuoteId(Long quoteId) {
-		this.quoteId = quoteId;
-	}
-
-	public String getSubjectCode() {
-		return subjectCode;
-	}
-
-	public void setSubjectCode(String subjectCode) {
-		this.subjectCode = subjectCode;
-	}
-
-	public String getFeesNo() {
-		return feesNo;
-	}
-
-	public void setFeesNo(String feesNo) {
-		this.feesNo = feesNo;
-	}
-
-	public BigDecimal getUnitRate() {
-		return unitRate;
-	}
-
-	public void setUnitRate(BigDecimal unitRate) {
-		this.unitRate = unitRate;
-	}
-
-	public BigDecimal getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(BigDecimal unitPrice) {
-		this.unitPrice = unitPrice;
-	}
-
-	public BigDecimal getFirstRate() {
-		return firstRate;
-	}
-
-	public void setFirstRate(BigDecimal firstRate) {
-		this.firstRate = firstRate;
-	}
-
-	public BigDecimal getFirstPrice() {
-		return firstPrice;
-	}
-
-	public void setFirstPrice(BigDecimal firstPrice) {
-		this.firstPrice = firstPrice;
-	}
-
-	public BigDecimal getContinueRate() {
-		return continueRate;
-	}
-
-	public void setContinueRate(BigDecimal continueRate) {
-		this.continueRate = continueRate;
-	}
-
-	public BigDecimal getContinuePrice() {
-		return continuePrice;
-	}
-
-	public void setContinuePrice(BigDecimal continuePrice) {
-		this.continuePrice = continuePrice;
 	}
     
 }

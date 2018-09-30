@@ -103,10 +103,10 @@
         <Property name="label">业务类型</Property>
       </PropertyDef>
       <PropertyDef name="discountType">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="customerType">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">

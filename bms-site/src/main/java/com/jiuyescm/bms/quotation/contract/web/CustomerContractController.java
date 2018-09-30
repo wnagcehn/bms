@@ -839,6 +839,7 @@ public class CustomerContractController {
 							price.setBizTypeName("仓储");
 							price.setBizTypeCode("STORAGE");
 							price.setSubjectId(s.getSubjectId());
+							price.setCarrierName(s.getSubjectId());
 							price.setDiscountType(s.getDiscountType());
 							price.setCustomerType("contract");
 							list.add(price);

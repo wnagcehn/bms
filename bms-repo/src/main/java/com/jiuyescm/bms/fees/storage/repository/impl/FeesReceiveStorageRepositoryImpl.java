@@ -466,5 +466,18 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryByFeesNo", FeesNo);
 	}
 
+	@Override
+	public List<FeesReceiveStorageEntity> queryCalculateFail(
+			Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryCalculateFail", parameter);
+	}
+
+	@Override
+	public FeesReceiveStorageEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (FeesReceiveStorageEntity) selectOne("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryOne", condition);
+	}
+
 
 }

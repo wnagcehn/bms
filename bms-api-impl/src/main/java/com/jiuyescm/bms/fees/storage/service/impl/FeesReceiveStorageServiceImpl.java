@@ -348,4 +348,17 @@ public class FeesReceiveStorageServiceImpl implements IFeesReceiveStorageService
 		return feesReceiveStorageRepository.queryOutStockPage(parameter, pageNo, pageSize);
 	}
 
+	@Override
+	public List<FeesReceiveStorageEntity> queryCalculateFail(
+			Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return feesReceiveStorageRepository.queryCalculateFail(parameter);
+	}
+
+	@Override
+	public FeesReceiveStorageEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return feesReceiveStorageRepository.queryOne(condition);
+	}
+
 }

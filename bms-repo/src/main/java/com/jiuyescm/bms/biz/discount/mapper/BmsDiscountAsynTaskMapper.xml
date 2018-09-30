@@ -28,7 +28,7 @@
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-		task_id, discount_type, create_month, customer_type, customerId, carrier_id, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
+		task_id, discount_type, create_month, customerId, customer_type,  carrier_id, biz_typecode, subject_code, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag, startDate, endDate, remark
     </sql>
 
 	<!-- 根据id查询 -->
@@ -45,7 +45,7 @@
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
         select
-        d.id, d.task_id,d.discount_type, d.create_month, d.customer_type,d.customerId, d.biz_typecode, d.subject_code, d.task_name, 
+        d.id, d.task_id,d.discount_type, d.create_month,d.customerId, d.customer_type, d.biz_typecode, d.subject_code, d.task_name, 
         d.task_rate, d.task_status, d.creator, d.create_time, d.finish_time, d.del_flag, d.startDate, 
         d.endDate, d.remark, d.carrier_id, s.subject_name as subjectName, c.code_name as bizTypeName
         from bms_discount_asyn_task d
@@ -93,13 +93,13 @@
 			</if>
 			and s.in_out_typecode='INPUT'
 			and d.del_flag = "0"
-			order by d.create_time desc	
+			order by d.create_time desc
     </select>
 
 	<select id="queryTask" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
 		select
-        <include refid="BASE_COLUMNS_ALL" />
+        *
         from bms_discount_asyn_task
         where 1 = 1
         <if test=" taskId != null and taskId !='' ">
