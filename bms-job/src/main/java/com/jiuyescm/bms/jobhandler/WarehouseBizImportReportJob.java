@@ -85,7 +85,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			param = new HashMap<String, Object>();
 			param.put("createTime", createTime);
 			param.put("delFlag", "0");
-			param.put("startTime", curDate);
+			param.put("startTime", beginDate);
 			param.put("endTime", endDate);
 			
 			// 统计商品托数
