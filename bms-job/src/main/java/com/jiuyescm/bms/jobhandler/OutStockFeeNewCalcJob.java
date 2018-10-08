@@ -309,7 +309,52 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 					storageFeeEntity.setParam3(generalEntity.getId()+"");
 					break;
 				case "PRICE_TYPE_STEP"://阶梯价
-					PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);
+					
+					
+					//=====================================查询子报价==================================
+					List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
+					Map<String,Object> map=new HashMap<String,Object>();
+					//寻找阶梯报价
+					map.clear();
+					map.put("quotationId", generalEntity.getId());
+					//根据报价单位判断
+					if("BILL".equals(generalEntity.getFeeUnitCode())){//按单
+						map.put("num", "1");
+					}else if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
+						map.put("num", entity.getTotalQuantity());
+					}else if("SKU".equals(generalEntity.getFeeUnitCode())){//按sku
+						map.put("num", entity.getTotalVarieties());
+					}
+					//查询出的所有子报价
+					list=repository.queryPriceStepByQuatationId(map);					
+					if(list==null || list.size() == 0){
+						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						entity.setRemark("阶梯报价未配置");
+						storageFeeEntity.setCalcuMsg("阶梯报价未配置");
+						//feesList.add(storageFeeEntity);
+						break;
+					}
+					
+					//封装数据的仓库和温度
+					map.clear();
+					map.put("warehouse_code", entity.getWarehouseCode());
+					map.put("temperature_code", entity.getTemperatureTypeCode());
+					
+					PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);
+					
+					if(stepQuoEntity==null){
+						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						entity.setRemark("阶梯报价未配置");
+						storageFeeEntity.setCalcuMsg("阶梯报价未配置");
+						break;
+					}
+					
+					XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+
 					// 如果计费单位是 单 ->费用 = 单价 （根据仓库和温度和上下限帅选出唯一报价）
 	                // 如果计费单位是 件或者sku数 
 	                //   如果单价为空或为0，-> 费用 = 首价+（商品件数-首量）/续量 * 续价
@@ -516,7 +561,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			//feesList.add(storageFeeEntity);
 			return false;
 		}
-		//报价模板
+		/*//报价模板
 		PriceGeneralQuotationEntity priceGeneral=quoTemplete;
 		//报价类型（常规报价、阶梯报价）
 		priceType=priceGeneral.getPriceType();
@@ -578,7 +623,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 			storageFeeEntity.setCalcuMsg("报价【"+quoTemplete.getQuotationNo()+"】类型未知");
 			//feesList.add(storageFeeEntity);
 			return  false;
-		}
+		}*/
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));	
 		return true;

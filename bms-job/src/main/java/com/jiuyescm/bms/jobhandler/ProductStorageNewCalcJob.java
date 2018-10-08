@@ -261,8 +261,43 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 					feeEntity.setUnitPrice(generalEntity.getUnitPrice());
 					feeEntity.setParam3(generalEntity.getId()+"");
 					break;
-				case "PRICE_TYPE_STEP"://阶梯价
-					PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);				
+				case "PRICE_TYPE_STEP"://阶梯价		
+					Map<String,Object> map=new HashMap<String,Object>();
+
+					List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
+					//寻找阶梯报价
+					map.clear();
+					map.put("quotationId", generalEntity.getId());
+					//根据报价单位判断
+					if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
+						map.put("num", entity.getAqty());	
+					}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
+						map.put("num", entity.getWeight()*entity.getAqty());
+					}
+								
+					//查询出的所有子报价
+					list=repository.queryPriceStepByQuatationId(map);
+						
+					if(list==null || list.size() == 0){
+						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						entity.setRemark("阶梯报价未配置");
+						break;
+					}
+						
+					//封装数据的仓库和温度
+					map.clear();
+					map.put("warehouse_code", entity.getWarehouseCode());
+					PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);
+					if(stepQuoEntity==null){
+						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						entity.setRemark("阶梯报价未配置");
+						break;
+					}
+								
 					if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
@@ -442,7 +477,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 			entity.setRemark("报价未配置");
 			return false;
 		}
-		PriceGeneralQuotationEntity priceGeneral=quoTemplete;
+		/*PriceGeneralQuotationEntity priceGeneral=quoTemplete;
 	    priceType=priceGeneral.getPriceType();
 		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
 		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
@@ -488,7 +523,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 			storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			entity.setRemark("报价【"+priceGeneral.getQuotationNo()+"】类型未知");
 			return  false;
-		}
+		}*/
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
 		return true;
