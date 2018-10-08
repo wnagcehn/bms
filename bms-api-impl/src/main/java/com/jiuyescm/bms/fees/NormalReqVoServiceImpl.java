@@ -137,6 +137,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			if(calcuResultVo.getPrice() == null){
 				entity.setRemark("规则计算失败");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setPrice(0d);
 				listBiz.add(entity);
 				continue;
 			}
@@ -232,6 +233,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			if(calcuResultVo.getPrice() == null){
 				entity.setRemark("规则计算失败");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setPrice(0d);
 				listBiz.add(entity);
 				continue;
 			}
