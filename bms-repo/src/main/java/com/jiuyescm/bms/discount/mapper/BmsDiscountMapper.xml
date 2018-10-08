@@ -68,7 +68,7 @@
 		from fees_receive_storage_discount
 		where 1=1 and is_calculated='0'
 		<if test="(taskId != null and taskId !='')" >
-				and a.task_id = #{taskId}
+				and task_id = #{taskId}
 		</if>
     </select>
 	 
@@ -138,12 +138,12 @@
     </select>
     
     <select id="queryStorageAccount" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
-        select 
+        resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">     
+  		select 
 			customer_id as customerId,
 			subject_code as subjectCode,
 			COUNT(0) as orderCount,
-			sum(b.amount) as amount
+			sum(cost) as amount
 	    from fees_receive_storage where 1=1 and del_flag='0'
 		and create_time>=#{startTime} and create_time<![CDATA[<#{endTime}]]>
 		and customer_id=#{customerId}  and subject_code=#{subjectCode}

@@ -197,8 +197,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if("contract".equals(task.getCustomerType())){//目前仅支持合同在线折扣计算
 				logger.info("进入合同在线查询折扣报价");
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId("SJ000084-1");
-				queryVo.setSettlementTime("2018-09");
+				queryVo.setCustomerId(task.getCustomerId());
+				queryVo.setSettlementTime(task.getCreateMonth());
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
@@ -312,7 +312,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			Map<String,Object> condition=new HashMap<String,Object>();
 			//根据运单号查询业务数据对应得费用，判断是否是计算成功的，成功的继续折扣，失败的返回计算失败
 			BigDecimal amount=new BigDecimal(0);
-			condition.put("waybillNo", discountVo.getWaybillNo());
+			condition.put("feesNo", discountVo.getFeesNo());
+			condition.put("subjectCode", task.getSubjectCode());
 			FeesReceiveStorageEntity fee=feesReceiveStorageService.queryOne(condition);
 			
 			if(fee!=null && "1".equals(fee.getIsCalculated())){				
@@ -476,8 +477,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			}else if("contract".equals(task.getCustomerType())){
 				logger.info("进入合同在线查询折扣报价");
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId("SJ000084-1");
-				queryVo.setSettlementTime("2018-09");
+				queryVo.setCustomerId(task.getCustomerId());
+				queryVo.setSettlementTime(task.getCreateMonth());
 				queryVo.setBizTypeCode("");
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
 				if(disCountVoList.size()>0){
@@ -492,7 +493,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 						queryVo.setDiscountType("MONTH_AMOUNT");
 						queryVo.setMonthCount(new BigDecimal(discountAccountVo.getAmount()));
 					}
-					queryVo.setCarrierId("1500000019");
+					queryVo.setCarrierId(task.getCarrierId());
 					queryVo.setCarrierServiceType("");
 					queryVo.setWarehouseCode("");
 					
