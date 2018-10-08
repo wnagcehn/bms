@@ -223,43 +223,60 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
-				if(mapCusPrice.containsKey(entity.getCustomerId()+entity.getWarehouseCode()+entity.getConsumerMaterialCode())){
-					List<PriceMaterialQuotationEntity> list=mapCusPrice.get(entity.getCustomerId()+entity.getWarehouseCode()+entity.getConsumerMaterialCode());
-					String id="";	
-
-					if(StringUtils.isNotBlank(feeEntity.getWarehouseCode())){
-						for(PriceMaterialQuotationEntity vo:list){
-							if(feeEntity.getWarehouseCode().equals(vo.getWarehouseId())){				
-								feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
-								feeEntity.setUnitPrice(vo.getUnitPrice());
-								feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
-								id=vo.getId()+"";
-								break;
-							}
+				
+				long start = System.currentTimeMillis();// 系统开始时间							
+				//商家耗材报价
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("contractCode", mapContact.get(entity.getCustomerId()).getContractCode());
+				map.put("subjectId",SubjectId);
+				map.put("materialCode",entity.getConsumerMaterialCode());
+				map.put("warehouseId", entity.getWarehouseCode());
+				List<PriceMaterialQuotationEntity> list=priceMaterialQuotationRepository.queryMaterialQuatationByContract(map);
+				
+				if(list==null||list.size()==0){
+					XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
+					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					entity.setRemark("报价未配置");
+					return;
+				}
+				long current = System.currentTimeMillis();
+				XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
+				
+				String id="";	
+				
+				if(StringUtils.isNotBlank(feeEntity.getWarehouseCode())){
+					for(PriceMaterialQuotationEntity vo:list){
+						if(feeEntity.getWarehouseCode().equals(vo.getWarehouseId())){				
+							feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
+							feeEntity.setUnitPrice(vo.getUnitPrice());
+							feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
+							id=vo.getId()+"";
+							break;
 						}
 					}
-						
-					if(StringUtils.isBlank(id)){
-						for(PriceMaterialQuotationEntity vo:list){
-							if(StringUtils.isBlank(vo.getWarehouseId())){
-								feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
-								feeEntity.setUnitPrice(vo.getUnitPrice());
-								feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
-								id=vo.getId()+"";
-							}
+				}
+					
+				if(StringUtils.isBlank(id)){
+					for(PriceMaterialQuotationEntity vo:list){
+						if(StringUtils.isBlank(vo.getWarehouseId())){
+							feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
+							feeEntity.setUnitPrice(vo.getUnitPrice());
+							feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
+							id=vo.getId()+"";
 						}
 					}
-					feeEntity.setParam3(id);
-					if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
-						feeEntity.setIsCalculated(CalculateState.Finish.getCode());
-						entity.setIsCalculated(CalculateState.Finish.getCode());
-						entity.setRemark(CalculateState.Finish.getDesc());
-						XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getCost());
-					}else{
-						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-						entity.setIsCalculated(CalculateState.Finish.getCode());
-						XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用【0】");
-					}
+				}
+				feeEntity.setParam3(id);
+				if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
+					feeEntity.setIsCalculated(CalculateState.Finish.getCode());
+					entity.setIsCalculated(CalculateState.Finish.getCode());
+					entity.setRemark(CalculateState.Finish.getDesc());
+					XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getCost());
+				}else{
+					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					entity.setIsCalculated(CalculateState.Finish.getCode());
+					XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用【0】");
 				}
 			}
 		}
@@ -323,8 +340,6 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		Map<String,Object> map=new HashMap<String,Object>();
 		long current = 0l;// 当前系统时间
 		String customerId = entity.getCustomerId();
-		String packNo = entity.getConsumerMaterialCode();
-		String warehouseCode = entity.getWarehouseCode();
 		
 		//验证商家合同
 		PriceContractInfoEntity contractEntity =null;
@@ -364,30 +379,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			return false;
 		}
 		current = System.currentTimeMillis();
-		XxlJobLogger.log("-->"+entity.getId()+"验证签约服务耗时：【{0}】毫秒  ",(current - start));		
-		start = System.currentTimeMillis();// 系统开始时间
-		
-		
-		//商家耗材报价
-		map.clear();
-		map.put("contractCode", contractEntity.getContractCode());
-		map.put("subjectId",SubjectId);
-		map.put("materialCode",entity.getConsumerMaterialCode());
-		map.put("warehouseId", entity.getWarehouseCode());
-		List<PriceMaterialQuotationEntity> materialList=priceMaterialQuotationRepository.queryMaterialQuatationByContract(map);
-		
-		if(materialList==null||materialList.size()==0){
-			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
-			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价未配置");
-			return false;
-		}else {
-			mapCusPrice.put(customerId+warehouseCode+packNo, materialList);
-		}
-		current = System.currentTimeMillis();
-		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
-		start = System.currentTimeMillis();// 系统开始时间
+		XxlJobLogger.log("-->"+entity.getId()+"验证签约服务耗时：【{0}】毫秒  ",(current - start));			
 		return true;
 	}
 

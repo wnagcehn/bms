@@ -184,6 +184,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	@Override
 	public void calcuForBms(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
+		Map<String, Object> maps = new HashMap<String, Object>();
 		try{
 			if(validateData(entity, feeEntity)){
 				String customerId=entity.getCustomerid();
@@ -201,7 +202,22 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 					entity.setRemark("计算成功");
 					break;
 				case "PRICE_TYPE_STEP"://阶梯价
-					List<PriceStepQuotationEntity> list=mapCusStepPrice.get(customerId);
+					
+					//寻找阶梯报价
+					maps.put("quotationId", generalEntity.getId());
+					//根据报价单位判断
+					maps.put("num", DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum());			
+					//查询出的所有子报价
+					List<PriceStepQuotationEntity> list=repository.queryPriceStepByQuatationId(maps);
+					
+					if(list==null || list.size() == 0){
+						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+						entity.setRemark("阶梯报价未配置");
+						break;
+					}
+					
 					PriceStepQuotationEntity price = new PriceStepQuotationEntity();
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("warehouse_code", entity.getWarehouseCode());
@@ -389,48 +405,19 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		//报价模板
 		//PriceGeneralQuotationEntity priceGeneral=quoTemplete;
 		priceType=quoTemplete.getPriceType(); //获取报价类型  一口价（PRICE_TYPE_NORMAL）/阶梯价（PRICE_TYPE_STEP）
-		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
+		//List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
 		//PriceStepQuotationEntity price=new PriceStepQuotationEntity();
-		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
-			//寻找阶梯报价
-			map.clear();
-			map.put("quotationId", quoTemplete.getId());
-			//根据报价单位判断
-			map.put("num", DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum());			
-			//查询出的所有子报价
-			list=repository.queryPriceStepByQuatationId(map);
-			
-			if(list==null || list.size() == 0){
-				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("阶梯报价未配置");
-				return false;
-			}
-			mapCusStepPrice.put(customerId, list);
-			//封装数据的仓库和温度
-			/*map.clear();
-			map.put("warehouse_code", entity.getWarehouseCode());
-			map.put("temperature_code", entity.getTemperatureTypeCode());
-			price=storageQuoteFilterService.quoteFilter(list, map);
-			mapCusStepPrice.put(customerId,price);
-			
-			if(price==null){
-				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("阶梯报价未配置");
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				return  false;
-			}*/
-		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
-			XxlJobLogger.log("-->"+entity.getId()+"一口价计费");
-		}else{//报价类型缺失
-			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");
-			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价【"+quoTemplete.getQuotationNo()+"】类型未知");
-			return  false;
-		}
+//		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
+//
+//		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
+//			XxlJobLogger.log("-->"+entity.getId()+"一口价计费");
+//		}else{//报价类型缺失
+//			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");
+//			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+//			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+//			entity.setRemark("报价【"+quoTemplete.getQuotationNo()+"】类型未知");
+//			return  false;
+//		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
 		return true;
