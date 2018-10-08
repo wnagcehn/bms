@@ -258,8 +258,39 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 						feeEntity.setUnitPrice(generalEntity.getUnitPrice());
 						feeEntity.setParam3(generalEntity.getId()+"");
 						break;
-					case "PRICE_TYPE_STEP"://阶梯价
-						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);
+					case "PRICE_TYPE_STEP"://阶梯价						
+						Map<String,Object> map=new HashMap<String,Object>();
+						map.put("quotationId", generalEntity.getId());
+						//根据报价单位判断
+						map.put("num", num);			
+						//查询出的所有子报价
+						List<PriceStepQuotationEntity> list=repository.queryPriceStepByQuatationId(map);
+						
+						if(list==null || list.size() == 0){
+							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							entity.setRemark("阶梯报价未配置");
+							feeEntity.setCalcuMsg("阶梯报价未配置");
+							break;
+						}
+						
+						//封装数据的仓库和温度
+						map.clear();
+						map.put("warehouse_code", entity.getWarehouseCode());
+						PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);			
+						
+						if(stepQuoEntity==null){
+							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							entity.setRemark("阶梯报价未配置");
+							feeEntity.setCalcuMsg("阶梯报价未配置");
+							break;
+						}
+						
+						XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+
 		                // 如果计费单位是 件
 						if ("ITEMS".equals(unit)) {//按件
 							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
@@ -440,7 +471,10 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			feeEntity.setCalcuMsg("报价未配置");
 			return false;
 		}
-		//报价模板
+		
+		
+		
+		/*//报价模板
 		PriceGeneralQuotationEntity priceGeneral=quoTemplete;
 		priceType=quoTemplete.getPriceType();
 		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
@@ -488,7 +522,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			entity.setRemark("报价【"+priceGeneral.getQuotationNo()+"】类型未知");
 			feeEntity.setCalcuMsg("报价【"+priceGeneral.getQuotationNo()+"】类型未知");
 			return  false;
-		}
+		}*/
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
 		return true;
