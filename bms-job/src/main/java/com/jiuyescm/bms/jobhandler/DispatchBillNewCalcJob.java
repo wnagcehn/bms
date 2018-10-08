@@ -261,11 +261,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 		
 		//根据仓库获取发件人省市
-	    WarehouseVo wareVo=wareMap.get(entity.getWarehouseCode());
+	    /*WarehouseVo wareVo=wareMap.get(entity.getWarehouseCode());
 	    if(wareVo!=null){
 	    	entity.setSendProvinceId(wareVo.getProvince());
 	    	entity.setSendCityId(wareVo.getCity());
-	    }
+	    }*/
 		
 		
 		//如果是顺丰配送 匹配标准地址

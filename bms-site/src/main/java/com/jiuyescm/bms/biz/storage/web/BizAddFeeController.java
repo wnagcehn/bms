@@ -577,11 +577,7 @@ public class BizAddFeeController {
     public FeesReceiveStorageEntity init(BizAddFeeEntity entity){
     	FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
     	fee.setFeesNo(entity.getFeesNo());
-    	if(entity.getPrice()!=null){
-    		fee.setCost(new BigDecimal(entity.getPrice()));
-    	}else{
-    		fee.setCost(new BigDecimal(0));
-    	}
+    	fee.setCost(new BigDecimal(entity.getPrice()));
     	fee.setIsCalculated(entity.getIsCalculated());
     	fee.setCalculateTime(JAppContext.currentTimestamp());
 		fee.setUnitPrice(entity.getUnitPrice());

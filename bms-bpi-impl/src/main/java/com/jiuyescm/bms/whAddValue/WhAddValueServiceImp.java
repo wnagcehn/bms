@@ -92,6 +92,7 @@ public class WhAddValueServiceImp implements IWhAddValueService{
 			//newEntity.setCreateTime(JAppContext.currentTimestamp());
 			//newEntity.setLastModifier(JAppContext.currentUserName());
 			//newEntity.setLastModifyTime(JAppContext.currentTimestamp());
+			newEntity.setIsCalculated("0");
 			newEntity.setOperationTime(JAppContext.currentTimestamp());
             newEntity.setWriteTime(JAppContext.currentTimestamp());
 			newEntity.setDelFlag("0");
@@ -151,11 +152,7 @@ public class WhAddValueServiceImp implements IWhAddValueService{
      public FeesReceiveStorageEntity init(BizAddFeeEntity entity){
 	    	FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
 	    	fee.setFeesNo(entity.getFeesNo());
-	    	if(entity.getPrice()!=null){
-	    		fee.setCost(new BigDecimal(entity.getPrice()));
-	    	}else{
-	    		fee.setCost(new BigDecimal(0));
-	    	}
+	    	fee.setCost(new BigDecimal(entity.getPrice()));
 	    	fee.setIsCalculated(entity.getIsCalculated());
 	    	fee.setCalculateTime(JAppContext.currentTimestamp());
 			fee.setUnitPrice(entity.getUnitPrice());
