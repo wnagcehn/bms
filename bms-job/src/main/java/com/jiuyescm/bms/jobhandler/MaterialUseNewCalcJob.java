@@ -223,8 +223,8 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
-				if(mapCusPrice.containsKey(entity.getCustomerId())){
-					List<PriceMaterialQuotationEntity> list=mapCusPrice.get(entity.getCustomerId());
+				if(mapCusPrice.containsKey(entity.getCustomerId()+entity.getConsumerMaterialCode())){
+					List<PriceMaterialQuotationEntity> list=mapCusPrice.get(entity.getCustomerId()+entity.getConsumerMaterialCode());
 					String id="";	
 
 					if(StringUtils.isNotBlank(feeEntity.getWarehouseCode())){
@@ -253,6 +253,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 					if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
 						feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 						entity.setIsCalculated(CalculateState.Finish.getCode());
+						entity.setRemark(CalculateState.Finish.getDesc());
 						XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getCost());
 					}else{
 						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -265,6 +266,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			entity.setRemark(CalculateState.Sys_Error.getDesc());
 			XxlJobLogger.log("-->"+entity.getId()+"系统异常，费用【0】");
 		}
 	}
@@ -321,6 +323,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		Map<String,Object> map=new HashMap<String,Object>();
 		long current = 0l;// 当前系统时间
 		String customerId = entity.getCustomerId();
+		String packNo = entity.getConsumerMaterialCode();
 		
 		//验证商家合同
 		PriceContractInfoEntity contractEntity =null;
@@ -379,7 +382,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			entity.setRemark("报价未配置");
 			return false;
 		}else {
-			mapCusPrice.put(customerId, materialList);
+			mapCusPrice.put(customerId+packNo, materialList);
 		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));

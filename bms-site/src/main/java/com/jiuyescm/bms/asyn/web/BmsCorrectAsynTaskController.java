@@ -22,6 +22,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,8 @@ import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -58,6 +61,9 @@ public class BmsCorrectAsynTaskController {
 	
 	@Resource
 	private IBmsGroupCustomerService bmsGroupCustomerService;
+	
+	@Autowired 
+	private IBmsGroupService bmsGroupService;
 	
 	private static final String BMS_CORRECT_ASYN_TASK = "BMS.CORRECT.ASYN.TASK";
 	
@@ -119,8 +125,13 @@ public class BmsCorrectAsynTaskController {
 		    voEntity.setStartDate(startDate);
 		    voEntity.setEndDate(endDate);
 		}
+		
 		// 查询不需要运单纠正的商家
-		List<String> notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(176);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupCode", "notpartin_orderCorrent_customer");
+		map.put("bizType", "group_customer");
+		BmsGroupVo bmsCancelCus=bmsGroupService.queryOne(map);
+		List<String> notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
 		
 		if(StringUtils.isBlank(voEntity.getCustomerId())){
 			Map<String,Object> conditionMap=Maps.newHashMap();

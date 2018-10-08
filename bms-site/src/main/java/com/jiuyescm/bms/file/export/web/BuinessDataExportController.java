@@ -1739,6 +1739,7 @@ public class BuinessDataExportController extends BaseController {
 		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = null;
 		double t_amount = 0d;
+		double amount = 0d;
 		for (FeesReceiveStorageEntity entity : list) {
 			dataItem = new HashMap<String, Object>();
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
@@ -1750,7 +1751,9 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("quality", entity.getQuantity());
 			dataItem.put("unit", entity.getUnit());
 			dataItem.put("unitPrice", entity.getUnitPrice());
-			double amount = entity.getCost().doubleValue();
+			if (null != entity.getCost()) {
+				amount = entity.getCost().doubleValue();
+			}
 			t_amount += amount;
 			dataItem.put("amount", amount);
 			dataItem.put("remark", entity.getRemarkContent());
