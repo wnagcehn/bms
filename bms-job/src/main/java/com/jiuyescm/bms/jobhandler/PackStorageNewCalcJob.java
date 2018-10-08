@@ -215,7 +215,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 						entity.setRemark("阶梯报价未配置");
-						break;
+						return;
 					}
 					
 					PriceStepQuotationEntity price = new PriceStepQuotationEntity();
@@ -226,8 +226,8 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 					if(price == null){
 						feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 						entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-						entity.setRemark("系统错误，报价帅选异常");
-						XxlJobLogger.log("-->"+entity.getId()+"系统错误，报价帅选异常");
+						entity.setRemark("系统错误，报价筛选异常");
+						XxlJobLogger.log("-->"+entity.getId()+"系统错误，报价筛选异常");
 						return;
 					}
 					else{

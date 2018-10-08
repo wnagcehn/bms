@@ -152,12 +152,12 @@ public class BmsGroupServiceImpl implements IBmsGroupService{
 		// TODO Auto-generated method stub
 		BmsGroupEntity entity=bmsGroupRepository.queryOne(condition);
 		try{
-			BmsGroupVo vo=null;
+			BmsGroupVo vo= new BmsGroupVo();
 			if (null != entity) {
 				PropertyUtils.copyProperties(vo, entity);
 				return vo;
 			}		
-			return vo;
+			return null;
 		}catch(Exception e){
 			logger.error("checkGroup:",e);
 			throw null;

@@ -268,7 +268,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							entity.setRemark("阶梯报价未配置");
-							break;
+							return;
 						}
 						
 						//封装数据的仓库和温度
@@ -281,7 +281,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							entity.setRemark("阶梯报价未配置");
-							break;
+							return;
 						}
 						
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
