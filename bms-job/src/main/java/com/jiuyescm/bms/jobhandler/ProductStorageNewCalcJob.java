@@ -235,19 +235,20 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		//合同报价校验  false-不通过  true-通过
 		if(validateData(entity, feeEntity)){
-			if(mapCusPrice.containsKey(entity.getCustomerid())){
+			if(mapCusPrice.containsKey(entity.getCustomerid()+SubjectId)){
 				entity.setCalculateTime(JAppContext.currentTimestamp());
 				feeEntity.setCalculateTime(entity.getCalculateTime());
 				
 				String customerId=entity.getCustomerid();
 				//报价模板
-				PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);	
+				PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);	
 				if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
 					feeEntity.setQuantity(entity.getAqty());
 				}else if("KILOGRAM".equals(generalEntity.getFeeUnitCode())){//按重量
 					feeEntity.setQuantity(entity.getWeight()*entity.getAqty());
 				}
-
+				priceType=generalEntity.getPriceType();
+				
 				//计算方法
 				double amount=0d;
 				switch(priceType){
@@ -283,7 +284,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 						entity.setRemark("阶梯报价未配置");
-						break;
+						return;
 					}
 						
 					//封装数据的仓库和温度
@@ -295,9 +296,12 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 						feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 						entity.setRemark("阶梯报价未配置");
-						break;
+						return;
 					}
-								
+					
+					XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+
+			
 					if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
@@ -459,16 +463,16 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 		start = System.currentTimeMillis();// 系统开始时间
 		/*验证报价 报价*/
 		PriceGeneralQuotationEntity quoTemplete=null;
-		if(!mapCusPrice.containsKey(customerId)){
+		if(!mapCusPrice.containsKey(customerId+SubjectId)){
 			map.clear();
 			map.put("subjectId",SubjectId);
 			map.put("quotationNo", contractItems.get(0).getTemplateId());
 			quoTemplete=priceGeneralQuotationRepository.query(map);
 			if(quoTemplete != null){
-				mapCusPrice.put(customerId, quoTemplete);//加入缓存
+				mapCusPrice.put(customerId+SubjectId, quoTemplete);//加入缓存
 			}
 		}else{
-			quoTemplete=mapCusPrice.get(entity.getCustomerid());
+			quoTemplete=mapCusPrice.get(customerId+SubjectId);
 		}
 		if(quoTemplete==null){
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");

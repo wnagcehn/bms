@@ -229,6 +229,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			
 					//报价模板
 					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
+					priceType=generalEntity.getPriceType();
 					//计费单位 
 					String unit=generalEntity.getFeeUnitCode();
 					//数量
@@ -272,7 +273,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							entity.setRemark("阶梯报价未配置");
 							feeEntity.setCalcuMsg("阶梯报价未配置");
-							break;
+							return;
 						}
 						
 						//封装数据的仓库和温度
@@ -286,7 +287,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							entity.setRemark("阶梯报价未配置");
 							feeEntity.setCalcuMsg("阶梯报价未配置");
-							break;
+							return;
 						}
 						
 						XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));

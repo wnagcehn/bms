@@ -276,157 +276,160 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		//合同报价校验  false-不通过  true-通过
 		if(validateData(entity, storageFeeEntity)){
-			try{
-				entity.setCalculateTime(JAppContext.currentTimestamp());
-				storageFeeEntity.setCalculateTime(entity.getCalculateTime());
-				String customerId=entity.getCustomerid();	
-				
-				//报价模板
-				PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
-				//计费单位 
-				String unit=generalEntity.getFeeUnitCode();
-				//计算方法
-				double amount=0d;
-				switch(priceType){
-				case "PRICE_TYPE_NORMAL"://一口价				
-					//如果计费单位是 单 -> 费用 = 模板价格
-		            //如果计费单位是 件 -> 费用 = 商品件数*模板价格
-		            //如果计费单位是 sku数 -> 费用 = 商家sku数*模板价格
-					if("BILL".equals(unit)){//按单
-						amount=generalEntity.getUnitPrice();				
-					}else if("ITEMS".equals(unit)){//按件				
-						amount=storageFeeEntity.getQuantity()*generalEntity.getUnitPrice();
-					}else if("SKU".equals(unit)){//按sku
-						amount=storageFeeEntity.getVarieties()*generalEntity.getUnitPrice();
-					}else if("CARTON".equals(unit)){
-						amount=storageFeeEntity.getBox()*generalEntity.getUnitPrice();
-					}else if("KILOGRAM".equals(unit)){
-						amount=storageFeeEntity.getWeight()*generalEntity.getUnitPrice();
-					}else if("TONS".equals(unit)){
-						amount=(double)storageFeeEntity.getWeight()*generalEntity.getUnitPrice()/1000;
-					}
-					storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
-					storageFeeEntity.setParam3(generalEntity.getId()+"");
-					break;
-				case "PRICE_TYPE_STEP"://阶梯价
+			if(mapCusPrice.containsKey(entity.getCustomerid()+SubjectId)){
+				try{
+					entity.setCalculateTime(JAppContext.currentTimestamp());
+					storageFeeEntity.setCalculateTime(entity.getCalculateTime());
+					String customerId=entity.getCustomerid();	
 					
-					
-					//=====================================查询子报价==================================
-					List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
-					Map<String,Object> map=new HashMap<String,Object>();
-					//寻找阶梯报价
-					map.clear();
-					map.put("quotationId", generalEntity.getId());
-					//根据报价单位判断
-					if("BILL".equals(generalEntity.getFeeUnitCode())){//按单
-						map.put("num", "1");
-					}else if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
-						map.put("num", entity.getTotalQuantity());
-					}else if("SKU".equals(generalEntity.getFeeUnitCode())){//按sku
-						map.put("num", entity.getTotalVarieties());
-					}
-					//查询出的所有子报价
-					list=repository.queryPriceStepByQuatationId(map);					
-					if(list==null || list.size() == 0){
-						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
-						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-						storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-						entity.setRemark("阶梯报价未配置");
-						storageFeeEntity.setCalcuMsg("阶梯报价未配置");
-						//feesList.add(storageFeeEntity);
+					//报价模板
+					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
+					priceType=generalEntity.getPriceType();
+					//计费单位 
+					String unit=generalEntity.getFeeUnitCode();
+					//计算方法
+					double amount=0d;
+					switch(priceType){
+					case "PRICE_TYPE_NORMAL"://一口价				
+						//如果计费单位是 单 -> 费用 = 模板价格
+			            //如果计费单位是 件 -> 费用 = 商品件数*模板价格
+			            //如果计费单位是 sku数 -> 费用 = 商家sku数*模板价格
+						if("BILL".equals(unit)){//按单
+							amount=generalEntity.getUnitPrice();				
+						}else if("ITEMS".equals(unit)){//按件				
+							amount=storageFeeEntity.getQuantity()*generalEntity.getUnitPrice();
+						}else if("SKU".equals(unit)){//按sku
+							amount=storageFeeEntity.getVarieties()*generalEntity.getUnitPrice();
+						}else if("CARTON".equals(unit)){
+							amount=storageFeeEntity.getBox()*generalEntity.getUnitPrice();
+						}else if("KILOGRAM".equals(unit)){
+							amount=storageFeeEntity.getWeight()*generalEntity.getUnitPrice();
+						}else if("TONS".equals(unit)){
+							amount=(double)storageFeeEntity.getWeight()*generalEntity.getUnitPrice()/1000;
+						}
+						storageFeeEntity.setUnitPrice(generalEntity.getUnitPrice());
+						storageFeeEntity.setParam3(generalEntity.getId()+"");
 						break;
-					}
-					
-					//封装数据的仓库和温度
-					map.clear();
-					map.put("warehouse_code", entity.getWarehouseCode());
-					map.put("temperature_code", entity.getTemperatureTypeCode());
-					
-					PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);
-					
-					if(stepQuoEntity==null){
-						XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
-						entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-						storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-						entity.setRemark("阶梯报价未配置");
-						storageFeeEntity.setCalcuMsg("阶梯报价未配置");
-						break;
-					}
-					
-					XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+					case "PRICE_TYPE_STEP"://阶梯价
+						
+						
+						//=====================================查询子报价==================================
+						List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
+						Map<String,Object> map=new HashMap<String,Object>();
+						//寻找阶梯报价
+						map.clear();
+						map.put("quotationId", generalEntity.getId());
+						//根据报价单位判断
+						if("BILL".equals(generalEntity.getFeeUnitCode())){//按单
+							map.put("num", "1");
+						}else if("ITEMS".equals(generalEntity.getFeeUnitCode())){//按件
+							map.put("num", entity.getTotalQuantity());
+						}else if("SKU".equals(generalEntity.getFeeUnitCode())){//按sku
+							map.put("num", entity.getTotalVarieties());
+						}
+						//查询出的所有子报价
+						list=repository.queryPriceStepByQuatationId(map);					
+						if(list==null || list.size() == 0){
+							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							entity.setRemark("阶梯报价未配置");
+							storageFeeEntity.setCalcuMsg("阶梯报价未配置");
+							//feesList.add(storageFeeEntity);
+							return;
+						}
+						
+						//封装数据的仓库和温度
+						map.clear();
+						map.put("warehouse_code", entity.getWarehouseCode());
+						map.put("temperature_code", entity.getTemperatureTypeCode());
+						
+						PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);
+						
+						if(stepQuoEntity==null){
+							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							storageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							entity.setRemark("阶梯报价未配置");
+							storageFeeEntity.setCalcuMsg("阶梯报价未配置");
+							return;
+						}
+						
+						XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
 
-					// 如果计费单位是 单 ->费用 = 单价 （根据仓库和温度和上下限帅选出唯一报价）
-	                // 如果计费单位是 件或者sku数 
-	                //   如果单价为空或为0，-> 费用 = 首价+（商品件数-首量）/续量 * 续价
-	                //   如果单价>0 ， 费用=单价*数量
-					if("BILL".equals(unit)){//按单
-						amount=stepQuoEntity.getUnitPrice();
-					}else if("ITEMS".equals(unit)){//按件	
-						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=storageFeeEntity.getQuantity()*stepQuoEntity.getUnitPrice();
-							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-						}else{
-							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getQuantity()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+						// 如果计费单位是 单 ->费用 = 单价 （根据仓库和温度和上下限帅选出唯一报价）
+		                // 如果计费单位是 件或者sku数 
+		                //   如果单价为空或为0，-> 费用 = 首价+（商品件数-首量）/续量 * 续价
+		                //   如果单价>0 ， 费用=单价*数量
+						if("BILL".equals(unit)){//按单
+							amount=stepQuoEntity.getUnitPrice();
+						}else if("ITEMS".equals(unit)){//按件	
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=storageFeeEntity.getQuantity()*stepQuoEntity.getUnitPrice();
+								storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getQuantity()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							}
+						}else if("SKU".equals(unit)){//按sku
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=storageFeeEntity.getVarieties()*stepQuoEntity.getUnitPrice();
+								storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getVarieties()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							}
+						}else if("CARTON".equals(unit)){//按箱
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=storageFeeEntity.getBox()*stepQuoEntity.getUnitPrice();
+								storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getBox()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							}
+						}else if("KILOGRAM".equals(unit)){//按千克
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=storageFeeEntity.getWeight()*stepQuoEntity.getUnitPrice();
+								storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							}
+						}else if("TONS".equals(unit)){//按吨
+							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+								amount=(double)storageFeeEntity.getWeight()*stepQuoEntity.getUnitPrice()/1000;
+								storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							}else{
+								amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+								amount=(double)amount/1000;
+							}					
+						}			
+						//判断封顶价
+						if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
+							if(stepQuoEntity.getCapPrice()<amount){
+								amount=stepQuoEntity.getCapPrice();
+							}
 						}
-					}else if("SKU".equals(unit)){//按sku
-						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=storageFeeEntity.getVarieties()*stepQuoEntity.getUnitPrice();
-							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-						}else{
-							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getVarieties()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getVarieties()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-						}
-					}else if("CARTON".equals(unit)){//按箱
-						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=storageFeeEntity.getBox()*stepQuoEntity.getUnitPrice();
-							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-						}else{
-							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getBox()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-						}
-					}else if("KILOGRAM".equals(unit)){//按千克
-						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=storageFeeEntity.getWeight()*stepQuoEntity.getUnitPrice();
-							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-						}else{
-							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-						}
-					}else if("TONS".equals(unit)){//按吨
-						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=(double)storageFeeEntity.getWeight()*stepQuoEntity.getUnitPrice()/1000;
-							storageFeeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-						}else{
-							amount=stepQuoEntity.getFirstNum()<storageFeeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(storageFeeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-							amount=(double)amount/1000;
-						}					
-					}			
-					//判断封顶价
-					if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
-						if(stepQuoEntity.getCapPrice()<amount){
-							amount=stepQuoEntity.getCapPrice();
-						}
+						
+						storageFeeEntity.setParam3(stepQuoEntity.getId()+"");
+						break;
+					default:
+						break;
 					}
 					
-					storageFeeEntity.setParam3(stepQuoEntity.getId()+"");
-					break;
-				default:
-					break;
+					storageFeeEntity.setUnit(unit);
+					storageFeeEntity.setCost(BigDecimal.valueOf(amount));
+					storageFeeEntity.setParam4(priceType);
+					storageFeeEntity.setBizType(entity.getextattr1());//用于判断是否是遗漏数据
+					entity.setRemark("计算成功");
+					storageFeeEntity.setCalcuMsg("计算成功");
+					entity.setIsCalculated(CalculateState.Finish.getCode());
+					storageFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
+					//feesList.add(storageFeeEntity);
+				}catch(Exception ex){
+					entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+					storageFeeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+					entity.setRemark("费用计算异常:"+ex.getMessage());
+					storageFeeEntity.setCalcuMsg("费用计算异常:"+ex.getMessage());
+					//feesList.add(storageFeeEntity);
 				}
-				
-				storageFeeEntity.setUnit(unit);
-				storageFeeEntity.setCost(BigDecimal.valueOf(amount));
-				storageFeeEntity.setParam4(priceType);
-				storageFeeEntity.setBizType(entity.getextattr1());//用于判断是否是遗漏数据
-				entity.setRemark("计算成功");
-				storageFeeEntity.setCalcuMsg("计算成功");
-				entity.setIsCalculated(CalculateState.Finish.getCode());
-				storageFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
-				//feesList.add(storageFeeEntity);
-			}catch(Exception ex){
-				entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-				storageFeeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-				entity.setRemark("费用计算异常:"+ex.getMessage());
-				storageFeeEntity.setCalcuMsg("费用计算异常:"+ex.getMessage());
-				//feesList.add(storageFeeEntity);
-			}
+			}	
 		}
 		XxlJobLogger.log("-->"+entity.getId()+"id【{0}】费用【{1}】",entity.getId(),storageFeeEntity.getCost());
 	}
