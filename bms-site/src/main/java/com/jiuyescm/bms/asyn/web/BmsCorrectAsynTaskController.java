@@ -127,11 +127,14 @@ public class BmsCorrectAsynTaskController {
 		}
 		
 		// 查询不需要运单纠正的商家
+		List<String> notCurCustList = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupCode", "notpartin_orderCorrent_customer");
 		map.put("bizType", "group_customer");
 		BmsGroupVo bmsCancelCus=bmsGroupService.queryOne(map);
-		List<String> notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
+		if (null != bmsCancelCus) {
+			notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
+		}
 		
 		if(StringUtils.isBlank(voEntity.getCustomerId())){
 			Map<String,Object> conditionMap=Maps.newHashMap();
@@ -143,6 +146,7 @@ public class BmsCorrectAsynTaskController {
 				return result;
 			}
 			
+			//存在不参与运单纠正的商家
 			if (notCurCustList != null && notCurCustList.size() > 0) { 
 				for (String customerId:customerIdList) {
 					boolean exe = false;
@@ -171,6 +175,26 @@ public class BmsCorrectAsynTaskController {
 						}
 					}
 				}
+			}else {
+				//没有配置不需要参与运单纠正的商家
+				for (String customerId : customerIdList) {
+					BmsCorrectAsynTaskVo vo=new BmsCorrectAsynTaskVo();
+					vo.setCreator(JAppContext.currentUserName());
+					vo.setCreateTime(JAppContext.currentTimestamp());
+					vo.setDelFlag("0");
+					vo.setTaskId(getUuid());
+					vo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+					format=new SimpleDateFormat("yyyyMM");
+					vo.setStartDate(voEntity.getStartDate());
+					vo.setEndDate(voEntity.getEndDate());
+					vo.setCreateMonth(format.format(voEntity.getStartDate()));
+					vo.setCustomerId(customerId);
+					vo.setTaskName(voEntity.getTaskName());
+					vo.setTaskRate(voEntity.getTaskRate());
+					if(!bmsCorrectAsynTaskService.existTask(vo)){
+						voList.add(vo);
+					}
+				}				
 			}
 			
 			if(voList.size()>0){
