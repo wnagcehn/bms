@@ -23,6 +23,7 @@ import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
+import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
@@ -64,6 +65,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
 	@Autowired private SequenceService sequenceService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
@@ -224,13 +226,12 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		try{
 			if(validateData(entity, feeEntity)){
 				
-				long start = System.currentTimeMillis();// 系统开始时间							
 				//商家耗材报价
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("contractCode", mapContact.get(entity.getCustomerId()).getContractCode());
 				map.put("subjectId",SubjectId);
 				map.put("materialCode",entity.getConsumerMaterialCode());
-				map.put("warehouseId", entity.getWarehouseCode());
+				//map.put("warehouseId", entity.getWarehouseCode());
 				List<PriceMaterialQuotationEntity> list=priceMaterialQuotationRepository.queryMaterialQuatationByContract(map);
 				
 				if(list==null||list.size()==0){
@@ -240,34 +241,27 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 					entity.setRemark("报价未配置");
 					return;
 				}
-				long current = System.currentTimeMillis();
-				XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
 				
-				String id="";	
+				//封装数据的仓库和温度
+				map.clear();
+				map.put("warehouse_code", entity.getWarehouseCode());
+				PriceMaterialQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteMaterialFilter(list, map);			
 				
-				if(StringUtils.isNotBlank(feeEntity.getWarehouseCode())){
-					for(PriceMaterialQuotationEntity vo:list){
-						if(feeEntity.getWarehouseCode().equals(vo.getWarehouseId())){				
-							feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
-							feeEntity.setUnitPrice(vo.getUnitPrice());
-							feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
-							id=vo.getId()+"";
-							break;
-						}
-					}
+				if(stepQuoEntity==null){
+					XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					entity.setRemark("阶梯报价未配置");
+					feeEntity.setCalcuMsg("阶梯报价未配置");
+					return;
 				}
-					
-				if(StringUtils.isBlank(id)){
-					for(PriceMaterialQuotationEntity vo:list){
-						if(StringUtils.isBlank(vo.getWarehouseId())){
-							feeEntity.setCost(new BigDecimal(vo.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
-							feeEntity.setUnitPrice(vo.getUnitPrice());
-							feeEntity.setParam2(vo.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
-							id=vo.getId()+"";
-						}
-					}
-				}
-				feeEntity.setParam3(id);
+				
+				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+							
+				feeEntity.setCost(new BigDecimal(stepQuoEntity.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
+				feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+				feeEntity.setParam2(stepQuoEntity.getUnitPrice().toString()+"*"+feeEntity.getQuantity().toString());
+				feeEntity.setParam3(stepQuoEntity.getId()+"");
 				if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
 					feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 					entity.setIsCalculated(CalculateState.Finish.getCode());
