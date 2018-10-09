@@ -272,8 +272,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			condition.put("waybillNo", discountVo.getWaybillNo());
 			FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryOne(condition);
 			
-			if(fee!=null && "1".equals(fee.getIsCalculated()) && StringUtils.isNotBlank(fee.getPriceId()) && StringUtils.isNotBlank(fee.getRuleNo())){
-				logger.info("原始报价id为"+fee.getPriceId()+",原始规则为"+fee.getRuleNo());
+			if(fee!=null && "1".equals(fee.getIsCalculated()) && StringUtils.isNotBlank(fee.getPriceId())){
+				logger.info("原始报价id为"+fee.getPriceId());
 				
 				//查询明细报价
 				condition=new HashMap<String,Object>();
@@ -348,7 +348,13 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					//===========================通过原始报价和折扣报价，得到最后计算的首重续重===============================
 					BmsQuoteDispatchDetailVo newprice=getNewPrice(oldPrice,discountPrice);	
 					
-					//============================开始费用计算========================================
+					//开始进行计算
+					if(!DoubleUtil.isBlank(newprice.getUnitPrice())){
+						amount=BigDecimal.valueOf(newprice.getUnitPrice());
+					}else{
+						amount=BigDecimal.valueOf(newprice.getFirstWeight()<fee.getChargedWeight()?newprice.getFirstWeightPrice()+newprice.getContinuedPrice()*((fee.getChargedWeight()-newprice.getFirstWeight())/newprice.getContinuedWeight()):newprice.getFirstWeightPrice());	        		
+					}
+					/*//============================开始费用计算========================================
 					//进入费用计算
 					BizDispatchBillEntity biz=new BizDispatchBillEntity();
 					biz.setWeight(fee.getChargedWeight());
@@ -367,7 +373,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					if(resultCalVo!=null && "succ".equals(resultCalVo.getSuccess()) && resultCalVo.getPrice()!=null){
 						//计算成功的
 						amount=resultCalVo.getPrice();	
-					}
+					}*/
 					//=============================费用计算结束========================================
 				}			
 				handAmount(discountVo,fee,amount,discountPrice);

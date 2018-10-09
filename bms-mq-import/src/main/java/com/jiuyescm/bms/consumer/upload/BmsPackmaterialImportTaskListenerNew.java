@@ -436,7 +436,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						}
 						
 						BigDecimal num = new BigDecimal(num0);
-						if(tempChild.getConsumerMaterialCode().endsWith("-GB")){
+						if(tempChild.getConsumerMaterialCode().endsWith("GB")){
 							tempChild.setWeight(num);
 						}
 						else{

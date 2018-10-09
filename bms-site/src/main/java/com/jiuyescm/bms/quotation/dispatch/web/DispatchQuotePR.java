@@ -930,6 +930,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		list.add("areaTypeCode");//地域类型
 		list.add("productCase");
 		list.add("deliverid");
+		list.add("serviceTypeCode");
 		return list;
 	}
 	
