@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
+import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 
 @Service("storageQuoteFilterServiceImpl")
@@ -60,5 +61,43 @@ public class StorageQuoteFilterServiceImpl implements IStorageQuoteFilterService
 			return null;
 		}
 		
+	}
+
+	@Override
+	public PriceMaterialQuotationEntity quoteMaterialFilter(
+			List<PriceMaterialQuotationEntity> quotes, Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		try{
+			Integer level = 3;
+			PriceMaterialQuotationEntity entity = new PriceMaterialQuotationEntity();
+			
+			String warehouse_code = map.get("warehouse_code")==null?"":map.get("warehouse_code").toString();
+			
+			for (PriceMaterialQuotationEntity quoteEntity : quotes) {
+				
+				String warehouse_quote = StringUtils.isEmpty(quoteEntity.getWarehouseId())?"":quoteEntity.getWarehouseId();
+				
+				if(!warehouse_code.equals(warehouse_quote) && StringUtils.isNotEmpty(warehouse_quote)){
+					continue;//仓库不匹配
+				}
+			
+				Integer warehouselevel = warehouse_code.equals(warehouse_quote)?1:2;		//仓库优先级	
+				
+				if(warehouselevel<level){
+					level = warehouselevel;
+					entity = quoteEntity;
+				}
+			}
+			if(level == 3){
+				return null;
+			}
+			else{
+				return entity;
+			}
+		}
+		catch(Exception ex){
+			logger.error("仓储耗材阶梯报价过滤异常", ex);
+			return null;
+		}
 	}
 }
