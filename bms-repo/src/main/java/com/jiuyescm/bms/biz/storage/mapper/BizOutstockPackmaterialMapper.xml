@@ -426,7 +426,9 @@
     	select consumer_material_code,consumer_material_name 
     	from biz_outstock_packmaterial where customer_id=#{customerId} and <![CDATA[create_time>=#{startTime}]]>
     	and <![CDATA[create_time<#{endTime}]]> and del_flag=0
-    	and warehouse_code=#{warehouseCode}
+    	<if test="warehouseCode!=null and warehouseCode!=''">
+    		and warehouse_code=#{warehouseCode}
+    	</if>
     	group by consumer_material_code,consumer_material_name
     </select>
     <select id="queryMaterialFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
@@ -455,7 +457,10 @@
   		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no
   		LEFT JOIN  fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no
 		where b.create_time>=#{startTime} and <![CDATA[b.create_time<#{endTime}]]> and b.customer_id=#{customerId} and b.del_flag=0
-		and b.warehouse_code=#{warehouseCode} and a.del_flag=0
+    	<if test="warehouseCode!=null and warehouseCode!=''">
+    		and b.warehouse_code=#{warehouseCode}
+    	</if>
+		and a.del_flag=0
     </select>
     
     <select id="queryAllWarehouseFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
