@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
@@ -278,7 +276,7 @@ public class BuinessDataExportController extends BaseController {
 		Map<String, String> temMap=getTemperatureTypeList();
 		// 存储费
 		handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
-		//出库
+		//出库(TB)
 		handOutstock(xssfWorkbook, poiUtil, condition, filePath,temMap);
 		//入库
 		handInstock(xssfWorkbook, poiUtil, condition, filePath);
@@ -1127,7 +1125,7 @@ public class BuinessDataExportController extends BaseController {
         itemMap.put("dataKey", "orderType");
         headInfoList.add(itemMap);
         
-        
+        itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "出库单号");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "outstockNo");
@@ -1178,7 +1176,7 @@ public class BuinessDataExportController extends BaseController {
 	        Map<String, Object> dataItem = null;
 	        Map<String,Map<String, Object>> entityMap=new HashMap<String,Map<String, Object>>();
 	        for (FeesReceiveStorageEntity entity : list) {
-	        	if(!entityMap.containsKey(entity.getWaybillNo())){
+	        	if(!entityMap.containsKey(entity.getOutstockNo())){
 	        		dataItem = new HashMap<String, Object>();
 		        	dataItem.put("warehouseName", entity.getWarehouseName());
 		        	dataItem.put("createTime", entity.getCreateTime());
@@ -1196,9 +1194,9 @@ public class BuinessDataExportController extends BaseController {
 	        			dataItem.put("outHandCost", entity.getCost());
 	        		}
 		        	dataList.add(dataItem);
-		        	entityMap.put(entity.getWaybillNo(), dataItem);
+		        	entityMap.put(entity.getOutstockNo(), dataItem);
 	        	}else{
-	        		Map<String, Object> data=entityMap.get(entity.getWaybillNo());
+	        		Map<String, Object> data=entityMap.get(entity.getOutstockNo());
 	        		//B2B订单操作费（区分是订单操作费还是出库装车费）
 	        		if("wh_b2b_work".equals(entity.getSubjectCode())){
 	        			data.put("orderCost", entity.getCost());

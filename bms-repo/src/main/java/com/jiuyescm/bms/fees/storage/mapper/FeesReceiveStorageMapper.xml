@@ -523,6 +523,7 @@
 			a.customer_name as customerName,
 			a.bill_type_name as costType,
 			a.outstock_no as outstockNo,
+			a.waybill_no as waybillNo,
 			a.temperature_type_name as tempretureType,
 			b.subject_code as subjectCode,
 			b.weight,
