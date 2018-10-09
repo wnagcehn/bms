@@ -763,8 +763,11 @@ public class BuinessDataExportController extends BaseController {
 			if (dataList.size() == 0) {
 				continue;
 			}
-
-			dataPackMaterialList = new ArrayList<Map<String, Object>>();
+			
+			if (null == dataPackMaterialList || dataPackMaterialList.size() == 0) {
+				dataPackMaterialList = new ArrayList<Map<String, Object>>();
+			}
+			
 			for (FeesReceiveMaterial materialEntity : dataList) {
 				boolean flag = false;
 				Map<String, Object> matchMap = null;
