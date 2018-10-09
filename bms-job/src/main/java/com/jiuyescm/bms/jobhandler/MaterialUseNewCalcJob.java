@@ -248,15 +248,14 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				PriceMaterialQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteMaterialFilter(list, map);			
 				
 				if(stepQuoEntity==null){
-					XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+					XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					entity.setRemark("阶梯报价未配置");
-					feeEntity.setCalcuMsg("阶梯报价未配置");
+					entity.setRemark("报价未配置");
+					feeEntity.setCalcuMsg("报价未配置");
 					return;
 				}
-				
-				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+				//XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
 							
 				feeEntity.setCost(new BigDecimal(stepQuoEntity.getUnitPrice()*feeEntity.getQuantity()).setScale(2,BigDecimal.ROUND_HALF_UP));
 				feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
