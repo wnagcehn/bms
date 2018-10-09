@@ -74,7 +74,6 @@ public class CustomerContractController {
 	@Resource
 	private IContractDiscountService contractDiscountService;
 	
-	
 	private static final Logger logger = LoggerFactory.getLogger(CustomerContractController.class.getName());
 	
 	/**
@@ -823,6 +822,7 @@ public class CustomerContractController {
 	@DataProvider
 	public List<PriceContractInfoEntity> getSubjectCode(Map<String, String> param){	
 		List<PriceContractInfoEntity> list=new ArrayList<PriceContractInfoEntity>();
+		Map<String, String> feeTypeMap=bmsGroupSubjectService.getSubject("receive_wh_base_quo_subject");
 		if (null != param) {
 			String bizTypeCode=param.get("bizTypeCode");
 			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
@@ -839,7 +839,7 @@ public class CustomerContractController {
 							price.setBizTypeName("仓储");
 							price.setBizTypeCode("STORAGE");
 							price.setSubjectId(s.getSubjectId());
-							price.setCarrierName(s.getSubjectId());
+							price.setCarrierName(feeTypeMap.get(s.getSubjectId()));
 							price.setDiscountType(s.getDiscountType());
 							price.setCustomerType("contract");
 							list.add(price);

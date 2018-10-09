@@ -248,7 +248,6 @@ public class BmsDiscountAsynTaskController {
 		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
 			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
 			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-			queryVo.setCustomerId("SJ000084-1");
 			queryVo.setSettlementTime("2018-09");
 			List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 			if(disCountVo.size()>0){
@@ -349,78 +348,75 @@ public class BmsDiscountAsynTaskController {
 		String taskId = "";
 		List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
 		for(ContractDiscountVo vo:disCountVo){
-			if("STORAGE".equals(entity.getBizTypecode())){
-				if(vo.getSubjectVoList().size()>0){
-					for(SubjectInfoVo s:vo.getSubjectVoList()){
-						BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
-						if (month < 10) {
-							newEntity.setMonth("0" + entity.getMonth().toString());
-						}
-						if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
-							String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							Date startDate = sdf.parse(startDateStr);
-							Date endDate = DateUtils.addMonths(startDate, 1);
-							Timestamp startTime = new Timestamp(startDate.getTime());
-							Timestamp endTime = new Timestamp(endDate.getTime());
-							newEntity.setStartDate(startTime);
-							newEntity.setEndDate(endTime);
-						}
-						// 生成任务，写入任务表
-						taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
-						newEntity.setTaskId(taskId);
-						//newEntity.setCarrierId(bizEntity.getCarrierId());
-						newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
-						newEntity.setTaskRate(0);
-						newEntity.setDelFlag("0");
-						newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-						newEntity.setCreator(JAppContext.currentUserName());
-						newEntity.setCreateTime(JAppContext.currentTimestamp());
-						newEntity.setBizTypecode(entity.getBizTypecode());
-						newEntity.setCustomerId(entity.getCustomerId());
-						newEntity.setSubjectCode(s.getSubjectId());
-						newEntity.setDiscountType(s.getDiscountType());
-						newEntity.setCustomerType("contract");
-						newList.add(newEntity);						
-					}			
-				}
-			}else if("DISPATCH".equals(entity.getBizTypecode())){
-				if(vo.getCarrierVoList().size()>0){
-					for(CarrierInfoVo s:vo.getCarrierVoList()){
-						BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
-						if (month < 10) {
-							newEntity.setMonth("0" + entity.getMonth().toString());
-						}
-						if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
-							String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							Date startDate = sdf.parse(startDateStr);
-							Date endDate = DateUtils.addMonths(startDate, 1);
-							Timestamp startTime = new Timestamp(startDate.getTime());
-							Timestamp endTime = new Timestamp(endDate.getTime());
-							newEntity.setStartDate(startTime);
-							newEntity.setEndDate(endTime);
-						}
-						// 生成任务，写入任务表
-						taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
-						newEntity.setTaskId(taskId);
-						newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
-						newEntity.setTaskRate(0);
-						newEntity.setDelFlag("0");
-						newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-						newEntity.setCreator(JAppContext.currentUserName());
-						newEntity.setCreateTime(JAppContext.currentTimestamp());
-						newEntity.setBizTypecode(entity.getBizTypecode());
-						newEntity.setCustomerId(entity.getCustomerId());
-						
-						SystemCodeEntity sys=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
-						newEntity.setCarrierId(s.getCarrierId());
-						newEntity.setSubjectCode(sys.getCode());
-						newEntity.setDiscountType(s.getDiscountType());
-						newEntity.setCustomerType("contract");
-						newList.add(newEntity);	
+			if(vo.getSubjectVoList().size()>0){
+				for(SubjectInfoVo s:vo.getSubjectVoList()){
+					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+					if (month < 10) {
+						newEntity.setMonth("0" + entity.getMonth().toString());
 					}
-				}				
+					if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
+						String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date startDate = sdf.parse(startDateStr);
+						Date endDate = DateUtils.addMonths(startDate, 1);
+						Timestamp startTime = new Timestamp(startDate.getTime());
+						Timestamp endTime = new Timestamp(endDate.getTime());
+						newEntity.setStartDate(startTime);
+						newEntity.setEndDate(endTime);
+					}
+					// 生成任务，写入任务表
+					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+					newEntity.setTaskId(taskId);
+					//newEntity.setCarrierId(bizEntity.getCarrierId());
+					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
+					newEntity.setTaskRate(0);
+					newEntity.setDelFlag("0");
+					newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+					newEntity.setCreator(JAppContext.currentUserName());
+					newEntity.setCreateTime(JAppContext.currentTimestamp());
+					newEntity.setBizTypecode("STORAGE");
+					newEntity.setCustomerId(entity.getCustomerId());
+					newEntity.setSubjectCode(s.getSubjectId());
+					newEntity.setDiscountType(s.getDiscountType());
+					newEntity.setCustomerType("contract");
+					newList.add(newEntity);						
+				}			
+			}
+			if(vo.getCarrierVoList().size()>0){
+				for(CarrierInfoVo s:vo.getCarrierVoList()){
+					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+					if (month < 10) {
+						newEntity.setMonth("0" + entity.getMonth().toString());
+					}
+					if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
+						String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date startDate = sdf.parse(startDateStr);
+						Date endDate = DateUtils.addMonths(startDate, 1);
+						Timestamp startTime = new Timestamp(startDate.getTime());
+						Timestamp endTime = new Timestamp(endDate.getTime());
+						newEntity.setStartDate(startTime);
+						newEntity.setEndDate(endTime);
+					}
+					// 生成任务，写入任务表
+					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+					newEntity.setTaskId(taskId);
+					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
+					newEntity.setTaskRate(0);
+					newEntity.setDelFlag("0");
+					newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+					newEntity.setCreator(JAppContext.currentUserName());
+					newEntity.setCreateTime(JAppContext.currentTimestamp());
+					newEntity.setBizTypecode("DISPATCH");
+					newEntity.setCustomerId(entity.getCustomerId());
+					
+					SystemCodeEntity sys=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
+					newEntity.setCarrierId(s.getCarrierId());
+					newEntity.setSubjectCode(sys.getCode());
+					newEntity.setDiscountType(s.getDiscountType());
+					newEntity.setCustomerType("contract");
+					newList.add(newEntity);	
+				}			
 			}			
 
 		}
