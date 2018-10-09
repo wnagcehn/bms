@@ -1226,16 +1226,18 @@ public class BuinessDataExportController extends BaseController {
 			int move1 = 0;
 			int move2 = 0;
 			parameter.put("warehouseCode", warehouseCode);
-
+			
+			FastDateFormat sdf = FastDateFormat.getInstance("yyyy/MM/dd");
+			//FastDateFormat sd = FastDateFormat.getInstance("yyyy-MM-dd");
 			//
-			Set<Timestamp> set = new TreeSet<Timestamp>();
+			Set<String> set = new TreeSet<String>();
 
 			// 商品按托存储
 			List<FeesReceiveStorageEntity> palletList = feesReceiveStorageService.queryPreBillStorage(parameter);
 			for (FeesReceiveStorageEntity entity : palletList) {
 				conIndex++;
-				if (!set.contains(entity.getCreateTime())) {
-					set.add(entity.getCreateTime());
+				if (!set.contains(sdf.format(entity.getCreateTime()))) {
+					set.add(sdf.format(entity.getCreateTime()));
 				}
 			}
 			
@@ -1244,8 +1246,8 @@ public class BuinessDataExportController extends BaseController {
 			for (FeesReceiveStorageEntity entity : itemsList) {
 				conIndex++;
 				newIndex++;
-				if (!set.contains(entity.getCreateTime())) {
-					set.add(entity.getCreateTime());
+				if (!set.contains(sdf.format(entity.getCreateTime()))) {
+					set.add(sdf.format(entity.getCreateTime()));
 				}
 			}
 
@@ -1253,8 +1255,8 @@ public class BuinessDataExportController extends BaseController {
 			List<FeesReceiveStorageEntity> packList = feesReceiveStorageService.queryPreBillMaterialStorage(parameter);// 耗材存储
 			for (FeesReceiveStorageEntity entity : packList) {
 				conIndex++;
-				if (!set.contains(entity.getCreateTime())) {
-					set.add(entity.getCreateTime());
+				if (!set.contains(sdf.format(entity.getCreateTime()))) {
+					set.add(sdf.format(entity.getCreateTime()));
 				}
 			}
 
@@ -1445,8 +1447,8 @@ public class BuinessDataExportController extends BaseController {
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 26, 26));
 			// end
 
-			FastDateFormat sdf = FastDateFormat.getInstance("yyyy/MM/dd");
-			List<Timestamp> dateList = new ArrayList<Timestamp>(set);
+
+			List<String> dateList = new ArrayList<String>(set);
 
 			int rowIndex = 4;
 			double totalcost = 0.0;
@@ -1463,8 +1465,8 @@ public class BuinessDataExportController extends BaseController {
 			
 			for (int i = 0; i < dateList.size(); i++) {
 				double rowCost = 0.0;
-				Timestamp timestamp = dateList.get(i);
-				String createTime = sdf.format(timestamp);
+				String timestamp = dateList.get(i);
+				//String createTime = timestamp;
 				Row row = sheet.createRow(rowIndex);
 				rowIndex++;
 
@@ -1473,11 +1475,11 @@ public class BuinessDataExportController extends BaseController {
 				cell40.setCellValue(i + 1);
 				// 日期
 				Cell cell41 = row.createCell(1);
-				cell41.setCellValue(createTime);
+				cell41.setCellValue(timestamp);
 
 				// 库存板数
 				for (FeesReceiveStorageEntity entity : palletList) {
-					if (entity.getCreateTime().equals(timestamp)) {
+					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
 						String tempretureType = entity.getTempretureType();
 						Integer quantity = entity.getQuantity();
 						// 托数（冷冻、冷藏、恒温、常温）
@@ -1498,19 +1500,19 @@ public class BuinessDataExportController extends BaseController {
 						// 列小计
 						double cost = entity.getCost().doubleValue();
 						if ("LD".equals(tempretureType)) {
-							Cell cell49 = row.createCell(12-move1);
+							Cell cell49 = row.createCell(11-move1);
 							cell49.setCellValue(cost);
 							ldcost = ldcost + cost;
 						} else if ("LC".equals(tempretureType)) {
-							Cell cell49 = row.createCell(13-move1);
+							Cell cell49 = row.createCell(12-move1);
 							cell49.setCellValue(cost);
 							lccost = lccost + cost;
 						} else if ("HW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(14-move1);
+							Cell cell49 = row.createCell(13-move1);
 							cell49.setCellValue(cost);
 							hwcost = hwcost + cost;
 						} else if ("CW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(15-move1);
+							Cell cell49 = row.createCell(14-move1);
 							cell49.setCellValue(cost);
 							cwcost = cwcost + cost;
 						}
@@ -1527,7 +1529,7 @@ public class BuinessDataExportController extends BaseController {
 				// 耗材
 				for (FeesReceiveStorageEntity entity : packList) {
 					
-					if (entity.getCreateTime().equals(timestamp)) {
+					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
 						
 						double materialCost = entity.getCost().doubleValue();
 						//1.常温--常温
@@ -1562,7 +1564,7 @@ public class BuinessDataExportController extends BaseController {
 				
 				//商品存储费（按件）
 				for (FeesReceiveStorageEntity entity : itemsList) {
-					if (entity.getCreateTime().equals(timestamp)) {
+					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
 						//库存件数
 						double productCost = entity.getCost().doubleValue();
 						Cell cell60 = row.createCell(8);
