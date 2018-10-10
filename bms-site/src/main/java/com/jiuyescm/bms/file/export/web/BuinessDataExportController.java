@@ -1589,27 +1589,29 @@ public class BuinessDataExportController extends BaseController {
 				double cCost = 0.0;
 				double rowTotalCost = 0.0;
 				double colTotalCost = 0.0;
-				//商品存储费（按件）
-				for (FeesReceiveStorageEntity entity : itemsList) {
-					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
-						//库存件数
-						double productCost = entity.getCost().doubleValue();
-						Cell cell60 = row.createCell(8);
-						cell60.setCellValue(entity.getQuantity()+qty);
-						//件数累加
-						qty = qty+entity.getQuantity();
-						//存储费按件小计
-						Cell cell61 = row.createCell(17);
-						cell61.setCellValue(productCost+cCost);
-						//累加行
-						cCost = cCost + productCost;
-						rowProCost = rowProCost + productCost;
-						//累加列
-						ccfcost = ccfcost+productCost;
-					}else {
-						rowProCost = 0.0;
-					}
-				}
+				if (newIndex > 0) {
+					//商品存储费（按件）
+					for (FeesReceiveStorageEntity entity : itemsList) {
+						if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
+							//库存件数
+							double productCost = entity.getCost().doubleValue();
+							Cell cell60 = row.createCell(8);
+							cell60.setCellValue(entity.getQuantity()+qty);
+							//件数累加
+							qty = qty+entity.getQuantity();
+							//存储费按件小计
+							Cell cell61 = row.createCell(17);
+							cell61.setCellValue(productCost+cCost);
+							//累加行
+							cCost = cCost + productCost;
+							rowProCost = rowProCost + productCost;
+							//累加列
+							ccfcost = ccfcost+productCost;
+						}else {
+							rowProCost = 0.0;
+						}
+					}	
+				}		
 				
 				//行总的+存储费（托）
 				rowCost = rowCost+rowcolCost;
