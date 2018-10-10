@@ -652,15 +652,23 @@ arg.processDefault = false;</ClientEvent>
     <DataSetDropDown id="subjectCodeEditDataSetDropDown">
       <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
 var bizTypecode = entity.get(&quot;bizTypecode&quot;);&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
 var customerId = entity.get(&quot;customerId&quot;);&#xD;
+&#xD;
+if(month&lt;10){&#xD;
+	createMonth=year+&quot;-0&quot;+month;&#xD;
+}else{&#xD;
+	createMonth=year+&quot;-&quot;+month;&#xD;
+}&#xD;
+&#xD;
 if(bizTypecode != undefined){&#xD;
 	var subDropDown = view.get(&quot;#subjectCodeEditDataSetDropDown&quot;);&#xD;
 	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
 	var parameter={&#xD;
 		bizTypeCode:bizTypecode,&#xD;
 		customerId:customerId,&#xD;
-		year:entity.get(&quot;year&quot;),&#xD;
-		month: entity.get(&quot;month&quot;)&#xD;
+		createMonth:createMonth&#xD;
 	};&#xD;
 	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;
@@ -686,6 +694,8 @@ arg.processDefault = false;</ClientEvent>
     <DataSetDropDown id="bizTypeDataSetDropDown">
       <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
 var customerId = entity.get(&quot;customerId&quot;);&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
 var createMonth=&quot;&quot;;&#xD;
 &#xD;
 if(month&lt;10){&#xD;

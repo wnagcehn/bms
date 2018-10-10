@@ -163,7 +163,6 @@ public class BmsDiscountAsynTaskController {
 			entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setCreateTime(JAppContext.currentTimestamp());		
-			entity.setCustomerType("bms");
 			bmsDiscountAsynTaskService.save(entity);
 			result.put("success", "保存成功");
 			try {				
@@ -183,15 +182,18 @@ public class BmsDiscountAsynTaskController {
 		
 		// 2.发送商家下业务类型下所有费用科目的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
-			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-			queryVo.setCustomerId("SJ000084-1");
-			queryVo.setSettlementTime("2018-09");
-			queryVo.setBizTypeCode(entity.getBizTypecode());
-			List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-			if(disCountVo.size()>0){
-				newList=getContractList(disCountVo, entity, month);
-			}else{
+			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();		
+			try {
+				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+				queryVo.setCustomerId("SJ000084-1");
+				queryVo.setSettlementTime("2018-09");
+				queryVo.setBizTypeCode(entity.getBizTypecode());
+				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				if(disCountVo.size()>0){
+					newList=getContractList(disCountVo, entity, month);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
 				Map<String, String> param = new HashMap<>();
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
@@ -213,13 +215,17 @@ public class BmsDiscountAsynTaskController {
 		// 3.发送商家下所有的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
 			List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
-			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-			queryVo.setCustomerId("SJ000084-1");
-			queryVo.setSettlementTime("2018-09");
-			List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-			if(disCountVo.size()>0){
-				bdatList=getContractList(disCountVo, entity, month);
-			}else{
+			
+			try {
+				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+				queryVo.setCustomerId("SJ000084-1");
+				queryVo.setSettlementTime("2018-09");
+				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				if(disCountVo.size()>0){
+					bdatList=getContractList(disCountVo, entity, month);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {
@@ -240,19 +246,20 @@ public class BmsDiscountAsynTaskController {
 				//生成任务，写入任务表
 				saveToTask(entity, month, bdatList, cusList, taskId);
 			}
-			if (bdatList.size() > 0) {
-				sendMQ(result, bdatList);
-			}
 		}		
 		// 4.发送所有
 		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
 			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
-			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-			queryVo.setSettlementTime("2018-09");
-			List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-			if(disCountVo.size()>0){
-				newList=getContractList(disCountVo, entity, month);
-			}else{
+			
+			try {
+				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+				queryVo.setSettlementTime("2018-09");
+				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				if(disCountVo.size()>0){
+					newList=getContractList(disCountVo, entity, month);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {
