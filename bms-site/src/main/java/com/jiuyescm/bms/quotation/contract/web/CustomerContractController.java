@@ -789,10 +789,11 @@ public class CustomerContractController {
 	
 	@DataProvider
 	public List<PriceContractInfoEntity> getBizTypeCode(Map<String, Object> param){
-		if(param!=null){
+		
+		if(param!=null && param.get("createMonth")!=null && param.get("customerId")!=null){
 			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-			queryVo.setCustomerId("SJ000084-1");
-			queryVo.setSettlementTime("2018-09");
+			queryVo.setCustomerId(param.get("customerId").toString());
+			queryVo.setSettlementTime(param.get("createMonth").toString());
 			queryVo.setBizTypeCode("");
 			List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 			if(disCountVo.size()>0){
@@ -823,11 +824,11 @@ public class CustomerContractController {
 	public List<PriceContractInfoEntity> getSubjectCode(Map<String, String> param){	
 		List<PriceContractInfoEntity> list=new ArrayList<PriceContractInfoEntity>();
 		Map<String, String> feeTypeMap=bmsGroupSubjectService.getSubject("receive_wh_base_quo_subject");
-		if (null != param) {
+		if (null != param && param.get("createMonth")!=null && param.get("customerId")!=null) {
 			String bizTypeCode=param.get("bizTypeCode");
 			ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-			queryVo.setCustomerId("SJ000084-1");
-			queryVo.setSettlementTime("2018-09");
+			queryVo.setCustomerId(param.get("customerId").toString());
+			queryVo.setSettlementTime(param.get("createMonth").toString());
 			queryVo.setBizTypeCode("");
 			List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 			ContractDiscountVo vo=disCountVo.get(0);
@@ -840,7 +841,7 @@ public class CustomerContractController {
 							price.setBizTypeCode("STORAGE");
 							price.setSubjectId(s.getSubjectId());
 							price.setCarrierName(feeTypeMap.get(s.getSubjectId()));
-							price.setDiscountType(s.getDiscountType());
+							price.setDiscountType(s.getDiscountType());			   
 							price.setCustomerType("contract");
 							list.add(price);
 						}			
