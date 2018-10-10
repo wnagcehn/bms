@@ -39,7 +39,6 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
-import com.jiuyescm.bms.base.servicetype.repository.IPubCarrierServicetypeRepository;
 import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
@@ -453,21 +452,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 			// 获得初步校验后和转换后的数据
 			templateList = (List<BmsQuoteDispatchDetailVo>) map.get(ConstantInterface.ImportExcelStatus.IMP_SUCC);
 			
-			//重复校验(包括Excel校验和数据库校验)
-			Map<String, Object> parame=new HashMap<String, Object>();
-			parame.put("templateCode", templateCode);
-			List<BmsQuoteDispatchDetailVo> orgList=getOrgList(parame);
-			List<BmsQuoteDispatchDetailVo> teList=templateList;
-			if (null != orgList) {
-				Map<String,Object> mapCheck=super.compareWithImportLineData(orgList, teList, infoList,getKeyDataProperty(), map);
-				if (mapCheck.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) {
-					return map;
-				}
-			}
-			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
-			
 			List<PubCarrierServicetypeEntity> servicetypeList = pubCarrierServicetypeService.queryByCarrierid(carrierid);
-			
 			//设置属性
 			for(BmsQuoteDispatchDetailVo p : templateList){
 				boolean exe = false;
@@ -493,6 +478,22 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 				p.setCreator(userName);
 				p.setCreateTime(currentTime);
 			}
+			
+			//重复校验(包括Excel校验和数据库校验)
+			Map<String, Object> parame=new HashMap<String, Object>();
+			parame.put("templateCode", templateCode);
+			List<BmsQuoteDispatchDetailVo> orgList=getOrgList(parame);
+			List<BmsQuoteDispatchDetailVo> teList=templateList;
+			if (null != orgList) {
+				Map<String,Object> mapCheck=super.compareWithImportLineData(orgList, teList, infoList,getKeyDataProperty(), map);
+				if (mapCheck.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) {
+					return map;
+				}
+			}
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
+			
+			
+			
 			//插入正式表
 			int insertNum = 0;
 			try {

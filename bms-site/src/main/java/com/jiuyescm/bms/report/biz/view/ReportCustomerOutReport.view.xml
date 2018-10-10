@@ -146,24 +146,30 @@ tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
         </DataColumn>
         <DataColumn name="lastMonthStorage">
           <Property name="property">lastMonthStorage</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="curMonthStorage">
           <Property name="property">curMonthStorage</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="minInTime">
           <Property name="property">minInTime</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="maxOutTime">
           <Property name="property">maxOutTime</Property>
         </DataColumn>
         <DataColumn name="isCalculated">
           <Property name="property">isCalculated</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="calculateTime">
           <Property name="property">calculateTime</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="writeTime">
           <Property name="property">writeTime</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>
@@ -171,7 +177,6 @@ tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
       <Property name="caption">导出Excel数据</Property>
       <Property name="dataScope">serverAll</Property>
       <Property name="template">warehouseImportGrid</Property>
-      <Property name="dataFontSize">10</Property>
       <Property name="maxSize">100000</Property>
     </Export2ReportAction>
   </View>

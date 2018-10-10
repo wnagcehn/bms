@@ -125,32 +125,33 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	    		//开票30天内:正常
 	    		//开票30天以上,小于45天:临期--包含30天
 	    		//超期:开票45天以上,包含45天;
-	    		if("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate()!=null){
-	    			//需要开票时用开票时间去判断
-	    			long time=entity.getInvoiceDate().getTime();
-	    			
-	    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
-		    		if(days>=0 && days<30){
-		    			entity.setOverStatus("正常");
-		    		}else if(days>=30 && days<45){
-		    			entity.setOverStatus("临期");
-		    		}else if(days>=45){
-		    			entity.setOverStatus("超期");
-		    		}	
-	    			
-	    		}else if("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate()!=null){
-	    			long time=entity.getConfirmDate().getTime();
-	    			
-	    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
-		    		if(days>=0 && days<30){
-		    			entity.setOverStatus("正常");
-		    		}else if(days>=30 && days<45){
-		    			entity.setOverStatus("临期");
-		    		}else if(days>=45){
-		    			entity.setOverStatus("超期");
-		    		}	
+	    		if(entity.getUnReceiptAmount()!=null && entity.getUnReceiptAmount().compareTo(new BigDecimal(1))>0){
+	    			if("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate()!=null){
+		    			//需要开票时用开票时间去判断
+		    			long time=entity.getInvoiceDate().getTime();
+		    			
+		    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
+			    		if(days>=0 && days<30){
+			    			entity.setOverStatus("正常");
+			    		}else if(days>=30 && days<45){
+			    			entity.setOverStatus("临期");
+			    		}else if(days>=45){
+			    			entity.setOverStatus("超期");
+			    		}	
+		    			
+		    		}else if("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate()!=null){
+		    			long time=entity.getConfirmDate().getTime();
+		    			
+		    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
+			    		if(days>=0 && days<30){
+			    			entity.setOverStatus("正常");
+			    		}else if(days>=30 && days<45){
+			    			entity.setOverStatus("临期");
+			    		}else if(days>=45){
+			    			entity.setOverStatus("超期");
+			    		}	
+		    		}
 	    		}
-	    		
 	    	}
 	    	List<BillCheckInfoVo> resultList = new ArrayList<BillCheckInfoVo>();
 	    	if(StringUtils.isNotBlank(overStatus)){

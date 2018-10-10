@@ -118,7 +118,7 @@
         d.*, s.servicename as servicename
         from bms_quote_dispatch_detail d
 		LEFT JOIN price_dispatch_template t on d.template_code=t.template_code
-		LEFT JOIN pub_carrier_servicetype s on s.servicecode=d.service_type_code and s.carrierid = #{carrierid}
+		LEFT JOIN pub_carrier_servicetype s on s.servicecode=d.service_type_code and s.carrierid = #{carrierid} and s.delflag='0'
         where 1=1 and d.del_flag = '0'
         <if test="(id != null and id !='')" >
 				and d.id = #{id}
@@ -213,7 +213,7 @@
 		d.*, s.servicename as servicename
 		FROM bms_quote_dispatch_detail d
 		LEFT JOIN pub_carrier_servicetype s on s.servicecode=d.service_type_code and s.delflag='0'and s.carrierid=#{carrierid} 
-		where 1=1 AND d.del_flag = '0' AND d.template_code=#{templateCode,jdbcType=VARCHAR} 
+		where 1=1 AND d.del_flag = '0' AND d.template_code=#{templateCode,jdbcType=VARCHAR}
 	</select>
 	
 	<!-- 通过temid查找对应的id -->
