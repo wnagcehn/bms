@@ -162,6 +162,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
 		bmsDiscountAsynTaskService.update(task);
 		try {
+			logger.info("判断是否有计算失败的单子");
 			//判断该商家是否有计算失败的单子
 			condition=new HashMap<String,Object>();
 			condition.put("startTime", task.getStartDate());
@@ -180,7 +181,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				bmsDiscountAsynTaskService.update(task);	
 				return;
 			}
-			//统计商家的月单量和金额  商家，物流商维度进行统计
+			//统计商家的月单量和金额  商家，费用科目进行统计
+			logger.info("统计商家的月单量和金额  商家，费用科目进行统计");
 			BmsDiscountAccountVo discountAccountVo=bmsDiscountService.queryStorageAccount(condition);
 			if(discountAccountVo==null){
 				logger.info("没有查询到该商家的统计记录");
@@ -636,28 +638,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					//其余的（包含首重续重折扣）
 					//查询原始报价
 					logger.info("进入首重续重折扣计算");
-					if(DoubleUtil.isBlank(fee.getUnitPrice())){
-						//总计算重量
-						Double weight=fee.getChargedWeight();
-						//获取费用表中的
-						Double firstWeight=fee.getHeadWeight(); //首重
-						Double firstPrice=fee.getHeadPrice();   //首重价格
-						Double continueWeight=fee.getContinuedWeight();//续重
-						Double continuePrice=fee.getContinuedPrice();//续重价格
-						
-						if(configVo.getFirstWeightDiscountPrice()!=null){
-							firstPrice=configVo.getFirstWeightDiscountPrice().doubleValue();
-						}
-						if(configVo.getFirstWeightDiscountRate()!=null){
-							firstPrice=configVo.getFirstWeightDiscountRate().doubleValue()*firstPrice;
-						}
-						if(configVo.getContinueWeightDiscountPrice()!=null){
-							continuePrice=configVo.getContinueWeightDiscountPrice().doubleValue();
-						}
-						if(configVo.getContinueWeightDiscountRate()!=null){
-							continuePrice=configVo.getContinueWeightDiscountRate().doubleValue()*continuePrice;
-						}						
-						amount = BigDecimal.valueOf(firstWeight<weight?firstPrice+ ((weight-firstWeight)/continueWeight)*continuePrice:firstPrice);	
+					if(DoubleUtil.isBlank(fee.getUnitPrice())){	
+						amount=getStorageAmount(fee,configVo);
 					}	
 				}			
 				handAmount(discountVo,fee,amount);
@@ -908,5 +890,37 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		}
 		
 		return oldPrice;
+	}
+	
+	/**
+	 * 获取仓储折扣后的价格
+	 * @param fee
+	 * @param configVo
+	 * @return
+	 */
+	public BigDecimal getStorageAmount(FeesReceiveDispatchEntity fee,ContractDiscountConfigVo configVo){
+		//总计算重量
+		Double weight=fee.getChargedWeight();
+		//获取费用表中的
+		Double firstWeight=fee.getHeadWeight(); //首重
+		Double firstPrice=fee.getHeadPrice();   //首重价格
+		Double continueWeight=fee.getContinuedWeight();//续重
+		Double continuePrice=fee.getContinuedPrice();//续重价格
+		
+		if(configVo.getFirstWeightDiscountPrice()!=null){
+			firstPrice=configVo.getFirstWeightDiscountPrice().doubleValue();
+		}
+		if(configVo.getFirstWeightDiscountRate()!=null){
+			firstPrice=configVo.getFirstWeightDiscountRate().doubleValue()*firstPrice;
+		}
+		if(configVo.getContinueWeightDiscountPrice()!=null){
+			continuePrice=configVo.getContinueWeightDiscountPrice().doubleValue();
+		}
+		if(configVo.getContinueWeightDiscountRate()!=null){
+			continuePrice=configVo.getContinueWeightDiscountRate().doubleValue()*continuePrice;
+		}						
+		BigDecimal amount = BigDecimal.valueOf(firstWeight<weight?firstPrice+ ((weight-firstWeight)/continueWeight)*continuePrice:firstPrice);	
+		
+		return amount;
 	}
 }
