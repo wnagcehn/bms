@@ -193,7 +193,8 @@ data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));</Clien
 var groupId=data.get(&quot;groupId&quot;);&#xD;
 var param = {&#xD;
 	userId:data.get(&quot;userId&quot;),&#xD;
-	userName:data.get(&quot;userName&quot;)&#xD;
+	userName:data.get(&quot;userName&quot;),&#xD;
+	bizType:'sale_area'&#xD;
 }&#xD;
 if(groupId){&#xD;
 	view.get(&quot;#dsGroupUser&quot;).set(&quot;parameter&quot;,param).flushAsync();&#xD;
