@@ -53,7 +53,7 @@
 			and user_id=#{userId}
 		</if>
 		<if test="(userName!=null and userName!='')">
-			and user_name like contcat('%',#{userName},'%')
+			and user_name like CONCAT('%',#{userName},'%')
 		</if>
 	</select>
 	<insert id="addGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
