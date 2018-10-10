@@ -49,6 +49,21 @@ public class BmsGroupController {
 		return bmsGroupService.queryDataByParentId(pid);
 	}
 	
+	/**
+	 * 销售区域管理
+	 * @param parentId
+	 * @return
+	 * @throws Exception
+	 */
+	@DataProvider
+	public List<BmsGroupVo> loadSaleAreaDataByParent(String parentId) throws Exception{
+		int pid=0;
+		if(StringUtils.isNoneBlank(parentId)){
+			pid=Integer.valueOf(parentId);
+		}
+		return bmsGroupService.querySaleAreaDataByParentId(pid);
+	}
+	
 	@DataProvider
 	public List<BmsGroupVo> loadSubjectDataByParent(String parentId) throws Exception{
 		int pid=0;
@@ -139,6 +154,41 @@ public class BmsGroupController {
 				voEntity.setCreateTime(nowdate);
 				voEntity.setCreator(userName);
 				voEntity.setBizType("bill_follow");
+				if(!bmsGroupService.checkGroup(voEntity)){
+					throw new Exception("组编码已经存在");
+				}
+				bmsGroupService.addGroup(voEntity);
+			}
+			else if (EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setLastModifyTime(nowdate);
+				voEntity.setLastModifier(userName);
+				bmsGroupService.updateGroup(voEntity);
+			}
+			List<BmsGroupVo> list=voEntity.getChildren();
+			if(list!=null){
+				saveGroup(list);
+			}
+		}
+	
+	}
+	
+	/**
+	 * 销售区域管理
+	 * @param datas
+	 * @throws Exception
+	 */
+	@DataResolver
+	public void saveSaleAreaGroup(List<BmsGroupVo> datas) throws Exception{
+		if (datas == null) {
+			return;
+		}
+		Timestamp nowdate = JAppContext.currentTimestamp();
+		String userName=JAppContext.currentUserName();
+		for(BmsGroupVo voEntity:datas){
+			if (EntityState.NEW.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setCreateTime(nowdate);
+				voEntity.setCreator(userName);
+				voEntity.setBizType("sale_area");
 				if(!bmsGroupService.checkGroup(voEntity)){
 					throw new Exception("组编码已经存在");
 				}
@@ -273,6 +323,39 @@ public class BmsGroupController {
 		
 		return result;
 	}
+	
+	@DataResolver
+	public String saveSaleAreaGroupUser(BmsGroupUserVo voEntity) throws Exception{
+		String result="";
+		try{
+			if(EntityState.NEW.equals(EntityUtils.getState(voEntity))){
+				voEntity.setCreator(JAppContext.currentUserName());
+				voEntity.setCreateTime(JAppContext.currentTimestamp());
+				String groupName=bmsGroupUserService.checkExistGroupName(voEntity.getUserId());
+				if(StringUtils.isBlank(groupName)){
+					voEntity.setAdministrator("");
+					int k=bmsGroupUserService.addGroupUser(voEntity);
+					if(k>0){
+						return "新增成功!";
+					}else{
+						return "新增失败!";
+					}
+				}else{
+					throw new Exception("用户"+voEntity.getUserName()+" 已存在于权限组【"+groupName+"】中,不可重新添加!");
+				}
+			}else if(EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))){
+				voEntity.setLastModifier(JAppContext.currentUserName());
+				voEntity.setLastModifyTime(JAppContext.currentTimestamp());
+				bmsGroupUserService.updateGroupUser(voEntity);
+			}
+			result="保存成功";
+		}catch(Exception e){
+			throw e;
+		}
+		
+		return result;
+	}
+	
 	@DataResolver
 	public String deleteGroupUser(BmsGroupUserVo voEntity){
 		int k=bmsGroupUserService.deleteGroupUser(voEntity.getId());

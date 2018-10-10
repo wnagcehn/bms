@@ -88,6 +88,26 @@ public class BmsGroupServiceImpl implements IBmsGroupService{
 			throw e;
 		}
 	}
+	
+	@Override
+	public List<BmsGroupVo> querySaleAreaDataByParentId(int parentId) throws Exception {
+		List<BmsGroupVo> volist=null;
+		try{
+			volist=new ArrayList<BmsGroupVo>();
+			List<BmsGroupEntity> list=bmsGroupRepository.queryDataByParentIdAndBizType(parentId,"sale_area");
+			if(list!=null){
+				for(BmsGroupEntity entity:list){
+					BmsGroupVo voEntity=new BmsGroupVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					volist.add(voEntity);
+				}
+			}
+			return volist;
+		}catch(Exception e){
+			logger.error("queryAllGroup:",e);
+			throw e;
+		}
+	}
 
 	@Override
 	public int queryChildGroupCount(int id) {
