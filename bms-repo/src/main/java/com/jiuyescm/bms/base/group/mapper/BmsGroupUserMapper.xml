@@ -55,6 +55,9 @@
 		<if test="(userName!=null and userName!='')">
 			and user_name like CONCAT('%',#{userName},'%')
 		</if>
+		<if test="bizType != null and bizType != ''">
+			and b.biz_type = #{bizType}
+		</if>
 	</select>
 	<insert id="addGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		insert into bms_group_user
