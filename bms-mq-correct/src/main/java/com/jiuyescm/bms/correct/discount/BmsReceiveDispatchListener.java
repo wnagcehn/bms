@@ -91,11 +91,10 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	@Resource
 	private IContractDiscountService contractDiscountService;
 	
-	
 	@Override
 	public void onMessage(Message message) {
 		
-		logger.info("--------------------MQ应收配送折扣消费---------------------------");
+		logger.info("--------------------MQ应收折扣消费---------------------------");
 		long start = System.currentTimeMillis();
 		String taskId = "";
 		try {
@@ -171,7 +170,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			condition.put("subjectCode", task.getSubjectCode());			
 			if("wh_b2c_work".equals(task.getSubjectCode())){
 				condition.put("tempretureType", "tempreture");
-			}			
+			}
 			List<FeesReceiveStorageEntity> feeList=feesReceiveStorageService.queryCalculateFail(condition);
 			if(feeList.size()>0){
 				logger.info("该商家存在计算失败的费用");
@@ -333,28 +332,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					//其余的（包含首重续重折扣）
 					//查询原始报价
 					logger.info("进入首重续重折扣计算");
-					if(DoubleUtil.isBlank(fee.getUnitPrice())){
-						//总计算重量
-						Double quantity=fee.getQuantity().doubleValue();
-						//获取费用表中的
-						Double firstNum=fee.getFirstNum(); //首重
-						Double firstPrice=fee.getFirstPrice();   //首重价格
-						Double continueNum=fee.getContinueNum();//续重
-						Double continuePrice=fee.getContinuedPrice();//续重价格
-						
-						if(configVo.getFirstWeightDiscountPrice()!=null){
-							firstPrice=configVo.getFirstWeightDiscountPrice().doubleValue();
-						}
-						if(configVo.getFirstWeightDiscountRate()!=null){
-							firstPrice=configVo.getFirstWeightDiscountRate().doubleValue()*firstPrice;
-						}
-						if(configVo.getContinueWeightDiscountPrice()!=null){
-							continuePrice=configVo.getContinueWeightDiscountPrice().doubleValue();
-						}
-						if(configVo.getContinueWeightDiscountRate()!=null){
-							continuePrice=configVo.getContinueWeightDiscountRate().doubleValue()*continuePrice;
-						}						
-						amount = BigDecimal.valueOf(firstNum<quantity?firstPrice+ ((quantity-firstNum)/continueNum)*continuePrice:firstPrice);	
+					if(DoubleUtil.isBlank(fee.getUnitPrice())){						
+						amount=getStorageAmount(fee,configVo);					
 					}	
 				}			
 				handStorageAmount(discountVo,fee,amount);
@@ -516,8 +495,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				updateProgress(task,40);
 			}
 			
-			
-			
 			//更新taskId到折扣费用表中
 			condition.put("taskId", task.getTaskId());
 			condition.put("startTime", task.getStartDate());
@@ -639,7 +616,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					//查询原始报价
 					logger.info("进入首重续重折扣计算");
 					if(DoubleUtil.isBlank(fee.getUnitPrice())){	
-						amount=getStorageAmount(fee,configVo);
+						amount=getDispatchAmount(fee,configVo);
 					}	
 				}			
 				handAmount(discountVo,fee,amount);
@@ -833,6 +810,12 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		
 	}
 	
+	/**
+	 * 处理仓储折扣费用
+	 * @param vo
+	 * @param fees
+	 * @param amount
+	 */
 	public void handStorageAmount(FeesReceiveStorageDiscountVo vo,FeesReceiveStorageEntity fees,BigDecimal amount){
 		//对折扣后价格四舍五入 	
 		vo.setDiscountAmount(amount);//折扣后价格
@@ -844,6 +827,12 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		fees.setDerateAmount(derateAmount.doubleValue());//费用里的减免金额
 	}
 	
+	/**
+	 * 处理配送折扣费用
+	 * @param vo
+	 * @param fees
+	 * @param amount
+	 */
 	public void handAmount(FeesReceiveDispatchDiscountVo vo,FeesReceiveDispatchEntity fees,BigDecimal amount){
 		//对折扣后价格四舍五入 	
 		vo.setDiscountAmount(amount);//折扣后价格
@@ -892,13 +881,45 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		return oldPrice;
 	}
 	
+	
 	/**
 	 * 获取仓储折扣后的价格
 	 * @param fee
 	 * @param configVo
 	 * @return
 	 */
-	public BigDecimal getStorageAmount(FeesReceiveDispatchEntity fee,ContractDiscountConfigVo configVo){
+	public BigDecimal getStorageAmount(FeesReceiveStorageEntity fee,ContractDiscountConfigVo configVo){
+		//总计算重量
+		Double quantity=fee.getQuantity().doubleValue();
+		//获取费用表中的
+		Double firstNum=fee.getFirstNum(); //首重
+		Double firstPrice=fee.getFirstPrice();   //首重价格
+		Double continueNum=fee.getContinueNum();//续重
+		Double continuePrice=fee.getContinuedPrice();//续重价格
+		
+		if(configVo.getFirstWeightDiscountPrice()!=null){
+			firstPrice=configVo.getFirstWeightDiscountPrice().doubleValue();
+		}
+		if(configVo.getFirstWeightDiscountRate()!=null){
+			firstPrice=configVo.getFirstWeightDiscountRate().doubleValue()*firstPrice;
+		}
+		if(configVo.getContinueWeightDiscountPrice()!=null){
+			continuePrice=configVo.getContinueWeightDiscountPrice().doubleValue();
+		}
+		if(configVo.getContinueWeightDiscountRate()!=null){
+			continuePrice=configVo.getContinueWeightDiscountRate().doubleValue()*continuePrice;
+		}						
+		BigDecimal amount = BigDecimal.valueOf(firstNum<quantity?firstPrice+ ((quantity-firstNum)/continueNum)*continuePrice:firstPrice);	
+		return amount;
+	}
+	
+	/**
+	 * 获取配送折扣后的价格
+	 * @param fee
+	 * @param configVo
+	 * @return
+	 */
+	public BigDecimal getDispatchAmount(FeesReceiveDispatchEntity fee,ContractDiscountConfigVo configVo){
 		//总计算重量
 		Double weight=fee.getChargedWeight();
 		//获取费用表中的
