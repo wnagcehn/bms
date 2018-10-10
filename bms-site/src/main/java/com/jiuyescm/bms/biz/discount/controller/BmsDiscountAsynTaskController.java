@@ -375,7 +375,7 @@ public class BmsDiscountAsynTaskController {
 					newEntity.setCreator(JAppContext.currentUserName());
 					newEntity.setCreateTime(JAppContext.currentTimestamp());
 					newEntity.setBizTypecode("STORAGE");
-					newEntity.setCustomerId(entity.getCustomerId());
+					newEntity.setCustomerId(vo.getCustomerId());
 					newEntity.setSubjectCode(s.getSubjectId());
 					newEntity.setDiscountType(s.getDiscountType());
 					newEntity.setCustomerType("contract");
@@ -408,8 +408,7 @@ public class BmsDiscountAsynTaskController {
 					newEntity.setCreator(JAppContext.currentUserName());
 					newEntity.setCreateTime(JAppContext.currentTimestamp());
 					newEntity.setBizTypecode("DISPATCH");
-					newEntity.setCustomerId(entity.getCustomerId());
-					
+					newEntity.setCustomerId(vo.getCustomerId());				
 					SystemCodeEntity sys=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
 					newEntity.setCarrierId(s.getCarrierId());
 					newEntity.setSubjectCode(sys.getCode());
