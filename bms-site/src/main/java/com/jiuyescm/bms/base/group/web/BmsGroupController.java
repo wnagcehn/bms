@@ -201,7 +201,7 @@ public class BmsGroupController {
 			}
 			List<BmsGroupVo> list=voEntity.getChildren();
 			if(list!=null){
-				saveGroup(list);
+				saveSaleAreaGroup(list);
 			}
 		}
 	
@@ -326,14 +326,26 @@ public class BmsGroupController {
 	
 	@DataResolver
 	public String saveSaleAreaGroupUser(BmsGroupUserVo voEntity) throws Exception{
+		Map<String, Object> map = null;
+		Map<String, Object> param = null;
 		String result="";
 		try{
-			if(EntityState.NEW.equals(EntityUtils.getState(voEntity))){
+			if(EntityState.NEW.equals(EntityUtils.getState(voEntity))){				
+				param = new HashMap<String, Object>();		
 				voEntity.setCreator(JAppContext.currentUserName());
 				voEntity.setCreateTime(JAppContext.currentTimestamp());
-				String groupName=bmsGroupUserService.checkExistGroupName(voEntity.getUserId());
+				
+				param.put("userId", voEntity.getUserId());
+				String groupName=bmsGroupUserService.checkUserGroupName(param);
 				if(StringUtils.isBlank(groupName)){
 					voEntity.setAdministrator("");
+					//查areaGroupId
+					map = new HashMap<String, Object>();
+					map.put("id", voEntity.getGroupId());
+					BmsGroupUserVo bmsGroupUserVo = bmsGroupUserService.queryAreaGroupId(map);
+					if (null != bmsGroupUserVo) {
+						voEntity.setAreaGroupId(bmsGroupUserVo.getId());
+					}
 					int k=bmsGroupUserService.addGroupUser(voEntity);
 					if(k>0){
 						return "新增成功!";
