@@ -609,8 +609,10 @@ public class BillCheckInfoController{
 				if(pageInfo!=null && pageInfo.getList().size()>0){
 					List<BillCheckInfoVo> list=pageInfo.getList();
 					for(BillCheckInfoVo vo:list){
-						//1.状态必须为“待收款”
-						if(CheckBillStatusEnum.TB_RECEIPT.getCode().equals(vo.getBillStatus())){
+						
+						
+						//1.状态必须为“待收款” 已确认未开票金额必须大于等于0,为负数时，不允许一键收款
+						if(CheckBillStatusEnum.TB_RECEIPT.getCode().equals(vo.getBillStatus()) && vo.getConfirmUnInvoiceAmount()!=null && vo.getConfirmUnInvoiceAmount().compareTo(BigDecimal.ZERO)>=0){
 							//确认金额+调整金额
 							BigDecimal totalAmount=new BigDecimal(0);	
 							if(vo.getConfirmAmount()!=null){

@@ -1963,7 +1963,12 @@ if(confirmAmount!=null){&#xD;
 	}&#xD;
 }&#xD;
 entity.set(&quot;operDesc&quot;,&quot;账单修改&quot;);&#xD;
-view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
+&#xD;
+var confirmDate=entity.get(&quot;confirmDate&quot;);&#xD;
+&#xD;
+if(confirmDate==null){&#xD;
+	dorado.MessageBox.confirm(&quot;确认日期没填！&quot;,function(){&#xD;
+	view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
 	function(result){&#xD;
 		if(result!='sucess'){&#xD;
 			dorado.MessageBox.alert(result);&#xD;
@@ -1972,10 +1977,28 @@ view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
 				flushAsync();&#xD;
 			}&#xD;
 			view.id(&quot;dialogEdit&quot;).hide();&#xD;
-		}&#xD;
-		&#xD;
-	}&#xD;
-);</ClientEvent>
+		 }	&#xD;
+	    }&#xD;
+	  );	&#xD;
+	});&#xD;
+}else{&#xD;
+	view.id(&quot;updateBillModifyAction&quot;).execute(&#xD;
+	function(result){&#xD;
+		if(result!='sucess'){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}else{&#xD;
+			with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+			view.id(&quot;dialogEdit&quot;).hide();&#xD;
+		 }	&#xD;
+	    }&#xD;
+	  );	&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
           <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
           <Property name="caption">确认修改</Property>
         </Button>
