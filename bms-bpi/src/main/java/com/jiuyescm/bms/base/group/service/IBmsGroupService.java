@@ -24,4 +24,12 @@ public interface IBmsGroupService {
 	 * @throws Exception
 	 */
 	List<BmsGroupVo> querySaleAreaDataByParentId(int parentId) throws Exception;
+	
+	/**
+	 * 区域下拉
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	List<BmsGroupVo> findAreaEnumList(Map<String, String> param) throws Exception;
 }

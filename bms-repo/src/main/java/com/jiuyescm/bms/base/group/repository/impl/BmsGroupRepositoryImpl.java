@@ -33,6 +33,12 @@ public class BmsGroupRepositoryImpl extends MyBatisDao<BmsGroupEntity> implement
 	public List<BmsGroupEntity> queryAllGroup() {
 		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupMapper.queryAll", null);
 	}
+	
+	@Override
+	public List<BmsGroupEntity> findAreaEnumList(Map<String, String> param) {
+		param.put("bizType", "sale_area");
+		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupMapper.findAreaEnumList", param);
+	}
 
 	@Override
 	public List<BmsGroupEntity> queryDataByParentId(int parentId) {

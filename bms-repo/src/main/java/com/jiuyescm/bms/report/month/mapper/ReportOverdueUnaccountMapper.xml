@@ -36,28 +36,44 @@
     
     <select id="queryTotalAmount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity">
-        select a.seller_id as sellerId,a.seller_name as sellerName,a.un_receipt_amount as unReceiptAmount,b.receipt_amount as receiptAmount,sum(IFNULL(un_receipt_amount,0)+IFNULL(receipt_amount,0)) as totalAmount from
-		(select seller_id,seller_name,sum(un_receipt_amount) as un_receipt_amount from bill_check_info 
+        select a.group_name as groupName,a.seller_id as sellerId,a.seller_name as sellerName,a.un_receipt_amount as unReceiptAmount,b.receipt_amount as receiptAmount,sum(IFNULL(un_receipt_amount,0)+IFNULL(receipt_amount,0)) as totalAmount from
+		(select g.group_name,i.seller_id,i.seller_name,sum(un_receipt_amount) as un_receipt_amount from bill_check_info i 
+		LEFT JOIN bms_group_user u on i.seller_id=u.user_id
+		LEFT JOIN bms_group g on g.id=u.group_id
 		where 1=1
+		<if test="sellerName != null and sellerName != ''">
+			and i.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
 		<if test="userIds != null and userIds != ''">
-			and seller_id in
+			and i.seller_id in
 			<foreach collection="userIds" item="item" separator="," open="(" close=")">
-	             	#{item}
+	        	#{item}
 	        </foreach>
 		</if> 
+		<if test="groupCode != null and groupCode != ''">
+			and g.group_code=#{groupCode}
+		</if>
 		and <![CDATA[create_month < #{createMonth}]]>
-		GROUP BY seller_id
+		GROUP BY i.seller_id
 		) a left JOIN
 		(
-		select a.seller_name AS seller_name,sum(b.receipt_amount) as receipt_amount from bill_check_info  a
+		select g.group_name,a.seller_name AS seller_name,sum(b.receipt_amount) as receipt_amount from bill_check_info  a
 		inner join bill_check_receipt b on a.id = b.bill_check_id
+		LEFT JOIN bms_group_user u on a.seller_id=u.user_id
+		LEFT JOIN bms_group g on g.id=u.group_id
 		where 1=1 
+		<if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
 		<if test="userIds != null and userIds != ''">
 			and a.seller_id in
 			<foreach collection="userIds" item="item" separator="," open="(" close=")">
 	             	#{item}
 	        </foreach>
 		</if> 
+		<if test="groupCode != null and groupCode != ''">
+			and g.group_code=#{groupCode}
+		</if>
 		and <![CDATA[a.create_month < #{createMonth}]]>
 		and b.receipt_date>=#{receiptDate}
 		GROUP BY a.seller_id

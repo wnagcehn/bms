@@ -49,6 +49,8 @@ public class ReportOverdueUnaccountEntity implements IEntity {
 	//累加后的金额
 	private Double totalAmount;
 	
+	//区域名
+	private String groupName;
 	
 	public ReportOverdueUnaccountEntity() {
 
@@ -162,6 +164,16 @@ public class ReportOverdueUnaccountEntity implements IEntity {
 
 	public void setTotalAmount(Double totalAmount) {
 		this.totalAmount = totalAmount;
+	}
+
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 	
 	
