@@ -1055,6 +1055,7 @@
 		<if test="tempreture_type!=null and tempreture_type!=''">
 			and tempreture_type in ('LD','LC')
 		</if>
+		limit 1
     </select>
     
 </mapper>

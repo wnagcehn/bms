@@ -515,50 +515,31 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			//批量获取业务数据 1000条一次（根据taskId关联）
 			//int pageNo = 1;
 			logger.info("进入批量循环处理");
-			
-			if("bms".equals(task.getCustomerType())){
-				logger.info("进入bms折扣报价计算");
-				boolean doLoop = true;
-				while (doLoop) {
-					try {
-						PageInfo<FeesReceiveDispatchDiscountVo> pageInfo = 
-								bmsDiscountService.queryAll(condition, 1,1000);
-						if (null != pageInfo && pageInfo.getList().size() > 0) {
-							if (pageInfo.getList().size() < 1000) {
-								doLoop = false;
-							}
-							handBmsDiscount(pageInfo.getList(),task,template,discountAccountVo);
-						}else {
-							doLoop = false;
-						}	
-					} catch (Exception e) {
-						// TODO: handle exception
-						logger.info("循环bms折扣报价计算异常");
-						doLoop = false;
-					}
-							
-				}
-			}else if("contract".equals(task.getCustomerType())){
-				logger.info("进入合同在线折扣报价计算");
-				boolean doLoop = true;
-				while (doLoop) {
-					try {
-						PageInfo<FeesReceiveDispatchDiscountVo> pageInfo = 
-								bmsDiscountService.queryAll(condition, 1,1000);
-						if (null != pageInfo && pageInfo.getList().size() > 0) {
-							if (pageInfo.getList().size() < 1000) {
-								doLoop = false;
-							}
-							handContractDiscount(pageInfo.getList(),task,configVo);
-						}else {
+			boolean doLoop = true;
+			while (doLoop) {
+				try {
+					PageInfo<FeesReceiveDispatchDiscountVo> pageInfo = 
+							bmsDiscountService.queryAll(condition, 1,1000);
+					if (null != pageInfo && pageInfo.getList().size() > 0) {
+						if (pageInfo.getList().size() < 1000) {
 							doLoop = false;
 						}
-					} catch (Exception e) {
-						// TODO: handle exception
-						logger.info("循环同在线折扣报价计算异常");
+						if("bms".equals(task.getCustomerType())){
+							logger.info("进入bms折扣报价计算");
+							handBmsDiscount(pageInfo.getList(),task,template,discountAccountVo);
+						}else if("contract".equals(task.getCustomerType())){
+							logger.info("进入合同在线折扣报价计算");
+							handContractDiscount(pageInfo.getList(),task,configVo);
+						}					
+					}else {
 						doLoop = false;
-					}
+					}	
+				} catch (Exception e) {
+					// TODO: handle exception
+					logger.info("循环bms折扣报价计算异常");
+					doLoop = false;
 				}
+						
 			}
 			
 			task.setRemark("折扣计算成功");
