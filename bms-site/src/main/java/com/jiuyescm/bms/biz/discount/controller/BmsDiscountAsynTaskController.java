@@ -185,8 +185,8 @@ public class BmsDiscountAsynTaskController {
 			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();		
 			try {
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId("SJ000084-1");
-				queryVo.setSettlementTime("2018-09");
+				queryVo.setCustomerId(entity.getCustomerId());
+				queryVo.setSettlementTime(entity.getCreateMonth());
 				queryVo.setBizTypeCode(entity.getBizTypecode());
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 				if(disCountVo.size()>0){
@@ -218,8 +218,8 @@ public class BmsDiscountAsynTaskController {
 			
 			try {
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId("SJ000084-1");
-				queryVo.setSettlementTime("2018-09");
+				queryVo.setCustomerId(entity.getCustomerId());
+				queryVo.setSettlementTime(entity.getCreateMonth());
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 				if(disCountVo.size()>0){
 					bdatList=getContractList(disCountVo, entity, month);
@@ -253,7 +253,7 @@ public class BmsDiscountAsynTaskController {
 			
 			try {
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setSettlementTime("2018-09");
+				queryVo.setSettlementTime(entity.getCreateMonth());
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
