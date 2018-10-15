@@ -19,4 +19,11 @@ public interface IBmsGroupRepository {
 			String bizTypeCode);
 	boolean checkGroup(BmsGroupEntity entity);
 	BmsGroupEntity queryOne(Map<String,Object> condition);
+	
+	/**
+	 * 区域下拉
+	 * @param param
+	 * @return
+	 */
+	List<BmsGroupEntity> findAreaEnumList(Map<String, String> param);
 }

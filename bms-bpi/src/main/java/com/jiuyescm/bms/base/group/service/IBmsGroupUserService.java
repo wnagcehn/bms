@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
+import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 
 public interface IBmsGroupUserService {
 	
@@ -36,4 +37,11 @@ public interface IBmsGroupUserService {
 	 * @return
 	 */
 	String checkUserGroupName(Map<String, Object> param);
+	
+	/**
+	 * 通过userId查询所属区域
+	 * @param condition
+	 * @return
+	 */
+	BmsGroupUserVo queryGroupNameByUserId(String userId);
 }

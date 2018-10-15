@@ -3,6 +3,7 @@ package com.jiuyescm.bms.base.group.web;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
@@ -463,4 +465,18 @@ public class BmsGroupController {
 		}
 		return bgsList;
 	}	
+	
+	@DataProvider
+	public Map<String, String> findAreaEnumList(String groupCode) throws Exception {
+		
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		//mapValue.put("ALL","全部");
+		mapValue.put("groupCode", groupCode);
+		List<BmsGroupVo> tmscodels = bmsGroupService.findAreaEnumList(mapValue);
+		for (BmsGroupVo bmsGroupVo : tmscodels) {
+			mapValue.put(bmsGroupVo.getGroupCode(), bmsGroupVo.getGroupName());
+		}
+		
+		return mapValue;
+	}
 }

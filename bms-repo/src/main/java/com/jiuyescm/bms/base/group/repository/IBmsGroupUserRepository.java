@@ -31,4 +31,11 @@ public interface IBmsGroupUserRepository {
 	 * @return
 	 */
 	String checkUserGroupName(Map<String, Object> param);
+	
+	/**
+	 * 通过userId查询所属区域
+	 * @param condition
+	 * @return
+	 */
+	BmsGroupUserEntity queryGroupNameByUserId(String userId);
 }

@@ -189,6 +189,21 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		}
 		return null;
 	}
+	
+	@Override
+	public BmsGroupUserVo queryGroupNameByUserId(String userId) {
+		// TODO Auto-generated method stub
+		try{
+			BmsGroupUserEntity groupUser=bmsGroupUserRepository.queryGroupNameByUserId(userId);
+			BmsGroupUserVo vo=new BmsGroupUserVo();
+			PropertyUtils.copyProperties(vo, groupUser);
+			
+			return vo;
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return null;
+	}
 
 	@Override
 	public List<String> queryContainUserIds(BmsGroupUserVo groupUser) {
