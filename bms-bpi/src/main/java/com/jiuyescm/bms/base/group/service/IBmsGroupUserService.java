@@ -21,4 +21,19 @@ public interface IBmsGroupUserService {
 	BmsGroupUserVo queryEntityByUserId(String userId);
 	
 	List<String> queryContainUserIds(BmsGroupUserVo voEntity);
+	
+	/**
+	 * 查询区域组ID（销售区域管理使用）
+	 * @param condition
+	 * @return
+	 * @throws Exception
+	 */
+	BmsGroupUserVo queryAreaGroupId(Map<String, Object> condition) throws Exception;
+	
+	/**
+	 * 检查username是否存在其他权限组
+	 * @param param
+	 * @return
+	 */
+	String checkUserGroupName(Map<String, Object> param);
 }

@@ -24,6 +24,12 @@
 		on a.group_id=b.id
 		where a.user_id=#{userId} limit 1
 	</select>
+	<select id="checkUserGroupName" parameterType="java.util.Map" resultType="java.lang.String">
+		select b.group_name from bms_group_user a
+		inner join bms_group b
+		on a.group_id=b.id
+		where a.user_id=#{userId} and b.biz_type=#{bizType} limit 1
+	</select>
 	<select id="queryUserCountByGroupId" parameterType="int" resultType="int">
 		select count(*) from bms_group_user where group_id=#{groupId}
 	</select>
@@ -61,9 +67,9 @@
 	</select>
 	<insert id="addGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		insert into bms_group_user
-		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time)
+		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time,area_group_id)
 		values
-		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime})
+		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime},#{areaGroupId})
 	</insert>
 	<update id="updateGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		update bms_group_user
@@ -81,5 +87,22 @@
 	</update>
 	<delete id="deleteGroupUser" parameterType="int">
 		delete from bms_group_user where id=#{id}
-	</delete>	
+	</delete>
+	
+	<select id="queryAreaGroupId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		SELECT T2.id as id, T2.group_code as groupCode, T2.group_name as groupName
+			FROM (
+			    SELECT
+			        @r AS _id,
+			        (SELECT @r := parent_id FROM bms_group WHERE id = _id) AS parent_id,
+			        @l := @l + 1 AS level
+			    FROM
+			        (SELECT @r := #{id}, @l := 0) vars,
+			        bms_group h
+			    WHERE @r &lt;&gt; 0) T1
+			JOIN bms_group T2 ON T1._id = T2.id 
+
+			JOIN bms_group T3 ON t3.id = T2.parent_id
+     	where T3.parent_id = 0;
+	</select>	
 </mapper>

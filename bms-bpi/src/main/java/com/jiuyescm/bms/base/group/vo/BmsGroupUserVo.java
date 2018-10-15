@@ -19,6 +19,7 @@ public class BmsGroupUserVo implements Serializable{
 	private Timestamp createTime;
 	private String lastModifier;
 	private Timestamp lastModifyTime;
+	private int areaGroupId; 
 	public int getId() {
 		return id;
 	}
@@ -78,6 +79,12 @@ public class BmsGroupUserVo implements Serializable{
 	}
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+	public int getAreaGroupId() {
+		return areaGroupId;
+	}
+	public void setAreaGroupId(int areaGroupId) {
+		this.areaGroupId = areaGroupId;
 	}
 	
 }

@@ -18,4 +18,17 @@ public interface IBmsGroupUserRepository {
 	int queryUserCountByGroupId(int groupId);
 	BmsGroupUserEntity queryEntityByUserId(String userId);
 	List<BmsGroupUserEntity> queryAllByGroupId(List<Integer> groupIds);
+	
+	/**
+	 * 为了添加area_group_id（销售区域管理使用）
+	 * @param condition
+	 * @return
+	 */
+	BmsGroupUserEntity queryAreaGroupId(Map<String, Object> condition);
+	/**
+	 * 检查username是否存在别的权限组
+	 * @param param
+	 * @return
+	 */
+	String checkUserGroupName(Map<String, Object> param);
 }

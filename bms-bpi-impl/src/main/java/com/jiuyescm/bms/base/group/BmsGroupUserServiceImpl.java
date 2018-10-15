@@ -70,6 +70,19 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public BmsGroupUserVo queryAreaGroupId(Map<String, Object> condition) throws Exception {
+		try{
+			BmsGroupUserEntity entity=bmsGroupUserRepository.queryAreaGroupId(condition);
+			BmsGroupUserVo voEntity=new BmsGroupUserVo();
+			PropertyUtils.copyProperties(voEntity, entity);
+			return voEntity;
+		}catch(Exception e){
+			logger.error("queryAreaGroupId:",e);
+			throw e;
+		}
+	}
 
 	@Override
 	public PageInfo<BmsGroupUserVo> query(Map<String, Object> condition,
@@ -98,6 +111,11 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 	@Override
 	public String checkExistGroupName(String userId) {
 		return bmsGroupUserRepository.checkExistGroupName(userId);
+	}
+	
+	@Override
+	public String checkUserGroupName(Map<String, Object> param) {
+		return bmsGroupUserRepository.checkUserGroupName(param);
 	}
 
 	@Override
