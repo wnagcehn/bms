@@ -16,14 +16,14 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#findAreaEnumList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="overdueUnaccount">
-        <Property name="label">超期未收款金额</Property>
+      <PropertyDef name="receiptWithinOneYear">
+        <Property name="label">启动时间一年以内收款</Property>
       </PropertyDef>
-      <PropertyDef name="receiveAccount">
-        <Property name="label">应收款金额</Property>
+      <PropertyDef name="receiptBetweenOneAndTwoYear">
+        <Property name="label">启动时间1-2年收款</Property>
       </PropertyDef>
-      <PropertyDef name="overdueUnaccountRatio">
-        <Property name="label">超期未收款占比</Property>
+      <PropertyDef name="receiptOverTwoYear">
+        <Property name="label">启动时间超过2年的收款</Property>
       </PropertyDef>
       <PropertyDef name="createMonth">
         <Property name="label">查询月份</Property>
@@ -55,14 +55,26 @@
       <PropertyDef name="area">
         <Property name="label">区域</Property>
       </PropertyDef>
-      <PropertyDef name="overdueUnaccount">
-        <Property name="label">超期未收款金额</Property>
+      <PropertyDef name="receiptWithinOneYear">
+        <Property name="label">启动时间一年以内收款</Property>
       </PropertyDef>
-      <PropertyDef name="receiveAccount">
-        <Property name="label">应收款金额</Property>
+      <PropertyDef name="receiptBetweenOneAndTwoYear">
+        <Property name="label">启动时间1-2年收款</Property>
       </PropertyDef>
-      <PropertyDef name="overdueUnaccountRatio">
-        <Property name="label">超期未收款占比</Property>
+      <PropertyDef name="receiptOverTwoYear">
+        <Property name="label">启动时间超过2年的收款</Property>
+      </PropertyDef>
+      <PropertyDef name="handoverCustomerReceipt">
+        <Property name="label">交接客户收款</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptTotal">
+        <Property name="label">收款合计</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptQuota">
+        <Property name="label">收款指标</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptCollectionRate">
+        <Property name="label">收款达成率</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -96,9 +108,13 @@ with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </Button>
       <Button>
-        <ClientEvent name="onClick">var entity=view.get(&quot;#formCondition&quot;).get(&quot;entity&quot;);&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsReportOverdueUnaccountQuery.data&quot;).current;&#xD;
+with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}&#xD;
 &#xD;
-view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute();</ClientEvent>
+</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
       </Button>
@@ -157,24 +173,43 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Property name="name">area</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">overdueUnaccount</Property>
-        <Property name="name">overdueUnaccount</Property>
+        <Property name="property">receiptWithinOneYear</Property>
+        <Property name="name">receiptWithinOneYear</Property>
+        <Property name="summaryType">sum</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">receiptBetweenOneAndTwoYear</Property>
+        <Property name="name">receiptBetweenOneAndTwoYear</Property>
+        <Property name="summaryType">sum</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">receiptOverTwoYear</Property>
+        <Property name="name">receiptOverTwoYear</Property>
+        <Property name="summaryType">sum</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">handoverCustomerReceipt</Property>
+        <Property name="name">handoverCustomerReceipt</Property>
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">receiveAccount</Property>
-        <Property name="name">receiveAccount</Property>
+        <Property name="property">receiptTotal</Property>
+        <Property name="name">receiptTotal</Property>
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">overdueUnaccountRatio</Property>
+        <Property name="property">receiptQuota</Property>
+        <Property name="name">receiptQuota</Property>
         <Property name="summaryType">sum</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">receiptCollectionRate</Property>
+        <Property name="summaryType">sum</Property>
+        <Property name="name">receiptCollectionRate</Property>
       </DataColumn>
     </DataGrid>
-    <DownloadAction id="downloadAction">
-      <Property name="fileProvider">reportOverdueUnaccountController#export</Property>
-      <Property name="caption">导出</Property>
-      <Property name="parameter"></Property>
-    </DownloadAction>
   </View>
 </ViewConfig>

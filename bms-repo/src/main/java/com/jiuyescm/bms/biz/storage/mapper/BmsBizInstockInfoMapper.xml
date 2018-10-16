@@ -51,7 +51,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		s.varieties as chargeSku, s.weight as chargeWeight,
 		s.cost as amount, s.derate_amount as derateAmount, s.unit_price as unitPrice,
 		s.first_num as firstNum, s.first_price as firstPrice, s.continue_num as continueNum,
-		s.continue_price as continuePrice, s.is_calculated as isCalculated,
+		s.continue_price as continuePrice, i.is_calculated as isCalculated,
 		s.calcu_msg as calcuMsg, s.unit as chargeUnit, i.instock_date as instockDate,
 		s.cost as cost
  		from biz_instock_info i
@@ -85,7 +85,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 				and <![CDATA[i.create_time <= #{createEndTime}]]>
 			</if>
 			<if test=" isCalculated != null and isCalculated !='' ">
-				and s.is_calculated = #{isCalculated}
+				and i.is_calculated = #{isCalculated}
 			</if>
 			<if test=" subjectCode != null and subjectCode !='' ">
 				and s.subject_code = #{subjectCode}

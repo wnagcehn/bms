@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.group.BmsGroupUserEntity;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 
@@ -44,4 +45,12 @@ public interface IBmsGroupUserService {
 	 * @return
 	 */
 	BmsGroupUserVo queryGroupNameByUserId(String userId);
+	
+	/**
+	 * 销售员id和name映射
+	 * 
+	 * @param param
+	 * @return
+	 */
+	List<BmsGroupUserEntity> queryUserByBizType(Map<String, String> param);
 }

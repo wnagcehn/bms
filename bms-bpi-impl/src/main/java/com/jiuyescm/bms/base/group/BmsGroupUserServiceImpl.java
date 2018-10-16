@@ -222,4 +222,9 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<BmsGroupUserEntity> queryUserByBizType(Map<String, String> param) {
+		return bmsGroupUserRepository.queryUserByBizType(param);
+	}
 }

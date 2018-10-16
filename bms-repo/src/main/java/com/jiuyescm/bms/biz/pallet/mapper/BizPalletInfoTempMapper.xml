@@ -30,7 +30,7 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
 	
 	<select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
         select a.cur_time, a.warehouse_name, a.customer_name, 
-        a.temperature_type_code,a.rowExcelNo,a.rowExcelName
+        a.temperature_type_code,a.rowExcelNo,a.rowExcelName,a.biz_type
 		from biz_pallet_info_temp a 
 		inner join biz_pallet_info b on a.customer_id = b.customer_id 
 		and a.cur_time = b.cur_time and a.warehouse_code = b.warehouse_code 

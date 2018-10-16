@@ -111,4 +111,10 @@
 		left join bms_group b on a.area_group_id = b.id
 		where a.user_id = #{userId} limit 1
 	</select>
+	
+	<select id="queryUserByBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">	
+		select u.* from bms_group_user u
+		LEFT JOIN bms_group g on g.id=u.group_id
+		WHERE g.biz_type=#{bizType}
+	</select>
 </mapper>

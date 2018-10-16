@@ -274,7 +274,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			return false;
 		}
 		
-		//数据库层面重复校验  false - 校验不通过 存在重复  原则上（时间+仓库+商家+温度）只有一条  
+		//数据库层面重复校验  false - 校验不通过 存在重复  原则上（时间+仓库+商家+温度+类型）只有一条  
 		if(!dbCheck()){
 			createResultFile();
 			return false;
@@ -321,7 +321,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 	}
 
 	private String getPalletKey(BizPalletInfoTempEntity dataEntity){
-		String key=dataEntity.getCurTime()+dataEntity.getWarehouseCode()+dataEntity.getCustomerId()+dataEntity.getTemperatureTypeCode();
+		String key=dataEntity.getCurTime()+dataEntity.getWarehouseCode()+dataEntity.getCustomerId()+dataEntity.getTemperatureTypeCode()+dataEntity.getBizType();
 		return key;
 	}
 	
@@ -345,10 +345,10 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 				String mes="";
 				if(map.containsKey(row)){
 					mes=map.get(row);
-					mes+=",【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+tranTemperature.get(entity.getTemperatureTypeCode())+"】";
+					mes+=",【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+tranTemperature.get(entity.getTemperatureTypeCode())+"】【"+entity.getBizType()+"】";
 					map.put(row,mes);
 				}else{
-					mes="系统中已存在,【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeCode()+"】";
+					mes="系统中已存在,【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeCode()+"】【"+entity.getBizType()+"】";
 					map.put(row,mes);
 				}
 			}

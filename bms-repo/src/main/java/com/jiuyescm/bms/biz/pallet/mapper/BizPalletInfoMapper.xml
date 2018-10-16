@@ -50,10 +50,10 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		p.customer_id, p.customer_name, p.temperature_type_code, 
 		p.pallet_num, p.adjust_pallet_num, p.fees_no, p.creator, p.creator_id, 
 		p.create_time, p.last_modifier, p.last_modifier_id, p.last_modify_time, 
-		s.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
+		p.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
 		s.cost as cost, s.subject_code as subjectCode
 		from biz_pallet_info p
-		INNER JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
+		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
 		WHERE 1=1 and p.del_flag='0'
         	<if test=" id != null and id !='' ">
 				and p.id = #{id}
@@ -77,7 +77,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
 			</if>
         	<if test=" isCalculated != null and isCalculated !='' ">
-				and s.is_calculated = #{isCalculated}
+				and p.is_calculated = #{isCalculated}
 			</if>
 			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 				and s.subject_code = #{subjectCode}

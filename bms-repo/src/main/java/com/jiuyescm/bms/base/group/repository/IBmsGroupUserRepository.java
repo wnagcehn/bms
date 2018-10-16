@@ -38,4 +38,11 @@ public interface IBmsGroupUserRepository {
 	 * @return
 	 */
 	BmsGroupUserEntity queryGroupNameByUserId(String userId);
+	
+	/**
+	 * 销售员id和name映射
+	 * @param param
+	 * @return
+	 */
+	List<BmsGroupUserEntity> queryUserByBizType(Map<String, String> param);
 }

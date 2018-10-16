@@ -99,5 +99,10 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
 		maps.put("groupIds", groupIds);
 		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryAllByGroupId", maps);
 	}
+	
+	@Override
+	public List<BmsGroupUserEntity> queryUserByBizType(Map<String, String> param) {
+		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryUserByBizType", param);
+	}
 
 }
