@@ -45,7 +45,7 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtReportOverdueUnaccountEntity">
-      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportIncomesSubjectEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity</Property>
       <PropertyDef name="sellerId">
         <Property name="label">销售员</Property>
       </PropertyDef>
@@ -67,7 +67,8 @@
     </DataType>
   </Model>
   <View>
-    <ClientEvent name="onReady">var date=new Date;  &#xD;
+    <ClientEvent name="onReady">&#xD;
+var date=new Date;  &#xD;
 var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
 view.get(&quot;#formCondition.entity&quot;).set(&quot;year&quot;,year);&#xD;
@@ -96,9 +97,9 @@ with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </Button>
       <Button>
-        <ClientEvent name="onClick">var entity=view.get(&quot;#formCondition&quot;).get(&quot;entity&quot;);&#xD;
-&#xD;
-view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute();</ClientEvent>
+        <ClientEvent name="onClick">//var entity=view.get(&quot;#formCondition&quot;).get(&quot;entity&quot;);&#xD;
+var data = view.get(&quot;#dsReportOverdueUnaccountQuery.data&quot;).current;&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
       </Button>

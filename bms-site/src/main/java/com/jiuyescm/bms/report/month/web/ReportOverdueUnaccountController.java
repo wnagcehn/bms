@@ -248,127 +248,131 @@ public class ReportOverdueUnaccountController {
 		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
 		if (null != groupUser) {
 			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-			if (userIds.size() == 0) {
-				return;
-			}
-			param.put("userIds", userIds);
-			//超期未收款金额
-			try {
-				unList = reportOverdueUnaccountService.queryTotalAmount(param);
-			} catch (Exception e) {
-				logger.error("超期未收款金额查询异常", e);
-			}		
-			
-			//应收款日期转换
-			createMonthTran(param);
-			//应收款总额
-			try {
-				list = reportOverdueUnaccountService.queryTotalAmount(param);
-			} catch (Exception e) {
-				logger.error("应收款金额查询异常", e);
-			}
-			
-			for (ReportOverdueUnaccountEntity unEntity : unList) {
-				for (ReportOverdueUnaccountEntity entity : list) {
-					if (unEntity.getSellerName().equals(entity.getSellerName())) {
-						BmsGroupUserVo areaEntity = bmsGroupUserService.queryGroupNameByUserId(entity.getSellerId());
-						newEntity = new ReportOverdueUnaccountEntity();
-						if (null != areaEntity) {
-							newEntity.setArea(areaEntity.getGroupName());
+			if (userIds.size() != 0) {
+				param.put("userIds", userIds);
+				//超期未收款金额
+				try {
+					unList = reportOverdueUnaccountService.queryTotalAmount(param);
+				} catch (Exception e) {
+					logger.error("超期未收款金额查询异常", e);
+				}		
+				
+				//应收款日期转换
+				createMonthTran(param);
+				//应收款总额
+				try {
+					list = reportOverdueUnaccountService.queryTotalAmount(param);
+				} catch (Exception e) {
+					logger.error("应收款金额查询异常", e);
+				}
+				
+				for (ReportOverdueUnaccountEntity unEntity : unList) {
+					for (ReportOverdueUnaccountEntity entity : list) {
+						if (unEntity.getSellerName().equals(entity.getSellerName())) {
+							//BmsGroupUserVo areaEntity = bmsGroupUserService.queryGroupNameByUserId(entity.getSellerId());
+							newEntity = new ReportOverdueUnaccountEntity();
+							newEntity.setArea(unEntity.getArea());
+							newEntity.setSellerId(unEntity.getSellerId());
+							newEntity.setSellerName(unEntity.getSellerName());
+							newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
+							newEntity.setReceiptAmount(entity.getReceiptAmount());
+							newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
+							newList.add(newEntity);
 						}
-						newEntity.setSellerId(unEntity.getSellerId());
-						newEntity.setSellerName(unEntity.getSellerName());
-						newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
-						newEntity.setReceiptAmount(entity.getReceiptAmount());
-						newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
-						newList.add(newEntity);
 					}
 				}
 			}
+		}		
+		logger.info("超期未收款占比导出生成sheet。。。");
+		Sheet sheet = poiUtil.getXSSFSheet(workbook,"超期未收款占比");
 		
-			logger.info("超期未收款占比导出生成sheet。。。");
-			Sheet sheet = poiUtil.getXSSFSheet(workbook,"超期未收款占比");
-			
-			sheet.setColumnWidth(1, 4000);
-			sheet.setColumnWidth(2, 4000);
-			sheet.setColumnWidth(3, 3500);
-			sheet.setColumnWidth(4, 3800);
-			sheet.setColumnWidth(5, 3800);
-			
-			Font font = workbook.createFont();
-		    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-			 CellStyle style = workbook.createCellStyle();
-			 style.setAlignment(CellStyle.ALIGN_CENTER);
-			 style.setWrapText(true);
-			 style.setFont(font);
-			 
-			 Row row0 = sheet.createRow(0);
-			 Cell cell0 = row0.createCell(0);
-			 cell0.setCellValue("销售");
-			 cell0.setCellStyle(style);
-			 Cell cell1 = row0.createCell(1);
-			 cell1.setCellValue("区域");
-			 cell1.setCellStyle(style);
-			 Cell cell2 = row0.createCell(2);
-			 cell2.setCellStyle(style);
-			 cell2.setCellValue("超期未收款");
-			 Cell cell3 = row0.createCell(3);
-			 cell3.setCellValue("应收款总额");
-			 cell3.setCellStyle(style);
-			 Cell cell4 = row0.createCell(4);
-			 cell4.setCellValue("超期未收款占比");
-			 cell4.setCellStyle(style);
-			 
-			logger.info("超期未收款占比导出给sheet赋值。。。");
-			//超期未收款金额总计
-			double totalOverdueUnaccount=0d;
-			//应收款金额总计
-			double totalReceiveAccount=0d;
-			//超期未收款占比总计
-			String totalOverdueUnaccountRatio="";
+		sheet.setColumnWidth(1, 4000);
+		sheet.setColumnWidth(2, 4000);
+		sheet.setColumnWidth(3, 4000);
+		sheet.setColumnWidth(4, 4000);
+		sheet.setColumnWidth(5, 4000);
+		
+		Font font = workbook.createFont();
+	    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		 CellStyle style = workbook.createCellStyle();
+		 style.setAlignment(CellStyle.ALIGN_CENTER);
+		 style.setWrapText(true);
+		 style.setFont(font);
+		 
+		 Row row0 = sheet.createRow(0);
+		 Cell cell0 = row0.createCell(0);
+		 cell0.setCellValue("销售");
+		 cell0.setCellStyle(style);
+		 Cell cell1 = row0.createCell(1);
+		 cell1.setCellValue("区域");
+		 cell1.setCellStyle(style);
+		 Cell cell2 = row0.createCell(2);
+		 cell2.setCellStyle(style);
+		 cell2.setCellValue("超期未收款");
+		 Cell cell3 = row0.createCell(3);
+		 cell3.setCellValue("应收款总额");
+		 cell3.setCellStyle(style);
+		 Cell cell4 = row0.createCell(4);
+		 cell4.setCellValue("超期未收款占比");
+		 cell4.setCellStyle(style);
+		 
+		logger.info("超期未收款占比导出给sheet赋值。。。");
+		//超期未收款金额总计
+		double totalOverdueUnaccount=0d;
+		//应收款金额总计
+		double totalReceiveAccount=0d;
+		//超期未收款占比总计
+		String totalOverdueUnaccountRatio="";
 
-			int RowIndex = 1;
-			for(int i=0;i<newList.size();i++){	
-				ReportOverdueUnaccountEntity entity = newList.get(i);
-				Row row = sheet.createRow(RowIndex);
-				RowIndex++;
-				Cell cel0 = row.createCell(0);
-				cel0.setCellValue(entity.getSellerName());
-				Cell cel1 = row.createCell(1);
-				cel1.setCellValue(entity.getArea());
-				Cell cel2 = row.createCell(2);
-				cel2.setCellValue(entity.getUnReceiptAmount());
-				Cell cel3 = row.createCell(3);
-				cel3.setCellValue(entity.getReceiptAmount());
-				Cell cel4 = row.createCell(4);
-				cel4.setCellValue(entity.getOverdueUnaccountRatio());
-				
-				//超期未收款金额总计
-				totalOverdueUnaccount+=(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());
-				//应收款金额总计
-				totalReceiveAccount+=(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount().doubleValue());
-				
-	
-			}
-			//超期未收款占比总计
-			try {
-				totalOverdueUnaccountRatio = new BigDecimal(totalOverdueUnaccount).divide(new BigDecimal(totalReceiveAccount), BigDecimal.ROUND_HALF_UP).doubleValue()+"%";
-			} catch (Exception e) {
-				logger.error("占比计算异常", e);
-			}
+		int RowIndex = 1;
+		for(int i=0;i<newList.size();i++){	
+			ReportOverdueUnaccountEntity entity = newList.get(i);
+			Row row = sheet.createRow(RowIndex);
+			RowIndex++;
+			Cell cel0 = row.createCell(0);
+			cel0.setCellValue(entity.getSellerName());
+			Cell cel1 = row.createCell(1);
+			cel1.setCellValue(entity.getArea());
+			Cell cel2 = row.createCell(2);
+			cel2.setCellValue(entity.getUnReceiptAmount());
+			Cell cel3 = row.createCell(3);
+			cel3.setCellValue(entity.getReceiptAmount());
+			Cell cel4 = row.createCell(4);
+			cel4.setCellValue(entity.getOverdueUnaccountRatio());
 			
-			Row lastRow = sheet.createRow(RowIndex);
-			Cell cellast = lastRow.createCell(0);
-			cellast.setCellValue("合计：");
+			//超期未收款金额总计
+			totalOverdueUnaccount+=(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());
+			//应收款金额总计
+			totalReceiveAccount+=(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount().doubleValue());
 			
-			Cell cellast0 = lastRow.createCell(2);
-			cellast0.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(totalOverdueUnaccount)));
-			Cell cellast1 = lastRow.createCell(3);
-			cellast1.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(totalReceiveAccount)));
-			Cell cellast2 = lastRow.createCell(4);
-			cellast2.setCellValue(totalOverdueUnaccountRatio);
-			}
+
 		}
+		//超期未收款占比总计
+		try {
+			//分母为0
+			if (totalReceiveAccount == 0d) {
+				totalOverdueUnaccountRatio = "0%";
+			}else {
+				totalOverdueUnaccountRatio = new BigDecimal(totalOverdueUnaccount).divide(new BigDecimal(totalReceiveAccount), BigDecimal.ROUND_HALF_UP).doubleValue()+"%";
+			}
+		} catch (Exception e) {
+			logger.error("占比计算异常", e);
+		}
+		
+		if (newList != null || newList.size() == 0) {
+			RowIndex++;
+		}
+		Row lastRow = sheet.createRow(RowIndex);
+		Cell cellast = lastRow.createCell(0);
+		cellast.setCellValue("合计：");
+		
+		Cell cellast0 = lastRow.createCell(2);
+		cellast0.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(totalOverdueUnaccount)));
+		Cell cellast1 = lastRow.createCell(3);
+		cellast1.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(totalReceiveAccount)));
+		Cell cellast2 = lastRow.createCell(4);
+		cellast2.setCellValue(totalOverdueUnaccountRatio);
+	}
 	
 	//每3位中间添加逗号的格式化显示 
 	public static String getCommaFormat(BigDecimal value){  

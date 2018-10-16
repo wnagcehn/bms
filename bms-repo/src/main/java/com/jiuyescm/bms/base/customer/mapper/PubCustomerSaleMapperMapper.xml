@@ -51,7 +51,7 @@ customer_id, customer_name, origin_seller_id, origin_seller_name, creator_id, cr
 				and origin_seller_id = #{originSellerId}
 			</if>
         	<if test=" originSellerName != null and originSellerName !='' ">
-				and origin_seller_name = #{originSellerName}
+				and origin_seller_name like CONCAT("%",#{originSellerName},"%")
 			</if>
         	<if test=" creatorId != null and creatorId !='' ">
 				and creator_id = #{creatorId}
@@ -97,38 +97,14 @@ customer_id, customer_name, origin_seller_id, origin_seller_name, creator_id, cr
     <update id="update" parameterType="com.jiuyescm.bms.base.customer.entity.PubCustomerSaleMapperEntity">
         update pub_customer_sale_mapper
         <trim prefix="set" suffixOverrides=",">
-			<if test=" customerId != null and customerId !='' ">
-				customer_id = #{customerId,jdbcType=VARCHAR},
-			</if>
-			<if test=" customerName != null and customerName !='' ">
-				customer_name = #{customerName,jdbcType=VARCHAR},
-			</if>
 			<if test=" originSellerId != null and originSellerId !='' ">
 				origin_seller_id = #{originSellerId,jdbcType=VARCHAR},
 			</if>
 			<if test=" originSellerName != null and originSellerName !='' ">
 				origin_seller_name = #{originSellerName,jdbcType=VARCHAR},
 			</if>
-			<if test=" creatorId != null and creatorId !='' ">
-				creator_id = #{creatorId,jdbcType=VARCHAR},
-			</if>
-			<if test=" creator != null and creator !='' ">
-				creator = #{creator,jdbcType=VARCHAR},
-			</if>
-			<if test=" createTime != null and createTime !='' ">
-				create_time = #{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test=" lastModifier != null and lastModifier !='' ">
-				last_modifier = #{lastModifier,jdbcType=VARCHAR},
-			</if>
-			<if test=" lastModifierId != null and lastModifierId !='' ">
-				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
-			</if>
-			<if test=" lastModifyTime != null and lastModifyTime !='' ">
-				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
-			</if>
         </trim>
-        where id = #{id}
+        where customer_name = #{customerName,jdbcType=VARCHAR}
     </update>
 
 	<!-- 删除 -->

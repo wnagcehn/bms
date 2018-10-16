@@ -92,4 +92,14 @@ public class PubCustomerSaleMapperRepositoryImpl extends MyBatisDao<PubCustomerS
 		return insertBatch("com.jiuyescm.bms.base.customer.PubCustomerSaleMapperMapper.save", list);
 	}
 	
+    /**
+     * 批量更新
+     * @param list
+     * @return
+     */
+	@Override
+	public int updateBatchTmp(List<PubCustomerSaleMapperEntity> list) {
+		return updateBatch("com.jiuyescm.bms.base.customer.PubCustomerSaleMapperMapper.save", list);
+	}
+	
 }

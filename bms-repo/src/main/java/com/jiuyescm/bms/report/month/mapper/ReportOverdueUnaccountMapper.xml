@@ -39,7 +39,7 @@
         select a.group_name as groupName,a.seller_id as sellerId,a.seller_name as sellerName,a.un_receipt_amount as unReceiptAmount,b.receipt_amount as receiptAmount,sum(IFNULL(un_receipt_amount,0)+IFNULL(receipt_amount,0)) as totalAmount from
 		(select g.group_name,i.seller_id,i.seller_name,sum(un_receipt_amount) as un_receipt_amount from bill_check_info i 
 		LEFT JOIN bms_group_user u on i.seller_id=u.user_id
-		LEFT JOIN bms_group g on g.id=u.group_id
+		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
 		where 1=1
 		<if test="sellerName != null and sellerName != ''">
 			and i.seller_name like CONCAT('%',#{sellerName},'%')
@@ -50,8 +50,8 @@
 	        	#{item}
 	        </foreach>
 		</if> 
-		<if test="groupCode != null and groupCode != ''">
-			and g.group_code=#{groupCode}
+		<if test="area != null and area != ''">
+			and g.group_code=#{area}
 		</if>
 		and <![CDATA[create_month < #{createMonth}]]>
 		GROUP BY i.seller_id
@@ -60,7 +60,7 @@
 		select g.group_name,a.seller_name AS seller_name,sum(b.receipt_amount) as receipt_amount from bill_check_info  a
 		inner join bill_check_receipt b on a.id = b.bill_check_id
 		LEFT JOIN bms_group_user u on a.seller_id=u.user_id
-		LEFT JOIN bms_group g on g.id=u.group_id
+		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
 		where 1=1 
 		<if test="sellerName != null and sellerName != ''">
 			and a.seller_name like CONCAT('%',#{sellerName},'%')
@@ -71,8 +71,8 @@
 	             	#{item}
 	        </foreach>
 		</if> 
-		<if test="groupCode != null and groupCode != ''">
-			and g.group_code=#{groupCode}
+		<if test="area != null and area != ''">
+			and g.group_code=#{area}
 		</if>
 		and <![CDATA[a.create_month < #{createMonth}]]>
 		and b.receipt_date>=#{receiptDate}

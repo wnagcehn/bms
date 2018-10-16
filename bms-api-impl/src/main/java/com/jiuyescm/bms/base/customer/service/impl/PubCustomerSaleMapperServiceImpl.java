@@ -85,5 +85,10 @@ public class PubCustomerSaleMapperServiceImpl implements IPubCustomerSaleMapperS
     public int insertBatchTmp(List<PubCustomerSaleMapperEntity> list){
     	return pubCustomerSaleMapperRepository.insertBatchTmp(list);
     }
+    
+    @Override
+    public int updateBatchTmp(List<PubCustomerSaleMapperEntity> list){
+    	return pubCustomerSaleMapperRepository.updateBatchTmp(list);
+    }
 	
 }

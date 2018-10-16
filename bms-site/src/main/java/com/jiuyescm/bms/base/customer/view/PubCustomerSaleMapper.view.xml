@@ -21,7 +21,7 @@
         <Property name="label">原始销售名称</Property>
       </PropertyDef>
       <PropertyDef name="creatorId">
-        <Property name="label">创建者</Property>
+        <Property name="label">创建者ID</Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property name="label">创建者</Property>
@@ -34,7 +34,7 @@
         <Property name="label">修改者</Property>
       </PropertyDef>
       <PropertyDef name="lastModifierId">
-        <Property name="label">修改者</Property>
+        <Property name="label">修改者ID</Property>
       </PropertyDef>
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
@@ -174,11 +174,11 @@
         <DataColumn name="originSellerName">
           <Property name="property">originSellerName</Property>
         </DataColumn>
-        <DataColumn name="creatorId">
-          <Property name="property">creatorId</Property>
-        </DataColumn>
         <DataColumn name="creator">
           <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="creatorId">
+          <Property name="property">creatorId</Property>
         </DataColumn>
         <DataColumn name="createTime">
           <Property name="property">createTime</Property>
@@ -251,11 +251,11 @@ view.get(&quot;#impBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
         <ProgressBar id="exportProgressBar"/>
         <AjaxAction id="getProgess">
           <Property name="modal">false</Property>
-          <Property name="service">dispatchPR#getProgress</Property>
+          <Property name="service">pubCustomerSaleMapperController#getProgress</Property>
         </AjaxAction>
         <AjaxAction id="setProgess">
           <Property name="modal">false</Property>
-          <Property name="service">dispatchPR#setProgress</Property>
+          <Property name="service">pubCustomerSaleMapperController#setProgress</Property>
         </AjaxAction>
         <UploadAction id="StepUploadAction">
           <ClientEvent name="onFileUploaded">&#xD;
@@ -272,6 +272,7 @@ if(data.error!=null){  &#xD;
 }&#xD;
 if(data.succ!=null){&#xD;
 	view.get(&quot;#progressLabel&quot;).set(&quot;text&quot;,&quot;导入成功！&quot;);&#xD;
+	dorado.MessageBox.alert(&quot;导入成功&quot;);&#xD;
 	var data = view.get(&quot;#dsPubCustomerSaleMapperEntityQuery.data&quot;).current;&#xD;
 	with (view.get(&quot;#dsPubCustomerSaleMapperEntity&quot;)){&#xD;
 		set(&quot;parameter&quot;, data);&#xD;

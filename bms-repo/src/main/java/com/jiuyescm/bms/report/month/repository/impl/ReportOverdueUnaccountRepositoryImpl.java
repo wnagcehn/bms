@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.report.month.entity.ReportIncomesSubjectEntity;
 import com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity;
+import com.jiuyescm.bms.report.month.repository.IReportCollectionRateRepository;
 import com.jiuyescm.bms.report.month.repository.IReportIncomesSubjectRepository;
 import com.jiuyescm.bms.report.month.repository.IReportOverdueUnaccountRepository;
 

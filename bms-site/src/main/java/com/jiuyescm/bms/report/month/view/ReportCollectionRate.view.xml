@@ -3,7 +3,7 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="dtReportOverdueUnaccountQuery">
+    <DataType name="dtReportCollectionRateQuery">
       <PropertyDef name="sellerId">
         <Property name="label">销售员</Property>
       </PropertyDef>
@@ -44,8 +44,8 @@
         <Property name="required">true</Property>
       </PropertyDef>
     </DataType>
-    <DataType name="dtReportOverdueUnaccountEntity">
-      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportIncomesSubjectEntity</Property>
+    <DataType name="dtReportCollectionRateEntity">
+      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportCollectionRateEntity</Property>
       <PropertyDef name="sellerId">
         <Property name="label">销售员</Property>
       </PropertyDef>
@@ -70,7 +70,7 @@
       <PropertyDef name="receiptTotal">
         <Property name="label">收款合计</Property>
       </PropertyDef>
-      <PropertyDef name="receiptQuota">
+      <PropertyDef name="receiptTarget">
         <Property name="label">收款指标</Property>
       </PropertyDef>
       <PropertyDef name="receiptCollectionRate">
@@ -84,21 +84,21 @@ var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
 view.get(&quot;#formCondition.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#formCondition.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
-    <DataSet id="dsReportOverdueUnaccountEntity">
-      <Property name="dataProvider">reportOverdueUnaccountController#queryAll</Property>
+    <DataSet id="dsReportCollectionRateEntity">
+      <Property name="dataProvider">reportCollectionRateController#queryAll</Property>
       <Property name="readOnly">false</Property>
-      <Property name="dataType">[dtReportOverdueUnaccountEntity]</Property>
+      <Property name="dataType">[dtReportCollectionRateEntity]</Property>
       <Property name="loadMode">manual</Property>
     </DataSet>
-    <DataSet id="dsReportOverdueUnaccountQuery">
-      <ClientEvent name="onCreate">view.get(&quot;#dsReportOverdueUnaccountQuery&quot;).getData().insert();&#xD;
+    <DataSet id="dsReportCollectionRateQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsReportCollectionRateQuery&quot;).getData().insert();&#xD;
 		  </ClientEvent>
-      <Property name="dataType">[dtReportOverdueUnaccountQuery]</Property>
+      <Property name="dataType">[dtReportCollectionRateQuery]</Property>
     </DataSet>
     <ToolBar>
       <Button>
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsReportOverdueUnaccountQuery.data&quot;).current;&#xD;
-with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsReportCollectionRateQuery.data&quot;).current;&#xD;
+with (view.get(&quot;#dsReportCollectionRateEntity&quot;)){&#xD;
 	set(&quot;parameter&quot;, data);&#xD;
 	flushAsync();&#xD;
 }&#xD;
@@ -108,23 +108,20 @@ with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </Button>
       <Button>
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsReportOverdueUnaccountQuery.data&quot;).current;&#xD;
-with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
-	set(&quot;parameter&quot;, data);&#xD;
-	flushAsync();&#xD;
-}&#xD;
-&#xD;
+        <ClientEvent name="onClick">//var entity=view.get(&quot;#formCondition&quot;).get(&quot;entity&quot;);&#xD;
+var data = view.get(&quot;#dsReportCollectionRateQuery.data&quot;).current;&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();&#xD;
 </ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
       </Button>
     </ToolBar>
     <AutoForm id="formCondition">
-      <Property name="dataType">dtReportOverdueUnaccountQuery</Property>
+      <Property name="dataType">dtReportCollectionRateQuery</Property>
       <Property name="createPrivateDataSet">true</Property>
       <Property name="cols">220,220,220,220,*,*</Property>
       <Property name="labelWidth">100</Property>
-      <Property name="dataSet">dsReportOverdueUnaccountQuery</Property>
+      <Property name="dataSet">dsReportCollectionRateQuery</Property>
       <AutoFormElement>
         <Property name="name">year</Property>
         <Property name="property">year</Property>
@@ -158,7 +155,7 @@ with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
       </AutoFormElement>
     </AutoForm>
     <DataGrid>
-      <Property name="dataSet">dsReportOverdueUnaccountEntity</Property>
+      <Property name="dataSet">dsReportCollectionRateEntity</Property>
       <Property name="stretchColumnsMode">auto</Property>
       <Property name="readOnly">true</Property>
       <Property name="showFooter">true</Property>
@@ -201,8 +198,8 @@ with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">receiptQuota</Property>
-        <Property name="name">receiptQuota</Property>
+        <Property name="property">receiptTarget</Property>
+        <Property name="name">receiptTarget</Property>
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
@@ -211,5 +208,10 @@ with (view.get(&quot;#dsReportOverdueUnaccountEntity&quot;)){&#xD;
         <Property name="name">receiptCollectionRate</Property>
       </DataColumn>
     </DataGrid>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">reportCollectionRateController#export</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.ReportCollectionRateMapper" >
+	
+    <select id="queryAmount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportCollectionRateEntity">
+        select i.seller_id as sellerId, i.seller_name as sellerName,i.customer_name as customerName,g.group_name as groupName,TIMESTAMPDIFF(Month,i.bill_start_time,r.receipt_date) as receiptMonth,SUM(r.receipt_amount) as receiptAmount from bill_check_info i
+		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id
+		LEFT JOIN bms_group_user u on i.seller_id=u.user_id
+		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
+		LEFT JOIN report_seller_receipt_target t on t.seller_id=i.seller_id and t.del_flag='0'
+		WHERE 1=1
+		<if test="sellerName != null and sellerName != ''">
+			and i.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and i.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		<if test="area != null and area != ''">
+			and g.group_code=#{area}
+		</if>
+		and <![CDATA[i.create_month <= #{createMonth}]]>
+		and t.create_month=#{createMonth}
+		GROUP BY i.seller_id,g.group_name
+    </select>
+
+</mapper>

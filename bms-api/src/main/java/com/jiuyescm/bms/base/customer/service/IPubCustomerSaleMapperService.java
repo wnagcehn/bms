@@ -31,5 +31,12 @@ public interface IPubCustomerSaleMapperService {
      * @return
      */
 	int insertBatchTmp(List<PubCustomerSaleMapperEntity> list);
+	
+	/**
+	 * 批量更新
+	 * @param list
+	 * @return
+	 */
+	int updateBatchTmp(List<PubCustomerSaleMapperEntity> list);
 
 }
