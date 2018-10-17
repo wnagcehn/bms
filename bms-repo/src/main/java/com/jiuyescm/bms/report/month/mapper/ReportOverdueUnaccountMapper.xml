@@ -53,7 +53,7 @@
 		<if test="area != null and area != ''">
 			and g.group_code=#{area}
 		</if>
-		and <![CDATA[create_month < #{createMonth}]]>
+		and <![CDATA[i.create_month < #{createMonth}]]>
 		GROUP BY i.seller_id
 		) a left JOIN
 		(
