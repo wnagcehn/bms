@@ -128,7 +128,7 @@ public class ReportCollectionRateController {
 				underOneYear = reportCollectionRateEntity.getReceiptWithinOneYear() == null ? 0d : reportCollectionRateEntity.getReceiptWithinOneYear();
 				betweenOneAndTwo = reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear();
 				overTwoTear = reportCollectionRateEntity.getReceiptOverTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptOverTwoYear();
-				newSellerReceipt = reportCollectionRateEntity.getNewSellerReceipt() == null ? 0d : reportCollectionRateEntity.getNewSellerReceipt();
+				newSellerReceipt = reportCollectionRateEntity.getHandoverCustomerReceipt() == null ? 0d : reportCollectionRateEntity.getHandoverCustomerReceipt();
 				//收款合计
 				reportCollectionRateEntity.setReceiptTotal(underOneYear+betweenOneAndTwo+overTwoTear+newSellerReceipt);
 				
@@ -307,7 +307,7 @@ public class ReportCollectionRateController {
 				Cell cel4 = row.createCell(4);
 				cel4.setCellValue(entity.getReceiptOverTwoYear());
 				Cell cel5 = row.createCell(5);
-				cel5.setCellValue(entity.getNewSellerReceipt());
+				cel5.setCellValue(entity.getHandoverCustomerReceipt());
 				Cell cel6 = row.createCell(6);
 				cel6.setCellValue(entity.getReceiptTotal());
 				Cell cel7 = row.createCell(7);
@@ -322,7 +322,7 @@ public class ReportCollectionRateController {
 				//启动时间超过2年的收款总计
 				totalOverTwoYear+=(entity.getReceiptOverTwoYear()==null?0d:entity.getReceiptOverTwoYear().doubleValue());
 				//交接客户收款总计
-				totalNewSellerReceipt+=(entity.getNewSellerReceipt()==null?0d:entity.getNewSellerReceipt().doubleValue());
+				totalNewSellerReceipt+=(entity.getHandoverCustomerReceipt()==null?0d:entity.getHandoverCustomerReceipt().doubleValue());
 				//收款合计总计
 				totalReceiptAmount+=(entity.getReceiptTotal()==null?0d:entity.getReceiptTotal().doubleValue());
 				//收款指标总计
