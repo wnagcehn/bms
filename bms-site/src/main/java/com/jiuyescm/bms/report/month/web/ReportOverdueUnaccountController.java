@@ -80,50 +80,50 @@ public class ReportOverdueUnaccountController {
 		} catch (Exception e) {
 			logger.error("日期转换异常", e);
 		}
+		
+		//如果区域不存在，加权限
+		if (!param.containsKey("area")) {	
+			BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+			if (null != groupUser) {
+				List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
+				if (userIds.size() == 0) {
+					return newList;	
+				}
+				param.put("userIds", userIds);
+			}
+		}
 	
-		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-		if (null != groupUser) {
-			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-			if (userIds.size() == 0) {
-				return newList;
-			}
-			param.put("userIds", userIds);
-			//超期未收款金额
-			try {
-				unList = reportOverdueUnaccountService.queryTotalAmount(param);
-			} catch (Exception e) {
-				logger.error("超期未收款金额查询异常", e);
-			}		
-			
-			//应收款日期转换
-			createMonthTran(param);
-			//应收款总额
-			try {
-				list = reportOverdueUnaccountService.queryTotalAmount(param);
-			} catch (Exception e) {
-				logger.error("应收款金额查询异常", e);
-			}
-			
-			for (ReportOverdueUnaccountEntity unEntity : unList) {
-				for (ReportOverdueUnaccountEntity entity : list) {
-					if (unEntity.getSellerName().equals(entity.getSellerName())) {
-						BmsGroupUserVo areaEntity = bmsGroupUserService.queryGroupNameByUserId(entity.getSellerId());
-						newEntity = new ReportOverdueUnaccountEntity();
-						if (null != areaEntity) {
-							newEntity.setArea(areaEntity.getGroupName());
-						}
-						newEntity.setSellerId(unEntity.getSellerId());
-						newEntity.setSellerName(unEntity.getSellerName());
-						newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
-						newEntity.setReceiptAmount(entity.getReceiptAmount());
-						newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
-						newList.add(newEntity);
-					}
+		//超期未收款金额
+		try {
+			unList = reportOverdueUnaccountService.queryTotalAmount(param);
+		} catch (Exception e) {
+			logger.error("超期未收款金额查询异常", e);
+		}		
+		
+		//应收款日期转换
+		createMonthTran(param);
+		//应收款总额
+		try {
+			list = reportOverdueUnaccountService.queryTotalAmount(param);
+		} catch (Exception e) {
+			logger.error("应收款金额查询异常", e);
+		}
+		
+		for (ReportOverdueUnaccountEntity unEntity : unList) {
+			for (ReportOverdueUnaccountEntity entity : list) {
+				if (unEntity.getSellerName().equals(entity.getSellerName())) {
+					newEntity = new ReportOverdueUnaccountEntity();
+					newEntity.setArea(unEntity.getGroupName());
+					newEntity.setSellerId(unEntity.getSellerId());
+					newEntity.setSellerName(unEntity.getSellerName());
+					newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
+					newEntity.setReceiptAmount(entity.getReceiptAmount());
+					newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
+					newList.add(newEntity);
 				}
 			}
-			return newList;
 		}
-		return newList;		
+		return newList;	
 	}
 
 	private void unCreateMonthTran(Map<String, Object> param) {
@@ -233,56 +233,64 @@ public class ReportOverdueUnaccountController {
 			String path, Map<String, Object> param,Map<String, Object> dictcodeMap)throws Exception{
 		logger.info("超期未收款占比信息导出...");
         
-		List<ReportOverdueUnaccountEntity> unList = null;
-		List<ReportOverdueUnaccountEntity> list = null;
-		ReportOverdueUnaccountEntity newEntity = null;
-		List<ReportOverdueUnaccountEntity> newList = new ArrayList<ReportOverdueUnaccountEntity>();
-		//超期未收款日期转换
-		try {
-			unCreateMonthTran(param);
-			receiptDateTran(param);
-		} catch (Exception e) {
-			logger.error("日期转换异常", e);
-		}
-	
-		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-		if (null != groupUser) {
-			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-			if (userIds.size() != 0) {
-				param.put("userIds", userIds);
-				//超期未收款金额
-				try {
-					unList = reportOverdueUnaccountService.queryTotalAmount(param);
-				} catch (Exception e) {
-					logger.error("超期未收款金额查询异常", e);
-				}		
+		//数据查询
+		List<ReportOverdueUnaccountEntity> newList = this.queryAll(param);
+		
+//		List<ReportOverdueUnaccountEntity> unList = null;
+//		List<ReportOverdueUnaccountEntity> list = null;
+//		ReportOverdueUnaccountEntity newEntity = null;
+//		List<ReportOverdueUnaccountEntity> newList = new ArrayList<ReportOverdueUnaccountEntity>();
+//		//超期未收款日期转换
+//		try {
+//			unCreateMonthTran(param);
+//			receiptDateTran(param);
+//		} catch (Exception e) {
+//			logger.error("日期转换异常", e);
+//		}
+//		
+//		//如果区域不存在，加权限
+//		if (!param.containsKey("area")) {
+//			BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+//			if (null != groupUser) {
+//				List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
+//				if (userIds.size() != 0) {
+//					param.put("userIds", userIds);
+//				}
+//			}
+//		}
+//
+//		//超期未收款金额
+//		try {
+//			unList = reportOverdueUnaccountService.queryTotalAmount(param);
+//		} catch (Exception e) {
+//			logger.error("超期未收款金额查询异常", e);
+//		}		
+//		
+//		//应收款日期转换
+//		createMonthTran(param);
+//		//应收款总额
+//		try {
+//			list = reportOverdueUnaccountService.queryTotalAmount(param);
+//		} catch (Exception e) {
+//			logger.error("应收款金额查询异常", e);
+//		}
+//		
+//		for (ReportOverdueUnaccountEntity unEntity : unList) {
+//			for (ReportOverdueUnaccountEntity entity : list) {
+//				if (unEntity.getSellerName().equals(entity.getSellerName())) {
+//					//BmsGroupUserVo areaEntity = bmsGroupUserService.queryGroupNameByUserId(entity.getSellerId());
+//					newEntity = new ReportOverdueUnaccountEntity();
+//					newEntity.setArea(unEntity.getArea());
+//					newEntity.setSellerId(unEntity.getSellerId());
+//					newEntity.setSellerName(unEntity.getSellerName());
+//					newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
+//					newEntity.setReceiptAmount(entity.getReceiptAmount());
+//					newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
+//					newList.add(newEntity);
+//				}
+//			}
+//		}
 				
-				//应收款日期转换
-				createMonthTran(param);
-				//应收款总额
-				try {
-					list = reportOverdueUnaccountService.queryTotalAmount(param);
-				} catch (Exception e) {
-					logger.error("应收款金额查询异常", e);
-				}
-				
-				for (ReportOverdueUnaccountEntity unEntity : unList) {
-					for (ReportOverdueUnaccountEntity entity : list) {
-						if (unEntity.getSellerName().equals(entity.getSellerName())) {
-							//BmsGroupUserVo areaEntity = bmsGroupUserService.queryGroupNameByUserId(entity.getSellerId());
-							newEntity = new ReportOverdueUnaccountEntity();
-							newEntity.setArea(unEntity.getArea());
-							newEntity.setSellerId(unEntity.getSellerId());
-							newEntity.setSellerName(unEntity.getSellerName());
-							newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
-							newEntity.setReceiptAmount(entity.getReceiptAmount());
-							newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
-							newList.add(newEntity);
-						}
-					}
-				}
-			}
-		}		
 		logger.info("超期未收款占比导出生成sheet。。。");
 		Sheet sheet = poiUtil.getXSSFSheet(workbook,"超期未收款占比");
 		

@@ -77,14 +77,17 @@ public class ReportCollectionRateController {
 		} catch (Exception e) {
 			logger.error("日期转换异常", e);
 		}
-	
-		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-		if (null != groupUser) {
-			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-			if (userIds.size() == 0) {
-				return newList;
+		
+		//如果区域不存在，加权限
+		if (!param.containsKey("area")) {
+			BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+			if (null != groupUser) {
+				List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
+				if (userIds.size() == 0) {
+					return newList;
+				}
+				param.put("userIds", userIds);			
 			}
-			param.put("userIds", userIds);			
 		}
 		
 		double underOneYear = 0d;
