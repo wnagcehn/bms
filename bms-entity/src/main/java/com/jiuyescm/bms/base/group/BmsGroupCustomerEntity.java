@@ -39,6 +39,16 @@ public class BmsGroupCustomerEntity implements IEntity {
 	// DelFlag
 	private String delFlag;
 
+	//业务类型
+	private String bizType;
+	private String groupCode;
+	//显示
+	//商家简称
+	private String shortname;
+	//商家全称
+	private String customername;
+	//开票商家
+	private String mkInvoiceName;
 	public BmsGroupCustomerEntity() {
 
 	}
@@ -186,6 +196,44 @@ public class BmsGroupCustomerEntity implements IEntity {
 	public void setGroupIds(List<Integer> groupIds) {
 		this.groupIds = groupIds;
 	}
-    
-	
+
+	public String getBizType() {
+		return bizType;
+	}
+
+	public void setBizType(String bizType) {
+		this.bizType = bizType;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public String getShortname() {
+		return shortname;
+	}
+
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
+	}
+
+	public String getCustomername() {
+		return customername;
+	}
+
+	public void setCustomername(String customername) {
+		this.customername = customername;
+	}
+
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
+	}
 }
