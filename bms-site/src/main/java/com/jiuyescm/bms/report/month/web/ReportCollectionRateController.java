@@ -99,46 +99,46 @@ public class ReportCollectionRateController {
 		
 		if (null != list && list.size()>0) {
 			for (ReportCollectionRateEntity reportCollectionRateEntity : list) {
-				newEntity = new ReportCollectionRateEntity();
+				//newEntity = new ReportCollectionRateEntity();
 				
-				//查询交换销售员
-				if (reportCollectionRateEntity.getCustomerName() != null) {
-					maps.put("customerName", reportCollectionRateEntity.getCustomerName());
-					sellerList = pubCustomerSaleMapperService.query(maps);
-				}
-				
-				//存在此商家的销售员，并且和原始销售员不相同
-				if (null != sellerList && !reportCollectionRateEntity.getSellerId().equals(sellerList.get(0).getOriginSellerId())) {
-					newEntity.setNewSellerReceipt(reportCollectionRateEntity.getReceiptAmount());
-					continue;
-				}
-				
-				//一年内的
-				if (reportCollectionRateEntity.getReceiptMonth() <= 12) {
-					newEntity.setReceiptWithinOneYear(reportCollectionRateEntity.getReceiptAmount());
-				}else if (reportCollectionRateEntity.getReceiptMonth() > 12 && reportCollectionRateEntity.getReceiptMonth() <= 24) {
-				//一年-两年	
-					newEntity.setReceiptBetweenOneAndTwoYear(reportCollectionRateEntity.getReceiptAmount());
-				}else if (reportCollectionRateEntity.getReceiptMonth() > 24) {
-				//两年以上的	
-					newEntity.setReceiptOverTwoYear(reportCollectionRateEntity.getReceiptAmount());
-				}else {
-					continue;
-				}
-				underOneYear = newEntity.getReceiptWithinOneYear() == null ? 0d : newEntity.getReceiptWithinOneYear();
-				betweenOneAndTwo = newEntity.getReceiptBetweenOneAndTwoYear() == null ? 0d : newEntity.getReceiptBetweenOneAndTwoYear();
-				overTwoTear = newEntity.getReceiptOverTwoYear() == null ? 0d : newEntity.getReceiptOverTwoYear();
-				newSellerReceipt = newEntity.getNewSellerReceipt() == null ? 0d : newEntity.getNewSellerReceipt();
+//				//查询交换销售员
+//				if (reportCollectionRateEntity.getCustomerName() != null) {
+//					maps.put("customerName", reportCollectionRateEntity.getCustomerName());
+//					sellerList = pubCustomerSaleMapperService.query(maps);
+//				}
+//				
+//				//存在此商家的销售员，并且和原始销售员不相同
+//				if (null != sellerList && !reportCollectionRateEntity.getSellerId().equals(sellerList.get(0).getOriginSellerId())) {
+//					newEntity.setNewSellerReceipt(reportCollectionRateEntity.getReceiptAmount());
+//					continue;
+//				}
+//				
+//				//一年内的
+//				if (reportCollectionRateEntity.getReceiptMonth() <= 12) {
+//					newEntity.setReceiptWithinOneYear(reportCollectionRateEntity.getReceiptAmount());
+//				}else if (reportCollectionRateEntity.getReceiptMonth() > 12 && reportCollectionRateEntity.getReceiptMonth() <= 24) {
+//				//一年-两年	
+//					newEntity.setReceiptBetweenOneAndTwoYear(reportCollectionRateEntity.getReceiptAmount());
+//				}else if (reportCollectionRateEntity.getReceiptMonth() > 24) {
+//				//两年以上的	
+//					newEntity.setReceiptOverTwoYear(reportCollectionRateEntity.getReceiptAmount());
+//				}else {
+//					continue;
+//				}
+				underOneYear = reportCollectionRateEntity.getReceiptWithinOneYear() == null ? 0d : reportCollectionRateEntity.getReceiptWithinOneYear();
+				betweenOneAndTwo = reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear();
+				overTwoTear = reportCollectionRateEntity.getReceiptOverTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptOverTwoYear();
+				newSellerReceipt = reportCollectionRateEntity.getNewSellerReceipt() == null ? 0d : reportCollectionRateEntity.getNewSellerReceipt();
 				//收款合计
-				newEntity.setReceiptTotal(underOneYear+betweenOneAndTwo+overTwoTear+newSellerReceipt);
+				reportCollectionRateEntity.setReceiptTotal(underOneYear+betweenOneAndTwo+overTwoTear+newSellerReceipt);
 				
 				//收款达成率
-				if (newEntity.getReceiptTarget() == null || newEntity.getReceiptTarget() == 0) {
-					newEntity.setReceiptCollectionRate("0%");
+				if (reportCollectionRateEntity.getReceiptTarget() == null || reportCollectionRateEntity.getReceiptTarget() == 0) {
+					reportCollectionRateEntity.setReceiptCollectionRate("0%");
 				}else {
-					newEntity.setReceiptCollectionRate(new BigDecimal(newEntity.getTotalAmount()).divide(new BigDecimal(newEntity.getReceiptTarget()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
+					reportCollectionRateEntity.setReceiptCollectionRate(new BigDecimal(reportCollectionRateEntity.getTotalAmount()).divide(new BigDecimal(reportCollectionRateEntity.getReceiptTarget()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
 				}
-				newList.add(newEntity);
+				newList.add(reportCollectionRateEntity);
 			}
 		}
 		return newList;		

@@ -1190,6 +1190,7 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
             <Property name="property">servicename</Property>
             <Property name="labelWidth">70</Property>
             <Property name="labelSpacing">13</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
         </AutoForm>

@@ -26,7 +26,7 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
-        <Property name="label">仓库编号</Property>
+        <Property name="label">仓库</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
         </Property>

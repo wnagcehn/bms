@@ -57,9 +57,13 @@
       </PropertyDef>
       <PropertyDef name="overdueUnaccount">
         <Property name="label">超期未收款金额</Property>
+        <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiveAccount">
         <Property name="label">应收款金额</Property>
+        <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="overdueUnaccountRatio">
         <Property name="label">超期未收款占比</Property>

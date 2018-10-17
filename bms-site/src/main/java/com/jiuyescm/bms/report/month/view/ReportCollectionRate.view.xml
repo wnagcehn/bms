@@ -58,26 +58,32 @@
       <PropertyDef name="receiptWithinOneYear">
         <Property name="label">启动时间一年以内收款</Property>
         <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptBetweenOneAndTwoYear">
         <Property name="label">启动时间1-2年收款</Property>
         <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptOverTwoYear">
         <Property name="label">启动时间超过2年的收款</Property>
         <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="handoverCustomerReceipt">
         <Property name="label">交接客户收款</Property>
         <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptTotal">
         <Property name="label">收款合计</Property>
         <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptTarget">
         <Property name="label">收款指标</Property>
         <Property name="dataType">Double</Property>
+        <Property name="displayFormat">0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptCollectionRate">
         <Property name="label">收款达成率</Property>
