@@ -39,6 +39,8 @@ import com.jiuyescm.bms.report.month.entity.ReportReceiptTargetEntity;
 import com.jiuyescm.bms.report.month.service.IReportReceiptTargetService;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.mdm.customer.api.ICustomerService;
+import com.jiuyescm.mdm.customer.vo.CustomerVo;
 
 @Controller("reportReceiptTargetController")
 public class ReportReceiptTargetController {
@@ -61,6 +63,9 @@ public class ReportReceiptTargetController {
 	@Resource 
 	private ISystemCodeService systemCodeService;
 	
+	@Resource
+	private ICustomerService customerService;
+	
 	@DataProvider
 	public void query(Page<ReportReceiptTargetEntity> page, Map<String, Object> parameter) {
 		
@@ -73,21 +78,21 @@ public class ReportReceiptTargetController {
 			parameter.put(code.getCode(), code.getExtattr1());
 		}
 		
-		//指定的商家
-		try {
-		Map<String, Object> map= new HashMap<String, Object>();
-		map.put("groupCode", "error_customer");
-		map.put("bizType", "group_customer");
-		BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
-		if(bmsGroup!=null){			
-			List<BmsGroupCustomerVo> custList=bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
-			List<String> billList=new ArrayList<String>();
-			for(BmsGroupCustomerVo vo:custList){
-				billList.add(vo.getMkInvoiceName());
-			}
-			//parameter.put("billList", billList);
-		}
-		
+		//指定的异常商家
+		try {			
+			Map<String,String> customerMap=customerMap();;
+			Map<String, Object> map= new HashMap<String, Object>();
+			map.put("groupCode", "error_customer");
+			map.put("bizType", "group_customer");
+			BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+			if(bmsGroup!=null){			
+				List<BmsGroupCustomerVo> custList=bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
+				List<String> billList=new ArrayList<String>();
+				for(BmsGroupCustomerVo vo:custList){
+					billList.add(customerMap.get(vo.getCustomerid()));
+				}
+				parameter.put("billList", billList);
+			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -388,4 +393,15 @@ public class ReportReceiptTargetController {
         df.applyPattern(style);// 将格式应用于格式化器  
         return df.format(value.doubleValue());  
     } 
+    
+    public Map<String,String> customerMap(){
+    	Map<String,String> map=new HashMap<String,String>();
+		List<CustomerVo> cusList=customerService.queryAll();
+		for(CustomerVo vo:cusList){
+			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+		}
+		
+		return map;
+
+    }
 }

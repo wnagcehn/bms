@@ -22,12 +22,6 @@ public class BmsGroupCustomerRepositoryImpl extends MyBatisDao<BmsGroupCustomerE
 	}
 	
 	@Override
-	public List<BmsGroupCustomerEntity> queryCustomer(int groupId) {
-		// TODO Auto-generated method stub
-		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryCustomer", groupId);
-	}
-
-	@Override
 	public int addBatch(List<BmsGroupCustomerEntity> list) {
 		return this.insertBatch("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.insertEntity", list);
 	}

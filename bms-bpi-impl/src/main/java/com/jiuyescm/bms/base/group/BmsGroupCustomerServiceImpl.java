@@ -38,24 +38,6 @@ public class BmsGroupCustomerServiceImpl implements IBmsGroupCustomerService {
 		return voList;
 	}
 	
-	@Override
-	public List<BmsGroupCustomerVo> queryCustomer(int groupId) {
-		// TODO Auto-generated method stub
-		List<BmsGroupCustomerVo> voList=null;
-		try{
-			List<BmsGroupCustomerEntity> entityList=bmsGroupCustomerRepository.queryCustomer(groupId);
-			voList=new ArrayList<BmsGroupCustomerVo>();
-			for(BmsGroupCustomerEntity entity:entityList){
-				BmsGroupCustomerVo vo=new BmsGroupCustomerVo();
-				PropertyUtils.copyProperties(vo, entity);
-				voList.add(vo);
-			}
-		}catch(Exception e){
-			logger.error("queryCustomer:",e);
-		}
-		return voList;
-	}
-
 
 	@Override
 	public int addBatch(List<BmsGroupCustomerVo> list) throws Exception {
