@@ -334,7 +334,7 @@ public class ReportCollectionRateController {
 				if (totalReceiptTarget == 0d) {
 					totalCollectionRate = "0%";
 				}
-				totalCollectionRate = new BigDecimal(totalReceiptAmount).divide(new BigDecimal(totalReceiptTarget), BigDecimal.ROUND_HALF_UP).doubleValue()+"%";
+				totalCollectionRate = new BigDecimal(totalReceiptAmount).divide(new BigDecimal(totalReceiptTarget), BigDecimal.ROUND_HALF_UP).intValue()+"%";
 			} catch (Exception e) {
 				logger.error("达成率计算异常", e);
 			}
