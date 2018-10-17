@@ -22,7 +22,7 @@
 	<select id="queryCustomerByGroupId" resultType="String" parameterType="int">
 		select customerid from bms_group_customer where group_id=#{groupId} and ifnull(del_flag,'0')='0'
 	</select>
-		
+	
 	<select id="queryGroupSubject" parameterType="com.jiuyescm.bms.base.group.BmsGroupCustomerEntity" resultType="com.jiuyescm.bms.base.group.BmsGroupCustomerEntity">
 		select id, group_id, customerid, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag
 		from bms_group_customer

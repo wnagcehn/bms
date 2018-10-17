@@ -16,4 +16,5 @@ public interface IBmsGroupCustomerService {
 	List<String> checkCustomerCodeExist(int groupId, List<String> subjectCodeList);
 	int queryCustomerCountByGroupId(int id);
 	List<String> queryCustomerByGroupId(int groupId);
+	List<BmsGroupCustomerVo> queryCustomer(int groupId);
 }

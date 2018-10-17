@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.ReportReceiptTargetMapper" >
+	
+	<select id="queryAll" parameterType="java.util.Map" resultType="com.jiuyescm.bms.report.month.entity.ReportReceiptTargetEntity">	
+		select a.seller_id as sellerId,a.seller_name as sellerName,a.group_name as area,a.unReceipt2,b.unReceipt1To2,c.unReceipt1,d.yeji2,e.yeji1To2,f.yeji1,
+		IF(IFNULL(a.unReceipt2,0)-IFNULL(d.yeji2,0)*(1-#{RECEIPT_TARGET_2})>0,IFNULL(a.unReceipt2,0)-IFNULL(d.yeji2,0)*(1-#{RECEIPT_TARGET_2}),0)+
+		IF(IFNULL(b.unReceipt1To2,0)-IFNULL(e.yeji1To2,0)*(1-#{RECEIPT_TARGET_1TO2})>0,IFNULL(b.unReceipt1To2,0)-IFNULL(e.yeji1To2,0)*(1-#{RECEIPT_TARGET_1TO2}),0)+
+		IF(IFNULL(c.unReceipt1,0)-IFNULL(f.yeji1,0)*(1-#{RECEIPT_TARGET_1})>0,IFNULL(c.unReceipt1,0)-IFNULL(f.yeji1,0)*(1-#{RECEIPT_TARGET_1}),0) as receiptTarget
+		 from
+		(select a.seller_id,a.seller_name,d.group_name,SUM(b.receipt_amount)+SUM(a.un_receipt_amount) as unReceipt2
+		from bill_check_info a 
+		LEFT JOIN bill_check_receipt b on a.id=b.bill_check_id and b.del_flag='0' and b.receipt_date>='2018-09'
+		LEFT JOIN bms_group_user c on a.seller_id=c.user_id
+		LEFT JOIN bms_group d on d.id=c.group_id
+		where a.del_flag='0' and a.create_month<![CDATA[<=]]>#{createMonthTran2}
+		<if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and d.group_code=#{area}
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and a.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		 GROUP BY a.seller_name) a
+		LEFT JOIN 
+		(select a.seller_id,a.seller_name,SUM(b.receipt_amount)+SUM(a.un_receipt_amount) as unReceipt1To2
+		from bill_check_info a 
+		LEFT JOIN bill_check_receipt b on a.id=b.bill_check_id and b.del_flag='0' and b.receipt_date>=#{receiptDate}
+		LEFT JOIN bms_group_user c on a.seller_id=c.user_id
+		LEFT JOIN bms_group d on d.id=c.group_id
+		where a.del_flag='0' and a.create_month=#{createMonthTran1To2}
+		<if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and d.group_code=#{area}
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and a.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		 GROUP BY a.seller_name) b on a.seller_name=b.seller_name
+		LEFT JOIN
+		(select a.seller_id,a.seller_name,SUM(b.receipt_amount)+SUM(a.un_receipt_amount) as unReceipt1
+		from bill_check_info a 
+		LEFT JOIN bill_check_receipt b on a.id=b.bill_check_id and b.del_flag='0' and b.receipt_date>=#{receiptDate}
+		LEFT JOIN bms_group_user c on a.seller_id=c.user_id
+		LEFT JOIN bms_group d on d.id=c.group_id
+		where a.del_flag='0' and a.create_month=#{createMonthTran1}
+		<if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and d.group_code=#{area}
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and a.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		 GROUP BY a.seller_name) c on a.seller_name=c.seller_name
+		LEFT JOIN
+		(select a.seller_id,a.seller_name,sum(a.confirm_amount) as yeji2  from bill_check_info a
+		LEFT JOIN bms_group_user c on a.seller_id=c.user_id
+		LEFT JOIN bms_group d on d.id=c.group_id
+		 where a.create_month<![CDATA[<=]]>#{createMonthTran2} and a.del_flag='0'
+		 <if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and d.group_code=#{area}
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and a.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		  GROUP BY a.seller_name) d on a.seller_name=d.seller_name
+		LEFT JOIN
+		(select a.seller_id,a.seller_name,sum(a.confirm_amount) as yeji1To2  from bill_check_info a
+		LEFT JOIN bms_group_user c on a.seller_id=c.user_id
+		LEFT JOIN bms_group d on d.id=c.group_id
+		 where a.create_month=#{createMonthTran1To2} and a.del_flag='0' 
+		 <if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and d.group_code=#{area}
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and a.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		 GROUP BY a.seller_name) e on a.seller_name=e.seller_name
+		LEFT JOIN
+		(select a.seller_id,a.seller_name,sum(a.confirm_amount) as yeji1  from bill_check_info a
+		LEFT JOIN bms_group_user c on a.seller_id=c.user_id
+		LEFT JOIN bms_group d on d.id=c.group_id
+		 where a.create_month=#{createMonthTran1} and a.del_flag='0'
+		  <if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and d.group_code=#{area}
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and a.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		 GROUP BY a.seller_name) f on a.seller_name=f.seller_name		
+	</select>
+	
+	<insert id="saveList" parameterType="com.jiuyescm.bms.report.month.entity.ReportReceiptTargetEntity">
+		insert into report_seller_receipt_target(seller_id, seller_name, create_month, receipt_target, create_time,del_flag)
+        values (
+			#{sellerId,jdbcType=VARCHAR}, 
+			#{sellerName,jdbcType=VARCHAR}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{receiptTarget,jdbcType=DECIMAL}, 
+			current_timestamp(),
+			'0'
+		)
+	</insert>
+	
+	<delete id="delete" parameterType="java.util.Map">
+		  delete from report_seller_receipt_target where create_month = #{createMonth}
+	</delete>
+</mapper>
