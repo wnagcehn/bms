@@ -118,7 +118,7 @@ public class ReportOverdueUnaccountController {
 					newEntity.setSellerName(unEntity.getSellerName());
 					newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
 					newEntity.setReceiptAmount(entity.getReceiptAmount());
-					newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
+					newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).intValue()+"%");
 					newList.add(newEntity);
 				}
 			}
