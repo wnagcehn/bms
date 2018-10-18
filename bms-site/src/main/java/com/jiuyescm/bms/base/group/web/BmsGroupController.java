@@ -473,6 +473,7 @@ public class BmsGroupController {
 		//mapValue.put("ALL","全部");
 		mapValue.put("groupCode", groupCode);
 		List<BmsGroupVo> tmscodels = bmsGroupService.findAreaEnumList(mapValue);
+		mapValue.clear();
 		for (BmsGroupVo bmsGroupVo : tmscodels) {
 			mapValue.put(bmsGroupVo.getGroupCode(), bmsGroupVo.getGroupName());
 		}

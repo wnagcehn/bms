@@ -48,37 +48,37 @@
       <PropertyDef name="unReceipt2">
         <Property name="dataType">Double</Property>
         <Property name="label">未收款-2个月以上</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="unReceipt1To2">
         <Property name="dataType">Double</Property>
         <Property name="label">未收款-1-2个月</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="unReceipt1">
         <Property name="dataType">Double</Property>
         <Property name="label">未收款-1个月</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="yeji2">
         <Property name="dataType">Double</Property>
         <Property name="label">业绩-2个月以上</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="yeji1To2">
         <Property name="dataType">Double</Property>
         <Property name="label">业绩-1-2个月</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="yeji1">
         <Property name="dataType">Double</Property>
         <Property name="label">业绩-1个月</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptTarget">
         <Property name="dataType">Double</Property>
         <Property name="label">收款指标</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -149,7 +149,6 @@ view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execut
         <Property name="name">area</Property>
         <Property name="property">area</Property>
         <Property name="labelWidth">80</Property>
-        <Property name="editable">false</Property>
         <Property name="showHint">false</Property>
         <Editor/>
       </AutoFormElement>
