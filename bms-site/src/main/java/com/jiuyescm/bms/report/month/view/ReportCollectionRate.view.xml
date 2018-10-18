@@ -58,35 +58,41 @@
       <PropertyDef name="receiptWithinOneYear">
         <Property name="label">启动时间一年以内收款</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptBetweenOneAndTwoYear">
         <Property name="label">启动时间1-2年收款</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptOverTwoYear">
         <Property name="label">启动时间超过2年的收款</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="handoverCustomerReceipt">
         <Property name="label">交接客户收款</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptTotal">
         <Property name="label">收款合计</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptTarget">
         <Property name="label">收款指标</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptCollectionRate">
         <Property name="label">收款达成率</Property>
+        <Property name="displayFormat">0</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="totalCollecRate">
+        <Property name="displayFormat">0</Property>
+        <Property name="dataType">String</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -215,8 +221,13 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
+        <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsReportCollectionRateEntity.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalCollecRate&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=amount;</ClientEvent>
         <Property name="property">receiptCollectionRate</Property>
-        <Property name="summaryType">sum</Property>
         <Property name="name">receiptCollectionRate</Property>
       </DataColumn>
     </DataGrid>

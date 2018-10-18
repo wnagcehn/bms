@@ -67,6 +67,9 @@ public class ReportCollectionRateEntity implements IEntity {
 	//交接客户收款
 	private Double newSellerReceipt;
 	
+	//总占比
+	private String totalCollecRate;
+	
 	public ReportCollectionRateEntity() {
 
 	}
@@ -214,6 +217,14 @@ public class ReportCollectionRateEntity implements IEntity {
 
 	public void setNewSellerReceipt(Double newSellerReceipt) {
 		this.newSellerReceipt = newSellerReceipt;
+	}
+
+	public String getTotalCollecRate() {
+		return totalCollecRate;
+	}
+
+	public void setTotalCollecRate(String totalCollecRate) {
+		this.totalCollecRate = totalCollecRate;
 	}
 
 	

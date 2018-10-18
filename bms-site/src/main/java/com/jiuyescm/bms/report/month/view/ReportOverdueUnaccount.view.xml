@@ -16,10 +16,10 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#findAreaEnumList&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="overdueUnaccount">
+      <PropertyDef name="unReceiptAmount">
         <Property name="label">超期未收款金额</Property>
       </PropertyDef>
-      <PropertyDef name="receiveAccount">
+      <PropertyDef name="receiptAmount">
         <Property name="label">应收款金额</Property>
       </PropertyDef>
       <PropertyDef name="overdueUnaccountRatio">
@@ -55,19 +55,20 @@
       <PropertyDef name="area">
         <Property name="label">区域</Property>
       </PropertyDef>
-      <PropertyDef name="overdueUnaccount">
+      <PropertyDef name="unReceiptAmount">
         <Property name="label">超期未收款金额</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
-      <PropertyDef name="receiveAccount">
+      <PropertyDef name="receiptAmount">
         <Property name="label">应收款金额</Property>
         <Property name="dataType">Double</Property>
-        <Property name="displayFormat">0.00</Property>
+        <Property name="displayFormat">###,###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="overdueUnaccountRatio">
         <Property name="label">超期未收款占比</Property>
       </PropertyDef>
+      <PropertyDef name="totalOverdueUnaccountRatio"/>
     </DataType>
   </Model>
   <View>
@@ -162,18 +163,24 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="name">area</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">overdueUnaccount</Property>
-        <Property name="name">overdueUnaccount</Property>
+        <Property name="property">unReceiptAmount</Property>
+        <Property name="name">unReceiptAmount</Property>
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">receiveAccount</Property>
-        <Property name="name">receiveAccount</Property>
+        <Property name="property">receiptAmount</Property>
+        <Property name="name">receiptAmount</Property>
         <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn>
+        <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsReportOverdueUnaccountEntity.data&quot;);             &#xD;
+var amount=0;&#xD;
+if(datas &amp;&amp; datas.getFirst()){&#xD;
+	amount = datas.getFirst().get(&quot;totalOverdueUnaccountRatio&quot;);&#xD;
+}&#xD;
+arg.dom.innerHTML=amount;</ClientEvent>
         <Property name="property">overdueUnaccountRatio</Property>
-        <Property name="summaryType">sum</Property>
+        <Property name="align">right</Property>
       </DataColumn>
     </DataGrid>
     <DownloadAction id="downloadAction">

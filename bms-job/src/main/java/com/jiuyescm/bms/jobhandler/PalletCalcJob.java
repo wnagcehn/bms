@@ -256,6 +256,8 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
+				XxlJobLogger.log(entity.getIsCalculated());
+				XxlJobLogger.log(entity.getRemark());
 				if(mapCusPrice.containsKey(entity.getCustomerId())){
 					entity.setCalculateTime(JAppContext.currentTimestamp());
 					feeEntity.setCalculateTime(entity.getCalculateTime());
@@ -450,6 +452,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 			
 			if(list==null || list.size() == 0){
 				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+				XxlJobLogger.log("11111111");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setRemark("阶梯报价未配置");
@@ -458,12 +461,15 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 			
 			//封装数据的仓库和温度
 			map.clear();
+			XxlJobLogger.log("-->"+entity.getWarehouseCode());
+			XxlJobLogger.log("-->"+entity.getTemperatureTypeCode());
 			map.put("warehouse_code", entity.getWarehouseCode());
 			map.put("temperature_code", entity.getTemperatureTypeCode());
 			price=storageQuoteFilterService.quoteFilter(list, map);
 			
 			if(price==null){
 				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+				XxlJobLogger.log("2222222");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setRemark("阶梯报价未配置");

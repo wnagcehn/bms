@@ -45,7 +45,7 @@ public class ReportOverdueUnaccountRepositoryImpl extends MyBatisDao<ReportOverd
 	
 	@Override
 	public List<ReportOverdueUnaccountEntity> queryTotalAmount(Map<String, Object> param) {
-		return this.selectList("com.jiuyescm.bms.report.month.ReportOverdueUnaccountMapper.queryAccountCost", param);
+		return this.selectList("com.jiuyescm.bms.report.month.ReportOverdueUnaccountMapper.queryTotalAmount", param);
 	}
 
 }

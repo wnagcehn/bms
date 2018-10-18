@@ -78,7 +78,7 @@
 	<select id="findAreaEnumList" parameterType="Map" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		select group_code, group_name from bms_group 
 		WHERE parent_id = (select id from bms_group WHERE biz_type=#{bizType} and parent_id=0)
-		<if test="groupCode != null and groupCode !='' ">
+		<if test="(groupCode != null and groupCode !='')" >
 			and group_code=#{groupCode}
 		</if>
 	</select>
