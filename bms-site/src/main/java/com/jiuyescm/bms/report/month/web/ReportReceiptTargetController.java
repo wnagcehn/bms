@@ -221,7 +221,10 @@ public class ReportReceiptTargetController {
 			
 		if(param==null){
 			param=new HashMap<String, Object>();
-		}			
+		}	
+		
+		Map<String, String> saleMap = saleMap();
+		
 		try {					
 			List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("RECEIPT_TARGET");
 			for(SystemCodeEntity code:systemCodeList){
@@ -347,7 +350,7 @@ public class ReportReceiptTargetController {
 				Cell cel0 = row.createCell(0);
 				cel0.setCellValue(entity.getSellerName());
 				Cell cel1 = row.createCell(1);
-				cel1.setCellValue(entity.getArea());
+				cel1.setCellValue(saleMap.get(entity.getArea()));
 				Cell cel2 = row.createCell(2);
 				cel2.setCellValue(entity.getUnReceipt2()==null?0d:entity.getUnReceipt2().doubleValue());
 				Cell cel3 = row.createCell(3);
@@ -429,4 +432,16 @@ public class ReportReceiptTargetController {
 		return map;
 
     }
+    
+    public Map<String,String> saleMap(){
+    	
+    	Map<String, String> mapValue = new HashMap<String, String>();
+    	List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList("SALE_AREA");
+    	for (SystemCodeEntity SystemCodeEntity : tmscodels) {
+    		mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+    	}	
+		return mapValue;
+    }
+    
+	
 }
