@@ -32,8 +32,12 @@ import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
+import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
@@ -47,6 +51,8 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.mdm.customer.api.ICustomerService;
+import com.jiuyescm.mdm.customer.vo.CustomerVo;
 
 /**
  * 
@@ -67,12 +73,42 @@ public class ReportOverdueUnaccountController {
 	@Resource 
 	private ISystemCodeService systemCodeService;
 	
+	@Resource
+	private IBmsGroupService bmsGroupService;
+	
+	@Resource
+	private IBmsGroupCustomerService bmsGroupCustomerService;
+	
+	@Resource
+	private ICustomerService customerService;
+	
 	@DataProvider
 	public List<ReportOverdueUnaccountEntity> queryAll(Map<String, Object> param){
 		List<ReportOverdueUnaccountEntity> unList = null;
 		List<ReportOverdueUnaccountEntity> list = null;
 		ReportOverdueUnaccountEntity newEntity = null;
 		List<ReportOverdueUnaccountEntity> newList = new ArrayList<ReportOverdueUnaccountEntity>();
+		
+		//指定的异常商家
+		try {			
+			Map<String,String> customerMap=customerMap();;
+			Map<String, Object> map= new HashMap<String, Object>();
+			map.put("groupCode", "error_customer");
+			map.put("bizType", "group_customer");
+			BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+			if(bmsGroup!=null){			
+				List<BmsGroupCustomerVo> custList=bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
+				List<String> billList=new ArrayList<String>();
+				for(BmsGroupCustomerVo vo:custList){
+					billList.add(customerMap.get(vo.getCustomerid()));
+				}
+				param.put("billList", billList);
+			}	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//超期未收款日期转换
 		try {
 			unCreateMonthTran(param);
@@ -81,48 +117,88 @@ public class ReportOverdueUnaccountController {
 			logger.error("日期转换异常", e);
 		}
 		
-		//如果区域不存在，加权限
-		if (!param.containsKey("area")) {	
-			BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-			if (null != groupUser) {
-				List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-				if (userIds.size() == 0) {
-					return newList;	
-				}
-				param.put("userIds", userIds);
+		//权限
+//		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+//		if (null != groupUser) {
+//			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
+//			if (userIds.size() == 0) {
+//				return newList;	
+//			}
+//			param.put("userIds", userIds);
+
+			//超期未收款金额
+			try {
+				unList = reportOverdueUnaccountService.queryTotalAmount(param);
+			} catch (Exception e) {
+				logger.error("超期未收款金额查询异常", e);
+			}		
+			
+			//应收款日期转换
+			createMonthTran(param);
+			//应收款总额
+			try {
+				list = reportOverdueUnaccountService.queryTotalAmount(param);
+			} catch (Exception e) {
+				logger.error("应收款金额查询异常", e);
 			}
-		}
-	
-		//超期未收款金额
-		try {
-			unList = reportOverdueUnaccountService.queryTotalAmount(param);
-		} catch (Exception e) {
-			logger.error("超期未收款金额查询异常", e);
-		}		
-		
-		//应收款日期转换
-		createMonthTran(param);
-		//应收款总额
-		try {
-			list = reportOverdueUnaccountService.queryTotalAmount(param);
-		} catch (Exception e) {
-			logger.error("应收款金额查询异常", e);
-		}
-		
-		for (ReportOverdueUnaccountEntity unEntity : unList) {
-			for (ReportOverdueUnaccountEntity entity : list) {
-				if (unEntity.getSellerName().equals(entity.getSellerName())) {
-					newEntity = new ReportOverdueUnaccountEntity();
-					newEntity.setArea(unEntity.getGroupName());
-					newEntity.setSellerId(unEntity.getSellerId());
-					newEntity.setSellerName(unEntity.getSellerName());
-					newEntity.setUnReceiptAmount(unEntity.getUnReceiptAmount());
-					newEntity.setReceiptAmount(entity.getReceiptAmount());
-					newEntity.setOverdueUnaccountRatio(new BigDecimal(unEntity.getUnReceiptAmount()).divide(new BigDecimal(entity.getReceiptAmount()), BigDecimal.ROUND_HALF_UP).intValue()+"%");
-					newList.add(newEntity);
+			
+			double unReceiptAmount = 0d;
+			double receiptAmount = 0d;
+			//超期未收款金额总计
+			double totalOverdueUnaccount=0d;
+			//应收款金额总计
+			double totalReceiveAccount=0d;
+			//超期未收款占比总计
+			String totalOverdueUnaccountRatio="";
+			DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+
+			
+			for (ReportOverdueUnaccountEntity unEntity : unList) {
+				for (ReportOverdueUnaccountEntity entity : list) {
+					if (unEntity.getSellerName().equals(entity.getSellerName())) {
+						newEntity = new ReportOverdueUnaccountEntity();
+						unReceiptAmount = unEntity.getTotalAmount()==null?0d:unEntity.getTotalAmount();
+						receiptAmount = entity.getTotalAmount()==null?0d:entity.getTotalAmount();
+						newEntity.setArea(unEntity.getGroupName());
+						newEntity.setSellerId(unEntity.getSellerId());
+						newEntity.setSellerName(unEntity.getSellerName());
+						newEntity.setUnReceiptAmount(unEntity.getTotalAmount());
+						newEntity.setReceiptAmount(entity.getTotalAmount());
+						if (receiptAmount == 0 || unReceiptAmount < 0) {
+							newEntity.setOverdueUnaccountRatio("0%");
+						}else {
+							newEntity.setOverdueUnaccountRatio(decimalFormat.format(new BigDecimal(unReceiptAmount).divide(new BigDecimal(receiptAmount), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%");
+						}
+						newList.add(newEntity);
+						break;
+					}
 				}
 			}
-		}
+			
+			//拼接前端占比总计
+			for(int i=0;i<newList.size();i++){	
+				ReportOverdueUnaccountEntity entity = newList.get(i);
+				//超期未收款金额总计
+				totalOverdueUnaccount+=(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());
+				//应收款金额总计
+				totalReceiveAccount+=(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount().doubleValue());
+			}
+			
+			//超期未收款占比总计
+			try {
+				//分母为0
+				if (totalReceiveAccount == 0d || totalOverdueUnaccount < 0) {
+					totalOverdueUnaccountRatio = "0%";
+				}else {
+					totalOverdueUnaccountRatio = decimalFormat.format(new BigDecimal(totalOverdueUnaccount).divide(new BigDecimal(totalReceiveAccount), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%";
+				}
+			} catch (Exception e) {
+				logger.error("占比计算异常", e);
+			}
+			if (null != newList && newList.size() > 0) {
+				newList.get(0).setTotalOverdueUnaccountRatio(totalOverdueUnaccountRatio);
+			}	
+		//}
 		return newList;	
 	}
 
@@ -331,6 +407,8 @@ public class ReportOverdueUnaccountController {
 		double totalReceiveAccount=0d;
 		//超期未收款占比总计
 		String totalOverdueUnaccountRatio="";
+		
+		DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
 
 		int RowIndex = 1;
 		for(int i=0;i<newList.size();i++){	
@@ -342,9 +420,9 @@ public class ReportOverdueUnaccountController {
 			Cell cel1 = row.createCell(1);
 			cel1.setCellValue(entity.getArea());
 			Cell cel2 = row.createCell(2);
-			cel2.setCellValue(entity.getUnReceiptAmount());
+			cel2.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount())));
 			Cell cel3 = row.createCell(3);
-			cel3.setCellValue(entity.getReceiptAmount());
+			cel3.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount())));
 			Cell cel4 = row.createCell(4);
 			cel4.setCellValue(entity.getOverdueUnaccountRatio());
 			
@@ -358,10 +436,10 @@ public class ReportOverdueUnaccountController {
 		//超期未收款占比总计
 		try {
 			//分母为0
-			if (totalReceiveAccount == 0d) {
+			if (totalReceiveAccount == 0d || totalOverdueUnaccount < 0) {
 				totalOverdueUnaccountRatio = "0%";
 			}else {
-				totalOverdueUnaccountRatio = new BigDecimal(totalOverdueUnaccount).divide(new BigDecimal(totalReceiveAccount), BigDecimal.ROUND_HALF_UP).doubleValue()+"%";
+				totalOverdueUnaccountRatio = decimalFormat.format(new BigDecimal(totalOverdueUnaccount).divide(new BigDecimal(totalReceiveAccount), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%";
 			}
 		} catch (Exception e) {
 			logger.error("占比计算异常", e);
@@ -393,4 +471,13 @@ public class ReportOverdueUnaccountController {
         df.applyPattern(style);// 将格式应用于格式化器  
         return df.format(value.doubleValue());  
     }  
+    
+    public Map<String,String> customerMap(){
+    	Map<String,String> map=new HashMap<String,String>();
+		List<CustomerVo> cusList=customerService.queryAll();
+		for(CustomerVo vo:cusList){
+			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+		}	
+		return map;
+    }
 }

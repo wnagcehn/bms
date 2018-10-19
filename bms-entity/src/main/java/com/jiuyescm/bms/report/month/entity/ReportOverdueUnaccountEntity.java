@@ -52,6 +52,9 @@ public class ReportOverdueUnaccountEntity implements IEntity {
 	//区域名
 	private String groupName;
 	
+	//累计总占比
+	private String totalOverdueUnaccountRatio;
+	
 	public ReportOverdueUnaccountEntity() {
 
 	}
@@ -174,6 +177,16 @@ public class ReportOverdueUnaccountEntity implements IEntity {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+
+	public String getTotalOverdueUnaccountRatio() {
+		return totalOverdueUnaccountRatio;
+	}
+
+
+	public void setTotalOverdueUnaccountRatio(String totalOverdueUnaccountRatio) {
+		this.totalOverdueUnaccountRatio = totalOverdueUnaccountRatio;
 	}
 	
 	

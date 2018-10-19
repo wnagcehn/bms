@@ -5,19 +5,20 @@
     <select id="queryAmount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.report.month.entity.ReportCollectionRateEntity">
         SELECT 
-		a.seller_id,a.seller_name,a.invoice_name,a.group_name,a.receipt_target,a.receiptAmount1,
-		b.receiptAmount2,c.receiptAmount3,a.newSellerReceipt+b.newSellerReceipt+c.newSellerReceipt as handoverCustomerReceipt FROM
+		a.seller_id,a.seller_name,a.invoice_name,a.group_name,a.receipt_target,a.receiptAmount1 as receiptWithinOneYear,
+		b.receiptAmount2 as receiptBetweenOneAndTwoYear,c.receiptAmount3 as receiptOverTwoYear,a.newSellerReceipt+b.newSellerReceipt+c.newSellerReceipt as handoverCustomerReceipt FROM
 		(SELECT 
 		i.seller_id,i.seller_name,i.invoice_name,g.group_name,t.receipt_target,
 		case when m.origin_seller_name is not null and i.seller_name=m.origin_seller_name then SUM(r.receipt_amount) ELSE SUM(r.receipt_amount) end receiptAmount1,
 		case when m.origin_seller_name is not null and i.seller_name!=m.origin_seller_name then SUM(r.receipt_amount) end newSellerReceipt
 		from bill_check_info i
-		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id
+		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id and r.del_flag='0' and r.receipt_date >= #{receiptDate} and r.receipt_date <![CDATA[<]]> #{receiptEndDate}
 		LEFT JOIN bms_group_user u on i.seller_id=u.user_id
 		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
-		LEFT JOIN report_seller_receipt_target t on t.seller_name=i.seller_name and t.del_flag='0'
+		LEFT JOIN report_seller_receipt_target t on t.seller_name=i.seller_name and t.del_flag='0' and t.create_month=#{createMonth}
 		LEFT JOIN pub_customer_sale_mapper m on i.invoice_name=m.customer_name
 		WHERE 1=1
+		and i.del_flag='0'
 		and TIMESTAMPDIFF(Month,i.bill_start_time,r.receipt_date) <![CDATA[<=]]> 12
 		<if test="sellerName != null and sellerName != ''">
 			and i.seller_name like CONCAT('%',#{sellerName},'%')
@@ -31,8 +32,15 @@
 		<if test="area != null and area != ''">
 			and g.group_code=#{area}
 		</if>
-		and <![CDATA[i.create_month <= #{createMonth}]]>
-		and t.create_month=#{createMonth}
+		<if test="billList != null and billList != ''">
+			and i.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="createMonth != null and createMonth != ''">
+			and <![CDATA[i.create_month <= #{createMonth}]]>
+		</if>
 		GROUP BY i.seller_name) a
 		LEFT JOIN
 		(SELECT 
@@ -40,12 +48,13 @@
 		case when m.origin_seller_name is not null and i.seller_name=m.origin_seller_name then SUM(r.receipt_amount) ELSE SUM(r.receipt_amount) end receiptAmount2,
 		case when m.origin_seller_name is not null and i.seller_name!=m.origin_seller_name then SUM(r.receipt_amount) end newSellerReceipt
 		from bill_check_info i
-		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id
+		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id and r.del_flag='0' and r.receipt_date >= #{receiptDate} and r.receipt_date <![CDATA[<]]> #{receiptEndDate}
 		LEFT JOIN bms_group_user u on i.seller_id=u.user_id
 		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
-		LEFT JOIN report_seller_receipt_target t on t.seller_name=i.seller_name and t.del_flag='0'
+		LEFT JOIN report_seller_receipt_target t on t.seller_name=i.seller_name and t.del_flag='0' and t.create_month=#{createMonth}
 		LEFT JOIN pub_customer_sale_mapper m on i.invoice_name=m.customer_name
 		WHERE 1=1
+		and i.del_flag='0'
 		and TIMESTAMPDIFF(Month,i.bill_start_time,r.receipt_date)>12 and TIMESTAMPDIFF(Month,i.bill_start_time,r.receipt_date)<![CDATA[<=]]>24
 		<if test="sellerName != null and sellerName != ''">
 			and i.seller_name like CONCAT('%',#{sellerName},'%')
@@ -59,8 +68,15 @@
 		<if test="area != null and area != ''">
 			and g.group_code=#{area}
 		</if>
-		and <![CDATA[i.create_month <= #{createMonth}]]>
-		and t.create_month=#{createMonth}		
+		<if test="billList != null and billList != ''">
+			and i.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="createMonth != null and createMonth != ''">
+			and <![CDATA[i.create_month <= #{createMonth}]]>
+		</if>	
 		GROUP BY i.seller_name) b
 		on a.seller_name=b.seller_name
 		LEFT JOIN
@@ -69,12 +85,13 @@
 		case when m.origin_seller_name is not null and i.seller_name=m.origin_seller_name then SUM(r.receipt_amount) ELSE SUM(r.receipt_amount) end receiptAmount3,
 		case when m.origin_seller_name is not null and i.seller_name!=m.origin_seller_name then SUM(r.receipt_amount) end newSellerReceipt
 		from bill_check_info i
-		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id
+		LEFT JOIN bill_check_receipt r on i.id=r.bill_check_id and r.del_flag='0' and r.receipt_date >= #{receiptDate} and r.receipt_date <![CDATA[<]]> #{receiptEndDate}
 		LEFT JOIN bms_group_user u on i.seller_id=u.user_id
 		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
-		LEFT JOIN report_seller_receipt_target t on t.seller_name=i.seller_name and t.del_flag='0'
+		LEFT JOIN report_seller_receipt_target t on t.seller_name=i.seller_name and t.del_flag='0' and t.create_month=#{createMonth}
 		LEFT JOIN pub_customer_sale_mapper m on i.invoice_name=m.customer_name
 		WHERE 1=1
+		and i.del_flag='0'
 		and TIMESTAMPDIFF(Month,i.bill_start_time,r.receipt_date) > 24
 		<if test="sellerName != null and sellerName != ''">
 			and i.seller_name like CONCAT('%',#{sellerName},'%')
@@ -88,8 +105,15 @@
 		<if test="area != null and area != ''">
 			and g.group_code=#{area}
 		</if>
-		and <![CDATA[i.create_month <= #{createMonth}]]>
-		and t.create_month=#{createMonth}		
+		<if test="billList != null and billList != ''">
+			and i.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="createMonth != null and createMonth != ''">
+			and <![CDATA[i.create_month <= #{createMonth}]]>
+		</if>	
 		GROUP BY i.seller_name) c
 		on b.seller_name=c.seller_name
 		GROUP BY a.seller_name
