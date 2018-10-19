@@ -44,7 +44,7 @@ public interface IBmsGroupUserService {
 	 * @param condition
 	 * @return
 	 */
-	BmsGroupUserVo queryGroupNameByUserId(String userId);
+	//BmsGroupUserVo queryGroupNameByUserId(String userId);
 	
 	/**
 	 * 销售员id和name映射
@@ -53,4 +53,21 @@ public interface IBmsGroupUserService {
 	 * @return
 	 */
 	List<BmsGroupUserEntity> queryUserByBizType(Map<String, String> param);
+	
+	/**
+	 * 查询销售区域+人员
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 * @throws Exception
+	 */
+	PageInfo<BmsGroupUserVo> queryGroupUser(Map<String, Object> condition, int pageNo, int pageSize) throws Exception;
+	
+	/**
+	 * 检查用户是否重复
+	 * @param param
+	 * @return
+	 */
+	String checkSaleUser(Map<String, Object> param);
 }

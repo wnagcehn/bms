@@ -13,7 +13,7 @@
       <PropertyDef name="area">
         <Property name="label">区域</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#findAreaEnumList&quot;).getResult(&quot;&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="receiptWithinOneYear">
@@ -54,6 +54,9 @@
       </PropertyDef>
       <PropertyDef name="area">
         <Property name="label">区域</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="receiptWithinOneYear">
         <Property name="label">启动时间一年以内收款</Property>
@@ -167,7 +170,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="name">area</Property>
         <Property name="property">area</Property>
         <Property name="labelWidth">80</Property>
-        <Property name="editable">false</Property>
+        <Property name="editable">true</Property>
         <Property name="showHint">false</Property>
         <Editor/>
       </AutoFormElement>

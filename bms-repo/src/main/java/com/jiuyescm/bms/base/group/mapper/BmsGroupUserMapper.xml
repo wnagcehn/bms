@@ -30,6 +30,12 @@
 		on a.group_id=b.id
 		where a.user_id=#{userId} and b.biz_type=#{bizType} limit 1
 	</select>
+	
+	<select id="checkSaleUser" parameterType="java.util.Map" resultType="java.lang.String">
+		select area_code from bms_group_user
+		where user_id=#{userId} limit 1
+	</select>
+	
 	<select id="queryUserCountByGroupId" parameterType="int" resultType="int">
 		select count(*) from bms_group_user where group_id=#{groupId}
 	</select>
@@ -65,12 +71,14 @@
 			and b.biz_type = #{bizType}
 		</if>
 	</select>
+	
 	<insert id="addGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		insert into bms_group_user
-		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time,area_group_id)
+		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time,area_code)
 		values
-		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime},#{areaGroupId})
+		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime},#{areaCode})
 	</insert>
+	
 	<update id="updateGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		update bms_group_user
 		<set>
@@ -106,15 +114,29 @@
      	where T3.parent_id = 0
 	</select>
 	
+	<!-- 
 	<select id="queryGroupNameByUserId" parameterType="java.lang.String" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">	
-		select b.group_code,b.group_name,a.area_group_id from bms_group_user a
+		select b.group_code,b.group_name,a.area_code from bms_group_user a
 		left join bms_group b on a.area_group_id = b.id
 		where a.user_id = #{userId} limit 1
 	</select>
-	
+	 -->
 	<select id="queryUserByBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">	
 		select u.* from bms_group_user u
 		LEFT JOIN bms_group g on g.id=u.group_id
 		WHERE g.biz_type=#{bizType}
+	</select>
+	
+	<select id="queryGroupUser" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">
+		select id,group_id,user_id,user_name,area_code,
+		creator,create_time,last_modifier,last_modify_time
+		from bms_group_user
+		where 1=1
+		<if test="(userId!=null and userId!='')">
+			and user_id=#{userId}
+		</if>
+		<if test="(userName!=null and userName!='')">
+			and user_name like CONCAT('%',#{userName},'%')
+		</if>
 	</select>
 </mapper>

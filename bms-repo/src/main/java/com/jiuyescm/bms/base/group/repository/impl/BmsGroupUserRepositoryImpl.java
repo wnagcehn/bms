@@ -51,6 +51,14 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
         		condition, new RowBounds(pageNo, pageSize));
 		return new PageInfo<BmsGroupUserEntity>(list);
 	}
+	
+	@Override
+	public PageInfo<BmsGroupUserEntity> queryGroupUser(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+        List<BmsGroupUserEntity> list = selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryGroupUser", 
+        		condition, new RowBounds(pageNo, pageSize));
+		return new PageInfo<BmsGroupUserEntity>(list);
+	}
 
 	@Override
 	public String checkExistGroupName(String userId) {
@@ -66,6 +74,16 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
 	public String checkUserGroupName(Map<String, Object> param) {
 		param.put("bizType", "sale_area");
 		Object obj=this.selectOneForObject("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.checkUserGroupName", param);
+		if(obj!=null){
+			return obj.toString();
+		}else{
+			return "";
+		}
+	}
+	
+	@Override
+	public String checkSaleUser(Map<String, Object> param) {
+		Object obj=this.selectOneForObject("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.checkSaleUser", param);
 		if(obj!=null){
 			return obj.toString();
 		}else{
@@ -88,10 +106,10 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
 		return this.selectOne("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryEntityByUserId", userId);
 	}
 	
-	@Override
-	public BmsGroupUserEntity queryGroupNameByUserId(String userId) {
-		return this.selectOne("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryGroupNameByUserId", userId);
-	}
+//	@Override
+//	public BmsGroupUserEntity queryGroupNameByUserId(String userId) {
+//		return this.selectOne("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryGroupNameByUserId", userId);
+//	}
 
 	@Override
 	public List<BmsGroupUserEntity> queryAllByGroupId(List<Integer> groupIds) {

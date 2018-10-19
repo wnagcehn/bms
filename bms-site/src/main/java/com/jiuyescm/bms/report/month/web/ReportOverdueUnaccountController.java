@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,7 +160,7 @@ public class ReportOverdueUnaccountController {
 						newEntity = new ReportOverdueUnaccountEntity();
 						unReceiptAmount = unEntity.getTotalAmount()==null?0d:unEntity.getTotalAmount();
 						receiptAmount = entity.getTotalAmount()==null?0d:entity.getTotalAmount();
-						newEntity.setArea(unEntity.getGroupName());
+						newEntity.setArea(unEntity.getArea());
 						newEntity.setSellerId(unEntity.getSellerId());
 						newEntity.setSellerName(unEntity.getSellerName());
 						newEntity.setUnReceiptAmount(unEntity.getTotalAmount());
@@ -408,8 +409,16 @@ public class ReportOverdueUnaccountController {
 		//超期未收款占比总计
 		String totalOverdueUnaccountRatio="";
 		
+		//3位数逗号隔开
 		DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-
+		
+		//区域code转name
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList("SALE_AREA");
+		for (SystemCodeEntity SystemCodeEntity : tmscodels) {
+			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+		}
+		
 		int RowIndex = 1;
 		for(int i=0;i<newList.size();i++){	
 			ReportOverdueUnaccountEntity entity = newList.get(i);
@@ -418,7 +427,7 @@ public class ReportOverdueUnaccountController {
 			Cell cel0 = row.createCell(0);
 			cel0.setCellValue(entity.getSellerName());
 			Cell cel1 = row.createCell(1);
-			cel1.setCellValue(entity.getArea());
+			cel1.setCellValue(mapValue.get(entity.getArea()));
 			Cell cel2 = row.createCell(2);
 			cel2.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount())));
 			Cell cel3 = row.createCell(3);
