@@ -36,10 +36,9 @@
     
     <select id="queryTotalAmount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity">
-        select a.group_name as groupName,a.seller_id as sellerId,a.seller_name as sellerName,a.un_receipt_amount as unReceiptAmount,b.receipt_amount as receiptAmount,sum(IFNULL(un_receipt_amount,0)+IFNULL(receipt_amount,0)) as totalAmount from
-		(select g.group_name,i.seller_id,i.seller_name,sum(un_receipt_amount) as un_receipt_amount from bill_check_info i 
+        select a.area_code as area,a.seller_id as sellerId,a.seller_name as sellerName,a.un_receipt_amount as unReceiptAmount,b.receipt_amount as receiptAmount,sum(IFNULL(un_receipt_amount,0)+IFNULL(receipt_amount,0)) as totalAmount from
+		(select u.area_code, i.seller_id,i.seller_name,sum(un_receipt_amount) as un_receipt_amount from bill_check_info i 
 		LEFT JOIN bms_group_user u on i.seller_name=u.user_name
-		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
 		where 1=1
 		<if test="sellerName != null and sellerName != ''">
 			and i.seller_name like CONCAT('%',#{sellerName},'%')
@@ -51,7 +50,7 @@
 	        </foreach>
 		</if> 
 		<if test="area != null and area != ''">
-			and g.group_code=#{area}
+			and u.area_code=#{area}
 		</if>
 		<if test="billList != null and billList != ''">
 			and i.invoice_name not in
@@ -65,22 +64,15 @@
 		GROUP BY i.seller_name
 		) a left JOIN
 		(
-		select g.group_name,a.seller_name AS seller_name,sum(b.receipt_amount) as receipt_amount from bill_check_info  a
+		select u.area_code,a.seller_name AS seller_name,sum(b.receipt_amount) as receipt_amount from bill_check_info  a
 		inner join bill_check_receipt b on a.id = b.bill_check_id
 		LEFT JOIN bms_group_user u on a.seller_name=u.user_name
-		LEFT JOIN bms_group g on g.id=u.group_id and g.biz_type='sale_area'
 		where 1=1 
 		<if test="sellerName != null and sellerName != ''">
 			and a.seller_name like CONCAT('%',#{sellerName},'%')
 		</if>
-		<if test="userIds != null and userIds != ''">
-			and a.seller_id in
-			<foreach collection="userIds" item="item" separator="," open="(" close=")">
-	             	#{item}
-	        </foreach>
-		</if> 
 		<if test="area != null and area != ''">
-			and g.group_code=#{area}
+			and u.area_code=#{area}
 		</if>
 		<if test="billList != null and billList != ''">
 			and a.invoice_name not in

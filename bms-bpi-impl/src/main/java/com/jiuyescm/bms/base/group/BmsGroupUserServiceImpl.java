@@ -107,6 +107,30 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		}
 		return pageVoInfo;
 	}
+	
+	@Override
+	public PageInfo<BmsGroupUserVo> queryGroupUser(Map<String, Object> condition,
+			int pageNo, int pageSize) throws Exception {
+		PageInfo<BmsGroupUserVo> pageVoInfo=null;
+		try{
+			pageVoInfo=new PageInfo<BmsGroupUserVo>();
+			PageInfo<BmsGroupUserEntity> pageInfo=bmsGroupUserRepository.queryGroupUser(condition, pageNo, pageSize);
+			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
+			
+			if(pageInfo!=null&&pageInfo.getList().size()>0){
+				List<BmsGroupUserVo> list=new ArrayList<BmsGroupUserVo>();
+				for(BmsGroupUserEntity entity:pageInfo.getList()){
+					BmsGroupUserVo voEntity=new BmsGroupUserVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					list.add(voEntity);
+				}
+				pageVoInfo.setList(list);
+			}
+		}catch(Exception e){
+			throw e;
+		}
+		return pageVoInfo;
+	}
 
 	@Override
 	public String checkExistGroupName(String userId) {
@@ -116,6 +140,11 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 	@Override
 	public String checkUserGroupName(Map<String, Object> param) {
 		return bmsGroupUserRepository.checkUserGroupName(param);
+	}
+	
+	@Override
+	public String checkSaleUser(Map<String, Object> param) {
+		return bmsGroupUserRepository.checkSaleUser(param);
 	}
 
 	@Override
@@ -190,20 +219,20 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		return null;
 	}
 	
-	@Override
-	public BmsGroupUserVo queryGroupNameByUserId(String userId) {
-		// TODO Auto-generated method stub
-		try{
-			BmsGroupUserEntity groupUser=bmsGroupUserRepository.queryGroupNameByUserId(userId);
-			BmsGroupUserVo vo=new BmsGroupUserVo();
-			PropertyUtils.copyProperties(vo, groupUser);
-			
-			return vo;
-		}catch(Exception e){
-			logger.error(e);
-		}
-		return null;
-	}
+//	@Override
+//	public BmsGroupUserVo queryGroupNameByUserId(String userId) {
+//		// TODO Auto-generated method stub
+//		try{
+//			BmsGroupUserEntity groupUser=bmsGroupUserRepository.queryGroupNameByUserId(userId);
+//			BmsGroupUserVo vo=new BmsGroupUserVo();
+//			PropertyUtils.copyProperties(vo, groupUser);
+//			
+//			return vo;
+//		}catch(Exception e){
+//			logger.error(e);
+//		}
+//		return null;
+//	}
 
 	@Override
 	public List<String> queryContainUserIds(BmsGroupUserVo groupUser) {

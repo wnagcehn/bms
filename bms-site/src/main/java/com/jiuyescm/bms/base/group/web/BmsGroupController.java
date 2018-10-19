@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
@@ -27,6 +30,7 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.exception.BizException;
 
 
 @Controller("bmsGroupController")
@@ -41,6 +45,8 @@ public class BmsGroupController {
 	
 	@Autowired
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Resource
+	private ISystemCodeService systemCodeService;
 	
 	@DataProvider
 	public List<BmsGroupVo> loadDataByParent(String parentId) throws Exception{
@@ -279,6 +285,22 @@ public class BmsGroupController {
 			throw e;
 		}
 	}
+	
+	@DataProvider
+	public void queryGroupSale(Page<BmsGroupUserVo> page,Map<String,Object> parameter) throws Exception{
+		PageInfo<BmsGroupUserVo> pageInfo=null;
+		try{
+			pageInfo=bmsGroupUserService.queryGroupUser(parameter, page.getPageNo(), page.getPageSize());
+			if(page!=null){
+				page.setEntities(pageInfo.getList());
+				page.setEntityCount((int)pageInfo.getTotal());
+			}
+		}catch(Exception e){
+			logger.error("queryGroupSale error:",e);
+			throw e;
+		}
+	}
+	
 	@DataProvider
 	public Map<String,Object> getAllGroupMap() throws Exception{
 		Map<String,Object> map=Maps.newLinkedHashMap();
@@ -321,52 +343,7 @@ public class BmsGroupController {
 			result="保存成功";
 		}catch(Exception e){
 			throw e;
-		}
-		
-		return result;
-	}
-	
-	@DataResolver
-	public String saveSaleAreaGroupUser(BmsGroupUserVo voEntity) throws Exception{
-		Map<String, Object> map = null;
-		Map<String, Object> param = null;
-		String result="";
-		try{
-			if(EntityState.NEW.equals(EntityUtils.getState(voEntity))){				
-				param = new HashMap<String, Object>();		
-				voEntity.setCreator(JAppContext.currentUserName());
-				voEntity.setCreateTime(JAppContext.currentTimestamp());
-				
-				param.put("userId", voEntity.getUserId());
-				String groupName=bmsGroupUserService.checkUserGroupName(param);
-				if(StringUtils.isBlank(groupName)){
-					voEntity.setAdministrator("");
-					//查areaGroupId
-					map = new HashMap<String, Object>();
-					map.put("id", voEntity.getGroupId());
-					BmsGroupUserVo bmsGroupUserVo = bmsGroupUserService.queryAreaGroupId(map);
-					if (null != bmsGroupUserVo) {
-						voEntity.setAreaGroupId(bmsGroupUserVo.getId());
-					}
-					int k=bmsGroupUserService.addGroupUser(voEntity);
-					if(k>0){
-						return "新增成功!";
-					}else{
-						return "新增失败!";
-					}
-				}else{
-					throw new Exception("用户"+voEntity.getUserName()+" 已存在于权限组【"+groupName+"】中,不可重新添加!");
-				}
-			}else if(EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))){
-				voEntity.setLastModifier(JAppContext.currentUserName());
-				voEntity.setLastModifyTime(JAppContext.currentTimestamp());
-				bmsGroupUserService.updateGroupUser(voEntity);
-			}
-			result="保存成功";
-		}catch(Exception e){
-			throw e;
-		}
-		
+		}		
 		return result;
 	}
 	
@@ -479,5 +456,40 @@ public class BmsGroupController {
 		}
 		
 		return mapValue;
+	}
+	
+	@DataResolver
+	public String saveSaleUser(BmsGroupUserVo voEntity) {
+		Map<String, Object> param = null;
+		String result="";
+		
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList("SALE_AREA");
+		for (SystemCodeEntity SystemCodeEntity : tmscodels) {
+			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+		}
+		
+		try{
+			param = new HashMap<String, Object>();
+			voEntity.setCreator(JAppContext.currentUserName());
+			voEntity.setCreateTime(JAppContext.currentTimestamp());
+			
+			param.put("userId", voEntity.getUserId());
+			String areaCode=bmsGroupUserService.checkSaleUser(param);
+			if(StringUtils.isBlank(areaCode)){
+				int k=bmsGroupUserService.addGroupUser(voEntity);
+				if(k>0){
+					return "新增成功!";
+				}else{
+					return "新增失败!";
+				}
+			}else{
+				result = "用户"+voEntity.getUserName()+" 已存在于区域【"+mapValue.get(areaCode)+"】中,不可重新添加!";
+			}
+		}catch(Exception e){
+			logger.error("新增异常", e);
+			throw new BizException("新增用户异常！");
+		}	
+		return result;
 	}
 }

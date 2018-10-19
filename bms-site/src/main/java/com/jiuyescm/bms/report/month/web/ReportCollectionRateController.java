@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,112 +108,77 @@ public class ReportCollectionRateController {
 		
 		//日期转换
 		try {
-			createMonthTran(param);
+			//createMonthTran(param);
 			receiptDateTran(param);
 		} catch (Exception e) {
 			logger.error("日期转换异常", e);
 		}
+					
+	
+//		double underOneYear = 0d;
+//		double betweenOneAndTwo = 0d;
+//		double overTwoTear = 0d;
+//		double newSellerReceipt = 0d;
+		DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+		//查询月份和金额
+		list = reportCollectionRateService.queryAmount(param);
 		
-		//如果区域不存在，加权限
-//		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-//		if (null != groupUser) {
-//			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-//			if (userIds.size() == 0) {
-//				return newList;
-//			}
-//			param.put("userIds", userIds);			
-		
-			double underOneYear = 0d;
-			double betweenOneAndTwo = 0d;
-			double overTwoTear = 0d;
-			double newSellerReceipt = 0d;
-			DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-			//查询月份和金额
-			list = reportCollectionRateService.queryAmount(param);
-			
-			if (null != list && list.size()>0) {
-				for (ReportCollectionRateEntity reportCollectionRateEntity : list) {
-					//newEntity = new ReportCollectionRateEntity();
-					
-	//				//查询交换销售员
-	//				if (reportCollectionRateEntity.getCustomerName() != null) {
-	//					maps.put("customerName", reportCollectionRateEntity.getCustomerName());
-	//					sellerList = pubCustomerSaleMapperService.query(maps);
-	//				}
-	//				
-	//				//存在此商家的销售员，并且和原始销售员不相同
-	//				if (null != sellerList && !reportCollectionRateEntity.getSellerId().equals(sellerList.get(0).getOriginSellerId())) {
-	//					newEntity.setNewSellerReceipt(reportCollectionRateEntity.getReceiptAmount());
-	//					continue;
-	//				}
-	//				
-	//				//一年内的
-	//				if (reportCollectionRateEntity.getReceiptMonth() <= 12) {
-	//					newEntity.setReceiptWithinOneYear(reportCollectionRateEntity.getReceiptAmount());
-	//				}else if (reportCollectionRateEntity.getReceiptMonth() > 12 && reportCollectionRateEntity.getReceiptMonth() <= 24) {
-	//				//一年-两年	
-	//					newEntity.setReceiptBetweenOneAndTwoYear(reportCollectionRateEntity.getReceiptAmount());
-	//				}else if (reportCollectionRateEntity.getReceiptMonth() > 24) {
-	//				//两年以上的	
-	//					newEntity.setReceiptOverTwoYear(reportCollectionRateEntity.getReceiptAmount());
-	//				}else {
-	//					continue;
-	//				}
-					underOneYear = reportCollectionRateEntity.getReceiptWithinOneYear() == null ? 0d : reportCollectionRateEntity.getReceiptWithinOneYear();
-					betweenOneAndTwo = reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear();
-					overTwoTear = reportCollectionRateEntity.getReceiptOverTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptOverTwoYear();
-					newSellerReceipt = reportCollectionRateEntity.getHandoverCustomerReceipt() == null ? 0d : reportCollectionRateEntity.getHandoverCustomerReceipt();
-					//收款合计
-					reportCollectionRateEntity.setReceiptTotal(underOneYear+betweenOneAndTwo+overTwoTear+newSellerReceipt);
-					
-					//收款达成率
-					if (reportCollectionRateEntity.getReceiptTarget() == null || reportCollectionRateEntity.getReceiptTarget() == 0 || reportCollectionRateEntity.getReceiptTotal() < 0) {
-						reportCollectionRateEntity.setReceiptCollectionRate("0%");
-					}else {
-						reportCollectionRateEntity.setReceiptCollectionRate(decimalFormat.format(new BigDecimal(reportCollectionRateEntity.getReceiptTotal()).divide(new BigDecimal(reportCollectionRateEntity.getReceiptTarget()), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%");
-					}
-					newList.add(reportCollectionRateEntity);
-					
-					//拼接前端占比总计
-					double totalRecAmount = 0d;
-					double totalRecTarget = 0d;
-					String totalCollecRate = "";
-					for(int i=0;i<newList.size();i++){	
-						ReportCollectionRateEntity entity = newList.get(i);
-						//收款合计总计
-						totalRecAmount+=(entity.getReceiptTotal()==null?0d:entity.getReceiptTotal().doubleValue());
-						//收款指标总计
-						totalRecTarget+=(entity.getReceiptTarget()==null?0d:entity.getReceiptTarget().doubleValue());
-					}
-					//收款达成率总计
-					try {
-						if (totalRecAmount == 0d || totalRecAmount < 0) {
-							totalCollecRate = "0%";
-						}
-						totalCollecRate = decimalFormat.format(new BigDecimal(totalRecAmount).divide(new BigDecimal(totalRecTarget), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%";
-					} catch (Exception e) {
-						logger.error("达成率计算异常", e);
-					}
-					if (newList != null && newList.size() > 0) {
-						newList.get(0).setTotalCollecRate(totalCollecRate);
-					}	
+		if (null != list && list.size()>0) {
+			for (ReportCollectionRateEntity reportCollectionRateEntity : list) {
+//				underOneYear = reportCollectionRateEntity.getReceiptWithinOneYear() == null ? 0d : reportCollectionRateEntity.getReceiptWithinOneYear();
+//				betweenOneAndTwo = reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptBetweenOneAndTwoYear();
+//				overTwoTear = reportCollectionRateEntity.getReceiptOverTwoYear() == null ? 0d : reportCollectionRateEntity.getReceiptOverTwoYear();
+//				newSellerReceipt = reportCollectionRateEntity.getHandoverCustomerReceipt() == null ? 0d : reportCollectionRateEntity.getHandoverCustomerReceipt();
+//				//收款合计
+//				reportCollectionRateEntity.setReceiptTotal(underOneYear+betweenOneAndTwo+overTwoTear+newSellerReceipt);
+				
+				//收款达成率
+				if (reportCollectionRateEntity.getReceiptTarget() == null || reportCollectionRateEntity.getReceiptTarget() == 0 || reportCollectionRateEntity.getReceiptTotal() < 0) {
+					reportCollectionRateEntity.setReceiptCollectionRate("0%");
+				}else {
+					reportCollectionRateEntity.setReceiptCollectionRate(decimalFormat.format(new BigDecimal(reportCollectionRateEntity.getReceiptTotal()).divide(new BigDecimal(reportCollectionRateEntity.getReceiptTarget()), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%");
 				}
+				newList.add(reportCollectionRateEntity);
 			}
-		
+			
+			//拼接前端占比总计
+			double totalRecAmount = 0d;
+			double totalRecTarget = 0d;
+			String totalCollecRate = "";
+			for(int i=0;i<newList.size();i++){	
+				ReportCollectionRateEntity entity = newList.get(i);
+				//收款合计总计
+				totalRecAmount+=(entity.getReceiptTotal()==null?0d:entity.getReceiptTotal().doubleValue());
+				//收款指标总计
+				totalRecTarget+=(entity.getReceiptTarget()==null?0d:entity.getReceiptTarget().doubleValue());
+			}
+			//收款达成率总计
+			try {
+				if (totalRecAmount == 0d || totalRecAmount < 0) {
+					totalCollecRate = "0%";
+				}
+				totalCollecRate = decimalFormat.format(new BigDecimal(totalRecAmount).divide(new BigDecimal(totalRecTarget), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%";
+			} catch (Exception e) {
+				logger.error("达成率计算异常", e);
+			}
+			if (newList != null && newList.size() > 0) {
+				newList.get(0).setTotalCollecRate(totalCollecRate);
+			}	
+		}	
 		return newList;		
 	}
 
-	private void createMonthTran(Map<String, Object> param) {
-		Integer month = Integer.parseInt(param.get("month").toString())-1;
-		if (month < 0) {
-			Integer year = Integer.parseInt(param.get("year").toString())-1;
-			param.put("createMonth", String.valueOf(year).substring(2,4) + "0" + month);
-		}else if (month > 10) {
-			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
-		}else {
-			param.put("createMonth", param.get("year").toString().substring(2, 4) + "0" + month.toString());
-		}
-	}
+//	private void createMonthTran(Map<String, Object> param) {
+//		Integer month = Integer.parseInt(param.get("month").toString())-1;
+//		if (month < 0) {
+//			Integer year = Integer.parseInt(param.get("year").toString())-1;
+//			param.put("createMonth", String.valueOf(year).substring(2,4) + "0" + month);
+//		}else if (month > 10) {
+//			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
+//		}else {
+//			param.put("createMonth", param.get("year").toString().substring(2, 4) + "0" + month.toString());
+//		}
+//	}
 	
 	private void receiptDateTran(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString())+1;
@@ -370,8 +336,16 @@ public class ReportCollectionRateController {
 			//收款达成率总计
 			String totalCollectionRate="";
 			
+			//3位数逗号隔开
 			DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-
+			
+			//区域code转name
+			Map<String, String> mapValue = new LinkedHashMap<String, String>();
+			List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList("SALE_AREA");
+			for (SystemCodeEntity SystemCodeEntity : tmscodels) {
+				mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+			}
+			
 			int RowIndex = 1;
 			for(int i=0;i<newList.size();i++){	
 				ReportCollectionRateEntity entity = newList.get(i);
@@ -380,7 +354,7 @@ public class ReportCollectionRateController {
 				Cell cel0 = row.createCell(0);
 				cel0.setCellValue(entity.getSellerName());
 				Cell cel1 = row.createCell(1);
-				cel1.setCellValue(entity.getArea());
+				cel1.setCellValue(mapValue.get(entity.getArea()));
 				Cell cel2 = row.createCell(2);
 				cel2.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getReceiptWithinOneYear()==null?0d:entity.getReceiptWithinOneYear())));
 				Cell cel3 = row.createCell(3);

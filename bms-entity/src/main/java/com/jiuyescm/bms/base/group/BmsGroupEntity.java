@@ -21,7 +21,7 @@ public class BmsGroupEntity implements IEntity {
 	private Timestamp createTime;
 	private String lastModifier;
 	private Timestamp lastModifyTime;
-	private int areaGroupId;
+	private String areaCode;
 	public int getId() {
 		return id;
 	}
@@ -76,11 +76,12 @@ public class BmsGroupEntity implements IEntity {
 	public void setGroupCode(String groupCode) {
 		this.groupCode = groupCode;
 	}
-	public int getAreaGroupId() {
-		return areaGroupId;
+	public String getAreaCode() {
+		return areaCode;
 	}
-	public void setAreaGroupId(int areaGroupId) {
-		this.areaGroupId = areaGroupId;
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
 	}
+
 	
 }

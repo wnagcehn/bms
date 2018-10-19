@@ -256,8 +256,8 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		XxlJobLogger.log("-->"+entity.getId()+"bms计算");
 		try{
 			if(validateData(entity, feeEntity)){
-				XxlJobLogger.log(entity.getIsCalculated());
-				XxlJobLogger.log(entity.getRemark());
+				XxlJobLogger.log("计算状态"+entity.getIsCalculated());
+				XxlJobLogger.log("计算信息"+entity.getRemark());
 				if(mapCusPrice.containsKey(entity.getCustomerId())){
 					entity.setCalculateTime(JAppContext.currentTimestamp());
 					feeEntity.setCalculateTime(entity.getCalculateTime());
