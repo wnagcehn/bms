@@ -68,18 +68,16 @@ public class ReportReceiptTargetController {
 	
 	@DataProvider
 	public Page<ReportReceiptTargetEntity> query(Page<ReportReceiptTargetEntity> page, Map<String, Object> parameter) {
-		
-		if(parameter==null){
-			parameter=new HashMap<String, Object>();
-		}
-		
-		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("RECEIPT_TARGET");
-		for(SystemCodeEntity code:systemCodeList){
-			parameter.put(code.getCode(), code.getExtattr1());
-		}
-		
-		//指定的异常商家
-		try {			
+		try {
+			if(parameter==null){
+				parameter=new HashMap<String, Object>();
+			}		
+			List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("RECEIPT_TARGET");
+			for(SystemCodeEntity code:systemCodeList){
+				parameter.put(code.getCode(), code.getExtattr1());
+			}
+			
+			//指定的异常商家
 			Map<String,String> customerMap=customerMap();;
 			Map<String, Object> map= new HashMap<String, Object>();
 			map.put("groupCode", "error_customer");
@@ -92,32 +90,25 @@ public class ReportReceiptTargetController {
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
 				parameter.put("billList", billList);
-			}	
+			}
+			
+			createMonthTran2(parameter);
+			createMonthTran1To2(parameter);
+			createMonthTran1(parameter);
+			receiptDateTran(parameter);
+			
+			PageInfo<ReportReceiptTargetEntity> tmpPageInfo =reportReceiptTargetService.queryAll(parameter, page.getPageNo(), page.getPageSize());
+			if (tmpPageInfo != null) {
+				page.setEntities(tmpPageInfo.getList());
+				page.setEntityCount((int) tmpPageInfo.getTotal());
+			}
+			return page;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		//时间转换
-		createMonthTran2(parameter);
-		createMonthTran1To2(parameter);
-		createMonthTran1(parameter);
-		receiptDateTran(parameter);
-		
-/*		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-		if (null != groupUser) {
-			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-			if (userIds.size()>0) {
-				parameter.put("userIds", userIds);*/
-				PageInfo<ReportReceiptTargetEntity> tmpPageInfo =reportReceiptTargetService.queryAll(parameter, page.getPageNo(), page.getPageSize());
-				if (tmpPageInfo != null) {
-					page.setEntities(tmpPageInfo.getList());
-					page.setEntityCount((int) tmpPageInfo.getTotal());
-				}
-		/*		
-			}
-		}*/
-		
 		return page;
 	}
 	
@@ -230,13 +221,13 @@ public class ReportReceiptTargetController {
 			
 		if(param==null){
 			param=new HashMap<String, Object>();
-		}	
-		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("RECEIPT_TARGET");
-		for(SystemCodeEntity code:systemCodeList){
-			param.put(code.getCode(), code.getExtattr1());
-		}		
-		//指定的异常商家
-		try {			
+		}			
+		try {					
+			List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("RECEIPT_TARGET");
+			for(SystemCodeEntity code:systemCodeList){
+				param.put(code.getCode(), code.getExtattr1());
+			}
+			//指定的异常商家
 			Map<String,String> customerMap=customerMap();;
 			Map<String, Object> map= new HashMap<String, Object>();
 			map.put("groupCode", "error_customer");
@@ -249,29 +240,19 @@ public class ReportReceiptTargetController {
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
 				param.put("billList", billList);
-			}	
+			}
+			
+			//时间转换
+			createMonthTran2(param);
+			createMonthTran1To2(param);
+			createMonthTran1(param);
+			receiptDateTran(param);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//时间转换
-		createMonthTran2(param);
-		createMonthTran1To2(param);
-		createMonthTran1(param);
-		receiptDateTran(param);
-		
-		List<ReportReceiptTargetEntity> list=new ArrayList<ReportReceiptTargetEntity>();
-/*		BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-		if (null != groupUser) {
-			List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
-			if (userIds.size()>0) {
-				parameter.put("userIds", userIds);*/
-				PageInfo<ReportReceiptTargetEntity> tmpPageInfo =reportReceiptTargetService.queryAll(param, 0, Integer.MAX_VALUE);
-				list=tmpPageInfo.getList();
-				/*		
-			}
-		}*/
+		PageInfo<ReportReceiptTargetEntity> tmpPageInfo =reportReceiptTargetService.queryAll(param, 0, Integer.MAX_VALUE);
+		List<ReportReceiptTargetEntity> list=tmpPageInfo.getList();
 		
 		logger.info("收款指标报表导出...");
 		Sheet sheet = poiUtil.getXSSFSheet(workbook,"超期未收款占比");
