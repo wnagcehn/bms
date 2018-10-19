@@ -145,7 +145,8 @@
      
      <insert id="saveMaterial" parameterType="java.util.Map">
      	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id)
-     	 select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2*100)/100 as percent,#{taskId} 
+     														    
+     	 select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId} 
      	 from
 			(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num1 from bms_marking_material a 
 			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
