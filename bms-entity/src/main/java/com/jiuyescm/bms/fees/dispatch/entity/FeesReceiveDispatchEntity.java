@@ -173,6 +173,9 @@ public class FeesReceiveDispatchEntity implements IEntity {
  	private String storageCal;
  	private String storageRemark;
  	
+	private String serviceTypeCode;
+	private String serviceTypeName;
+ 	
     public String getDispatchCal() {
 		return dispatchCal;
 	}
@@ -795,6 +798,22 @@ public class FeesReceiveDispatchEntity implements IEntity {
 
 	public void setDiscountAmount(Double discountAmount) {
 		this.discountAmount = discountAmount;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getServiceTypeName() {
+		return serviceTypeName;
+	}
+
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
 	}	
 	
 	

@@ -923,6 +923,7 @@ public class BuinessDataExportController extends BaseController {
 		headMapDict.put("totalQty", "商品数量");
 		headMapDict.put("productDetail", "商品明细");
 		headMapDict.put("carrierName", "计费物流商");
+		headMapDict.put("serviceTypeName", "物流产品类型");
 		headMapDict.put("receiver", "收件人");
 		headMapDict.put("receiveProvice", "收件人省");
 		headMapDict.put("receiveCity", "收件人市");
@@ -970,6 +971,7 @@ public class BuinessDataExportController extends BaseController {
 			map.put("totalQty", entity.getTotalQuantity() == null ? 0 : entity.getTotalQuantity());
 			map.put("productDetail", entity.getProductDetail());
 			map.put("carrierName", entity.getCarrierName());
+			map.put("serviceTypeName", entity.getServiceTypeName());
 			map.put("receiver", entity.getReceiveName());
 			map.put("receiveProvice", entity.getToProvinceName());
 			map.put("receiveCity", entity.getToCityName());

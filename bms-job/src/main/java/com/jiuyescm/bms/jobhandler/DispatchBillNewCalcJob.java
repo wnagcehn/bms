@@ -768,6 +768,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				feeEntity.setContinuedPrice(price.getContinuedPrice());   //续重价格	
 				feeEntity.setPriceId(price.getId()+"");
 				feeEntity.setBizType(entity.getExtattr1());//判断是否是遗漏数据
+				feeEntity.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 				feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setRemark("计算成功");
@@ -1428,6 +1429,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		
 		String temperature_code = StringUtil.isEmpty(entity.getTemperatureTypeCode())?"":entity.getTemperatureTypeCode();
 		String service_type_code = StringUtil.isEmpty(entity.getServiceTypeCode())?"":entity.getServiceTypeCode();
+		String adjust_service_type_code = StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?service_type_code:entity.getAdjustServiceTypeCode();
 		for (BmsQuoteDispatchDetailVo vo : list) {
 			//=====================================温度判断=================================
 			String temperature_quote = StringUtil.isEmpty(vo.getTemperatureTypeCode())?"":vo.getTemperatureTypeCode();
@@ -1436,11 +1438,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			if(!temperature_code.equals(temperature_quote) && StringUtils.isNotEmpty(temperature_quote)){
 				continue;//温度不匹配
 			}
-			if(!service_type_code.equals(service_type_quote) && StringUtils.isNotEmpty(service_type_quote)){
+			if(!adjust_service_type_code.equals(service_type_quote) && StringUtils.isNotEmpty(service_type_quote)){
 				continue;//仓库不匹配
 			}
 			Integer temperaturelevel = temperature_code.equals(temperature_quote)?1:2; //温度优先级
-			Integer serviceTypelevel = service_type_code.equals(service_type_quote)?1:2;		//仓库优先级
+			Integer serviceTypelevel = adjust_service_type_code.equals(service_type_quote)?1:2;		//仓库优先级
 			
 			Integer temLevel = Integer.valueOf(temperaturelevel.toString()+serviceTypelevel.toString());
 			if(temLevel<level){
