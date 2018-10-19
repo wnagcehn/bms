@@ -13,7 +13,7 @@
       <PropertyDef name="area">
         <Property name="label">区域</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#findAreaEnumList&quot;).getResult(&quot;&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="year">
@@ -44,6 +44,9 @@
       <PropertyDef name="area">
         <Property></Property>
         <Property name="label">区域</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="unReceipt2">
         <Property name="dataType">Double</Property>
