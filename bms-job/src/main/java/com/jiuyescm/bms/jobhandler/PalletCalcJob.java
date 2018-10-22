@@ -526,6 +526,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		try{
 			if(feesNos.size()>0){
 				feesMap.put("feesNos", feesNos);
+				feesMap.put("subjectId", SubjectId);
 				feesReceiveStorageService.deleteBatch(feesMap);
 			}
 		}
