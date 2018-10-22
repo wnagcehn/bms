@@ -1239,16 +1239,16 @@ public class BuinessDataExportController extends BaseController {
 			FastDateFormat sdf = FastDateFormat.getInstance("yyyy/MM/dd");
 			//FastDateFormat sd = FastDateFormat.getInstance("yyyy-MM-dd");
 			//
-			Set<Timestamp> set = new TreeSet<Timestamp>();
+			Set<String> set = new TreeSet<String>();
 
 			// 商品按托存储
-			List<FeesReceiveStorageEntity> palletList = feesReceiveStorageService.queryPreBillStorage(parameter);
-			for (FeesReceiveStorageEntity entity : palletList) {
-				conIndex++;
-				if (!set.contains(sdf.format(entity.getCreateTime()))) {
-					set.add(sdf.format(entity.getCreateTime()));
-				}
-			}
+//			List<FeesReceiveStorageEntity> palletList = feesReceiveStorageService.queryPreBillStorage(parameter);
+//			for (FeesReceiveStorageEntity entity : palletList) {
+//				conIndex++;
+//				if (!set.contains(sdf.format(entity.getCreateTime()))) {
+//					set.add(sdf.format(entity.getCreateTime()));
+//				}
+//			}
 			
 			// 商品按件存储
 			List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
@@ -1484,22 +1484,21 @@ public class BuinessDataExportController extends BaseController {
 			double cwpackcost = 0.0;
 			double ldCost = 0.0;
 			double colcost = 0.0;
-<<<<<<< HEAD
-			double prodcost = 0.0;
-			double rowProCost = 0.0;
-			double colProCost = 0.0;
-=======
 			//double prodcost = 0.0;
 			double paCost = 0.0;
 			double incost = 0.0;
 			double incolCost = 0.0;
 			double outcost = 0.0;
 			double outcolCost = 0.0;
->>>>>>> feature/v1.3.12
+			double rowProCost = 0.0;
+
+
+
 			
 			for (int i = 0; i < dateList.size(); i++) {
 				double rowCost = 0.0;
 				String timestamp = dateList.get(i);
+				//String createTime = sdf.format(timestamp);
 				//String createTime = timestamp;
 				Row row = sheet.createRow(rowIndex);
 				rowIndex++;
@@ -1511,77 +1510,17 @@ public class BuinessDataExportController extends BaseController {
 				Cell cell41 = row.createCell(1);
 				cell41.setCellValue(timestamp);
 
-<<<<<<< HEAD
-				// 库存板数
-				for (FeesReceiveStorageEntity entity : palletList) {
-					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
-						String tempretureType = entity.getTempretureType();
-						Integer quantity = entity.getQuantity();
-						// 托数（冷冻、冷藏、恒温、常温）
-						if ("LD".equals(tempretureType)) {
-							Cell cell42 = row.createCell(2);
-							cell42.setCellValue(quantity);
-						} else if ("LC".equals(tempretureType)) {
-							Cell cell42 = row.createCell(3);
-							cell42.setCellValue(quantity);
-						} else if ("HW".equals(tempretureType)) {
-							Cell cell42 = row.createCell(4);
-							cell42.setCellValue(quantity);
-						} else if ("CW".equals(tempretureType)) {
-							Cell cell42 = row.createCell(5);
-							cell42.setCellValue(quantity);
-						}
-
-						// 列小计
-						double cost = entity.getCost().doubleValue();
-						if ("LD".equals(tempretureType)) {
-							Cell cell49 = row.createCell(11-move1);
-							cell49.setCellValue(cost);
-							ldcost = ldcost + cost;
-						} else if ("LC".equals(tempretureType)) {
-							Cell cell49 = row.createCell(12-move1);
-							cell49.setCellValue(cost);
-							lccost = lccost + cost;
-						} else if ("HW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(13-move1);
-							cell49.setCellValue(cost);
-							hwcost = hwcost + cost;
-						} else if ("CW".equals(tempretureType)) {
-							Cell cell49 = row.createCell(14-move1);
-							cell49.setCellValue(cost);
-							cwcost = cwcost + cost;
-						}
-						// 行小计
-						rowCost = rowCost + cost;
-					}
-				}
-				
-=======
->>>>>>> feature/v1.3.12
 				Integer index = new Integer(0);
 				double rowcolCost = 0.0;
 				double cwCost = 0.0;
-<<<<<<< HEAD
-				// 耗材
-				for (FeesReceiveStorageEntity entity : packList) {
-					
-					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
-						
-						double materialCost = entity.getCost().doubleValue();
-						//1.常温--常温
-						//2.冷冻--冷冻、冷藏、恒温
-						if ("CW".equals(entity.getTempretureType())) {
-							Cell cell46 = row.createCell(6);
-							cell46.setCellValue(entity.getQuantity());
-=======
+				
 				int pIndex = 0;
 				
 				// 库存板数
 				for (FeesReceiveStorageEntity entity : disposalList) {
-					if (entity.getCreateTime().equals(timestamp)) {
+					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
 						//商品
 						if ("product".equals(entity.getBizType())) {
->>>>>>> feature/v1.3.12
 							
 							String tempretureType = entity.getTempretureType();
 							Integer quantity = entity.getQuantity();
@@ -1679,74 +1618,6 @@ public class BuinessDataExportController extends BaseController {
 						incost = 0.0;
 					}
 				}
-
-				// 耗材
-//				for (FeesReceiveStorageEntity entity : packList) {
-//					
-//					if (entity.getCreateTime().equals(timestamp)) {
-//						
-//						double materialCost = entity.getCost().doubleValue();
-//						//1.常温--常温
-//						//2.冷冻--冷冻、冷藏、恒温
-//						if ("CW".equals(entity.getTempretureType())) {
-//							Cell cell46 = row.createCell(6);
-//							cell46.setCellValue(entity.getQuantity());
-//							
-//							Cell cell49 = row.createCell(15-move1);
-//							cell49.setCellValue(materialCost);
-//							//累加行
-//							cwCost = cwCost+materialCost;
-//							//累加列
-//							cwpackcost = cwpackcost+materialCost;
-//						}else {
-//							Cell cell47 = row.createCell(7);
-//							cell47.setCellValue(entity.getQuantity()+index);
-//							index = entity.getQuantity()+index;
-//							
-//							Cell cell50 = row.createCell(16-move1);
-//							cell50.setCellValue(materialCost+ldCost);
-//							//累加行
-//							ldCost = materialCost+ldCost;
-//							//累加列
-//							colcost = colcost + materialCost;
-//						}
-//						rowcolCost = cwCost+ldCost;
-//					}else {
-//						ldCost = 0.0;
-//					}
-//				}
-				
-<<<<<<< HEAD
-				Integer qty = new Integer(0);
-				double cCost = 0.0;
-				double rowTotalCost = 0.0;
-				double colTotalCost = 0.0;
-				if (newIndex > 0) {
-					//商品存储费（按件）
-					for (FeesReceiveStorageEntity entity : itemsList) {
-						if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
-							//库存件数
-							double productCost = entity.getCost().doubleValue();
-							Cell cell60 = row.createCell(8);
-							cell60.setCellValue(entity.getQuantity()+qty);
-							//件数累加
-							qty = qty+entity.getQuantity();
-							//存储费按件小计
-							Cell cell61 = row.createCell(17);
-							cell61.setCellValue(productCost+cCost);
-							//累加行
-							cCost = cCost + productCost;
-							rowProCost = rowProCost + productCost;
-							//累加列
-							ccfcost = ccfcost+productCost;
-						}else {
-							rowProCost = 0.0;
-						}
-					}	
-				}		
-				
-				//行总的+存储费（托）
-=======
 				//处置费
 //				for (FeesReceiveStorageEntity entity : disposalList) {
 //					if (entity.getCreateTime().equals(timestamp)) {
@@ -1776,24 +1647,36 @@ public class BuinessDataExportController extends BaseController {
 //					}
 //				}
 				
+				Integer qty = new Integer(0);
+				double cCost = 0.0;
+				double rowTotalCost = 0.0;
+				double colTotalCost = 0.0;
+				
 				if (newIndex > 0) {
 					//商品存储费（按件）
 					for (FeesReceiveStorageEntity entity : itemsList) {
-						if (entity.getCreateTime().equals(timestamp)) {
+						if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
 							//库存件数
 							double productCost = entity.getCost().doubleValue();
 							Cell cell60 = row.createCell(8);
-							cell60.setCellValue(entity.getQuantity());
+							cell60.setCellValue(entity.getQuantity()+qty);
+							//件数累加
+							qty = qty+entity.getQuantity();
 							//存储费按件小计
 							Cell cell61 = row.createCell(17);
-							cell61.setCellValue(productCost);
-							rowCost = rowCost+productCost;
+							cell61.setCellValue(productCost+cCost);
+							//累加行
+							cCost = cCost + productCost;
+							rowProCost = rowProCost + productCost;
+							//累加列
 							ccfcost = ccfcost+productCost;
+						}else {
+							rowProCost = 0.0;
 						}
-					}
-				}
-			
->>>>>>> feature/v1.3.12
+					}	
+				}		
+				
+				//行总的+存储费（托）
 				rowCost = rowCost+rowcolCost;
 				//行总的+存储费（件）
 				rowCost = rowCost+cCost;
