@@ -68,6 +68,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private String externalProductNo;
 	// 数量
 	private Integer quantity;
+	//调整数量
+	private Integer adjustNum;
 	// 单位
 	private String unit;
 	// 重量
@@ -141,7 +143,14 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private String instockType;
 	//收货确定时间
 	private Timestamp instockDate;
-	
+	// 首量
+	private Double firstNum;
+	// 首价
+	private Double firstPrice;
+	// 续量
+	private Double continueNum;
+	// 续价
+	private Double continuePrice;
 	
 	public Long getId() {
 		return id;
@@ -443,18 +452,13 @@ public class FeesReceiveStorageEntity implements IEntity {
 		this.externalProductNo = externalProductNo;
 	}
 
-	/**
-	 * 数量
-	 */
+
+	
+
 	public Integer getQuantity() {
-		return this.quantity;
+		return quantity;
 	}
 
-	/**
-	 * 数量
-	 * 
-	 * @param quantity
-	 */
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
@@ -907,6 +911,46 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setInstockDate(Timestamp instockDate) {
 		this.instockDate = instockDate;
+	}
+
+	public Integer getAdjustNum() {
+		return adjustNum;
+	}
+
+	public void setAdjustNum(Integer adjustNum) {
+		this.adjustNum = adjustNum;
+	}
+
+	public Double getFirstNum() {
+		return firstNum;
+	}
+
+	public void setFirstNum(Double firstNum) {
+		this.firstNum = firstNum;
+	}
+
+	public Double getFirstPrice() {
+		return firstPrice;
+	}
+
+	public void setFirstPrice(Double firstPrice) {
+		this.firstPrice = firstPrice;
+	}
+
+	public Double getContinueNum() {
+		return continueNum;
+	}
+
+	public void setContinueNum(Double continueNum) {
+		this.continueNum = continueNum;
+	}
+
+	public Double getContinuePrice() {
+		return continuePrice;
+	}
+
+	public void setContinuePrice(Double continuePrice) {
+		this.continuePrice = continuePrice;
 	}
 	
 	

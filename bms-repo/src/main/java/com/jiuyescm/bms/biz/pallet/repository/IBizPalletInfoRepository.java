@@ -21,8 +21,7 @@ public interface IBizPalletInfoRepository {
 
     BizPalletInfoEntity update(BizPalletInfoEntity entity);
 
-	BizPalletInfoEntity delete(BizPalletInfoEntity entity);
-	
+	int delete(List<BizPalletInfoEntity> lists);	
 	/**
 	 * 重算
 	 * @param list
@@ -45,5 +44,7 @@ public interface IBizPalletInfoRepository {
 	 * @return
 	 */
 	PageInfo<BizPalletInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
+
+
 
 }

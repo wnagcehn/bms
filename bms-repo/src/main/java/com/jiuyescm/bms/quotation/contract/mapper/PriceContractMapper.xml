@@ -437,11 +437,11 @@
     </select>
     
     <select id="queryByCustomerIdAndBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
-    	select DISTINCT b.subject_id as subjectId,c.extattr1 as carrierId,c.code_name as carrierName from price_contract_info a
+    	select DISTINCT b.subject_id as subjectId,c.extattr1 as carrierId,c.code_name as carrierName,'bms' as customerType  from price_contract_info a
 		inner join price_contract_discount_item b on a.contract_code = b.contract_code
 		inner join system_code c on b.subject_id = c.`code`
 		where a.customerId = #{customerId} and b.biz_type_code = #{bizTypeCode}  and a.contract_state='1' 
-		and a.contract_type_code='CUSTOMER_CONTRACT' and b.del_flag=0;
+		and a.contract_type_code='CUSTOMER_CONTRACT' and b.del_flag=0
     </select>
     
     <select id="queryTempByContractCodeAndSubjectId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity">

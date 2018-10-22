@@ -50,18 +50,18 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		p.customer_id, p.customer_name, p.temperature_type_code, 
 		p.pallet_num, p.adjust_pallet_num, p.fees_no, p.creator, p.creator_id, 
 		p.create_time, p.last_modifier, p.last_modifier_id, p.last_modify_time, 
-		s.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
+		p.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
 		s.cost as cost, s.subject_code as subjectCode
 		from biz_pallet_info p
 		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
-		WHERE 1=1
+		WHERE 1=1 and p.del_flag='0'
         	<if test=" id != null and id !='' ">
 				and p.id = #{id}
 			</if>
         	<if test=" curTime != null and curTime !='' ">
 				and p.cur_time = #{curTime}
 			</if>
-        	<if test=" bizType != null and bizType !='' ">
+        	<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
 				and p.biz_type = #{bizType}
 			</if>
         	<if test=" warehouseCode != null and warehouseCode !='' ">
@@ -77,12 +77,9 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
 			</if>
         	<if test=" isCalculated != null and isCalculated !='' ">
-				and s.is_calculated = #{isCalculated}
+				and p.is_calculated = #{isCalculated}
 			</if>
-        	<if test=" delFlag != null and delFlag !='' ">
-				and p.del_flag = #{delFlag}
-			</if>
-			<if test=" subjectCode != null and subjectCode !='' ">
+			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 				and s.subject_code = #{subjectCode}
 			</if>
 			<if test=" feesNo != null and feesNo !='' ">
@@ -166,8 +163,8 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 				del_flag = #{delFlag,jdbcType=VARCHAR},
 			</if>
         </trim>
-        where cur_time=#{curTime} and customer_name=#{customerId}
-        and warehouse_name=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
+        where cur_time=#{curTime} and customer_id=#{customerId}
+        and warehouse_code=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
         and biz_type=#{bizType}
     </update>
     
@@ -180,10 +177,10 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
     <!-- 分组统计 -->
     <select id="groupCount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
-    	select i.customer_name, i.warehouse_name, s.subject_code, s.is_calculated, COUNT(*) as totalNum from fees_receive_storage s
+    	select i.customer_name, i.warehouse_name, s.subject_code as subjectCode, s.is_calculated, COUNT(*) as totalNum from fees_receive_storage s
 		LEFT JOIN biz_pallet_info i on i.fees_no=s.fees_no and i.del_flag = '0'
-		WHERE 1=1
-		<if test=" bizType != null and bizType !='' ">
+		WHERE 1=1 and s.subject_code != 'outstock_pallet_vm'
+		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
 			and i.biz_type = #{bizType}
 		</if>
        	<if test=" warehouseCode != null and warehouseCode !='' ">
@@ -204,7 +201,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
        	<if test=" delFlag != null and delFlag !='' ">
 			and i.del_flag = #{delFlag}
 		</if>
-		<if test=" subjectCode != null and subjectCode !='' ">
+		<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 			and s.subject_code = #{subjectCode}
 		</if>
 		GROUP BY i.customer_name, i.warehouse_code, s.subject_code, s.is_calculated
@@ -216,4 +213,5 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         delete from biz_pallet_info 
         where id = #{id}
     </delete>
+    
 </mapper>

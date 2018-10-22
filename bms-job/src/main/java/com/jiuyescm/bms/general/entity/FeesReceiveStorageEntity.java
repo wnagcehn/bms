@@ -103,6 +103,15 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private String delFlag;
 	//计算备注
 	private String calcuMsg;
+	
+	// 首量
+	private Double firstNum;
+	// 首价
+	private Double firstPrice;
+	// 续量
+	private Double continueNum;
+	// 续价
+	private Double continuePrice;
 
 	public String getBizId() {
 		return bizId;
@@ -746,6 +755,38 @@ public class FeesReceiveStorageEntity implements IEntity {
 
 	public void setCalcuMsg(String calcuMsg) {
 		this.calcuMsg = calcuMsg;
+	}
+
+	public Double getFirstNum() {
+		return firstNum;
+	}
+
+	public void setFirstNum(Double firstNum) {
+		this.firstNum = firstNum;
+	}
+
+	public Double getFirstPrice() {
+		return firstPrice;
+	}
+
+	public void setFirstPrice(Double firstPrice) {
+		this.firstPrice = firstPrice;
+	}
+
+	public Double getContinueNum() {
+		return continueNum;
+	}
+
+	public void setContinueNum(Double continueNum) {
+		this.continueNum = continueNum;
+	}
+
+	public Double getContinuePrice() {
+		return continuePrice;
+	}
+
+	public void setContinuePrice(Double continuePrice) {
+		this.continuePrice = continuePrice;
 	}
 
 

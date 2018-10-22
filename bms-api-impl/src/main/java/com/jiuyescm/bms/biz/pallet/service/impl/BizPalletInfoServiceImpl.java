@@ -67,8 +67,8 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
 	 * @param entity
 	 */
     @Override
-    public BizPalletInfoEntity delete(BizPalletInfoEntity entity) {
-        return bizPalletInfoRepository.delete(entity);
+    public int delete(List<BizPalletInfoEntity> list) {
+        return bizPalletInfoRepository.delete(list);
     }
     
     /**

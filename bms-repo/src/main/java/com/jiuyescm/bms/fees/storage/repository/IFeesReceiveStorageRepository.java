@@ -30,6 +30,11 @@ public interface IFeesReceiveStorageRepository {
     public FeesReceiveStorageEntity save(FeesReceiveStorageEntity entity);
 
     public FeesReceiveStorageEntity update(FeesReceiveStorageEntity entity);
+    
+	/**
+	 * 根据条件查询单个费用
+	 */
+    FeesReceiveStorageEntity queryOne(Map<String, Object> condition);
 
     public void delete(Long id);
 
@@ -204,4 +209,18 @@ public interface IFeesReceiveStorageRepository {
 	 * @return
 	 */
 	List<FeesReceiveStorageEntity> queryPreBillStorageByItems(Map<String, Object> parameter);
+	
+	/**
+	 * 预账单处置费
+	 * @param parameter
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryPreBillPallet(Map<String, Object> parameter);
+	
+	/**
+	 * 查询计算失败的费用
+	 * @param parameter
+	 * @return
+	 */
+	List<FeesReceiveStorageEntity> queryCalculateFail(Map<String, Object> parameter);
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.ReportCollectionRateMapper" >
+	
+    <select id="queryAmount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportCollectionRateEntity">     
+		select 
+				 t.seller_name,
+				 sum(case t.bill_year when 1 then t.receipt_amount end) receiptWithinOneYear,
+				 sum(case t.bill_year when 2 then t.receipt_amount end) receiptBetweenOneAndTwoYear,
+				 sum(case t.bill_year when 3 then t.receipt_amount end) receiptOverTwoYear,
+				 sum(case t.bill_year when 4 then t.receipt_amount end) handoverCustomerReceipt,
+				 sum(receipt_amount) receiptTotal,
+				 t1.receipt_target receiptTarget,
+				 t.area_code area
+		from
+		(select a.seller_name,b.receipt_amount,u.area_code,a.create_month,
+				CASE
+						when c.origin_seller_id is not null and a.seller_id!=c.origin_seller_id then 4
+						else
+							case
+								when TIMESTAMPDIFF(YEAR,a.bill_start_time,b.receipt_date)=0 then 1
+								when TIMESTAMPDIFF(YEAR,a.bill_start_time,b.receipt_date)=1 then 2
+								when TIMESTAMPDIFF(YEAR,a.bill_start_time,b.receipt_date)>=2 then 3
+							end 
+				end bill_year
+		from bill_check_info a
+		left join bill_check_receipt b on a.id = b.bill_check_id
+		left join pub_customer_sale_mapper c on c.customer_name = a.invoice_name
+		left join bms_group_user u on a.seller_name=u.user_name
+		where 1=1
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+				<foreach collection="billList" item="item" separator="," open="(" close=")">
+					#{item}
+				</foreach>
+		</if>
+		and b.receipt_date >= #{receiptDate} 
+		and b.receipt_date <![CDATA[<]]> #{receiptEndDate}
+		<if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and u.area_code=#{areaCode}
+		</if>
+		) t
+		LEFT JOIN report_seller_receipt_target t1 on t1.seller_name=t.seller_name and t1.del_flag='0' and t1.create_month = t.create_month
+		group by t.seller_name
+    </select>
+
+</mapper>

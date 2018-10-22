@@ -261,6 +261,12 @@
         </Property>
         <Property name="defaultValue">GENERAL</Property>
       </PropertyDef>
+      <PropertyDef name="carrierid">
+        <Property name="label">物流商ID</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubCarrierServicetypeController#getCarrierName&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtPriceCondition">
       <PropertyDef name="startWarehouseId">
@@ -279,6 +285,11 @@
         <Property></Property>
         <Property name="visible">false</Property>
         <Property name="label">区名</Property>
+      </PropertyDef>
+      <PropertyDef name="serviceTypeName">
+        <Property></Property>
+        <Property name="visible">false</Property>
+        <Property name="label">物流产品类型</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtAllDeliver">
@@ -790,6 +801,12 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;QUO_MODUS_RECEIVE_DISPATCH&quot;)}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="serviceTypeCode">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
+      <PropertyDef name="servicename">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -996,7 +1013,8 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
 with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
-		templateCode:data.current.get(&quot;templateCode&quot;)&#xD;
+		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+		carrierid:data.current.get(&quot;carrierid&quot;)&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -1018,8 +1036,8 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
           <Property name="width">120</Property>
         </DataColumn>
         <DataColumn>
-          <Property name="property">deliver</Property>
-          <Property name="name">deliver</Property>
+          <Property name="property">carrierid</Property>
+          <Property name="name">carrierid</Property>
         </DataColumn>
         <DataColumn name="priceType">
           <Property name="property">priceType</Property>
@@ -1042,6 +1060,11 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
         <DataColumn name="lastModifyTime">
           <Property name="property">lastModifyTime</Property>
         </DataColumn>
+        <DataColumn>
+          <Property name="property">deliver</Property>
+          <Property name="name">deliver</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
       </DataGrid>
     </Container>
     <TabControl>
@@ -1060,6 +1083,7 @@ var startWarehouseId=tmpFormCondition.current.get(&quot;startWarehouseId&quot;);
 var provinceId=tmpFormCondition.current.get(&quot;provinceId&quot;);&#xD;
 var cityId=tmpFormCondition.current.get(&quot;cityId&quot;);&#xD;
 var areaId=tmpFormCondition.current.get(&quot;areaId&quot;);&#xD;
+var serviceTypeCode = tmpFormCondition.current.get(&quot;serviceTypeCode&quot;);&#xD;
 &#xD;
 with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
@@ -1068,7 +1092,9 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 		startWarehouseId:startWarehouseId,&#xD;
 		provinceId:provinceId,&#xD;
 		cityId:cityId,&#xD;
-		areaId:areaId&#xD;
+		areaId:areaId,&#xD;
+		carrierid:data.current.get(&quot;carrierid&quot;),&#xD;
+		serviceTypeCode:serviceTypeCode&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -1086,7 +1112,7 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
           <AutoForm id="priceFormCondition">
             <Property name="dataSet">dsPriceCondition</Property>
             <Property name="dataType">dtPriceCondition</Property>
-            <Property name="cols">220,140,140,140</Property>
+            <Property name="cols">220,140,140,140,220</Property>
             <AutoFormElement>
               <Property name="name">startWarehouseId</Property>
               <Property name="property">startWarehouseId</Property>
@@ -1118,6 +1144,26 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
               <Property name="labelWidth">40</Property>
               <Property name="showHint">false</Property>
               <Property name="trigger">ddropDownQueryPriceDistrict</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">serviceTypeName</Property>
+              <Property name="property">serviceTypeName</Property>
+              <Property name="editorWidth">200</Property>
+              <Property name="labelWidth">100</Property>
+              <Property name="showHint">false</Property>
+              <Property name="trigger">triggerServiceType2</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">serviceTypeCode</Property>
+              <Property name="property">serviceTypeCode</Property>
+              <Property name="editorWidth">100</Property>
+              <Property name="labelWidth">40</Property>
+              <Property name="showHint">false</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
               <Editor/>
             </AutoFormElement>
           </AutoForm>
@@ -1176,6 +1222,18 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
             <DataColumn name="continuedPrice">
               <Property name="property">continuedPrice</Property>
               <Property name="width">100</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">serviceTypeCode</Property>
+              <Property name="name">serviceTypeCode</Property>
+              <Property name="width">90</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="name">servicename</Property>
+              <Property name="property">servicename</Property>
+              <Property name="width">90</Property>
+              <Editor/>
             </DataColumn>
             <DataColumn name="timeliness">
               <Property name="property">timeliness</Property>
@@ -1331,5 +1389,54 @@ if (tmpSelectData != null) {&#xD;
 	this.get(&quot;parent&quot;).get(&quot;parent&quot;).hide(); // 关闭当前按子页面&#xD;
 }</ClientEvent>
     </Action>
+    <Trigger id="triggerServiceType2">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsGenericTemplate&quot;).getData();&#xD;
+&#xD;
+//调整物流商/实际物流商&#xD;
+var carrierid=data.current.get(&quot;carrierid&quot;);&#xD;
+&#xD;
+//alert(carrierid);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectServiceType2&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsPubCarrierServicetypeEntity.data&quot;);&#xD;
+subviewData.clear();&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsPubCarrierServicetypeEntityQuery.data&quot;).current;&#xD;
+&#xD;
+ds.set(&quot;carrierid&quot;,carrierid);&#xD;
+&#xD;
+&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsPubCarrierServicetypeEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelServiceType2&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelServiceType2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectServiceType2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsPriceCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        serviceTypeCode:data.get(&quot;servicecode&quot;),&#xD;
+		serviceTypeName:data.get(&quot;servicename&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">物流产品类型选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectServiceType2">
+          <Property name="subView">com.jiuyescm.bms.base.servicetype.view.ServicetypeLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

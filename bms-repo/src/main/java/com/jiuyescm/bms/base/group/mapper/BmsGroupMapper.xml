@@ -59,9 +59,11 @@
 	<select id="queryAllGroupId" parameterType="int" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		select * from  bms_group where FIND_IN_SET(id,getBmsGroup(#{groupId}))
 	</select>
+	
 	<select id="checkGroup" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity" resultType="int">
 		select count(*) from bms_group where group_code=#{groupCode} and biz_type=#{bizType}
 	</select>
+	
 	<select id="queryOne" parameterType="Map" resultMap="baseResultMap">
 		select * from  bms_group where 1=1
 		<if test="(groupCode != null and groupCode !='')" >
@@ -72,4 +74,13 @@
 		</if> 
 		limit 1
 	</select>
+	
+	<select id="findAreaEnumList" parameterType="Map" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		select group_code, group_name from bms_group 
+		WHERE parent_id = (select id from bms_group WHERE biz_type=#{bizType} and parent_id=0)
+		<if test="(groupCode != null and groupCode !='')" >
+			and group_code=#{groupCode}
+		</if>
+	</select>
+	
 </mapper>

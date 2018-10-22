@@ -102,6 +102,12 @@
       <PropertyDef name="bizTypeName">
         <Property name="label">业务类型</Property>
       </PropertyDef>
+      <PropertyDef name="discountType">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerType">
+        <Property></Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">
       <PropertyDef name="year">
@@ -605,12 +611,25 @@ if (data != null) {&#xD;
     <DataSetDropDown id="subjectCodeDataSetDropDown">
       <ClientEvent name="beforeExecute">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);&#xD;
 var bizType = entity.get(&quot;bizTypecode&quot;);&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
+&#xD;
+var createMonth=&quot;&quot;;&#xD;
+&#xD;
+if(month&lt;10){&#xD;
+	createMonth=year+&quot;-0&quot;+month;&#xD;
+}else{&#xD;
+	createMonth=year+&quot;-&quot;+month;&#xD;
+}&#xD;
+&#xD;
+&#xD;
 &#xD;
 if(bizType != undefined){&#xD;
 	var subDropDown = view.get(&quot;#subjectCodeDataSetDropDown&quot;);&#xD;
 	subDropDown.set(&quot;dataSet&quot;,&quot;dsAllSubjectCode&quot;);&#xD;
 	var parameter={&#xD;
-		bizTypeCode:bizType&#xD;
+		bizTypeCode:bizType,&#xD;
+		createMonth:createMonth&#xD;
 	};&#xD;
 	view.get(&quot;#dsAllSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;
@@ -633,13 +652,23 @@ arg.processDefault = false;</ClientEvent>
     <DataSetDropDown id="subjectCodeEditDataSetDropDown">
       <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
 var bizTypecode = entity.get(&quot;bizTypecode&quot;);&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
 var customerId = entity.get(&quot;customerId&quot;);&#xD;
+&#xD;
+if(month&lt;10){&#xD;
+	createMonth=year+&quot;-0&quot;+month;&#xD;
+}else{&#xD;
+	createMonth=year+&quot;-&quot;+month;&#xD;
+}&#xD;
+&#xD;
 if(bizTypecode != undefined){&#xD;
 	var subDropDown = view.get(&quot;#subjectCodeEditDataSetDropDown&quot;);&#xD;
 	subDropDown.set(&quot;dataSet&quot;,&quot;dsSubjectCode&quot;);&#xD;
 	var parameter={&#xD;
 		bizTypeCode:bizTypecode,&#xD;
-		customerId:customerId&#xD;
+		customerId:customerId,&#xD;
+		createMonth:createMonth&#xD;
 	};&#xD;
 	view.get(&quot;#dsSubjectCode&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;
@@ -652,7 +681,9 @@ if(bizTypecode != undefined){&#xD;
 data.set({&#xD;
 	subjectName:arg.selectedValue.get(&quot;carrierName&quot;),&#xD;
 	subjectCode:arg.selectedValue.get(&quot;subjectId&quot;),&#xD;
-	carrierId:arg.selectedValue.get(&quot;carrierId&quot;)&#xD;
+	carrierId:arg.selectedValue.get(&quot;carrierId&quot;),&#xD;
+	discountType:arg.selectedValue.get(&quot;discountType&quot;),&#xD;
+	customerType:arg.selectedValue.get(&quot;customerType&quot;)&#xD;
 });&#xD;
 arg.processDefault = false;</ClientEvent>
       <Property name="autoOpen">true</Property>
@@ -663,12 +694,22 @@ arg.processDefault = false;</ClientEvent>
     <DataSetDropDown id="bizTypeDataSetDropDown">
       <ClientEvent name="beforeExecute">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
 var customerId = entity.get(&quot;customerId&quot;);&#xD;
+var year=entity.get(&quot;year&quot;);&#xD;
+var month=entity.get(&quot;month&quot;);&#xD;
+var createMonth=&quot;&quot;;&#xD;
+&#xD;
+if(month&lt;10){&#xD;
+	createMonth=year+&quot;-0&quot;+month;&#xD;
+}else{&#xD;
+	createMonth=year+&quot;-&quot;+month;&#xD;
+}&#xD;
 &#xD;
 if(customerId != undefined){&#xD;
 	var subDropDown = view.get(&quot;#bizTypeDataSetDropDown&quot;);&#xD;
 	subDropDown.set(&quot;dataSet&quot;,&quot;dsBizType&quot;);&#xD;
 	var parameter={&#xD;
-		customerId:customerId&#xD;
+		customerId:customerId,&#xD;
+		createMonth:createMonth&#xD;
 	};&#xD;
 	view.get(&quot;#dsBizType&quot;).set(&quot;parameter&quot;,parameter).flushAsync();&#xD;
 }else{&#xD;

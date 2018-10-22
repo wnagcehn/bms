@@ -100,4 +100,11 @@ public interface IBizDispatchBillService {
 	 
 	 public List<BizDispatchBillEntity> queryNotCalculate(Map<String,Object> condition);
 	 
+	 /**
+	  * 根据运单号查询
+	  * @param condition
+	  * @return
+	  */
+	BizDispatchBillEntity queryByWayNo(Map<String, String> condition);
+	 
 }

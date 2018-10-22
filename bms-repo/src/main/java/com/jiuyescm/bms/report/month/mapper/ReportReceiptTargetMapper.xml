@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.ReportReceiptTargetMapper" >
+	
+	<select id="queryAll" parameterType="java.util.Map" resultType="com.jiuyescm.bms.report.month.entity.ReportReceiptTargetEntity">	
+		select m.seller_id as sellerId,m.seller_name as sellerName,n.area_code as area,m.unReceipt2,m.unReceipt1To2,m.unReceipt1,m.yeji2,m.yeji1To2,m.yeji1,
+		ROUND(IF(IFNULL(m.unReceipt2,0)-IFNULL(m.yeji2,0)*(1-#{RECEIPT_TARGET_2})>0,IFNULL(m.unReceipt2,0)-IFNULL(m.yeji2,0)*(1-#{RECEIPT_TARGET_2}),0)+
+		IF(IFNULL(m.unReceipt1To2,0)-IFNULL(m.yeji1To2,0)*(1-#{RECEIPT_TARGET_1TO2})>0,IFNULL(m.unReceipt1To2,0)-IFNULL(m.yeji1To2,0)*(1-#{RECEIPT_TARGET_1TO2}),0)+
+		IF(IFNULL(m.unReceipt1,0)-IFNULL(m.yeji1,0)*(1-#{RECEIPT_TARGET_1})>0,IFNULL(m.unReceipt1,0)-IFNULL(m.yeji1,0)*(1-#{RECEIPT_TARGET_1}),0),2) as receiptTarget
+		from (			
+			select 
+					a.seller_id,a.seller_name,
+					IFNULL(sum(case a.bill_month when 1 then IFNULL(a.un_receipt_amount,0)+IFNULL(b.delay_amount,0) end),0) unReceipt2,
+					IFNULL(sum(case a.bill_month when 2 then IFNULL(a.un_receipt_amount,0)+IFNULL(b.delay_amount,0) end),0) unReceipt1To2,
+					IFNULL(sum(case a.bill_month when 3 then IFNULL(a.un_receipt_amount,0)+IFNULL(b.delay_amount,0) end),0) unReceipt1,
+					IFNULL(sum(case a.bill_month when 1 then a.confirm_amount end),0) yeji2,
+					IFNULL(sum(case a.bill_month when 2 then a.confirm_amount end),0) yeji1To2,
+					IFNULL(sum(case a.bill_month when 3 then a.confirm_amount end),0) yeji1
+			 from
+			(select seller_name,seller_id,
+							sum(un_receipt_amount) as un_receipt_amount,
+							sum(confirm_amount) as confirm_amount,
+						case 
+							when create_month<![CDATA[<=]]>#{createMonthTran2} then 1
+							when create_month=#{createMonthTran1To2} then 2
+							when create_month=#{createMonthTran1} then 3
+						end bill_month
+			from bill_check_info where del_flag='0'
+			<if test="billList != null and billList != ''">
+				and invoice_name not in
+				<foreach collection="billList" item="item" separator="," open="(" close=")">
+		        	#{item}
+		        </foreach>
+			</if>
+			 group by seller_name,bill_month) a
+			left join 
+			(select a.seller_name,sum(b.receipt_amount) as delay_amount,
+							case 
+								when a.create_month<![CDATA[<=]]>#{createMonthTran2} then 1
+								when a.create_month=#{createMonthTran1To2} then 2
+								when a.create_month=#{createMonthTran1} then 3
+							end bill_month
+					from bill_check_info a
+							 left join bill_check_receipt b on a.id = b.bill_check_id
+							where a.del_flag='0' and b.del_flag='0' and b.receipt_date>=#{receiptDate}
+							<if test="billList != null and billList != ''">
+								and a.invoice_name not in
+								<foreach collection="billList" item="item" separator="," open="(" close=")">
+						        	#{item}
+						        </foreach>
+							</if>
+							group by a.seller_name,bill_month) b on a.seller_name = b.seller_name and a.bill_month=b.bill_month
+			group by a.seller_name) m
+			left join bms_group_user n on m.seller_id=n.user_id
+			where 1=1
+			<if test="(sellerName != null and sellerName !='')" >
+				and m.seller_name like CONCAT('%',#{sellerName},'%')
+			</if>
+			<if test="(area != null and area !='')" >
+				and n.area_code=#{area}
+			</if>	
+	</select>
+	
+	<insert id="saveList" parameterType="com.jiuyescm.bms.report.month.entity.ReportReceiptTargetEntity">
+		insert into report_seller_receipt_target(seller_id, seller_name, create_month, receipt_target, create_time,del_flag)
+        values (
+			#{sellerId,jdbcType=VARCHAR}, 
+			#{sellerName,jdbcType=VARCHAR}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{receiptTarget,jdbcType=DECIMAL}, 
+			current_timestamp(),
+			'0'
+		)
+	</insert>
+	
+	<delete id="delete" parameterType="java.util.Map">
+		  delete from report_seller_receipt_target where create_month = #{createMonth}
+	</delete>
+</mapper>

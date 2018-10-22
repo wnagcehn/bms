@@ -20,6 +20,9 @@ public class BmsGroupUserEntity implements IEntity {
 	private Timestamp createTime;
 	private String lastModifier;
 	private Timestamp lastModifyTime;
+	
+	private String areaCode;
+	private String groupCode;
 	public int getId() {
 		return id;
 	}
@@ -79,6 +82,19 @@ public class BmsGroupUserEntity implements IEntity {
 	}
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public String getAreaCode() {
+		return areaCode;
+	}
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+	public String getGroupCode() {
+		return groupCode;
+	}
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
 	}
 	
 }

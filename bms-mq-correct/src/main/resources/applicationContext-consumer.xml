@@ -6,8 +6,8 @@
         http://code.alibabatech.com/schema/dubbo
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 		<dubbo:application name="bms-mq-import" />
-		
  		<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}"/>
+ 		<dubbo:registry protocol="zookeeper" address="${dubbo.registry}"/>
 		<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" id = "bms"/>
 	
 		<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" />
@@ -31,7 +31,11 @@
 		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialInfoService"
 				version="1.0.0" id="pubMaterialInfoService" timeout="1200000" check="false"/>
 		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialSupplierService"
-				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/>
+				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/>	
+									
+		<dubbo:reference interface="com.jiuyescm.contract.quote.api.IContractDiscountService" 
+				version="1.0.0" id="contractDiscountService"   timeout="1200000" check="false" />
+		
 		
 		<dubbo:reference interface="com.jiuyescm.bms.calculate.base.IFeesCalcuService" 
 		  	 version="1.0.0" id="feesCalcuService" registry="bms"/>

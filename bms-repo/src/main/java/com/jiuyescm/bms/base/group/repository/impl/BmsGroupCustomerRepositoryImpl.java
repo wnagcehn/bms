@@ -20,7 +20,7 @@ public class BmsGroupCustomerRepositoryImpl extends MyBatisDao<BmsGroupCustomerE
 	public List<BmsGroupCustomerEntity> queryAllByGroupId(int groupId) {
 		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryAllByGroupId", groupId);
 	}
-
+	
 	@Override
 	public int addBatch(List<BmsGroupCustomerEntity> list) {
 		return this.insertBatch("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.insertEntity", list);

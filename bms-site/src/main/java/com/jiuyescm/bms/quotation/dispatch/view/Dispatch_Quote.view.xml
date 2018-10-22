@@ -281,6 +281,11 @@
         <Property name="visible">false</Property>
         <Property name="label">区名</Property>
       </PropertyDef>
+      <PropertyDef name="serviceTypeName">
+        <Property></Property>
+        <Property name="visible">false</Property>
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtAllDeliver">
       <Property name="creationType">com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity</Property>
@@ -1136,6 +1141,10 @@ if(currentData){&#xD;
     <Container>
       <DataGrid>
         <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsGenericTemplate&quot;).getData();&#xD;
+var queryData = this.get(&quot;#dsPriceCondition&quot;).getData(&quot;#&quot;);&#xD;
+queryData.set(&quot;serviceTypeCode&quot;,&quot;&quot;);&#xD;
+queryData.set(&quot;serviceTypeName&quot;,&quot;&quot;);&#xD;
+&#xD;
 with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
@@ -1465,6 +1474,7 @@ var startWarehouseId=tmpFormCondition.current.get(&quot;startWarehouseId&quot;);
 var provinceId=tmpFormCondition.current.get(&quot;provinceId&quot;);&#xD;
 var cityId=tmpFormCondition.current.get(&quot;cityId&quot;);&#xD;
 var areaId=tmpFormCondition.current.get(&quot;areaId&quot;);&#xD;
+var serviceTypeCode=tmpFormCondition.current.get(&quot;serviceTypeCode&quot;);&#xD;
 &#xD;
 with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
@@ -1474,7 +1484,8 @@ with (view.get(&quot;#dsBmsQuoteDispatchDetailVo&quot;)){&#xD;
 		provinceId:provinceId,&#xD;
 		cityId:cityId,&#xD;
 		areaId:areaId,&#xD;
-		carrierid:data.current.get(&quot;carrierid&quot;)&#xD;
+		carrierid:data.current.get(&quot;carrierid&quot;),&#xD;
+		serviceTypeCode:serviceTypeCode&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -1609,7 +1620,7 @@ if(data){&#xD;
           <AutoForm id="priceFormCondition">
             <Property name="dataSet">dsPriceCondition</Property>
             <Property name="dataType">dtPriceCondition</Property>
-            <Property name="cols">220,140,140,140</Property>
+            <Property name="cols">220,140,140,140,220</Property>
             <AutoFormElement>
               <Property name="name">startWarehouseId</Property>
               <Property name="property">startWarehouseId</Property>
@@ -1641,6 +1652,26 @@ if(data){&#xD;
               <Property name="labelWidth">40</Property>
               <Property name="showHint">false</Property>
               <Property name="trigger">ddropDownQueryPriceDistrict</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">serviceTypeName</Property>
+              <Property name="property">serviceTypeName</Property>
+              <Property name="editorWidth">100</Property>
+              <Property name="labelWidth">100</Property>
+              <Property name="showHint">false</Property>
+              <Property name="trigger">triggerServiceType2</Property>
+              <Property name="editable">false</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">serviceTypeCode</Property>
+              <Property name="property">serviceTypeCode</Property>
+              <Property name="editorWidth">100</Property>
+              <Property name="labelWidth">40</Property>
+              <Property name="showHint">false</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
               <Editor/>
             </AutoFormElement>
           </AutoForm>
@@ -2838,6 +2869,53 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectServiceType">
+          <Property name="subView">com.jiuyescm.bms.base.servicetype.view.ServicetypeLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerServiceType2">
+      <ClientEvent name="onExecute">var data = view.get(&quot;#dsGenericTemplate&quot;).getData();&#xD;
+&#xD;
+//调整物流商/实际物流商&#xD;
+var carrierid=data.current.get(&quot;carrierid&quot;);&#xD;
+&#xD;
+var subview = view.get(&quot;#viewSelectServiceType2&quot;).get(&quot;subView&quot;);&#xD;
+//清空&#xD;
+var subviewData=subview.get(&quot;#dsPubCarrierServicetypeEntity.data&quot;);&#xD;
+subviewData.clear();&#xD;
+&#xD;
+var ds = subview.get(&quot;#dsPubCarrierServicetypeEntityQuery.data&quot;).current;&#xD;
+&#xD;
+ds.set(&quot;carrierid&quot;,carrierid);&#xD;
+&#xD;
+&#xD;
+//直接调用方法查询&#xD;
+var tmpDataSet=subview.get(&quot;#dsPubCarrierServicetypeEntity&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+&#xD;
+view.get(&quot;#panelServiceType2&quot;).show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelServiceType2">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectServiceType2.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsPriceCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        serviceTypeCode:data.get(&quot;servicecode&quot;),&#xD;
+		serviceTypeName:data.get(&quot;servicename&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">物流产品类型选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectServiceType2">
           <Property name="subView">com.jiuyescm.bms.base.servicetype.view.ServicetypeLookUp</Property>
         </SubViewHolder>
       </Children>

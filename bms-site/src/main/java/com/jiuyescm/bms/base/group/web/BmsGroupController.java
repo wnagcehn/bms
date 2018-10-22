@@ -3,8 +3,11 @@ package com.jiuyescm.bms.base.group.web;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,6 +21,8 @@ import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
@@ -25,6 +30,7 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.exception.BizException;
 
 
 @Controller("bmsGroupController")
@@ -39,6 +45,8 @@ public class BmsGroupController {
 	
 	@Autowired
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Resource
+	private ISystemCodeService systemCodeService;
 	
 	@DataProvider
 	public List<BmsGroupVo> loadDataByParent(String parentId) throws Exception{
@@ -47,6 +55,21 @@ public class BmsGroupController {
 			pid=Integer.valueOf(parentId);
 		}
 		return bmsGroupService.queryDataByParentId(pid);
+	}
+	
+	/**
+	 * 销售区域管理
+	 * @param parentId
+	 * @return
+	 * @throws Exception
+	 */
+	@DataProvider
+	public List<BmsGroupVo> loadSaleAreaDataByParent(String parentId) throws Exception{
+		int pid=0;
+		if(StringUtils.isNoneBlank(parentId)){
+			pid=Integer.valueOf(parentId);
+		}
+		return bmsGroupService.querySaleAreaDataByParentId(pid);
 	}
 	
 	@DataProvider
@@ -156,6 +179,41 @@ public class BmsGroupController {
 		}
 	
 	}
+	
+	/**
+	 * 销售区域管理
+	 * @param datas
+	 * @throws Exception
+	 */
+	@DataResolver
+	public void saveSaleAreaGroup(List<BmsGroupVo> datas) throws Exception{
+		if (datas == null) {
+			return;
+		}
+		Timestamp nowdate = JAppContext.currentTimestamp();
+		String userName=JAppContext.currentUserName();
+		for(BmsGroupVo voEntity:datas){
+			if (EntityState.NEW.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setCreateTime(nowdate);
+				voEntity.setCreator(userName);
+				voEntity.setBizType("sale_area");
+				if(!bmsGroupService.checkGroup(voEntity)){
+					throw new Exception("组编码已经存在");
+				}
+				bmsGroupService.addGroup(voEntity);
+			}
+			else if (EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))) {
+				voEntity.setLastModifyTime(nowdate);
+				voEntity.setLastModifier(userName);
+				bmsGroupService.updateGroup(voEntity);
+			}
+			List<BmsGroupVo> list=voEntity.getChildren();
+			if(list!=null){
+				saveSaleAreaGroup(list);
+			}
+		}
+	
+	}
 	/**
 	 * 删除  验证是否有子用户组
 	 * 验证用户组 是否有用户信息
@@ -227,6 +285,22 @@ public class BmsGroupController {
 			throw e;
 		}
 	}
+	
+	@DataProvider
+	public void queryGroupSale(Page<BmsGroupUserVo> page,Map<String,Object> parameter) throws Exception{
+		PageInfo<BmsGroupUserVo> pageInfo=null;
+		try{
+			pageInfo=bmsGroupUserService.queryGroupUser(parameter, page.getPageNo(), page.getPageSize());
+			if(page!=null){
+				page.setEntities(pageInfo.getList());
+				page.setEntityCount((int)pageInfo.getTotal());
+			}
+		}catch(Exception e){
+			logger.error("queryGroupSale error:",e);
+			throw e;
+		}
+	}
+	
 	@DataProvider
 	public Map<String,Object> getAllGroupMap() throws Exception{
 		Map<String,Object> map=Maps.newLinkedHashMap();
@@ -269,10 +343,10 @@ public class BmsGroupController {
 			result="保存成功";
 		}catch(Exception e){
 			throw e;
-		}
-		
+		}		
 		return result;
 	}
+	
 	@DataResolver
 	public String deleteGroupUser(BmsGroupUserVo voEntity){
 		int k=bmsGroupUserService.deleteGroupUser(voEntity.getId());
@@ -368,4 +442,54 @@ public class BmsGroupController {
 		}
 		return bgsList;
 	}	
+	
+	@DataProvider
+	public Map<String, String> findAreaEnumList(String groupCode) throws Exception {
+		
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		//mapValue.put("ALL","全部");
+		mapValue.put("groupCode", groupCode);
+		List<BmsGroupVo> tmscodels = bmsGroupService.findAreaEnumList(mapValue);
+		mapValue.clear();
+		for (BmsGroupVo bmsGroupVo : tmscodels) {
+			mapValue.put(bmsGroupVo.getGroupCode(), bmsGroupVo.getGroupName());
+		}
+		
+		return mapValue;
+	}
+	
+	@DataResolver
+	public String saveSaleUser(BmsGroupUserVo voEntity) {
+		Map<String, Object> param = null;
+		String result="";
+		
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList("SALE_AREA");
+		for (SystemCodeEntity SystemCodeEntity : tmscodels) {
+			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+		}
+		
+		try{
+			param = new HashMap<String, Object>();
+			voEntity.setCreator(JAppContext.currentUserName());
+			voEntity.setCreateTime(JAppContext.currentTimestamp());
+			
+			param.put("userId", voEntity.getUserId());
+			String areaCode=bmsGroupUserService.checkSaleUser(param);
+			if(StringUtils.isBlank(areaCode)){
+				int k=bmsGroupUserService.addGroupUser(voEntity);
+				if(k>0){
+					return "新增成功!";
+				}else{
+					return "新增失败!";
+				}
+			}else{
+				result = "用户"+voEntity.getUserName()+" 已存在于区域【"+mapValue.get(areaCode)+"】中,不可重新添加!";
+			}
+		}catch(Exception e){
+			logger.error("新增异常", e);
+			throw new BizException("新增用户异常！");
+		}	
+		return result;
+	}
 }

@@ -34,6 +34,9 @@
 				version="1.0.0" id="pubMaterialInfoService" timeout="1200000" check="false"/>
 		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialSupplierService"
 				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.contract.quote.api.IContractDiscountService" 
+				version="1.0.0" id="contractDiscountService"   timeout="1200000" check="false" />
+		 
 				
 		<dubbo:reference id="accountUserService" interface="com.jiuyescm.iaccount.api.IUserService" version="1.0.0" check="false"  registry ="iaccount" />
 		<dubbo:reference id="accountDeptService" interface="com.jiuyescm.iaccount.api.IDeptService" version="1.0.0" check="false"  registry="iaccount"/>
@@ -71,13 +74,14 @@
 		 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="bmsWarehouseConfigService" interface="com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService" 
 		 version="1.0.0" registry="bms"/>
-		  <dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" 
+		<dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" 
 		 version="1.0.0" registry="bms"/>
 		 
-		  <dubbo:reference id="bmsSubjectService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" 
-		 version="1.0.0" registry="bms"/>		 
+		<dubbo:reference id="bmsSubjectService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" 
+		 version="1.0.0" registry="bms"/>	
+
 		 
-		 <!-- 耗材导入报表服务  -->
+		<!-- 耗材导入报表服务  -->
 		 <dubbo:reference id="materialReportService" interface="com.jiuyescm.bms.report.service.IMaterialReportService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bizWarehouseImportReportService" interface="com.jiuyescm.bms.report.biz.service.IBizWarehouseImportReportService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsFileAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService" version="1.0.0" registry="bms"/>

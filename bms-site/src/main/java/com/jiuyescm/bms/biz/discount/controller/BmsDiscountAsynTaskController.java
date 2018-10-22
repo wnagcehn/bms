@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.biz.discount.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,12 +23,13 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
-import com.alibaba.dubbo.common.io.Bytes;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
@@ -35,6 +37,11 @@ import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractDiscountService;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.contract.quote.api.IContractDiscountService;
+import com.jiuyescm.contract.quote.vo.CarrierInfoVo;
+import com.jiuyescm.contract.quote.vo.ContractDiscountQueryVo;
+import com.jiuyescm.contract.quote.vo.ContractDiscountVo;
+import com.jiuyescm.contract.quote.vo.SubjectInfoVo;
 
 /**
  * ..Controller
@@ -58,6 +65,11 @@ public class BmsDiscountAsynTaskController {
 
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
+	@Resource
+	private IContractDiscountService contractDiscountService;
+	
+	@Resource
+	private ISystemCodeService systemCodeService;
 
 	private static final String BMS_DISCOUNT_ASYN_TASK = "BMS.DISCOUNT.ASYN.TASK";
 
@@ -150,7 +162,7 @@ public class BmsDiscountAsynTaskController {
 			entity.setDelFlag("0");
 			entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 			entity.setCreator(JAppContext.currentUserName());
-			entity.setCreateTime(JAppContext.currentTimestamp());			
+			entity.setCreateTime(JAppContext.currentTimestamp());		
 			bmsDiscountAsynTaskService.save(entity);
 			result.put("success", "保存成功");
 			try {				
@@ -170,208 +182,162 @@ public class BmsDiscountAsynTaskController {
 		
 		// 2.发送商家下业务类型下所有费用科目的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			Map<String, String> param = new HashMap<>();
-			if (null != entity) {
-				param.put("customerid", entity.getCustomerId());
-				param.put("bizTypeCode", entity.getBizTypecode());
-			}
-			List<PriceContractDiscountItemEntity> bizList = priceContractDiscountService.queryByCustomerIdAndBizType(param);
-			if (bizList.isEmpty()) {
-				result.put("fail", "你还没为这个费用科目配置折扣");
-				return result;
-			}
-			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
-			for (PriceContractDiscountItemEntity bizEntity : bizList) {
-				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
-				if (month < 10) {
-					newEntity.setMonth("0" + entity.getMonth().toString());
+			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();		
+			try {
+				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+				queryVo.setCustomerId(entity.getCustomerId());
+				queryVo.setSettlementTime(entity.getCreateMonth());
+				queryVo.setBizTypeCode(entity.getBizTypecode());
+				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				if(disCountVo.size()>0){
+					newList=getContractList(disCountVo, entity, month);
 				}
-				if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
-					String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date startDate = sdf.parse(startDateStr);
-					Date endDate = DateUtils.addMonths(startDate, 1);
-					Timestamp startTime = new Timestamp(startDate.getTime());
-					Timestamp endTime = new Timestamp(endDate.getTime());
-					newEntity.setStartDate(startTime);
-					newEntity.setEndDate(endTime);
+			} catch (Exception e) {
+				// TODO: handle exception
+				Map<String, String> param = new HashMap<>();
+				if (null != entity) {
+					param.put("customerid", entity.getCustomerId());
+					param.put("bizTypeCode", entity.getBizTypecode());
 				}
-				// 生成任务，写入任务表
-				taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
-				newEntity.setTaskId(taskId);
-				newEntity.setCarrierId(bizEntity.getCarrierId());
-				newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
-				newEntity.setTaskRate(0);
-				newEntity.setDelFlag("0");
-				newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-				newEntity.setCreator(JAppContext.currentUserName());
-				newEntity.setCreateTime(JAppContext.currentTimestamp());
-				newEntity.setBizTypecode(entity.getBizTypecode());
-				newEntity.setCustomerId(entity.getCustomerId());
-				newEntity.setSubjectCode(bizEntity.getSubjectId());
-				newList.add(newEntity);
+				List<PriceContractDiscountItemEntity> bizList = priceContractDiscountService.queryByCustomerIdAndBizType(param);
+				if (bizList.isEmpty()) {
+					result.put("fail", "你还没为这个费用科目配置折扣");
+					return result;
+				}
+				//生成任务，写入任务表
+				saveToTask(entity, month, newList, bizList, taskId);
 			}
 			if (newList.size() > 0) {
-				bmsDiscountAsynTaskService.saveBatch(newList);
-				result.put("success", "保存成功");
-				for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
-					try {			
-						logger.info("开始发送MQ");
-						final String msg = bmsDiscountAsynTaskEntity.getTaskId();
-						jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
-							@Override
-							public Message createMessage(Session session) throws JMSException {
-								return session.createTextMessage(msg);
-							}
-						});
-						logger.info("MQ发送成功");
-					} catch (Exception e) {
-						logger.error("send MQ:", e);
-					}
-				}			
+				sendMQ(result, newList);			
 			}
 		}
 		
 		// 3.发送商家下所有的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
-			// 合同生效期和开始时间比较
-			if (month < 10) {
-				newEntity.setMonth("0" + entity.getMonth().toString());
-			}
-			String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date startDa = sd.parse(startD);
-			Timestamp starttime = new Timestamp(startDa.getTime());
-			newEntity.setStartDate(starttime);
-			newEntity.setCustomerId(entity.getCustomerId());
-			
-			List<PriceContractDiscountItemEntity> cusList = priceContractDiscountService.queryByCustomerId(newEntity);
-			if(cusList.isEmpty()){
-				result.put("fail", "未查询到商家折扣报价或商家合同过期");
-				return result;
-			}
-
 			List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
-			for (PriceContractDiscountItemEntity cusEntity : cusList) {
-				BmsDiscountAsynTaskEntity bdatEntity = new BmsDiscountAsynTaskEntity();
+			
+			try {
+				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+				queryVo.setCustomerId(entity.getCustomerId());
+				queryVo.setSettlementTime(entity.getCreateMonth());
+				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				if(disCountVo.size()>0){
+					bdatList=getContractList(disCountVo, entity, month);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+				// 合同生效期和开始时间比较
 				if (month < 10) {
-					bdatEntity.setMonth("0" + entity.getMonth().toString());
+					newEntity.setMonth("0" + entity.getMonth().toString());
 				}
-				if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
-					String startDateStr = entity.getYear() + "-" + bdatEntity.getMonth() + "-01 00:00:00";
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date startDate = sdf.parse(startDateStr);
-					Date endDate = DateUtils.addMonths(startDate, 1);
-					Timestamp startTime = new Timestamp(startDate.getTime());
-					Timestamp endTime = new Timestamp(endDate.getTime());
-					bdatEntity.setStartDate(startTime);
-					bdatEntity.setEndDate(endTime);
+				String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+				SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date startDa = sd.parse(startD);
+				Timestamp starttime = new Timestamp(startDa.getTime());
+				newEntity.setStartDate(starttime);
+				newEntity.setCustomerId(entity.getCustomerId());
+				
+				List<PriceContractDiscountItemEntity> cusList = priceContractDiscountService.queryByCustomerId(newEntity);
+				if(cusList.isEmpty()){
+					result.put("fail", "未查询到商家折扣报价或商家合同过期");
+					return result;
 				}
-				// 生成任务，写入任务表
-				taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
-				bdatEntity.setTaskId(taskId);
-				bdatEntity.setCarrierId(cusEntity.getCarrierId());
-				bdatEntity.setCreateMonth(entity.getYear() + "-" + bdatEntity.getMonth());
-				bdatEntity.setTaskRate(0);
-				bdatEntity.setDelFlag("0");
-				bdatEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-				bdatEntity.setCreator(JAppContext.currentUserName());
-				bdatEntity.setCreateTime(JAppContext.currentTimestamp());
-				bdatEntity.setBizTypecode(cusEntity.getBizTypeCode());
-				bdatEntity.setSubjectCode(cusEntity.getSubjectId());
-				bdatEntity.setCustomerId(entity.getCustomerId());
-				bdatList.add(bdatEntity);
-			}
-			if (bdatList.size() > 0) {
-				bmsDiscountAsynTaskService.saveBatch(bdatList);
-				result.put("success", "保存成功");
-				for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : bdatList) {
-					try {
-						logger.info("开始发送MQ");
-						final String msg = bmsDiscountAsynTaskEntity.getTaskId();
-						jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
-							@Override
-							public Message createMessage(Session session) throws JMSException {
-								return session.createTextMessage(msg);
-							}
-						});
-						logger.info("MQ发送成功");
-					} catch (Exception e) {
-						logger.error("send MQ:", e);
-					}
-				}																				
+				//生成任务，写入任务表
+				saveToTask(entity, month, bdatList, cusList, taskId);
 			}
 		}		
 		// 4.发送所有
 		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
-			// 合同生效期和开始时间比较
-			if (month < 10) {
-				newEntity.setMonth("0" + entity.getMonth().toString());
-			}
-			String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date startDa = sd.parse(startD);
-			Timestamp starttime = new Timestamp(startDa.getTime());
-			List<PriceContractDiscountItemEntity> allList = priceContractDiscountService.queryAll(starttime);
-			
-			if (allList.isEmpty()) {
-				result.put("fail", "没有商家配置折扣");
-				return result;
-			}
 			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
-			for (PriceContractDiscountItemEntity allEntity : allList) {
-				BmsDiscountAsynTaskEntity bdatEntity = new BmsDiscountAsynTaskEntity();
+			
+			try {
+				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+				queryVo.setSettlementTime(entity.getCreateMonth());
+				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				if(disCountVo.size()>0){
+					newList=getContractList(disCountVo, entity, month);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+				// 合同生效期和开始时间比较
 				if (month < 10) {
-					bdatEntity.setMonth("0" + entity.getMonth().toString());
+					newEntity.setMonth("0" + entity.getMonth().toString());
 				}
-				if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
-					String startDateStr = entity.getYear() + "-" + bdatEntity.getMonth() + "-01 00:00:00";
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date startDate = sdf.parse(startDateStr);
-					Date endDate = DateUtils.addMonths(startDate, 1);
-					Timestamp startTime = new Timestamp(startDate.getTime());
-					Timestamp endTime = new Timestamp(endDate.getTime());
-					bdatEntity.setStartDate(startTime);
-					bdatEntity.setEndDate(endTime);
+				String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+				SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date startDa = sd.parse(startD);
+				Timestamp starttime = new Timestamp(startDa.getTime());
+				List<PriceContractDiscountItemEntity> allList = priceContractDiscountService.queryAll(starttime);
+				
+				if (allList.isEmpty()) {
+					result.put("fail", "没有商家配置折扣");
+					return result;
 				}
-				// 生成任务，写入任务表
-				taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
-				bdatEntity.setTaskId(taskId);
-				bdatEntity.setCarrierId(allEntity.getCarrierId());
-				bdatEntity.setCreateMonth(entity.getYear() + "-" + bdatEntity.getMonth());
-				bdatEntity.setTaskRate(0);
-				bdatEntity.setDelFlag("0");
-				bdatEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-				bdatEntity.setCreator(JAppContext.currentUserName());
-				bdatEntity.setCreateTime(JAppContext.currentTimestamp());
-				bdatEntity.setBizTypecode(allEntity.getBizTypeCode());
-				bdatEntity.setSubjectCode(allEntity.getSubjectId());
-				bdatEntity.setCustomerId(allEntity.getCustomerId());
-				newList.add(bdatEntity);
+				//生成任务，写入任务表
+				saveToTask(entity, month, newList, allList, taskId);
 			}
 			if (newList.size() > 0) {
-				bmsDiscountAsynTaskService.saveBatch(newList);
-				result.put("success", "保存成功");
-				for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
-					try {				
-						logger.info("开始发送MQ");
-						final String msg = bmsDiscountAsynTaskEntity.getTaskId();
-						jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
-							@Override
-							public Message createMessage(Session session) throws JMSException {
-								return session.createTextMessage(msg);
-							}
-						});
-						logger.info("MQ发送成功");
-					} catch (Exception e) {
-						logger.error("send MQ:", e);
-					}
-				}		
+				sendMQ(result, newList);
 			}
 		}
 		return result;
+	}
+
+	private void saveToTask(BmsDiscountAsynTaskEntity entity, int month, List<BmsDiscountAsynTaskEntity> newList,
+			List<PriceContractDiscountItemEntity> bizList, String taskId) throws ParseException {
+		for (PriceContractDiscountItemEntity bizEntity : bizList) {
+			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+			if (month < 10) {
+				newEntity.setMonth("0" + entity.getMonth().toString());
+			}
+			if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
+				String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date startDate = sdf.parse(startDateStr);
+				Date endDate = DateUtils.addMonths(startDate, 1);
+				Timestamp startTime = new Timestamp(startDate.getTime());
+				Timestamp endTime = new Timestamp(endDate.getTime());
+				newEntity.setStartDate(startTime);
+				newEntity.setEndDate(endTime);
+			}
+			// 生成任务，写入任务表
+			taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+			newEntity.setTaskId(taskId);
+			newEntity.setCarrierId(bizEntity.getCarrierId());
+			newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
+			newEntity.setTaskRate(0);
+			newEntity.setDelFlag("0");
+			newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+			newEntity.setCreator(JAppContext.currentUserName());
+			newEntity.setCreateTime(JAppContext.currentTimestamp());
+			newEntity.setBizTypecode(entity.getBizTypecode());
+			newEntity.setCustomerId(entity.getCustomerId());
+			newEntity.setSubjectCode(bizEntity.getSubjectId());
+			newEntity.setCustomerType("bms");
+			newList.add(newEntity);
+		}
+	}
+
+	private void sendMQ(Map<String, String> result, List<BmsDiscountAsynTaskEntity> newList) throws Exception {
+		bmsDiscountAsynTaskService.saveBatch(newList);
+		result.put("success", "保存成功");
+		for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
+			try {			
+				logger.info("开始发送MQ");
+				final String msg = bmsDiscountAsynTaskEntity.getTaskId();
+				jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
+					@Override
+					public Message createMessage(Session session) throws JMSException {
+						return session.createTextMessage(msg);
+					}
+				});
+				logger.info("MQ发送成功");
+			} catch (Exception e) {
+				logger.error("send MQ:", e);
+			}
+		}
 	}
 
 	/**
@@ -384,4 +350,95 @@ public class BmsDiscountAsynTaskController {
 		bmsDiscountAsynTaskService.delete(entity.getId());
 	}
 
+	
+	public List<BmsDiscountAsynTaskEntity> getContractList(List<ContractDiscountVo> disCountVo,BmsDiscountAsynTaskEntity entity,int month)throws Exception{
+		String taskId = "";
+		List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
+		for(ContractDiscountVo vo:disCountVo){
+			if(vo.getSubjectVoList().size()>0){
+				for(SubjectInfoVo s:vo.getSubjectVoList()){
+					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+					if (month < 10) {
+						newEntity.setMonth("0" + entity.getMonth().toString());
+					}
+					if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
+						String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date startDate = sdf.parse(startDateStr);
+						Date endDate = DateUtils.addMonths(startDate, 1);
+						Timestamp startTime = new Timestamp(startDate.getTime());
+						Timestamp endTime = new Timestamp(endDate.getTime());
+						newEntity.setStartDate(startTime);
+						newEntity.setEndDate(endTime);
+					}
+					// 生成任务，写入任务表
+					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+					newEntity.setTaskId(taskId);
+					//newEntity.setCarrierId(bizEntity.getCarrierId());
+					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
+					newEntity.setTaskRate(0);
+					newEntity.setDelFlag("0");
+					newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+					newEntity.setCreator(JAppContext.currentUserName());
+					newEntity.setCreateTime(JAppContext.currentTimestamp());
+					newEntity.setBizTypecode("STORAGE");
+					newEntity.setCustomerId(vo.getCustomerId());
+					newEntity.setSubjectCode(s.getSubjectId());
+					newEntity.setDiscountType(s.getDiscountType());
+					newEntity.setCustomerType("contract");
+					newList.add(newEntity);						
+				}			
+			}
+			if(vo.getCarrierVoList().size()>0){
+				for(CarrierInfoVo s:vo.getCarrierVoList()){
+					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
+					if (month < 10) {
+						newEntity.setMonth("0" + entity.getMonth().toString());
+					}
+					if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
+						String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date startDate = sdf.parse(startDateStr);
+						Date endDate = DateUtils.addMonths(startDate, 1);
+						Timestamp startTime = new Timestamp(startDate.getTime());
+						Timestamp endTime = new Timestamp(endDate.getTime());
+						newEntity.setStartDate(startTime);
+						newEntity.setEndDate(endTime);
+					}
+					// 生成任务，写入任务表
+					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+					newEntity.setTaskId(taskId);
+					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
+					newEntity.setTaskRate(0);
+					newEntity.setDelFlag("0");
+					newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
+					newEntity.setCreator(JAppContext.currentUserName());
+					newEntity.setCreateTime(JAppContext.currentTimestamp());
+					newEntity.setBizTypecode("DISPATCH");
+					newEntity.setCustomerId(vo.getCustomerId());				
+					SystemCodeEntity sys=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
+					newEntity.setCarrierId(s.getCarrierId());
+					newEntity.setSubjectCode(sys.getCode());
+					newEntity.setDiscountType(s.getDiscountType());
+					newEntity.setCustomerType("contract");
+					newList.add(newEntity);	
+				}			
+			}			
+
+		}
+		
+		return newList;
+	}
+	
+	
+	public Map<String,Object> getDispatchMap(){
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("typeCode", "DISPATCH_COMPANY");
+		List<SystemCodeEntity> scList = systemCodeService.queryCodeList(map);
+		map.clear();
+		for(SystemCodeEntity s:scList){
+			map.put(s.getExtattr1(), s);
+		}
+		return map;
+	}
 }

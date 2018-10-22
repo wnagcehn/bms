@@ -452,6 +452,11 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 	}
 	
 	@Override
+	public List<FeesReceiveStorageEntity> queryPreBillPallet(Map<String, Object> parameter) {
+		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryPreBillPallet", parameter);
+	}
+	
+	@Override
 	public List<FeesReceiveStorageEntity> queryPreBillMaterialStorage(Map<String, Object> parameter) {
 		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryPreBillMaterialStorage", parameter);
 	}
@@ -459,6 +464,19 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 	@Override
 	public List<FeesReceiveStorageEntity> queryByFeesNo(String FeesNo){
 		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryByFeesNo", FeesNo);
+	}
+
+	@Override
+	public List<FeesReceiveStorageEntity> queryCalculateFail(
+			Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryCalculateFail", parameter);
+	}
+
+	@Override
+	public FeesReceiveStorageEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (FeesReceiveStorageEntity) selectOne("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryOne", condition);
 	}
 
 

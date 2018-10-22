@@ -76,7 +76,8 @@
 	    <result column="origin_carrier_name" property="originCarrierName" jdbcType="VARCHAR" />
 	    <result column="throw_weight" property="throwWeight" jdbcType="DOUBLE" />
 	    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
-	    <result column="origin_weight" property="originWeight" jdbcType="DECIMAL" />	    
+	    <result column="origin_weight" property="originWeight" jdbcType="DECIMAL" />
+	    <result column="adjust_service_type_code" property="adjustServiceTypeCode" jdbcType="VARCHAR" />	    
     </resultMap>
   
      <resultMap id="baseChangeResultMap" type="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity" >
@@ -110,7 +111,8 @@
         receive_street, receive_detail_address, receive_time, fees_no, account_state,external_no,sign_time,accept_time, 
         del_flag, total_volume,create_time,temperature_type_code,temperature_type_name,remark,zexpressnum, bigstatus, smallstatus, system_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_deliver_id,
         adjust_deliver_name, adjust_carrier_id, adjust_carrier_name,adjust_province_id,adjust_city_id,
-        adjust_district_id,origin_carrier_id,origin_carrier_name,IFNULL(throw_weight,0) as throw_weight,order_status,origin_weight
+        adjust_district_id,origin_carrier_id,origin_carrier_name,IFNULL(throw_weight,0) as throw_weight,order_status,origin_weight,
+        adjust_service_type_code as adjustServiceTypeCode
         from biz_dispatch_bill
         where del_flag = 0
         <if test="(beginTime != null and beginTime !='')" >

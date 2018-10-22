@@ -64,6 +64,8 @@ public class BizPalletInfoEntity implements IEntity {
 	
 	private String subjectCode;
 	private String subjectName;
+	
+	private Integer totalNum;
 
 	public BizPalletInfoEntity() {
 		super();
@@ -267,6 +269,14 @@ public class BizPalletInfoEntity implements IEntity {
 
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
+	}
+
+	public Integer getTotalNum() {
+		return totalNum;
+	}
+
+	public void setTotalNum(Integer totalNum) {
+		this.totalNum = totalNum;
 	}
     
 }

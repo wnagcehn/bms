@@ -3,11 +3,13 @@ package com.jiuyescm.bms.biz.pallet.repository.impl;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
+import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 
 /**
@@ -51,6 +53,7 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
         insert("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.save", entity);
         return entity;
     }
+    
 
 	/**
 	 * 更新
@@ -68,9 +71,8 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 	 * @param entity
 	 */
     @Override
-    public BizPalletInfoEntity delete(BizPalletInfoEntity entity) {
-    	update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.update", entity);
-    	return entity;
+    public int delete(List<BizPalletInfoEntity> lists) {
+    	return updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.update", lists);
     }
     
     /**

@@ -10,6 +10,8 @@ public class BmsDiscountAccountEntity implements Serializable{
 	
 	private String carrierId;
 	
+	private String subjectCode;
+	
 	private String orderCount;
 	
 	private String amount;
@@ -45,6 +47,16 @@ public class BmsDiscountAccountEntity implements Serializable{
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
+
+	public String getSubjectCode() {
+		return subjectCode;
+	}
+
+	public void setSubjectCode(String subjectCode) {
+		this.subjectCode = subjectCode;
+	}
+
+	
 	
 	
 }

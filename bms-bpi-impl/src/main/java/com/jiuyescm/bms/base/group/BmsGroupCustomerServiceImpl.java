@@ -37,6 +37,7 @@ public class BmsGroupCustomerServiceImpl implements IBmsGroupCustomerService {
 		}
 		return voList;
 	}
+	
 
 	@Override
 	public int addBatch(List<BmsGroupCustomerVo> list) throws Exception {
@@ -124,6 +125,7 @@ public class BmsGroupCustomerServiceImpl implements IBmsGroupCustomerService {
 		// TODO Auto-generated method stub
 		return bmsGroupCustomerRepository.queryCustomerByGroupId(groupId);
 	}
+
 
 
 }

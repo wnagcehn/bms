@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity;
+import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoTempService;
 import com.jiuyescm.bms.biz.storage.entity.BizPackStorageTempEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizPackStorageService;
@@ -55,17 +58,14 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 	@Autowired private IWarehouseService warehouseService;
 	@Autowired private ISystemCodeService systemCodeService; //业务类型
 	@Autowired private ICustomerService customerService;
-	@Autowired private IBizProductPalletStorageTempService bizProductPalletStorageTempService;
-	@Autowired private IBizPackStorageTempService bizPackStorageTempService;
 	@Autowired private StorageClient storageClient;
-	@Autowired private IBizProductPalletStorageService bizProductPalletStorageService;
-	@Autowired private IBizPackStorageService bizPackStorageService;
+	@Autowired private IBizPalletInfoTempService bizPalletInfoTempService;
 	private Map<Integer,String> originColumn = null; //源生表头信息
 	private static final String REMARK = "导入数据不规范,请下载查看最后一列说明";
 	//商品按托存储费和耗材存储费
 	@Override
 	protected List<String> initColumnNames() {
-		String[] str = {"库存日期","仓库","商家全称","商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温"};
+		String[] str = {"库存日期","仓库","商家全称","商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温","入库托数","出库托数"};
 		return Arrays.asList(str); 
 	}
 
@@ -96,6 +96,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 				}
 			}
 		}
+		
 		//温度类型
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("typeCode", "TEMPERATURE_TYPE");
@@ -106,8 +107,10 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 		    }
 		}
 		
-		List<BizProductPalletStorageTempEntity> palletList = new ArrayList<BizProductPalletStorageTempEntity>();
-		List<BizPackStorageTempEntity> packList = new ArrayList<BizPackStorageTempEntity>();
+//		List<BizProductPalletStorageTempEntity> palletList = new ArrayList<BizProductPalletStorageTempEntity>();
+//		List<BizPackStorageTempEntity> packList = new ArrayList<BizPackStorageTempEntity>();
+		
+		List<BizPalletInfoTempEntity> palletList = new ArrayList<BizPalletInfoTempEntity>();
 		
 		for(Entry<Integer, Map<String, String>> row : reader.getContents().entrySet()) { 
 			Map<String, String> cells = row.getValue();
@@ -145,7 +148,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			String outTimeExcel=cells.get("库存日期");//出库日期
 			try {
 				createTime = reader.changeValueToTimestamp(outTimeExcel);
-				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String tsStr = sdf.format(createTime);
 				reader.getContents().get(rowNo).put("出库日期", tsStr);
 			} catch (Exception e) {
@@ -153,86 +156,79 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			}
 			
 			//****************************************************************** 校验数量的类型
-			String[] strs = {"商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温"};
+			String[] strs = {"商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温","入库托数","出库托数"};
 			boolean isAllEmpty=false;
+			Date date = new Date(createTime.getTime());
 			for (String str : strs) {
-				BizProductPalletStorageTempEntity product_entity = new BizProductPalletStorageTempEntity();
-				BizPackStorageTempEntity pack_entity = new BizPackStorageTempEntity();
-				product_entity.setRowExcelNo(rowNo);
-				product_entity.setWarehouseCode(warehouseCode);
-				product_entity.setWarehouseName(warehouseName);
-				product_entity.setCustomerid(customerId);
-				product_entity.setCustomerName(customerName);
-				product_entity.setStockTime(createTime);
-				product_entity.setCreateTime(createTime);
-				product_entity.setIsCalculated("0");
-				product_entity.setWriteTime(JAppContext.currentTimestamp());
-				product_entity.setDelFlag("0");
-				product_entity.setCreator(taskEntity.getCreator());
-				product_entity.setTaskId(taskEntity.getTaskId());
+				BizPalletInfoTempEntity pallet_entity = new BizPalletInfoTempEntity();
 				
+				pallet_entity.setRowExcelNo(rowNo);
+				pallet_entity.setCurTime(date);
+				pallet_entity.setWarehouseCode(warehouseCode);
+				pallet_entity.setWarehouseName(warehouseName);
+				pallet_entity.setCustomerId(customerId);
+				pallet_entity.setCustomerName(customerName);
+				pallet_entity.setCreateTime(createTime);
+				pallet_entity.setWriteTime(JAppContext.currentTimestamp());
+				pallet_entity.setCreator(taskEntity.getCreator());
+				pallet_entity.setCreatorId(taskEntity.getCreatorId());
+				pallet_entity.setTaskId(taskEntity.getTaskId());
 				
-				pack_entity.setRowExcelNo(rowNo);
-				pack_entity.setWarehouseCode(warehouseCode);
-				pack_entity.setWarehouseName(warehouseName);
-				pack_entity.setCustomerid(customerId);
-				pack_entity.setCustomerName(customerName);
-				pack_entity.setCreateTime(createTime);
-				pack_entity.setCurTime(createTime);
-				pack_entity.setIsCalculated("0");
-				pack_entity.setWriteTime(JAppContext.currentTimestamp());
-				pack_entity.setDelFlag("0");
-				pack_entity.setCreator(taskEntity.getCreator());
-				pack_entity.setTaskId(taskEntity.getTaskId());
 				
 				if(StringUtils.isNotEmpty(cells.get(str)))
 				{
 					if(ExportUtil.isNumber(cells.get(str)))
 					{
 						isAllEmpty=true;
-						product_entity.setPalletNum(Double.valueOf(cells.get(str)));//托数
-						product_entity.setAdjustPalletNum(Double.valueOf(cells.get(str)));
-						pack_entity.setPalletNum(Double.valueOf(cells.get(str)));//托数
-						pack_entity.setAdjustPalletNum(Double.valueOf(cells.get(str)));
+						pallet_entity.setPalletNum(Double.valueOf(cells.get(str)));//托数
+
 						if(str.equals("商品冷冻")){
-							product_entity.setTemperatureTypeName("冷冻");
-							product_entity.setTemperatureTypeCode(temperatureMap.get("冷冻"));
-							palletList.add(product_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷冻"));
+							pallet_entity.setBizType("product");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("商品冷藏")){
-							product_entity.setTemperatureTypeName("冷藏");
-							product_entity.setTemperatureTypeCode(temperatureMap.get("冷藏"));
-							palletList.add(product_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷藏"));
+							pallet_entity.setBizType("product");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("商品常温")){
-							product_entity.setTemperatureTypeName("常温");
-							product_entity.setTemperatureTypeCode(temperatureMap.get("常温"));
-							palletList.add(product_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("常温"));
+							pallet_entity.setBizType("product");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("商品恒温")){
-							product_entity.setTemperatureTypeName("恒温");
-							product_entity.setTemperatureTypeCode(temperatureMap.get("恒温"));
-							palletList.add(product_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("恒温"));
+							pallet_entity.setBizType("product");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("耗材冷冻")){
-							pack_entity.setTemperatureTypeName("冷冻");
-							pack_entity.setTemperatureTypeCode(temperatureMap.get("冷冻"));
-							packList.add(pack_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷冻"));
+							pallet_entity.setBizType("material");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("耗材冷藏")){
-							pack_entity.setTemperatureTypeName("冷藏");
-							pack_entity.setTemperatureTypeCode(temperatureMap.get("冷藏"));
-							packList.add(pack_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷藏"));
+							pallet_entity.setBizType("material");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("耗材常温")){
-							pack_entity.setTemperatureTypeName("常温");
-							pack_entity.setTemperatureTypeCode(temperatureMap.get("常温"));
-							packList.add(pack_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("常温"));
+							pallet_entity.setBizType("material");
+							palletList.add(pallet_entity);
 						}
 						else if(str.equals("耗材恒温")){
-							pack_entity.setTemperatureTypeName("恒温");
-							pack_entity.setTemperatureTypeCode(temperatureMap.get("恒温"));
-							packList.add(pack_entity);
+							pallet_entity.setTemperatureTypeCode(temperatureMap.get("恒温"));
+							pallet_entity.setBizType("material");
+							palletList.add(pallet_entity);
+						}
+						else if(str.equals("入库托数")){
+							pallet_entity.setBizType("instock");
+							palletList.add(pallet_entity);
+						}
+						else if(str.equals("出库托数")) {
+							pallet_entity.setBizType("outstock");
+							palletList.add(pallet_entity);
 						}
 						
 					}else{
@@ -259,9 +255,6 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
          if(palletList!=null&&palletList.size()>0){
         	  checkPallet(palletList);		
          }
-  		 if(packList!=null&&packList.size()>0){
-  			  checkPack(packList);
-  		 }
 		
   		//如果excel数据本身存在问题，直接生产结果文件返回给用户
  		if(errMap.size()>0){
@@ -287,7 +280,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			return false;
 		}
 		
-		//数据库层面重复校验  false - 校验不通过 存在重复  原则上 商品按托（时间+仓库+商家+温度）只有一条  ，耗材库存（时间+仓库+商家+温度）只有一条  
+		//数据库层面重复校验  false - 校验不通过 存在重复  原则上（时间+仓库+商家+温度+类型）只有一条  
 		if(!dbCheck()){
 			createResultFile();
 			return false;
@@ -308,24 +301,22 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			}else{
 				logger.error("未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
-				bizProductPalletStorageTempService.deleteBybatchNum(taskEntity.getTaskId());
-				bizPackStorageTempService.deleteBybatchNum(taskEntity.getTaskId());
+				bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
 			}
 		}catch(Exception e){
 			logger.error("异步导入异常", e);
 			bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.EXCEPTION.getCode(),"从临时表中保存数据到业务表异常");
-			bizProductPalletStorageTempService.deleteBybatchNum(taskEntity.getTaskId());
-			bizPackStorageTempService.deleteBybatchNum(taskEntity.getTaskId());
+			bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
 		}
 		//return;
 		
 		return false;
 	}
 	
-	private void checkPallet(List<BizProductPalletStorageTempEntity> list){
+	private void checkPallet(List<BizPalletInfoTempEntity> list){
 		//验证导入数据有重复
 		List<String> keyList=new ArrayList<String>();
-		for(BizProductPalletStorageTempEntity temp:list){
+		for(BizPalletInfoTempEntity temp:list){
 			String key=getPalletKey(temp);
 			if(!keyList.contains(key)){//excel数据无重复 验证与数据库对比
 				keyList.add(key);
@@ -334,72 +325,42 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			}
 		}
 	}
-	
-	private void checkPack(List<BizPackStorageTempEntity> list){
-		//验证导入数据有重复
-		List<String> keyList=new ArrayList<String>();
-		for(BizPackStorageTempEntity temp:list){
-			String key=getPackKey(temp);
-			if(!keyList.contains(key)){//excel数据无重复 验证与数据库对比
-				keyList.add(key);
-			}else{			
-				errMap.put(temp.getRowExcelNo(), "Excel中数据重复");
-			}
-		}
-	}
-	private String getPalletKey(BizProductPalletStorageTempEntity dataEntity){
-		String key=dataEntity.getStockTime()+dataEntity.getWarehouseCode()+dataEntity.getCustomerid()+dataEntity.getTemperatureTypeCode();
-		return key;
-	}
-	
-	private String getPackKey(BizPackStorageTempEntity dataEntity){
-		String key=dataEntity.getCurTime()+dataEntity.getWarehouseCode()+dataEntity.getCustomerid()+dataEntity.getTemperatureTypeCode();
+
+	private String getPalletKey(BizPalletInfoTempEntity dataEntity){
+		String key=dataEntity.getCurTime()+dataEntity.getWarehouseCode()+dataEntity.getCustomerId()+dataEntity.getTemperatureTypeCode()+dataEntity.getBizType();
 		return key;
 	}
 	
 	private int saveDataFromTemp(String taskId){
-		int result=bizProductPalletStorageService.saveTempData(taskId);
-		result+=bizPackStorageService.saveTempData(taskId);
-		
+		int result=bizPalletInfoTempService.saveTempData(taskId);		
 		return result;
 	}
 	
 	private boolean dbCheck(){
-		
-		List<BizProductPalletStorageTempEntity> productlist = bizProductPalletStorageTempService.queryInBiz(taskEntity.getTaskId());
+		Map<String, String> tranTemperature = new HashMap<String, String>();
+		tranTemperature.put("LD", "冷冻");
+		tranTemperature.put("LC", "冷藏");
+		tranTemperature.put("CW", "常温");
+		tranTemperature.put("HW", "恒温");
+		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBiz(taskEntity.getTaskId());
 		Map<String,String> map=Maps.newLinkedHashMap();
-		if(productlist.size()> 0){			
+		if(palletlist.size()> 0){			
 			//存在重复记录
-			for(BizProductPalletStorageTempEntity entity:productlist){
+			for(BizPalletInfoTempEntity entity:palletlist){
 				String row=String.valueOf(entity.getRowExcelNo());
 				String mes="";
 				if(map.containsKey(row)){
 					mes=map.get(row);
-					mes+=",商品库存【"+entity.getStockTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeName()+"】";
+					mes+=",【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+tranTemperature.get(entity.getTemperatureTypeCode())+"】【"+entity.getBizType()+"】";
 					map.put(row,mes);
 				}else{
-					mes="系统中已存在,商品库存【"+entity.getStockTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeName()+"】";
+					mes="系统中已存在,【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeCode()+"】【"+entity.getBizType()+"】";
 					map.put(row,mes);
 				}
 			}
 		}
 	
-		//存在重复记录
-		List<BizPackStorageTempEntity> packlist = bizPackStorageTempService.queryInBiz(taskEntity.getTaskId());
-		if(productlist.size()> 0){	
-			for(BizPackStorageTempEntity entity:packlist){
-				String row=String.valueOf(entity.getRowExcelNo());
-				String mes="";
-				if(map.containsKey(row)){
-					mes=map.get(row);
-					mes+=",耗材【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeName()+"】";
-					map.put(row,mes);
-				}else{
-					mes="系统中已存在,耗材【"+entity.getCurTime()+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeName()+"】";
-					map.put(row,mes);
-				}
-			}
-		}
+
 		
 		
 		Set<String> set=map.keySet();

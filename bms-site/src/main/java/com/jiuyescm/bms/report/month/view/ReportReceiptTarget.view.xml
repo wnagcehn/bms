@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="sellerId">
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property name="label">区域</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="year">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="readOnly">false</Property>
+        <Property name="label">年份</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="month">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">月份</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtReportReceiptTarget">
+      <Property name="creationType">com.jiuyescm.bms.report.month.entity.ReportReceiptTargetEntity</Property>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="unReceipt2">
+        <Property name="dataType">Double</Property>
+        <Property name="label">未收款-2个月以上</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="unReceipt1To2">
+        <Property name="dataType">Double</Property>
+        <Property name="label">未收款-1-2个月</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="unReceipt1">
+        <Property name="dataType">Double</Property>
+        <Property name="label">未收款-1个月</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="yeji2">
+        <Property name="dataType">Double</Property>
+        <Property name="label">业绩-2个月以上</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="yeji1To2">
+        <Property name="dataType">Double</Property>
+        <Property name="label">业绩-1-2个月</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="yeji1">
+        <Property name="dataType">Double</Property>
+        <Property name="label">业绩-1个月</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptTarget">
+        <Property name="dataType">Double</Property>
+        <Property name="label">收款指标</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+view.get(&quot;#formCondition.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#formCondition.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsReportReceiptTarget">
+      <Property name="dataType">[dtReportReceiptTarget]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">reportReceiptTargetController#query</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsReportReceiptTarget</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsReportReceiptTarget&quot;);&#xD;
+var formCondition=view.get(&quot;#formCondition&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, formCondition.get(&quot;entity&quot;)).flushAsync();</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        <Property name="caption">查询</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var condition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="cols">220,220,220,220</Property>
+      <Property name="dataType">dtCondition</Property>
+      <AutoFormElement>
+        <Property name="name">year</Property>
+        <Property name="property">year</Property>
+        <Property name="showHint">false</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">month</Property>
+        <Property name="property">month</Property>
+        <Property name="showHint">false</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">sellerName</Property>
+        <Property name="property">sellerName</Property>
+        <Property name="labelWidth">80</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="editable">true</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">area</Property>
+        <Property name="property">area</Property>
+        <Property name="labelWidth">80</Property>
+        <Property name="showHint">false</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsReportReceiptTarget</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFooter">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="sellerName">
+          <Property name="property">sellerName</Property>
+        </DataColumn>
+        <DataColumn name="area">
+          <ClientEvent name="onRenderFooterCell">arg.dom.innerHTML=&quot;合计:&quot;;</ClientEvent>
+          <Property name="property">area</Property>
+        </DataColumn>
+        <DataColumn name="unReceipt2">
+          <Property name="property">unReceipt2</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+        <DataColumn name="unReceipt1To2">
+          <Property name="property">unReceipt1To2</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+        <DataColumn name="unReceipt1">
+          <Property name="property">unReceipt1</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+        <DataColumn name="yeji2">
+          <Property name="property">yeji2</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+        <DataColumn name="yeji1To2">
+          <Property name="property">yeji1To2</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+        <DataColumn name="yeji1">
+          <Property name="property">yeji1</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+        <DataColumn name="receiptTarget">
+          <Property name="property">receiptTarget</Property>
+          <Property name="summaryType">sum</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <DownloadAction id="bizDownAction">
+      <Property name="fileProvider">reportReceiptTargetController#export</Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

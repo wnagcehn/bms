@@ -5,12 +5,17 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,7 +26,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
@@ -35,22 +44,32 @@ import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
+import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeNewEnum;
+import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
+import com.jiuyescm.bms.common.enumtype.type.ExeclOperateTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
+import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.framework.fastdfs.client.StorageClient;
+import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
+import com.jiuyescm.framework.redis.client.IRedisClient;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
@@ -72,10 +91,25 @@ public class BizPalletInfoController {
 	private Lock lock;
 	@Resource
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
-	@Autowired private IWarehouseService warehouseService;
-	@Resource private ISystemCodeService systemCodeService;
-	@Autowired private ICustomerService customerService;
+	@Autowired 
+	private IWarehouseService warehouseService;
+	@Resource 
+	private ISystemCodeService systemCodeService;
+	@Autowired 
+	private ICustomerService customerService;
+	@Resource 
+	private IRedisClient redisClient;
+	@Resource
+	private JmsTemplate jmsQueueTemplate;
+	@Autowired
+	private IBmsFileAsynTaskService bmsFileAsynTaskService;
+	@Autowired 
+	private StorageClient storageClient;
+	@Resource 
+	private SequenceService sequenceService;
 
+	String sessionId=JAppContext.currentUserID()+"_import_PalletStorage";
+	final String nameSpace="com.jiuyescm.bms.biz.pallet.controller.BizPalletInfoController";
 
 	/**
 	 * 分页查询
@@ -126,10 +160,12 @@ public class BizPalletInfoController {
 	 * @param entity
 	 */
 	@DataResolver
-	public void delete(BizPalletInfoEntity entity) {
-		entity.setDelFlag("1");
+	public void delete(List<BizPalletInfoEntity> lists) {
+		for (BizPalletInfoEntity entity : lists) {
+			entity.setDelFlag("1");
+		}		
 		try {
-			bizPalletInfoService.delete(entity);
+			bizPalletInfoService.delete(lists);
 		} catch (Exception e) {
 			logger.error("删除失败",e);
 		}	
@@ -179,7 +215,7 @@ public class BizPalletInfoController {
 					throws LockCantObtainException {
 				Map<String, Object> map=new HashMap<String, Object>();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
-				errorVo.setMsg("宅配导入功能已被其他用户占用，请稍后重试；");
+				errorVo.setMsg("托数批量更新功能已被其他用户占用，请稍后重试；");
 				infoList.add(errorVo);
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
@@ -202,7 +238,7 @@ public class BizPalletInfoController {
 	}
 	
 	@FileResolver
-	public Map<String, Object> importUpdateWeightLock(UploadFile file, Map<String, Object> parameter){
+	public Map<String, Object> importUpdateWeightLock(UploadFile file, Map<String, Object> parameter) throws ParseException{
 		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 10);
 		// 校验信息（报错提示）
 		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
@@ -229,7 +265,7 @@ public class BizPalletInfoController {
 		    	temperatureMap.put(scEntity.getCodeName(), scEntity.getCode());
 		    }
 		}
-		//温度类型
+		//托数类型
 		Map<String, Object> para = new HashMap<String, Object>();
 		para.put("typeCode", "BIZ_TYPE");
 		List<SystemCodeEntity> bizTypeList = systemCodeService.queryCodeList(para);
@@ -335,13 +371,13 @@ public class BizPalletInfoController {
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			}
 			
-//			//入库单号重复性校验
-//			if (dataMap.containsKey(instockNo)) {
-//				setMessage(infoList, rowNum+1,"第"+(rowNum+1)+"行入库单号重复！");
-//				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-//			}else {
-//				dataMap.put(instockNo, xssfRow);
-//			}
+			//入库单号重复性校验
+			if (dataMap.containsKey(curTime+customerName+warehouseName+bizType+temperatureType)) {
+				setMessage(infoList, rowNum+1,"第"+(rowNum+1)+"行数据重复！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			}else {
+				dataMap.put(curTime+customerName+warehouseName+bizType+temperatureType, xssfRow);
+			}
 			
 			//调整数量为空
 			if(StringUtils.isBlank(adjustPalletNum)){
@@ -365,8 +401,10 @@ public class BizPalletInfoController {
 			if (map.size() != 0) {
 				continue;
 			}
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-			map0.put("curTime", curTime);
+			map0.put("curTime", sdf.parse(curTime));
 			map0.put("customerId", customerMap.get(customerName));
 			map0.put("warehouseCode", wareHouseMap.get(warehouseName));
 			map0.put("temperatureTypeCode", temperatureMap.get(temperatureType));
@@ -411,8 +449,11 @@ public class BizPalletInfoController {
 			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			
 			return map;
-        }
-        return map;
+        }else {
+        	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+			return map;
+		}
 	}
 	
 	private void setMessage(List<ErrorMessageVo> errorList, int lineNo,String msg) {
@@ -507,51 +548,173 @@ public class BizPalletInfoController {
 	/**
 	 * 导入
 	 */
-//	@FileResolver
-//	public Map<String, Object> importPalletTemplate(final UploadFile file,final Map<String, Object> parameter) throws Exception {
-//		// 校验信息（报错提示）
-//		final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
-//
-//		String userId=ContextHolder.getLoginUserName();
-//		String lockString=Tools.getMd5(userId + "BMS_QUE_PALLET_STORAGE_IMPORT");
-//		Map<String, Object> remap = lock.lock(lockString, 300, new LockCallback<Map<String, Object>>() {
-//
-//			@Override
-//			public Map<String, Object> handleObtainLock() {
-//				Map<String, Object> map = Maps.newHashMap();
-//				try {
-//				   map = importFileAsyn(file,parameter);
-//				   return map;
-//				} catch (Exception e) {
-//					ErrorMessageVo errorVo = new ErrorMessageVo();
-//					errorVo.setMsg(e.getMessage());
-//					infoList.add(errorVo);		
-//					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-//					return map;
-//				}
-//			}
-//
-//			@Override
-//			public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
-//				Map<String, Object> map = Maps.newHashMap();
-//				ErrorMessageVo errorVo = new ErrorMessageVo();
-//				errorVo.setMsg("托数导入功能已被其他用户占用，请稍后重试；");
-//				infoList.add(errorVo);
-//				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-//				return map;
-//			}
-//
-//			@Override
-//			public Map<String, Object> handleException(LockInsideExecutedException e)
-//					throws LockInsideExecutedException {
-//				Map<String, Object> map = Maps.newHashMap();
-//				ErrorMessageVo errorVo = new ErrorMessageVo();
-//				errorVo.setMsg("系统异常，请稍后重试!");
-//				infoList.add(errorVo);
-//				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-//				return map;
-//			}
-//		});
-//		return remap;
-//	}
+	@FileResolver
+	public Map<String, Object> importPalletTemplate(final UploadFile file,final Map<String, Object> parameter) throws Exception {
+		// 校验信息（报错提示）
+		final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
+
+		String userId=ContextHolder.getLoginUserName();
+		String lockString=Tools.getMd5(userId + "BMS_QUE_PALLET_STORAGE_IMPORT");
+		Map<String, Object> remap = lock.lock(lockString, 300, new LockCallback<Map<String, Object>>() {
+
+			@Override
+			public Map<String, Object> handleObtainLock() {
+				Map<String, Object> map = Maps.newHashMap();
+				try {
+				   map = importFileAsyn(file,parameter);
+				   return map;
+				} catch (Exception e) {
+					ErrorMessageVo errorVo = new ErrorMessageVo();
+					errorVo.setMsg(e.getMessage());
+					infoList.add(errorVo);		
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}
+			}
+
+			@Override
+			public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("托数导入功能已被其他用户占用，请稍后重试；");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+
+			@Override
+			public Map<String, Object> handleException(LockInsideExecutedException e)
+					throws LockInsideExecutedException {
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("系统异常，请稍后重试!");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+		});
+		return remap;
+	}
+	
+	/**
+	 * 异步导入处理文件
+	 * @param file
+	 * @param parameter
+	 * @return
+	 * @throws IOException
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public Map<String,Object> importFileAsyn(UploadFile file, Map<String, Object> parameter) throws Exception{
+		setProgress(0);
+		Map<String, Object> map = Maps.newHashMap();
+		List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
+		setProgress(1);
+		String extendFileName="";
+		if(file.getFileName().contains("xlsx")){
+			extendFileName="xlsx";
+		}else{
+			extendFileName="xls";
+		}
+		
+		String fileName = file.getFileName();
+				
+		double maxFileSize=getMaxFileSize();
+		double importFileSize=BigDecimal.valueOf(file.getSize()).divide(BigDecimal.valueOf(1024*1024)).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		if(importFileSize>maxFileSize){
+			infoList.add(new ErrorMessageVo(1, "Excel 导入文件过大,最多能导入"+maxFileSize+"M,请分批次导入"));
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		// 保存导入文件到fastDFS，获取文件路径
+		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
+		StorePath resultStorePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
+		String fullPath = storePath.getFullPath();
+		String resultFullPath = resultStorePath.getFullPath();
+		if (StringUtils.isBlank(fullPath) || StringUtils.isBlank(resultFullPath)) {
+			setProgress(6);
+			infoList.add(new ErrorMessageVo(1, "Excel 导入数据上传文件系统失败，请稍后重试"));
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		
+		// 生成任务，写入任务表
+		String taskId =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		
+		BmsFileAsynTaskVo taskEntity = new BmsFileAsynTaskVo();
+		taskEntity.setTaskId(taskId);
+		taskEntity.setTaskName(fileName.substring(0, fileName.lastIndexOf(".")));
+		taskEntity.setTaskRate(0);
+		taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
+		taskEntity.setTaskType("BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK");
+		taskEntity.setBizType(ExeclOperateTypeEnum.IMPORT.getCode());
+		taskEntity.setFileRows(0);
+		taskEntity.setOriginFileName(fileName);
+		taskEntity.setOriginFilePath(fullPath);
+		taskEntity.setResultFileName(fileName);
+		taskEntity.setResultFilePath(resultFullPath);
+		taskEntity.setCreator(JAppContext.currentUserName());
+		taskEntity.setCreatorId(JAppContext.currentUserID());
+		taskEntity.setCreateTime(JAppContext.currentTimestamp());
+		int saveNum = bmsFileAsynTaskService.save(taskEntity);
+		if (saveNum <= 0) {
+			setProgress(6);
+			infoList.add(new ErrorMessageVo(1, "Excel 导入数据生成任务失败"));
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		
+		// 写入MQ
+		final String msg = taskId;
+		jmsQueueTemplate.send("BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK", new MessageCreator() {
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				return session.createTextMessage(msg);
+			}
+		});
+		
+		setProgress(5);
+		map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "操作成功");
+		return map;
+	}
+	
+	/**
+	 *重置处理进度
+	 */
+    @Expose
+	public void resetProgress() {
+    	redisClient.del(sessionId, nameSpace);
+	}
+	/**
+	 * 过期时间 1小时
+	 * @param progress
+	 */
+	private void setProgress(Object obj){
+		
+		redisClient.set(sessionId, nameSpace, obj,10*60);
+	}
+	
+	 /**
+	 * 获取处理进度 0-开始处理 1-验证模板 2-读取Excel 3-开始验证数据 4-开始保存数据 5-保存结束 6-异常结束
+	 * @return
+	 */
+    @Expose
+	public int getProgress(){
+    	if(redisClient.exists(sessionId, nameSpace)){
+    		return Integer.valueOf(redisClient.get(sessionId, nameSpace, null));
+    	}else{
+    		return 0;
+    	}
+	}
+	
+	private double getMaxFileSize(){
+		double fileSize=50.0;
+		try{
+			SystemCodeEntity code=systemCodeService.getSystemCode("GLOABL_PARAM", "IMPORT_FILE_SIZE");
+			fileSize=Double.valueOf(code.getExtattr1());
+		}catch(Exception e){
+			logger.info("未配置系统参数IMPORT_FILE_SIZE");
+			System.out.println("未配置系统参数IMPORT_FILE_SIZE");
+		}
+		return fileSize;
+	}
 }

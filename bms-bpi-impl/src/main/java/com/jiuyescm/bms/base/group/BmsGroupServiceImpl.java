@@ -68,6 +68,25 @@ public class BmsGroupServiceImpl implements IBmsGroupService{
 		}
 		
 	}
+	
+	@Override
+	public List<BmsGroupVo> findAreaEnumList(Map<String, String> param) throws Exception {
+		List<BmsGroupVo> volist=null;
+		try{
+			volist=new ArrayList<BmsGroupVo>();
+			List<BmsGroupEntity> list=bmsGroupRepository.findAreaEnumList(param);
+			for(BmsGroupEntity entity:list){
+				BmsGroupVo voEntity=new BmsGroupVo();
+				PropertyUtils.copyProperties(voEntity, entity);
+				volist.add(voEntity);
+			}
+			return volist;
+		}catch(Exception e){
+			logger.error("findAreaEnumList:",e);
+			throw e;
+		}
+		
+	}
 
 	@Override
 	public List<BmsGroupVo> queryDataByParentId(int parentId) throws Exception {
@@ -75,6 +94,26 @@ public class BmsGroupServiceImpl implements IBmsGroupService{
 		try{
 			volist=new ArrayList<BmsGroupVo>();
 			List<BmsGroupEntity> list=bmsGroupRepository.queryDataByParentIdAndBizType(parentId,"bill_follow");
+			if(list!=null){
+				for(BmsGroupEntity entity:list){
+					BmsGroupVo voEntity=new BmsGroupVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					volist.add(voEntity);
+				}
+			}
+			return volist;
+		}catch(Exception e){
+			logger.error("queryAllGroup:",e);
+			throw e;
+		}
+	}
+	
+	@Override
+	public List<BmsGroupVo> querySaleAreaDataByParentId(int parentId) throws Exception {
+		List<BmsGroupVo> volist=null;
+		try{
+			volist=new ArrayList<BmsGroupVo>();
+			List<BmsGroupEntity> list=bmsGroupRepository.queryDataByParentIdAndBizType(parentId,"sale_area");
 			if(list!=null){
 				for(BmsGroupEntity entity:list){
 					BmsGroupVo voEntity=new BmsGroupVo();

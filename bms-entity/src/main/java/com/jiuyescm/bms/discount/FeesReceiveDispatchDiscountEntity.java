@@ -23,8 +23,24 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 	private Long id;
 	// 任务ID
 	private String taskId;
+	// 费用科目
+	private String subjectCode;
+	// 费用编号
+	private String feesNo;
 	// 运单号
 	private String waybillNo;
+	// 整单折扣率
+	private BigDecimal unitRate;
+	// 整单折扣价
+	private BigDecimal unitPrice;
+	// 首量折扣率
+	private BigDecimal firstRate;
+	// 首量折扣价
+	private BigDecimal firstPrice;
+	// 续量折扣率
+	private BigDecimal continueRate;
+	// 续量折扣价
+	private BigDecimal continuePrice;
 	// 折扣后金额
 	private BigDecimal discountAmount;
 	// 减免金额
@@ -214,6 +230,70 @@ public class FeesReceiveDispatchDiscountEntity implements IEntity {
 
 	public void setQuoteId(Long quoteId) {
 		this.quoteId = quoteId;
+	}
+
+	public String getSubjectCode() {
+		return subjectCode;
+	}
+
+	public void setSubjectCode(String subjectCode) {
+		this.subjectCode = subjectCode;
+	}
+
+	public String getFeesNo() {
+		return feesNo;
+	}
+
+	public void setFeesNo(String feesNo) {
+		this.feesNo = feesNo;
+	}
+
+	public BigDecimal getUnitRate() {
+		return unitRate;
+	}
+
+	public void setUnitRate(BigDecimal unitRate) {
+		this.unitRate = unitRate;
+	}
+
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public BigDecimal getFirstRate() {
+		return firstRate;
+	}
+
+	public void setFirstRate(BigDecimal firstRate) {
+		this.firstRate = firstRate;
+	}
+
+	public BigDecimal getFirstPrice() {
+		return firstPrice;
+	}
+
+	public void setFirstPrice(BigDecimal firstPrice) {
+		this.firstPrice = firstPrice;
+	}
+
+	public BigDecimal getContinueRate() {
+		return continueRate;
+	}
+
+	public void setContinueRate(BigDecimal continueRate) {
+		this.continueRate = continueRate;
+	}
+
+	public BigDecimal getContinuePrice() {
+		return continuePrice;
+	}
+
+	public void setContinuePrice(BigDecimal continuePrice) {
+		this.continuePrice = continuePrice;
 	}
     
 }

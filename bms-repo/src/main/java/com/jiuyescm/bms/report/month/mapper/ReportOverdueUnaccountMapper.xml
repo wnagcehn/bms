@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.month.ReportOverdueUnaccountMapper" >
+	
+	<!-- 未收款金额 -->
+    <select id="queryUnaccountCost" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity">
+		select a.seller_name as sellerName, sum(un_receipt_amount) as unReceiptAmount from bill_check_info 
+		where 1=1
+		<if test="userIds != null and userIds != ''">
+			and seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	             	#{item}
+	        </foreach>
+		</if>
+		and <![CDATA[create_month < #{createMonth}]]>
+		group by a.seller_id
+    </select>
+    
+    <!-- 收款金额 -->
+    <select id="queryAccountCost" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity">
+		select a.seller_name as sellerName, sum(b.receipt_amount) as receiptAmount from bill_check_info  a
+		inner join bill_check_receipt b on a.id = b.bill_check_id
+		where 1=1
+		<if test="userIds != null and userIds != ''">
+			and seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	             	#{item}
+	        </foreach>
+		</if> 
+		and <![CDATA[a.create_month < #{createMonth}]]>
+		and b.receipt_date >= #{receiptDate}
+		group by a.seller_id
+    </select>
+    
+    <select id="queryTotalAmount" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity">
+        select a.area_code as area,a.seller_id as sellerId,a.seller_name as sellerName,a.un_receipt_amount as unReceiptAmount,b.receipt_amount as receiptAmount,sum(IFNULL(un_receipt_amount,0)+IFNULL(receipt_amount,0)) as totalAmount from
+		(select u.area_code, i.seller_id,i.seller_name,sum(un_receipt_amount) as un_receipt_amount from bill_check_info i 
+		LEFT JOIN bms_group_user u on i.seller_name=u.user_name
+		where 1=1
+		<if test="sellerName != null and sellerName != ''">
+			and i.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="userIds != null and userIds != ''">
+			and i.seller_id in
+			<foreach collection="userIds" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if> 
+		<if test="area != null and area != ''">
+			and u.area_code=#{area}
+		</if>
+		<if test="billList != null and billList != ''">
+			and i.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="createMonth != null and createMonth != ''">
+			and <![CDATA[i.create_month < #{createMonth}]]>
+		</if>
+		GROUP BY i.seller_name
+		) a left JOIN
+		(
+		select u.area_code,a.seller_name AS seller_name,sum(b.receipt_amount) as receipt_amount from bill_check_info  a
+		inner join bill_check_receipt b on a.id = b.bill_check_id
+		LEFT JOIN bms_group_user u on a.seller_name=u.user_name
+		where 1=1 
+		<if test="sellerName != null and sellerName != ''">
+			and a.seller_name like CONCAT('%',#{sellerName},'%')
+		</if>
+		<if test="area != null and area != ''">
+			and u.area_code=#{area}
+		</if>
+		<if test="billList != null and billList != ''">
+			and a.invoice_name not in
+			<foreach collection="billList" item="item" separator="," open="(" close=")">
+	        	#{item}
+	        </foreach>
+		</if>
+		<if test="createMonth != null and createMonth != ''">
+			and <![CDATA[a.create_month < #{createMonth}]]>
+		</if>
+		and b.receipt_date>=#{receiptDate}
+		GROUP BY a.seller_name
+		) b on a.seller_name=b.seller_name
+		GROUP BY a.seller_name
+    </select>
+
+</mapper>

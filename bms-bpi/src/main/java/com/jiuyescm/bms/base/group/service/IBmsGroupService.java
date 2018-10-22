@@ -17,4 +17,19 @@ public interface IBmsGroupService {
 	List<BmsGroupVo> queryBmsSubjectGroupByParentId(int parentId) throws Exception;
 	boolean checkGroup(BmsGroupVo voEntity) throws Exception;
 	BmsGroupVo queryOne(Map<String,Object> condition);
+	/**
+	 * 查询销售区域
+	 * @param parentId
+	 * @return
+	 * @throws Exception
+	 */
+	List<BmsGroupVo> querySaleAreaDataByParentId(int parentId) throws Exception;
+	
+	/**
+	 * 区域下拉
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	List<BmsGroupVo> findAreaEnumList(Map<String, String> param) throws Exception;
 }

@@ -3,7 +3,7 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="dtCondition">
+    <DataType name="dtCond">
       <PropertyDef name="carrierid">
         <Property></Property>
         <Property name="label">物流商ID</Property>
@@ -25,9 +25,9 @@
     </DataType>
   </Model>
   <View>
-    <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
+    <DataSet id="dsCond">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCond&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCond]</Property>
     </DataSet>
     <DataSet id="dsCarrierEntity">
       <Property name="dataType">[dtCarrierEntity]</Property>
@@ -43,7 +43,7 @@
         </DataPilot>
         <Separator/>
         <ToolBarButton id="btnQuery">
-          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCond.data&quot;).current;&#xD;
 with (view.get(&quot;#dsCarrierEntity&quot;)){&#xD;
 					set(&quot;parameter&quot;, data);&#xD;
 					flushAsync();&#xD;
@@ -63,8 +63,8 @@ with (view.get(&quot;#dsCarrierEntity&quot;)){&#xD;
         <Property name="showHint">false</Property>
         <Property name="createPrivateDataSet">true</Property>
         <Property name="readOnly">false</Property>
-        <Property name="dataType">dtCondition</Property>
-        <Property name="dataSet">dsCondition</Property>
+        <Property name="dataType">dtCond</Property>
+        <Property name="dataSet">dsCond</Property>
         <Property name="labelWidth">75</Property>
         <Property name="labelSpacing">0</Property>
         <Property name="colPadding">15</Property>

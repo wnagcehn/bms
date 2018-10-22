@@ -74,6 +74,11 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 		// TODO Auto-generated method stub
 		return bizRepository.queryAllPrice(condition, pageNo, pageSize);
 	}
+	
+	@Override	
+	public BizDispatchBillEntity queryByWayNo(Map<String, String> condition) {
+		return bizRepository.queryByWayNo(condition);
+	}
 
 	@Override
 	public PageInfo<BizDispatchBillEntity> queryAllData(

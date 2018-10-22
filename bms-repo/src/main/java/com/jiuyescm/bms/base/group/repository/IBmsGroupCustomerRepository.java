@@ -8,7 +8,7 @@ import com.jiuyescm.bms.base.group.BmsGroupCustomerEntity;
 public interface IBmsGroupCustomerRepository {
 
 	List<BmsGroupCustomerEntity> queryAllByGroupId(int groupId);
-
+	
 	int addBatch(List<BmsGroupCustomerEntity> list);
 
 	int delGroupCustomer(BmsGroupCustomerEntity subjectEntity);

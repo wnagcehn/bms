@@ -41,6 +41,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
+import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
@@ -145,6 +147,9 @@ public class DispatchBillController{
 	
 	@Autowired 
 	private IAddressService omsAddressService;
+	
+	@Resource
+	private IPubCarrierServicetypeService pubCarrierServicetypeService;
 	
 	/**
 	 * 分页查询
@@ -936,7 +941,7 @@ public class DispatchBillController{
 		
 		int cols = xssfSheet.getRow(0).getPhysicalNumberOfCells();
 		
-		if(cols>7){
+		if(cols>8){
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 			errorVo = new ErrorMessageVo();
 			errorVo.setMsg("Excel导入格式错误请参考标准模板检查!");
@@ -951,6 +956,7 @@ public class DispatchBillController{
 		Timestamp nowdate = JAppContext.currentTimestamp();
 		String userid=JAppContext.currentUserName();
 		
+		String carrier = "";
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
         	Map<String,Object> map0 = new HashMap<String,Object>();
         	
@@ -969,6 +975,14 @@ public class DispatchBillController{
 			String adjustWeight=getCellValue(xssfRow.getCell(4));
 			String adjustCarrier = getCellValue(xssfRow.getCell(5));
 			String adjustDeliver = getCellValue(xssfRow.getCell(6));
+			String serviceTypeName = getCellValue(xssfRow.getCell(7));
+			String adjustcarrierid = "";
+			for (CarrierVo carriervo : carrierList) {
+				if (!StringUtils.isEmpty(adjustCarrier) && adjustCarrier.equals(carriervo.getName())) {
+					adjustcarrierid = carriervo.getCarrierid();
+					break;
+				}
+			}
 			// 运单号（必填）
 			if(StringUtils.isEmpty(waybillNo)) {
 				int lieshu = rowNum + 1;
@@ -976,14 +990,15 @@ public class DispatchBillController{
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
 			}
-						
-			//调整省市区、调整重量、物流商、宅配商都为空
+				
+			//调整省市区、调整重量、物流商、宅配商、物流产品类型都为空
 			if(StringUtils.isBlank(adjustProvince) && 
 					StringUtils.isBlank(adjustCity) && 
 					StringUtils.isBlank(adjustDistrict) &&
 					StringUtils.isBlank(adjustWeight) && 
 					StringUtils.isBlank(adjustCarrier) && 
-					StringUtils.isBlank(adjustDeliver)){
+					StringUtils.isBlank(adjustDeliver) &&
+					StringUtils.isBlank(serviceTypeName)){
 				// 除waybillNo外，其他更新字段都为空
 				setMessage(infoList, rowNum+1,"没有需要调整的内容！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
@@ -1053,6 +1068,42 @@ public class DispatchBillController{
 						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 						return map;	
 					}
+				}
+				
+				// 检验物流产品类型名称
+				Map<String, String> param = new HashMap<>();
+				List<PubCarrierServicetypeEntity> servicetypeList = null;
+				param.put("waybillNo", waybillNo);
+				BizDispatchBillEntity entity = bizDispatchBillService.queryByWayNo(param);
+				if (null == entity) {
+					setMessage(infoList, rowNum+1,"没有该运单:"+waybillNo);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;	
+				}
+				if (StringUtils.isEmpty(adjustCarrier)) {
+					//为空，查业务数据优先调整物流商
+					if (StringUtils.isEmpty(entity.getAdjustCarrierId())) {
+						carrier = entity.getCarrierId();
+						servicetypeList = pubCarrierServicetypeService.queryByCarrierid(carrier);
+					}else {
+						servicetypeList = pubCarrierServicetypeService.queryByCarrierid(entity.getAdjustCarrierId());
+					}		
+				}else {
+					//Excel中调整物流商
+					servicetypeList = pubCarrierServicetypeService.queryByCarrierid(adjustcarrierid);
+				}
+				boolean exe = false;
+				for (PubCarrierServicetypeEntity pubCarrierServicetypeEntity : servicetypeList) {
+					if (serviceTypeName.equals(pubCarrierServicetypeEntity.getServicename())) {
+						map0.put("adjustServiceTypeCode", pubCarrierServicetypeEntity.getServicecode());
+						exe = true;
+						break;
+					}
+				}
+				if (!exe) {
+					setMessage(infoList, rowNum+1,"物流商没有物流产品类型:"+serviceTypeName);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
 				}
 			}
 			
