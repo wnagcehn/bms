@@ -180,7 +180,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		if(entity.getPalletNum()!=null){
 			storageFeeEntity.setQuantity(entity.getAdjustPalletNum()==null?entity.getPalletNum():entity.getAdjustPalletNum());//商品数量
 		}
-		storageFeeEntity.setStatus("0");			
+		//storageFeeEntity.setStatus("0");			
 		storageFeeEntity.setUnit("PALLETS");
 		storageFeeEntity.setTempretureType(entity.getTemperatureTypeCode());//设置温度类型  zhangzw
 		storageFeeEntity.setCost(new BigDecimal(0));	//入仓金额
@@ -501,7 +501,11 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
 		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveStorageService.InsertBatch(fs);
+		try {
+			feesReceiveStorageService.InsertBatch(fs);
+		} catch (Exception e) {
+			XxlJobLogger.log("新增费用异常", e);
+		}
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒 ",(current - start));
 		
