@@ -469,7 +469,7 @@ public class BuinessDataExportController extends BaseController {
 		map.put("receiveCityId", "收件人市");
 		map.put("receiveDetailAddress", "收件人地址");
 
-		// 按新增时间获取systemCode表中的类别并排序
+		// 按序号获取systemCode表中的类别并排序
 		Map<String, Object> param = new HashMap<>();
 		param.put("typeCode", "PACKMAGERIAL_SORT");
 		List<SystemCodeEntity> entityList = systemCodeService.queryBySortNo(param);
