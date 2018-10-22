@@ -258,12 +258,12 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 			if(validateData(entity, feeEntity)){
 				XxlJobLogger.log("计算状态"+entity.getIsCalculated());
 				XxlJobLogger.log("计算信息"+entity.getRemark());
-				if(mapCusPrice.containsKey(entity.getCustomerId())){
+				if(mapCusPrice.containsKey(entity.getCustomerId()+SubjectId)){
 					entity.setCalculateTime(JAppContext.currentTimestamp());
 					feeEntity.setCalculateTime(entity.getCalculateTime());
 					String customerId=entity.getCustomerId();
 					//报价模板
-					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId);
+					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
 					//数量
 					double num=DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum();
 					//如果有调整托数按照调整托数算钱  185需求
@@ -279,7 +279,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 						feeEntity.setParam3(generalEntity.getId()+"");
 						break;
 					case "PRICE_TYPE_STEP"://阶梯价
-						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId);
+						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId+SubjectId);
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 							amount=num*stepQuoEntity.getUnitPrice();
 							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
@@ -418,16 +418,16 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		start = System.currentTimeMillis();// 系统开始时间
 		/*验证报价 报价*/
 		PriceGeneralQuotationEntity quoTemplete=null;
-		if(!mapCusPrice.containsKey(customerId)){
+		if(!mapCusPrice.containsKey(customerId+SubjectId)){
 			map.clear();
 			map.put("subjectId",SubjectId);
 			map.put("quotationNo", contractItems.get(0).getTemplateId());
 			quoTemplete=priceGeneralQuotationRepository.query(map);
 			if(quoTemplete != null){
-				mapCusPrice.put(customerId, quoTemplete);//加入缓存
+				mapCusPrice.put(customerId+SubjectId, quoTemplete);//加入缓存
 			}
 		}else{
-			quoTemplete=mapCusPrice.get(customerId);
+			quoTemplete=mapCusPrice.get(customerId+SubjectId);
 		}
 		if(quoTemplete==null){
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
@@ -476,7 +476,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 				return  false;
 			}else {
 				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
-				mapCusStepPrice.put(customerId,price);
+				mapCusStepPrice.put(customerId+SubjectId,price);
 			}
 		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
 			
