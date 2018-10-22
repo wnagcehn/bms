@@ -264,12 +264,10 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			
 		if(errMap.size()==0){
 			//如果excel数据本身存在问题，就没有将数据写入临时表的必要
-			if(palletList!=null && palletList.size()>0){
-				bizProductPalletStorageTempService.saveBatch(palletList);//保存到临时表
-			}
-			
-			if(packList!=null && packList.size()>0){
-				bizPackStorageTempService.saveBatch(packList);
+			if(palletList!=null && palletList.size()>0){				
+				//如果excel数据本身存在问题，就没有将数据写入临时表的必要
+				bizPalletInfoTempService.saveBatch(palletList);
+				
 			}
 		}
 		logger.info("所有数据写入临时表-成功");
