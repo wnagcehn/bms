@@ -784,6 +784,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	public void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity feeEntity,ContractQuoteInfoVo contractQuoteInfoVo){
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
+		XxlJobLogger.log("-->"+entity.getId()+"计算总重量为"+feeEntity.getChargedWeight());
 		try{
 			Map<String, Object> con = new HashMap<String, Object>();
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode().trim());
@@ -811,6 +812,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setRemark("计算成功");
+				XxlJobLogger.log("-->"+entity.getId()+"计算成功11，费用"+feeEntity.getAmount());
 				XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getAmount());
 			}
 			else{
@@ -937,15 +939,21 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	@Override
 	public void updateBatch(List<BizDispatchBillEntity> billList,List<FeesReceiveDispatchEntity> feesList) {
-		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
-		bizDispatchBillService.newUpdateBatch(billList);
-		current = System.currentTimeMillis();
-		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
-		start = System.currentTimeMillis();// 系统开始时间
-		feesReceiveDispatchService.InsertBatch(feesList);
-		current = System.currentTimeMillis();
-		XxlJobLogger.log("更新费用数据耗时：【{0}】毫秒 ",(current - start));
+		try {
+			long start = System.currentTimeMillis();// 系统开始时间
+			long current = 0l;// 当前系统时间
+			bizDispatchBillService.newUpdateBatch(billList);
+			current = System.currentTimeMillis();
+			XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
+			start = System.currentTimeMillis();// 系统开始时间
+			feesReceiveDispatchService.InsertBatch(feesList);
+			current = System.currentTimeMillis();
+			XxlJobLogger.log("更新费用数据耗时：【{0}】毫秒 ",(current - start));
+		} catch (Exception e) {
+			// TODO: handle exception
+			XxlJobLogger.log("-->批量保存异常"+e.getMessage());
+		}
+		
 	}
 
 	
