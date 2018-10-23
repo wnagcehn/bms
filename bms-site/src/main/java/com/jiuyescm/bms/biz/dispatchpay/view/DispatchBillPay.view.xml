@@ -273,6 +273,10 @@
       <PropertyDef name="servicename">
         <Property name="label">物流产品类型</Property>
       </PropertyDef>
+      <PropertyDef name="originThrowWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">泡重</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1112,6 +1116,11 @@ if(isNullOrEmpty(adjustWeight)){&#xD;
 arg.processDefault = true;</ClientEvent>
           <Property name="property">adjustWeight</Property>
           <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">originThrowWeight</Property>
+          <Property name="width">90</Property>
+          <Property name="name">originThrowWeight</Property>
         </DataColumn>
         <DataColumn name="receiveTime">
           <Property name="property">receiveTime</Property>

@@ -424,8 +424,11 @@
     
     <select id="getMaterialCodeFromBizData" parameterType="Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	select consumer_material_code,consumer_material_name 
-    	from biz_outstock_packmaterial where customer_id=#{customerId} and <![CDATA[create_time>=#{startTime}]]>
+    	from biz_outstock_packmaterial where 1=1 and <![CDATA[create_time>=#{startTime}]]>
     	and <![CDATA[create_time<#{endTime}]]> and del_flag=0
+    	<if test="customerId !=null and customerId !='' ">
+    		and customer_id=#{customerId}
+    	</if>
     	<if test="warehouseCode!=null and warehouseCode!=''">
     		and warehouse_code=#{warehouseCode}
     	</if>

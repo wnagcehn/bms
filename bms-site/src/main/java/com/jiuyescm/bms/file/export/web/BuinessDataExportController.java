@@ -735,7 +735,7 @@ public class BuinessDataExportController extends BaseController {
 	 */
 	private void handMaterialNotSepWareHouse(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil,
 			Map<String, Object> condition, String filePath) throws Exception {
-		List<Map<String, Object>> dataPackMaterialList = dataPackMaterialList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> dataPackMaterialList = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> headPackMaterialMapList = null;
 		Map<String, Object> cond = new HashMap<String, Object>();
 		

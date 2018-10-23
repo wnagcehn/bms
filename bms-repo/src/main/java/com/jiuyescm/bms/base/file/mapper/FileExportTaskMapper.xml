@@ -41,8 +41,8 @@
 		<if test="(billNo != null and billNo !='')" >
 			and bill_no = #{billNo}
 		</if>
-		<if test="(customerid != null and customerid !='')" >
-			and customerid = #{customerid}
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId}
 		</if>
 		<if test="(startTime != null and startTime !='')" >
 			and start_time = #{startTime}
