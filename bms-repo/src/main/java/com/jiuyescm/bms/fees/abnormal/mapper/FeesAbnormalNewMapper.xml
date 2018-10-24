@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.abnormal.FeesAbnormalNewMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fee_no" property="feeNo" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="reference" property="reference" jdbcType="VARCHAR" />
+	    <result column="expressnum" property="expressnum" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="reason_id" property="reasonId" jdbcType="SMALLINT" />
+	    <result column="reason" property="reason" jdbcType="VARCHAR" />
+	    <result column="reason_detail" property="reasonDetail" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="warehouse_id" property="warehouseId" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="create_person" property="createPerson" jdbcType="VARCHAR" />
+	    <result column="create_person_name" property="createPersonName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="ispay" property="ispay" jdbcType="BIT" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="pay_money" property="payMoney" jdbcType="DECIMAL" />
+	    <result column="is_conflict" property="isConflict" jdbcType="BIT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="CHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_delivery_free" property="isDeliveryFree" jdbcType="VARCHAR" />
+	    <result column="delivery_cost" property="deliveryCost" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE"/>
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE"/>
+	    <result column="product_amount_j2c" property="productAmountJ2c" jdbcType="DECIMAL" />
+	    <result column="product_amount_d2j" property="productAmountD2j" jdbcType="DECIMAL" />
+	    <result column="is_delivery_free_d2j" property="isDeliveryFreeD2j" jdbcType="VARCHAR" />
+	    <result column="returned_amount_c2j" property="returnedAmountC2j" jdbcType="DECIMAL" />
+	    <result column="returned_amount_j2d" property="returnedAmountJ2d" jdbcType="DECIMAL" />
+	    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+	    <result column="duty_type" property="dutyType" jdbcType="VARCHAR" />
+	    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+	    <result column="kesu_confirm_time" property="kesuConfirmTime" jdbcType="TIMESTAMP" />
+	    <result column="is_delivery_free_j2c" property="isDeliveryFreeJ2c" jdbcType="VARCHAR" />
+	    <result column="confirm_pay_amount" property="confirmPayAmount" jdbcType="DECIMAL" />
+	    <result column="confirm_is_delivery_free" property="confirmIsDeliveryFree" jdbcType="VARCHAR" />
+	    <result column="confirm_year" property="confirmYear" jdbcType="VARCHAR" />
+	    <result column="confirm_month" property="confirmMonth" jdbcType="VARCHAR" />
+	    <result column="import_confirm_time" property="importConfirmTime" jdbcType="TIMESTAMP" />
+	    <result column="close_time" property="closeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, fee_no,outstock_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, is_calculated, operate_time,is_delivery_free,delivery_cost, product_amount_j2c, product_amount_d2j, is_delivery_free_d2j, returned_amount_c2j, returned_amount_j2d, order_status, duty_type, pay_type, kesu_confirm_time, is_delivery_free_j2c, confirm_pay_amount, confirm_is_delivery_free, confirm_year, confirm_month, import_confirm_time, close_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(feeNo != null and feeNo !='')" >
+				and fee_no = #{feeNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(reference != null and reference !='')" >
+				and reference = #{reference}
+		</if>
+		<if test="(expressnum != null and expressnum !='')" >
+				and expressnum = #{expressnum}
+		</if>
+		<if test="(orderNo != null and orderNo !='')" >
+				and order_no = #{orderNo}
+		</if>
+		<if test="(reasonId != null and reasonId !='')" >
+				and reason_id = #{reasonId}
+		</if>
+		<if test="(reason != null and reason !='')" >
+				and reason = #{reason}
+		</if>
+		<if test="(reasonDetail != null and reasonDetail !='')" >
+				and reason_detail = #{reasonDetail}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+				and carrier_id = #{carrierId}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and carrier_name = #{carrierName}
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and deliver_id = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliver_name = #{deliverName}
+		</if>
+		<if test="(warehouseId != null and warehouseId !='')" >
+				and warehouse_id = #{warehouseId}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(createPerson != null and createPerson !='')" >
+				and create_person = #{createPerson}
+		</if>
+		<if test="(createPersonName != null and createPersonName !='')" >
+				and create_person_name = #{createPersonName}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(ispay != null and ispay !='')" >
+				and ispay = #{ispay}
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		<if test="(kesuStartTime != null and kesuStartTime !='') and (kesuEndTime != null and kesuEndTime !='')" >
+			    and kesu_confirm_time >= #{kesuStartTime} and <![CDATA[kesu_confirm_time <= #{kesuEndTime}]]>
+		</if>
+		<if test="(payMoney != null and payMoney !='')" >
+				and pay_money = #{payMoney}
+		</if>
+		<if test="(isConflict != null and isConflict !='')" >
+				and is_conflict = #{isConflict}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
+               select
+        <include refid="baseColumns" />
+        from fees_abnormal
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    
+	
+</mapper>
