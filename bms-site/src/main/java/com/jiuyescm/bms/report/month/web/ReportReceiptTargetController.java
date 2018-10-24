@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.Cell;
@@ -430,7 +431,9 @@ public class ReportReceiptTargetController {
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			if(StringUtils.isNotBlank(vo.getMkInvoiceName())){
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}	
 		}
 		
 		return map;

@@ -195,10 +195,10 @@ public class ReportReceiptTargetJob extends IJobHandler{
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
-		}
-		
+			if(StringUtils.isNotBlank(vo.getMkInvoiceName())){
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}
+		}		
 		return map;
-
     }
 }
