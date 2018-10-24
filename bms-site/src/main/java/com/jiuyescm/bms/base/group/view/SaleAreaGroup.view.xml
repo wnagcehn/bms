@@ -104,12 +104,23 @@
         <Property name="label">状态</Property>
         <Property name="mapping">
           <Property name="mapValues">
-            <Entity>
-              <Property name="启用">0</Property>
-              <Property name="禁用">1</Property>
-            </Entity>
+            <Collection>
+              <Entity>
+                <Property name="key">ALL</Property>
+                <Property name="value">全部</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">启用</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">禁用</Property>
+              </Entity>
+            </Collection>
           </Property>
         </Property>
+        <Property name="defaultValue">ALL</Property>
       </PropertyDef>
     </DataType>
   </Model>
