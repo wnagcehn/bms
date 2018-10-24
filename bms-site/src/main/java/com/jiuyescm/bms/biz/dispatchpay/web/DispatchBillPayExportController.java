@@ -43,6 +43,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
@@ -460,7 +461,7 @@ public class DispatchBillPayExportController extends BaseController{
         	//校验该费用是否已生成Excel文件
         	if (StringUtils.isNotBlank(customerId)) {
         		Map<String, Object> queryEntity = new HashMap<String, Object>();
-            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getCode());
+            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
             	queryEntity.put("taskName", "原始耗材出库明细"+customerMap.get(customerId));
             	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
             	if (StringUtils.isNotEmpty(existDel)) {
@@ -470,7 +471,7 @@ public class DispatchBillPayExportController extends BaseController{
         	
         	if (StringUtils.isNotBlank(warehouseCode)) {
         		Map<String, Object> queryEntity = new HashMap<String, Object>();
-            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getCode());
+            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
             	queryEntity.put("taskName", "原始耗材出库明细"+warehouseMap.get(warehouseCode));
             	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
             	if (StringUtils.isNotEmpty(existDel)) {
@@ -478,12 +479,12 @@ public class DispatchBillPayExportController extends BaseController{
             	}
 			}
         	
-        	String path = getBizPayExportPath();
+        	String path = getPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getCode() + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
-        	entity.setStartTime(DateUtil.formatTimestamp(param.get("createTime")));
+        	entity.setStartTime(DateUtil.formatTimestamp(param.get("startTime")));
         	entity.setEndTime(DateUtil.formatTimestamp(param.get("endTime")));
         	if (!"".equals(customerId) && "".equals(warehouseCode)) {
         		entity.setTaskName(FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getDesc() + customerMap.get(customerId));
@@ -492,7 +493,7 @@ public class DispatchBillPayExportController extends BaseController{
 			}else {
 				entity.setTaskName(FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getDesc());
 			}
-        	entity.setTaskType(FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getCode());
+        	entity.setTaskType(FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
         	entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
         	entity.setProgress(0d);
         	entity.setFilePath(filepath);
@@ -546,7 +547,7 @@ public class DispatchBillPayExportController extends BaseController{
 	 */
 	private void originExport(Map<String, Object> param,String taskId,String filePath)throws Exception{
 		fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 10);
-		String path = getBizPayExportPath();
+		String path = getPath();
 		long beginTime = System.currentTimeMillis();
 		
 		logger.info("====原始耗材导出：");
@@ -554,6 +555,14 @@ public class DispatchBillPayExportController extends BaseController{
     	File storeFolder=new File(path);
 		if(!storeFolder.isDirectory()){
 			storeFolder.mkdirs();
+		}
+		
+		// 如果文件存在直接删除，重新生成
+		String fileName = "原始耗材出库明细" + FileConstant.SUFFIX_XLSX;
+		String filepath = path + FileConstant.SEPARATOR + fileName;
+		File file = new File(filepath);
+		if (file.exists()) {
+			file.delete();
 		}
 		
     	logger.info("====原始耗材导出：写入Excel begin.");
@@ -793,6 +802,18 @@ public class DispatchBillPayExportController extends BaseController{
 			}
 		}
 		return "其他";
+	}
+	
+	/**
+	 * 获取原始耗材出库明细导出的文件路径
+	 * @return
+	 */
+	public String getPath(){
+		SystemCodeEntity systemCodeEntity = getSystemCode("GLOABL_PARAM", "EXPORT_ORIGIN_PAY_BIZ");
+		if(systemCodeEntity == null){
+			throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_ORIGIN_PAY_BIZ");
+		}
+		return systemCodeEntity.getExtattr1();
 	}
 	
 }

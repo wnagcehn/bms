@@ -36,7 +36,7 @@ public class BaseController {
 	 * @return
 	 */
 	public String getBizPayExportPath(){
-		SystemCodeEntity systemCodeEntity = getSystemCode("GLOABL_PARAM", "EXPORT_ORIGIN_PAY_BIZ");
+		SystemCodeEntity systemCodeEntity = getSystemCode("GLOABL_PARAM", "EXPORT_PAY_BIZ");
 		return systemCodeEntity.getExtattr1();
 	}
 	

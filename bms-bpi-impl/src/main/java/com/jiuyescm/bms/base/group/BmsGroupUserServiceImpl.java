@@ -146,7 +146,7 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 	public String checkSaleUser(Map<String, Object> param) {
 		return bmsGroupUserRepository.checkSaleUser(param);
 	}
-
+	
 	@Override
 	public int queryUserCountByGroupId(int groupId) {
 		return bmsGroupUserRepository.queryUserCountByGroupId(groupId);

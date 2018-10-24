@@ -1503,7 +1503,7 @@ arg.data=view.get(&quot;#dg_MaterialList&quot;).get(&quot;selection&quot;);</Cli
       <Property name="dataResolver">bizOutstockPackmaterialExportController#asynExport</Property>
     </UpdateAction>
     <UpdateAction id="originBizDownAction">
-      <Property name="dataResolver">bizOutstockPackmaterialExportController#originAsynExport</Property>
+      <Property name="dataResolver">dispatchBillPayExportController#originAsynExport</Property>
     </UpdateAction>
     <Dialog id="fileExportTaskDialog">
       <Property name="closeable">false</Property>
