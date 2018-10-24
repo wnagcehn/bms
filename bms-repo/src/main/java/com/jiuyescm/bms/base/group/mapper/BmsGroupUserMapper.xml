@@ -37,10 +37,10 @@
 	</select>
 	
 	<select id="checkSaleUserIgnoreId" parameterType="java.util.Map" resultType="java.lang.String">
-		select area_code from bms_group_user
+		select area_code as areaCode from bms_group_user
 		where del_flag='0' 
 		and user_id=#{userId}
-		and id != #{Id}
+		and id != #{id}
 		limit 1
 	</select>
 	
@@ -134,7 +134,7 @@
 	<select id="queryUserByBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">	
 		select u.* from bms_group_user u
 		LEFT JOIN bms_group g on g.id=u.group_id
-		WHERE g.biz_type=#{bizType}
+		WHERE g.biz_type=#{bizType} and u.del_flag='0'
 	</select>
 	
 	<select id="queryGroupUser" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">

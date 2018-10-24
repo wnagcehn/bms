@@ -13,6 +13,7 @@
       <PropertyDef name="userId">
         <Property></Property>
         <Property name="label">用户编号</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="userName">
         <Property></Property>
@@ -168,12 +169,18 @@ view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
         <Separator/>
         <ToolBarButton>
           <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUser.data&quot;);&#xD;
-                if(data.current){&#xD;
-                    view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
-					&#xD;
-                }else{&#xD;
-                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
-                }&#xD;
+&#xD;
+if(data.current.get(&quot;delFlag&quot;) == '1'){&#xD;
+	dorado.MessageBox.alert(&quot;已禁用的用户无法修改！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(data.current){&#xD;
+    view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
+	&#xD;
+}else{&#xD;
+    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
 	&#xD;
 </ClientEvent>
           <Property name="caption">修改用户</Property>
@@ -182,7 +189,11 @@ view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
         <Separator/>
         <ToolBarButton>
           <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUser.data&quot;).current;&#xD;
-dorado.MessageBox.confirm(&quot;确认要删除用户【&quot;+data.get(&quot;userName&quot;)+&quot;】?&quot;,function(){&#xD;
+if(data.get(&quot;delFlag&quot;) == '1'){&#xD;
+	dorado.MessageBox.alert(&quot;该用户已禁用，无法重复禁用!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;确认要禁用用户【&quot;+data.get(&quot;userName&quot;)+&quot;】?&quot;,function(){&#xD;
 	var action=view.get(&quot;#deleteUserAction&quot;);&#xD;
 	action.execute(function(result){&#xD;
 		dorado.MessageBox.alert(result);&#xD;

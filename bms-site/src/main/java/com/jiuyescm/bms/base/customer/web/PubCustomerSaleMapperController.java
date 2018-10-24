@@ -320,12 +320,14 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 			List<PubCustomerSaleMapperEntity> orgList=getOrgList(parame);
 			List<PubCustomerSaleMapperEntity> teList=templateList;
 			List<PubCustomerSaleMapperEntity> newList = new ArrayList<PubCustomerSaleMapperEntity>();
+			List<PubCustomerSaleMapperEntity> updList = new ArrayList<PubCustomerSaleMapperEntity>();
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
 			if (null != orgList && orgList.size()>0) {
 				//Map<String,Object> mapCheck=super.compareWithImportLineData(orgList, teList, infoList,getKeyDataProperty(), map);
 				//if (mapCheck.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) {
 					//map.clear();
 				for (PubCustomerSaleMapperEntity excelEntity : teList) {
+					boolean exe = false;
 					if (!sellerMap.containsKey(excelEntity.getOriginSellerName())) {
 						errorVo = new ErrorMessageVo();
 						errorVo.setMsg(excelEntity.getOriginSellerName()+"没有在销售区域人员中维护");
@@ -334,35 +336,104 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 						continue;
 					}
 					for (PubCustomerSaleMapperEntity dbEntity : orgList) {
-						//重复的更新
-						if (excelEntity.getCustomerName().equals(dbEntity.getCustomerName())) {
-							excelEntity.setLastModifier(userName);
-							excelEntity.setLastModifierId(JAppContext.currentUserID());
-							excelEntity.setLastModifyTime(currentTime);
-							excelEntity.setOriginSellerId(sellerMap.get(excelEntity.getOriginSellerName()).trim());
-							pubCustomerSaleMapperService.update(excelEntity);	
-							map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
-							break;
-						}else {
-						//非重复的新增			
-							excelEntity.setOriginSellerId(sellerMap.get(excelEntity.getOriginSellerName()).trim());
-							excelEntity.setCustomerId(customerMap.get(excelEntity.getCustomerName()).trim());
-							excelEntity.setCreator(userName);
-							excelEntity.setCreateTime(currentTime);
-							excelEntity.setCreatorId(JAppContext.currentUserID());
-							newList.add(excelEntity);
+						if (excelEntity.getCustomerName().equals(dbEntity.getCustomerName())) {				
+							exe = true;
 							break;
 						}
+					}
+					if (exe) {
+						//重复的更新
+						excelEntity.setLastModifier(userName);
+						excelEntity.setLastModifierId(JAppContext.currentUserID());
+						excelEntity.setLastModifyTime(currentTime);
+						excelEntity.setOriginSellerId(sellerMap.get(excelEntity.getOriginSellerName()).trim());
+						updList.add(excelEntity);
+						//map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+					}else {
+						//非重复的更新
+						excelEntity.setOriginSellerId(sellerMap.get(excelEntity.getOriginSellerName()).trim());
+						excelEntity.setCustomerId(customerMap.get(excelEntity.getCustomerName()).trim());
+						excelEntity.setCreator(userName);
+						excelEntity.setCreateTime(currentTime);
+						excelEntity.setCreatorId(JAppContext.currentUserID());
+						newList.add(excelEntity);
 					}
 				}
 				if (map.containsKey(ConstantInterface.ImportExcelStatus.IMP_ERROR)) {
 					return map;
 				}
+				//正式表更新
+				int updateNum = 0;
+				try {
+					if (updList.size() > 0) {
+						updateNum = pubCustomerSaleMapperService.updateBatchTmp(updList);
+						DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 900);
+					}
+				} catch (Exception e) {
+					if (updateNum <= 0) {
+						errorVo = new ErrorMessageVo();
+						errorVo.setMsg("更新正式表失败!");
+						infoList.add(errorVo);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						return map;
+					}else{
+						DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+						logger.info("更新表耗时："+FileOperationUtil.getOperationTime(starTime));
+						try{
+							PubRecordLogEntity model=new PubRecordLogEntity();
+							model.setBizType(RecordLogBizTypeEnum.PRICE.getCode());
+							model.setNewData("");
+							model.setOldData("");
+							model.setOperateDesc("导入宅配报价对应关系,共计【"+updateNum+"】条");
+							model.setOperatePerson(JAppContext.currentUserName());
+							model.setOperateTable("price_dispatch_detail");
+							model.setOperateTime(JAppContext.currentTimestamp());
+							model.setOperateType(RecordLogOperateType.IMPORT.getCode());
+							model.setRemark("");
+							model.setOperateTableKey("");
+							model.setUrlName(RecordLogUrlNameEnum.IN_DELIVER_BASE_PRICE.getCode());
+							pubRecordLogService.AddRecordLog(model);
+						}catch(Exception ex){
+							logger.error("记录日志失败,失败原因:"+ex.getMessage());
+						}
+					}
+				}
 				//插入正式表
 				int insertNum = 0;
 				try {
-					insertNum = pubCustomerSaleMapperService.insertBatchTmp(newList);
-					DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 900);
+					if (newList.size() > 0) {
+						insertNum = pubCustomerSaleMapperService.insertBatchTmp(newList);
+						DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 900);
+						if (insertNum <= 0) {
+							errorVo = new ErrorMessageVo();
+							errorVo.setMsg("插入正式表失败!");
+							infoList.add(errorVo);
+							map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+							return map;
+						}else{
+							DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
+							map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+							logger.info("写入表耗时："+FileOperationUtil.getOperationTime(starTime));
+							try{
+								PubRecordLogEntity model=new PubRecordLogEntity();
+								model.setBizType(RecordLogBizTypeEnum.PRICE.getCode());
+								model.setNewData("");
+								model.setOldData("");
+								model.setOperateDesc("导入宅配报价对应关系,共计【"+insertNum+"】条");
+								model.setOperatePerson(JAppContext.currentUserName());
+								model.setOperateTable("price_dispatch_detail");
+								model.setOperateTime(JAppContext.currentTimestamp());
+								model.setOperateType(RecordLogOperateType.IMPORT.getCode());
+								model.setRemark("");
+								model.setOperateTableKey("");
+								model.setUrlName(RecordLogUrlNameEnum.IN_DELIVER_BASE_PRICE.getCode());
+								pubRecordLogService.AddRecordLog(model);
+							}catch(Exception e){
+								logger.error("记录日志失败,失败原因:"+e.getMessage());
+							}
+						}
+					}
 				} catch (Exception e) {
 					if((e.getMessage().indexOf("Duplicate entry"))>0){
 						errorVo = new ErrorMessageVo();
@@ -374,35 +445,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 					//写入日志
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 				}
-				
-				if (insertNum <= 0) {
-					errorVo = new ErrorMessageVo();
-					errorVo.setMsg("插入正式表失败!");
-					infoList.add(errorVo);
-					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
-				}else{
-					DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
-					map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
-					logger.info("写入表耗时："+FileOperationUtil.getOperationTime(starTime));
-					try{
-						PubRecordLogEntity model=new PubRecordLogEntity();
-						model.setBizType(RecordLogBizTypeEnum.PRICE.getCode());
-						model.setNewData("");
-						model.setOldData("");
-						model.setOperateDesc("导入宅配报价对应关系,共计【"+insertNum+"】条");
-						model.setOperatePerson(JAppContext.currentUserName());
-						model.setOperateTable("price_dispatch_detail");
-						model.setOperateTime(JAppContext.currentTimestamp());
-						model.setOperateType(RecordLogOperateType.IMPORT.getCode());
-						model.setRemark("");
-						model.setOperateTableKey("");
-						model.setUrlName(RecordLogUrlNameEnum.IN_DELIVER_BASE_PRICE.getCode());
-						pubRecordLogService.AddRecordLog(model);
-					}catch(Exception e){
-						logger.error("记录日志失败,失败原因:"+e.getMessage());
-					}
-				}
+						
 			}
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);		
 		} catch (Exception e) {
