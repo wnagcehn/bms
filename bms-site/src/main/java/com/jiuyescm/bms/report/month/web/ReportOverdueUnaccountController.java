@@ -214,7 +214,7 @@ public class ReportOverdueUnaccountController {
 			Integer year = Integer.parseInt(param.get("year").toString())+1;
 			param.put("createMonth", String.valueOf(year).substring(2,4) + "0" + (month-12));
 		}else if (month < 10) {
-			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
+			param.put("createMonth", param.get("year").toString().substring(2, 4) + "0" + month.toString());
 		}else {
 			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
 		}

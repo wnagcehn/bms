@@ -159,13 +159,13 @@
 		from bms_group_user
 		WHERE 1=1
 			and group_id in (select id from bms_group WHERE biz_type='sale_area')
-		<if test="(userId!=null and userId!='')">
+		<if test="(userId != null and userId != '')">
 			and user_id=#{userId}
 		</if>
-		<if test="(userName!=null and userName!='')">
+		<if test="(userName != null and userName != '')">
 			and user_name like CONCAT('%',#{userName},'%')
 		</if>
-		<if test="(delFlag!=null and delFlag!='')">
+		<if test="(delFlag != null and delFlag != '' and delFlag !='ALL')">
 			and del_flag=#{delFlag}
 		</if>
 	</select>
