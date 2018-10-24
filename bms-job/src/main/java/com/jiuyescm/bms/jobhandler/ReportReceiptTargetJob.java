@@ -107,7 +107,9 @@ public class ReportReceiptTargetJob extends IJobHandler{
 					for(BmsGroupCustomerVo vo:custList){
 						billList.add(customerMap.get(vo.getCustomerid()));
 					}
-					parameter.put("billList", billList);
+					if(billList.size()>0){
+						parameter.put("billList", billList);
+					}
 				}	
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
