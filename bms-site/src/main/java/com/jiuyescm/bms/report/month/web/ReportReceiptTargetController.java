@@ -12,10 +12,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -83,13 +85,15 @@ public class ReportReceiptTargetController {
 			map.put("groupCode", "error_customer");
 			map.put("bizType", "group_customer");
 			BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
-			if(bmsGroup!=null){			
+			if(bmsGroup!=null){
 				List<BmsGroupCustomerVo> custList=bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
 				List<String> billList=new ArrayList<String>();
 				for(BmsGroupCustomerVo vo:custList){
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
-				parameter.put("billList", billList);
+				if(billList.size()>0){
+					parameter.put("billList", billList);
+				}
 			}
 			
 			createMonthTran2(parameter);
@@ -231,7 +235,7 @@ public class ReportReceiptTargetController {
 				param.put(code.getCode(), code.getExtattr1());
 			}
 			//指定的异常商家
-			Map<String,String> customerMap=customerMap();;
+			Map<String,String> customerMap=customerMap();
 			Map<String, Object> map= new HashMap<String, Object>();
 			map.put("groupCode", "error_customer");
 			map.put("bizType", "group_customer");
@@ -242,7 +246,9 @@ public class ReportReceiptTargetController {
 				for(BmsGroupCustomerVo vo:custList){
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
-				param.put("billList", billList);
+				if(billList.size()>0){
+					param.put("billList", billList);
+				}
 			}
 			
 			//时间转换
@@ -265,6 +271,7 @@ public class ReportReceiptTargetController {
 		sheet.setColumnWidth(5, 4000);
 		sheet.setColumnWidth(6, 4000);
 		sheet.setColumnWidth(7, 4000);
+		sheet.setColumnWidth(8, 5000);
 		
 		Font font = workbook.createFont();
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
@@ -273,8 +280,7 @@ public class ReportReceiptTargetController {
 		style.setAlignment(CellStyle.ALIGN_CENTER);
 		style.setWrapText(true);
 		style.setFont(font);
-		
-		
+
 		Row row0 = sheet.createRow(0);	
 		Cell cell0 = row0.createCell(0);
 		cell0.setCellValue("");
@@ -325,7 +331,9 @@ public class ReportReceiptTargetController {
 		cell28.setCellValue("收款指标");
 		cell28.setCellStyle(style);
 		
-		
+		CellStyle style2 = workbook.createCellStyle();
+        DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
+        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));//数据格式只显示整数
 		//未收款（2个月以上）
 		double unReceipt2=0d;		
 		//未收款（1到2个月）
@@ -341,6 +349,7 @@ public class ReportReceiptTargetController {
 		//收款指标
 		double receiptTarget=0d;
 		
+		
 		int RowIndex = 2;
 		if(list.size()>0){
 			for(int i=0;i<list.size();i++){	
@@ -349,24 +358,31 @@ public class ReportReceiptTargetController {
 				RowIndex++;
 				Cell cel0 = row.createCell(0);
 				cel0.setCellValue(entity.getSellerName());
+				cel0.setCellStyle(style2);
 				Cell cel1 = row.createCell(1);
 				cel1.setCellValue(saleMap.get(entity.getArea()));
+				cel1.setCellStyle(style2);
 				Cell cel2 = row.createCell(2);
 				cel2.setCellValue(entity.getUnReceipt2()==null?0d:entity.getUnReceipt2().doubleValue());
+				cel2.setCellStyle(style2);
 				Cell cel3 = row.createCell(3);
 				cel3.setCellValue(entity.getUnReceipt1To2()==null?0d:entity.getUnReceipt1To2().doubleValue());
+				cel3.setCellStyle(style2);
 				Cell cel4 = row.createCell(4);
 				cel4.setCellValue(entity.getUnReceipt1()==null?0d:entity.getUnReceipt1().doubleValue());
-				
+				cel4.setCellStyle(style2);
 				Cell cel5 = row.createCell(5);
 				cel5.setCellValue(entity.getYeji2()==null?0d:entity.getYeji2().doubleValue());
+				cel5.setCellStyle(style2);
 				Cell cel6 = row.createCell(6);
 				cel6.setCellValue(entity.getYeji1To2()==null?0d:entity.getYeji1To2().doubleValue());
+				cel6.setCellStyle(style2);
 				Cell cel7 = row.createCell(7);
 				cel7.setCellValue(entity.getYeji1()==null?0d:entity.getYeji1().doubleValue());
+				cel7.setCellStyle(style2);
 				Cell cel8 = row.createCell(8);
 				cel8.setCellValue(entity.getReceiptTarget()==null?0d:entity.getReceiptTarget().doubleValue());
-				
+				cel8.setCellStyle(style2);
 				//未收款（2个月以上）总计
 				unReceipt2+=(entity.getUnReceipt2()==null?0d:entity.getUnReceipt2().doubleValue());
 				//未收款（1到2个月）
@@ -378,28 +394,36 @@ public class ReportReceiptTargetController {
 				//业绩 （1到2个月）
 				yeji1To2+=(entity.getYeji1To2()==null?0d:entity.getYeji1To2().doubleValue());
 				//业绩 （1个月）
-				yeji1+=(entity.getYeji1()==null?0d:entity.getYeji1().doubleValue());			
+				yeji1+=(entity.getYeji1()==null?0d:entity.getYeji1().doubleValue());
+				//收款指标
 				receiptTarget+=(entity.getReceiptTarget()==null?0d:entity.getReceiptTarget().doubleValue());			
 			}
 		}
-		
+				
 		Row lastRow = sheet.createRow(RowIndex);
 		Cell cellast1 = lastRow.createCell(1);
 		cellast1.setCellValue("合计：");
 		Cell cellast2 = lastRow.createCell(2);
-		cellast2.setCellValue(getCommaFormat(new BigDecimal(unReceipt2)));
+		cellast2.setCellValue(unReceipt2);
+		cellast2.setCellStyle(style2);
 		Cell cellast3 = lastRow.createCell(3);
-		cellast3.setCellValue(getCommaFormat(new BigDecimal(unReceipt1To2)));
+		cellast3.setCellValue(unReceipt1To2);
+		cellast3.setCellStyle(style2);
 		Cell cellast4 = lastRow.createCell(4);
-		cellast4.setCellValue(getCommaFormat(new BigDecimal(unReceipt1)));
+		cellast4.setCellValue(unReceipt1);
+		cellast4.setCellStyle(style2);
 		Cell cellast5 = lastRow.createCell(5);
-		cellast5.setCellValue(getCommaFormat(new BigDecimal(yeji2)));
+		cellast5.setCellValue(yeji2);
+		cellast5.setCellStyle(style2);
 		Cell cellast6 = lastRow.createCell(6);
-		cellast6.setCellValue(getCommaFormat(new BigDecimal(yeji1To2)));
+		cellast6.setCellValue(yeji1To2);
+		cellast6.setCellStyle(style2);
 		Cell cellast7 = lastRow.createCell(7);
-		cellast7.setCellValue(getCommaFormat(new BigDecimal(yeji1)));
+		cellast7.setCellValue(yeji1);
+		cellast7.setCellStyle(style2);	
 		Cell cellast8 = lastRow.createCell(8);
-		cellast8.setCellValue(getCommaFormat(new BigDecimal(receiptTarget)));
+		cellast8.setCellValue(receiptTarget);
+		cellast8.setCellStyle(style2);
 	}
 	
 	private String getPath(){
@@ -426,7 +450,9 @@ public class ReportReceiptTargetController {
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			if(StringUtils.isNotBlank(vo.getMkInvoiceName())){
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}	
 		}
 		
 		return map;

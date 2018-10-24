@@ -32,4 +32,10 @@ public interface IBmsGroupService {
 	 * @throws Exception
 	 */
 	List<BmsGroupVo> findAreaEnumList(Map<String, String> param) throws Exception;
+	
+	/**
+	 * 查询销售区域id
+	 * @return
+	 */
+	BmsGroupVo queryIdByBizType();
 }

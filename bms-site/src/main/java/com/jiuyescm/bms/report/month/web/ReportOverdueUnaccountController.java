@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -30,26 +31,16 @@ import org.springframework.stereotype.Controller;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.uploader.DownloadFile;
 import com.bstek.dorado.uploader.annotation.FileProvider;
-import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
-import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
-import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.common.constants.FileConstant;
-import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
-import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
-import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
-import com.jiuyescm.bms.report.month.entity.ReportIncomesSubjectEntity;
 import com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity;
-import com.jiuyescm.bms.report.month.service.IReportIncomesSubjectService;
 import com.jiuyescm.bms.report.month.service.IReportOverdueUnaccountService;
-import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
@@ -103,7 +94,9 @@ public class ReportOverdueUnaccountController {
 				for(BmsGroupCustomerVo vo:custList){
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
-				param.put("billList", billList);
+				if (billList.size() > 0) {
+					param.put("billList", billList);
+				}
 			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -221,7 +214,7 @@ public class ReportOverdueUnaccountController {
 			Integer year = Integer.parseInt(param.get("year").toString())+1;
 			param.put("createMonth", String.valueOf(year).substring(2,4) + "0" + (month-12));
 		}else if (month < 10) {
-			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
+			param.put("createMonth", param.get("year").toString().substring(2, 4) + "0" + month.toString());
 		}else {
 			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
 		}
@@ -402,6 +395,10 @@ public class ReportOverdueUnaccountController {
 		 cell4.setCellStyle(style);
 		 
 		logger.info("超期未收款占比导出给sheet赋值。。。");
+		CellStyle style2 = workbook.createCellStyle();
+        DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
+        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));//数据格式只显示整数
+		
 		//超期未收款金额总计
 		double totalOverdueUnaccount=0d;
 		//应收款金额总计
@@ -429,12 +426,13 @@ public class ReportOverdueUnaccountController {
 			Cell cel1 = row.createCell(1);
 			cel1.setCellValue(mapValue.get(entity.getArea()));
 			Cell cel2 = row.createCell(2);
-			cel2.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount())));
+			cel2.setCellValue(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount());
+			cel2.setCellStyle(style2);
 			Cell cel3 = row.createCell(3);
-			cel3.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount())));
+			cel3.setCellValue(entity.getReceiptAmount()==null?0d:entity.getReceiptAmount());
+			cel3.setCellStyle(style2);
 			Cell cel4 = row.createCell(4);
-			cel4.setCellValue(entity.getOverdueUnaccountRatio());
-			
+			cel4.setCellValue(entity.getOverdueUnaccountRatio());		
 			//超期未收款金额总计
 			totalOverdueUnaccount+=(entity.getUnReceiptAmount()==null?0d:entity.getUnReceiptAmount().doubleValue());
 			//应收款金额总计
@@ -462,9 +460,11 @@ public class ReportOverdueUnaccountController {
 		cellast.setCellValue("合计：");
 		
 		Cell cellast0 = lastRow.createCell(2);
-		cellast0.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(totalOverdueUnaccount)));
+		cellast0.setCellValue(totalOverdueUnaccount);
+		cellast0.setCellStyle(style2);
 		Cell cellast1 = lastRow.createCell(3);
-		cellast1.setCellValue(ReportOverdueUnaccountController.getCommaFormat(new BigDecimal(totalReceiveAccount)));
+		cellast1.setCellValue(totalReceiveAccount);
+		cellast1.setCellStyle(style2);
 		Cell cellast2 = lastRow.createCell(4);
 		cellast2.setCellValue(totalOverdueUnaccountRatio);
 	}
@@ -485,7 +485,9 @@ public class ReportOverdueUnaccountController {
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			if (StringUtils.isNotBlank(vo.getMkInvoiceName())) {
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}	
 		}	
 		return map;
     }

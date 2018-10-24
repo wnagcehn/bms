@@ -26,4 +26,10 @@ public interface IBmsGroupRepository {
 	 * @return
 	 */
 	List<BmsGroupEntity> findAreaEnumList(Map<String, String> param);
+	
+	/**
+	 * 查询销售区域的id
+	 * @return
+	 */
+	BmsGroupEntity queryIdByBizType();
 }

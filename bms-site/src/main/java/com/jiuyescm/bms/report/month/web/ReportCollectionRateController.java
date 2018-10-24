@@ -17,20 +17,20 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.uploader.DownloadFile;
 import com.bstek.dorado.uploader.annotation.FileProvider;
-import com.jiuyescm.bms.base.customer.entity.PubCustomerSaleMapperEntity;
 import com.jiuyescm.bms.base.customer.service.IPubCustomerSaleMapperService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
@@ -38,20 +38,17 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
-import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.report.month.entity.ReportCollectionRateEntity;
-import com.jiuyescm.bms.report.month.entity.ReportOverdueUnaccountEntity;
 import com.jiuyescm.bms.report.month.service.IReportCollectionRateService;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
 
 /**
- * 
+ * 收款达成率报表
  * @author stevenl
  * 
  */
@@ -99,7 +96,9 @@ public class ReportCollectionRateController {
 				for(BmsGroupCustomerVo vo:custList){
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
-				param.put("billList", billList);
+				if (billList.size() > 0) {
+					param.put("billList", billList);
+				}		
 			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -321,6 +320,11 @@ public class ReportCollectionRateController {
 			 cell8.setCellStyle(style);
 			 
 			logger.info("收款达成率导出给sheet赋值。。。");
+			
+			CellStyle style2 = workbook.createCellStyle();
+	        DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
+	        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));//数据格式只显示整数
+			
 			//启动时间一年以内收款总计
 			double totalUnderOneYear=0d;
 			//启动时间1-2年的客户收款总计
@@ -356,17 +360,23 @@ public class ReportCollectionRateController {
 				Cell cel1 = row.createCell(1);
 				cel1.setCellValue(mapValue.get(entity.getArea()));
 				Cell cel2 = row.createCell(2);
-				cel2.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getReceiptWithinOneYear()==null?0d:entity.getReceiptWithinOneYear())));
+				cel2.setCellValue(entity.getReceiptWithinOneYear()==null?0d:entity.getReceiptWithinOneYear());
+				cel2.setCellStyle(style2);
 				Cell cel3 = row.createCell(3);
-				cel3.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getReceiptBetweenOneAndTwoYear()==null?0d:entity.getReceiptBetweenOneAndTwoYear())));
+				cel3.setCellValue(entity.getReceiptBetweenOneAndTwoYear()==null?0d:entity.getReceiptBetweenOneAndTwoYear());
+				cel3.setCellStyle(style2);
 				Cell cel4 = row.createCell(4);
-				cel4.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getReceiptOverTwoYear()==null?0d:entity.getReceiptOverTwoYear())));
+				cel4.setCellValue(entity.getReceiptOverTwoYear()==null?0d:entity.getReceiptOverTwoYear());
+				cel4.setCellStyle(style2);
 				Cell cel5 = row.createCell(5);
-				cel5.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getHandoverCustomerReceipt()==null?0d:entity.getHandoverCustomerReceipt())));
+				cel5.setCellValue(entity.getHandoverCustomerReceipt()==null?0d:entity.getHandoverCustomerReceipt());
+				cel5.setCellStyle(style2);	
 				Cell cel6 = row.createCell(6);
-				cel6.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getReceiptTotal()==null?0d:entity.getReceiptTotal())));
+				cel6.setCellValue(entity.getReceiptTotal()==null?0d:entity.getReceiptTotal());
+				cel6.setCellStyle(style2);			
 				Cell cel7 = row.createCell(7);
-				cel7.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(entity.getReceiptTarget()==null?0d:entity.getReceiptTarget())));
+				cel7.setCellValue(entity.getReceiptTarget()==null?0d:entity.getReceiptTarget());
+				cel7.setCellStyle(style2);			
 				Cell cel8 = row.createCell(8);
 				cel8.setCellValue(entity.getReceiptCollectionRate());
 				
@@ -403,17 +413,23 @@ public class ReportCollectionRateController {
 			cellast.setCellValue("合计：");
 			
 			Cell cellast0 = lastRow.createCell(2);
-			cellast0.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(totalUnderOneYear)));
+			cellast0.setCellValue(totalUnderOneYear);
+			cellast0.setCellStyle(style2);
 			Cell cellast1 = lastRow.createCell(3);
-			cellast1.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(totalBetweenOneAndTwo)));
+			cellast1.setCellValue(totalBetweenOneAndTwo);
+			cellast1.setCellStyle(style2);
 			Cell cellast2 = lastRow.createCell(4);
-			cellast2.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(totalOverTwoYear)));
+			cellast2.setCellValue(totalOverTwoYear);
+			cellast2.setCellStyle(style2);
 			Cell cellast3 = lastRow.createCell(5);
-			cellast3.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(totalNewSellerReceipt)));
+			cellast3.setCellValue(totalNewSellerReceipt);
+			cellast3.setCellStyle(style2);
 			Cell cellast4 = lastRow.createCell(6);
-			cellast4.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(totalReceiptAmount)));
+			cellast4.setCellValue(totalReceiptAmount);
+			cellast4.setCellStyle(style2);
 			Cell cellast5 = lastRow.createCell(7);
-			cellast5.setCellValue(ReportCollectionRateController.getCommaFormat(new BigDecimal(totalReceiptTarget)));
+			cellast5.setCellValue(totalReceiptTarget);
+			cellast5.setCellStyle(style2);			
 			Cell cellast6 = lastRow.createCell(8);
 			cellast6.setCellValue(totalCollectionRate);
 	}
@@ -435,7 +451,9 @@ public class ReportCollectionRateController {
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			if (StringUtils.isNotBlank(vo.getMkInvoiceName())) {
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}		
 		}	
 		return map;
     }

@@ -22,6 +22,7 @@ public class BmsGroupEntity implements IEntity {
 	private String lastModifier;
 	private Timestamp lastModifyTime;
 	private String areaCode;
+	private String delFlag;
 	public int getId() {
 		return id;
 	}
@@ -81,6 +82,12 @@ public class BmsGroupEntity implements IEntity {
 	}
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
+	}
+	public String getDelFlag() {
+		return delFlag;
+	}
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
 	}
 
 	

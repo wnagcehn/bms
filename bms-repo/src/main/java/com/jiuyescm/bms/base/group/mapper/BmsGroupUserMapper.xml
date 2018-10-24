@@ -33,7 +33,15 @@
 	
 	<select id="checkSaleUser" parameterType="java.util.Map" resultType="java.lang.String">
 		select area_code from bms_group_user
-		where user_id=#{userId} limit 1
+		where del_flag='0' and user_id=#{userId} limit 1
+	</select>
+	
+	<select id="checkSaleUserIgnoreId" parameterType="java.util.Map" resultType="java.lang.String">
+		select area_code as areaCode from bms_group_user
+		where del_flag='0' 
+		and user_id=#{userId}
+		and id != #{id}
+		limit 1
 	</select>
 	
 	<select id="queryUserCountByGroupId" parameterType="int" resultType="int">
@@ -74,9 +82,9 @@
 	
 	<insert id="addGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
 		insert into bms_group_user
-		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time,area_code)
+		(group_id,user_id,user_name,administrator,creator,create_time,last_modifier,last_modify_time,area_code,del_flag)
 		values
-		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime},#{areaCode})
+		(#{groupId},#{userId},#{userName},#{administrator},#{creator},#{createTime},#{lastModifier},#{lastModifyTime},#{areaCode},#{delFlag})
 	</insert>
 	
 	<update id="updateGroupUser" parameterType="com.jiuyescm.bms.base.group.BmsGroupEntity">
@@ -85,11 +93,13 @@
 			<if test="(groupId!=null and groupId!='')">group_id=#{groupId},</if>
 			<if test="(userId!=null and userId!='')">user_id=#{userId},</if>
 			<if test="(userName!=null and userName!='')">user_name=#{userName},</if>
+			<if test="(areaCode!=null and areaCode!='')">area_code=#{areaCode},</if>
 			<if test="(administrator!=null and administrator!='')">administrator=#{administrator},</if>
 			<if test="(creator!=null and creator!='')">creator=#{creator},</if>
 			<if test="(createTime!=null and createTime!='')">create_time=#{createTime},</if>
 			<if test="(lastModifier!=null and lastModifier!='')">last_modifier=#{lastModifier},</if>
 			<if test="(lastModifyTime!=null and lastModifyTime!='')">last_modify_time=#{lastModifyTime},</if>
+			<if test="(delFlag!=null and delFlag!='')">del_flag=#{delFlag},</if>
 		</set>
 		where id=#{id}
 	</update>
@@ -124,12 +134,12 @@
 	<select id="queryUserByBizType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">	
 		select u.* from bms_group_user u
 		LEFT JOIN bms_group g on g.id=u.group_id
-		WHERE g.biz_type=#{bizType}
+		WHERE g.biz_type=#{bizType} and u.del_flag='0'
 	</select>
 	
 	<select id="queryGroupUser" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">
 		select id,group_id,user_id,user_name,area_code,
-		creator,create_time,last_modifier,last_modify_time
+		creator,create_time,last_modifier,last_modify_time,del_flag
 		from bms_group_user
 		where 1=1
 		<if test="(userId!=null and userId!='')">
@@ -138,5 +148,26 @@
 		<if test="(userName!=null and userName!='')">
 			and user_name like CONCAT('%',#{userName},'%')
 		</if>
+		<if test="(delFlag!=null and delFlag!='')">
+			and del_flag=#{delFlag}
+		</if>
 	</select>
+	
+	<select id="querySaleUser" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">
+		select id,group_id,user_id,user_name,area_code,
+		creator,create_time,last_modifier,last_modify_time,del_flag
+		from bms_group_user
+		WHERE 1=1
+			and group_id in (select id from bms_group WHERE biz_type='sale_area')
+		<if test="(userId != null and userId != '')">
+			and user_id=#{userId}
+		</if>
+		<if test="(userName != null and userName != '')">
+			and user_name like CONCAT('%',#{userName},'%')
+		</if>
+		<if test="(delFlag != null and delFlag != '' and delFlag !='ALL')">
+			and del_flag=#{delFlag}
+		</if>
+	</select>
+	
 </mapper>
