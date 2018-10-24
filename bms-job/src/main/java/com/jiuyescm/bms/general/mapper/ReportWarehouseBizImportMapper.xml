@@ -86,11 +86,11 @@
 		UNION ALL
 		
 		SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
-			customerid as customerId, 'ACTUAL' as importType, 'PALLET' as biz_type
-		FROM biz_product_pallet_storage
-		WHERE del_flag = '0'
+			customer_id as customerId, 'ACTUAL' as importType, 'PALLET' as biz_type
+		FROM biz_pallet_info
+		WHERE del_flag = '0' and biz_type='product'
 			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
-		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'),customerid) a
+		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'),customer_id) a
 		
         on DUPLICATE KEY update
         create_time=#{createTime,jdbcType=TIMESTAMP},del_flag=#{delFlag};
