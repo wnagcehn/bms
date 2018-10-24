@@ -1946,7 +1946,7 @@ public class BuinessDataExportController extends BaseController {
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "运单号");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "waybillNo");
+		itemMap.put("dataKey", "expressnum");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();

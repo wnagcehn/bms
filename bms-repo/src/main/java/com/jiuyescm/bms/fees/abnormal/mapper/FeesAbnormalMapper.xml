@@ -908,26 +908,17 @@
 	</select>
 	
 	<!-- 预账单理赔 -->
-	<select id="queryPreBillAbnormal" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
-		SELECT a.warehouse_name,a.create_time,a.expressnum,a.customer_name,a.reason,
-			(case when a.reason_id=4 then a.pay_money else -a.pay_money end) pay_money,
-			b.amount as delivery_cost,
-			case a.is_delivery_free
-			   when '0'  then  '否'
-			   when '1'  then  '是'
-			   end as is_delivery_free,
-			a.create_person_name,a.remark
-		FROM fees_abnormal a
-		left join fees_receive_dispatch b
-		on a.expressnum=b.waybill_no and b.del_flag = '0' and b.subject_code <![CDATA[<>]]> 'de_abnormal_pay'
-		where a.customer_id = #{customerId}
+	<select id="queryPreBillAbnormal" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">		
+		select warehouse_name,create_time,expressnum,customer_name,duty_type,
+		pay_type,product_amount_j2c,returned_amount_c2j,is_delivery_free_j2c,create_person_name,remark from fees_abnormal
+		where 1=1
+		and customer_id = #{customerId}
 		<if test="startTime!=null">
-			AND a.create_time <![CDATA[>=]]> #{startTime}
+			AND create_time <![CDATA[>=]]> #{startTime}
 		</if>
 		<if test="endTime!=null">
-			AND a.create_time <![CDATA[<]]> #{endTime}
+			AND create_time <![CDATA[<]]> #{endTime}
 		</if>
-		and a.reason_id <![CDATA[<>]]> 4
 	</select>
 	
 	<select id="queryAbnormalChangeByBillNo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
