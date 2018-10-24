@@ -59,6 +59,14 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
         		condition, new RowBounds(pageNo, pageSize));
 		return new PageInfo<BmsGroupUserEntity>(list);
 	}
+	
+	@Override
+	public PageInfo<BmsGroupUserEntity> querySaleUser(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+        List<BmsGroupUserEntity> list = selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.querySaleUser", 
+        		condition, new RowBounds(pageNo, pageSize));
+		return new PageInfo<BmsGroupUserEntity>(list);
+	}
 
 	@Override
 	public String checkExistGroupName(String userId) {

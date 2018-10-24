@@ -294,6 +294,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 					}
 				}
 			}
+			
 			//销售员
 			Map<String, String> parma = new HashMap<String, String>();
 			parma.put("bizType", "sale_area");
@@ -325,6 +326,13 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 				//if (mapCheck.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) {
 					//map.clear();
 				for (PubCustomerSaleMapperEntity excelEntity : teList) {
+					if (!sellerMap.containsKey(excelEntity.getOriginSellerName())) {
+						errorVo = new ErrorMessageVo();
+						errorVo.setMsg(excelEntity.getOriginSellerName()+"没有在销售区域人员中维护");
+						infoList.add(errorVo);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						continue;
+					}
 					for (PubCustomerSaleMapperEntity dbEntity : orgList) {
 						//重复的更新
 						if (excelEntity.getCustomerName().equals(dbEntity.getCustomerName())) {
@@ -346,6 +354,9 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 							break;
 						}
 					}
+				}
+				if (map.containsKey(ConstantInterface.ImportExcelStatus.IMP_ERROR)) {
+					return map;
 				}
 				//插入正式表
 				int insertNum = 0;

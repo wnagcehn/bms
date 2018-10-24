@@ -103,7 +103,9 @@ public class ReportOverdueUnaccountController {
 				for(BmsGroupCustomerVo vo:custList){
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
-				param.put("billList", billList);
+				if (billList.size() > 0) {
+					param.put("billList", billList);
+				}
 			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -485,7 +487,9 @@ public class ReportOverdueUnaccountController {
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			if (StringUtils.isNotBlank(vo.getMkInvoiceName())) {
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}	
 		}	
 		return map;
     }

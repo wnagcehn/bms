@@ -23,6 +23,7 @@ public class BmsGroupUserEntity implements IEntity {
 	
 	private String areaCode;
 	private String groupCode;
+	private String delFlag;
 	public int getId() {
 		return id;
 	}
@@ -95,6 +96,12 @@ public class BmsGroupUserEntity implements IEntity {
 	}
 	public void setGroupCode(String groupCode) {
 		this.groupCode = groupCode;
+	}
+	public String getDelFlag() {
+		return delFlag;
+	}
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
 	}
 	
 }

@@ -290,7 +290,7 @@ public class BmsGroupController {
 	public void queryGroupSale(Page<BmsGroupUserVo> page,Map<String,Object> parameter) throws Exception{
 		PageInfo<BmsGroupUserVo> pageInfo=null;
 		try{
-			pageInfo=bmsGroupUserService.queryGroupUser(parameter, page.getPageNo(), page.getPageSize());
+			pageInfo=bmsGroupUserService.querySaleUser(parameter, page.getPageNo(), page.getPageSize());
 			if(page!=null){
 				page.setEntities(pageInfo.getList());
 				page.setEntityCount((int)pageInfo.getTotal());
@@ -349,12 +349,20 @@ public class BmsGroupController {
 	
 	@DataResolver
 	public String deleteGroupUser(BmsGroupUserVo voEntity){
-		int k=bmsGroupUserService.deleteGroupUser(voEntity.getId());
-		if(k>0){
-			return "删除成功!";
-		}else{
-			return "删除失败!";
+		String result = "";
+		voEntity.setDelFlag("1");
+		try {
+			int k=bmsGroupUserService.updateGroupUser(voEntity);
+			if(k>0){
+				return "删除成功!";
+			}else{
+				return "删除失败!";
+			}
+		} catch (Exception e) {
+			logger.error("删除失败", e);
+			result = "删除失败";
 		}
+		return result;
 	}
 	
 	@DataProvider
@@ -468,13 +476,19 @@ public class BmsGroupController {
 		for (SystemCodeEntity SystemCodeEntity : tmscodels) {
 			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
 		}
-		if ("".equals(voEntity.getId()+"")) {
+		if (EntityState.NEW.equals(EntityUtils.getState(voEntity))) {
 			//新增
 			try{
 				param = new HashMap<String, Object>();
 				voEntity.setCreator(JAppContext.currentUserName());
 				voEntity.setCreateTime(JAppContext.currentTimestamp());
-				
+				voEntity.setDelFlag("0");
+				BmsGroupVo gVo = bmsGroupService.queryIdByBizType();
+				if (null != gVo) {
+					voEntity.setGroupId(gVo.getId());
+				}else {
+					return "销售区域组未配置!";
+				}
 				param.put("userId", voEntity.getUserId());
 				String areaCode=bmsGroupUserService.checkSaleUser(param);
 				if(StringUtils.isBlank(areaCode)){
@@ -491,7 +505,7 @@ public class BmsGroupController {
 				logger.error("新增异常", e);
 				throw new BizException("新增用户异常！");
 			}	
-		}else {
+		}else if(EntityState.MODIFIED.equals(EntityUtils.getState(voEntity))){
 			//修改
 			try{
 				param = new HashMap<String, Object>();

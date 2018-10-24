@@ -95,5 +95,11 @@ public class BmsGroupRepositoryImpl extends MyBatisDao<BmsGroupEntity> implement
 		
 		return (BmsGroupEntity) selectOne("com.jiuyescm.bms.base.group.mapper.BmsGroupMapper.queryOne", condition);
 	}
+	
+	@Override
+	public BmsGroupEntity queryIdByBizType() {
+		List<BmsGroupEntity> list = this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupMapper.queryIdByBizType", null);
+		return list.size()>0?list.get(0):null;
+	}
 
 }

@@ -77,4 +77,14 @@ public interface IBmsGroupUserService {
 	 * @return
 	 */
 	String checkSaleUserIgnoreId(Map<String, Object> param);
+	
+	/**
+	 * 查询销售人员
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 * @throws Exception
+	 */
+	PageInfo<BmsGroupUserVo> querySaleUser(Map<String, Object> condition, int pageNo, int pageSize) throws Exception;
 }
