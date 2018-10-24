@@ -1954,35 +1954,41 @@ public class BuinessDataExportController extends BaseController {
 		itemMap.put("columnWidth", 50);
 		itemMap.put("dataKey", "customerName");
 		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "责任方");
+		itemMap.put("columnWidth", 50);
+		itemMap.put("dataKey", "dutyType");
+		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "赔付类型");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "reason");
+		itemMap.put("dataKey", "payType");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "赔款额");
+		itemMap.put("title", "赔付商品金额");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "payAmount");
+		itemMap.put("dataKey", "productAmountJ2c");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "运费");
+		itemMap.put("title", "赔付运费");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "deliveryCost");
+		itemMap.put("dataKey", "returnedAmountC2j");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "是否免运费");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "isDeliveryFree");
+		itemMap.put("dataKey", "isDeliveryFreeJ2c");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "登记人");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "creator");
+		itemMap.put("dataKey", "createPersonName");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
