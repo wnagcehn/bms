@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -99,7 +100,9 @@ public class ReportCollectionRateController {
 				for(BmsGroupCustomerVo vo:custList){
 					billList.add(customerMap.get(vo.getCustomerid()));
 				}
-				param.put("billList", billList);
+				if (billList.size() > 0) {
+					param.put("billList", billList);
+				}		
 			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -435,7 +438,9 @@ public class ReportCollectionRateController {
     	Map<String,String> map=new HashMap<String,String>();
 		List<CustomerVo> cusList=customerService.queryAll();
 		for(CustomerVo vo:cusList){
-			map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			if (StringUtils.isNotBlank(vo.getMkInvoiceName())) {
+				map.put(vo.getCustomerid(), vo.getMkInvoiceName());
+			}		
 		}	
 		return map;
     }

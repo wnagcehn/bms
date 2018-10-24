@@ -5,9 +5,7 @@
   <Model>
     <DataType name="dtBmsGroupUserEntity">
       <Property name="creationType">com.jiuyescm.bms.base.group.vo.BmsGroupUserVo</Property>
-      <PropertyDef name="id">
-        <Property name="dataType">int</Property>
-      </PropertyDef>
+      <PropertyDef name="id"/>
       <PropertyDef name="groupId">
         <Property name="dataType">int</Property>
         <Property name="label">区域</Property>
@@ -43,6 +41,17 @@
         <Property name="label">区域</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">启用</Property>
+              <Property name="1">禁用</Property>
+            </Entity>
+          </Property>
         </Property>
       </PropertyDef>
     </DataType>
@@ -89,6 +98,17 @@
         <Property name="label">区域</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;SALE_AREA&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="启用">0</Property>
+              <Property name="禁用">1</Property>
+            </Entity>
+          </Property>
         </Property>
       </PropertyDef>
     </DataType>
@@ -192,6 +212,12 @@ dorado.MessageBox.confirm(&quot;确认要删除用户【&quot;+data.get(&quot;us
           <Property name="property">userName</Property>
           <Editor/>
         </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">delFlag</Property>
+          <Property name="property">delFlag</Property>
+          <Property name="editable">false</Property>
+          <Editor/>
+        </AutoFormElement>
       </AutoForm>
       <DataGrid>
         <Property name="dataSet">dsGroupUser</Property>
@@ -206,6 +232,11 @@ dorado.MessageBox.confirm(&quot;确认要删除用户【&quot;+data.get(&quot;us
         <DataColumn>
           <Property name="name">areaCode</Property>
           <Property name="property">areaCode</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">delFlag</Property>
+          <Property name="property">delFlag</Property>
           <Editor/>
         </DataColumn>
         <DataColumn name="creator">

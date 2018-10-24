@@ -83,4 +83,10 @@
 		</if>
 	</select>
 	
+	<select id="queryIdByBizType" resultMap="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		select * from bms_group
+		where 1=1
+		and biz_type='sale_area'
+	</select>
+	
 </mapper>
