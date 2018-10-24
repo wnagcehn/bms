@@ -333,7 +333,7 @@ public class ReportReceiptTargetController {
 		
 		CellStyle style2 = workbook.createCellStyle();
         DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
-        style2.setDataFormat(df.getFormat(",##0.00"));//数据格式只显示整数
+        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));//数据格式只显示整数
 		//未收款（2个月以上）
 		double unReceipt2=0d;		
 		//未收款（1到2个月）

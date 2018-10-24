@@ -323,7 +323,7 @@ public class ReportCollectionRateController {
 			
 			CellStyle style2 = workbook.createCellStyle();
 	        DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
-	        style2.setDataFormat(df.getFormat(",##0.00"));//数据格式只显示整数
+	        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));//数据格式只显示整数
 			
 			//启动时间一年以内收款总计
 			double totalUnderOneYear=0d;
