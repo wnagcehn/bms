@@ -36,6 +36,11 @@
 		where user_id=#{userId} limit 1
 	</select>
 	
+	<select id="checkSaleUserIgnoreId" parameterType="java.util.Map" resultType="java.lang.String">
+		select area_code from bms_group_user
+		where user_id=#{userId} and id != #{id} limit 1
+	</select>
+	
 	<select id="queryUserCountByGroupId" parameterType="int" resultType="int">
 		select count(*) from bms_group_user where group_id=#{groupId}
 	</select>
@@ -85,6 +90,7 @@
 			<if test="(groupId!=null and groupId!='')">group_id=#{groupId},</if>
 			<if test="(userId!=null and userId!='')">user_id=#{userId},</if>
 			<if test="(userName!=null and userName!='')">user_name=#{userName},</if>
+			<if test="(areaCode!=null and areaCode!='')">area_code=#{areaCode},</if>
 			<if test="(administrator!=null and administrator!='')">administrator=#{administrator},</if>
 			<if test="(creator!=null and creator!='')">creator=#{creator},</if>
 			<if test="(createTime!=null and createTime!='')">create_time=#{createTime},</if>

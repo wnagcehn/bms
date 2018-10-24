@@ -90,6 +90,16 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
 			return "";
 		}
 	}
+	
+	@Override
+	public String checkSaleUserIgnoreId(Map<String, Object> param) {
+		Object obj=this.selectOneForObject("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.checkSaleUserIgnoreId", param);
+		if(obj!=null){
+			return obj.toString();
+		}else{
+			return "";
+		}
+	}
 
 	@Override
 	public int queryUserCountByGroupId(int groupId) {

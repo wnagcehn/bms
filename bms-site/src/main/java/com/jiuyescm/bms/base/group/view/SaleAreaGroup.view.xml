@@ -136,6 +136,20 @@ view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
         </ToolBarButton>
         <Separator/>
         <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUser.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogGroupUserEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }&#xD;
+	&#xD;
+</ClientEvent>
+          <Property name="caption">修改用户</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
+        <Separator/>
+        <ToolBarButton>
           <ClientEvent name="onClick">var data=view.get(&quot;#dsGroupUser.data&quot;).current;&#xD;
 dorado.MessageBox.confirm(&quot;确认要删除用户【&quot;+data.get(&quot;userName&quot;)+&quot;】?&quot;,function(){&#xD;
 	var action=view.get(&quot;#deleteUserAction&quot;);&#xD;

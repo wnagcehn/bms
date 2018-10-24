@@ -61,4 +61,11 @@ public interface IBmsGroupUserRepository {
 	 * @return
 	 */
 	String checkSaleUser(Map<String, Object> param);
+	
+	/**
+	 * 更新时检查用户是否重复
+	 * @param param
+	 * @return
+	 */
+	String checkSaleUserIgnoreId(Map<String, Object> param);
 }
