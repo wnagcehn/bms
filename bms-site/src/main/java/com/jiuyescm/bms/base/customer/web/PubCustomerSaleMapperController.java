@@ -281,7 +281,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 			if (map.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) {
 				return map;
 			}
-			
+			logger.info("商家name转ID");
 			//商家+销售员name转ID
 			Map<String, String> customerMap = new HashMap<String, String>();
 			Map<String, String> sellerMap = new HashMap<String, String>();
@@ -294,7 +294,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 					}
 				}
 			}
-			
+			logger.info("销售员name转ID");
 			//销售员
 			Map<String, String> parma = new HashMap<String, String>();
 			parma.put("bizType", "sale_area");
@@ -314,7 +314,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 			
 			// 获得初步校验后和转换后的数据
 			templateList = (List<PubCustomerSaleMapperEntity>) map.get(ConstantInterface.ImportExcelStatus.IMP_SUCC);
-			
+			logger.info("重复校验(数据库层校验)");
 			//重复校验(数据库层校验)
 			Map<String, Object> parame=new HashMap<String, Object>();
 			List<PubCustomerSaleMapperEntity> orgList=getOrgList(parame);
@@ -323,6 +323,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 			List<PubCustomerSaleMapperEntity> updList = new ArrayList<PubCustomerSaleMapperEntity>();
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
 			if (null != orgList && orgList.size()>0) {
+				logger.info("判断在销售区域中是否有人员---新增---修改");
 				//Map<String,Object> mapCheck=super.compareWithImportLineData(orgList, teList, infoList,getKeyDataProperty(), map);
 				//if (mapCheck.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) {
 					//map.clear();
@@ -446,8 +447,73 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 				}
 						
+			}else {
+				for (PubCustomerSaleMapperEntity excelEntity : teList) {
+					if (!sellerMap.containsKey(excelEntity.getOriginSellerName())) {
+						errorVo = new ErrorMessageVo();
+						errorVo.setMsg(excelEntity.getOriginSellerName()+"没有在销售区域人员中维护");
+						infoList.add(errorVo);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						continue;
+					}else {
+						excelEntity.setCreator(JAppContext.currentUserName());
+						excelEntity.setCreatorId(JAppContext.currentUserID());
+						excelEntity.setCreateTime(JAppContext.currentTimestamp());
+						newList.add(excelEntity);
+					}
+				}
+				
+				if (map.containsKey(ConstantInterface.ImportExcelStatus.IMP_ERROR)) {
+					return map;
+				}
+				
+				int insertNum = 0;
+				try {
+					if (newList.size() > 0) {
+						insertNum = pubCustomerSaleMapperService.insertBatchTmp(newList);
+						DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 900);
+						if (insertNum <= 0) {
+							errorVo = new ErrorMessageVo();
+							errorVo.setMsg("插入正式表失败!");
+							infoList.add(errorVo);
+							map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+							return map;
+						}else{
+							DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
+							map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
+							logger.info("写入表耗时："+FileOperationUtil.getOperationTime(starTime));
+							try{
+								PubRecordLogEntity model=new PubRecordLogEntity();
+								model.setBizType(RecordLogBizTypeEnum.PRICE.getCode());
+								model.setNewData("");
+								model.setOldData("");
+								model.setOperateDesc("导入宅配报价对应关系,共计【"+insertNum+"】条");
+								model.setOperatePerson(JAppContext.currentUserName());
+								model.setOperateTable("price_dispatch_detail");
+								model.setOperateTime(JAppContext.currentTimestamp());
+								model.setOperateType(RecordLogOperateType.IMPORT.getCode());
+								model.setRemark("");
+								model.setOperateTableKey("");
+								model.setUrlName(RecordLogUrlNameEnum.IN_DELIVER_BASE_PRICE.getCode());
+								pubRecordLogService.AddRecordLog(model);
+							}catch(Exception e){
+								logger.error("记录日志失败,失败原因:"+e.getMessage());
+							}
+						}
+					}
+				} catch (Exception e) {
+					if((e.getMessage().indexOf("Duplicate entry"))>0){
+						errorVo = new ErrorMessageVo();
+						errorVo.setMsg("违反唯一性约束,插入数据失败!");
+						infoList.add(errorVo);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						return map;
+					}
+					//写入日志
+					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
+				}
 			}
-			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);		
+			//DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);		
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
