@@ -99,7 +99,7 @@ public class PubCustomerSaleMapperRepositoryImpl extends MyBatisDao<PubCustomerS
      */
 	@Override
 	public int updateBatchTmp(List<PubCustomerSaleMapperEntity> list) {
-		return updateBatch("com.jiuyescm.bms.base.customer.PubCustomerSaleMapperMapper.save", list);
+		return updateBatch("com.jiuyescm.bms.base.customer.PubCustomerSaleMapperMapper.update", list);
 	}
 	
 }

@@ -202,4 +202,21 @@ public class BmsGroupServiceImpl implements IBmsGroupService{
 			throw null;
 		}
 	}
+	
+	@Override
+	public BmsGroupVo queryIdByBizType() {
+		// TODO Auto-generated method stub
+		BmsGroupEntity entity=bmsGroupRepository.queryIdByBizType();
+		try{
+			BmsGroupVo vo= new BmsGroupVo();
+			if (null != entity) {
+				PropertyUtils.copyProperties(vo, entity);
+				return vo;
+			}		
+			return null;
+		}catch(Exception e){
+			logger.error("checkGroup:",e);
+			throw null;
+		}
+	}
 }

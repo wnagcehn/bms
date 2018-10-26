@@ -382,6 +382,7 @@ if (data != null) {&#xD;
             <Property name="property">lineNo</Property>
             <Property name="width">30</Property>
             <Property name="readOnly">true</Property>
+            <Property name="visible">false</Property>
           </DataColumn>
           <DataColumn name="msg">
             <Property name="property">msg</Property>

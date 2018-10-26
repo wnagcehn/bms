@@ -131,6 +131,30 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		}
 		return pageVoInfo;
 	}
+	
+	@Override
+	public PageInfo<BmsGroupUserVo> querySaleUser(Map<String, Object> condition,
+			int pageNo, int pageSize) throws Exception {
+		PageInfo<BmsGroupUserVo> pageVoInfo=null;
+		try{
+			pageVoInfo=new PageInfo<BmsGroupUserVo>();
+			PageInfo<BmsGroupUserEntity> pageInfo=bmsGroupUserRepository.querySaleUser(condition, pageNo, pageSize);
+			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
+			
+			if(pageInfo!=null&&pageInfo.getList().size()>0){
+				List<BmsGroupUserVo> list=new ArrayList<BmsGroupUserVo>();
+				for(BmsGroupUserEntity entity:pageInfo.getList()){
+					BmsGroupUserVo voEntity=new BmsGroupUserVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					list.add(voEntity);
+				}
+				pageVoInfo.setList(list);
+			}
+		}catch(Exception e){
+			throw e;
+		}
+		return pageVoInfo;
+	}
 
 	@Override
 	public String checkExistGroupName(String userId) {
@@ -147,6 +171,11 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		return bmsGroupUserRepository.checkSaleUser(param);
 	}
 	
+	@Override
+	public String checkSaleUserIgnoreId(Map<String, Object> param) {
+		return bmsGroupUserRepository.checkSaleUserIgnoreId(param);
+	}
+
 	@Override
 	public int queryUserCountByGroupId(int groupId) {
 		return bmsGroupUserRepository.queryUserCountByGroupId(groupId);
