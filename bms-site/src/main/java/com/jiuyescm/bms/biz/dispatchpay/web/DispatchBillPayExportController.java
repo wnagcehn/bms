@@ -2,9 +2,11 @@
 package com.jiuyescm.bms.biz.dispatchpay.web;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -459,7 +461,7 @@ public class DispatchBillPayExportController extends BaseController{
 		}
         try {
         	//校验该费用是否已生成Excel文件
-        	if (StringUtils.isNotBlank(customerId)) {
+        	if (StringUtils.isNotBlank(customerId) && StringUtils.isBlank(warehouseCode)) {
         		Map<String, Object> queryEntity = new HashMap<String, Object>();
             	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
             	queryEntity.put("taskName", "原始耗材出库明细"+customerMap.get(customerId));
@@ -469,7 +471,7 @@ public class DispatchBillPayExportController extends BaseController{
             	}
 			}
         	
-        	if (StringUtils.isNotBlank(warehouseCode)) {
+        	if (StringUtils.isNotBlank(warehouseCode) && StringUtils.isBlank(customerId)) {
         		Map<String, Object> queryEntity = new HashMap<String, Object>();
             	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
             	queryEntity.put("taskName", "原始耗材出库明细"+warehouseMap.get(warehouseCode));
@@ -593,34 +595,30 @@ public class DispatchBillPayExportController extends BaseController{
 		
 		List<Map<String, Object>> dataPackMaterialList = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> headPackMaterialMapList = null;
-		List<FeesReceiveMaterial> dataList = new ArrayList<FeesReceiveMaterial>();
+		//List<FeesReceiveMaterial> dataList = new ArrayList<FeesReceiveMaterial>();
 		
 		List<PubMaterialInfoVo> materialInfoList = getAllMaterial();
 		List<BizOutstockPackmaterialEntity> ListHead = bizOutstockPackmaterialServiceImpl
-				.getMaterialCodeFromBizData(myparam);
+				.queryOriginMaterialFromBizData(myparam);
 		List<String> materialCodeList = getMaterialCodeList(ListHead);
 		headPackMaterialMapList = getHeadPackMaterialMap(materialCodeList, materialInfoList);
-		
-		//物流商
-//		if(myparam.get("logistics") != null && StringUtils.equalsIgnoreCase(myparam.get("logistics").toString(), "ALL")){
-//			myparam.put("logistics", null);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+				
+		int lineNo = 1;
+//		int pageNo = 1;
+//		boolean doLoop = true;
+//		while (doLoop) {
+//			PageInfo<FeesReceiveMaterial> packMaterialList = bizOutstockPackmaterialServiceImpl
+//					.queryMaterialFromBizData(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+//			if (packMaterialList.getList().size() < FileConstant.EXPORTPAGESIZE) {
+//				doLoop = false;
+//			} else {
+//				pageNo += 1;
+//			}
+//			dataList.addAll(packMaterialList.getList());
 //		}
 		
-		int pageNo = 1;
-		int lineNo = 1;
-		boolean doLoop = true;
-		while (doLoop) {
-			PageInfo<FeesReceiveMaterial> packMaterialList = bizOutstockPackmaterialServiceImpl
-					.queryMaterialFromBizData(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
-			if (packMaterialList.getList().size() < FileConstant.EXPORTPAGESIZE) {
-				doLoop = false;
-			} else {
-				pageNo += 1;
-			}
-			dataList.addAll(packMaterialList.getList());
-		}
-		
-		for (FeesReceiveMaterial materialEntity : dataList) {
+		for (BizOutstockPackmaterialEntity materialEntity : ListHead) {
 			boolean flag = false;
 			Map<String, Object> matchMap = null;
 			for (Map<String, Object> map : dataPackMaterialList) {
@@ -634,14 +632,14 @@ public class DispatchBillPayExportController extends BaseController{
 			if (flag) {
 				// 检查耗材类型
 				String marterialType = getMaterialType(materialInfoList,
-						materialEntity.getProductNo());
+						materialEntity.getConsumerMaterialCode());
 				if (matchMap.containsKey(marterialType + "_name")) {
 					matchMap.put(
 							marterialType + "_name",
 							matchMap.get(marterialType + "_name") + ","
-									+ materialEntity.getProductName() == null ? ""
-									: materialEntity.getProductName());
-					if (materialEntity.getProductNo().contains("GB")) {
+									+ materialEntity.getConsumerMaterialName() == null ? ""
+									: materialEntity.getConsumerMaterialName());
+					if (materialEntity.getConsumerMaterialCode().contains("GB")) {
 						matchMap.put(
 								marterialType + "_count",
 								matchMap.get(marterialType + "_count")
@@ -652,57 +650,55 @@ public class DispatchBillPayExportController extends BaseController{
 								marterialType + "_count",
 								matchMap.get(marterialType + "_count")
 										+ ","
-										+ materialEntity.getQuantity() == null ? ""
-										: Double.valueOf(materialEntity.getQuantity()));
+										+ materialEntity.getNum() == null ? ""
+										: Double.valueOf(materialEntity.getNum()));
 					}
 				} else {
 					matchMap.put(marterialType + "_name",
-							materialEntity.getProductName() == null ? ""
-									: materialEntity.getProductName());
-					if (materialEntity.getProductNo().contains("GB")) {
+							materialEntity.getConsumerMaterialName() == null ? ""
+									: materialEntity.getConsumerMaterialName());
+					if (materialEntity.getConsumerMaterialCode().contains("GB")) {
 						matchMap.put(marterialType + "_count",
 								materialEntity.getWeight() == null ? ""
 										: Double.valueOf(materialEntity.getWeight()));
 					} else {
 						matchMap.put(marterialType + "_count",
-								materialEntity.getQuantity() == null ? ""
-										: Double.valueOf(materialEntity.getQuantity()));
+								materialEntity.getNum() == null ? ""
+										: Double.valueOf(materialEntity.getNum()));
 					}
 				}
 			} else {
 				Map<String, Object> dataItem = new HashMap<String, Object>();
-				dataItem.put("createTime",materialEntity.getCreateTime());
+				dataItem.put("createTime",sdf.format(materialEntity.getCreateTime()));
 				dataItem.put("warehouseName",materialEntity.getWarehouseName());
 				dataItem.put("customerName",materialEntity.getCustomerName());
 				dataItem.put("outstockNo", materialEntity.getOutstockNo());
 				dataItem.put("waybillNo", materialEntity.getWaybillNo());
 				String marterialType = getMaterialType(materialInfoList,
-						materialEntity.getProductNo());
+						materialEntity.getConsumerMaterialCode());
 				dataItem.put(marterialType + "_name",
-						materialEntity.getProductName());
+						materialEntity.getConsumerMaterialName());
 				dataItem.put(marterialType + "_code",
-						materialEntity.getProductNo());
+						materialEntity.getConsumerMaterialCode());
 				dataItem.put(marterialType + "_type",
 						materialEntity.getSpecDesc());
-				if (materialEntity.getProductNo().contains("GB")) {
+				if (materialEntity.getConsumerMaterialCode().contains("GB")) {
 					dataItem.put(marterialType + "_count", materialEntity
 							.getWeight() == null ? "" : Double.valueOf(materialEntity
 							.getWeight()));
 				} else {
 					dataItem.put(marterialType + "_count", materialEntity
-							.getQuantity() == null ? "" : Double.valueOf(materialEntity
-							.getQuantity()));
+							.getNum() == null ? "" : Double.valueOf(materialEntity
+							.getNum()));
 				}
 				dataPackMaterialList.add(dataItem);
-			}
-			
-			if (headPackMaterialMapList != null && dataPackMaterialList != null) {
-				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getDesc(), 
-						lineNo, headPackMaterialMapList, dataPackMaterialList);
-			}
+			}		
 		}
 		
-		
+		if (headPackMaterialMapList != null && dataPackMaterialList != null) {
+			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS_ORIGIN_DATA.getDesc(), 
+					lineNo, headPackMaterialMapList, dataPackMaterialList);
+		}	
 		
 	}
 	

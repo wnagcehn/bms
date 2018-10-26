@@ -100,4 +100,11 @@ public interface IBizOutstockPackmaterialService {
 	 */
 	PageInfo<BizOutstockPackmaterialEntity> queryErrorCal(Map<String, Object> condition, int pageNo, int pageSize);
 	
+	/**
+	 * 查询原始耗材
+	 * @param condition
+	 * @return
+	 */
+	List<BizOutstockPackmaterialEntity> queryOriginMaterialFromBizData(Map<String, Object> condition);
+	
 }

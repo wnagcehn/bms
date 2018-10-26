@@ -434,6 +434,22 @@
     	</if>
     	group by consumer_material_code,consumer_material_name
     </select>
+    
+    <select id="queryOriginMaterialFromBizData" parameterType="Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select consumer_material_code,consumer_material_name, 
+    	waybill_no, num, weight, warehouse_name, customer_name,
+    	create_time, outstock_no
+    	from biz_outstock_packmaterial where 1=1 and <![CDATA[create_time>=#{startTime}]]>
+    	and <![CDATA[create_time<#{endTime}]]> and extattr5 = 'origin'
+    	<if test="customerId !=null and customerId !='' ">
+    		and customer_id=#{customerId}
+    	</if>
+    	<if test="warehouseCode!=null and warehouseCode!=''">
+    		and warehouse_code=#{warehouseCode}
+    	</if>
+    	group by consumer_material_code,consumer_material_name
+    </select>
+    
     <select id="queryMaterialFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
     	select  
 			b.warehouse_name, 
