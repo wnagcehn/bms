@@ -2,9 +2,11 @@
  * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
  *
  */
-package com.jiuyescm.bms.entity.entity;
+package com.jiuyescm.bms.billcheck;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
 /**
