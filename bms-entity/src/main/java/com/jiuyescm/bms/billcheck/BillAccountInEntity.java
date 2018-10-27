@@ -11,14 +11,13 @@ import com.jiuyescm.cfm.domain.IEntity;
 
 /**
  * 
- * @author stevenl
+ * @author chenwenxin
  * 
  */
 public class BillAccountInEntity implements IEntity {
 
-    // TODO Change serialVersionUID by eclipse
-    private static final long serialVersionUID = -1;
-    
+	private static final long serialVersionUID = -8412532655353680186L;
+
 	// 自增标识
 	private Long id;
 	// 商家id
