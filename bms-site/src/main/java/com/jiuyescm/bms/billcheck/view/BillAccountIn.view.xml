@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillAccountIn">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.BillAccountInEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property/>
+        <Property name="label">商家编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="tradeType">
+        <Property/>
+        <Property name="label">交易方式</Property>
+      </PropertyDef>
+      <PropertyDef name="tradeDescrip">
+        <Property/>
+        <Property name="label">交易摘要</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">录入金额</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmStatus">
+        <Property/>
+        <Property name="label">确认状态</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId">
+        <Property/>
+        <Property name="label">创建者编号</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property/>
+        <Property name="label">创建者</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId">
+        <Property/>
+        <Property name="label">修改者编号</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property/>
+        <Property name="label">修改者</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property/>
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property/>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">确认时间/入账时间</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <ToolBarButton>
+        <Property name="caption">查询</Property>
+      </ToolBarButton>
+    </ToolBar>
+  </View>
+</ViewConfig>
