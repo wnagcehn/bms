@@ -24,5 +24,28 @@ public interface IReportCalcuStatusRepository {
     ReportCalcuStatusEntity update(ReportCalcuStatusEntity entity);
 
     void delete(Long id);
+    
+    /**
+     * 明细查询
+     * @param condition
+     * @return
+     */
+	List<ReportCalcuStatusEntity> queryDetail(Map<String, Object> condition);
+	
+	/**
+	 * 新分页查询
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<ReportCalcuStatusEntity> queryAll(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 新不分页查询
+	 * @param condition
+	 * @return
+	 */
+	List<ReportCalcuStatusEntity> queryAll(Map<String, Object> condition);
 
 }

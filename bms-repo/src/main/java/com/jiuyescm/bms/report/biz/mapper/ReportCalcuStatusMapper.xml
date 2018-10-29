@@ -30,13 +30,12 @@ create_year, create_month, customer_id, customer_name, biz_type, subject_code, i
         where id = #{id}
     </select>
 	
-	<!-- 分页查询 -->
+	<!-- 主表分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
-        select
-        <include refid="BASE_COLUMNS_ALL" />
-        from report_calcu_status
-        where 1 = 1
+	        select create_year,create_month,customer_name,is_calculated,sum(sum_amount) as sumAmount
+			from report_calcu_status
+			WHERE 1=1		
         	<if test=" id != null and id !='' ">
 				and id = #{id}
 			</if>
@@ -58,17 +57,60 @@ create_year, create_month, customer_id, customer_name, biz_type, subject_code, i
         	<if test=" subjectCode != null and subjectCode !='' ">
 				and subject_code = #{subjectCode}
 			</if>
-        	<if test=" isCalculated != null and isCalculated !='' ">
+        	<if test=" isCalculated != null and isCalculated !='' and isCalculated !='ALL' ">
 				and is_calculated = #{isCalculated}
 			</if>
-        	<if test=" sumAmount != null and sumAmount !='' ">
-				and sum_amount = #{sumAmount}
-			</if>
-        	<if test=" reportTime != null and reportTime !='' ">
-				and report_time = #{reportTime}
-			</if>
+			GROUP BY customer_name
     </select>
-
+    
+    <select id="queryDetail" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+	        select biz_type,subject_code,is_calculated,sum(sum_amount) as sumAmount
+			from report_calcu_status
+			WHERE 1=1		
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" createYear != null and createYear !='' ">
+				and create_year = #{createYear}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+			GROUP BY biz_type,subject_code
+    </select>
+    <!-- 主表分页查询 -->
+    <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+	    select a.create_year,a.create_month,a.customer_id,a.customer_name,IF(LOCATE(a.cal,'2')>0,'2','1') as isCalculated from (
+		select create_year,create_month,customer_id,customer_name,IF(GROUP_CONCAT(is_calculated) like '%2%','2','1') as cal from report_calcu_status GROUP BY customer_name) a
+		WHERE 1=1 
+		<if test=" isCalculated != null and isCalculated !='' and isCalculated !='ALL' ">
+			and a.cal = #{isCalculated}
+		</if>
+	    <if test=" customerId != null and customerId !='' ">
+			and a.customer_id = #{customerId}
+		</if>
+       	<if test=" customerName != null and customerName !='' ">
+			and a.customer_name = #{customerName}
+		</if>
+	    <if test=" createYear != null and createYear !='' ">
+			and a.create_year = #{createYear}
+		</if>
+       	<if test=" createMonth != null and createMonth !='' ">
+			and a.create_month = #{createMonth}
+		</if>
+	</select>
+	
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
         insert into report_calcu_status(

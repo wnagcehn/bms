@@ -39,7 +39,29 @@ public class ReportCalcuStatusRepositoryImpl extends MyBatisDao<ReportCalcuStatu
                 pageNo, pageSize));
         return new PageInfo<ReportCalcuStatusEntity>(list);
     }
+	
+	/**
+	 * 分页查询(新)
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public PageInfo<ReportCalcuStatusEntity> queryAll(Map<String, Object> condition, int pageNo, int pageSize) {
+        List<ReportCalcuStatusEntity> list = selectList("com.jiuyescm.bms.report.biz.ReportCalcuStatusMapper.queryAll", condition, new RowBounds(
+                pageNo, pageSize));
+        return new PageInfo<ReportCalcuStatusEntity>(list);
+    }
     
+    /**
+	 * 明细查询
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public List<ReportCalcuStatusEntity> queryDetail(Map<String, Object> condition){
+		return selectList("com.jiuyescm.bms.report.biz.ReportCalcuStatusMapper.queryDetail", condition);
+	}
+	
     /**
 	 * 查询
 	 * @param page
@@ -48,6 +70,16 @@ public class ReportCalcuStatusRepositoryImpl extends MyBatisDao<ReportCalcuStatu
 	@Override
     public List<ReportCalcuStatusEntity> query(Map<String, Object> condition){
 		return selectList("com.jiuyescm.bms.report.biz.ReportCalcuStatusMapper.query", condition);
+	}
+	
+    /**
+	 * 查询(新)
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public List<ReportCalcuStatusEntity> queryAll(Map<String, Object> condition){
+		return selectList("com.jiuyescm.bms.report.biz.ReportCalcuStatusMapper.queryAll", condition);
 	}
 
 	/**
