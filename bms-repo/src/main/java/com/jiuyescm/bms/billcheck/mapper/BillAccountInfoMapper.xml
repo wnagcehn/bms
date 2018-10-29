@@ -68,7 +68,7 @@
         where 1=1
 		<include refid="baseSelectColumns" />
     </select>
-    <select id="findByCustomerId" resultType="com.jiuyescm.bms.entity.entity.BillAccountInfoEntity">
+    <select id="findByCustomerId" resultType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
         select
         <include refid="baseColumns" />
         from bill_account_info
