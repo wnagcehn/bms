@@ -55,6 +55,16 @@
     </DataType>
   </Model>
   <View>
+    <DataSet id="dsCheckInfo">
+      <Property name="dataType">[dtCheckInfo]</Property>
+      <Property name="dataProvider">billAccountOutController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
     <Container>
       <ToolBar>
         <DataPilot>
@@ -112,6 +122,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
       <DataGrid>
         <Property name="dataSet">dsCheckInfo</Property>
         <Property name="dataType">dtCheckInfo</Property>
+        <Property name="readOnly">true</Property>
         <DataColumn name="id">
           <Property name="property">id</Property>
           <Property name="visible">false</Property>
@@ -137,6 +148,20 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
           <Property name="width">120</Property>
         </DataColumn>
         <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;冲抵&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;本次冲抵金额&quot;, function() {&#xD;
+&#xD;
+				}); &#xD;
+	    	}&#xD;
+		}&#xD;
+	]);</ClientEvent>
           <Property name="caption">操作</Property>
           <Property name="align">center</Property>
           <Property name="width">170</Property>
@@ -144,14 +169,5 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
         </DataColumn>
       </DataGrid>
     </Container>
-    <DataSet id="dsCheckInfo">
-      <Property name="dataType">[dtCheckInfo]</Property>
-      <Property name="dataProvider">billAccountOutController#queryAll</Property>
-      <Property name="pageSize">20</Property>
-    </DataSet>
-    <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
-    </DataSet>
   </View>
 </ViewConfig>

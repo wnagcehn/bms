@@ -2,16 +2,16 @@
  * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
  *
  */
-package com.jiuyescm.bms.billcheck;
+import com.jiuyescm.cfm.domain.IEntity;
+
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import com.jiuyescm.cfm.domain.IEntity;
 
 /**
  * 
- * @author stevenl
+ * @author liuzhicheng
  * 
  */
 public class BillAccountOutEntity implements IEntity {
@@ -21,8 +21,10 @@ public class BillAccountOutEntity implements IEntity {
     
 	// 自增标识
 	private Long id;
-	// 账单编号
+	// 账户编号
 	private String accountNo;
+	// 账单标识
+	private Integer billCheckId;
 	// 出账类型 1-账单扣款 2-其他扣款
 	private String outType;
 	// 出账金额
@@ -57,19 +59,35 @@ public class BillAccountOutEntity implements IEntity {
 	}
 	
 	/**
-     * 账单编号
+     * 账户编号
      */
 	public String getAccountNo() {
 		return this.accountNo;
 	}
 
     /**
-     * 账单编号
+     * 账户编号
      *
      * @param accountNo
      */
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
+	}
+	
+	/**
+     * 账单标识
+     */
+	public Integer getBillCheckId() {
+		return this.billCheckId;
+	}
+
+    /**
+     * 账单标识
+     *
+     * @param billCheckId
+     */
+	public void setBillCheckId(Integer billCheckId) {
+		this.billCheckId = billCheckId;
 	}
 	
 	/**
