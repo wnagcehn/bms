@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.billcheck.web;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInEntity;
 import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.ConstantInterface;
 
 /**
  * 
@@ -70,6 +72,14 @@ public class BillAccountInController {
 	@DataResolver
 	public void delete(BillAccountInEntity entity) {
 		billAccountInService.delete(entity.getId());
+	}
+	
+	@DataProvider
+	public Map<String, String> getConfirmStatus() {
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("0", "未确认");
+		mapValue.put("1", "已确认");
+		return mapValue;
 	}
 	
 }
