@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillAccountIn">
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">账户编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="tradeType">
+        <Property name="label">交易方式</Property>
+      </PropertyDef>
+      <PropertyDef name="tradeDescrip">
+        <Property name="label">交易摘要</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">录入金额</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmTime">
+        <Property name="label">入账时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmStatus">
+        <Property name="label">确认状态</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId"/>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId"/>
+      <PropertyDef name="lastModifier"/>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag"/>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillAccountOut">
+      <PropertyDef name="id"/>
+      <PropertyDef name="accountNo">
+        <Property name="label">账单号</Property>
+      </PropertyDef>
+      <PropertyDef name="outType">
+        <Property name="label">出账类型</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">出账金额</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId"/>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">日期</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag"/>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="accountNo">
+        <Property name="label">账户编号</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBillAccountIn&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="queyConditionForm">
+      <Property name="dataSet">dsCondition</Property>
+      <Property name="dataType">dtCondition</Property>
+      <Property name="labelWidth">80</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <AutoFormElement>
+        <Property name="name">accountNo</Property>
+        <Property name="property">accountNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">customerName</Property>
+        <Property name="property">customerName</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container layout="hbox">
+      <Property name="width">100%</Property>
+      <Container>
+        <Property name="width">50%</Property>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">收入</Property>
+            <DataGrid id="dataAccountIn">
+              <Property name="dataSet">dsBillAccountIn</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="selectionMode">multiRows</Property>
+              <Property name="rowSelectionProperty">checked</Property>
+              <RowNumColumn/>
+              <DataColumn>
+                <Property name="property">confirmTime</Property>
+                <Property name="name">confirmTime</Property>
+                <Property name="width">145</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">tradeType</Property>
+                <Property name="width">130</Property>
+                <Property name="name">tradeType</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">tradeDescrip</Property>
+                <Property name="width">130</Property>
+                <Property name="name">tradeDescrip</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">amount</Property>
+                <Property name="width">130</Property>
+                <Property name="name">amount</Property>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+        </TabControl>
+      </Container>
+      <Container>
+        <Property name="width">50%</Property>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">支出</Property>
+            <DataGrid id="dataAccountOut">
+              <Property name="dataSet">dsBillAccountOut</Property>
+              <Property name="readOnly">true</Property>
+              <RowNumColumn/>
+              <DataColumn>
+                <Property name="property">creatorTime</Property>
+                <Property name="name">creatorTime</Property>
+                <Property name="width">145</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">outType</Property>
+                <Property name="width">130</Property>
+                <Property name="name">outType</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">accountNo</Property>
+                <Property name="width">130</Property>
+                <Property name="name">accountNo</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">amount</Property>
+                <Property name="width">130</Property>
+                <Property name="name">amount</Property>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+        </TabControl>
+      </Container>
+    </Container>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillAccountIn">
+      <Property name="dataType">[dtBillAccountIn]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">2</Property>
+    </DataSet>
+    <DataSet id="dsBillAccountOut">
+      <Property name="dataType">[dtBillAccountOut]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+  </View>
+</ViewConfig>
