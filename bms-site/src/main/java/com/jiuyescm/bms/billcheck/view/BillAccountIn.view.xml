@@ -195,6 +195,7 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
 var status=arg.data.get(&quot;confirmStatus&quot;);&#xD;
+var id = arg.data.get(&quot;customerId&quot;);&#xD;
 &#xD;
 if(status == '0'){&#xD;
 	jQuery(arg.dom).xCreate([&#xD;
@@ -255,6 +256,10 @@ if(status == '0'){&#xD;
           <Property name="align">center</Property>
           <Property name="caption">操作</Property>
           <Editor/>
+        </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
       <Trigger id="getCustomerNameCondition">
@@ -424,5 +429,8 @@ if (data != null) {&#xD;
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
+    <UpdateAction id="saveCustomerInfo"/>
+    <AjaxAction id="queryCustomerStatus"/>
+    <AjaxAction id="queryConfirmStatus"/>
   </View>
 </ViewConfig>

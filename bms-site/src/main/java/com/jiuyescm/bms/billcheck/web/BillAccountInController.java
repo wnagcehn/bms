@@ -60,11 +60,15 @@ public class BillAccountInController {
 	@DataResolver
 	public void save(BillAccountInEntity entity) {
 		if (entity.getId() == null) {
+			entity.setCreatorId(JAppContext.currentUserID());
 			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setDelFlag("0");
 			billAccountInService.save(entity);
 		} else {
+			entity.setLastModifierId(JAppContext.currentUserID());
+			entity.setLastModifyTime(JAppContext.currentTimestamp());
+			entity.setLastModifier(JAppContext.currentUserName());
 			billAccountInService.update(entity);
 		}
 	}
