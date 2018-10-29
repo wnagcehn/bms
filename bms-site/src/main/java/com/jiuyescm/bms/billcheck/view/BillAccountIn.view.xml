@@ -9,19 +9,22 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家编号</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="tradeType">
-        <Property/>
+        <Property></Property>
         <Property name="label">交易方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;TRADETYPE&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="tradeDescrip">
-        <Property/>
+        <Property></Property>
         <Property name="label">交易摘要</Property>
       </PropertyDef>
       <PropertyDef name="amount">
@@ -29,31 +32,31 @@
         <Property name="label">录入金额</Property>
       </PropertyDef>
       <PropertyDef name="confirmStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">确认状态</Property>
       </PropertyDef>
       <PropertyDef name="creatorId">
-        <Property/>
+        <Property></Property>
         <Property name="label">创建者编号</Property>
       </PropertyDef>
       <PropertyDef name="creator">
-        <Property/>
+        <Property></Property>
         <Property name="label">创建者</Property>
       </PropertyDef>
       <PropertyDef name="lastModifierId">
-        <Property/>
+        <Property></Property>
         <Property name="label">修改者编号</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
-        <Property/>
+        <Property></Property>
         <Property name="label">修改者</Property>
       </PropertyDef>
       <PropertyDef name="delFlag">
-        <Property/>
+        <Property></Property>
         <Property name="label">作废标识</Property>
       </PropertyDef>
       <PropertyDef name="remark">
-        <Property/>
+        <Property></Property>
         <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="confirmTime">
@@ -69,12 +72,323 @@
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">删除 0为存在 1为删除</Property>
+        <Property name="defaultValue">0</Property>
+        <Property name="visible">false</Property>
+      </PropertyDef>
+      <PropertyDef name="startCreateTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endCreateTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
-    <ToolBar>
-      <ToolBarButton>
-        <Property name="caption">查询</Property>
-      </ToolBarButton>
-    </ToolBar>
+    <DataSet id="dsBillAccountIns">
+      <Property name="dataType">[dtBillAccountIn]</Property>
+      <Property name="dataProvider">billAccountInController#query</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsConditions">
+      <ClientEvent name="onCreate">view.get(&quot;#dsConditions&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsBillAccountIns</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btdQuery">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsConditions.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+        </ToolBarButton>
+        <ToolBarButton id="btnAdd">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillAccountIns.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogView&quot;).show();</ClientEvent>
+          <Property name="caption">录入</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="conditionForm">
+        <Property name="dataSet">dsConditions</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="colPadding">15</Property>
+        <Property name="labelSpacing">0</Property>
+        <Property name="labelWidth">70</Property>
+        <Property name="cols">*,*,*,*,*,*</Property>
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="showHint">false</Property>
+        <AutoFormElement>
+          <Property name="name">customerName</Property>
+          <Property name="property">customerName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startCreateTime</Property>
+          <Property name="property">startCreateTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endCreateTime</Property>
+          <Property name="property">endCreateTime</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsBillAccountIns</Property>
+        <Property name="dataType">dtBillAccountIn</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="stretchColumnsMode">stretchableColumns</Property>
+        <DataColumn name="confirmTime">
+          <Property name="property">confirmTime</Property>
+        </DataColumn>
+        <DataColumn name="customerName">
+          <Property name="property">customerName</Property>
+        </DataColumn>
+        <DataColumn name="amount">
+          <Property name="property">amount</Property>
+        </DataColumn>
+        <DataColumn name="tradeType">
+          <Property name="property">tradeType</Property>
+        </DataColumn>
+        <DataColumn name="tradeDescrip">
+          <Property name="property">tradeDescrip</Property>
+        </DataColumn>
+        <DataColumn name="remark">
+          <Property name="property">remark</Property>
+        </DataColumn>
+        <DataColumn name="confirmStatus">
+          <Property name="property">confirmStatus</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var status=arg.data.get(&quot;confirmStatus&quot;);&#xD;
+&#xD;
+if(status == '未确定'){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;修改&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogView&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;删除&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;是否确定删除该条记录？&quot;, function() {&#xD;
+					arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
+					var action=view.get(&quot;#updateAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+				 		alertMsg(result.code, result.message);&#xD;
+						//获取条件查询数据&#xD;
+						with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
+							set(&quot;parameter&quot;, data);&#xD;
+							flush();&#xD;
+						}&#xD;
+				 	});&#xD;
+				}); &#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;确认&quot;,&#xD;
+		    onclick: function() {&#xD;
+				dorado.MessageBox.confirm(&quot;是否确定改商家预收款录入无误？&quot;, function() {&#xD;
+					var action=view.get(&quot;#updateAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+				 		alertMsg(result.code, result.message);&#xD;
+						//获取条件查询数据&#xD;
+						with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
+							set(&quot;parameter&quot;, data);&#xD;
+							flush();&#xD;
+						}&#xD;
+				 	});&#xD;
+				}); &#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == '已确定'){&#xD;
+	//已确认(详细、开票、删除、导出)&#xD;
+	jQuery(arg.dom).xCreate([]);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="align">center</Property>
+          <Property name="caption">操作</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogView">
+      <ClientEvent name="onClose">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsBillAccountIns&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogView&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+      <Property name="caption">预收款</Property>
+      <Property name="height">320</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+	function(){&#xD;
+		view.id(&quot;dsBillAccountIns&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.id(&quot;dialogView&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="visible">true</Property>
+        </Button>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">var entity = view.get(&quot;#dialogForm&quot;).get(&quot;entity&quot;);	&#xD;
+&#xD;
+var customerName = entity.get(&quot;customerName&quot;);&#xD;
+var confirmTime = entity.get(&quot;confirmTime&quot;);&#xD;
+var amount =entity.get(&quot;amount&quot;);&#xD;
+var tradeType = entity.get(&quot;tradeType&quot;);&#xD;
+var tradeDescrip = entity.get(&quot;tradeDescrip&quot;);&#xD;
+var remark = entity.get(&quot;remark&quot;);&#xD;
+entity.set(&quot;confirmStatus&quot;,&quot;未确定&quot;);&#xD;
+&#xD;
+if(undefined==customerName || customerName==''){&#xD;
+	dorado.MessageBox.alert(&quot;请填写商户名称!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(undefined==confirmTime || confirmTime==''){&#xD;
+	dorado.MessageBox.alert(&quot;请选择入账时间!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(undefined==amount || amount==''){&#xD;
+	dorado.MessageBox.alert(&quot;请输入金额!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(undefined==tradeType || tradeType==''){&#xD;
+	dorado.MessageBox.alert(&quot;请选择交易方式!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(undefined==tradeDescrip || tradeDescrip==''){&#xD;
+	dorado.MessageBox.alert(&quot;请填写摘要!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+view.id(&quot;updateAction&quot;).execute(&#xD;
+	function(){&#xD;
+		with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.id(&quot;dialogView&quot;).hide();&#xD;
+	}&#xD;
+);</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="visible">true</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="dialogForm">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBillAccountIns</Property>
+          <Property name="dataType">dtBillAccountIn</Property>
+          <Property name="labelWidth">150</Property>
+          <Property name="rowHeight">30</Property>
+          <AutoFormElement>
+            <Property name="name">customerName</Property>
+            <Property name="property">customerName</Property>
+            <Property name="trigger">getCustomerName</Property>
+            <Property name="readOnly">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">confirmTime</Property>
+            <Property name="property">confirmTime</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">amount</Property>
+            <Property name="property">amount</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">tradeType</Property>
+            <Property name="property">tradeType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">tradeDescrip</Property>
+            <Property name="property">tradeDescrip</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+        <Trigger id="getCustomerName">
+          <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+        </Trigger>
+        <FloatPanel id="panelCustomer">
+          <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#dialogForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+	view.get(&quot;#dialogForm.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+}</ClientEvent>
+          <Property name="caption">商家选择</Property>
+          <Property name="center">true</Property>
+          <Property name="closeable">true</Property>
+          <Property name="contentOverflow">scroll</Property>
+          <Property name="height">450</Property>
+          <Property name="modal">true</Property>
+          <Property name="width">800</Property>
+          <Buttons/>
+          <Children>
+            <SubViewHolder id="viewSelectCustomer">
+              <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+            </SubViewHolder>
+          </Children>
+          <Tools/>
+        </FloatPanel>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="executingMessage">数据保存中</Property>
+      <Property name="successMessage">更新成功</Property>
+      <Property name="dataResolver">billAccountInController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillAccountIns</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>
