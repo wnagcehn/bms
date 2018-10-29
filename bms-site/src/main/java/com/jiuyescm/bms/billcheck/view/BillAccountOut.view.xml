@@ -55,13 +55,25 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountOutFrame&quot;).objects[0];&#xD;
+var userData=myframe.get(&quot;userData&quot;);&#xD;
+if(userData){&#xD;
+	//alert(userData);&#xD;
+	//alert(view.get(&quot;#queryForm.entity&quot;));&#xD;
+	var entity=view.get(&quot;#queryForm.entity&quot;);&#xD;
+	entity.set(&quot;createMonthStart&quot;,userData.createMonthStart);&#xD;
+	entity.set(&quot;createMonthEnd&quot;,userData.createMonthEnd);&#xD;
+	entity.set(&quot;billName&quot;,userData.billName);&#xD;
+	entity.set(&quot;billStatus&quot;,userData.billStatus);&#xD;
+		&#xD;
+}</ClientEvent>
     <DataSet id="dsCheckInfo">
       <Property name="dataType">[dtCheckInfo]</Property>
       <Property name="dataProvider">billAccountOutController#queryAll</Property>
       <Property name="pageSize">20</Property>
     </DataSet>
     <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition.data&quot;).insert();&#xD;
 </ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
     </DataSet>

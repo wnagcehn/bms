@@ -14,12 +14,12 @@ import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
  * @author stevenl
  * 
  */
-public interface IBillAccountInfoService {
+public interface IBmsAccountInfoService {
 
     PageInfo<BillAccountInfoEntity> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 
-    BillAccountInfoEntity findById(Long id);
+    BillAccountInfoEntity findByCustomerId(Long customerId);
 
     BillAccountInfoEntity save(BillAccountInfoEntity entity);
 

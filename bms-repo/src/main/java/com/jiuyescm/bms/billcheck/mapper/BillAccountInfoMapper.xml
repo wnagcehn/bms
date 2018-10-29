@@ -68,4 +68,10 @@
         where 1=1
 		<include refid="baseSelectColumns" />
     </select>
+    <select id="findByCustomerId" resultType="com.jiuyescm.bms.entity.entity.BillAccountInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_account_info
+        where customer_id=#{customerId} 
+    </select>
 </mapper>

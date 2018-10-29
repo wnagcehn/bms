@@ -81,6 +81,17 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountDetailFrame&quot;).objects[0];&#xD;
+var userData=myframe.get(&quot;userData&quot;);&#xD;
+if(userData){&#xD;
+	//alert(userData);&#xD;
+	//alert(view.get(&quot;#queyConditionForm.entity&quot;));&#xD;
+	var entity=view.get(&quot;#queyConditionForm.entity&quot;);&#xD;
+    entity.set(&quot;customerName&quot;,userData.customerName);&#xD;
+	entity.set(&quot;accountNo&quot;,userData.accountNo);&#xD;
+	&#xD;
+		&#xD;
+}</ClientEvent>
     <ToolBar>
       <DataPilot/>
       <ToolBarButton id="btnQuery">
@@ -103,13 +114,13 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
       <Property name="labelWidth">80</Property>
       <Property name="cols">*,*,*,*</Property>
       <AutoFormElement>
-        <Property name="name">accountNo</Property>
-        <Property name="property">accountNo</Property>
+        <Property name="name">customerName</Property>
+        <Property name="property">customerName</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">customerName</Property>
-        <Property name="property">customerName</Property>
+        <Property name="name">accountNo</Property>
+        <Property name="property">accountNo</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -185,7 +196,8 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
       </Container>
     </Container>
     <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
+</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
     </DataSet>
     <DataSet id="dsBillAccountIn">

@@ -156,27 +156,21 @@ jQuery(arg.dom).xCreate([&#xD;
 		    content:&quot;查看明细&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
 		    onclick: function() {&#xD;
+				//var subview = view.get(&quot;#viewSelectBillAccountDetail&quot;).get(&quot;subView&quot;);&#xD;
+				//var ds = subview.get(&quot;#dsCondition.data&quot;).current;&#xD;
+				//ds.set(&quot;customerName&quot;,&quot;123&quot;);&#xD;
+				//alert(ds.get(&quot;customerName&quot;));&#xD;
 				&#xD;
-				var subview = view.get(&quot;#viewSelectBillAccountDetail&quot;).get(&quot;subView&quot;);&#xD;
+				var parameter={&#xD;
+					customerName:&quot;test&quot;,&#xD;
+					accountNo:&quot;123&quot;,&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#BillAccountDetailFrame&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
 				&#xD;
-				//清空&#xD;
-				//var subviewData=subview.get(&quot;#dsQuotaList.data&quot;);&#xD;
-				//subviewData.clear();&#xD;
-				//var stepData=subview.get(&quot;#dsStepList.data&quot;);&#xD;
-				//stepData.clear();&#xD;
 				&#xD;
-				//获取到选择按钮&#xD;
-				//var btn=subview.get(&quot;#select&quot;);&#xD;
-				//btn.set(&quot;visible&quot;,false);&#xD;
-				var ds = subview.get(&quot;#dsCondition.data&quot;).current;&#xD;
-				ds.set(&quot;accountNo&quot;,&quot;123&quot;);&#xD;
-				alert(ds.get(&quot;accountNo&quot;));&#xD;
-				&#xD;
-				//直接调用方法查询&#xD;
-				//var tmpDataSet=subview.get(&quot;#dsQuotaList&quot;);&#xD;
-				//tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
-				&#xD;
-				view.get(&quot;#panelBillAccountDetail&quot;).show();&#xD;
+				view.get(&quot;#dialogBillAccountDetail&quot;).show();&#xD;
+				//alert(12);&#xD;
 	    	}&#xD;
 		},&#xD;
 		{&#xD;
@@ -185,9 +179,18 @@ jQuery(arg.dom).xCreate([&#xD;
 		    content:&quot;冲抵&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
 		    onclick: function() {&#xD;
-				view.get(&quot;#dialogView&quot;).show();&#xD;
+				var parameter={&#xD;
+					createMonthStart:&quot;6&quot;,&#xD;
+					createMonthEnd:&quot;11&quot;,&#xD;
+					billName:&quot;123&quot;,&#xD;
+					billStatus:&quot;&quot;,&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#BillAccountOutFrame&quot;);&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				&#xD;
+				view.get(&quot;#dialogBillAccountOut&quot;).show();;&#xD;
 	    	}&#xD;
-		},&#xD;
+		}&#xD;
 ]);</ClientEvent>
           <Property name="visible">true</Property>
           <Property name="name">操作</Property>
@@ -206,11 +209,49 @@ jQuery(arg.dom).xCreate([&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectBillAccountDetail">
-          <Property name="userData">{}</Property>
           <Property name="subView">com.jiuyescm.bms.billcheck.view.BillAccountDetail</Property>
         </SubViewHolder>
       </Children>
       <Tools/>
     </FloatPanel>
+    <FloatPanel id="panelBillAccountOut">
+      <Property name="caption">冲抵 </Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Property name="closeAction">hide</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectBillAccountOut">
+          <Property name="userData">{}</Property>
+          <Property name="subView">com.jiuyescm.bms.billcheck.view.BillAccountOut</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Dialog id="dialogBillAccountDetail">
+      <Property name="width">1000</Property>
+      <Property name="height">500</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="BillAccountDetailFrame">
+          <Property name="path">com.jiuyescm.bms.billcheck.view.BillAccountDetail.d</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogBillAccountOut">
+      <Property name="width">1000</Property>
+      <Property name="height">500</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="BillAccountOutFrame">
+          <Property name="path">com.jiuyescm.bms.billcheck.view.BillAccountOut.d</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

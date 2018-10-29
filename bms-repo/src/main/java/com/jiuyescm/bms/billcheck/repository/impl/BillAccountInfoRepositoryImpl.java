@@ -39,8 +39,8 @@ public class BillAccountInfoRepositoryImpl extends MyBatisDao<BillAccountInfoEnt
     }
 
     @Override
-    public BillAccountInfoEntity findById(Long id) {
-        BillAccountInfoEntity entity = selectOne("com.jiuyescm.bms.billcheck.BillAccountInfoEntityMapper.findById", id);
+    public BillAccountInfoEntity findByCustomerId(Long customerId) {
+        BillAccountInfoEntity entity = selectOne("com.jiuyescm.bms.billcheck.BillAccountInfoEntityMapper.findByCustomerId", customerId);
         return entity;
     }
 

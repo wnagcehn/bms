@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountInfoRepository;
-import com.jiuyescm.bms.billcheck.service.IBillAccountInfoService;
+import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillPayRepository;
 
 /**
@@ -24,9 +24,9 @@ import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillPayRepository;
  * 
  */
 @Service("billAccountInfoService")
-public class BillAccountInfoServiceImpl implements IBillAccountInfoService {
+public class BmsBillAccountInfoServiceImpl implements IBmsAccountInfoService {
 
-	private static final Logger logger = Logger.getLogger(BillAccountInfoServiceImpl.class.getName());
+	private static final Logger logger = Logger.getLogger(BmsBillAccountInfoServiceImpl.class.getName());
 
 	@Resource
 	private IBillAccountInfoRepository billAccountInfoRepository;
@@ -39,9 +39,9 @@ public class BillAccountInfoServiceImpl implements IBillAccountInfoService {
 	}
 
 	@Override
-	public BillAccountInfoEntity findById(Long id) {
+	public BillAccountInfoEntity findByCustomerId(Long customerId) {
 		// TODO Auto-generated method stub
-		return billAccountInfoRepository.findById(id);
+		return billAccountInfoRepository.findByCustomerId(customerId);
 	}
 
 	@Override

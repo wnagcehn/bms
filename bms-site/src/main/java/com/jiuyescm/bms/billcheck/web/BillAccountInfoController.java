@@ -8,22 +8,24 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
+import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.airport.entity.PubAirportEntity;
 import com.jiuyescm.bms.base.airport.service.IPubAirportService;
 import com.jiuyescm.bms.billcheck.BillAccountInEntity;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
-import com.jiuyescm.bms.billcheck.service.IBillAccountInfoService;
+import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
+import com.jiuyescm.cfm.common.JAppContext;
 @Controller("billCheckPR")
 public class BillAccountInfoController {
 	private static final Logger logger = Logger.getLogger(BillAccountInfoController.class.getName());
-	@Resource private IBillAccountInfoService billAccountInfoService;
+	@Resource private IBmsAccountInfoService billAccountInfoService;
 	@DataProvider
-	public BillAccountInfoEntity findById(Long id) throws Exception {
+	public BillAccountInfoEntity findByCustomerId(Long customerId) throws Exception {
 		BillAccountInfoEntity entity = null;
-		entity = billAccountInfoService.findById(id);
+		entity = billAccountInfoService.findByCustomerId(customerId);
 		return entity;
 	}
 	@DataProvider
@@ -35,6 +37,17 @@ public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> paramet
 			page.setEntityCount((int) tmpPageInfo.getTotal());
 		}
 		
+	}
+	
+	@DataResolver
+	public void save(BillAccountInfoEntity entity) {
+			 if (null != entity) {
+			      entity.setCreatorId(JAppContext.currentUserID());
+			      entity.setCreateTime(JAppContext.currentTimestamp());
+			      entity.setCreator(JAppContext.currentUserName());
+			      entity.setDelFlag("0");
+			      billAccountInfoService.save(entity);
+			 }
 	}
 	
 

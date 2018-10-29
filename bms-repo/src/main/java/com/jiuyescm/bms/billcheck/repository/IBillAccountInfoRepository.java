@@ -4,7 +4,6 @@
  */
 package com.jiuyescm.bms.billcheck.repository;
 
-import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -20,7 +19,7 @@ public interface IBillAccountInfoRepository {
 	public PageInfo<BillAccountInfoEntity> query(Map<String, Object> condition,
             int pageNo, int pageSize);
 
-    public BillAccountInfoEntity findById(Long id);
+    public BillAccountInfoEntity findByCustomerId(Long customerId);
 
     public BillAccountInfoEntity save(BillAccountInfoEntity entity);
 
