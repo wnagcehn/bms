@@ -50,12 +50,10 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtBillAccountOut">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.BillAccountOutEntity</Property>
       <PropertyDef name="id"/>
       <PropertyDef name="accountNo">
-        <Property name="label">账单号</Property>
-      </PropertyDef>
-      <PropertyDef name="outType">
-        <Property name="label">出账类型</Property>
+        <Property name="label">账户编号</Property>
       </PropertyDef>
       <PropertyDef name="amount">
         <Property name="label">出账金额</Property>
@@ -65,11 +63,24 @@
       <PropertyDef name="creator">
         <Property name="label">创建人</Property>
       </PropertyDef>
-      <PropertyDef name="creatorTime">
+      <PropertyDef name="createTime">
         <Property name="dataType">DateTime</Property>
         <Property name="label">日期</Property>
       </PropertyDef>
       <PropertyDef name="delFlag"/>
+      <PropertyDef name="createMonth">
+        <Property name="label">账单号</Property>
+      </PropertyDef>
+      <PropertyDef name="billCheckId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="outType">
+        <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;billDetailController#getOutType&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">出账类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="customerName">
@@ -78,10 +89,14 @@
       <PropertyDef name="accountNo">
         <Property name="label">账户编号</Property>
       </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">余额</Property>
+      </PropertyDef>
     </DataType>
   </Model>
+  
   <View>
-    <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountDetailFrame&quot;).objects[0];&#xD;
+    <!-- <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountDetailFrame&quot;).objects[0];&#xD;
 var userData=myframe.get(&quot;userData&quot;);&#xD;
 if(userData){&#xD;
 	//alert(userData);&#xD;
@@ -91,7 +106,23 @@ if(userData){&#xD;
 	entity.set(&quot;accountNo&quot;,userData.accountNo);&#xD;
 	&#xD;
 		&#xD;
-}</ClientEvent>
+}</ClientEvent> -->
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillAccountIn">
+      <Property name="dataType">[dtBillAccountIn]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">billDetailController#queryIn</Property>
+    </DataSet>
+    <DataSet id="dsBillAccountOut">
+      <Property name="dataType">[dtBillAccountOut]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">billDetailController#queryOut</Property>
+    </DataSet>
     <ToolBar>
       <DataPilot/>
       <ToolBarButton id="btnQuery">
@@ -123,6 +154,11 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
         <Property name="property">accountNo</Property>
         <Editor/>
       </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">amount</Property>
+        <Property name="property">amount</Property>
+        <Editor/>
+      </AutoFormElement>
     </AutoForm>
     <Container layout="hbox">
       <Property name="width">100%</Property>
@@ -134,8 +170,7 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
             <DataGrid id="dataAccountIn">
               <Property name="dataSet">dsBillAccountIn</Property>
               <Property name="readOnly">true</Property>
-              <Property name="selectionMode">multiRows</Property>
-              <Property name="rowSelectionProperty">checked</Property>
+              <Property name="selectionMode">none</Property>
               <RowNumColumn/>
               <DataColumn>
                 <Property name="property">confirmTime</Property>
@@ -171,8 +206,8 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
               <Property name="readOnly">true</Property>
               <RowNumColumn/>
               <DataColumn>
-                <Property name="property">creatorTime</Property>
-                <Property name="name">creatorTime</Property>
+                <Property name="property">createTime</Property>
+                <Property name="name">createTime</Property>
                 <Property name="width">145</Property>
               </DataColumn>
               <DataColumn>
@@ -195,20 +230,5 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
         </TabControl>
       </Container>
     </Container>
-    <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
-</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
-    </DataSet>
-    <DataSet id="dsBillAccountIn">
-      <Property name="dataType">[dtBillAccountIn]</Property>
-      <Property name="loadMode">manual</Property>
-      <Property name="pageSize">2</Property>
-    </DataSet>
-    <DataSet id="dsBillAccountOut">
-      <Property name="dataType">[dtBillAccountOut]</Property>
-      <Property name="pageSize">20</Property>
-      <Property name="loadMode">manual</Property>
-    </DataSet>
   </View>
 </ViewConfig>

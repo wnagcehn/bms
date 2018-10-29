@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.repository.IBillAccountOutRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 
@@ -16,12 +17,12 @@ import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	
 	@Autowired
-    private IBillCheckInfoRepository billCheckInfoRepository;
+    private IBillAccountOutRepository billAccountOutRepository;
 
 	@Override
-	public PageInfo<BillCheckInfoEntity> query(Map<String, Object> condition,
+	public PageInfo<BillAccountOutEntity> query(Map<String, Object> condition,
 			int pageNo, int pageSize) {
-		return billCheckInfoRepository.query(condition, pageNo, pageSize);
+		return billAccountOutRepository.query(condition, pageNo, pageSize);
 	}
 
 }
