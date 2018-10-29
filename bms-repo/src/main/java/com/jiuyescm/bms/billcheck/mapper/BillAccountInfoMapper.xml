@@ -3,7 +3,7 @@
 <mapper namespace="com.jiuyescm.bms.billcheck.mapper.BillAccountInfoMapper" >
     <resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillAccountInfoEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
-	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
 	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
 	    <result column="account_no" property="accountNo" jdbcType="VARCHAR" />

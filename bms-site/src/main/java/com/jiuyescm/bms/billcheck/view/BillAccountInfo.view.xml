@@ -57,7 +57,10 @@
     </DataSet>
     <Container id="Container_Main">
       <ToolBar>
-        <DataPilot/>
+        <DataPilot>
+          <Property name="itemCodes">pages,pageSize</Property>
+          <Property name="dataSet">dsBillAccountInfo</Property>
+        </DataPilot>
         <Separator/>
         <ToolBarButton id="btnQuery">
           <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
@@ -145,11 +148,69 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
           <Editor/>
         </DataColumn>
         <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;查看明细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				&#xD;
+				var subview = view.get(&quot;#viewSelectBillAccountDetail&quot;).get(&quot;subView&quot;);&#xD;
+				&#xD;
+				//清空&#xD;
+				//var subviewData=subview.get(&quot;#dsQuotaList.data&quot;);&#xD;
+				//subviewData.clear();&#xD;
+				//var stepData=subview.get(&quot;#dsStepList.data&quot;);&#xD;
+				//stepData.clear();&#xD;
+				&#xD;
+				//获取到选择按钮&#xD;
+				//var btn=subview.get(&quot;#select&quot;);&#xD;
+				//btn.set(&quot;visible&quot;,false);&#xD;
+				var ds = subview.get(&quot;#dsCondition.data&quot;).current;&#xD;
+				ds.set(&quot;accountNo&quot;,&quot;123&quot;);&#xD;
+				alert(ds.get(&quot;accountNo&quot;));&#xD;
+				&#xD;
+				//直接调用方法查询&#xD;
+				//var tmpDataSet=subview.get(&quot;#dsQuotaList&quot;);&#xD;
+				//tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+				&#xD;
+				view.get(&quot;#panelBillAccountDetail&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;冲抵&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				view.get(&quot;#dialogView&quot;).show();&#xD;
+	    	}&#xD;
+		},&#xD;
+]);</ClientEvent>
           <Property name="visible">true</Property>
           <Property name="name">操作</Property>
           <Editor/>
         </DataColumn>
       </DataGrid>
     </Container>
+    <FloatPanel id="panelBillAccountDetail">
+      <Property name="caption">收支明细</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="height">500</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Property name="closeAction">hide</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectBillAccountDetail">
+          <Property name="userData">{}</Property>
+          <Property name="subView">com.jiuyescm.bms.billcheck.view.BillAccountDetail</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

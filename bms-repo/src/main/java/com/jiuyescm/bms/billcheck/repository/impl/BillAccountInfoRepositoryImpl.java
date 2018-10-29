@@ -40,25 +40,25 @@ public class BillAccountInfoRepositoryImpl extends MyBatisDao<BillAccountInfoEnt
 
     @Override
     public BillAccountInfoEntity findById(Long id) {
-        BillAccountInfoEntity entity = selectOne("com.jiuyescm.bms.entity.BillAccountInfoEntityMapper.findById", id);
+        BillAccountInfoEntity entity = selectOne("com.jiuyescm.bms.billcheck.BillAccountInfoEntityMapper.findById", id);
         return entity;
     }
 
     @Override
     public BillAccountInfoEntity save(BillAccountInfoEntity entity) {
-        insert("com.jiuyescm.bms.entity.BillAccountInfoEntityMapper.save", entity);
+        insert("com.jiuyescm.bms.billcheck.BillAccountInfoEntityMapper.save", entity);
         return entity;
     }
 
     @Override
     public BillAccountInfoEntity update(BillAccountInfoEntity entity) {
-        update("com.jiuyescm.bms.entity.BillAccountInfoEntityMapper.update", entity);
+        update("com.jiuyescm.bms.billcheck.BillAccountInfoEntityMapper.update", entity);
         return entity;
     }
 
     @Override
     public void delete(Long id) {
-        delete("com.jiuyescm.bms.entity.BillAccountInfoEntityMapper.delete", id);
+        delete("com.jiuyescm.bms.billcheck.BillAccountInfoEntityMapper.delete", id);
     }
 	
 }

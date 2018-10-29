@@ -41,19 +41,19 @@ public class BillAccountInfoServiceImpl implements IBillAccountInfoService {
 	@Override
 	public BillAccountInfoEntity findById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		return billAccountInfoRepository.findById(id);
 	}
 
 	@Override
 	public BillAccountInfoEntity save(BillAccountInfoEntity entity) {
 		// TODO Auto-generated method stub
-		return null;
+		return billAccountInfoRepository.save(entity);
 	}
 
 	@Override
 	public BillAccountInfoEntity update(BillAccountInfoEntity entity) {
 		// TODO Auto-generated method stub
-		return null;
+		 return billAccountInfoRepository.update(entity);
 	}
 
 	@Override
