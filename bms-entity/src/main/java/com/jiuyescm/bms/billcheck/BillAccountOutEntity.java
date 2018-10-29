@@ -1,10 +1,6 @@
-/**
- * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
- *
- */
+package com.jiuyescm.bms.billcheck;
+
 import com.jiuyescm.cfm.domain.IEntity;
-
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
