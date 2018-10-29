@@ -175,21 +175,21 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
               <DataColumn>
                 <Property name="property">confirmTime</Property>
                 <Property name="name">confirmTime</Property>
-                <Property name="width">145</Property>
+                <Property name="width">150</Property>
               </DataColumn>
               <DataColumn>
                 <Property name="property">tradeType</Property>
-                <Property name="width">130</Property>
+                <Property name="width">110</Property>
                 <Property name="name">tradeType</Property>
               </DataColumn>
               <DataColumn>
                 <Property name="property">tradeDescrip</Property>
-                <Property name="width">130</Property>
+                <Property name="width">110</Property>
                 <Property name="name">tradeDescrip</Property>
               </DataColumn>
               <DataColumn>
                 <Property name="property">amount</Property>
-                <Property name="width">130</Property>
+                <Property name="width">110</Property>
                 <Property name="name">amount</Property>
               </DataColumn>
             </DataGrid>
@@ -204,25 +204,26 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
             <DataGrid id="dataAccountOut">
               <Property name="dataSet">dsBillAccountOut</Property>
               <Property name="readOnly">true</Property>
+              <Property name="dataType">dtBillAccountOut</Property>
               <RowNumColumn/>
               <DataColumn>
                 <Property name="property">createTime</Property>
                 <Property name="name">createTime</Property>
-                <Property name="width">145</Property>
+                <Property name="width">150</Property>
               </DataColumn>
-              <DataColumn>
+              <DataColumn name="outType">
                 <Property name="property">outType</Property>
-                <Property name="width">130</Property>
+                <Property name="width">110</Property>
                 <Property name="name">outType</Property>
               </DataColumn>
               <DataColumn>
-                <Property name="property">accountNo</Property>
-                <Property name="width">130</Property>
-                <Property name="name">accountNo</Property>
+                <Property name="property">createMonth</Property>
+                <Property name="width">110</Property>
+                <Property name="name">createMonth</Property>
               </DataColumn>
               <DataColumn>
                 <Property name="property">amount</Property>
-                <Property name="width">130</Property>
+                <Property name="width">110</Property>
                 <Property name="name">amount</Property>
               </DataColumn>
             </DataGrid>

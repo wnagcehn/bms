@@ -20,10 +20,8 @@ public class BillAccountOutEntity implements IEntity {
 	private Long id;
 	// 账户编号
 	private String accountNo;
-	
 	// 业务月份
 	private Integer createMonth;
-	
 	// 账单标识
 	private Integer billCheckId;
 	// 出账类型 1-账单扣款 2-其他扣款
@@ -73,6 +71,22 @@ public class BillAccountOutEntity implements IEntity {
      */
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
+	}
+	
+	/**
+     * 业务月份
+     */
+	public Integer getCreateMonth() {
+		return this.createMonth;
+	}
+
+    /**
+     * 业务月份
+     *
+     * @param createMonth
+     */
+	public void setCreateMonth(Integer createMonth) {
+		this.createMonth = createMonth;
 	}
 	
 	/**
@@ -186,13 +200,4 @@ public class BillAccountOutEntity implements IEntity {
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
 	}
-
-	public Integer getCreateMonth() {
-		return createMonth;
-	}
-
-	public void setCreateMonth(Integer createMonth) {
-		this.createMonth = createMonth;
-	}
-    
 }
