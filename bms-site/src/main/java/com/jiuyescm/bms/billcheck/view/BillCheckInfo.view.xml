@@ -803,8 +803,8 @@
         <Property name="dataSet">dsBillCheckInfo</Property>
       </DataPilot>
       <ToolBarButton id="btnQuery">
-        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
-var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsCheckInfo&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#dsCondition&quot;);&#xD;
 &#xD;
 var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
 &#xD;
@@ -814,24 +814,6 @@ if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot
 }&#xD;
 &#xD;
 tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
-&#xD;
-//清空下面的数据&#xD;
-var logData=view.get(&quot;#dsBillCheckLog.data&quot;);&#xD;
-if(!isNullOrEmpty(logData)){&#xD;
-	logData.clear();&#xD;
-}&#xD;
-var invoiceData=view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
-if(!isNullOrEmpty(invoiceData)){&#xD;
-	invoiceData.clear();&#xD;
-}&#xD;
-var receiptData=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
-if(!isNullOrEmpty(receiptData)){&#xD;
-	receiptData.clear();&#xD;
-}&#xD;
-var receiptFollowData=view.get(&quot;#dsReceiptFollow.data&quot;);&#xD;
-if(!isNullOrEmpty(receiptFollowData)){&#xD;
-	receiptFollowData.clear();&#xD;
-}&#xD;
 &#xD;
 </ClientEvent>
         <Property name="caption">查询</Property>

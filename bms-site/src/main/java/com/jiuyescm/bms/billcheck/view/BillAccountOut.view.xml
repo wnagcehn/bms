@@ -2,6 +2,156 @@
 <ViewConfig>
   <Arguments/>
   <Context/>
-  <Model/>
-  <View/>
+  <Model>
+    <DataType name="dtCheckInfo">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.BillCheckInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">账单月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="unReceiptAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">未收款金额</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="createMonthStart">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">账单月份</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthEnd">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Container>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dsCheckInfo</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsCheckInfo&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#queryForm&quot;);&#xD;
+&#xD;
+var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
+&#xD;
+if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;业务月份的结束时间不能大于起始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryForm">
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="cols">200,120,200,200,200,200</Property>
+        <Property name="dataType">dtCondition</Property>
+        <AutoFormElement>
+          <Property name="name">createMonthStart</Property>
+          <Property name="property">createMonthStart</Property>
+          <Property name="label">账单月份：</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createMonthEnd</Property>
+          <Property name="property">createMonthEnd</Property>
+          <Property name="labelWidth">10</Property>
+          <Property name="editorWidth">100</Property>
+          <Property name="label">-</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">billName</Property>
+          <Property name="property">billName</Property>
+          <Property name="label">账单名称</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">billStatus</Property>
+          <Property name="property">billStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsCheckInfo</Property>
+        <Property name="dataType">dtCheckInfo</Property>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="invoiceName">
+          <Property name="property">invoiceName</Property>
+          <Property name="width">300</Property>
+        </DataColumn>
+        <DataColumn name="billName">
+          <Property name="property">billName</Property>
+          <Property name="width">300</Property>
+        </DataColumn>
+        <DataColumn name="billStatus">
+          <Property name="property">billStatus</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="unReceiptAmount">
+          <Property name="property">unReceiptAmount</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="caption">操作</Property>
+          <Property name="align">center</Property>
+          <Property name="width">170</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <DataSet id="dsCheckInfo">
+      <Property name="dataType">[dtCheckInfo]</Property>
+      <Property name="dataProvider">billAccountOutController#queryAll</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+  </View>
 </ViewConfig>
