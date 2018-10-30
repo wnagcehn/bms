@@ -74,12 +74,15 @@
         where 1=1
 		<include refid="baseSelectColumns" />
     </select>
-    <select id="findByCustomerId" resultType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+    
+    <select id="findByCustomerId" 
+    	resultType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
         select
         <include refid="baseColumns" />
         from bill_account_info
         where customer_id=#{customerId} 
     </select>
+
     <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
         insert into bill_account_info(customer_id, customer_name, account_no, amount, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, del_flag)
         values (

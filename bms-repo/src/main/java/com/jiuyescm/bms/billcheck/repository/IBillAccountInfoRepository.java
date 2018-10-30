@@ -19,7 +19,7 @@ public interface IBillAccountInfoRepository {
 	public PageInfo<BillAccountInfoEntity> query(Map<String, Object> condition,
             int pageNo, int pageSize);
 
-    public BillAccountInfoEntity findByCustomerId(Long customerId);
+    public BillAccountInfoEntity findByCustomerId(String customerId);
 
     public BillAccountInfoEntity save(BillAccountInfoEntity entity);
 

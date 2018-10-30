@@ -194,8 +194,12 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
         </DataColumn>
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
-var status=arg.data.get(&quot;confirmStatus&quot;);&#xD;
-var id = arg.data.get(&quot;customerId&quot;);&#xD;
+var status = arg.data.get(&quot;confirmStatus&quot;);&#xD;
+var id = arg.data.get(&quot;id&quot;);&#xD;
+var action = view.get(&quot;#queryConfirmStatus&quot;)&#xD;
+// action.set(&quot;parameter&quot;, id).execute(function(result){&#xD;
+//    status = result.confirmStatus;&#xD;
+//});&#xD;
 &#xD;
 if(status == '0'){&#xD;
 	jQuery(arg.dom).xCreate([&#xD;
@@ -205,7 +209,12 @@ if(status == '0'){&#xD;
 		    content:&quot;修改&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
 		    onclick: function() {&#xD;
-				view.get(&quot;#dialogView&quot;).show();&#xD;
+				action.set(&quot;parameter&quot;, id).execute(function(result){&#xD;
+	   				 status = result.confirmStatus;&#xD;
+					 if(status == '0'){&#xD;
+					 	view.get(&quot;#dialogView&quot;).show();&#xD;
+					 }&#xD;
+				});&#xD;
 	    	}&#xD;
 		},&#xD;
 		{&#xD;
@@ -213,38 +222,47 @@ if(status == '0'){&#xD;
 		    href: &quot;#&quot;,&#xD;
 		    content:&quot;删除&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
-		    onclick: function() {&#xD;
-				dorado.MessageBox.confirm(&quot;是否确定删除该条记录？&quot;, function() {&#xD;
-					arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
-					var action=view.get(&quot;#updateAction&quot;);&#xD;
-					action.execute(function(result){&#xD;
-				 		alertMsg(result.code, result.message);&#xD;
-						//获取条件查询数据&#xD;
-						with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
-							set(&quot;parameter&quot;, data);&#xD;
-							flush();&#xD;
-						}&#xD;
-				 	});&#xD;
-				}); &#xD;
-	    	}&#xD;
+		    onclick: function() {	&#xD;
+				action.set(&quot;parameter&quot;, id).execute(function(result){&#xD;
+		   			status = result.confirmStatus;&#xD;
+					if(status == '0'){&#xD;
+						dorado.MessageBox.confirm(&quot;是否确定删除该条记录？&quot;, function() {&#xD;
+							arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
+							var action=view.get(&quot;#updateAction&quot;);&#xD;
+							action.execute(function(result){&#xD;
+						 		alertMsg(result.code, result.message);&#xD;
+								//获取条件查询数据&#xD;
+								with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flush();&#xD;
+								}&#xD;
+					 		});&#xD;
+						}); &#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
 		},&#xD;
 		{&#xD;
 		    tagName: &quot;A&quot;,&#xD;
 		    href: &quot;#&quot;,&#xD;
 		    content:&quot;确认&quot;,&#xD;
 		    onclick: function() {&#xD;
-				dorado.MessageBox.confirm(&quot;是否确定改商家预收款录入无误？&quot;, function() {&#xD;
-					arg.data.set(&quot;confirmStatus&quot;,&quot;1&quot;);&#xD;
-					var action=view.get(&quot;#updateAction&quot;);&#xD;
-					action.execute(function(result){&#xD;
-				 		alertMsg(result.code, result.message);&#xD;
-						//获取条件查询数据&#xD;
-						with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
-							set(&quot;parameter&quot;, data);&#xD;
-							flush();&#xD;
-						}&#xD;
-				 	});&#xD;
-				}); &#xD;
+				action.set(&quot;parameter&quot;, id).execute(function(result){&#xD;
+	   				 status = result.confirmStatus;&#xD;
+					 if(status == '0'){&#xD;
+					 	dorado.MessageBox.confirm(&quot;是否确定改商家预收款录入无误？&quot;, function() {&#xD;
+							arg.data.set(&quot;confirmStatus&quot;,&quot;1&quot;);&#xD;
+							var action=view.get(&quot;#updateAction&quot;);&#xD;
+								action.execute(function(result){&#xD;
+				 					alertMsg(result.code, result.message);&#xD;
+										with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
+											set(&quot;parameter&quot;, data);&#xD;
+											flush();&#xD;
+										}&#xD;
+				 				});&#xD;
+						}); &#xD;
+					}&#xD;
+				});&#xD;
 	    	}&#xD;
 		}&#xD;
 	]);&#xD;
@@ -257,8 +275,8 @@ if(status == '0'){&#xD;
           <Property name="caption">操作</Property>
           <Editor/>
         </DataColumn>
-        <DataColumn name="customerId">
-          <Property name="property">customerId</Property>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
           <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
@@ -339,7 +357,6 @@ if(undefined==tradeDescrip || tradeDescrip==''){&#xD;
 	dorado.MessageBox.alert(&quot;请填写摘要!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
 &#xD;
 view.id(&quot;updateAction&quot;).execute(&#xD;
 	function(){&#xD;
@@ -429,8 +446,8 @@ if (data != null) {&#xD;
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
-    <UpdateAction id="saveCustomerInfo"/>
-    <AjaxAction id="queryCustomerStatus"/>
-    <AjaxAction id="queryConfirmStatus"/>
+    <AjaxAction id="queryConfirmStatus">
+      <Property name="service">billAccountInController#findById</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

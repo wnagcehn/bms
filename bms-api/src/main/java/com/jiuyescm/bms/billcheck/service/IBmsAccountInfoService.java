@@ -19,7 +19,7 @@ public interface IBmsAccountInfoService {
     PageInfo<BillAccountInfoEntity> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 
-    BillAccountInfoEntity findByCustomerId(Long customerId);
+    BillAccountInfoEntity findByCustomerId(String customerId);
 
     BillAccountInfoEntity save(BillAccountInfoEntity entity);
 

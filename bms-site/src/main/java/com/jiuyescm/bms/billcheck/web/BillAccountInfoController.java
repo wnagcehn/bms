@@ -18,16 +18,18 @@ import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
+
 @Controller("billCheckPR")
 public class BillAccountInfoController {
 	private static final Logger logger = Logger.getLogger(BillAccountInfoController.class.getName());
 	@Resource private IBmsAccountInfoService billAccountInfoService;
-	@DataProvider
-	public BillAccountInfoEntity findByCustomerId(Long customerId) throws Exception {
+
+	public BillAccountInfoEntity findByCustomerId(String customerId) throws Exception {
 		BillAccountInfoEntity entity = null;
 		entity = billAccountInfoService.findByCustomerId(customerId);
 		return entity;
 	}
+	
 	@DataProvider
 public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> parameter){
 		

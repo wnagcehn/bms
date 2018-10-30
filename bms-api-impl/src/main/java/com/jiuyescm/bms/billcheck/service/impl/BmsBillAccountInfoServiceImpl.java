@@ -39,7 +39,7 @@ public class BmsBillAccountInfoServiceImpl implements IBmsAccountInfoService {
 	}
 
 	@Override
-	public BillAccountInfoEntity findByCustomerId(Long customerId) {
+	public BillAccountInfoEntity findByCustomerId(String customerId) {
 		// TODO Auto-generated method stub
 		return billAccountInfoRepository.findByCustomerId(customerId);
 	}

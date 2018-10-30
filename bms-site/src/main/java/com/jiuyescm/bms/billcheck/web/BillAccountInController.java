@@ -18,15 +18,24 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInEntity;
+import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
+import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 
+
+
+
+import org.springframework.stereotype.Component;
+
+import com.bstek.dorado.annotation.Expose;
 /**
  * 
  * @author stevenl
  * 
  */
+@Component
 @Controller("billAccountInController")
 public class BillAccountInController {
 
@@ -35,7 +44,10 @@ public class BillAccountInController {
 	@Resource
 	private IBmsBillAccountInService billAccountInService;
 
-	@DataProvider
+	@Resource 
+	private IBmsAccountInfoService billAccountInfoService;
+	
+	@Expose
 	public BillAccountInEntity findById(Long id) throws Exception {
 		BillAccountInEntity entity = null;
 		entity = billAccountInService.findById(id);
@@ -59,6 +71,14 @@ public class BillAccountInController {
 
 	@DataResolver
 	public void save(BillAccountInEntity entity) {
+		BillAccountInfoEntity accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
+		if(null == accountEntity){
+			accountEntity.setCustomerId(entity.getCustomerId());
+			accountEntity.setCustomerId(entity.getCustomerName());
+			accountEntity.setAccountNo("1111111111");
+//			accountEntity.setAmount(00000.000000);
+			billAccountInfoService.save(accountEntity);
+		}
 		if (entity.getId() == null) {
 			entity.setCreatorId(JAppContext.currentUserID());
 			entity.setCreateTime(JAppContext.currentTimestamp());
