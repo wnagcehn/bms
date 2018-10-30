@@ -62,10 +62,14 @@ public class BillAccountInfoController {
 	}
 	
 	@DataResolver
-	public void update(BillAccountInfoEntity entity){
+	public BillAccountInfoEntity update(BillAccountInfoEntity entity){
+		BillAccountInfoEntity res = null;
 		 if (null != entity && null != entity.getAmount()) {
-		      billAccountInfoService.update(entity);
-		 }
-	}
+			 res =  billAccountInfoService.update(entity);
+		 }		
+		 return res;
+		 
+}
+
 
 }
