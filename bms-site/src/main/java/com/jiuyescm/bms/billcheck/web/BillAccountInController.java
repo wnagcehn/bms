@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.billcheck.web;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -21,8 +23,14 @@ import com.jiuyescm.bms.billcheck.BillAccountInEntity;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+
+
+
+
 
 
 
@@ -46,6 +54,8 @@ public class BillAccountInController {
 
 	@Resource 
 	private IBmsAccountInfoService billAccountInfoService;
+	
+	@Autowired private SequenceService sequenceService;
 	
 	@Expose
 	public BillAccountInEntity findById(Long id) throws Exception {
@@ -76,12 +86,14 @@ public class BillAccountInController {
 			BillAccountInfoEntity accountVo = new BillAccountInfoEntity();
 			accountVo.setCustomerId(entity.getCustomerId());
 			accountVo.setCustomerName(entity.getCustomerName());
-			accountVo.setAccountNo("1111111111");
+			String accountNo = sequenceService.getBillNoOne(BillAccountInfoEntity.class.getName(), "3131", "000000");
+			accountVo.setAccountNo(accountNo);
 			accountVo.setCreatorId(JAppContext.currentUserID());
 			accountVo.setCreateTime(JAppContext.currentTimestamp());
 			accountVo.setCreator(JAppContext.currentUserName());
 			entity.setDelFlag("0");
-//			accountEntity.setAmount(00000.000000);
+			BigDecimal amount = new BigDecimal(0);
+			accountEntity.setAmount(amount);
 			billAccountInfoService.save(accountVo);
 		}
 		if (entity.getId() == null) {
@@ -90,7 +102,22 @@ public class BillAccountInController {
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setDelFlag("0");
 			billAccountInService.save(entity);
-		} else {
+		} else if(entity.getConfirmStatus().equals("1")) {
+			BillAccountInfoEntity accountVo = billAccountInfoService.findByCustomerId(entity.getCustomerId()); 
+			BillAccountInfoEntity updateVo = new BillAccountInfoEntity();
+			
+			updateVo.setId(accountVo.getId());
+			BigDecimal amount = new BigDecimal(0);
+			amount =accountVo.getAmount().add(entity.getAmount());
+
+			updateVo.setAmount(amount);
+			billAccountInfoService.update(updateVo);
+			
+			entity.setLastModifierId(JAppContext.currentUserID());
+			entity.setLastModifyTime(JAppContext.currentTimestamp());
+			entity.setLastModifier(JAppContext.currentUserName());
+			billAccountInService.update(entity);
+		}else{
 			entity.setLastModifierId(JAppContext.currentUserID());
 			entity.setLastModifyTime(JAppContext.currentTimestamp());
 			entity.setLastModifier(JAppContext.currentUserName());

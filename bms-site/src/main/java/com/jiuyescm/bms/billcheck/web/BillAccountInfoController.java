@@ -1,4 +1,7 @@
 package com.jiuyescm.bms.billcheck.web;
+import org.springframework.stereotype.Component;
+
+import com.bstek.dorado.annotation.Expose;
 
 import java.util.Map;
 
@@ -19,11 +22,17 @@ import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
 
+import org.springframework.stereotype.Component;
+
+import com.bstek.dorado.annotation.Expose;
+
+@Component
 @Controller("billCheckPR")
 public class BillAccountInfoController {
 	private static final Logger logger = Logger.getLogger(BillAccountInfoController.class.getName());
 	@Resource private IBmsAccountInfoService billAccountInfoService;
 
+	@Expose
 	public BillAccountInfoEntity findByCustomerId(String customerId) throws Exception {
 		BillAccountInfoEntity entity = null;
 		entity = billAccountInfoService.findByCustomerId(customerId);
@@ -31,7 +40,7 @@ public class BillAccountInfoController {
 	}
 	
 	@DataProvider
-public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> parameter){
+	public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> parameter){
 		
 		PageInfo<BillAccountInfoEntity> tmpPageInfo = billAccountInfoService.query(parameter, page.getPageNo(),page.getPageSize());
 		if (tmpPageInfo != null) {
@@ -57,7 +66,6 @@ public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> paramet
 		 if (null != entity && null != entity.getAmount()) {
 		      billAccountInfoService.update(entity);
 		 }
-}
-	
+	}
 
 }
