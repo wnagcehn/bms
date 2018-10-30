@@ -48,6 +48,7 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.tool.Session;
+import com.jiuyescm.bms.common.web.EnumControlPR;
 import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
 import com.jiuyescm.bms.fees.abnormal.service.IFeesAbnormalNewService;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -68,6 +69,9 @@ public class FeesAbnormalController {
 	private IFeesAbnormalNewService feesAbnormalNewService;
 	@Resource
 	private ISystemCodeService systemCodeService;
+	@Resource
+	private EnumControlPR enumControlPR;
+	
 
 	/**
 	 * 应收理赔分页查询
@@ -727,6 +731,8 @@ public class FeesAbnormalController {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+		Map<String,String> statusMap=enumControlPR.getOrderStatusList();
+		
 		//理赔商品金额
 		double totalProductAmount=0d;		
 		//改地址退件费
@@ -778,7 +784,7 @@ public class FeesAbnormalController {
 				Cell cel16 = row.createCell(16);
 				cel16.setCellValue(fee.getConfirmIsDeliveryFree());
 				Cell cel17 = row.createCell(17);
-				cel17.setCellValue(fee.getOrderStatus());
+				cel17.setCellValue(statusMap.get(fee.getOrderStatus()));
 				Cell cel18 = row.createCell(18);
 				cel18.setCellValue(fee.getConfirmYear());
 				Cell cel19 = row.createCell(19);

@@ -3,7 +3,7 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="dtCondition">
+    <DataType name="dtMondition">
       <PropertyDef name="deliverId">
         <Property></Property>
         <Property name="label">宅配商</Property>
@@ -301,9 +301,9 @@ view.get(&quot;#formCondition.entity&quot;).set(&quot;confirmMonth&quot;,month);
       <Property name="readOnly">false</Property>
       <Property name="loadMode">manual</Property>
     </DataSet>
-    <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
+    <DataSet id="dsMondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsMondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtMondition]</Property>
     </DataSet>
     <DataSet id="dsErrorMessageVo">
       <Property name="dataType">[dtErrorMessageVo]</Property>
@@ -321,7 +321,7 @@ view.get(&quot;#formCondition.entity&quot;).set(&quot;confirmMonth&quot;,month);
       </DataPilot>
       <Separator/>
       <ToolBarButton id="query">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 &#xD;
 with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
 					set(&quot;parameter&quot;, data);&#xD;
@@ -332,7 +332,7 @@ with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnCount">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 &#xD;
 with (view.get(&quot;#dsFeesAbnormalCount&quot;)){&#xD;
 					set(&quot;parameter&quot;, data);&#xD;
@@ -370,7 +370,7 @@ dorado.MessageBox.confirm(&quot;确认是否关账?&quot;,function(){&#xD;
 	view.get(&quot;#updateAction&quot;).execute({&#xD;
 		callback:function(result){		&#xD;
 			dorado.MessageBox.alert(&quot;关账成功!&quot;);&#xD;
-			var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 			with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
 				set(&quot;parameter&quot;, data);&#xD;
 				flushAsync();&#xD;
@@ -410,7 +410,7 @@ dorado.MessageBox.confirm(&quot;确认是否反关账?&quot;,function(){&#xD;
 	view.get(&quot;#updateAction&quot;).execute({&#xD;
 		callback:function(result){&#xD;
 			dorado.MessageBox.alert(&quot;反关账成功!&quot;);&#xD;
-			var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 			with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
 				set(&quot;parameter&quot;, data);&#xD;
 				flushAsync();&#xD;
@@ -450,11 +450,11 @@ var nowdays = new Date();&#xD;
 		endTime:lastDay&#xD;
 	});&#xD;
 </ClientEvent>
-      <Property name="dataType">dtCondition</Property>
+      <Property name="dataType">dtMondition</Property>
       <Property name="createPrivateDataSet">false</Property>
       <Property name="cols">*,*,*,*,*,*</Property>
-      <Property name="labelWidth">80</Property>
-      <Property name="dataSet">dsCondition</Property>
+      <Property name="labelWidth">60</Property>
+      <Property name="dataSet">dsMondition</Property>
       <AutoFormElement>
         <Property name="name">deliverId</Property>
         <Property name="property">deliverId</Property>
@@ -645,10 +645,7 @@ var nowdays = new Date();&#xD;
     <FloatPanel id="panelCustomer">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
-    entity.set({&#xD;
-        customerId: data.get(&quot;customerid&quot;),&#xD;
-    });&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
 }&#xD;
 </ClientEvent>
       <Property name="width">800</Property>
@@ -672,9 +669,9 @@ if (data != null) {&#xD;
     <FloatPanel id="panelDeliver">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeliver.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#queyConditionForm.entity&quot;).set(&quot;deliverid&quot;,data.get(&quot;deliverid&quot;));&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;deliverId&quot;,data.get(&quot;deliverid&quot;));&#xD;
 }</ClientEvent>
-      <Property name="caption">商家选择</Property>
+      <Property name="caption">宅配商选择</Property>
       <Property name="center">true</Property>
       <Property name="closeable">true</Property>
       <Property name="contentOverflow">scroll</Property>
@@ -773,7 +770,7 @@ if(data.succ!=null){&#xD;
 	dorado.MessageBox.alert(&quot;导入成功!&quot;,function(){&#xD;
 		view.get(&quot;#importDialog&quot;).hide();	&#xD;
 		&#xD;
-		var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+		var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 &#xD;
 		with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
 				set(&quot;parameter&quot;, data);&#xD;
@@ -814,7 +811,7 @@ var getProgress = function() {&#xD;
 			view.get(&quot;#uimportCloseBtn&quot;).set(&quot;disabled&quot;,false);&#xD;
 			view.get(&quot;#uprogressLabel&quot;).set(&quot;text&quot;,&quot;导入完成！&quot;);&#xD;
 			&#xD;
-			var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 &#xD;
 			with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
 					set(&quot;parameter&quot;, data);&#xD;
