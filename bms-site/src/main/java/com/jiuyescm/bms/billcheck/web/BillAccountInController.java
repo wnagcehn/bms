@@ -111,12 +111,13 @@ public class BillAccountInController {
 			amount =accountVo.getAmount().add(entity.getAmount());
 
 			updateVo.setAmount(amount);
-			billAccountInfoService.update(updateVo);
-			
-			entity.setLastModifierId(JAppContext.currentUserID());
-			entity.setLastModifyTime(JAppContext.currentTimestamp());
-			entity.setLastModifier(JAppContext.currentUserName());
-			billAccountInService.update(entity);
+			BillAccountInfoEntity res = billAccountInfoService.update(updateVo);
+			if(null != res){
+				entity.setLastModifierId(JAppContext.currentUserID());
+				entity.setLastModifyTime(JAppContext.currentTimestamp());
+				entity.setLastModifier(JAppContext.currentUserName());
+				billAccountInService.update(entity);
+			}
 		}else{
 			entity.setLastModifierId(JAppContext.currentUserID());
 			entity.setLastModifyTime(JAppContext.currentTimestamp());
