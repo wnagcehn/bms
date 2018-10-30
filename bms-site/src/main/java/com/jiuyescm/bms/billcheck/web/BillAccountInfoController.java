@@ -52,5 +52,12 @@ public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> paramet
 			 }
 	}
 	
+	@DataResolver
+	public void update(BillAccountInfoEntity entity){
+		 if (null != entity && null != entity.getAmount()) {
+		      billAccountInfoService.update(entity);
+		 }
+}
+	
 
 }
