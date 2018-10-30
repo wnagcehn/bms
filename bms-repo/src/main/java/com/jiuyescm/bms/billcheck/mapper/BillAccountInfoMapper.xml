@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jiuyescm.bms.billcheck.mapper.BillAccountInfoMapper" >
+<mapper namespace="com.jiuyescm.bms.billcheck.BillAccountInfoMapper" >
     <resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillAccountInfoEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="id" property="id" jdbcType="INTEGER" />
@@ -29,7 +29,7 @@
 				and customer_id = #{customerId}
 		</if>
 		<if test="(customerName != null and customerName !='')" >
-				and customer_name = #{customerName}
+				and customer_name like concat('%',#{customerName},'%')
 		</if>
 		<if test="(accountNo != null and accountNo !='')" >
 				and account_no = #{accountNo}
@@ -58,6 +58,12 @@
 		<if test="(delFlag != null and delFlag !='')" >
 				and del_flag = #{delFlag}
 		</if>
+		<if test="(startTime!= null and startTime!='')">
+			and create_time>=#{startTime}
+		</if>
+		<if test="(endTime!= null and endTime!='')">
+			and create_time <![CDATA[<= #{endTime}]]>
+		</if>
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
@@ -74,4 +80,41 @@
         from bill_account_info
         where customer_id=#{customerId} 
     </select>
+    <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+        insert into bill_account_info(customer_id, customer_name, account_no, amount, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, del_flag)
+        values (
+
+#{customerId,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{accountNo,jdbcType=VARCHAR}, 
+#{amount,jdbcType=DECIMAL}, 
+#{creatorId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifierId,jdbcType=VARCHAR}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+        update bill_account_info 
+		<set >
+
+<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="accountNo != null" >account_no=#{accountNo,jdbcType=VARCHAR},</if>
+<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
 </mapper>

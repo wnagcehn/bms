@@ -58,8 +58,6 @@
     <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountOutFrame&quot;).objects[0];&#xD;
 var userData=myframe.get(&quot;userData&quot;);&#xD;
 if(userData){&#xD;
-	//alert(userData);&#xD;
-	//alert(view.get(&quot;#queryForm.entity&quot;));&#xD;
 	var entity=view.get(&quot;#queryForm.entity&quot;);&#xD;
 	entity.set(&quot;createMonthStart&quot;,userData.createMonthStart);&#xD;
 	entity.set(&quot;createMonthEnd&quot;,userData.createMonthEnd);&#xD;

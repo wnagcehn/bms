@@ -32,7 +32,7 @@ public class BillAccountInfoRepositoryImpl extends MyBatisDao<BillAccountInfoEnt
 	
 	@Override
     public PageInfo<BillAccountInfoEntity> query(Map<String, Object> condition, int pageNo, int pageSize) {
-        List<BillAccountInfoEntity> list = selectList("com.jiuyescm.bms.billcheck.mapper.BillAccountInfoMapper.query", condition, new RowBounds(
+        List<BillAccountInfoEntity> list = selectList("com.jiuyescm.bms.billcheck.BillAccountInfoMapper.query", condition, new RowBounds(
                 pageNo, pageSize));
         PageInfo<BillAccountInfoEntity> pageInfo = new PageInfo<BillAccountInfoEntity>(list);
         return pageInfo;

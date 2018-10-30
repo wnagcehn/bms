@@ -35,8 +35,8 @@
         <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="startTime">
-        <Property name="dataType">DateTime</Property>
         <Property name="label">创建日期：</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="dataType">DateTime</Property>
@@ -85,6 +85,7 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
         <AutoFormElement>
           <Property name="name">customerName</Property>
           <Property name="property">customerName</Property>
+          <Property name="trigger">getCustomerNameCondition</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -96,7 +97,7 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
           <Property name="name">endTime</Property>
           <Property name="property">endTime</Property>
           <Property name="labelWidth">5</Property>
-          <Property name="width">160</Property>
+          <Property name="width">145</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -148,30 +149,30 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
           <Editor/>
         </DataColumn>
         <DataColumn>
-          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+          <ClientEvent name="onRenderCell"> jQuery(arg.dom).empty();&#xD;
 jQuery(arg.dom).xCreate([&#xD;
 		{&#xD;
 		    tagName: &quot;A&quot;,&#xD;
 		    href: &quot;#&quot;,&#xD;
 		    content:&quot;查看明细&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
-		    onclick: function() {&#xD;
-				//var subview = view.get(&quot;#viewSelectBillAccountDetail&quot;).get(&quot;subView&quot;);&#xD;
-				//var ds = subview.get(&quot;#dsCondition.data&quot;).current;&#xD;
-				//ds.set(&quot;customerName&quot;,&quot;123&quot;);&#xD;
-				//alert(ds.get(&quot;customerName&quot;));&#xD;
-				&#xD;
-				var parameter={&#xD;
-					customerName:&quot;test&quot;,&#xD;
-					accountNo:&quot;123&quot;,&#xD;
+		    onclick: function() { &#xD;
+			&#xD;
+				var accountData=view.get(&quot;#dsBillAccountInfo.data&quot;).current;&#xD;
+				var accountNo = accountData.get(&quot;accountNo&quot;);&#xD;
+				var customerName = accountData.get(&quot;customerName&quot;);&#xD;
+				var amount = accountData.get(&quot;amount&quot;);&#xD;
+					var parameter={&#xD;
+					customerName:customerName,&#xD;
+					accountNo:accountNo,&#xD;
+					amount:amount,&#xD;
 				};&#xD;
 				var iframe=view.get(&quot;#BillAccountDetailFrame&quot;);&#xD;
+				iframe.reload();&#xD;
 				iframe.set(&quot;userData&quot;,parameter);&#xD;
-				&#xD;
-				&#xD;
 				view.get(&quot;#dialogBillAccountDetail&quot;).show();&#xD;
-				//alert(12);&#xD;
 	    	}&#xD;
+			&#xD;
 		},&#xD;
 		{&#xD;
 		    tagName: &quot;A&quot;,&#xD;
@@ -179,61 +180,55 @@ jQuery(arg.dom).xCreate([&#xD;
 		    content:&quot;冲抵&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
 		    onclick: function() {&#xD;
+				var accountOutData=view.get(&quot;#dsBillAccountInfo.data&quot;).current;&#xD;
+				var accountNo = accountOutData.get(&quot;accountNo&quot;);&#xD;
 				var parameter={&#xD;
-					createMonthStart:&quot;6&quot;,&#xD;
-					createMonthEnd:&quot;11&quot;,&#xD;
-					billName:&quot;123&quot;,&#xD;
-					billStatus:&quot;&quot;,&#xD;
+					accountNo:accountNo,&#xD;
+					&#xD;
 				};&#xD;
 				var iframe=view.get(&quot;#BillAccountOutFrame&quot;);&#xD;
+				iframe.reload();&#xD;
 				iframe.set(&quot;userData&quot;,parameter);&#xD;
 				&#xD;
 				view.get(&quot;#dialogBillAccountOut&quot;).show();;&#xD;
 	    	}&#xD;
 		}&#xD;
+		&#xD;
+		&#xD;
 ]);</ClientEvent>
           <Property name="visible">true</Property>
           <Property name="name">操作</Property>
           <Editor/>
         </DataColumn>
       </DataGrid>
+      <Trigger id="getCustomerNameCondition">
+        <ClientEvent name="onExecute">view.get(&quot;#panelCustomerCondition&quot;).show();</ClientEvent>
+      </Trigger>
+      <FloatPanel id="panelCustomerCondition">
+        <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomerCondition.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryConditionFrm.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+}</ClientEvent>
+        <Property name="caption">商家选择</Property>
+        <Property name="center">true</Property>
+        <Property name="closeable">true</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <Property name="height">450</Property>
+        <Property name="modal">true</Property>
+        <Property name="width">800</Property>
+        <Buttons/>
+        <Children>
+          <SubViewHolder id="viewSelectCustomerCondition">
+            <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+          </SubViewHolder>
+        </Children>
+        <Tools/>
+      </FloatPanel>
     </Container>
-    <FloatPanel id="panelBillAccountDetail">
-      <Property name="caption">收支明细</Property>
-      <Property name="center">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="height">500</Property>
-      <Property name="modal">true</Property>
-      <Property name="width">800</Property>
-      <Property name="closeAction">hide</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectBillAccountDetail">
-          <Property name="subView">com.jiuyescm.bms.billcheck.view.BillAccountDetail</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
-    <FloatPanel id="panelBillAccountOut">
-      <Property name="caption">冲抵 </Property>
-      <Property name="center">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="height">500</Property>
-      <Property name="modal">true</Property>
-      <Property name="width">800</Property>
-      <Property name="closeAction">hide</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectBillAccountOut">
-          <Property name="userData">{}</Property>
-          <Property name="subView">com.jiuyescm.bms.billcheck.view.BillAccountOut</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
     <Dialog id="dialogBillAccountDetail">
       <Property name="width">1000</Property>
       <Property name="height">500</Property>
+      <Property name="caption">查看明细</Property>
       <Buttons/>
       <Children>
         <IFrame id="BillAccountDetailFrame">
@@ -245,6 +240,7 @@ jQuery(arg.dom).xCreate([&#xD;
     <Dialog id="dialogBillAccountOut">
       <Property name="width">1000</Property>
       <Property name="height">500</Property>
+      <Property name="caption">冲抵</Property>
       <Buttons/>
       <Children>
         <IFrame id="BillAccountOutFrame">

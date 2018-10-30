@@ -94,19 +94,18 @@
       </PropertyDef>
     </DataType>
   </Model>
-  
   <View>
-    <!-- <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountDetailFrame&quot;).objects[0];&#xD;
+    <ClientEvent name="onReady">var myframe= window.parent.$id(&quot;BillAccountDetailFrame&quot;).objects[0];&#xD;
 var userData=myframe.get(&quot;userData&quot;);&#xD;
 if(userData){&#xD;
-	//alert(userData);&#xD;
-	//alert(view.get(&quot;#queyConditionForm.entity&quot;));&#xD;
 	var entity=view.get(&quot;#queyConditionForm.entity&quot;);&#xD;
     entity.set(&quot;customerName&quot;,userData.customerName);&#xD;
 	entity.set(&quot;accountNo&quot;,userData.accountNo);&#xD;
+	entity.set(&quot;amount&quot;,userData.amount);&#xD;
+	&#xD;
 	&#xD;
 		&#xD;
-}</ClientEvent> -->
+}</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
