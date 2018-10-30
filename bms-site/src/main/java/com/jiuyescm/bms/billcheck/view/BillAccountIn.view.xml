@@ -449,5 +449,6 @@ if (data != null) {&#xD;
     <AjaxAction id="queryConfirmStatus">
       <Property name="service">billAccountInController#findById</Property>
     </AjaxAction>
+    <UpdateAction id="updateAmount"/>
   </View>
 </ViewConfig>
