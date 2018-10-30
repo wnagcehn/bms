@@ -44,51 +44,6 @@
 		<if test="(customerName != null and customerName !='')">
 			and customer_name like concat('%',#{customerName},'%')
 		</if>
-		<if test="(tradeType != null and tradeType !='')">
-			and trade_type = #{tradeType}
-		</if>
-		<if test="(tradeDescrip != null and tradeDescrip !='')">
-			and trade_descrip = #{tradeDescrip}
-		</if>
-		<if test="(amount != null and amount !='')">
-			and amount = #{amount}
-		</if>
-		<if test="(confirmTime != null and confirmTime !='')">
-			and confirm_time >= #{confirmTime} add <![CDATA[confirm_time <= #{confirmTime}]]>
-		</if>
-		<if test="(confirmStatus != null and confirmStatus !='')">
-			and confirm_status = #{confirmStatus}
-		</if>
-		<if test="(creatorId != null and creatorId !='')">
-			and creator_id = #{creatorId}
-		</if>
-		<if test="(creator != null and creator !='')">
-			and creator = #{creator}
-		</if>
-		<if test="(createTime != null and createTime !='')">
-			and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
-		</if>
-		<if test="(lastModifierId != null and lastModifierId !='')">
-			and last_modifier_id = #{lastModifierId}
-		</if>
-		<if test="(lastModifier != null and lastModifier !='')">
-			and last_modifier = #{lastModifier}
-		</if>
-		<if test="(lastModifyTime != null and lastModifyTime !='')">
-			and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
-		</if>
-		<if test="(delFlag != null and delFlag !='')">
-			and del_flag = #{delFlag}
-		</if>
-		<if test="(remark != null and remark !='')">
-			and remark = #{remark}
-		</if>
-		<if test="(startCreateTime!= null and startCreateTime!='')">
-			and create_time>=#{startCreateTime}
-		</if>
-		<if test="(endCreateTime!= null and endCreateTime!='')">
-			and create_time <![CDATA[<= #{endCreateTime}]]>
-		</if>
 	</sql>
 
 	<select id="query" parameterType="java.util.Map"

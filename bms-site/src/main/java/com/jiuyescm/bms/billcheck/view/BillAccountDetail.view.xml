@@ -146,16 +146,19 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
       <AutoFormElement>
         <Property name="name">customerName</Property>
         <Property name="property">customerName</Property>
+        <Property name="readOnly">true</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">accountNo</Property>
         <Property name="property">accountNo</Property>
+        <Property name="readOnly">true</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">amount</Property>
         <Property name="property">amount</Property>
+        <Property name="readOnly">true</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
