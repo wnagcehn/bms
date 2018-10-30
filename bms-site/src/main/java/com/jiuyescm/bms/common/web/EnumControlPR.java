@@ -1062,4 +1062,17 @@ public class EnumControlPR {
 		return mapValue;
 	}
 	
+	
+	/**
+	 * 获取所有单据类型
+	 * @return
+	 */
+	@DataProvider
+	public Map<String, String> getOrderStatusList(){
+		Map<String, String> map =new LinkedHashMap<String,String>();
+		map.put("1", "待确认");
+		map.put("2", "已确认");
+		map.put("3", "已关账");
+		return map;
+	}
 }

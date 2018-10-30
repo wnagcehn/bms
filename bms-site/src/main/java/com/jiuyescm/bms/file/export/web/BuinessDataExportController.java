@@ -115,7 +115,13 @@ public class BuinessDataExportController extends BaseController {
 	FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
 	
 	private static ThreadLocal<Double> totalAmount = new ThreadLocal<Double>();
+	//运费
 	private static ThreadLocal<Double> totalDeliveryCost = new ThreadLocal<Double>();
+	//商品金额
+	private static ThreadLocal<Double> totalProductAmount = new ThreadLocal<Double>();
+	//改地址退件费
+	private static ThreadLocal<Double> totalReturnAmount = new ThreadLocal<Double>();
+
 	
 	/**
 	 * 分页查询
@@ -1893,8 +1899,9 @@ public class BuinessDataExportController extends BaseController {
 		int pageNo = 1;
 		int abnormalLineNo = 1;
 		boolean doLoop = true;
-		totalAmount.set(0d);// 置零
+		totalProductAmount.set(0d);// 置零
 		totalDeliveryCost.set(0d);
+		totalReturnAmount.set(0d);
 
 		while (doLoop) {
 			PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormal(condition, pageNo,
@@ -1976,7 +1983,7 @@ public class BuinessDataExportController extends BaseController {
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "赔付运费");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "returnedAmountC2j");
+		itemMap.put("dataKey", "deliveryCost");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
@@ -2006,29 +2013,29 @@ public class BuinessDataExportController extends BaseController {
 	private List<Map<String, Object>> getAbnormalItem(List<FeesAbnormalEntity> list) {
 		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = null;
-		double t_amount = 0d;
+		double t_productAmount = 0d;
 		double t_deliveryCost = 0d;
-
 		for (FeesAbnormalEntity entity : list) {
 			dataItem = new HashMap<String, Object>();
 			dataItem.put("warehouseName", entity.getWarehouseName());
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
-			dataItem.put("waybillNo", entity.getExpressnum());
+			dataItem.put("expressnum", entity.getExpressnum());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("reason", entity.getReason());
-			double amount = (entity.getPayMoney() == null ? 0 : entity.getPayMoney());
-			t_amount += amount;
-			dataItem.put("payAmount", amount);
-			double deliveryCost = (entity.getDeliveryCost() == null ? 0 : entity.getDeliveryCost());
-			t_deliveryCost += deliveryCost;
+			dataItem.put("dutyType", entity.getDutyType());
+			dataItem.put("payType", entity.getPayType());
+			double productAmount=entity.getProductAmountJ2c()==null?0d:entity.getProductAmountJ2c();
+			t_productAmount+=productAmount;
+			dataItem.put("productAmountJ2c", productAmount);
+			double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
+			t_deliveryCost+=deliveryCost;
 			dataItem.put("deliveryCost", deliveryCost);
-			dataItem.put("isDeliveryFree", entity.getIsDeliveryFree());
-			dataItem.put("creator", entity.getCreatePersonName());
+			dataItem.put("isDeliveryFreeJ2c", entity.getIsDeliveryFreeJ2c());
+			dataItem.put("createPersonName", entity.getCreatePersonName());
 			dataItem.put("remark", entity.getRemark());
 			dataList.add(dataItem);
 		}
 
-		totalAmount.set(totalAmount.get() + t_amount);
+		totalProductAmount.set(totalProductAmount.get() + t_productAmount);
 		totalDeliveryCost.set(totalDeliveryCost.get() + t_deliveryCost);
 		return dataList;
 	}
@@ -2039,8 +2046,8 @@ public class BuinessDataExportController extends BaseController {
 	private List<Map<String, Object>> getAbnormalSumItem() {
 		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = new HashMap<String, Object>();
-		dataItem.put("reason", "合计金额");
-		dataItem.put("payAmount", totalAmount.get());
+		dataItem.put("expressnum", "合计金额");
+		dataItem.put("productAmountJ2c", totalProductAmount.get());
 		dataItem.put("deliveryCost", totalDeliveryCost.get());
 		dataList.add(dataItem);
 		return dataList;
@@ -2060,8 +2067,10 @@ public class BuinessDataExportController extends BaseController {
 		int pageNo = 1;
 		int abnormalLineNo = 1;
 		boolean doLoop = true;
-		totalAmount.set(0d);// 置零
-
+		totalProductAmount.set(0d);// 置零
+		totalDeliveryCost.set(0d);
+		totalReturnAmount.set(0d);
+		
 		while (doLoop) {
 			PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormalChange(condition,
 					pageNo, PAGESIZE);
@@ -2099,6 +2108,12 @@ public class BuinessDataExportController extends BaseController {
 		Map<String, Object> itemMap = new HashMap<String, Object>();
 
 		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "发货仓库");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "warehouseName");
+		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "运单日期");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "createTime");
@@ -2107,37 +2122,37 @@ public class BuinessDataExportController extends BaseController {
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "运单号");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "waybillNo");
+		itemMap.put("dataKey", "expressnum");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "商家名称");
+		itemMap.put("title", "客户");
 		itemMap.put("columnWidth", 50);
 		itemMap.put("dataKey", "customerName");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "退回单号");
+		itemMap.put("title", "责任方");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "returnWaybillNo");
+		itemMap.put("dataKey", "dutyType");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "退回金额");
+		itemMap.put("title", "赔付类型");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "payAmount");
+		itemMap.put("dataKey", "payType");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "承运商");
+		itemMap.put("title", "金额");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "carrierName");
+		itemMap.put("dataKey", "returnedAmountC2j");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "登记人");
 		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "creator");
+		itemMap.put("dataKey", "createPersonName");
 		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
@@ -2158,21 +2173,22 @@ public class BuinessDataExportController extends BaseController {
 		double t_amount = 0d;
 
 		for (FeesAbnormalEntity entity : list) {
-			dataItem = new HashMap<String, Object>();
+			dataItem = new HashMap<String, Object>();		
+			dataItem.put("warehouseName", entity.getWarehouseName());
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
-			dataItem.put("waybillNo", entity.getExpressnum());
+			dataItem.put("expressnum", entity.getExpressnum());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("returnWaybillNo", "");
-			double amount = (entity.getPayMoney() == null ? 0 : entity.getPayMoney());
+			dataItem.put("dutyType", entity.getDutyType());
+			dataItem.put("payType", entity.getPayType());
+			double amount = (entity.getReturnedAmountC2j() == null ? 0 : entity.getReturnedAmountC2j());
 			t_amount += amount;
-			dataItem.put("payAmount", amount);
-			dataItem.put("carrierName", entity.getCarrierName());
-			dataItem.put("creator", entity.getCreatePersonName());
+			dataItem.put("returnedAmountC2j", amount);
+			dataItem.put("createPersonName", entity.getCreatePersonName());
 			dataItem.put("remark", entity.getRemark());
 			dataList.add(dataItem);
 		}
 
-		totalAmount.set(totalAmount.get() + t_amount);
+		totalReturnAmount.set(totalReturnAmount.get() + t_amount);
 		return dataList;
 	}
 
@@ -2182,8 +2198,8 @@ public class BuinessDataExportController extends BaseController {
 	private List<Map<String, Object>> getAbnormalChangeSumItem() {
 		List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> dataItem = new HashMap<String, Object>();
-		dataItem.put("returnWaybillNo", "合计金额");
-		dataItem.put("payAmount", totalAmount.get());
+		dataItem.put("expressnum", "合计金额");
+		dataItem.put("returnedAmountC2j", totalReturnAmount.get());
 		dataList.add(dataItem);
 		return dataList;
 	}
