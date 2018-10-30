@@ -42,6 +42,27 @@ public class ReportCalcuStatusServiceImpl implements IReportCalcuStatusService {
         return reportCalcuStatusRepository.query(condition, pageNo, pageSize);
     }
     
+	/**
+	 * 新分页查询
+	 * @param page
+	 * @param param
+	 */
+    @Override
+    public PageInfo<ReportCalcuStatusEntity> queryAll(Map<String, Object> condition,
+            int pageNo, int pageSize) {
+        return reportCalcuStatusRepository.queryAll(condition, pageNo, pageSize);
+    }
+    
+    /**
+	 * 明细查询
+	 * @param page
+	 * @param param
+	 */
+	@Override
+    public List<ReportCalcuStatusEntity> queryDetail(Map<String, Object> condition){
+		return reportCalcuStatusRepository.queryDetail(condition);
+	}
+    
      /**
 	 * 查询
 	 * @param page
@@ -50,6 +71,16 @@ public class ReportCalcuStatusServiceImpl implements IReportCalcuStatusService {
 	@Override
     public List<ReportCalcuStatusEntity> query(Map<String, Object> condition){
 		return reportCalcuStatusRepository.query(condition);
+	}
+	
+    /**
+	 * 查询(新)
+	 * @param page
+	 * @param param
+	 */
+	@Override
+   public List<ReportCalcuStatusEntity> queryAll(Map<String, Object> condition){
+		return reportCalcuStatusRepository.queryAll(condition);
 	}
 	
 	/**

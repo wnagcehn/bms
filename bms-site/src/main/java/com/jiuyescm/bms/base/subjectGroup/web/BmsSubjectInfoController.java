@@ -214,4 +214,15 @@ public class BmsSubjectInfoController {
 		return "删除成功";
 	}
 	
+	@DataProvider
+	public Map<String,String> getSubjectCodeAndName(){
+		Map<String, String> map = new HashMap<String, String>();
+		List<BmsSubjectInfoEntity> subjectList = bmsSubjectInfoService.queryAll("INPUT");
+		if (subjectList != null && subjectList.size() > 0) {
+			for (BmsSubjectInfoEntity bmsSubjectInfoEntity : subjectList) {
+				map.put(bmsSubjectInfoEntity.getSubjectCode(), bmsSubjectInfoEntity.getSubjectName());
+			}
+		}	
+		return map;
+	}
 }
