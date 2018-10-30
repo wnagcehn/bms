@@ -33,7 +33,7 @@ public class BillAccountOutRepositoryImpl extends MyBatisDao<BillAccountOutEntit
 	
 	@Override
     public PageInfo<BillAccountOutEntity> query(Map<String, Object> condition, int pageNo, int pageSize) {
-        List<BillAccountOutEntity> list = selectList("com.jiuyescm.bms.billcheck.BillAccountOutEntityMapper.query", condition, new RowBounds(
+        List<BillAccountOutEntity> list = selectList("com.jiuyescm.bms.billcheck.BillAccountOutMapper.query", condition, new RowBounds(
                 pageNo, pageSize));
         PageInfo<BillAccountOutEntity> pageInfo = new PageInfo<BillAccountOutEntity>(list);
         return pageInfo;
@@ -41,25 +41,25 @@ public class BillAccountOutRepositoryImpl extends MyBatisDao<BillAccountOutEntit
 
     @Override
     public BillAccountOutEntity findById(Long id) {
-        BillAccountOutEntity entity = selectOne("com.jiuyescm.bms.entity.BillAccountOutEntityMapper.findById", id);
+        BillAccountOutEntity entity = selectOne("com.jiuyescm.bms.billcheck.BillAccountOutMapper.findById", id);
         return entity;
     }
 
     @Override
     public BillAccountOutEntity save(BillAccountOutEntity entity) {
-        insert("com.jiuyescm.bms.entity.BillAccountOutEntityMapper.save", entity);
+        insert("com.jiuyescm.bms.billcheck.BillAccountOutMapper.save", entity);
         return entity;
     }
 
     @Override
     public BillAccountOutEntity update(BillAccountOutEntity entity) {
-        update("com.jiuyescm.bms.entity.BillAccountOutEntityMapper.update", entity);
+        update("com.jiuyescm.bms.billcheck.BillAccountOutMapper.update", entity);
         return entity;
     }
 
     @Override
     public void delete(Long id) {
-        delete("com.jiuyescm.bms.entity.BillAccountOutEntityMapper.delete", id);
+        delete("com.jiuyescm.bms.billcheck.BillAccountOutMapper.delete", id);
     }
 	
 }

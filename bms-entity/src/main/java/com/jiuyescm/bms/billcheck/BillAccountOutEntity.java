@@ -72,22 +72,7 @@ public class BillAccountOutEntity implements IEntity {
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
 	}
-	
-	/**
-     * 业务月份
-     */
-	public Integer getCreateMonth() {
-		return this.createMonth;
-	}
 
-    /**
-     * 业务月份
-     *
-     * @param createMonth
-     */
-	public void setCreateMonth(Integer createMonth) {
-		this.createMonth = createMonth;
-	}
 	
 	/**
      * 账单标识
@@ -200,4 +185,21 @@ public class BillAccountOutEntity implements IEntity {
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
 	}
+	
+	/**
+     * 业务月份
+     */
+	public Integer getCreateMonth() {
+		return this.createMonth;
+	}
+
+    /**
+     * 业务月份
+     *
+     * @param createMonth
+     */
+	public void setCreateMonth(Integer createMonth) {
+		this.createMonth = createMonth;
+	}
+    
 }

@@ -38,7 +38,6 @@ public class BillAccountInfoController {
 		entity = billAccountInfoService.findByCustomerId(customerId);
 		return entity;
 	}
-	
 	@DataProvider
 	public void queryAll(Page<BillAccountInfoEntity> page,Map<String,Object> parameter){
 		
