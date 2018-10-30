@@ -73,11 +73,16 @@ public class BillAccountInController {
 	public void save(BillAccountInEntity entity) {
 		BillAccountInfoEntity accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
 		if(null == accountEntity){
-			accountEntity.setCustomerId(entity.getCustomerId());
-			accountEntity.setCustomerId(entity.getCustomerName());
-			accountEntity.setAccountNo("1111111111");
+			BillAccountInfoEntity accountVo = new BillAccountInfoEntity();
+			accountVo.setCustomerId(entity.getCustomerId());
+			accountVo.setCustomerName(entity.getCustomerName());
+			accountVo.setAccountNo("1111111111");
+			accountVo.setCreatorId(JAppContext.currentUserID());
+			accountVo.setCreateTime(JAppContext.currentTimestamp());
+			accountVo.setCreator(JAppContext.currentUserName());
+			entity.setDelFlag("0");
 //			accountEntity.setAmount(00000.000000);
-			billAccountInfoService.save(accountEntity);
+			billAccountInfoService.save(accountVo);
 		}
 		if (entity.getId() == null) {
 			entity.setCreatorId(JAppContext.currentUserID());
