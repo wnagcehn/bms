@@ -774,7 +774,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("-->"+entity.getId()+"系统异常，费用【0】");
+			XxlJobLogger.log("-->"+entity.getId()+"系统异常，费用【0】",ex);
 		}
 	}
 	
