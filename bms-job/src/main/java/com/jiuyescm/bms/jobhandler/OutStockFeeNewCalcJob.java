@@ -202,7 +202,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		Double charge_weight = DoubleUtil.isBlank(outstock.getResizeWeight())?outstock.getTotalWeight():outstock.getResizeWeight();
 		storageFeeEntity.setWeight(charge_weight);
 		//塞箱数
-		storageFeeEntity.setBox(outstock.getAdjustBoxnum()==null?outstock.getBoxnum():outstock.getAdjustBoxnum());
+		storageFeeEntity.setBox(isBlank(outstock.getAdjustBoxnum())?outstock.getBoxnum():outstock.getAdjustBoxnum());
 		
 		storageFeeEntity.setOrderNo(outstock.getOutstockNo());			//oms订单号
 		storageFeeEntity.setProductType("");							//商品类型		
@@ -647,5 +647,24 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		    current = System.currentTimeMillis();
 			XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  更新行数【{1}】  费用科目【{2}】",(current - start),feesList.size(),SubjectId);
 		}
+	}
+	
+	/**
+	 * 判断Integer类型数据是否为空值
+	 * @param d
+	 * @return
+	 * null -> true
+	 * 0 -> true   0.0 -> true  -0.0 -> true
+	 * 其他返回 false
+	 */
+	public boolean isBlank(Integer d){
+		
+		if(d == null){
+			return true;
+		}
+		if(d == 0){
+			return true;
+		}
+		return false;
 	}
 }
