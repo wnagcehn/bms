@@ -120,11 +120,8 @@ public class DispatchBillResetJob extends IJobHandler{
 			entity.setReceiveStreet(updateEntity.getReceiveStreet());
 			entity.setReceiveTime(updateEntity.getReceiveTime());
 			entity.setRemark(updateEntity.getRemark());
-			entity.setSendCityId(updateEntity.getSendCityId());
 			entity.setSendDetailAddress(updateEntity.getSendDetailAddress());
-			entity.setSendDistrictId(updateEntity.getSendDistrictId());
 			entity.setSendName(updateEntity.getSendName());
-			entity.setSendProvinceId(updateEntity.getSendProvinceId());
 			entity.setSendStreet(updateEntity.getSendStreet());
 			entity.setServiceTypeCode(updateEntity.getServiceTypeCode());
 			entity.setSignTime(updateEntity.getSignTime());
