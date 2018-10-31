@@ -229,6 +229,10 @@ if (data != null) {&#xD;
       </FloatPanel>
     </Container>
     <Dialog id="dialogBillAccountDetail">
+      <ClientEvent name="onHide">&#xD;
+with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}</ClientEvent>
       <Property name="width">1000</Property>
       <Property name="height">500</Property>
       <Property name="caption">查看明细</Property>
@@ -241,6 +245,10 @@ if (data != null) {&#xD;
       <Tools/>
     </Dialog>
     <Dialog id="dialogBillAccountOut">
+      <ClientEvent name="onHide">&#xD;
+with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}</ClientEvent>
       <Property name="width">1000</Property>
       <Property name="height">500</Property>
       <Property name="caption">冲抵</Property>
