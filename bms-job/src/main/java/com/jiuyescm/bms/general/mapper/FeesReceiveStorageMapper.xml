@@ -48,7 +48,7 @@
 
 
     <insert id="insert" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
-        insert into fees_receive_storage(fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code,other_subject_code, tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, unit_price, continued_price, cost,biz_type,is_calculated, calculate_time, param1, param2, param3, param4, param6, rule_no, bill_no, `status`, operate_time,biz_id,del_flag,first_num, first_price, continue_num, continue_price)
+        insert into fees_receive_storage(fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code,other_subject_code, tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, box, unit_price, continued_price, cost,biz_type,is_calculated, calculate_time, param1, param2, param3, param4, param6, rule_no, bill_no, `status`, operate_time,biz_id,del_flag,first_num, first_price, continue_num, continue_price)
         values (
 			#{feesNo,jdbcType=VARCHAR}, 
 			#{creator,jdbcType=VARCHAR}, 
@@ -74,6 +74,7 @@
 			#{weight,jdbcType=DOUBLE}, 
 			#{volume,jdbcType=DOUBLE}, 
 			#{varieties,jdbcType=INTEGER}, 
+			#{box,jdbcType=INTEGER}, 
 			#{unitPrice,jdbcType=DOUBLE}, 
 			#{continuedPrice,jdbcType=DOUBLE}, 
 			#{cost,jdbcType=DECIMAL}, 

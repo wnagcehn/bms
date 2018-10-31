@@ -130,6 +130,13 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		//重量
 		Double weight = DoubleUtil.isBlank(instock.getAdjustWeight())?instock.getTotalWeight():instock.getAdjustWeight();
 		storageFeeEntity.setWeight(weight);
+		
+		//塞箱数
+		Double box=DoubleUtil.isBlank(instock.getAdjustBox())?instock.getTotalBox():instock.getTotalBox();
+		if(!DoubleUtil.isBlank(box)){
+			storageFeeEntity.setBox(box.intValue());
+		}
+		
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(instock.getCreateTime());
 		storageFeeEntity.setCustomerId(instock.getCustomerId());		//商家ID
