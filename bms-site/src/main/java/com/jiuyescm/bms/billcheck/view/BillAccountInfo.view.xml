@@ -180,14 +180,19 @@ jQuery(arg.dom).xCreate([&#xD;
 		    content:&quot;冲抵&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
 		    onclick: function() {&#xD;
-				var accountOutData=view.get(&quot;#dsBillAccountInfo.data&quot;).current;&#xD;
-				var accountNo = accountOutData.get(&quot;accountNo&quot;);&#xD;
-				var parameter={&#xD;
+				var accountData=view.get(&quot;#dsBillAccountInfo.data&quot;).current;&#xD;
+				var accountNo = accountData.get(&quot;accountNo&quot;);&#xD;
+				var customerName = accountData.get(&quot;customerName&quot;);&#xD;
+				var amount = accountData.get(&quot;amount&quot;);&#xD;
+					var parameter={&#xD;
+					customerName:customerName,&#xD;
 					accountNo:accountNo,&#xD;
+					amount:amount,&#xD;
 				};&#xD;
 				var iframe=view.get(&quot;#BillAccountOutFrame&quot;);&#xD;
 				iframe.reload();&#xD;
 				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				&#xD;
 				view.get(&quot;#dialogBillAccountOut&quot;).show();;&#xD;
 	    	}&#xD;
 		}&#xD;
@@ -224,10 +229,6 @@ if (data != null) {&#xD;
       </FloatPanel>
     </Container>
     <Dialog id="dialogBillAccountDetail">
-      <ClientEvent name="onHide">&#xD;
-with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
-			flushAsync();&#xD;
-		}</ClientEvent>
       <Property name="width">1000</Property>
       <Property name="height">500</Property>
       <Property name="caption">查看明细</Property>
@@ -240,10 +241,6 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
       <Tools/>
     </Dialog>
     <Dialog id="dialogBillAccountOut">
-      <ClientEvent name="onHide">&#xD;
-with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
-			flushAsync();&#xD;
-		}</ClientEvent>
       <Property name="width">1000</Property>
       <Property name="height">500</Property>
       <Property name="caption">冲抵</Property>
