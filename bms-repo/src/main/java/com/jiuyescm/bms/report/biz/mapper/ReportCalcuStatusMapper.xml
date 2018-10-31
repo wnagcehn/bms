@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.biz.ReportCalcuStatusMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="create_year" property="createYear" jdbcType="INTEGER" />
+		   	<result column="create_month" property="createMonth" jdbcType="INTEGER" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+		   	<result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+		   	<result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+		   	<result column="sum_amount" property="sumAmount" jdbcType="VARCHAR" />
+		   	<result column="report_time" property="reportTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, create_year, create_month, customer_id, customer_name, biz_type, subject_code, is_calculated, sum_amount, report_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+create_year, create_month, customer_id, customer_name, biz_type, subject_code, is_calculated, sum_amount, report_time
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from report_calcu_status
+        where id = #{id}
+    </select>
+	
+	<!-- 主表分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+	        select create_year,create_month,customer_name,is_calculated,sum(sum_amount) as sumAmount
+			from report_calcu_status
+			WHERE 1=1		
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" createYear != null and createYear !='' ">
+				and create_year = #{createYear}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" bizType != null and bizType !='' ">
+				and biz_type = #{bizType}
+			</if>
+        	<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+        	<if test=" isCalculated != null and isCalculated !='' and isCalculated !='ALL' ">
+				and is_calculated = #{isCalculated}
+			</if>
+			GROUP BY customer_name
+    </select>
+    
+    <select id="queryDetail" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+	        select biz_type,subject_code,is_calculated,sum(sum_amount) as sumAmount
+			from report_calcu_status
+			WHERE 1=1		
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" createYear != null and createYear !='' ">
+				and create_year = #{createYear}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+			GROUP BY biz_type,subject_code
+    </select>
+    <!-- 主表分页查询 -->
+    <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+	    select a.create_year,a.create_month,a.customer_id,a.customer_name,IF(LOCATE(a.cal,'2')>0,'2','1') as isCalculated,SUM(a.sum_amount) as sumAmount
+		from (
+				select create_year,create_month,customer_id,customer_name,IF(GROUP_CONCAT(is_calculated) like '%2%','2','1') as cal,SUM(sum_amount) as sum_amount
+				from report_calcu_status GROUP BY customer_name
+		) a
+		WHERE 1=1 
+		<if test=" isCalculated != null and isCalculated !='' and isCalculated !='ALL' ">
+			and a.cal = #{isCalculated}
+		</if>
+	    <if test=" customerId != null and customerId !='' ">
+			and a.customer_id = #{customerId}
+		</if>
+       	<if test=" customerName != null and customerName !='' ">
+			and a.customer_name = #{customerName}
+		</if>
+	    <if test=" createYear != null and createYear !='' ">
+			and a.create_year = #{createYear}
+		</if>
+       	<if test=" createMonth != null and createMonth !='' ">
+			and a.create_month = #{createMonth}
+		</if>
+		GROUP BY a.customer_name
+	</select>
+	
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+        insert into report_calcu_status(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{createYear,jdbcType=INTEGER}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{bizType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{sumAmount,jdbcType=VARCHAR}, 
+			#{reportTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.report.biz.entity.ReportCalcuStatusEntity">
+        update report_calcu_status
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" createYear != null and createYear !='' ">
+				create_year = #{createYear,jdbcType=INTEGER},
+			</if>
+			<if test=" createMonth != null and createMonth !='' ">
+				create_month = #{createMonth,jdbcType=INTEGER},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" bizType != null and bizType !='' ">
+				biz_type = #{bizType,jdbcType=VARCHAR},
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				subject_code = #{subjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+			<if test=" sumAmount != null and sumAmount !='' ">
+				sum_amount = #{sumAmount,jdbcType=VARCHAR},
+			</if>
+			<if test=" reportTime != null and reportTime !='' ">
+				report_time = #{reportTime,jdbcType=TIMESTAMP},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from report_calcu_status 
+        where id = #{id}
+    </delete>
+</mapper>
