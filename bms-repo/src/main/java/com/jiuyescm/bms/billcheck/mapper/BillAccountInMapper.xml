@@ -44,6 +44,15 @@
 		<if test="(customerName != null and customerName !='')">
 			and customer_name like concat('%',#{customerName},'%')
 		</if>
+		<if test="(startCreateTime!= null and startCreateTime!='')">
+			and create_time>=#{startCreateTime}
+		</if>
+		<if test="(endCreateTime!= null and endCreateTime!='')">
+			and create_time <![CDATA[<= #{endCreateTime}]]>
+		</if>
+		<if test="(confirmStatus != null and confirmStatus !='')">
+			and confirm_status = #{confirmStatus}
+		</if>
 	</sql>
 
 	<select id="query" parameterType="java.util.Map"
