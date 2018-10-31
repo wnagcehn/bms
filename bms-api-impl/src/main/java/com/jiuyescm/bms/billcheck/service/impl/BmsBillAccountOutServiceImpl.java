@@ -42,11 +42,18 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 
 	@Override
 	public String save(Map<String, Object> param) {
-		String accountNo =  (String) param.get("accountNo");
 		int amount =  (int) param.get("amount");
 		int  unReceiptAmount = (int) param.get("unReceiptAmount");
 		
 		String status="";
+		String accountNo =  (String) param.get("accountNo");
+		int idInt =  (int) param.get("id");
+		Long id = Long.valueOf(idInt);
+		Map<String,Object> conditionAccount = new HashMap<String,Object>();
+		conditionAccount.put("accountNo", accountNo);
+		Map<String,Object> conditionCheck = new HashMap<String,Object>();
+		conditionCheck.put("id", id);
+		
 		BillAccountOutEntity entity = new BillAccountOutEntity();
 		entity.setAccountNo(accountNo);
 		entity.setCreateTime(JAppContext.currentTimestamp());
@@ -61,30 +68,38 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		}else if(amount==0){
 			status = "冲抵失败，账户金额为0";
 		}else if(amount>=unReceiptAmount){
-			int outInt = amount-unReceiptAmount;
-			BigDecimal out = new BigDecimal(outInt);
-			entity.setAmount(out);
+			//插入支出表
+			entity.setAmount(new BigDecimal(unReceiptAmount));
 			billAccountOutRepository.save(entity);
+			//修改账户表
+			BillAccountInfoEntity account = billAccountInfoRepository.query(conditionAccount, 1, 20).getList().get(0);
+			account.setAmount(new BigDecimal(amount-unReceiptAmount));
+			billAccountInfoRepository.update(account);
+			//修改账单表
+			BillCheckInfoEntity check = billCheckInfoRepository.query(conditionCheck,1,20).getList().get(0);
+			int zeroInt = 0;
+			BigDecimal zero = new BigDecimal(zeroInt);
+			check.setUnReceiptAmount(zero);
+			billCheckInfoRepository.update(check);
+
 			status = "冲抵成功";
 		}else {
-			BigDecimal out = new BigDecimal(amount);
-			entity.setAmount(out);
+			//插入支出表
+			entity.setAmount(new BigDecimal(amount));
+			billAccountOutRepository.save(entity);
+			//修改账户表
+			BillAccountInfoEntity account = billAccountInfoRepository.query(conditionAccount, 1, 20).getList().get(0);
+			int zeroInt = 0;
+			BigDecimal zero = new BigDecimal(zeroInt);
+			account.setAmount(zero);
+			billAccountInfoRepository.update(account);
+			//修改账单表
+			BillCheckInfoEntity check = billCheckInfoRepository.query(conditionCheck,1,20).getList().get(0);
+			check.setUnReceiptAmount(new BigDecimal(unReceiptAmount-amount));
+			billCheckInfoRepository.update(check);
+			
 			status = "冲抵成功，还有剩余未收款金额未冲抵";
 		}
-		
-//		if(unReceiptAmount.compareTo(BigDecimal.ZERO)==0){
-//			status = "冲抵失败，未收款金额为0";
-//		}else if(amount.compareTo(BigDecimal.ZERO)==0){
-//			status = "冲抵失败，账户金额为0";
-//		}else if(amount.compareTo(unReceiptAmount)==0||amount.compareTo(unReceiptAmount)==1){
-//			BigDecimal out = amount.subtract(unReceiptAmount);
-//			entity.setAmount(out);
-//			billAccountOutRepository.save(entity);
-//			status = "冲抵成功";
-//		}else {
-//			entity.setAmount(amount);
-//			status = "冲抵成功，还有剩余未收款金额未冲抵";
-//		}
 
 		return status;
 	}
