@@ -216,7 +216,6 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
       <ClientEvent name="onExecute">//alert(&quot;exe&quot;);&#xD;
 </ClientEvent>
       <Property name="executingMessage">账单冲抵中</Property>
-      <Property name="successMessage">冲抵成功</Property>
       <Property name="dataResolver">billAccountOutController#save</Property>
     </UpdateAction>
   </View>
