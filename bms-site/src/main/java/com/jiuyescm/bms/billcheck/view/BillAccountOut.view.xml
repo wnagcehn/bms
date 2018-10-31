@@ -77,7 +77,21 @@ if(userData){&#xD;
 	//entity.set(&quot;billName&quot;,userData.billName);&#xD;
 	//entity.set(&quot;billStatus&quot;,userData.billStatus);&#xD;
 		&#xD;
-}</ClientEvent>
+}&#xD;
+var tmpDataSet=view.get(&quot;#dsCheckInfo&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#queryForm&quot;);&#xD;
+&#xD;
+var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
+&#xD;
+if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;业务月份的结束时间不能大于起始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
+</ClientEvent>
     <DataSet id="dsCheckInfo">
       <Property name="dataType">[dtCheckInfo]</Property>
       <Property name="dataProvider">billAccountOutController#queryAll</Property>
@@ -109,6 +123,7 @@ if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot
 }&#xD;
 &#xD;
 tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
+&#xD;
 </ClientEvent>
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>

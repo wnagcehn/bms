@@ -102,10 +102,17 @@ if(userData){&#xD;
     entity.set(&quot;customerName&quot;,userData.customerName);&#xD;
 	entity.set(&quot;accountNo&quot;,userData.accountNo);&#xD;
 	entity.set(&quot;amount&quot;,userData.amount);&#xD;
-	&#xD;
-	&#xD;
-		&#xD;
-}</ClientEvent>
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBillAccountIn&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
