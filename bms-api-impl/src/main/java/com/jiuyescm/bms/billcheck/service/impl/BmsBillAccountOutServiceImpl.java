@@ -56,6 +56,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		
 		BillAccountOutEntity entity = new BillAccountOutEntity();
 		entity.setAccountNo(accountNo);
+		entity.setBillCheckId(idInt);
 		entity.setCreateTime(JAppContext.currentTimestamp());
 		entity.setCreator(JAppContext.currentUserName());
 		entity.setCreatorId(JAppContext.currentUserID());
