@@ -34,7 +34,7 @@
         <Property name="label">项目名称</Property>
       </PropertyDef>
       <PropertyDef name="outstockNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">出库单号</Property>
       </PropertyDef>
       <PropertyDef name="kesuStartTime">
@@ -143,26 +143,26 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="carrierId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="deliverId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="warehouseName">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库</Property>
       </PropertyDef>
       <PropertyDef name="createPerson">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="ispay">
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="isDeliveryFree">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="deliveryCost">
         <Property name="dataType">Double</Property>
@@ -184,7 +184,7 @@
         <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="isDeliveryFreeD2j">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="returnedAmountC2j">
         <Property name="dataType">Double</Property>
@@ -194,38 +194,38 @@
         <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="orderStatus">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="dutyType">
-        <Property/>
+        <Property></Property>
         <Property name="label">责任方</Property>
       </PropertyDef>
       <PropertyDef name="payType">
-        <Property/>
+        <Property></Property>
         <Property name="label">赔付类型</Property>
       </PropertyDef>
       <PropertyDef name="isDeliveryFreeJ2c">
-        <Property/>
+        <Property></Property>
         <Property name="label">是否免运费</Property>
       </PropertyDef>
       <PropertyDef name="confirmPayAmount">
         <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="confirmIsDeliveryFree">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="confirmYear">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="confirmMonth">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="kesuConfirmTime">
         <Property name="dataType">DateTime</Property>
         <Property name="label">客诉确认时间</Property>
       </PropertyDef>
       <PropertyDef name="outstockNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">出库单号</Property>
       </PropertyDef>
     </DataType>
@@ -445,7 +445,7 @@ if (data != null) {&#xD;
       <Property name="editable">true</Property>
     </Trigger>
     <DownloadAction id="bizDownAction">
-      <Property name="fileProvider">feesAbnormalController#exportReceive</Property>
+      <Property name="fileProvider">feesAbnormalController#export</Property>
     </DownloadAction>
   </View>
 </ViewConfig>

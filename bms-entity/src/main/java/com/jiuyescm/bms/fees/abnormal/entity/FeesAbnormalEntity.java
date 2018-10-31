@@ -77,11 +77,12 @@ public class FeesAbnormalEntity implements IEntity {
 	private String isPayStr;
 	// 是否争议
 	private String isConflictStr;
-	
+	//理赔小计
 	private Double totalPay;
 	//是否免费运费 1-不免运费  0是免运费
     private String isDeliveryFree;
     // 运费
+    private Double amerceAmount;//罚款金额
 	private Double deliveryCost;
 	private Double derateAmount;//减免金额
 	private Double receiptAmount;//实收金额
@@ -120,7 +121,7 @@ public class FeesAbnormalEntity implements IEntity {
 	private Timestamp importConfirmTime;
 	// 关账时间
 	private Timestamp closeTime;
-	
+
 	public String getIsDeliveryFree() {
 		return isDeliveryFree;
 	}
@@ -756,6 +757,14 @@ public class FeesAbnormalEntity implements IEntity {
 
 	public void setOutstockNo(String outstockNo) {
 		this.outstockNo = outstockNo;
+	}
+
+	public Double getAmerceAmount() {
+		return amerceAmount;
+	}
+
+	public void setAmerceAmount(Double amerceAmount) {
+		this.amerceAmount = amerceAmount;
 	}
 	
 	

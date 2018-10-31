@@ -11,7 +11,7 @@
     <PropertyDef name="bizTypecode">
       <Property name="label">业务类型</Property>
       <Property name="mapping">
-        <Property name="mapValues">${dorado.getDataProvider(&quot;bmsSubjectInfoController#getBizTypeCode&quot;).getResult()}</Property>
+        <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getBusinessTypeList&quot;).getResult()}</Property>
       </Property>
     </PropertyDef>
     <PropertyDef name="subjectName">

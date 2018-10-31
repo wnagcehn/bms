@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.fees.abnormal.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,38 @@ public class FeesAbnormalNewServiceImpl implements IFeesAbnormalNewService{
 			int pageNo, int pageSize) {
 		// TODO Auto-generated method stub
 		return feesAbnormalNewRepository.query(condition, pageNo, pageSize);
+	}
+
+	@Override
+	public PageInfo<FeesAbnormalEntity> queryPay(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		return feesAbnormalNewRepository.queryPay(condition, pageNo, pageSize);
+	}
+
+	@Override
+	public FeesAbnormalEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return feesAbnormalNewRepository.queryOne(condition);
+	}
+
+	@Override
+	public int updateList(List<FeesAbnormalEntity> list) {
+		// TODO Auto-generated method stub
+		return feesAbnormalNewRepository.updateList(list);
+	}
+
+	@Override
+	public int updateOne(FeesAbnormalEntity entity) {
+		// TODO Auto-generated method stub
+		return feesAbnormalNewRepository.updateOne(entity);
+	}
+
+	@Override
+	public PageInfo<FeesAbnormalEntity> queryCount(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		return feesAbnormalNewRepository.queryCount(condition, pageNo, pageSize);
 	}
 
 }
