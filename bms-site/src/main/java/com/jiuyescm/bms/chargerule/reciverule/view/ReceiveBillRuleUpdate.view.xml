@@ -11,7 +11,6 @@
       <PropertyDef name="quotationNo">
         <Property></Property>
         <Property name="label">规则编号</Property>
-        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="quotationName">
         <Property></Property>
@@ -449,6 +448,10 @@ with (view.get(&quot;#dsRuleCustomerReceivableEntity&quot;)){&#xD;
           <Property name="property">quotationNo</Property>
           <Property name="width">140</Property>
         </DataColumn>
+        <DataColumn name="quotationName">
+          <Property name="property">quotationName</Property>
+          <Property name="width">140</Property>
+        </DataColumn>
         <DataColumn name="bizTypeCode">
           <Property name="property">bizTypeCode</Property>
           <Property name="width">100</Property>
@@ -533,8 +536,9 @@ view.id(&quot;updateRuleAction&quot;).execute(&#xD;
           <AutoFormElement>
             <Property name="name">quotationNo</Property>
             <Property name="property">quotationNo</Property>
-            <Property name="editable">true</Property>
+            <Property name="editable">false</Property>
             <Property name="labelWidth">85</Property>
+            <Property name="readOnly">true</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>

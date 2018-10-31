@@ -100,8 +100,8 @@ public class ReceiveBillRuleController{
 						return "FALSE";
 					}*/
 					
-//					String templateNo =sequenceService.getBillNoOne(BillRuleReceiveEntity.class.getName(), "YGR", "00000");
-//					temp.setQuotationNo(templateNo);
+					String templateNo =sequenceService.getBillNoOne(BillRuleReceiveEntity.class.getName(), "YGR", "00000");
+					temp.setQuotationNo(templateNo);
 					if(temp.getSubjectName()!=null){
 						temp.setSubjectId(temp.getSubjectId());
 					}
