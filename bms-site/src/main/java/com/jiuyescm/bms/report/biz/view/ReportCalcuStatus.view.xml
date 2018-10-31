@@ -298,7 +298,10 @@ if(!isNullOrEmpty(isCalculated)){&#xD;
 	}	&#xD;
 }&#xD;
 &#xD;
-arg.processDefault = true;</ClientEvent>
+arg.processDefault = true;&#xD;
+&#xD;
+&#xD;
+arg.dom.style.color = (arg.data.get(&quot;isCalculated&quot;)==&quot;2&quot;) ? &quot;red&quot; : &quot;&quot;;</ClientEvent>
               <Property name="property">isCalculated</Property>
             </DataColumn>
             <DataColumn name="sumAmount">
@@ -353,7 +356,10 @@ if(!isNullOrEmpty(isCalculated)){&#xD;
 	}	&#xD;
 }&#xD;
 &#xD;
-arg.processDefault = true;</ClientEvent>
+arg.processDefault = true;&#xD;
+&#xD;
+&#xD;
+arg.dom.style.color = (arg.data.get(&quot;isCalculated&quot;)==&quot;2&quot;) ? &quot;red&quot; : &quot;&quot;;</ClientEvent>
               <Property name="property">isCalculated</Property>
             </DataColumn>
             <DataColumn name="sumAmount">
