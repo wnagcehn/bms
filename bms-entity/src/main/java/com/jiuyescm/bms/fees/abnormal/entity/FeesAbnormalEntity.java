@@ -23,6 +23,8 @@ public class FeesAbnormalEntity implements IEntity {
 	private Long id;
 	// 费用编号
 	private String feeNo;
+	// 出库单号
+	private String outstockNo;
 	// 外部订单号
 	private String reference;
 	// 运单号
@@ -75,15 +77,51 @@ public class FeesAbnormalEntity implements IEntity {
 	private String isPayStr;
 	// 是否争议
 	private String isConflictStr;
-	
+	//理赔小计
 	private Double totalPay;
 	//是否免费运费 1-不免运费  0是免运费
     private String isDeliveryFree;
     // 运费
+    private Double amerceAmount;//罚款金额
 	private Double deliveryCost;
 	private Double derateAmount;//减免金额
 	private Double receiptAmount;//实收金额
 	private Double num;
+	
+	
+	// 九曳赔偿商家 商品金额 
+	private Double productAmountJ2c;
+	// 承运商赔偿九曳 商品金额 
+	private Double productAmountD2j;
+	// 承运商赔偿九曳 是否免运费 
+	private String isDeliveryFreeD2j;
+	// 商家赔偿九曳 改地址退件费
+	private Double returnedAmountC2j;
+	// 九曳赔偿承运商 改地址退件费
+	private Double returnedAmountJ2d;
+	// 单据状态 1-待确认 2-已确认 3-已关账
+	private String orderStatus;
+	// 责任方
+	private String dutyType;
+	// 赔付类型
+	private String payType;
+	// 客诉确认时间
+	private Timestamp kesuConfirmTime;
+	// 九曳赔偿商家 是否免运费
+	private String isDeliveryFreeJ2c;
+	// 确认理赔金额
+	private Double confirmPayAmount;
+	// 确认是否免运费
+	private String confirmIsDeliveryFree;
+	// 确认年份
+	private String confirmYear;
+	// 确认月份
+	private String confirmMonth;
+	// 导入确认时间
+	private Timestamp importConfirmTime;
+	// 关账时间
+	private Timestamp closeTime;
+
 	public String getIsDeliveryFree() {
 		return isDeliveryFree;
 	}
@@ -584,4 +622,150 @@ public class FeesAbnormalEntity implements IEntity {
 	public void setNum(Double num) {
 		this.num = num;
 	}
+
+	public Double getProductAmountJ2c() {
+		return productAmountJ2c;
+	}
+
+	public void setProductAmountJ2c(Double productAmountJ2c) {
+		this.productAmountJ2c = productAmountJ2c;
+	}
+
+	public Double getProductAmountD2j() {
+		return productAmountD2j;
+	}
+
+	public void setProductAmountD2j(Double productAmountD2j) {
+		this.productAmountD2j = productAmountD2j;
+	}
+
+	public String getIsDeliveryFreeD2j() {
+		return isDeliveryFreeD2j;
+	}
+
+	public void setIsDeliveryFreeD2j(String isDeliveryFreeD2j) {
+		this.isDeliveryFreeD2j = isDeliveryFreeD2j;
+	}
+
+	public Double getReturnedAmountC2j() {
+		return returnedAmountC2j;
+	}
+
+	public void setReturnedAmountC2j(Double returnedAmountC2j) {
+		this.returnedAmountC2j = returnedAmountC2j;
+	}
+
+	public Double getReturnedAmountJ2d() {
+		return returnedAmountJ2d;
+	}
+
+	public void setReturnedAmountJ2d(Double returnedAmountJ2d) {
+		this.returnedAmountJ2d = returnedAmountJ2d;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public String getDutyType() {
+		return dutyType;
+	}
+
+	public void setDutyType(String dutyType) {
+		this.dutyType = dutyType;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
+	}
+
+	public Timestamp getKesuConfirmTime() {
+		return kesuConfirmTime;
+	}
+
+	public void setKesuConfirmTime(Timestamp kesuConfirmTime) {
+		this.kesuConfirmTime = kesuConfirmTime;
+	}
+
+	public String getIsDeliveryFreeJ2c() {
+		return isDeliveryFreeJ2c;
+	}
+
+	public void setIsDeliveryFreeJ2c(String isDeliveryFreeJ2c) {
+		this.isDeliveryFreeJ2c = isDeliveryFreeJ2c;
+	}
+
+	public Double getConfirmPayAmount() {
+		return confirmPayAmount;
+	}
+
+	public void setConfirmPayAmount(Double confirmPayAmount) {
+		this.confirmPayAmount = confirmPayAmount;
+	}
+
+	public String getConfirmIsDeliveryFree() {
+		return confirmIsDeliveryFree;
+	}
+
+	public void setConfirmIsDeliveryFree(String confirmIsDeliveryFree) {
+		this.confirmIsDeliveryFree = confirmIsDeliveryFree;
+	}
+
+	public String getConfirmYear() {
+		return confirmYear;
+	}
+
+	public void setConfirmYear(String confirmYear) {
+		this.confirmYear = confirmYear;
+	}
+
+	public String getConfirmMonth() {
+		return confirmMonth;
+	}
+
+	public void setConfirmMonth(String confirmMonth) {
+		this.confirmMonth = confirmMonth;
+	}
+
+	public Timestamp getImportConfirmTime() {
+		return importConfirmTime;
+	}
+
+	public void setImportConfirmTime(Timestamp importConfirmTime) {
+		this.importConfirmTime = importConfirmTime;
+	}
+
+	public Timestamp getCloseTime() {
+		return closeTime;
+	}
+
+	public void setCloseTime(Timestamp closeTime) {
+		this.closeTime = closeTime;
+	}
+
+	public String getOutstockNo() {
+		return outstockNo;
+	}
+
+	public void setOutstockNo(String outstockNo) {
+		this.outstockNo = outstockNo;
+	}
+
+	public Double getAmerceAmount() {
+		return amerceAmount;
+	}
+
+	public void setAmerceAmount(Double amerceAmount) {
+		this.amerceAmount = amerceAmount;
+	}
+	
+	
 }

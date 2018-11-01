@@ -178,6 +178,8 @@ public class BizDispatchBillPayEntity implements IEntity {
 	
 	//抛重
 	private Double throwWeight;
+	//原始抛重
+	private Double originThrowWeight;
 	
 	// 原始重量
 	private Double originWeight;
@@ -1140,6 +1142,14 @@ public class BizDispatchBillPayEntity implements IEntity {
 
 	public void setServicename(String servicename) {
 		this.servicename = servicename;
+	}
+
+	public Double getOriginThrowWeight() {
+		return originThrowWeight;
+	}
+
+	public void setOriginThrowWeight(Double originThrowWeight) {
+		this.originThrowWeight = originThrowWeight;
 	}
     
 	

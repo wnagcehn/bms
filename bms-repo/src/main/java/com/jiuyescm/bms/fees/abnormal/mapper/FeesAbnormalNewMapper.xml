@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.abnormal.FeesAbnormalNewMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fee_no" property="feeNo" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="reference" property="reference" jdbcType="VARCHAR" />
+	    <result column="expressnum" property="expressnum" jdbcType="VARCHAR" />
+	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+	    <result column="reason_id" property="reasonId" jdbcType="SMALLINT" />
+	    <result column="reason" property="reason" jdbcType="VARCHAR" />
+	    <result column="reason_detail" property="reasonDetail" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="warehouse_id" property="warehouseId" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="create_person" property="createPerson" jdbcType="VARCHAR" />
+	    <result column="create_person_name" property="createPersonName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="ispay" property="ispay" jdbcType="BIT" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="pay_money" property="payMoney" jdbcType="DECIMAL" />
+	    <result column="is_conflict" property="isConflict" jdbcType="BIT" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="CHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_delivery_free" property="isDeliveryFree" jdbcType="VARCHAR" />
+	    <result column="delivery_cost" property="deliveryCost" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DOUBLE"/>
+	    <result column="receipt_amount" property="receiptAmount" jdbcType="DOUBLE"/>
+	    <result column="product_amount_j2c" property="productAmountJ2c" jdbcType="DECIMAL" />
+	    <result column="product_amount_d2j" property="productAmountD2j" jdbcType="DECIMAL" />
+	    <result column="is_delivery_free_d2j" property="isDeliveryFreeD2j" jdbcType="VARCHAR" />
+	    <result column="returned_amount_c2j" property="returnedAmountC2j" jdbcType="DECIMAL" />
+	    <result column="returned_amount_j2d" property="returnedAmountJ2d" jdbcType="DECIMAL" />
+	    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+	    <result column="duty_type" property="dutyType" jdbcType="VARCHAR" />
+	    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+	    <result column="kesu_confirm_time" property="kesuConfirmTime" jdbcType="TIMESTAMP" />
+	    <result column="is_delivery_free_j2c" property="isDeliveryFreeJ2c" jdbcType="VARCHAR" />
+	    <result column="confirm_pay_amount" property="confirmPayAmount" jdbcType="DECIMAL" />
+	    <result column="confirm_is_delivery_free" property="confirmIsDeliveryFree" jdbcType="VARCHAR" />
+	    <result column="confirm_year" property="confirmYear" jdbcType="VARCHAR" />
+	    <result column="confirm_month" property="confirmMonth" jdbcType="VARCHAR" />
+	    <result column="import_confirm_time" property="importConfirmTime" jdbcType="TIMESTAMP" />
+	    <result column="close_time" property="closeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, fee_no,outstock_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, is_calculated, operate_time,is_delivery_free,delivery_cost, product_amount_j2c, product_amount_d2j, is_delivery_free_d2j, returned_amount_c2j, returned_amount_j2d, order_status, duty_type, pay_type, kesu_confirm_time, is_delivery_free_j2c, confirm_pay_amount, confirm_is_delivery_free, confirm_year, confirm_month, import_confirm_time, close_time
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(feeNo != null and feeNo !='')" >
+				and fee_no = #{feeNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(reference != null and reference !='')" >
+				and reference = #{reference}
+		</if>
+		<if test="(expressnum != null and expressnum !='')" >
+				and expressnum = #{expressnum}
+		</if>
+		<if test="(orderNo != null and orderNo !='')" >
+				and order_no = #{orderNo}
+		</if>
+		<if test="(reasonId != null and reasonId !='')" >
+				and reason_id = #{reasonId}
+		</if>
+		<if test="(reason != null and reason !='')" >
+				and reason = #{reason}
+		</if>
+		<if test="(reasonDetailId != null and reasonDetailId !='')" >
+				and reason_detail_id = #{reasonDetailId}
+		</if>
+		<if test="(reasonDetail != null and reasonDetail !='')" >
+				and reason_detail = #{reasonDetail}
+		</if>
+		<if test="(ispay != null and ispay !='')" >
+				and ispay = #{ispay}
+		</if>
+		<if test="(payMoney != null and payMoney !='')" >
+				and pay_money = #{payMoney}
+		</if>
+		<if test="(amerceAmount != null and amerceAmount !='')" >
+				and amerce_amount = #{amerceAmount}
+		</if>
+		<if test="(isConflict != null and isConflict !='')" >
+				and is_conflict = #{isConflict}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+				and carrier_id = #{carrierId}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and carrier_name = #{carrierName}
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and deliver_id = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliver_name = #{deliverName}
+		</if>
+		<if test="(warehouseId != null and warehouseId !='')" >
+				and warehouse_id = #{warehouseId}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(createPerson != null and createPerson !='')" >
+				and create_person = #{createPerson}
+		</if>
+		<if test="(createPersonName != null and createPersonName !='')" >
+				and create_person_name = #{createPersonName}
+		</if>
+		<if test="(bizType != null and bizType !='')" >
+				and biz_type = #{bizType}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and remark = #{remark}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(operateTime != null and operateTime !='')" >
+			    and operate_time >= #{operateTime} add <![CDATA[operate_time <= #{operateTime}]]>
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="(isDeliveryFree != null and isDeliveryFree !='')" >
+				and is_delivery_free = #{isDeliveryFree}
+		</if>
+		<if test="(deliveryCost != null and deliveryCost !='')" >
+				and delivery_cost = #{deliveryCost}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(productAmountJ2c != null and productAmountJ2c !='')" >
+				and product_amount_j2c = #{productAmountJ2c}
+		</if>
+		<if test="(productAmountD2j != null and productAmountD2j !='')" >
+				and product_amount_d2j = #{productAmountD2j}
+		</if>
+		<if test="(isDeliveryFreeD2j != null and isDeliveryFreeD2j !='')" >
+				and is_delivery_free_d2j = #{isDeliveryFreeD2j}
+		</if>
+		<if test="(returnedAmountC2j != null and returnedAmountC2j !='')" >
+				and returned_amount_c2j = #{returnedAmountC2j}
+		</if>
+		<if test="(returnedAmountJ2d != null and returnedAmountJ2d !='')" >
+				and returned_amount_j2d = #{returnedAmountJ2d}
+		</if>
+		<if test="(orderStatus != null and orderStatus !='')" >
+				and order_status = #{orderStatus}
+		</if>
+		<if test="(dutyType != null and dutyType !='')" >
+				and duty_type = #{dutyType}
+		</if>
+		<if test="(payType != null and payType !='')" >
+				and pay_type = #{payType}
+		</if>
+		<if test="(kesuConfirmTime != null and kesuConfirmTime !='')" >
+			    and kesu_confirm_time >= #{kesuConfirmTime} add <![CDATA[kesu_confirm_time <= #{kesuConfirmTime}]]>
+		</if>
+		<if test="(isDeliveryFreeJ2c != null and isDeliveryFreeJ2c !='')" >
+				and is_delivery_free_j2c = #{isDeliveryFreeJ2c}
+		</if>
+		<if test="(confirmPayAmount != null and confirmPayAmount !='')" >
+				and confirm_pay_amount = #{confirmPayAmount}
+		</if>
+		<if test="(confirmIsDeliveryFree != null and confirmIsDeliveryFree !='')" >
+				and confirm_is_delivery_free = #{confirmIsDeliveryFree}
+		</if>
+		<if test="(confirmYear != null and confirmYear !='')" >
+				and confirm_year = #{confirmYear}
+		</if>
+		<if test="(confirmMonth != null and confirmMonth !='')" >
+				and confirm_month = #{confirmMonth}
+		</if>
+		<if test="(importConfirmTime != null and importConfirmTime !='')" >
+			    and import_confirm_time >= #{importConfirmTime} add <![CDATA[import_confirm_time <= #{importConfirmTime}]]>
+		</if>
+		<if test="(closeTime != null and closeTime !='')" >
+			    and close_time >= #{closeTime} add <![CDATA[close_time <= #{closeTime}]]>
+		</if>
+		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
+			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		<if test="(startDate != null and startDate !='') and (endDate != null and endDate !='')" >
+			    and create_time >= #{startDate} and <![CDATA[create_time < #{endDate}]]>
+		</if>
+		<if test="(kesuStartTime != null and kesuStartTime !='') and (kesuEndTime != null and kesuEndTime !='')" >
+			    and kesu_confirm_time >= #{kesuStartTime} and <![CDATA[kesu_confirm_time <= #{kesuEndTime}]]>
+		</if>
+    </sql>
+    
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
+               select
+        <include refid="baseColumns" />
+        from fees_abnormal
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="queryPay" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
+         select
+                id, fee_no,outstock_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, 
+                is_calculated, operate_time,is_delivery_free,delivery_cost, product_amount_j2c, product_amount_d2j, is_delivery_free_d2j, returned_amount_c2j, returned_amount_j2d, order_status, duty_type, pay_type, kesu_confirm_time, is_delivery_free_j2c, confirm_pay_amount, confirm_is_delivery_free, confirm_year, 
+                confirm_month, import_confirm_time, close_time,IFNULL(product_amount_d2j,0)+IFNULL(amerce_amount,0)+IFNULL(returned_amount_j2d,0) totalPay
+        from fees_abnormal
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+    
+    <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
+               select
+        <include refid="baseColumns" />
+        from fees_abnormal
+        where 1=1
+		<include refid="baseSelectColumns" />
+		limit 1
+    </select>
+    
+    <select id="queryCount"  parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
+          select
+				deliver_name,
+				order_status,
+				IFNULL(product_amount_d2j,0)+IFNULL(amerce_amount,0)+IFNULL(returned_amount_j2d,0) totalPay,
+				confirm_pay_amount
+		from fees_abnormal
+        where 1=1 
+        <include refid="baseSelectColumns" />
+        GROUP BY deliver_name,order_status    
+    </select>
+    
+    <update id="update" parameterType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
+    	update fees_abnormal 
+		<set >
+			<if test="feeNo != null" >fee_no=#{feeNo,jdbcType=VARCHAR},</if>
+			<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+			<if test="reference != null" >reference=#{reference,jdbcType=VARCHAR},</if>
+			<if test="expressnum != null" >expressnum=#{expressnum,jdbcType=VARCHAR},</if>
+			<if test="orderNo != null" >order_no=#{orderNo,jdbcType=VARCHAR},</if>
+			<if test="reasonId != null" >reason_id=#{reasonId,jdbcType=SMALLINT},</if>
+			<if test="reason != null" >reason=#{reason,jdbcType=VARCHAR},</if>
+			<if test="reasonDetail != null" >reason_detail=#{reasonDetail,jdbcType=VARCHAR},</if>
+			<if test="ispay != null" >ispay=#{ispay,jdbcType=BIT},</if>
+			<if test="payMoney != null" >pay_money=#{payMoney,jdbcType=DECIMAL},</if>
+			<if test="amerceAmount != null" >amerce_amount=#{amerceAmount,jdbcType=DECIMAL},</if>
+			<if test="isConflict != null" >is_conflict=#{isConflict,jdbcType=BIT},</if>
+			<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="carrierId != null" >carrier_id=#{carrierId,jdbcType=VARCHAR},</if>
+			<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+			<if test="deliverId != null" >deliver_id=#{deliverId,jdbcType=VARCHAR},</if>
+			<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+			<if test="warehouseId != null" >warehouse_id=#{warehouseId,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="createPerson != null" >create_person=#{createPerson,jdbcType=VARCHAR},</if>
+			<if test="createPersonName != null" >create_person_name=#{createPersonName,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=CHAR},</if>
+			<if test="operateTime != null" >operate_time=#{operateTime,jdbcType=TIMESTAMP},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="isDeliveryFree != null" >is_delivery_free=#{isDeliveryFree,jdbcType=CHAR},</if>
+			<if test="deliveryCost != null" >delivery_cost=#{deliveryCost,jdbcType=DECIMAL},</if>
+			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+			<if test="productAmountJ2c != null" >product_amount_j2c=#{productAmountJ2c,jdbcType=DECIMAL},</if>
+			<if test="productAmountD2j != null" >product_amount_d2j=#{productAmountD2j,jdbcType=DECIMAL},</if>
+			<if test="isDeliveryFreeD2j != null" >is_delivery_free_d2j=#{isDeliveryFreeD2j,jdbcType=VARCHAR},</if>
+			<if test="returnedAmountC2j != null" >returned_amount_c2j=#{returnedAmountC2j,jdbcType=DECIMAL},</if>
+			<if test="returnedAmountJ2d != null" >returned_amount_j2d=#{returnedAmountJ2d,jdbcType=DECIMAL},</if>
+			<if test="orderStatus != null" >order_status=#{orderStatus,jdbcType=VARCHAR},</if>
+			<if test="dutyType != null" >duty_type=#{dutyType,jdbcType=VARCHAR},</if>
+			<if test="payType != null" >pay_type=#{payType,jdbcType=VARCHAR},</if>
+			<if test="kesuConfirmTime != null" >kesu_confirm_time=#{kesuConfirmTime,jdbcType=TIMESTAMP},</if>
+			<if test="isDeliveryFreeJ2c != null" >is_delivery_free_j2c=#{isDeliveryFreeJ2c,jdbcType=VARCHAR},</if>
+			<if test="confirmPayAmount != null" >confirm_pay_amount=#{confirmPayAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmIsDeliveryFree != null" >confirm_is_delivery_free=#{confirmIsDeliveryFree,jdbcType=VARCHAR},</if>
+			<if test="confirmYear != null" >confirm_year=#{confirmYear,jdbcType=VARCHAR},</if>
+			<if test="confirmMonth != null" >confirm_month=#{confirmMonth,jdbcType=VARCHAR},</if>
+			<if test="importConfirmTime != null" >import_confirm_time=#{importConfirmTime,jdbcType=TIMESTAMP},</if>
+			<if test="closeTime != null" >close_time=#{closeTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+	
+</mapper>

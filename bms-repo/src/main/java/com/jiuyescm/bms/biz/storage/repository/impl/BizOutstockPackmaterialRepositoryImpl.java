@@ -232,6 +232,12 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		
 		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getMaterialCodeFromBizData", condition);
 	}
+	
+	@Override
+	public List<BizOutstockPackmaterialEntity> queryOriginMaterialFromBizData(
+			Map<String, Object> condition) {
+		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryOriginMaterialFromBizData", condition);
+	}
 
 	@Override
 	public PageInfo<FeesReceiveMaterial> queryMaterialFromBizData(

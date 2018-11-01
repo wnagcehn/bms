@@ -809,6 +809,37 @@ if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
 		return;&#xD;
 	}&#xD;
 }&#xD;
+view.get(&quot;#originBizDownAction&quot;).set(&quot;parameter&quot;,condition).execute(&#xD;
+	function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);</ClientEvent>
+            <Property name="caption">原始数据导出</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+          </MenuItem>
+          <MenuItem>
+            <ClientEvent name="onClick">var condition=view.get(&quot;#queryConditionFrm.entity&quot;);&#xD;
+var cre=condition.get(&quot;startTime&quot;);&#xD;
+var end=condition.get(&quot;endTime&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(condition.get(&quot;customerId&quot;)) &amp;&amp; isNullOrEmpty(condition.get(&quot;warehouseCode&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;商家或仓库必选一个!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(cre)){&#xD;
+	dorado.MessageBox.alert(&quot;开始时间不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(end)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
 view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute(&#xD;
 	function(result){&#xD;
 		dorado.MessageBox.alert(result);&#xD;
@@ -1470,6 +1501,9 @@ arg.data=view.get(&quot;#dg_MaterialList&quot;).get(&quot;selection&quot;);</Cli
     </UpdateAction>
     <UpdateAction id="bizDownAction">
       <Property name="dataResolver">bizOutstockPackmaterialExportController#asynExport</Property>
+    </UpdateAction>
+    <UpdateAction id="originBizDownAction">
+      <Property name="dataResolver">dispatchBillPayExportController#originAsynExport</Property>
     </UpdateAction>
     <Dialog id="fileExportTaskDialog">
       <Property name="closeable">false</Property>

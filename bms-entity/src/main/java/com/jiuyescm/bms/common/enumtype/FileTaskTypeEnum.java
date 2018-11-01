@@ -31,6 +31,7 @@ public enum FileTaskTypeEnum {
 	BIZ_ROADBILL("roadbill", "干线路单"),
 	BIZ_REC_DIS("recdis", "应收运单"),
 	BIZ_PAY_DIS("paydis", "应付运单"),
+	BIZ_PAY_DIS_ORIGIN_DATA("origin_paydis", "原始耗材出库明细"),
 	BIZ_TIHUO("tihuo", "配送提货"),
 	BILL_REC_DISPATCH("billrecdispatch","账单应收配送费"),
 	BILL_OTHER_STORAGE("other_storage","仓储其它费用"),

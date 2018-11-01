@@ -201,6 +201,12 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 		
 		return repository.getMaterialCodeFromBizData(condition);
 	}
+	
+	@Override
+	public List<BizOutstockPackmaterialEntity> queryOriginMaterialFromBizData(
+			Map<String, Object> condition) {
+		return repository.queryOriginMaterialFromBizData(condition);
+	}
 
 	@Override
 	public PageInfo<FeesReceiveMaterial> queryMaterialFromBizData(

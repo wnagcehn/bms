@@ -46,7 +46,7 @@ public class FeesAbnormalRepositoryImpl extends MyBatisDao implements IFeesAbnor
     public PageInfo<FeesAbnormalEntity> query(Map<String, Object> condition, int pageNo, int pageSize) {
         List<FeesAbnormalEntity> list = selectList("com.jiuyescm.bms.fees.abnormal.FeesAbnormalEntityMapper.query", condition, new RowBounds(
                 pageNo, pageSize));
-        if(condition!=null && null!=condition.get("payment")){
+       /* if(condition!=null && null!=condition.get("payment")){
         	if (null!=list&&list.size()>0) 
             {
                Double d = queryTotalPay(condition);
@@ -72,7 +72,7 @@ public class FeesAbnormalRepositoryImpl extends MyBatisDao implements IFeesAbnor
                for(FeesAbnormalEntity entity:list)
             	   entity.setTotalPay(d);
     		}
-        }
+        }*/
         
         PageInfo<FeesAbnormalEntity> pageInfo = new PageInfo<FeesAbnormalEntity>(list);
         return pageInfo;

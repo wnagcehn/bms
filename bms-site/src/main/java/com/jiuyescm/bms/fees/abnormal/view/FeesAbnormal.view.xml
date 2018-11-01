@@ -4,24 +4,22 @@
   <Context/>
   <Model>
     <DataType name="dtCondition">
+      <PropertyDef name="customerId">
+        <Property name="label">商家</Property>
+      </PropertyDef>
       <PropertyDef name="warehouseId">
         <Property name="label">仓库</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getWarehouseList&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="reasonId">
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getComplaintReasonList&quot;).getResult()}</Property>
-        </Property>
-      </PropertyDef>
       <PropertyDef name="startTime">
         <Property name="dataType">DateTime</Property>
-        <Property name="label">创建时间</Property>
+        <Property name="label">运单时间</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="dataType">DateTime</Property>
-        <Property name="label">结束时间</Property>
+        <Property name="label">-</Property>
       </PropertyDef>
       <PropertyDef name="carrierName">
         <Property name="label">承运商</Property>
@@ -29,14 +27,27 @@
       <PropertyDef name="customerName">
         <Property name="label">商家</Property>
       </PropertyDef>
-      <PropertyDef name="customerId">
-        <Property name="label">商家</Property>
-      </PropertyDef>
       <PropertyDef name="projectId">
         <Property name="label">项目ID</Property>
       </PropertyDef>
       <PropertyDef name="projectName">
         <Property name="label">项目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+        <Property name="label">出库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="kesuStartTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">客诉时间</Property>
+      </PropertyDef>
+      <PropertyDef name="kesuEndTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+      <PropertyDef name="expressnum">
+        <Property></Property>
+        <Property name="label">运单号</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFeesAbnormal">
@@ -70,7 +81,7 @@
       </PropertyDef>
       <PropertyDef name="customerName">
         <Property></Property>
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家</Property>
       </PropertyDef>
       <PropertyDef name="carrierName">
         <Property></Property>
@@ -112,7 +123,7 @@
         <Property name="label">状态</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
-        <Property name="label">创建时间</Property>
+        <Property name="label">运单创建时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="totalPay"/>
@@ -127,6 +138,95 @@
       </PropertyDef>
       <PropertyDef name="projectName">
         <Property name="label">项目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="reasonId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliverId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property></Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="createPerson">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="ispay">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="isDeliveryFree">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deliveryCost">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="derateAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="productAmountJ2c">
+        <Property name="dataType">Double</Property>
+        <Property name="label">理赔商品金额</Property>
+      </PropertyDef>
+      <PropertyDef name="productAmountD2j">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="isDeliveryFreeD2j">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="returnedAmountC2j">
+        <Property name="dataType">Double</Property>
+        <Property name="label">改地址退件费</Property>
+      </PropertyDef>
+      <PropertyDef name="returnedAmountJ2d">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="orderStatus">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="dutyType">
+        <Property></Property>
+        <Property name="label">责任方</Property>
+      </PropertyDef>
+      <PropertyDef name="payType">
+        <Property></Property>
+        <Property name="label">赔付类型</Property>
+      </PropertyDef>
+      <PropertyDef name="isDeliveryFreeJ2c">
+        <Property></Property>
+        <Property name="label">是否免运费</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmPayAmount">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmIsDeliveryFree">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="confirmYear">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMonth">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="kesuConfirmTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">客诉确认时间</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property></Property>
+        <Property name="label">出库单号</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -147,10 +247,17 @@ with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var condition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -160px -120px</Property>
+      </ToolBarButton>
     </ToolBar>
     <DataSet id="dsFeesAbnormalEntity">
       <Property name="dataType">[dtFeesAbnormal]</Property>
-      <Property name="dataProvider">feesAbnormalController#queryReceive</Property>
+      <Property name="dataProvider">feesAbnormalController#query</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
       <Property name="loadMode">manual</Property>
@@ -176,26 +283,15 @@ var nowdays = new Date();&#xD;
     var myDate = new Date(year, month, 0);&#xD;
     var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
 	view.get(&quot;#formCondition.entity&quot;).set({&#xD;
-		startTime:firstDay,&#xD;
-		endTime:lastDay&#xD;
+		kesuStartTime:firstDay,&#xD;
+		kesuEndTime:lastDay,&#xD;
 	});&#xD;
 </ClientEvent>
       <Property name="dataType">dtCondition</Property>
       <Property name="createPrivateDataSet">false</Property>
-      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="cols">*,*,*,*</Property>
       <Property name="labelWidth">100</Property>
       <Property name="dataSet">dsCondition</Property>
-      <AutoFormElement>
-        <Property name="name">warehouseId</Property>
-        <Property name="property">warehouseId</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="property">projectId</Property>
-        <Property name="name">projectId</Property>
-        <Property name="trigger">trgProject</Property>
-        <Editor/>
-      </AutoFormElement>
       <AutoFormElement>
         <Property name="name">customerId</Property>
         <Property name="property">customerId</Property>
@@ -203,14 +299,8 @@ var nowdays = new Date();&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">reasonId</Property>
-        <Property name="property">reasonId</Property>
-        <Property name="label">客诉原因</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">carrierName</Property>
-        <Property name="property">carrierName</Property>
+        <Property name="name">outstockNo</Property>
+        <Property name="property">outstockNo</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -221,6 +311,32 @@ var nowdays = new Date();&#xD;
       <AutoFormElement>
         <Property name="name">endTime</Property>
         <Property name="property">endTime</Property>
+        <Property name="labelWidth">10</Property>
+        <Property name="editorWidth">120</Property>
+        <Property name="width">180</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseId</Property>
+        <Property name="property">warehouseId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">expressnum</Property>
+        <Property name="property">expressnum</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">kesuStartTime</Property>
+        <Property name="property">kesuStartTime</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">kesuEndTime</Property>
+        <Property name="property">kesuEndTime</Property>
+        <Property name="labelWidth">10</Property>
+        <Property name="editorWidth">120</Property>
+        <Property name="width">180</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -232,53 +348,13 @@ var nowdays = new Date();&#xD;
       <Property name="footerRowHeight">30</Property>
       <IndicatorColumn/>
       <RowNumColumn/>
-      <DataColumn name="feeNo">
-        <Property name="property">feeNo</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn name="reference">
-        <Property name="property">reference</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn name="expressnum">
-        <Property name="property">expressnum</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn name="orderNo">
-        <Property name="property">orderNo</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn name="reason">
-        <Property name="property">reason</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn name="reasonDetail">
-        <Property name="property">reasonDetail</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn name="remark">
-        <Property name="property">remark</Property>
-        <Property name="width">80</Property>
-      </DataColumn>
-      <DataColumn>
-        <Property name="property">isConflictStr</Property>
-        <Property name="width">80</Property>
-        <Property name="name">isConflictStr</Property>
-      </DataColumn>
-      <DataColumn>
-        <Property name="name">projectId</Property>
-        <Property name="property">projectId</Property>
-        <Property name="width">80</Property>
-        <Editor/>
-      </DataColumn>
-      <DataColumn>
-        <Property name="name">projectName</Property>
-        <Property name="property">projectName</Property>
-        <Property name="width">80</Property>
-        <Editor/>
-      </DataColumn>
       <DataColumn name="customerName">
+        <ClientEvent name="onRenderFooterCell">arg.dom.innerHTML=&quot;合计:&quot;;</ClientEvent>
         <Property name="property">customerName</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="warehouseName">
+        <Property name="property">warehouseName</Property>
         <Property name="width">80</Property>
       </DataColumn>
       <DataColumn name="carrierName">
@@ -289,47 +365,55 @@ var nowdays = new Date();&#xD;
         <Property name="property">deliverName</Property>
         <Property name="width">80</Property>
       </DataColumn>
-      <DataColumn>
-        <Property name="property">warehouseId</Property>
-        <Property name="width">80</Property>
-        <Property name="name">warehouseId</Property>
+      <DataColumn name="outstockNo">
+        <Property name="property">outstockNo</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn>
-        <Property name="property">isPayStr</Property>
-        <Property name="width">80</Property>
-        <Property name="name">isPayStr</Property>
+      <DataColumn name="expressnum">
+        <Property name="property">expressnum</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="payMoney">
-        <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsFeesAbnormalEntity.data&quot;);&#xD;
-var amount=0;&#xD;
-var i = 0;&#xD;
-datas.each(function(data){&#xD;
-	&#xD;
-	if(i==0){&#xD;
-		amount=data.get(&quot;totalPay&quot;);&#xD;
-		}&#xD;
-	&#xD;
-	i = i+1;&#xD;
-});&#xD;
-arg.dom.innerHTML=&quot;合计: &lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>元&quot;;</ClientEvent>
-        <Property name="property">payMoney</Property>
+      <DataColumn name="reference">
+        <Property name="property">reference</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="dutyType">
+        <Property name="property">dutyType</Property>
         <Property name="width">80</Property>
       </DataColumn>
-      <DataColumn name="billNo">
-        <Property name="property">billNo</Property>
+      <DataColumn name="payType">
+        <Property name="property">payType</Property>
         <Property name="width">80</Property>
       </DataColumn>
-      <DataColumn name="isCalculated">
-        <Property name="property">isCalculated</Property>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="productAmountJ2c">
+        <Property name="property">productAmountJ2c</Property>
         <Property name="width">80</Property>
+        <Property name="summaryType">sum</Property>
+      </DataColumn>
+      <DataColumn name="isDeliveryFreeJ2c">
+        <Property name="property">isDeliveryFreeJ2c</Property>
+        <Property name="width">80</Property>
+      </DataColumn>
+      <DataColumn name="returnedAmountC2j">
+        <Property name="property">returnedAmountC2j</Property>
+        <Property name="width">80</Property>
+        <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn name="createPersonName">
         <Property name="property">createPersonName</Property>
         <Property name="width">80</Property>
       </DataColumn>
+      <DataColumn name="kesuConfirmTime">
+        <Property name="property">kesuConfirmTime</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
       <DataColumn name="createTime">
         <Property name="property">createTime</Property>
-        <Property name="width">118</Property>
+        <Property name="width">120</Property>
       </DataColumn>
     </DataGrid>
     <FloatPanel id="panelCustomer2">
@@ -360,30 +444,8 @@ if (data != null) {&#xD;
       <ClientEvent name="onExecute">view.get(&quot;#panelCustomer2&quot;).show();</ClientEvent>
       <Property name="editable">true</Property>
     </Trigger>
-    <FloatPanel id="panelProject">
-      <ClientEvent name="onHide">&#xD;
-var data = this.get(&quot;#viewSelectProject.userData&quot;);&#xD;
-if (data != null) {&#xD;
-	view.get(&quot;#formCondition.entity&quot;).set(&quot;projectId&quot;,data.get(&quot;projectid&quot;));&#xD;
-}</ClientEvent>
-      <Property name="center">true</Property>
-      <Property name="caption">项目选择</Property>
-      <Property name="height">450</Property>
-      <Property name="width">800</Property>
-      <Property name="modal">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="contentOverflow">scroll</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectProject">
-          <Property name="subView">com.jiuyescm.bms.lookup.view.ProjectLookup</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
-    <Trigger id="trgProject">
-      <ClientEvent name="onExecute">view.id(&quot;panelProject&quot;).show();&#xD;
-</ClientEvent>
-    </Trigger>
+    <DownloadAction id="bizDownAction">
+      <Property name="fileProvider">feesAbnormalController#export</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>
