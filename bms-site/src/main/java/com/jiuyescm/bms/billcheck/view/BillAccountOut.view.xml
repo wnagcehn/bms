@@ -36,10 +36,20 @@
       <PropertyDef name="createMonthStart">
         <Property name="dataType">Integer</Property>
         <Property name="label">账单月份</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">4</Property>
+          <Property name="minLength">4</Property>
+          <Property name="defaultResultState">warn</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="createMonthEnd">
         <Property name="dataType">Integer</Property>
         <Property name="label">-</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">4</Property>
+          <Property name="minLength">4</Property>
+          <Property name="defaultResultState">warn</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property></Property>
@@ -131,7 +141,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
       </ToolBar>
       <AutoForm id="queryForm">
         <Property name="dataSet">dsCondition</Property>
-        <Property name="cols">200,120,200,200,200,200</Property>
+        <Property name="cols">200,120,250,200,200,200</Property>
         <Property name="dataType">dtCondition</Property>
         <Property name="width">160</Property>
         <AutoFormElement>
@@ -152,7 +162,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
           <Property name="name">billName</Property>
           <Property name="property">billName</Property>
           <Property name="label">账单名称</Property>
-          <Property name="labelWidth">65</Property>
+          <Property name="labelWidth">60</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -171,13 +181,14 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
         <Property name="dataSet">dsCheckInfo</Property>
         <Property name="dataType">dtCheckInfo</Property>
         <Property name="readOnly">true</Property>
+        <Property name="stretchColumnsMode">allColumns</Property>
         <DataColumn name="id">
           <Property name="property">id</Property>
           <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="createMonth">
           <Property name="property">createMonth</Property>
-          <Property name="width">95</Property>
+          <Property name="width">100</Property>
         </DataColumn>
         <DataColumn name="invoiceName">
           <Property name="property">invoiceName</Property>
@@ -189,11 +200,11 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
         </DataColumn>
         <DataColumn name="billStatus">
           <Property name="property">billStatus</Property>
-          <Property name="width">95</Property>
+          <Property name="width">100</Property>
         </DataColumn>
         <DataColumn name="unReceiptAmount">
           <Property name="property">unReceiptAmount</Property>
-          <Property name="width">95</Property>
+          <Property name="width">100</Property>
         </DataColumn>
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
