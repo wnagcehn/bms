@@ -129,22 +129,6 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
       <Property name="loadMode">manual</Property>
       <Property name="dataProvider">billDetailController#queryOut</Property>
     </DataSet>
-    <ToolBar>
-      <DataPilot/>
-      <ToolBarButton id="btnQuery">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
-with (view.get(&quot;#dsBillAccountIn&quot;)){&#xD;
-					set(&quot;parameter&quot;, data);&#xD;
-					flushAsync();&#xD;
-				}&#xD;
-with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
-					set(&quot;parameter&quot;, data);&#xD;
-					flushAsync();&#xD;
-				}		</ClientEvent>
-        <Property name="caption">查询</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-      </ToolBarButton>
-    </ToolBar>
     <AutoForm id="queyConditionForm">
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
@@ -175,7 +159,7 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
         <Property name="width">50%</Property>
         <TabControl>
           <ControlTab>
-            <Property name="caption">收入</Property>
+            <Property name="caption">入账</Property>
             <DataGrid id="dataAccountIn">
               <Property name="dataSet">dsBillAccountIn</Property>
               <Property name="readOnly">true</Property>
@@ -209,7 +193,7 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
         <Property name="width">50%</Property>
         <TabControl>
           <ControlTab>
-            <Property name="caption">支出</Property>
+            <Property name="caption">抵扣</Property>
             <DataGrid id="dataAccountOut">
               <Property name="dataSet">dsBillAccountOut</Property>
               <Property name="readOnly">true</Property>
