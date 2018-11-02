@@ -65,9 +65,9 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	
 		//插入支出表
 		if(unReceiptAmount==0){
-			status = "冲抵失败，未收款金额为0";
+			status = "未能冲抵，未收款金额为0";
 		}else if(amount==0){
-			status = "冲抵失败，账户金额为0";
+			status = "未能冲抵，账户金额为0";
 		}else if(amount>=unReceiptAmount){
 			//插入支出表
 			entity.setAmount(new BigDecimal(unReceiptAmount));
@@ -99,7 +99,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			check.setUnReceiptAmount(new BigDecimal(unReceiptAmount-amount));
 			billCheckInfoRepository.update(check);
 			
-			status = "冲抵成功，还有剩余未收款金额未冲抵";
+			status = "部分冲抵，还有未收款余额";
 		}
 
 		return status;

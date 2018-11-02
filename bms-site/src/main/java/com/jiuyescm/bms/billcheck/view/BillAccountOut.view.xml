@@ -133,6 +133,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
         <Property name="dataSet">dsCondition</Property>
         <Property name="cols">200,120,200,200,200,200</Property>
         <Property name="dataType">dtCondition</Property>
+        <Property name="width">160</Property>
         <AutoFormElement>
           <Property name="name">createMonthStart</Property>
           <Property name="property">createMonthStart</Property>
@@ -151,6 +152,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
           <Property name="name">billName</Property>
           <Property name="property">billName</Property>
           <Property name="label">账单名称</Property>
+          <Property name="labelWidth">65</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -175,7 +177,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
         </DataColumn>
         <DataColumn name="createMonth">
           <Property name="property">createMonth</Property>
-          <Property name="width">105</Property>
+          <Property name="width">95</Property>
         </DataColumn>
         <DataColumn name="invoiceName">
           <Property name="property">invoiceName</Property>
@@ -183,15 +185,15 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
         </DataColumn>
         <DataColumn name="billName">
           <Property name="property">billName</Property>
-          <Property name="width">250</Property>
+          <Property name="width">300</Property>
         </DataColumn>
         <DataColumn name="billStatus">
           <Property name="property">billStatus</Property>
-          <Property name="width">105</Property>
+          <Property name="width">95</Property>
         </DataColumn>
         <DataColumn name="unReceiptAmount">
           <Property name="property">unReceiptAmount</Property>
-          <Property name="width">105</Property>
+          <Property name="width">95</Property>
         </DataColumn>
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
@@ -222,7 +224,7 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
 	]);</ClientEvent>
           <Property name="caption">操作</Property>
           <Property name="align">center</Property>
-          <Property name="width">150</Property>
+          <Property name="width">130</Property>
           <Editor/>
         </DataColumn>
       </DataGrid>
