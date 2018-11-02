@@ -220,4 +220,11 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		return entity;
 	}
 
+	@Override
+	public List<BillCheckInfoEntity> queryAllUnreceipt(Map<String,Object> condition) {
+		// TODO Auto-generated method stub
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryAllUnreceipt",condition);
+		return list;
+	}
+
 }

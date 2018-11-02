@@ -366,6 +366,14 @@
         <Property></Property>
         <Property name="label">预警信息</Property>
       </PropertyDef>
+      <PropertyDef name="preDistibutionAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">预分配金额</Property>
+      </PropertyDef>
+      <PropertyDef name="tbDunAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">待催款金额</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInvoice">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo</Property>
@@ -803,8 +811,9 @@
         <Property name="dataSet">dsBillCheckInfo</Property>
       </DataPilot>
       <ToolBarButton id="btnQuery">
-        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsCheckInfo&quot;);&#xD;
-var tmpFormCondition=view.get(&quot;#dsCondition&quot;);&#xD;
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+						  &#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
 &#xD;
 var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
 &#xD;
@@ -1565,6 +1574,14 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
             </DataColumn>
             <DataColumn name="adjustMoney">
               <Property name="property">adjustMoney</Property>
+              <Property name="width">100</Property>
+            </DataColumn>
+            <DataColumn name="preDistibutionAmount">
+              <Property name="property">preDistibutionAmount</Property>
+              <Property name="width">100</Property>
+            </DataColumn>
+            <DataColumn name="tbDunAmount">
+              <Property name="property">tbDunAmount</Property>
               <Property name="width">100</Property>
             </DataColumn>
             <DataColumn name="isapplyBad">

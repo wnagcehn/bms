@@ -130,6 +130,12 @@ public class BillCheckInfoEntity implements IEntity {
 	private String billExcelUrl;
 	//账单逾期时间
 	private Date overdueDate;
+	//预分配金额
+	private BigDecimal preDistibutionAmount;
+	//待催款金额
+	private BigDecimal tbDunAmount;
+	//账户余额
+	private BigDecimal accountAmount;
 	public BillCheckInfoEntity() {
 
 	}
@@ -891,6 +897,30 @@ public class BillCheckInfoEntity implements IEntity {
 
 	public void setOverdueDate(Date overdueDate) {
 		this.overdueDate = overdueDate;
+	}
+
+	public BigDecimal getPreDistibutionAmount() {
+		return preDistibutionAmount;
+	}
+
+	public void setPreDistibutionAmount(BigDecimal preDistibutionAmount) {
+		this.preDistibutionAmount = preDistibutionAmount;
+	}
+
+	public BigDecimal getTbDunAmount() {
+		return tbDunAmount;
+	}
+
+	public void setTbDunAmount(BigDecimal tbDunAmount) {
+		this.tbDunAmount = tbDunAmount;
+	}
+
+	public BigDecimal getAccountAmount() {
+		return accountAmount;
+	}
+
+	public void setAccountAmount(BigDecimal accountAmount) {
+		this.accountAmount = accountAmount;
 	}
 
 	

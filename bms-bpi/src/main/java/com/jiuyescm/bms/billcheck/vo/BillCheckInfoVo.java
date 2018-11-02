@@ -157,10 +157,16 @@ public class BillCheckInfoVo implements IEntity {
 	//调整金额
 	private BigDecimal adjustMoney;
 	
+	//预分配金额
+	
 	//新增字段，不存表
 	//超期状态
 	private String overStatus;
 	private String warnMessage;
+	//预分配金额
+	private BigDecimal preDistibutionAmount;
+	//待催款金额
+	private BigDecimal tbDunAmount;
 	
 	public BillCheckInfoVo() {
 
@@ -1037,6 +1043,22 @@ public class BillCheckInfoVo implements IEntity {
 
 	public void setWarnMessage(String warnMessage) {
 		this.warnMessage = warnMessage;
+	}
+
+	public BigDecimal getPreDistibutionAmount() {
+		return preDistibutionAmount;
+	}
+
+	public void setPreDistibutionAmount(BigDecimal preDistibutionAmount) {
+		this.preDistibutionAmount = preDistibutionAmount;
+	}
+
+	public BigDecimal getTbDunAmount() {
+		return tbDunAmount;
+	}
+
+	public void setTbDunAmount(BigDecimal tbDunAmount) {
+		this.tbDunAmount = tbDunAmount;
 	}
    
 	
