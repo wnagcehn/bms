@@ -12,7 +12,7 @@
         <Property name="label">商家编号</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="accountNo">
         <Property name="label">账号</Property>
@@ -25,6 +25,7 @@
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="operat">
         <Property name="label">操作</Property>
@@ -32,7 +33,10 @@
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="customerName">
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="accountNo">
+        <Property name="label">账号</Property>
       </PropertyDef>
       <PropertyDef name="startTime">
         <Property name="label">创建日期：</Property>
@@ -80,12 +84,18 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
         <Property name="dataSet">dsCondition</Property>
         <Property name="dataType">dtCondition</Property>
         <Property name="labelSpacing">0</Property>
-        <Property name="labelWidth">80</Property>
+        <Property name="labelWidth">90</Property>
         <Property name="showHint">false</Property>
         <AutoFormElement>
           <Property name="name">customerName</Property>
           <Property name="property">customerName</Property>
           <Property name="trigger">getCustomerNameCondition</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">accountNo</Property>
+          <Property name="property">accountNo</Property>
+          <Property name="labelWidth">45</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -145,7 +155,6 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
         <DataColumn>
           <Property name="name">createTime</Property>
           <Property name="property">createTime</Property>
-          <Property name="visible">true</Property>
           <Editor/>
         </DataColumn>
         <DataColumn>
