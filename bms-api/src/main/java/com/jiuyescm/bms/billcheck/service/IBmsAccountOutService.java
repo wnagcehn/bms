@@ -16,6 +16,7 @@ public interface IBmsAccountOutService {
 
 	PageInfo<BillAccountOutEntity> query(Map<String, Object> condition,int pageNo, int pageSize);
 
+	//账单冲抵
 	String save(Map<String, Object> param);
 	
 }
