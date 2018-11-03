@@ -79,23 +79,24 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
       </ToolBar>
       <AutoForm id="queryConditionFrm">
         <Property name="colPadding">15</Property>
-        <Property name="cols">*,*,*,*,*</Property>
+        <Property name="cols">200,150,220,200</Property>
         <Property name="createPrivateDataSet">true</Property>
         <Property name="dataSet">dsCondition</Property>
         <Property name="dataType">dtCondition</Property>
         <Property name="labelSpacing">0</Property>
-        <Property name="labelWidth">90</Property>
         <Property name="showHint">false</Property>
         <AutoFormElement>
           <Property name="name">customerName</Property>
           <Property name="property">customerName</Property>
           <Property name="trigger">getCustomerNameCondition</Property>
+          <Property name="labelWidth">90</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">accountNo</Property>
           <Property name="property">accountNo</Property>
-          <Property name="labelWidth">45</Property>
+          <Property name="editorWidth">120</Property>
+          <Property name="labelWidth">40</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -107,7 +108,7 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
           <Property name="name">endTime</Property>
           <Property name="property">endTime</Property>
           <Property name="labelWidth">5</Property>
-          <Property name="width">145</Property>
+          <Property name="width">140</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
