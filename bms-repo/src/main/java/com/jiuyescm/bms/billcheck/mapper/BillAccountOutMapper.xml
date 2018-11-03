@@ -41,6 +41,7 @@
         inner join bill_check_info b on a.bill_check_id = b.id 
         where  a.del_flag = '0' and b.del_flag = '0'
 		<include refid="baseSelectColumns" />
+		ORDER BY  create_time DESC
     </select>
 
     <select id="findById" resultType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">
@@ -48,7 +49,6 @@
         <include refid="baseColumns" />
         from bill_account_out
         where id=#{id} 
-        ORDER BY  create_time DESC
     </select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">
