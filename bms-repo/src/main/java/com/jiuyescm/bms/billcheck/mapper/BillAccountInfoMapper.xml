@@ -72,8 +72,8 @@
         <include refid="baseColumns" />
         from bill_account_info
         where 1=1
-        ORDER BY create_time DESC
 		<include refid="baseSelectColumns" />
+		        ORDER BY create_time DESC
     </select>
     
     <select id="findByCustomerId" 
