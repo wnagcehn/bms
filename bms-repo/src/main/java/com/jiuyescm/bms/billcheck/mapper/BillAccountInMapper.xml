@@ -50,12 +50,6 @@
 		<if test="(endCreateTime!= null and endCreateTime!='')">
 			and create_time <![CDATA[<= #{endCreateTime}]]>
 		</if>
-		<if test="(startCreateTime!= null and startCreateTime!='')">
-			and confirm_time>=#{startCreateTime}
-		</if>
-		<if test="(endCreateTime!= null and endCreateTime!='')">
-			and confirm_time <![CDATA[<= #{endCreateTime}]]>
-		</if>
 		<if test="(confirmStatus != null and confirmStatus !='')">
 			and confirm_status = #{confirmStatus}
 		</if>
@@ -68,7 +62,7 @@
 		from bill_account_in
 		where del_flag = '0'
 		<include refid="baseSelectColumns" />
-		ORDER BY confirm_time DESC 
+		order by create_time DESC
 	</select>
 
 	<select id="findById" resultType="com.jiuyescm.bms.billcheck.BillAccountInEntity">

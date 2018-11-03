@@ -14,7 +14,7 @@
       </PropertyDef>
       <PropertyDef name="customerName">
         <Property></Property>
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="tradeType">
         <Property></Property>
@@ -61,6 +61,10 @@
       <PropertyDef name="remark">
         <Property></Property>
         <Property name="label">备注</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">100</Property>
+          <Property name="resultMessage">最多输入100字</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="confirmTime">
         <Property name="dataType">DateTime</Property>
@@ -77,14 +81,14 @@
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="customerName">
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="startCreateTime">
         <Property name="label">开始时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="endCreateTime">
-        <Property name="label">结束时间</Property>
+        <Property name="label">-</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="confirmStatus">
@@ -96,6 +100,39 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var data = view.get(&quot;#dsConditions.data&quot;).current;&#xD;
+	&#xD;
+	&#xD;
+	var date = new Date();&#xD;
+var seperator1 = &quot;-&quot;;&#xD;
+var seperator2 = &quot;:&quot;;&#xD;
+var month = date.getMonth() + 1;&#xD;
+var strDate = date.getDate();&#xD;
+if (month >= 1 &amp;&amp; month &lt;= 9) {&#xD;
+    month = &quot;0&quot; + month;&#xD;
+}&#xD;
+if (strDate >= 0 &amp;&amp; strDate &lt;= 9) {&#xD;
+    strDate = &quot;0&quot; + strDate;&#xD;
+}&#xD;
+&#xD;
+var lw = new Date(date - 1000*60*60*24*30);&#xD;
+var lwmonth = lw.getMonth() + 1;&#xD;
+var lwstrDate = lw.getDate();&#xD;
+if (lwmonth >= 1 &amp;&amp; lwmonth &lt;= 9) {&#xD;
+    lwmonth = &quot;0&quot; + lwmonth;&#xD;
+}&#xD;
+if (lwstrDate >= 0 &amp;&amp; lwstrDate &lt;= 9) {&#xD;
+    lwstrDate = &quot;0&quot; + lwstrDate;&#xD;
+}&#xD;
+var startdate = lw.getFullYear() + seperator1 + lwmonth + seperator1 + lwstrDate&#xD;
+	+ &quot; &quot; + &quot;00&quot; + seperator2 + &quot;00&quot; + seperator2 + &quot;00&quot;;&#xD;
+&#xD;
+var enddate = date.getFullYear() + seperator1 + month + seperator1 + strDate&#xD;
+	+ &quot; &quot; + &quot;23&quot; + seperator2 + &quot;59&quot; + seperator2 + &quot;59&quot;;&#xD;
+&#xD;
+data.set(&quot;startCreateTime&quot;,startdate)&#xD;
+data.set(&quot;endCreateTime&quot;,enddate)&#xD;
+</ClientEvent>
     <DataSet id="dsBillAccountIns">
       <Property name="dataType">[dtBillAccountIn]</Property>
       <Property name="dataProvider">billAccountInController#query</Property>
@@ -121,12 +158,14 @@ with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
 				}		&#xD;
 </ClientEvent>
           <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
         </ToolBarButton>
         <ToolBarButton id="btnAdd">
           <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillAccountIns.data&quot;);&#xD;
 datas.insert();&#xD;
 view.get(&quot;#dialogView&quot;).show();</ClientEvent>
           <Property name="caption">录入</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
         </ToolBarButton>
       </ToolBar>
       <AutoForm id="conditionForm">
@@ -134,29 +173,35 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
         <Property name="dataType">dtCondition</Property>
         <Property name="colPadding">15</Property>
         <Property name="labelSpacing">0</Property>
-        <Property name="labelWidth">70</Property>
-        <Property name="cols">*,*,*,*,*,*</Property>
+        <Property name="labelWidth">60</Property>
         <Property name="createPrivateDataSet">true</Property>
         <Property name="showHint">false</Property>
+        <Property name="cols">250,200,200,200</Property>
         <AutoFormElement>
           <Property name="name">customerName</Property>
           <Property name="property">customerName</Property>
           <Property name="trigger">getCustomerNameCondition</Property>
+          <Property name="labelWidth">90</Property>
+          <Property name="editorWidth">135</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">startCreateTime</Property>
           <Property name="property">startCreateTime</Property>
+          <Property name="editorWidth">135</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">endCreateTime</Property>
           <Property name="property">endCreateTime</Property>
+          <Property name="labelWidth">5</Property>
+          <Property name="editorWidth">135</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">confirmStatus</Property>
           <Property name="property">confirmStatus</Property>
+          <Property name="editorWidth">135</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -184,6 +229,27 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
           <Property name="property">remark</Property>
         </DataColumn>
         <DataColumn name="confirmStatus">
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var status = arg.data.get(&quot;confirmStatus&quot;);&#xD;
+&#xD;
+if(status == '0'){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    content:&quot;未确定&quot;,&#xD;
+			style:&quot;color:red;&quot;&#xD;
+		}&#xD;
+	]);&#xD;
+}else if(status == '1'){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    content:&quot;已确定&quot;,&#xD;
+			style:&quot;color:green;&quot;&#xD;
+		}&#xD;
+	]);&#xD;
+}&#xD;
+</ClientEvent>
           <Property name="property">confirmStatus</Property>
         </DataColumn>
         <DataColumn name="creator">
@@ -191,6 +257,7 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
         </DataColumn>
         <DataColumn name="createTime">
           <Property name="property">createTime</Property>
+          <Property name="sortState">desc</Property>
         </DataColumn>
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
@@ -307,31 +374,17 @@ if (data != null) {&#xD;
       </FloatPanel>
     </Container>
     <Dialog id="dialogView">
-      <ClientEvent name="onClose">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
-	function(){&#xD;
-		view.id(&quot;dsBillAccountIns&quot;).getData(&quot;#&quot;).cancel();&#xD;
-		view.id(&quot;dialogView&quot;).hide();&#xD;
-	}&#xD;
-);</ClientEvent>
-      <Property name="caption">预收款</Property>
+      <ClientEvent name="onClose">view.id(&quot;dsBillAccountIns&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.id(&quot;dialogView&quot;).hide();&#xD;
+</ClientEvent>
+      <Property name="caption">预收款录入</Property>
       <Property name="height">320</Property>
-      <Property name="width">600</Property>
+      <Property name="width">450</Property>
       <Buttons>
-        <Button id="btnCancel">
-          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
-	function(){&#xD;
-		view.id(&quot;dsBillAccountIns&quot;).getData(&quot;#&quot;).cancel();&#xD;
-		view.id(&quot;dialogView&quot;).hide();&#xD;
-	}&#xD;
-);</ClientEvent>
-          <Property name="caption">取消</Property>
-          <Property name="visible">true</Property>
-        </Button>
         <Button id="btnSave">
           <ClientEvent name="onClick">var entity = view.get(&quot;#dialogForm&quot;).get(&quot;entity&quot;);	&#xD;
 &#xD;
 var customerName = entity.get(&quot;customerName&quot;);&#xD;
-var confirmTime = entity.get(&quot;confirmTime&quot;);&#xD;
 var amount =entity.get(&quot;amount&quot;);&#xD;
 var tradeType = entity.get(&quot;tradeType&quot;);&#xD;
 var tradeDescrip = entity.get(&quot;tradeDescrip&quot;);&#xD;
@@ -343,10 +396,6 @@ if(undefined==customerName || customerName==''){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-if(undefined==confirmTime || confirmTime==''){&#xD;
-	dorado.MessageBox.alert(&quot;请选择入账时间!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
 if(undefined==amount || amount==''){&#xD;
 	dorado.MessageBox.alert(&quot;请输入金额!&quot;);&#xD;
 	return;&#xD;
@@ -370,46 +419,52 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
 );</ClientEvent>
           <Property name="caption">保存</Property>
           <Property name="visible">true</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">view.id(&quot;dsBillAccountIns&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.id(&quot;dialogView&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="visible">true</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
         </Button>
       </Buttons>
       <Children>
         <AutoForm id="dialogForm">
-          <Property name="cols">*</Property>
+          <Property name="cols">*,*,*</Property>
           <Property name="dataSet">dsBillAccountIns</Property>
           <Property name="dataType">dtBillAccountIn</Property>
-          <Property name="labelWidth">150</Property>
+          <Property name="labelWidth">100</Property>
           <Property name="rowHeight">30</Property>
-          <AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">customerName</Property>
             <Property name="property">customerName</Property>
             <Property name="trigger">getCustomerName</Property>
             <Property name="readOnly">false</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">confirmTime</Property>
-            <Property name="property">confirmTime</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">amount</Property>
             <Property name="property">amount</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">tradeType</Property>
             <Property name="property">tradeType</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">tradeDescrip</Property>
             <Property name="property">tradeDescrip</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">remark</Property>
             <Property name="property">remark</Property>
-            <Editor/>
+            <Editor>
+              <TextArea/>
+            </Editor>
           </AutoFormElement>
         </AutoForm>
         <Trigger id="getCustomerName">

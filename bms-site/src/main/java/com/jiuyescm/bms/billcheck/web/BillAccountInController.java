@@ -5,6 +5,10 @@
 package com.jiuyescm.bms.billcheck.web;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,6 +31,10 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+
+
+
+
 
 
 
@@ -83,39 +91,53 @@ public class BillAccountInController {
 	public void save(BillAccountInEntity entity) {
 		BillAccountInfoEntity accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
 		if(null == accountEntity){
+			//创建新账户
 			BillAccountInfoEntity accountVo = new BillAccountInfoEntity();
 			accountVo.setCustomerId(entity.getCustomerId());
 			accountVo.setCustomerName(entity.getCustomerName());
 			String accountNo = sequenceService.getBillNoOne(BillAccountInfoEntity.class.getName(), "3131", "000000");
 			accountVo.setAccountNo(accountNo);
 			accountVo.setCreatorId(JAppContext.currentUserID());
+			
+//			int month = JAppContext.currentTimestamp().getMonth()-1;
+//			Timestamp time = JAppContext.currentTimestamp();
+//			time.setMonth(month);
 			accountVo.setCreateTime(JAppContext.currentTimestamp());
+			
 			accountVo.setCreator(JAppContext.currentUserName());
-			entity.setDelFlag("0");
+			accountVo.setDelFlag("0");
 			BigDecimal amount = new BigDecimal(0);
-			accountEntity.setAmount(amount);
+			accountVo.setAmount(amount);
 			billAccountInfoService.save(accountVo);
 		}
+		
 		if (entity.getId() == null) {
 			entity.setCreatorId(JAppContext.currentUserID());
+			
+//			int month = JAppContext.currentTimestamp().getMonth()-1;
+//			Timestamp time = JAppContext.currentTimestamp();
+//			time.setMonth(month);
 			entity.setCreateTime(JAppContext.currentTimestamp());
+			
+//			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setDelFlag("0");
 			billAccountInService.save(entity);
 		} else if(entity.getConfirmStatus().equals("1")) {
 			BillAccountInfoEntity accountVo = billAccountInfoService.findByCustomerId(entity.getCustomerId()); 
 			BillAccountInfoEntity updateVo = new BillAccountInfoEntity();
-			
+
 			updateVo.setId(accountVo.getId());
 			BigDecimal amount = new BigDecimal(0);
 			amount =accountVo.getAmount().add(entity.getAmount());
-
 			updateVo.setAmount(amount);
+		
 			BillAccountInfoEntity res = billAccountInfoService.update(updateVo);
 			if(null != res){
 				entity.setLastModifierId(JAppContext.currentUserID());
 				entity.setLastModifyTime(JAppContext.currentTimestamp());
 				entity.setLastModifier(JAppContext.currentUserName());
+				entity.setConfirmTime(JAppContext.currentTimestamp());
 				billAccountInService.update(entity);
 			}
 		}else{
