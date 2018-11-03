@@ -26,6 +26,12 @@
 		<if test="(accountNo != null and accountNo !='')" >
 				and account_no = #{accountNo}
 		</if>
+		<if test="(startCreateTime!= null and startCreateTime!='')">
+			and create_time>=#{startCreateTime}
+		</if>
+		<if test="(endCreateTime!= null and endCreateTime!='')">
+			and create_time <![CDATA[<= #{endCreateTime}]]>
+		</if>
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
@@ -42,6 +48,7 @@
         <include refid="baseColumns" />
         from bill_account_out
         where id=#{id} 
+        ORDER BY  create_time DESC
     </select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">

@@ -84,7 +84,7 @@
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="customerName">
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
       <PropertyDef name="accountNo">
         <Property name="label">账户编号</Property>
@@ -102,17 +102,10 @@ if(userData){&#xD;
     entity.set(&quot;customerName&quot;,userData.customerName);&#xD;
 	entity.set(&quot;accountNo&quot;,userData.accountNo);&#xD;
 	entity.set(&quot;amount&quot;,userData.amount);&#xD;
-}&#xD;
-&#xD;
-var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
-with (view.get(&quot;#dsBillAccountIn&quot;)){&#xD;
-					set(&quot;parameter&quot;, data);&#xD;
-					flushAsync();&#xD;
-				}&#xD;
-with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
-					set(&quot;parameter&quot;, data);&#xD;
-					flushAsync();&#xD;
-				}		</ClientEvent>
+	&#xD;
+	&#xD;
+		&#xD;
+}</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
@@ -132,7 +125,7 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
     <AutoForm id="queyConditionForm">
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
-      <Property name="labelWidth">80</Property>
+      <Property name="labelWidth">100</Property>
       <Property name="cols">*,*,*,*</Property>
       <AutoFormElement>
         <Property name="name">customerName</Property>
@@ -158,6 +151,7 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
       <Container>
         <Property name="width">50%</Property>
         <TabControl>
+          <Property name="height">395</Property>
           <ControlTab>
             <Property name="caption">入账</Property>
             <DataGrid id="dataAccountIn">
@@ -188,10 +182,17 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
             </DataGrid>
           </ControlTab>
         </TabControl>
+        <ToolBar>
+          <DataPilot>
+            <Property name="itemCodes">pages,pageSize</Property>
+            <Property name="dataSet">dsBillAccountIn</Property>
+          </DataPilot>
+        </ToolBar>
       </Container>
       <Container>
         <Property name="width">50%</Property>
         <TabControl>
+          <Property name="height">395</Property>
           <ControlTab>
             <Property name="caption">抵扣</Property>
             <DataGrid id="dataAccountOut">
@@ -222,6 +223,12 @@ with (view.get(&quot;#dsBillAccountOut&quot;)){&#xD;
             </DataGrid>
           </ControlTab>
         </TabControl>
+        <ToolBar>
+          <DataPilot>
+            <Property name="itemCodes">pages,pageSize</Property>
+            <Property name="dataSet">dsBillAccountOut</Property>
+          </DataPilot>
+        </ToolBar>
       </Container>
     </Container>
   </View>
