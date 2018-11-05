@@ -501,7 +501,7 @@ public class FeesAbnormalController {
 		//未收款（1到2个月）
 		double totalReturnedAmount=0d;		
 		
-		int RowIndex = 2;
+		int RowIndex = 1;
 		if(list.size()>0){
 			for(int i=0;i<list.size();i++){	
 				FeesAbnormalEntity fee = list.get(i);
@@ -743,7 +743,7 @@ public class FeesAbnormalController {
 		double totalTotalPay=0d;
 		//确认理赔金额
 		double totalConfirmPayAmount=0d;
-		int RowIndex = 2;
+		int RowIndex = 1;
 		if(list.size()>0){
 			for(int i=0;i<list.size();i++){	
 				FeesAbnormalEntity fee = list.get(i);
