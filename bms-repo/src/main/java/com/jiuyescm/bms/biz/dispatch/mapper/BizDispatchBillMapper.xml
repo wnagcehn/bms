@@ -445,7 +445,7 @@
     
     <update id="retryByMaterialMark" parameterType="java.util.Map">
     	update biz_dispatch_bill a,bms_marking_material b set a.is_calculated = '99' 
-		where a.waybill_no = b.waybill_no 
+		where a.waybill_no = b.waybill_no and b.material_type = #{materialType}
 		and b.material_mark in
 		( select a.material_mark from bms_marking_material a 
 			inner JOIN bms_marking_products b on a.waybill_no=b.waybill_no 
