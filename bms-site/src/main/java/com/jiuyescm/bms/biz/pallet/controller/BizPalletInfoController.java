@@ -645,7 +645,7 @@ public class BizPalletInfoController {
 		taskEntity.setTaskName(fileName.substring(0, fileName.lastIndexOf(".")));
 		taskEntity.setTaskRate(0);
 		taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
-		taskEntity.setTaskType("BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK");
+		taskEntity.setTaskType("BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK");
 		taskEntity.setBizType(ExeclOperateTypeEnum.IMPORT.getCode());
 		taskEntity.setFileRows(0);
 		taskEntity.setOriginFileName(fileName);
