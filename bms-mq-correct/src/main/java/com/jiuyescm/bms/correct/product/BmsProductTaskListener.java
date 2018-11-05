@@ -165,10 +165,7 @@ public class BmsProductTaskListener implements MessageListener{
 			condition.put("taskId", taskId);
 			updateProgress(taskVo,30);
 			//插入汇总统计
-			start = System.currentTimeMillis();
 			int re=bmsProductsWeightService.saveWeight(condition);
-			end = System.currentTimeMillis();
-			logger.info("------------------插入汇总统计耗时：" + (end-start) + "毫秒------------------");
 			if(re<=0){
 				logger.info("插入重量汇总统计失败");
 				errorMessage.append("插入重量汇总统计失败");
@@ -176,10 +173,7 @@ public class BmsProductTaskListener implements MessageListener{
 			}
 			//获取商品明细组合与重量占比最高
 			condition.put("taskId", taskId);
-			start = System.currentTimeMillis();
 			List<BmsProductsWeightAccountVo> list=bmsProductsWeightService.queyAllMax(condition);
-			end = System.currentTimeMillis();
-			logger.info("------------------获取商品明细组合与重量占比最高耗时：" + (end-start) + "毫秒------------------");
 			if(list.size()>0){
 				//循环更新每个商品明细对应的运单
 				for(int i=0;i<list.size();i++){
@@ -214,10 +208,7 @@ public class BmsProductTaskListener implements MessageListener{
 						logger.info("商品明细"+productDetail+"的标准重量"+newWeight);
 						
 						//查询出该商品明细下不是这个重量的所有打标记录
-						start = System.currentTimeMillis();
 						List<BmsMarkingProductsVo> marklist=bmsProductsWeightService.queryMark(condition);
-						end = System.currentTimeMillis();
-						logger.info("------------------查询出该商品明细下不是这个重量的所有打标记录耗时：" + (end-start) + "毫秒------------------");
 						
 						if(marklist.size()>0){
 							for(BmsMarkingProductsVo vo:marklist){
@@ -225,10 +216,7 @@ public class BmsProductTaskListener implements MessageListener{
 							}
 							//批量更新打标记录
 							logger.info("批量更新打标记录");
-							start = System.currentTimeMillis();
 							int result=bmsProductsWeightService.updateMark(condition);
-							end = System.currentTimeMillis();
-							logger.info("------------------批量更新打标记录耗时：" + (end-start) + "毫秒------------------");
 							//int result=bmsProductsWeightService.updateMarkList(marklist);
 							if(result>0){
 								//去更新运单状态
@@ -394,8 +382,10 @@ public class BmsProductTaskListener implements MessageListener{
 							start = System.currentTimeMillis();
 							List<BmsMarkingMaterialVo> notMaxList=bmsProductsMaterialService.queyNotMax(condition);
 							end = System.currentTimeMillis();
-							logger.info("------------------查询该运单使用到的标准泡沫箱和纸箱耗时：" + (end-start) + "毫秒------------------");
+							logger.info("------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
 							
+							long total = 0l;
+							long delTimeTotal = 0l;
 							for(int j=0,lenth=notMaxList.size();j<lenth;j++){
 								BmsMarkingMaterialVo vo=notMaxList.get(j);
 								String wayNo=vo.getWaybillNo();
@@ -414,7 +404,7 @@ public class BmsProductTaskListener implements MessageListener{
 									start = System.currentTimeMillis();
 									int result=bizOutstockPackmaterialService.updateList(materialList);
 									end = System.currentTimeMillis();
-									logger.info("------------------删除原运单号对应得耗材和费用耗时：" + (end-start) + "毫秒------------------");
+									delTimeTotal = delTimeTotal + (end-start);
 									if(result<=0){
 										logger.info("删除占比小耗材失败");
 										continue;
@@ -446,7 +436,7 @@ public class BmsProductTaskListener implements MessageListener{
 									start = System.currentTimeMillis();
 									int resultSave=bizOutstockPackmaterialService.saveList(newList);
 									end = System.currentTimeMillis();
-									logger.info("------------------保存新耗材耗时：" + (end-start) + "毫秒------------------");
+									total = total + (end-start);
 									if(resultSave>0){
 										//对运单重算
 										waybillNoList.add(wayNo);									
@@ -455,6 +445,8 @@ public class BmsProductTaskListener implements MessageListener{
 									}															
 								}							
 							}
+							logger.info("------------------删除原运单号对应得耗材和费用耗时：" + delTimeTotal + "毫秒------------------");
+							logger.info("------------------保存新耗材成功，耗时：" + total + "毫秒------------------");
 						}
 						condition=new HashMap<String,Object>();
 						condition.put("productsMark", proAccountVo.getProductsMark());
