@@ -71,6 +71,7 @@ import com.jiuyescm.common.utils.excel.IFileReader;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DataProperty;
 import com.jiuyescm.common.utils.upload.DispatchWayBillDataType;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
@@ -163,8 +164,11 @@ public class DispatchBillController{
 		if (param == null){
 			param = new HashMap<String, Object>();
 		}
-		if (param.get("createTime") == null || param.get("endTime") == null) {
-			return;
+		if (param.get("createTime") == null) {
+			throw new BizException("创建时间不能为空！");
+		}
+		if (param.get("endTime") == null) {
+			throw new BizException("结束时间不能为空!");
 		}
 		//物流商
 		if(param.get("logistics") != null && StringUtils.equalsIgnoreCase(param.get("logistics").toString(), "ALL")){

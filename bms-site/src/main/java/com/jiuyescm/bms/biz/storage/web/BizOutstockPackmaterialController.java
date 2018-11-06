@@ -127,8 +127,11 @@ public class BizOutstockPackmaterialController {
 		if (param == null) {
 			param = new HashMap<String, Object>();
 		}
-		if (param.get("startTime") == null || param.get("endTime") == null) {
-			return;
+		if (param.get("startTime") == null) {
+			throw new BizException("创建时间不能为空！");
+		}
+		if (param.get("endTime") == null) {
+			throw new BizException("结束时间不能为空！");
 		}
 		if("ALL".equals(param.get("isCalculated"))){
 			param.put("isCalculated", null);

@@ -63,6 +63,7 @@ import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.framework.lock.Lock;
@@ -122,8 +123,11 @@ public class BizPalletInfoController {
 		if (param == null) {
 			param = new HashMap<String, Object>();
 		}
-		if (param.get("createTime") == null || param.get("createEndTime") == null) {
-			return;
+		if (param.get("createTime") == null) {
+			throw new BizException("创建时间不能为空!");
+		}
+		if (param.get("createEndTime") == null) {
+			throw new BizException("结束时间不能为空!");
 		}
 		PageInfo<BizPalletInfoEntity> pageInfo = bizPalletInfoService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
