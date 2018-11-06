@@ -358,16 +358,10 @@ view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execut
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnClose">
-        <ClientEvent name="onClick">var entity=view.get(&quot;#dsFeesAbnormalEntity.data&quot;).current;&#xD;
-if(entity.get(&quot;orderStatus&quot;)!='2'){&#xD;
-	dorado.MessageBox.alert(&quot;只能对已确认的单据进行关账!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-&#xD;
-entity.set(&quot;orderStatus&quot;,&quot;3&quot;);&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;确认是否关账?&quot;,function(){&#xD;
-	view.get(&quot;#updateAction&quot;).execute({&#xD;
+	view.get(&quot;#closeAction&quot;).set(&quot;parameter&quot;, data).execute({&#xD;
 		callback:function(result){		&#xD;
 			dorado.MessageBox.alert(&quot;关账成功!&quot;);&#xD;
 			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
@@ -398,7 +392,6 @@ if(diffmonth>1){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-&#xD;
 if(entity.get(&quot;orderStatus&quot;)!=3){&#xD;
 	dorado.MessageBox.alert(&quot;只能对已关账的单据进行反关账!&quot;);&#xD;
 	return;&#xD;
@@ -407,7 +400,7 @@ if(entity.get(&quot;orderStatus&quot;)!=3){&#xD;
 entity.set(&quot;orderStatus&quot;,&quot;2&quot;);&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;确认是否反关账?&quot;,function(){&#xD;
-	view.get(&quot;#updateAction&quot;).execute({&#xD;
+	view.get(&quot;#unCloseAction&quot;).execute({&#xD;
 		callback:function(result){&#xD;
 			dorado.MessageBox.alert(&quot;反关账成功!&quot;);&#xD;
 			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
@@ -901,16 +894,15 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <UpdateAction id="updateAction">
-      <Property name="dataResolver">feesAbnormalController#update</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsFeesAbnormalEntity</Property>
-        <Property name="dataPath">[#current]</Property>
-      </UpdateItem>
+    <UpdateAction id="closeAction">
+      <Property name="dataResolver">feesAbnormalController#close</Property>
     </UpdateAction>
     <DownloadAction id="downloadMoBanAction">
       <Property name="fileProvider">feesAbnormalController#downloadTemplate</Property>
       <Property name="target">workspace</Property>
     </DownloadAction>
+    <UpdateAction id="unCloseAction">
+      <Property name="dataResolver">feesAbnormalController#unClose</Property>
+    </UpdateAction>
   </View>
 </ViewConfig>

@@ -292,7 +292,20 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			Map<String, Object> cond = new HashMap<String, Object>();
 			feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
-			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			ContractQuoteInfoVo rtnQuoteInfoVo = null;		
+			try {
+				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			} catch (BizException e) {
+				// TODO: handle exception
+				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价异常:"+e.getMessage());
+				entity.setRemark("获取合同在线报价异常:"+e.getMessage());
+				feeEntity.setCalcuMsg("获取合同在线报价异常:"+e.getMessage());
+				return;
+			}
+			
+			
 			XxlJobLogger.log("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("-->"+entity.getId()+"报价信息 -- "+map);
@@ -314,7 +327,9 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用0",ex);
+			XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用0{0}",ex.getMessage());
+			entity.setRemark("计算不成功:"+ex.getMessage());
+			feeEntity.setCalcuMsg("计算不成功:"+ex.getMessage());
 		}
 		
 	}
