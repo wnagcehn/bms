@@ -286,6 +286,7 @@ public class BmsProductTaskListener implements MessageListener{
 	private String handMaterial(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
 		long start = 0l;
 		long end = 0l;
+		long totalStart = System.currentTimeMillis();
 		Map<String,Object> condition=new HashMap<String,Object>();
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
 			//根据商家和时间查询耗材出库表业务数据里的运单号
@@ -460,6 +461,8 @@ public class BmsProductTaskListener implements MessageListener{
 				}		
 			}
 		}
+		long totalEnd = System.currentTimeMillis();
+		logger.info("------------------修改重算状态耗时占比:" + (end-start)/(totalEnd-totalStart)*100 + "%------------------");
 		updateProgress(taskVo, 90);
 		return "sucess";
 	}
