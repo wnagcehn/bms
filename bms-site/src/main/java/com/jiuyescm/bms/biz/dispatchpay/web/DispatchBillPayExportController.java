@@ -483,7 +483,7 @@ public class DispatchBillPayExportController extends BaseController{
         	
         	String path = getPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + customerId + warehouseCode + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
         	entity.setStartTime(DateUtil.formatTimestamp(param.get("startTime")));
