@@ -671,6 +671,16 @@ var customerId=tmpFormCondition.get(&quot;entity&quot;).get(&quot;merchantId&quo
 var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;createTime&quot;);&#xD;
 var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;endTime&quot;);&#xD;
 &#xD;
+if(isNullOrEmpty(cre)){&#xD;
+	dorado.MessageBox.alert(&quot;起始时间不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(end)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
 if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
  	if(cre.getTime()>end.getTime()){&#xD;
 		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
@@ -1828,7 +1838,7 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
     </UpdateAction>
     <Dialog id="fileExportTaskDialog">
       <Property name="closeable">false</Property>
-      <Property name="caption">账单下载</Property>
+      <Property name="caption">运单下载</Property>
       <Property name="height">500</Property>
       <Property name="width">900</Property>
       <Buttons>

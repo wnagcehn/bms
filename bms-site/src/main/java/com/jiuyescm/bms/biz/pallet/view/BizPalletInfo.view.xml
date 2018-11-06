@@ -236,10 +236,23 @@
       <Separator/>
       <ToolBarButton id="btnQuery">
         <ClientEvent name="onClick">var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;
-				with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){
-					set(&quot;parameter&quot;, data);
-					flushAsync();
-				}</ClientEvent>
+if(data.get(&quot;createTime&quot;)==&quot;&quot;||data.get(&quot;createTime&quot;)==null){
+		dorado.MessageBox.alert(&quot;创建时间不能为空!&quot;);
+		return;
+	}
+	if(data.get(&quot;createEndTime&quot;)==&quot;&quot;||data.get(&quot;createEndTime&quot;)==null){
+		dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);
+		return;
+	}
+	
+	if(data.get(&quot;createTime&quot;)>data.get(&quot;createEndTime&quot;)){
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束时间!&quot;);
+		return;
+	} 
+with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){
+	set(&quot;parameter&quot;, data);
+	flushAsync();
+}</ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
       </ToolBarButton>
@@ -352,6 +365,23 @@ function isNullOrEmpty(e) {&#xD;
 </ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
         <Property name="caption">导入</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data={&#xD;
+	bizType:&quot;IMPORT&quot;&#xD;
+}&#xD;
+var taskType = &quot;BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK&quot;;&#xD;
+var param=&quot;?taskType=&quot;+taskType;&#xD;
+view.get(&quot;#detailFrame&quot;).set(&quot;userData&quot;,data);&#xD;
+view.get(&quot;#detailFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.file.upload.view.BmsFileAsynTaskLookUp.d&quot;);&#xD;
+&#xD;
+var dialog = view.get(&quot;#dialogAsynDownloadDetails&quot;);&#xD;
+dialog.set(&quot;width&quot;, document.body.clientWidth-150);&#xD;
+dialog.set(&quot;height&quot;, document.body.clientHeight);&#xD;
+dialog.set(&quot;caption&quot;,&quot;文件下载&quot;);&#xD;
+dialog.show();</ClientEvent>
+        <Property name="caption">查看导入结果</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="updateBatch">
         <ClientEvent name="onClick">view.get(&quot;#updateWayBillDialog&quot;).show();</ClientEvent>
@@ -1084,6 +1114,17 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
             <Property name="property">msg</Property>
           </DataColumn>
         </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogAsynDownloadDetails">
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Property name="center">false</Property>
+      <Property name="offsetLeft">50</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="detailFrame"/>
       </Children>
       <Tools/>
     </Dialog>

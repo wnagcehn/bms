@@ -453,7 +453,19 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		Map<String, Object> cond = new HashMap<String, Object>();
 		feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 		XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
-		ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+		ContractQuoteInfoVo rtnQuoteInfoVo = null;		
+		try {
+			rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+		} catch (BizException e) {
+			// TODO: handle exception
+			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价异常:"+e.getMessage());
+			entity.setRemark("获取合同在线报价异常:"+e.getMessage());
+			feeEntity.setCalcuMsg("获取合同在线报价异常:"+e.getMessage());
+			return;
+		}
+		
 		XxlJobLogger.log("获取合同在线报价结果【{0}】",JSONObject.fromObject(rtnQuoteInfoVo));
 		for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 			XxlJobLogger.log("-->"+entity.getId()+"报价信息 -- "+map);

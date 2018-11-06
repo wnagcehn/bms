@@ -41,6 +41,8 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.exception.BizException;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * 商品存储费
@@ -75,6 +77,15 @@ public class BizProductStorageController extends BaseController{
 	 */
 	@DataProvider
 	public void query(Page<BizProductStorageEntity> page, Map<String, Object> param) {
+		if (param == null) {
+			param = new HashMap<String, Object>();
+		}
+		if (param.get("startTime") == null) {
+			throw new BizException("创建时间不能为空！");
+		}
+		if (param.get("endTime") == null) {
+			throw new BizException("结束时间不能为空！");
+		}
 		if("ALL".equals(param.get("isCalculated"))){
 			param.put("isCalculated", "");
 		}

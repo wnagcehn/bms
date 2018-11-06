@@ -124,6 +124,15 @@ public class BizOutstockPackmaterialController {
 	
 	@DataProvider
 	public void query(Page<BizOutstockPackmaterialEntity> page, Map<String, Object> param){
+		if (param == null) {
+			param = new HashMap<String, Object>();
+		}
+		if (param.get("startTime") == null) {
+			throw new BizException("创建时间不能为空！");
+		}
+		if (param.get("endTime") == null) {
+			throw new BizException("结束时间不能为空！");
+		}
 		if("ALL".equals(param.get("isCalculated"))){
 			param.put("isCalculated", null);
 		}

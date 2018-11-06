@@ -447,7 +447,7 @@
     	<if test="warehouseCode!=null and warehouseCode!=''">
     		and warehouse_code=#{warehouseCode}
     	</if>
-    	group by consumer_material_code,consumer_material_name
+    	group by consumer_material_code,consumer_material_name,waybill_no
     </select>
     
     <select id="queryMaterialFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">

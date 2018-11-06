@@ -63,6 +63,7 @@ import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.framework.lock.Lock;
@@ -74,6 +75,7 @@ import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * ..Controller
@@ -118,6 +120,15 @@ public class BizPalletInfoController {
 	 */
 	@DataProvider
 	public void query(Page<BizPalletInfoEntity> page, Map<String, Object> param) {
+		if (param == null) {
+			param = new HashMap<String, Object>();
+		}
+		if (param.get("createTime") == null) {
+			throw new BizException("创建时间不能为空!");
+		}
+		if (param.get("createEndTime") == null) {
+			throw new BizException("结束时间不能为空!");
+		}
 		PageInfo<BizPalletInfoEntity> pageInfo = bizPalletInfoService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
@@ -645,7 +656,7 @@ public class BizPalletInfoController {
 		taskEntity.setTaskName(fileName.substring(0, fileName.lastIndexOf(".")));
 		taskEntity.setTaskRate(0);
 		taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
-		taskEntity.setTaskType("BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK");
+		taskEntity.setTaskType("BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK");
 		taskEntity.setBizType(ExeclOperateTypeEnum.IMPORT.getCode());
 		taskEntity.setFileRows(0);
 		taskEntity.setOriginFileName(fileName);

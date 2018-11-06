@@ -637,8 +637,8 @@ public class DispatchBillPayExportController extends BaseController{
 					matchMap.put(
 							marterialType + "_name",
 							matchMap.get(marterialType + "_name") + ","
-									+ materialEntity.getConsumerMaterialName() == null ? ""
-									: materialEntity.getConsumerMaterialName());
+									+ materialEntity.getConsumerMaterialCode() == null ? ""
+									: materialEntity.getConsumerMaterialCode());
 					if (materialEntity.getConsumerMaterialCode().contains("GB")) {
 						matchMap.put(
 								marterialType + "_count",
@@ -655,8 +655,8 @@ public class DispatchBillPayExportController extends BaseController{
 					}
 				} else {
 					matchMap.put(marterialType + "_name",
-							materialEntity.getConsumerMaterialName() == null ? ""
-									: materialEntity.getConsumerMaterialName());
+							materialEntity.getConsumerMaterialCode() == null ? ""
+									: materialEntity.getConsumerMaterialCode());
 					if (materialEntity.getConsumerMaterialCode().contains("GB")) {
 						matchMap.put(marterialType + "_count",
 								materialEntity.getWeight() == null ? ""
@@ -677,7 +677,7 @@ public class DispatchBillPayExportController extends BaseController{
 				String marterialType = getMaterialType(materialInfoList,
 						materialEntity.getConsumerMaterialCode());
 				dataItem.put(marterialType + "_name",
-						materialEntity.getConsumerMaterialName());
+						materialEntity.getConsumerMaterialCode());
 				dataItem.put(marterialType + "_code",
 						materialEntity.getConsumerMaterialCode());
 				dataItem.put(marterialType + "_type",
@@ -783,9 +783,9 @@ public class DispatchBillPayExportController extends BaseController{
 		for (String marterialTypeDetail : materialTypeList) {
 			map.put(marterialTypeDetail + "_name", marterialTypeDetail);
 			if (((String) codeMap.get(marterialTypeDetail)).contains("GB")) {
-				map.put(marterialTypeDetail + "_count", "重量");
+				map.put(marterialTypeDetail + "_count", marterialTypeDetail+"重量");
 			} else {
-				map.put(marterialTypeDetail + "_count", "数量");
+				map.put(marterialTypeDetail + "_count", marterialTypeDetail+"数量");
 			}
 		}
 		return map;

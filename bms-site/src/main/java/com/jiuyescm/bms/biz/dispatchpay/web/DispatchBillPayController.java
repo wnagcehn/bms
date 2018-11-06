@@ -66,6 +66,7 @@ import com.jiuyescm.common.utils.excel.IFileReader;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DataProperty;
 import com.jiuyescm.common.utils.upload.DispatchWayBillDataType;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
@@ -82,6 +83,7 @@ import com.jiuyescm.mdm.deliver.api.IDeliverService;
 import com.jiuyescm.mdm.deliver.vo.DeliverVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 @Controller("dispatchBillPayController")
 public class DispatchBillPayController{
@@ -150,6 +152,12 @@ public class DispatchBillPayController{
 	public void queryAll(Page<BizDispatchBillPayEntity> page, Map<String, Object> param) {
 		if (param == null){
 			param = new HashMap<String, Object>();
+		}
+		if (param.get("createTime") == null) {
+			throw new BizException("创建时间不能为空！");
+		}
+		if (param.get("endTime") == null) {
+			throw new BizException("结束时间不能位空！");
 		}
 		//物流商
 		if(param.get("logistics") != null && StringUtils.equalsIgnoreCase(param.get("logistics").toString(), "ALL")){

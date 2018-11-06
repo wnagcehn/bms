@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -34,6 +35,7 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.enumtype.OrderStatus;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
@@ -58,6 +60,9 @@ public class DispatchBillExportController extends BaseController{
 	
 	@Resource
 	private ISystemCodeService systemCodeService; //业务类型
+	
+	@Autowired
+	private SequenceService sequenceService;
 	/**
 	 * 导出
 	 */
@@ -77,10 +82,11 @@ public class DispatchBillExportController extends BaseController{
 			customerName=param.get("customerName").toString();
 		}
         try {
+        	
+         	String key=sequenceService.getBillNoOne(DispatchBillExportController.class.getName(), "RD", "000000000");   	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_REC_DIS.getCode() + customerId + FileConstant.SUFFIX_XLSX;
-        	
+        			FileTaskTypeEnum.BIZ_REC_DIS.getCode() + key + FileConstant.SUFFIX_XLSX;
         	FileExportTaskEntity entity = new FileExportTaskEntity();
         	entity.setCustomerid(customerId);
         	entity.setStartTime(DateUtil.formatTimestamp(param.get("createTime")));
