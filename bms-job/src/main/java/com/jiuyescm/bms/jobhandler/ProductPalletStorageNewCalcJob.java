@@ -337,7 +337,18 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			Map<String, Object> cond = new HashMap<String, Object>();
 			feesCalcuService.ContractCalcuService(biz, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			XxlJobLogger.log("-->"+biz.getId()+"获取报价参数"+cond);
-			ContractQuoteInfoVo rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			ContractQuoteInfoVo rtnQuoteInfoVo = null;		
+			try {
+				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
+			} catch (BizException e) {
+				// TODO: handle exception
+				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				biz.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				XxlJobLogger.log("-->"+biz.getId()+"获取合同在线报价异常:"+e.getMessage());
+				biz.setRemark("获取合同在线报价异常:"+e.getMessage());
+				fee.setCalcuMsg("获取合同在线报价异常:"+e.getMessage());
+				return;
+			}
 			XxlJobLogger.log("-->"+biz.getId()+"获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("-->"+biz.getId()+"报价信息 -- "+map);
@@ -359,7 +370,9 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			biz.setIsCalculated(CalculateState.Sys_Error.getCode());
-			XxlJobLogger.log("-->"+biz.getId()+"计算不成功，费用0"+ex);
+			XxlJobLogger.log("-->"+biz.getId()+"计算不成功，费用0{0}",ex.getMessage());
+			biz.setRemark("计算不成功:"+ex.getMessage());
+			fee.setCalcuMsg("计算不成功:"+ex.getMessage());
 		}
 		
 	}

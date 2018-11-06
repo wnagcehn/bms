@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -120,7 +121,7 @@ public class FeesAbnormalController {
 	}
 	
 	/**
-	 * 审核合同
+	 * 审核
 	 * @param 
 	 * @return
 	 */
@@ -138,6 +139,100 @@ public class FeesAbnormalController {
 			//写入日志
 			logger.info("数据库更新失败"+e.getMessage());
 			return "fail";
+		}
+	}
+	
+	
+	/**
+	 * 关账
+	 * @param 
+	 * @return
+	 */
+	@DataResolver
+	public String close(Map<String, Object> param){		
+		if(Session.isMissing()){
+			return "长时间未操作，用户已失效，请重新登录再试！";
+		}		
+		PageInfo<FeesAbnormalEntity> pageInfo = feesAbnormalNewService.queryPay(param, 0, Integer.MAX_VALUE);
+		if(pageInfo!=null && pageInfo.getList().size()>0){
+			for(FeesAbnormalEntity entity:pageInfo.getList()){
+				if(!"2".equals(entity.getOrderStatus())){
+					return "只能对已确认的单据进行关账!";
+				}
+				entity.setOrderStatus("3");
+				entity.setCloseTime(JAppContext.currentTimestamp());
+			}
+			
+			try {		
+				feesAbnormalNewService.updateList(pageInfo.getList());
+				return "关账成功";
+				
+			} catch (Exception e) {
+				//写入日志
+				logger.info("数据库更新失败"+e.getMessage());
+				return "fail";
+			}
+		}else{
+			return "未查询到需要关账的数据";
+		}
+	}
+	
+	/**
+	 * 反关账
+	 * @param 
+	 * @return
+	 */
+	@DataResolver
+	public String unClose(Map<String, Object> param){
+		if(Session.isMissing()){
+			return "长时间未操作，用户已失效，请重新登录再试！";
+		}		
+		PageInfo<FeesAbnormalEntity> pageInfo = feesAbnormalNewService.queryPay(param, 0, Integer.MAX_VALUE);
+		if(pageInfo!=null && pageInfo.getList().size()>0){
+			for(FeesAbnormalEntity entity:pageInfo.getList()){
+				if(!"3".equals(entity.getOrderStatus())){
+					return "只能对已关账的单据进行反关账!";
+				}
+				
+				//时间判断，只能对一个前的费用反关账
+				try {
+					Date confirmDate=null;		
+					String year=entity.getConfirmYear();
+					String month=entity.getConfirmMonth();
+			        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			        if(month.length()==1){	        	
+						confirmDate=format.parse(year+"0"+month);					
+			        }else{
+			        	confirmDate=format.parse(year+month);
+			        }
+			        //当前日期
+					Date newDate=new Date();				
+					int diffyear = newDate.getYear()- confirmDate.getMonth();
+					int diffmonth = diffyear * 12 + newDate.getMonth() - confirmDate.getMonth() ;
+
+					if(diffmonth>1){
+						return "只能对上个月的单据进行反关账!";
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				entity.setOrderStatus("2");
+				entity.setCloseTime(JAppContext.currentTimestamp());			
+			}
+			
+			try {
+				feesAbnormalNewService.updateList(pageInfo.getList());
+				return "反关账成功";
+				
+			} catch (Exception e) {
+				//写入日志
+				logger.info("数据库更新失败"+e.getMessage());
+				return "fail";
+			}
+		}else{
+			return "未查询到需要反关账的数据";
 		}
 	}
 	
@@ -634,7 +729,7 @@ public class FeesAbnormalController {
 			param=new HashMap<String, Object>();
 		}	
 		
-		PageInfo<FeesAbnormalEntity> tmpPageInfo =feesAbnormalNewService.query(param, 0, Integer.MAX_VALUE);
+		PageInfo<FeesAbnormalEntity> tmpPageInfo =feesAbnormalNewService.queryPay(param, 0, Integer.MAX_VALUE);
 		List<FeesAbnormalEntity> list=tmpPageInfo.getList();
 		
 		logger.info("应付理赔导出...");
