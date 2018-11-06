@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billcheck.BillAccountOutMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillAccountOutEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="account_no" property="accountNo" jdbcType="VARCHAR" />
+	    <result column="bill_check_id" property="billCheckId" jdbcType="INTEGER" />
+	    <result column="out_type" property="outType" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="DECIMAL" />
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="create_month" property="createMonth" jdbcType="INTEGER" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        create_time, create_month, account_no, amount
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(accountNo != null and accountNo !='')" >
+				and account_no = #{accountNo}
+		</if>
+		<if test="(startCreateTime!= null and startCreateTime!='')">
+			and create_time>=#{startCreateTime}
+		</if>
+		<if test="(endCreateTime!= null and endCreateTime!='')">
+			and create_time <![CDATA[<= #{endCreateTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">
+        select a.create_time, a.out_type,b.create_month, a.amount
+        from bill_account_out a
+        inner join bill_check_info b on a.bill_check_id = b.id 
+        where  a.del_flag = '0' and b.del_flag = '0'
+		<include refid="baseSelectColumns" />
+		ORDER BY  create_time DESC
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_account_out
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">
+        insert into bill_account_out(account_no, bill_check_id, out_type, amount, creator_id, creator, create_time, del_flag)
+        values (
+
+#{accountNo,jdbcType=VARCHAR}, 
+#{billCheckId,jdbcType=INTEGER}, 
+#{outType,jdbcType=VARCHAR}, 
+#{amount,jdbcType=DECIMAL}, 
+#{creatorId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillAccountOutEntity">
+        update bill_account_out 
+		<set >
+
+<if test="accountNo != null" >account_no=#{accountNo,jdbcType=VARCHAR},</if>
+<if test="billCheckId != null" >bill_check_id=#{billCheckId,jdbcType=INTEGER},</if>
+<if test="outType != null" >out_type=#{outType,jdbcType=VARCHAR},</if>
+<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bill_account_out where
+        id=#{id}
+    </delete>
+</mapper>

@@ -219,7 +219,7 @@
         select
         <include refid="baseColumns" />
         from bill_check_info
-        where 1=1 and del_flag='0'
+        where 1=1 and del_flag='0' and un_receipt_amount>0
 		<include refid="baseSelectColumns" />
     </select>
     
@@ -647,4 +647,11 @@
 		<include refid="baseSelectColumns" />
     </select>
 	
+	 <select id="queryAllUnreceipt" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+       select a.invoice_name,a.create_month,a.bill_name,a.un_receipt_amount,b.amount as accountAmount
+		from bill_check_info a inner JOIN bill_account_info b on a.invoice_name=b.customer_name 
+		where a.del_flag='0' and a.un_receipt_amount>0 and b.del_flag='0' and b.amount>0
+	    GROUP BY a.invoice_name,a.create_month,a.bill_name
+    </select>
 </mapper> 

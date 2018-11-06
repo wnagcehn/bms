@@ -135,5 +135,9 @@ public interface IBillCheckInfoRepository {
 	 */
 	PageInfo<BillCheckInfoEntity> queryReceiptDetail(Map<String, Object> condition, int pageNo,
             int pageSize); 
-
+	
+	/*
+	 * 获取所有的未收款及账户金额
+	 */
+	List<BillCheckInfoEntity> queryAllUnreceipt(Map<String,Object> condition);
 }

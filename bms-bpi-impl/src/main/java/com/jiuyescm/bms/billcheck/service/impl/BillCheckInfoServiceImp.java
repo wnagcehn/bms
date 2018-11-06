@@ -57,7 +57,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 			}
 			
 			PageInfo<BillCheckInfoEntity> pageInfo=new PageInfo<BillCheckInfoEntity>();
-			if(condition!=null && condition.get("invoiceNo")!=null && condition.get("followType")!=""){
+			if(condition!=null && condition.get("invoiceNo")!=null && condition.get("invoiceNo")!=""){
 				//发票号不为空时，需要根据发票号去查询子票再查询主表
 				pageInfo=billCheckInfoRepository.queryByInvoiceNo(condition, pageNo, pageSize);
 	
@@ -151,6 +151,13 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 			    			entity.setOverStatus("超期");
 			    		}	
 		    		}
+	    		}
+	    		
+	    		//设置预分配金额和待催款金额
+	    		if(getPreMoney().containsKey(entity.getInvoiceName()+"&"+entity.getCreateMonth()+"&"+entity.getBillName())){
+	    			BillCheckInfoEntity amountVo=getPreMoney().get((entity.getInvoiceName()+"&"+entity.getCreateMonth()+"&"+entity.getBillName()));
+	    			entity.setPreDistibutionAmount(amountVo.getPreDistibutionAmount());
+	    			entity.setTbDunAmount(amountVo.getTbDunAmount());
 	    		}
 	    	}
 	    	List<BillCheckInfoVo> resultList = new ArrayList<BillCheckInfoVo>();
@@ -592,6 +599,52 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		return null;
 	}
 
+	
+	/**
+	 * 获取“预分配金额” 、“待催款金额”
+	 * @return
+	 */
+	public Map<String,BillCheckInfoEntity> getPreMoney(){
+		
+		Map<String,BillCheckInfoEntity> returnMap=new HashMap<>();
+		
+		Map<String,Object> map=new HashMap<>();
+		Map<String,BigDecimal> accountMap=new HashMap<>();
+		
+		List<BillCheckInfoEntity> list=billCheckInfoRepository.queryAllUnreceipt(map);
+		
+		for(BillCheckInfoEntity entity:list){
+			BigDecimal accountAmount=new BigDecimal(0d);
+			
+			if(accountMap.containsKey(entity.getInvoiceName())){
+				accountAmount=accountMap.get(entity.getInvoiceName());		
+			}else{
+				accountAmount=entity.getAccountAmount();
+			}
+			
+			BigDecimal unReceiptAmount=entity.getUnReceiptAmount();
+			if(accountAmount.compareTo(BigDecimal.ZERO)>0){
+				//账户金额大于0时
+				if(accountAmount.compareTo(unReceiptAmount)>=0){
+					//账户金额大于未收款金额时，赋值	
+					accountMap.put(entity.getInvoiceName(), accountAmount.subtract(unReceiptAmount));//账户余额
+					entity.setPreDistibutionAmount(unReceiptAmount);//预分配金额
+				}else{
+					//账户金额小于未收款金额时，赋值
+					accountMap.put(entity.getInvoiceName(), BigDecimal.ZERO);//账户余额30240.6
+					entity.setPreDistibutionAmount(accountAmount);//预分配金额
+				}
+			}else{
+				accountMap.put(entity.getInvoiceName(), BigDecimal.ZERO);//账户余额
+				entity.setPreDistibutionAmount(BigDecimal.ZERO);//预分配金额
+			}			
+			entity.setTbDunAmount(unReceiptAmount.subtract(entity.getPreDistibutionAmount()));//待催款金额	
+			
+			returnMap.put(entity.getInvoiceName()+"&"+entity.getCreateMonth()+"&"+entity.getBillName(), entity);
+		}
+		return returnMap;
+	}
+	
 	@Override
 	public BillCheckInfoVo queryBillCheck(Map<String, Object> condition) {
 		BillCheckInfoVo billCheckInfoVo=new BillCheckInfoVo();
