@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillAccountInfo">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.BillAccountInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property name="label">商家编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="accountNo">
+        <Property name="label">账号</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">账户余额</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="operat">
+        <Property name="label">操作</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCondition">
+      <PropertyDef name="customerName">
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="accountNo">
+        <Property name="label">账号</Property>
+      </PropertyDef>
+      <PropertyDef name="startTime">
+        <Property name="label">创建日期：</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="endTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsBillAccountInfo">
+      <Property name="dataType">[dtBillAccountInfo]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">billCheckPR#queryAll</Property>
+    </DataSet>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <Container id="Container_Main">
+      <ToolBar>
+        <DataPilot>
+          <Property name="itemCodes">pages,pageSize</Property>
+          <Property name="dataSet">dsBillAccountInfo</Property>
+        </DataPilot>
+        <Separator/>
+        <ToolBarButton id="btnQuery">
+          <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}		&#xD;
+</ClientEvent>
+          <Property name="caption">查询</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <AutoForm id="queryConditionFrm">
+        <Property name="colPadding">15</Property>
+        <Property name="cols">200,150,220,200</Property>
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <Property name="dataType">dtCondition</Property>
+        <Property name="labelSpacing">0</Property>
+        <Property name="showHint">false</Property>
+        <AutoFormElement>
+          <Property name="name">customerName</Property>
+          <Property name="property">customerName</Property>
+          <Property name="trigger">getCustomerNameCondition</Property>
+          <Property name="labelWidth">90</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">accountNo</Property>
+          <Property name="property">accountNo</Property>
+          <Property name="editorWidth">120</Property>
+          <Property name="labelWidth">40</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">startTime</Property>
+          <Property name="property">startTime</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">endTime</Property>
+          <Property name="property">endTime</Property>
+          <Property name="labelWidth">5</Property>
+          <Property name="width">140</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+      <DataGrid>
+        <Property name="dataSet">dsBillAccountInfo</Property>
+        <Property name="dataType">dtBillAccountInfo</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="stretchColumnsMode">stretchableColumns</Property>
+        <DataColumn>
+          <Property name="name">id</Property>
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="visible">true</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">customerName</Property>
+          <Property name="property">customerName</Property>
+          <Property name="visible">true</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">accountNo</Property>
+          <Property name="property">accountNo</Property>
+          <Property name="visible">true</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">amount</Property>
+          <Property name="property">amount</Property>
+          <Property name="visible">true</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">creator</Property>
+          <Property name="property">creator</Property>
+          <Property name="visible">true</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell"> jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;查看明细&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() { &#xD;
+			&#xD;
+				var accountData=view.get(&quot;#dsBillAccountInfo.data&quot;).current;&#xD;
+				var accountNo = accountData.get(&quot;accountNo&quot;);&#xD;
+				var customerName = accountData.get(&quot;customerName&quot;);&#xD;
+				var amount = accountData.get(&quot;amount&quot;);&#xD;
+				var parameter={&#xD;
+					customerName:customerName,&#xD;
+					accountNo:accountNo,&#xD;
+					amount:amount,&#xD;
+				};&#xD;
+				&#xD;
+				var iframe=view.get(&quot;#BillAccountDetailFrame&quot;);&#xD;
+				iframe.reload();&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				&#xD;
+				view.get(&quot;#dialogBillAccountDetail&quot;).show();&#xD;
+					&#xD;
+				&#xD;
+				&#xD;
+				&#xD;
+	    	}&#xD;
+			&#xD;
+		},&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;冲抵&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var accountData=view.get(&quot;#dsBillAccountInfo.data&quot;).current;&#xD;
+				var accountNo = accountData.get(&quot;accountNo&quot;);&#xD;
+				var customerName = accountData.get(&quot;customerName&quot;);&#xD;
+				var amount = accountData.get(&quot;amount&quot;);&#xD;
+					var parameter={&#xD;
+					customerName:customerName,&#xD;
+					accountNo:accountNo,&#xD;
+					amount:amount,&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#BillAccountOutFrame&quot;);&#xD;
+				iframe.reload();&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				&#xD;
+				view.get(&quot;#dialogBillAccountOut&quot;).show();;&#xD;
+	    	}&#xD;
+		}&#xD;
+		&#xD;
+		&#xD;
+]);</ClientEvent>
+          <Property name="visible">true</Property>
+          <Property name="name">操作</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+      <Trigger id="getCustomerNameCondition">
+        <ClientEvent name="onExecute">view.get(&quot;#panelCustomerCondition&quot;).show();</ClientEvent>
+      </Trigger>
+      <FloatPanel id="panelCustomerCondition">
+        <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomerCondition.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryConditionFrm.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+}</ClientEvent>
+        <Property name="caption">商家选择</Property>
+        <Property name="center">true</Property>
+        <Property name="closeable">true</Property>
+        <Property name="contentOverflow">scroll</Property>
+        <Property name="height">450</Property>
+        <Property name="modal">true</Property>
+        <Property name="width">800</Property>
+        <Buttons/>
+        <Children>
+          <SubViewHolder id="viewSelectCustomerCondition">
+            <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+          </SubViewHolder>
+        </Children>
+        <Tools/>
+      </FloatPanel>
+    </Container>
+    <Dialog id="dialogBillAccountDetail">
+      <ClientEvent name="onHide">&#xD;
+with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}</ClientEvent>
+      <Property name="width">1000</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">查看明细</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="BillAccountDetailFrame">
+          <Property name="path">com.jiuyescm.bms.billcheck.view.BillAccountDetail.d</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogBillAccountOut">
+      <ClientEvent name="onHide">&#xD;
+with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
+			flushAsync();&#xD;
+		}</ClientEvent>
+      <Property name="width">1000</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">冲抵</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="BillAccountOutFrame">
+          <Property name="path">com.jiuyescm.bms.billcheck.view.BillAccountOut.d</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

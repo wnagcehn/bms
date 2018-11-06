@@ -70,11 +70,14 @@ import com.jiuyescm.mdm.customer.api.IProjectService;
 import com.jiuyescm.mdm.customer.vo.CusprojectRuleVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 
+import org.springframework.stereotype.Component;
+
 /**
  * 应收账单主表
  * @author yangss
  *
  */
+@Component
 @Controller("bmsBillInfoController")
 public class BmsBillInfoController {
 

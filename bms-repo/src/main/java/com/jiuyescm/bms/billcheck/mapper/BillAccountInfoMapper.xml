@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billcheck.BillAccountInfoMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.billcheck.BillAccountInfoEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="account_no" property="accountNo" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="DECIMAL" />
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, customer_id, customer_name, account_no, amount, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, del_flag
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name like concat('%',#{customerName},'%')
+		</if>
+		<if test="(accountNo != null and accountNo !='')" >
+				and account_no = #{accountNo}
+		</if>
+		<if test="(amount != null and amount !='')" >
+				and amount = #{amount}
+		</if>
+		<if test="(creatorId != null and creatorId !='')" >
+				and creator_id = #{creatorId}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifierId != null and lastModifierId !='')" >
+				and last_modifier_id = #{lastModifierId}
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and del_flag = #{delFlag}
+		</if>
+		<if test="(startTime!= null and startTime!='')">
+			and create_time>=#{startTime}
+		</if>
+		<if test="(endTime!= null and endTime!='')">
+			and create_time <![CDATA[<= #{endTime}]]>
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_account_info
+        where 1=1
+		<include refid="baseSelectColumns" />
+		        ORDER BY create_time DESC
+    </select>
+    
+    <select id="findByCustomerId" 
+    	resultType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_account_info
+        where customer_id=#{customerId} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+        insert into bill_account_info(customer_id, customer_name, account_no, amount, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, del_flag)
+        values (
+
+#{customerId,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{accountNo,jdbcType=VARCHAR}, 
+#{amount,jdbcType=DECIMAL}, 
+#{creatorId,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifierId,jdbcType=VARCHAR}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillAccountInfoEntity">
+        update bill_account_info 
+		<set >
+
+<if test="customerId != null" >customer_id=#{customerId,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="accountNo != null" >account_no=#{accountNo,jdbcType=VARCHAR},</if>
+<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+<if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
+<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
+<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+    
+</mapper>
