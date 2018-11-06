@@ -301,7 +301,7 @@ public class BmsProductTaskListener implements MessageListener{
 			start = System.currentTimeMillis();
 			int re=bmsProductsMaterialService.saveMaterial(condition);
 			end = System.currentTimeMillis();
-			logger.info("------------------插入汇总统计耗时：" + (end-start) + "毫秒------------------");
+			logger.info("------------------插入汇总统计:"+re+"条,耗时：" + (end-start) + "毫秒------------------");
 			if(re<=0){
 				errorMessage.append("耗材汇总统计失败;");
 				logger.info("耗材汇总统计失败");
@@ -398,7 +398,7 @@ public class BmsProductTaskListener implements MessageListener{
 										entity.setLastModifier(taskVo.getCreator());
 										entity.setLastModifyTime(JAppContext.currentTimestamp());
 									}									
-									logger.info("删除原始耗材");
+									//logger.info("删除原始耗材");
 									
 									//删除原运单号对应得耗材和费用
 									start = System.currentTimeMillis();
@@ -432,7 +432,7 @@ public class BmsProductTaskListener implements MessageListener{
 										packEntity.setextattr5("");
 										newList.add(packEntity);
 									}
-									logger.info("保存新耗材");
+									//logger.info("保存新耗材");
 									start = System.currentTimeMillis();
 									int resultSave=bizOutstockPackmaterialService.saveList(newList);
 									end = System.currentTimeMillis();
@@ -445,8 +445,8 @@ public class BmsProductTaskListener implements MessageListener{
 									}															
 								}							
 							}
-							logger.info("------------------删除原运单号对应得耗材和费用耗时：" + delTimeTotal + "毫秒------------------");
-							logger.info("------------------保存新耗材成功，耗时：" + total + "毫秒------------------");
+							logger.info("------------------删除原运单号对应得耗材和费用总耗时：" + delTimeTotal + "毫秒------------------");
+							logger.info("------------------保存新耗材成功，总耗时：" + total + "毫秒------------------");
 						}
 						condition=new HashMap<String,Object>();
 						condition.put("productsMark", proAccountVo.getProductsMark());
