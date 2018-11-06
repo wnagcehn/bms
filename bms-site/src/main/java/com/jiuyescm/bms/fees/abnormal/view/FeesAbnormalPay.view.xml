@@ -361,16 +361,15 @@ view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execut
         <ClientEvent name="onClick">var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;确认是否关账?&quot;,function(){&#xD;
-	view.get(&quot;#closeAction&quot;).set(&quot;parameter&quot;, data).execute({&#xD;
-		callback:function(result){		&#xD;
-			dorado.MessageBox.alert(&quot;关账成功!&quot;);&#xD;
+	view.get(&quot;#closeAction&quot;).set(&quot;parameter&quot;, data).execute(function(result){		&#xD;
+			dorado.MessageBox.alert(result);&#xD;
 			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 			with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
 				set(&quot;parameter&quot;, data);&#xD;
 				flushAsync();&#xD;
 			}&#xD;
 		}&#xD;
-	});&#xD;
+	);&#xD;
 });</ClientEvent>
         <Property name="caption">关账</Property>
         <Property name="icon">url(>skin>common/icons.gif) -0px -120px</Property>
@@ -400,8 +399,7 @@ if(entity.get(&quot;orderStatus&quot;)!=3){&#xD;
 entity.set(&quot;orderStatus&quot;,&quot;2&quot;);&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;确认是否反关账?&quot;,function(){&#xD;
-	view.get(&quot;#unCloseAction&quot;).execute({&#xD;
-		callback:function(result){&#xD;
+	view.get(&quot;#unCloseAction&quot;).execute(function(result){&#xD;
 			dorado.MessageBox.alert(&quot;反关账成功!&quot;);&#xD;
 			var data = view.get(&quot;#dsMondition.data&quot;).current;&#xD;
 			with (view.get(&quot;#dsFeesAbnormalEntity&quot;)){&#xD;
@@ -409,7 +407,7 @@ dorado.MessageBox.confirm(&quot;确认是否反关账?&quot;,function(){&#xD;
 				flushAsync();&#xD;
 			}		&#xD;
 		}&#xD;
-	});&#xD;
+	);&#xD;
 });&#xD;
 </ClientEvent>
         <Property name="caption">反关账</Property>
