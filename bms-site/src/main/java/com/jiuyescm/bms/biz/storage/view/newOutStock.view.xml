@@ -496,6 +496,31 @@
         </DataPilot>
         <ToolBarButton id="query">
           <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+var tmpFormCondition=view.get(&quot;#queryConditionFrm&quot;);&#xD;
+var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;startTime&quot;);&#xD;
+var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;endTime&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(cre)){&#xD;
+	dorado.MessageBox.alert(&quot;起始时间不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(end)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
+ 	if(cre.getTime()>end.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;起始时间不能大于结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+var m=getDays(cre,end);&#xD;
+if(m>31){&#xD;
+	dorado.MessageBox.alert(&quot;不能查询时间间隔大于1个月的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
 	set(&quot;parameter&quot;, data);&#xD;
 	flushAsync();&#xD;

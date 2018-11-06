@@ -236,10 +236,23 @@
       <Separator/>
       <ToolBarButton id="btnQuery">
         <ClientEvent name="onClick">var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;
-				with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){
-					set(&quot;parameter&quot;, data);
-					flushAsync();
-				}</ClientEvent>
+if(data.get(&quot;createTime&quot;)==&quot;&quot;||data.get(&quot;createTime&quot;)==null){
+		dorado.MessageBox.alert(&quot;创建时间不能为空!&quot;);
+		return;
+	}
+	if(data.get(&quot;createEndTime&quot;)==&quot;&quot;||data.get(&quot;createEndTime&quot;)==null){
+		dorado.MessageBox.alert(&quot;结束时间不能为空!&quot;);
+		return;
+	}
+	
+	if(data.get(&quot;createTime&quot;)>data.get(&quot;createEndTime&quot;)){
+		dorado.MessageBox.alert(&quot;开始时间不能大于结束时间!&quot;);
+		return;
+	} 
+with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){
+	set(&quot;parameter&quot;, data);
+	flushAsync();
+}</ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
       </ToolBarButton>

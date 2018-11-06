@@ -287,6 +287,7 @@ public class BmsProductTaskListener implements MessageListener{
 		long start = 0l;
 		long end = 0l;
 		long totalStart = System.currentTimeMillis();
+		long totalRetry = 0l;
 		Map<String,Object> condition=new HashMap<String,Object>();
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
 			//根据商家和时间查询耗材出库表业务数据里的运单号
@@ -299,10 +300,9 @@ public class BmsProductTaskListener implements MessageListener{
 			
 			logger.info("插入汇总统计");
 			//插入汇总统计
-			start = System.currentTimeMillis();
+			long sta = System.currentTimeMillis();
 			int re=bmsProductsMaterialService.saveMaterial(condition);
-			end = System.currentTimeMillis();
-			logger.info("------------------插入汇总统计:"+re+"条,耗时：" + (end-start) + "毫秒------------------");
+			long en = System.currentTimeMillis();
 			if(re<=0){
 				errorMessage.append("耗材汇总统计失败;");
 				logger.info("耗材汇总统计失败");
@@ -456,13 +456,16 @@ public class BmsProductTaskListener implements MessageListener{
 						start = System.currentTimeMillis();
 						bizDispatchBillService.retryByMaterialMark(condition);	
 						end = System.currentTimeMillis();
-						logger.info("------------------修改重算状态耗时：" + (end-start) + "毫秒------------------");
+						totalRetry = totalRetry+(end-start);
+						
 					}
 				}		
 			}
+			logger.info("------------------插入汇总统计运单:"+re+"条,耗时：" + (en-sta) + "毫秒------------------");
 		}
+		logger.info("------------------修改重算状态总耗时：" + totalRetry + "毫秒------------------");
 		long totalEnd = System.currentTimeMillis();
-		logger.info("------------------修改重算状态耗时占比:" + (end-start)/(totalEnd-totalStart)*100 + "%------------------");
+		logger.info("------------------修改重算状态耗时占比:" + totalRetry*1.0/(totalEnd-totalStart)*100 + "%------------------");
 		updateProgress(taskVo, 90);
 		return "sucess";
 	}

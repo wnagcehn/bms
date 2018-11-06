@@ -124,6 +124,12 @@ public class BizOutstockPackmaterialController {
 	
 	@DataProvider
 	public void query(Page<BizOutstockPackmaterialEntity> page, Map<String, Object> param){
+		if (param == null) {
+			param = new HashMap<String, Object>();
+		}
+		if (param.get("startTime") == null || param.get("endTime") == null) {
+			return;
+		}
 		if("ALL".equals(param.get("isCalculated"))){
 			param.put("isCalculated", null);
 		}

@@ -74,6 +74,7 @@ import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * ..Controller
@@ -118,6 +119,12 @@ public class BizPalletInfoController {
 	 */
 	@DataProvider
 	public void query(Page<BizPalletInfoEntity> page, Map<String, Object> param) {
+		if (param == null) {
+			param = new HashMap<String, Object>();
+		}
+		if (param.get("createTime") == null || param.get("createEndTime") == null) {
+			return;
+		}
 		PageInfo<BizPalletInfoEntity> pageInfo = bizPalletInfoService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());

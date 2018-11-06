@@ -87,6 +87,7 @@ import com.jiuyescm.mdm.deliver.api.IDeliverService;
 import com.jiuyescm.mdm.deliver.vo.DeliverVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 @Controller("dispatchBillController")
 public class DispatchBillController{
@@ -161,6 +162,9 @@ public class DispatchBillController{
 	public void queryAll(Page<BizDispatchBillEntity> page, Map<String, Object> param) {
 		if (param == null){
 			param = new HashMap<String, Object>();
+		}
+		if (param.get("createTime") == null || param.get("endTime") == null) {
+			return;
 		}
 		//物流商
 		if(param.get("logistics") != null && StringUtils.equalsIgnoreCase(param.get("logistics").toString(), "ALL")){

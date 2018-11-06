@@ -41,6 +41,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * 商品存储费
@@ -75,6 +76,12 @@ public class BizProductStorageController extends BaseController{
 	 */
 	@DataProvider
 	public void query(Page<BizProductStorageEntity> page, Map<String, Object> param) {
+		if (param == null) {
+			param = new HashMap<String, Object>();
+		}
+		if (param.get("startTime") == null || param.get("endTime") == null) {
+			return;
+		}
 		if("ALL".equals(param.get("isCalculated"))){
 			param.put("isCalculated", "");
 		}
