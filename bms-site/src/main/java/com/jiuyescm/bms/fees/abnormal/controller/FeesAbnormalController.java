@@ -165,7 +165,7 @@ public class FeesAbnormalController {
 			
 			try {		
 				feesAbnormalNewService.updateList(pageInfo.getList());
-				return "sucess";
+				return "关账成功";
 				
 			} catch (Exception e) {
 				//写入日志
@@ -219,13 +219,12 @@ public class FeesAbnormalController {
 				}
 				
 				entity.setOrderStatus("2");
-				entity.setCloseTime(JAppContext.currentTimestamp());
-				
+				entity.setCloseTime(JAppContext.currentTimestamp());			
 			}
 			
-			try {		
+			try {
 				feesAbnormalNewService.updateList(pageInfo.getList());
-				return "sucess";
+				return "反关账成功";
 				
 			} catch (Exception e) {
 				//写入日志
