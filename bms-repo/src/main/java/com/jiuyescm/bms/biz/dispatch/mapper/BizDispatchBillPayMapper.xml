@@ -178,7 +178,7 @@
 		LEFT JOIN biz_dispatch_bill b on a.outstock_no=b.outstock_no and b.del_flag='0'
 		where 1=1
 		<include refid="baseSelectColumns" />
-		GROUP BY a.waybill_no
+		GROUP BY a.outstock_no
     </select>
     <update id="adjustBillPay"  parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
     	update biz_dispatch_pay_bill 

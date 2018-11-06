@@ -75,19 +75,18 @@ public class BmsProductTaskListener implements MessageListener{
 			logger.info("正在消费"+taskId);
 			//处理运单重量统一
 			logger.info("正在处理运单重量纠正");
+			start = System.currentTimeMillis();
 			handWeightTask(taskId,errorMessage);
-			logger.info("重量纠正结束");
+			logger.info("重量纠正结束 耗时--"+(System.currentTimeMillis()-start));
+			
+			
 			//处理运单耗材统一
 			logger.info("正在处理耗材纠正");
+			start = System.currentTimeMillis();
 			handMaterialTask(taskId,errorMessage);
-			logger.info("耗材纠正结束");
+			logger.info("耗材纠正结束 耗时--"+(System.currentTimeMillis()-start));
 		} catch (Exception e1) {
 			logger.error("处理运单重量和耗材统一失败：{}",e1);
-			try {
-				
-			} catch (Exception e2) {
-				logger.error("保存mq错误日志失败，错误日志：{}",e2);
-			}
 			return;
 		}
 		
@@ -157,22 +156,28 @@ public class BmsProductTaskListener implements MessageListener{
 		long end = 0l;
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
 			//根据商家和时间查询运单业务数据里的运单号
-			logger.info("正在进行重量汇总统计");
+			
 			condition=new HashMap<String,Object>();
 			condition.put("customerId", taskVo.getCustomerId());
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 			condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
 			condition.put("taskId", taskId);
 			updateProgress(taskVo,30);
+			logger.info("正在进行重量汇总统计 ");
+			logger.info(condition);
 			//插入汇总统计
+			start = System.currentTimeMillis();
 			int re=bmsProductsWeightService.saveWeight(condition);
 			if(re<=0){
 				logger.info("插入重量汇总统计失败");
 				errorMessage.append("插入重量汇总统计失败");
 				return "fail";
 			}
+			logger.info("重量汇总统计 耗时--" + (System.currentTimeMillis()-start));
 			//获取商品明细组合与重量占比最高
 			condition.put("taskId", taskId);
+			
+			
 			List<BmsProductsWeightAccountVo> list=bmsProductsWeightService.queyAllMax(condition);
 			if(list.size()>0){
 				//循环更新每个商品明细对应的运单
@@ -215,9 +220,8 @@ public class BmsProductTaskListener implements MessageListener{
 								waybillNoList.add(vo.getWaybillNo());
 							}
 							//批量更新打标记录
-							logger.info("批量更新打标记录");
+							logger.info("批量更新打标记录 运单数--"+waybillNoList.size());
 							int result=bmsProductsWeightService.updateMark(condition);
-							//int result=bmsProductsWeightService.updateMarkList(marklist);
 							if(result>0){
 								//去更新运单状态
 								start = System.currentTimeMillis();
