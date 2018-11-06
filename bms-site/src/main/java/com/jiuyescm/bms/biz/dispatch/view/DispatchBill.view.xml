@@ -1838,7 +1838,7 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
     </UpdateAction>
     <Dialog id="fileExportTaskDialog">
       <Property name="closeable">false</Property>
-      <Property name="caption">账单下载</Property>
+      <Property name="caption">运单下载</Property>
       <Property name="height">500</Property>
       <Property name="width">900</Property>
       <Buttons>
