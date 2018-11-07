@@ -76,6 +76,10 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 		if (param.get("customerId") != null) {
 			customerId = param.get("customerId").toString();
 		}
+		String warehouseCode = "";
+		if (null != param.get("warehouseCode")) {
+			warehouseCode = param.get("warehouseCode").toString();
+		}
 		
         try {
         	//校验该费用是否已生成Excel文件
@@ -87,17 +91,11 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         		return existDel;
         	}
         	
-        	String taskid = sequenceService.getBillNoOne(FileExportTaskEntity.class.getName(), "FT", "0000000000");
-    		if (StringUtils.isBlank(taskid)) {
-    			throw new Exception("生成导出文件编号失败,请稍后重试!");
-    		}
-        	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + taskid + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + customerId + warehouseCode + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
-        	entity.setTaskId(taskid);
         	entity.setCustomerid(customerId);
         	entity.setStartTime(DateUtil.formatTimestamp(param.get("startTime")));
         	entity.setEndTime(DateUtil.formatTimestamp(param.get("endTime")));
@@ -113,7 +111,7 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         	
         	//生成账单文件
     		final Map<String, Object> condition = param;
-    		final String taskId = taskid;
+    		final String taskId = entity.getTaskId();
     		final String filePath=filepath;
     		new Thread(){
     			public void run() {
