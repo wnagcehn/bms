@@ -519,7 +519,8 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("-->"+entity.getId()+String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getChargeCarrierId()));
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getChargeCarrierId()));
+			//entity.setRemark(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getChargeCarrierId()));
+			entity.setRemark(entity.getRemark()+String.format("bms运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getChargeCarrierId()));
 			return false;
 		}
 		XxlJobLogger.log("-->"+entity.getId()+"费用科目编号:"+ subject);
@@ -542,7 +543,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("-->"+entity.getId()+"--------未获取到重量 计算失败--------");
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark("未获取到重量 计算失败");
+			entity.setRemark(entity.getRemark()+"bms未获取到重量 计算失败");
 			return false;
 		}
 			
@@ -567,7 +568,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
+			entity.setRemark(entity.getRemark()+String.format("bms未查询到合同  运单号【%s】--商家【%s】", entity.getWaybillNo(),entity.getCustomerid()));
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -585,7 +586,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	    	XxlJobLogger.log(String.format("-->"+entity.getId()+"合同【%s】未签约服务", contractEntity.getContractCode()));
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
+			entity.setRemark(entity.getRemark()+String.format("bms合同【%s】未签约服务", contractEntity.getContractCode()));
 			return false;
 	    }
 	    current = System.currentTimeMillis();
@@ -694,7 +695,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
-			entity.setRemark(ex.getMessage());
+			entity.setRemark("合同在线"+ex.getMessage()+";");
 		}
 		return modelEntity;
 	}

@@ -218,7 +218,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
-			entity.setRemark(ex.getMessage());
+			entity.setRemark("合同在线"+ex.getMessage()+";");
 		}
 		return modelEntity;
 	}
@@ -446,7 +446,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark("未查询到合同");
+			entity.setRemark(entity.getRemark()+"bms未查询到合同");
 			feeEntity.setCalcuMsg("未查询到合同");
 			return false;
 		}
@@ -463,7 +463,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			XxlJobLogger.log("-->"+entity.getId()+"未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerId());
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark("未签约服务");
+			entity.setRemark(entity.getRemark()+"bms未签约服务");
 			feeEntity.setCalcuMsg("未签约服务");
 			return false;
 		}
@@ -488,7 +488,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价未配置");
+			entity.setRemark(entity.getRemark()+"bms报价未配置");
 			feeEntity.setCalcuMsg("报价未配置");
 			return false;
 		}

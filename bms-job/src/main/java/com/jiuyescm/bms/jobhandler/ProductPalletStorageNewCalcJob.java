@@ -220,7 +220,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
-			entity.setRemark(ex.getMessage());
+			entity.setRemark("合同在线"+ex.getMessage()+";");
 		}
 		return modelEntity;
 	}
@@ -409,7 +409,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到有效合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark("未查询到有效合同");
+			entity.setRemark(entity.getRemark()+"bms未查询到有效合同");
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -425,7 +425,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerId());
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark("未签约服务");
+			entity.setRemark(entity.getRemark()+"bms未签约服务");
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -451,7 +451,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价未配置");
+			entity.setRemark(entity.getRemark()+"bms报价未配置");
 			return false;
 		}
 		//报价模板
@@ -465,7 +465,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价【"+priceGeneral.getQuotationNo()+"】类型未知");
+			entity.setRemark(entity.getRemark()+"bms报价【"+priceGeneral.getQuotationNo()+"】类型未知");
 			return  false;
 		}
 		current = System.currentTimeMillis();

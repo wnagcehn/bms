@@ -214,7 +214,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
-			entity.setRemark(ex.getMessage());
+			entity.setRemark("合同在线"+ex.getMessage()+";");
 		}
 		return modelEntity;
 	}
@@ -365,7 +365,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
+			entity.setRemark(entity.getRemark()+String.format("bms未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -382,7 +382,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未签约服务  主键【%s】--商家【%s】", entity.getId(),entity.getCustomerId()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("未签约服务"));
+			entity.setRemark(entity.getRemark()+String.format("bms未签约服务"));
 			return false;
 		}
 		current = System.currentTimeMillis();
