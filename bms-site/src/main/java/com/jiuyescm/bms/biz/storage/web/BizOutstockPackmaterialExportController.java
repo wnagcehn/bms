@@ -31,6 +31,7 @@ import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
@@ -47,6 +48,8 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 	private IFileExportTaskService fileExportTaskService;
 	@Resource
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
+	@Resource 
+	private SequenceService sequenceService;
 	
 	@DataProvider
 	public void query(Page<BizOutstockPackmaterialEntity> page, Map<String, Object> param){
@@ -69,7 +72,11 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 			return MessageConstant.QUERY_PARAM_NULL_MSG;
 		}
 		
-		String customerId = param.get("customerId").toString();
+		String customerId = "";
+		if (param.get("customerId") != null) {
+			customerId = param.get("customerId").toString();
+		}
+		
         try {
         	//校验该费用是否已生成Excel文件
         	Map<String, Object> queryEntity = new HashMap<String, Object>();
@@ -80,11 +87,17 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         		return existDel;
         	}
         	
+        	String taskid = sequenceService.getBillNoOne(FileExportTaskEntity.class.getName(), "FT", "0000000000");
+    		if (StringUtils.isBlank(taskid)) {
+    			throw new Exception("生成导出文件编号失败,请稍后重试!");
+    		}
+        	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + customerId + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + taskid + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
+        	entity.setTaskId(taskid);
         	entity.setCustomerid(customerId);
         	entity.setStartTime(DateUtil.formatTimestamp(param.get("startTime")));
         	entity.setEndTime(DateUtil.formatTimestamp(param.get("endTime")));
@@ -100,7 +113,7 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         	
         	//生成账单文件
     		final Map<String, Object> condition = param;
-    		final String taskId = entity.getTaskId();
+    		final String taskId = taskid;
     		final String filePath=filepath;
     		new Thread(){
     			public void run() {

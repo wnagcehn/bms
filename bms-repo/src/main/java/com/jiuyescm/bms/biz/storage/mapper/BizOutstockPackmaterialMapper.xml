@@ -447,6 +447,30 @@
     	<if test="warehouseCode!=null and warehouseCode!=''">
     		and warehouse_code=#{warehouseCode}
     	</if>
+    	<if test="(feesNo != null and feesNo !='')" >
+				and fees_no = #{feesNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and is_calculated = #{isCalculated}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			   and creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and extattr1 = #{extattr1}
+		</if>
+		<if test="(costFeesNo!=null and costFeesNo!='')">
+			and cost_fees_no=#{costFeesNo}
+		</if>
     	group by consumer_material_code,consumer_material_name,waybill_no
     </select>
     
