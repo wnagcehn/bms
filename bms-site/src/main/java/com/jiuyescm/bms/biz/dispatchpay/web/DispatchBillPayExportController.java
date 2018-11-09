@@ -40,6 +40,7 @@ import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
@@ -74,6 +75,8 @@ public class DispatchBillPayExportController extends BaseController{
 	private ISystemCodeService systemCodeService;
 	@Resource
 	private IBizOutstockPackmaterialService bizOutstockPackmaterialServiceImpl;
+	@Resource 
+	private SequenceService sequenceService;
 	
 	/**
 	 * 导出
@@ -441,15 +444,21 @@ public class DispatchBillPayExportController extends BaseController{
 	
 	/**
 	 * 原始数据导出
+	 * @throws Exception 
 	 */
 	@DataResolver
-	public String originAsynExport(Map<String, Object> param) {
+	public String originAsynExport(Map<String, Object> param) throws Exception {
 		if (null == param) {
 			return MessageConstant.QUERY_PARAM_NULL_MSG;
 		}
 		
 		Map<String, String> warehouseMap = getWarehouse();
 		Map<String, String> customerMap = getCustomer();
+		
+		String taskid = sequenceService.getBillNoOne(FileExportTaskEntity.class.getName(), "FT", "0000000000");
+		if (StringUtils.isBlank(taskid)) {
+			throw new Exception("生成导出文件编号失败,请稍后重试!");
+		}
 		
 		String customerId = "";
 		if (null != param.get("customerId")) {
@@ -483,7 +492,7 @@ public class DispatchBillPayExportController extends BaseController{
         	
         	String path = getPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + customerId + warehouseCode + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + taskid + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
         	entity.setStartTime(DateUtil.formatTimestamp(param.get("startTime")));

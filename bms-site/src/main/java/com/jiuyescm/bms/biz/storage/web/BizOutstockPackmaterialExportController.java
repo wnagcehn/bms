@@ -65,9 +65,10 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 	
 	/**
 	 * 导出
+	 * @throws Exception 
 	 */
 	@DataResolver
-	public String asynExport(Map<String, Object> param) {
+	public String asynExport(Map<String, Object> param) throws Exception {
 		if (null == param) {
 			return MessageConstant.QUERY_PARAM_NULL_MSG;
 		}
@@ -76,11 +77,14 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 		if (param.get("customerId") != null) {
 			customerId = param.get("customerId").toString();
 		}
-		String warehouseCode = "";
-		if (null != param.get("warehouseCode")) {
-			warehouseCode = param.get("warehouseCode").toString();
+//		String warehouseCode = "";
+//		if (null != param.get("warehouseCode")) {
+//			warehouseCode = param.get("warehouseCode").toString();
+//		}
+		String taskid = sequenceService.getBillNoOne(FileExportTaskEntity.class.getName(), "FT", "0000000000");
+		if (StringUtils.isBlank(taskid)) {
+			throw new Exception("生成导出文件编号失败,请稍后重试!");
 		}
-		
         try {
         	//校验该费用是否已生成Excel文件
         	Map<String, Object> queryEntity = new HashMap<String, Object>();
@@ -93,7 +97,7 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + customerId + warehouseCode + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode() + taskid + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
         	entity.setCustomerid(customerId);

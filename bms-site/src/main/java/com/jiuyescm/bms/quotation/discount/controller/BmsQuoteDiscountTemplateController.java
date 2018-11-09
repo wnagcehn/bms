@@ -242,7 +242,9 @@ public class BmsQuoteDiscountTemplateController {
 			starTime = System.currentTimeMillis(); // 开始时间
 
 			// 解析Excel
+			long start = System.currentTimeMillis();
 			templateList = readExcelProduct(file, bs);
+			System.out.println("读取数据:" + templateList.size() + "条，耗时："+  (System.currentTimeMillis()-start) + "毫秒");
 			if (null == templateList || templateList.size() <= 0) {
 				errorVo = new ErrorMessageVo();
 				errorVo.setMsg("导入的Excel数据为空或者数据格式不对!");
