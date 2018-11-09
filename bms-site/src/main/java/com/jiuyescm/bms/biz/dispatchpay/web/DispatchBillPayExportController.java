@@ -470,25 +470,25 @@ public class DispatchBillPayExportController extends BaseController{
 		}
         try {
         	//校验该费用是否已生成Excel文件
-        	if (StringUtils.isNotBlank(customerId) && StringUtils.isBlank(warehouseCode)) {
-        		Map<String, Object> queryEntity = new HashMap<String, Object>();
-            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
-            	queryEntity.put("taskName", "原始耗材出库明细"+customerMap.get(customerId));
-            	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
-            	if (StringUtils.isNotEmpty(existDel)) {
-            		return existDel;
-            	}
-			}
-        	
-        	if (StringUtils.isNotBlank(warehouseCode) && StringUtils.isBlank(customerId)) {
-        		Map<String, Object> queryEntity = new HashMap<String, Object>();
-            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
-            	queryEntity.put("taskName", "原始耗材出库明细"+warehouseMap.get(warehouseCode));
-            	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
-            	if (StringUtils.isNotEmpty(existDel)) {
-            		return existDel;
-            	}
-			}
+//        	if (StringUtils.isNotBlank(customerId) && StringUtils.isBlank(warehouseCode)) {
+//        		Map<String, Object> queryEntity = new HashMap<String, Object>();
+//            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
+//            	queryEntity.put("taskName", "原始耗材出库明细"+customerMap.get(customerId));
+//            	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
+//            	if (StringUtils.isNotEmpty(existDel)) {
+//            		return existDel;
+//            	}
+//			}
+//        	
+//        	if (StringUtils.isNotBlank(warehouseCode) && StringUtils.isBlank(customerId)) {
+//        		Map<String, Object> queryEntity = new HashMap<String, Object>();
+//            	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
+//            	queryEntity.put("taskName", "原始耗材出库明细"+warehouseMap.get(warehouseCode));
+//            	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
+//            	if (StringUtils.isNotEmpty(existDel)) {
+//            		return existDel;
+//            	}
+//			}
         	
         	String path = getPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
