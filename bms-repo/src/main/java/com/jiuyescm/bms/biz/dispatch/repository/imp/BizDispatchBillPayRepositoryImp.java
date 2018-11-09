@@ -30,6 +30,17 @@ public class BizDispatchBillPayRepositoryImp extends MyBatisDao implements IBizD
 		
 		return p;
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public PageInfo<BizDispatchBillPayEntity> queryAllToExport(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		List<BizDispatchBillPayEntity> l=selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillPayMapper.queryAllToExport", condition,new RowBounds(pageNo,pageSize));
+		PageInfo<BizDispatchBillPayEntity> p=new PageInfo<>(l);
+		
+		return p;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")

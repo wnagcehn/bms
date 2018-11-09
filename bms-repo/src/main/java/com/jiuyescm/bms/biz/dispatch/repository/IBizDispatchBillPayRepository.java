@@ -77,4 +77,13 @@ public interface IBizDispatchBillPayRepository{
 
 
 	int adjustBillPayEntity(BizDispatchBillPayEntity temp);
+	
+	/**
+	 * 导出时查询数据
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BizDispatchBillPayEntity> queryAllToExport(Map<String, Object> condition, int pageNo, int pageSize);
 }

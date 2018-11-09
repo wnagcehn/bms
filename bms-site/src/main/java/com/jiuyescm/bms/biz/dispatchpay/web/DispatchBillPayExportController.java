@@ -211,7 +211,7 @@ public class DispatchBillPayExportController extends BaseController{
 		boolean doLoop = true;
 		while (doLoop) {			
 			PageInfo<BizDispatchBillPayEntity> pageInfo = 
-					bizDispatchBillPayService.queryAll(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+					bizDispatchBillPayService.queryAllToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
 			if (null != pageInfo && pageInfo.getList().size() > 0) {
 				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
 					doLoop = false;

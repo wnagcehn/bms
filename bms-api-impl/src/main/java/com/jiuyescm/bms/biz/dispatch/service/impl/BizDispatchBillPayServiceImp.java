@@ -28,6 +28,13 @@ public class BizDispatchBillPayServiceImp implements IBizDispatchBillPayService{
 		// TODO Auto-generated method stub
 		return bizRepository.queryAll(condition, pageNo, pageSize);
 	}
+	
+	@Override
+	public PageInfo<BizDispatchBillPayEntity> queryAllToExport(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		return bizRepository.queryAllToExport(condition, pageNo, pageSize);
+	}
 
 	/**
 	 * 批量修改业务数据
