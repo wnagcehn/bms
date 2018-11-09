@@ -107,4 +107,10 @@ public interface IBizOutstockPackmaterialService {
 	 */
 	List<BizOutstockPackmaterialEntity> queryOriginMaterialFromBizData(Map<String, Object> condition);
 	
+	/**
+	 * 获取最高的体积
+	 * @param condition
+	 * @return
+	 */
+	public String getMaxBwdVolumn(Map<String, Object> condition);
 }

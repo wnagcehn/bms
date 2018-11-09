@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.correct.BmsMarkingMaterialEntity;
 import com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsMaterialRepository;
@@ -23,10 +24,27 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 	}
 
 	@Override
+	public List<BmsProductsMaterialAccountEntity> queyAllBwxMax(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsProductsMaterialAccountEntity> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyAllBwxMax", condition);
+		return list;
+	}
+	
+	@Override
 	public List<BmsMarkingMaterialEntity> queyNotMax(
 			Map<String, Object> condition) {
 		SqlSession session=this.getSqlSessionTemplate();
 		List<BmsMarkingMaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMax", condition);
+		return list;
+	}
+	
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxBwd(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stubo
+		SqlSession session=this.getSqlSessionTemplate();
+		List<BizOutstockPackmaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMaxBwd", condition);
 		return list;
 	}
 	
@@ -76,6 +94,14 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 	}
 
 	@Override
+	public int saveBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.saveBwd", condition);
+	
+	}
+	
+	@Override
 	public BmsMarkingMaterialEntity queryOneMark(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		SqlSession session=this.getSqlSessionTemplate();
@@ -96,6 +122,15 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		// TODO Auto-generated method stub
 		SqlSession session=this.getSqlSessionTemplate();
 		return session.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.updateMaterialAccount", condition);
+	}
+
+	@Override
+	public BizOutstockPackmaterialEntity queryBwdMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session=this.getSqlSessionTemplate();
+		return session.selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queryBwdMaterial", condition);
+	
 	}
 	
 }
