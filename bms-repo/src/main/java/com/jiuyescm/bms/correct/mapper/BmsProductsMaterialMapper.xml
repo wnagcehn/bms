@@ -49,10 +49,11 @@
         resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
 		select a.products_mark, a.material_type, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
 		inner JOIN (
-			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId}
+			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId} and type='PMXZX'
 			GROUP BY products_mark, material_type
 		) b
 		on a.products_mark=b.products_mark and a.material_type=b.material_type and a.task_id=b.task_id and a.percent=b.percent
+		where a.task_id =#{taskId} and a.type='PMXZX'
 		GROUP BY a.products_mark,a.material_type,a.percent
      </select>
      
@@ -64,7 +65,7 @@
 			GROUP BY products_mark
 		) b
 		on a.products_mark=b.products_mark and a.task_id=b.task_id and a.percent=b.percent
-		where a.task_id=#{taskId}
+		where a.task_id=#{taskId} and a.type='BWD'
 		GROUP BY a.products_mark,a.percent
      </select>
      
@@ -216,6 +217,9 @@
  		 </if>
  		 <if test="(taskId != null and taskId !='')" >
  			 and task_id=#{taskId,jdbcType=VARCHAR}
+ 		 </if>
+ 		  <if test="(type != null and type !='')" >
+ 			 and type=#{type,jdbcType=VARCHAR}
  		 </if>
      </update>
      

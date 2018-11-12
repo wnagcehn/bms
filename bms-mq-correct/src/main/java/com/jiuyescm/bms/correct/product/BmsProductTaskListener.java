@@ -362,6 +362,7 @@ public class BmsProductTaskListener implements MessageListener{
 							condition.put("percent", proAccountVo.getPercent());
 							condition.put("taskId", proAccountVo.getTaskId());
 							condition.put("waybillNo", waybillNo);
+							condition.put("type", "PMXZX");
 							start = System.currentTimeMillis();
 							int updateResult=bmsProductsMaterialService.updateMaterialAccount(condition);
 							end = System.currentTimeMillis();
@@ -596,6 +597,7 @@ public class BmsProductTaskListener implements MessageListener{
 							condition.put("percent", proAccountVo.getPercent());
 							condition.put("taskId", proAccountVo.getTaskId());
 							condition.put("waybillNo", markVo.getWaybillNo());
+							condition.put("type", "BWD");
 							start = System.currentTimeMillis();
 							int updateResult=bmsProductsMaterialService.updateMaterialAccount(condition);
 							end = System.currentTimeMillis();
