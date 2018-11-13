@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtCheckInfo">
-      <Property name="creationType">com.jiuyescm.bms.billcheck.BillCheckInfoEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
       <PropertyDef name="id">
         <Property name="dataType">Integer</Property>
       </PropertyDef>

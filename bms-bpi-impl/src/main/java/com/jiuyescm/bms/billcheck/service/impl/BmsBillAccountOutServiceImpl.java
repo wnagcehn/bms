@@ -1,13 +1,17 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
@@ -16,13 +20,16 @@ import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountInfoRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountOutRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
-import com.jiuyescm.bms.billcheck.repository.IBillAccountOutRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
+import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.exception.BizException;
 
 
 @Service("bmsBillAccountOutService")
 public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
+
+	private static final Logger logger = Logger.getLogger(BmsBillAccountOutServiceImpl.class.getName());
 
 	
 	@Autowired
@@ -35,11 +42,28 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
     private IBillCheckInfoRepository billCheckInfoRepository;
 
 	@Override
-	public PageInfo<BillAccountOutEntity> query(Map<String, Object> condition,
+	public PageInfo<BillAccountOutVo> query(Map<String, Object> condition,
 			int pageNo, int pageSize) {
-		return billAccountOutRepository.query(condition, pageNo, pageSize);
+		
+		PageInfo<BillAccountOutEntity> pageInfo=billAccountOutRepository.query(condition, pageNo, pageSize);
+		PageInfo<BillAccountOutVo> result=new PageInfo<BillAccountOutVo>();
+		
+		try {
+			List<BillAccountOutVo> voList = new ArrayList<BillAccountOutVo>();
+	    	for(BillAccountOutEntity entity : pageInfo.getList()) {
+	    		BillAccountOutVo vo = new BillAccountOutVo(); 		
+	            PropertyUtils.copyProperties(vo, entity);  
+	    		voList.add(vo);
+	    	}
+	    	result.setList(voList);
+		} catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+    	
+		return result;
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
 	public String save(Map<String, Object> param) {
 		String status="";
