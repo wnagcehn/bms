@@ -565,6 +565,7 @@
     	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
     		#{item}
     	</foreach>
+    	 limit 1
     </select>
     
     <delete id="deleteAllByWayBillNo" parameterType="java.util.Map">
