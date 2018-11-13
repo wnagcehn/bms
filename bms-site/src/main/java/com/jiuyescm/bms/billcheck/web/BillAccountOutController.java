@@ -43,7 +43,7 @@ public class BillAccountOutController {
 			param = new HashMap<String, Object>();
 		}		
 
-		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.query(param, page.getPageNo(), page.getPageSize());
+		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.queryForOut(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
