@@ -7,7 +7,7 @@ package com.jiuyescm.bms.billcheck.service;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.billcheck.BillAccountInEntity;
+import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
 
 /**
  * 
@@ -16,14 +16,14 @@ import com.jiuyescm.bms.billcheck.BillAccountInEntity;
  */
 public interface IBmsBillAccountInService {
 
-    PageInfo<BillAccountInEntity> query(Map<String, Object> condition, int pageNo,
+    PageInfo<BillAccountInVo> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 
-    BillAccountInEntity findById(Long id);
+    BillAccountInVo findById(Long id);
 
-    BillAccountInEntity save(BillAccountInEntity entity);
+    BillAccountInVo save(BillAccountInVo entity);
 
-    BillAccountInEntity update(BillAccountInEntity entity);
+    BillAccountInVo update(BillAccountInVo entity);
 
     void delete(Long id);
 

@@ -5,47 +5,27 @@
 package com.jiuyescm.bms.billcheck.web;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.billcheck.BillAccountInEntity;
-import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
+import com.jiuyescm.bms.billcheck.vo.BillAccountInfoVo;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.ConstantInterface;
-
-
-
-
-
-
-
-
-
-
-
-
-import org.springframework.stereotype.Component;
-
-import com.bstek.dorado.annotation.Expose;
 /**
  * 
  * @author stevenl
@@ -66,8 +46,8 @@ public class BillAccountInController {
 	@Autowired private SequenceService sequenceService;
 	
 	@Expose
-	public BillAccountInEntity findById(Long id) throws Exception {
-		BillAccountInEntity entity = null;
+	public BillAccountInVo findById(Long id) throws Exception {
+		BillAccountInVo entity = null;
 		entity = billAccountInService.findById(id);
 		return entity;
 	}
@@ -79,8 +59,8 @@ public class BillAccountInController {
 	 * @param param
 	 */
 	@DataProvider
-	public void query(Page<BillAccountInEntity> page, Map<String, Object> param) {
-		PageInfo<BillAccountInEntity> pageInfo = billAccountInService.query(param, page.getPageNo(), page.getPageSize());
+	public void query(Page<BillAccountInVo> page, Map<String, Object> param) {
+		PageInfo<BillAccountInVo> pageInfo = billAccountInService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
@@ -88,14 +68,14 @@ public class BillAccountInController {
 	}
 
 	@DataResolver
-	public void save(BillAccountInEntity entity) {
-		BillAccountInfoEntity accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
+	public void save(BillAccountInVo entity) {
+		BillAccountInfoVo accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
 		if(null == accountEntity){
 			//创建新账户
-			BillAccountInfoEntity accountVo = new BillAccountInfoEntity();
+			BillAccountInfoVo accountVo = new BillAccountInfoVo();
 			accountVo.setCustomerId(entity.getCustomerId());
 			accountVo.setCustomerName(entity.getCustomerName());
-			String accountNo = sequenceService.getBillNoOne(BillAccountInfoEntity.class.getName(), "3131", "000000");
+			String accountNo = sequenceService.getBillNoOne(BillAccountInfoVo.class.getName(), "3131", "000000");
 			accountVo.setAccountNo(accountNo);
 			accountVo.setCreatorId(JAppContext.currentUserID());
 			
@@ -124,15 +104,15 @@ public class BillAccountInController {
 			entity.setDelFlag("0");
 			billAccountInService.save(entity);
 		} else if(entity.getConfirmStatus().equals("1")) {
-			BillAccountInfoEntity accountVo = billAccountInfoService.findByCustomerId(entity.getCustomerId()); 
-			BillAccountInfoEntity updateVo = new BillAccountInfoEntity();
+			BillAccountInfoVo accountVo = billAccountInfoService.findByCustomerId(entity.getCustomerId()); 
+			BillAccountInfoVo updateVo = new BillAccountInfoVo();
 
 			updateVo.setId(accountVo.getId());
 			BigDecimal amount = new BigDecimal(0);
 			amount =accountVo.getAmount().add(entity.getAmount());
 			updateVo.setAmount(amount);
 		
-			BillAccountInfoEntity res = billAccountInfoService.update(updateVo);
+			BillAccountInfoVo res = billAccountInfoService.update(updateVo);
 			if(null != res){
 				entity.setLastModifierId(JAppContext.currentUserID());
 				entity.setLastModifyTime(JAppContext.currentTimestamp());
@@ -149,7 +129,7 @@ public class BillAccountInController {
 	}
 
 	@DataResolver
-	public void delete(BillAccountInEntity entity) {
+	public void delete(BillAccountInVo entity) {
 		billAccountInService.delete(entity.getId());
 	}
 	

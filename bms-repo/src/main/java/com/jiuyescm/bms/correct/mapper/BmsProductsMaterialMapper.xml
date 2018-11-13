@@ -49,11 +49,24 @@
         resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
 		select a.products_mark, a.material_type, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
 		inner JOIN (
-			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId}
+			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId} and type='PMXZX'
 			GROUP BY products_mark, material_type
 		) b
 		on a.products_mark=b.products_mark and a.material_type=b.material_type and a.task_id=b.task_id and a.percent=b.percent
+		where a.task_id =#{taskId} and a.type='PMXZX'
 		GROUP BY a.products_mark,a.material_type,a.percent
+     </select>
+     
+     <select id="queyAllBwxMax" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+        select a.products_mark, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
+		inner JOIN (
+			SELECT MAX(percent) percent,products_mark, task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId} and type='BWD'
+			GROUP BY products_mark
+		) b
+		on a.products_mark=b.products_mark and a.task_id=b.task_id and a.percent=b.percent
+		where a.task_id=#{taskId} and a.type='BWD'
+		GROUP BY a.products_mark,a.percent
      </select>
      
      <select id="queyNotMax" parameterType="java.util.Map"
@@ -144,9 +157,9 @@
      </insert>
      
      <insert id="saveMaterial" parameterType="java.util.Map">
-     	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id)
+     	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id, type)
      														    
-     	 select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId} 
+     	 select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
      	 from
 			(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num1 from bms_marking_material a 
 			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
@@ -162,6 +175,24 @@
 		 on m.products_mark=n.products_mark and m.material_type=n.material_type
      </insert>
      
+     <insert id="saveBwd" parameterType="java.util.Map">
+		insert into bms_products_material_account(products_mark, material_mark, percent, task_id, type)
+		select m.products_mark,m.consumer_material_code as material_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
+		from
+			(select b.products_mark,a.consumer_material_code,COUNT(a.consumer_material_code) as num1 from biz_outstock_packmaterial a 
+			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+			INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
+			where 1=1 and a.del_flag='0' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]> and c.material_type_name='保温袋'
+			GROUP BY b.products_mark,a.consumer_material_code) m
+		LEFT JOIN
+			(select b.products_mark,COUNT(a.consumer_material_code) as num2 from biz_outstock_packmaterial a 
+			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+			INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
+			where 1=1 and a.del_flag='0' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]> and c.material_type_name='保温袋'
+			GROUP BY b.products_mark) n
+		on m.products_mark=n.products_mark
+     </insert>
+     
      <delete id="deleteMarkMaterialByWaybillNo" parameterType="java.util.Map">
      	delete from bms_marking_material where waybill_no in
      	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
@@ -171,11 +202,38 @@
      
      <update id="updateMaterialAccount" parameterType="java.util.Map">
      	 update bms_products_material_account set waybill_no=#{waybillNo,jdbcType=VARCHAR}
-		 where 1=1 
-		 and products_mark=#{productsMark,jdbcType=VARCHAR}
-		 and material_type=#{materialType,jdbcType=VARCHAR}
-		 and material_mark=#{materialMark,jdbcType=VARCHAR}
-		 and percent=#{percent,jdbcType=DOUBLE}
-		 and task_id=#{taskId,jdbcType=VARCHAR}
+		 where 1=1
+		 <if test="(productsMark != null and productsMark !='')" >
+		  	 and products_mark=#{productsMark,jdbcType=VARCHAR}
+		 </if>
+		 <if test="(materialType != null and materialType !='')" >
+		 	 and material_type=#{materialType,jdbcType=VARCHAR}		 	 
+		 </if>
+		  <if test="(materialMark != null and materialMark !='')" >
+ 			 and material_mark=#{materialMark,jdbcType=VARCHAR}
+ 		 </if>
+ 		  <if test="(percent != null and percent !='')" >
+ 			 and percent=#{percent,jdbcType=VARCHAR}
+ 		 </if>
+ 		 <if test="(taskId != null and taskId !='')" >
+ 			 and task_id=#{taskId,jdbcType=VARCHAR}
+ 		 </if>
+ 		  <if test="(type != null and type !='')" >
+ 			 and type=#{type,jdbcType=VARCHAR}
+ 		 </if>
      </update>
+     
+     <select id="queryBwdMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+     	select a.* from biz_outstock_packmaterial a 
+		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+		where b.products_mark=#{productsMark} and a.consumer_material_code=#{materialMark} and a.del_flag='0' limit 1
+     </select>
+     
+     <select id="queyNotMaxBwd" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">   
+        select * from biz_outstock_packmaterial a 
+		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+		where 1=1 and b.products_mark=#{productsMark} and a.consumer_material_code!=#{materialMark}
+		and a.del_flag='0' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]>
+     </select>
 </mapper> 
