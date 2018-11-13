@@ -659,4 +659,138 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
         }
 		return billCheckInfoVo;
 	}
+	
+	public PageInfo<BillCheckInfoVo> queryForOut(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+		try {
+			
+			long current=JAppContext.currentTimestamp().getTime();
+			
+			String overStatus="";
+			if(condition!=null && condition.get("overStatus")!=null){
+				overStatus=condition.get("overStatus").toString();
+			}
+			
+			PageInfo<BillCheckInfoEntity> pageInfo=new PageInfo<BillCheckInfoEntity>();
+			if(condition!=null && condition.get("invoiceNo")!=null && condition.get("invoiceNo")!=""){
+				//发票号不为空时，需要根据发票号去查询子票再查询主表
+				pageInfo=billCheckInfoRepository.queryByInvoiceNo(condition, pageNo, pageSize);
+	
+			}else if(condition!=null  && condition.get("followType")!=null && condition.get("followType")!=""){
+				//跟进类型不为空时，需要根据跟进类型去查询字表再查询主表
+				pageInfo=billCheckInfoRepository.queryByFollowType(condition, pageNo, pageSize);
+			}else{
+				pageInfo=billCheckInfoRepository.query(condition, pageNo, pageSize);
+			}
+			
+			PageInfo<BillCheckInfoVo> result=new PageInfo<BillCheckInfoVo>();
+	
+			PropertyUtils.copyProperties(result, pageInfo);
+			
+			List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
+			//确认金额总计
+			BigDecimal totalConfirmAmount=new BigDecimal(0);
+			//发票金额总计
+			BigDecimal totalInvoiceAmount=new BigDecimal(0);
+			//未收款金额
+			BigDecimal totalUnReceiptAmount=new BigDecimal(0);
+			//开票未回款金额
+			BigDecimal totalInvoiceUnReceiptAmount=new BigDecimal(0);
+			//已确认未开票金额
+			BigDecimal totalConfirmUnInvoiceAmount=new BigDecimal(0);
+			//收款金额
+			BigDecimal totalReceiptAmount=new BigDecimal(0);
+			
+	    	for(BillCheckInfoEntity entity : pageInfo.getList()) {
+	    		BillCheckInfoVo vo = new BillCheckInfoVo();    		
+	            PropertyUtils.copyProperties(vo, entity);
+	            //统计金额
+	            //确认金额
+	            totalConfirmAmount=totalConfirmAmount.add(vo.getConfirmAmount());
+	            //发票金额
+	            totalInvoiceAmount=totalInvoiceAmount.add(vo.getInvoiceAmount());
+	            //未收款金额
+	            totalUnReceiptAmount=totalUnReceiptAmount.add(vo.getUnReceiptAmount());
+	            //开票未回款金额
+	            totalInvoiceUnReceiptAmount=totalInvoiceUnReceiptAmount.add(vo.getInvoiceUnReceiptAmount());
+	            //已确认未回款金额
+	            totalConfirmUnInvoiceAmount=totalConfirmUnInvoiceAmount.add(vo.getConfirmUnInvoiceAmount());
+	            //收款金额
+	            totalReceiptAmount=totalReceiptAmount.add(vo.getReceiptAmount());
+	    		voList.add(vo);
+	    	}
+			
+	    	for(BillCheckInfoVo entity:voList){
+	    		entity.setTotalConfirmAmount(totalConfirmAmount);
+	    		entity.setTotalInvoiceAmount(totalInvoiceAmount);
+	    		entity.setTotalUnReceiptAmount(totalUnReceiptAmount);
+	    		entity.setTotalInvoiceUnReceiptAmount(totalInvoiceUnReceiptAmount);
+	    		entity.setTotalConfirmUnInvoiceAmount(totalConfirmUnInvoiceAmount);
+	    		entity.setTotalReceiptAmount(totalReceiptAmount);
+	    		BigDecimal m=new BigDecimal(0);
+	    		entity.setAdjustMoney(m);
+	    		//查询调整金额
+	    		Map<String, Object> param=new HashMap<String, Object>();
+	    		param.put("billCheckId", entity.getId());
+	    		BillCheckAdjustInfoEntity adjustEntity=billCheckInfoRepository.queryOneAdjust(param);
+	    		if(adjustEntity!=null){
+	    			entity.setAdjustMoney(adjustEntity.getAdjustAmount()==null?m:adjustEntity.getAdjustAmount());
+	    		}
+	    		//判断超期状态
+	    		//开票30天内:正常
+	    		//开票30天以上,小于45天:临期--包含30天
+	    		//超期:开票45天以上,包含45天;
+	    		if(entity.getUnReceiptAmount()!=null && entity.getUnReceiptAmount().compareTo(new BigDecimal(1))>0){
+	    			if("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate()!=null){
+		    			//需要开票时用开票时间去判断
+		    			long time=entity.getInvoiceDate().getTime();
+		    			
+		    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
+			    		if(days>=0 && days<30){
+			    			entity.setOverStatus("正常");
+			    		}else if(days>=30 && days<45){
+			    			entity.setOverStatus("临期");
+			    		}else if(days>=45){
+			    			entity.setOverStatus("超期");
+			    		}	
+		    			
+		    		}else if("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate()!=null){
+		    			long time=entity.getConfirmDate().getTime();
+		    			
+		    			int days = (int) ((current - time)/(1000 * 60 * 60 * 24));
+			    		if(days>=0 && days<30){
+			    			entity.setOverStatus("正常");
+			    		}else if(days>=30 && days<45){
+			    			entity.setOverStatus("临期");
+			    		}else if(days>=45){
+			    			entity.setOverStatus("超期");
+			    		}	
+		    		}
+	    		}
+	    		
+	    		//设置预分配金额和待催款金额
+	    		if(getPreMoney().containsKey(entity.getInvoiceName()+"&"+entity.getCreateMonth()+"&"+entity.getBillName())){
+	    			BillCheckInfoEntity amountVo=getPreMoney().get((entity.getInvoiceName()+"&"+entity.getCreateMonth()+"&"+entity.getBillName()));
+	    			entity.setPreDistibutionAmount(amountVo.getPreDistibutionAmount());
+	    			entity.setTbDunAmount(amountVo.getTbDunAmount());
+	    		}
+	    	}
+	    	List<BillCheckInfoVo> resultList = new ArrayList<BillCheckInfoVo>();
+	    	if(StringUtils.isNotBlank(overStatus)){
+	    		for(BillCheckInfoVo entity:voList){
+		    		if(overStatus.equals(entity.getOverStatus())){
+		    			resultList.add(entity);
+		    		}
+		    	}
+	    		result.setList(resultList);
+	    		return result;
+	    	}
+	    	
+	    	result.setList(voList);
+			return result;
+		} catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return null;
+	}
 }
