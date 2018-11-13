@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -26,6 +28,7 @@ import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
 import com.jiuyescm.bms.billcheck.vo.BillAccountInfoVo;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.exception.BizException;
 /**
  * 
  * @author stevenl
@@ -67,6 +70,7 @@ public class BillAccountInController {
 		}
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@DataResolver
 	public void save(BillAccountInVo entity) {
 		BillAccountInfoVo accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
