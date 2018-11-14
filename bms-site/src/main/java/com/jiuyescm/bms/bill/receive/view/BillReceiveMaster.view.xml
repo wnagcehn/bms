@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillReceiveMasterEntity">
+      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="taskRate">
+        <Property name="label">导入进度</Property>
+      </PropertyDef>
+      <PropertyDef name="taskStatus">
+        <Property name="label">导入状态</Property>
+      </PropertyDef>
+      <PropertyDef name="amount">
+        <Property name="label">导入金额</Property>
+      </PropertyDef>
+      <PropertyDef name="adjustAmount">
+        <Property name="label">调整金额</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorId">
+        <Property name="label">创建人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">任务创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="finishTime">
+        <Property name="label">任务处理完成时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierId">
+        <Property name="label">修改人ID</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">最后修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="taskId">
+        <Property name="label">任务ID</Property>
+      </PropertyDef>
+      <PropertyDef name="originFileName">
+        <Property name="label">原文件名称</Property>
+      </PropertyDef>
+      <PropertyDef name="originFilePath">
+        <Property name="label">原文件路径</Property>
+      </PropertyDef>
+      <PropertyDef name="resultFileName">
+        <Property name="label">结果文件名称</Property>
+      </PropertyDef>
+      <PropertyDef name="resultFilePath">
+        <Property name="label">结果文件路径</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillReceiveMasterEntityQuery">
+      <PropertyDef name="invoiceName">
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="taskStatus">
+        <Property name="label">导入状态</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createEndTime">
+        <Property name="label">~</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthStart">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonthEnd">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">-</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBillReceiveMasterEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="import">
+        <Property name="caption">导入</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -220px -240px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBillReceiveMasterEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">调整金额</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBillReceiveMasterEntity">
+      <Property name="dataType">[dtBillReceiveMasterEntity]</Property>
+      <Property name="dataProvider">billReceiveMasterController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBillReceiveMasterEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBillReceiveMasterEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBillReceiveMasterEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <Container>
+      <AutoForm id="queryForm">
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsBillReceiveMasterEntityQuery</Property>
+        <AutoFormElement>
+          <Property name="name">createMonthStart</Property>
+          <Property name="property">createMonthStart</Property>
+          <Property name="labelWidth">90</Property>
+          <Property name="showHint">false</Property>
+          <Property name="editorWidth">100</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createMonthEnd</Property>
+          <Property name="property">createMonthEnd</Property>
+          <Property name="labelWidth">10</Property>
+          <Property name="editorWidth">100</Property>
+          <Property name="showHint">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createTime</Property>
+          <Property name="property">createTime</Property>
+          <Property name="showHint">false</Property>
+          <Property name="labelWidth">90</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createEndTime</Property>
+          <Property name="property">createEndTime</Property>
+          <Property name="showHint">false</Property>
+          <Property name="labelWidth">10</Property>
+          <Property name="editorWidth">130</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">creator</Property>
+          <Property name="property">creator</Property>
+          <Property name="showHint">false</Property>
+          <Property name="labelWidth">90</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement layoutConstraint="colSpan:2">
+          <Property name="name">invoiceName</Property>
+          <Property name="property">invoiceName</Property>
+          <Property name="showHint">false</Property>
+          <Property name="labelWidth">90</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement layoutConstraint="colSpan:2">
+          <Property name="name">billName</Property>
+          <Property name="property">billName</Property>
+          <Property name="showHint">false</Property>
+          <Property name="labelWidth">90</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">taskStatus</Property>
+          <Property name="property">taskStatus</Property>
+          <Property name="showHint">false</Property>
+          <Property name="labelWidth">90</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <Container>
+      <DataGrid id="DataGrid">
+        <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+        <Property name="stretchColumnsMode">auto</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFooter">true</Property>
+        <IndicatorColumn/>
+        <RowNumColumn/>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="invoiceName">
+          <Property name="property">invoiceName</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="billName">
+          <Property name="property">billName</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="taskRate">
+          <Property name="property">taskRate</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="taskStatus">
+          <Property name="property">taskStatus</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="amount">
+          <ClientEvent name="onRenderCell">arg.dom.style.color = &quot;red&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+          <Property name="property">amount</Property>
+          <Property name="summaryType">sum</Property>
+          <Property name="width">100</Property>
+          <Property name="align">right</Property>
+        </DataColumn>
+        <DataColumn name="adjustAmount">
+          <ClientEvent name="onRenderCell">arg.dom.style.color = &quot;red&quot;;&#xD;
+arg.processDefault = true;</ClientEvent>
+          <Property name="property">adjustAmount</Property>
+          <Property name="summaryType">sum</Property>
+          <Property name="width">100</Property>
+          <Property name="align">right</Property>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="creatorId">
+          <Property name="property">creatorId</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+        <DataColumn name="finishTime">
+          <Property name="property">finishTime</Property>
+          <Property name="width">130</Property>
+        </DataColumn>
+        <DataColumn name="lastModifier">
+          <Property name="property">lastModifier</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="lastModifierId">
+          <Property name="property">lastModifierId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="lastModifyTime">
+          <Property name="property">lastModifyTime</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="delFlag">
+          <Property name="property">delFlag</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="taskId">
+          <Property name="property">taskId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="originFileName">
+          <Property name="property">originFileName</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="originFilePath">
+          <Property name="property">originFilePath</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="resultFileName">
+          <Property name="property">resultFileName</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="resultFilePath">
+          <Property name="property">resultFilePath</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBillReceiveMasterEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">调整金额</Property>
+      <Property name="center">true</Property>
+      <Property name="height">180</Property>
+      <Property name="width">300</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillReceiveMasterEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+          <Property name="dataType">dtBillReceiveMasterEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">amount</Property>
+            <Property name="property">amount</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustAmount</Property>
+            <Property name="property">adjustAmount</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBillReceiveMasterEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">billReceiveMasterController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>
