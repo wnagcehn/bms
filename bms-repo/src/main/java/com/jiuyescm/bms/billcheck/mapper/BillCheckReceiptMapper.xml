@@ -165,7 +165,7 @@
     </insert>
 
     <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity">
-        update bill_check_receipt 
+        update bill_check_receipt
 		<set >
 
 <if test="billCheckId != null" >bill_check_id=#{billCheckId,jdbcType=INTEGER},</if>
@@ -178,6 +178,7 @@
 <if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 <if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 <if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+<if test="remark != null" >receipt_type=#{receiptType,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>

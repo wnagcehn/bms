@@ -105,7 +105,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		billCheckReceiptEntity.setReceiptDate(creTime);
 		billCheckReceiptEntity.setCreator(creator);
 		billCheckReceiptEntity.setCreatorId(creatorId);
-		billCheckReceiptEntity.setReceiptType("预收款冲抵");
+		billCheckReceiptEntity.setReceiptType("预收款");
 		billCheckReceiptEntity.setDelFlag("0");
 		//日志信息
 		BillCheckLogEntity log = new BillCheckLogEntity();

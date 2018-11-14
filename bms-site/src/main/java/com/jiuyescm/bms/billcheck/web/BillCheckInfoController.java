@@ -796,7 +796,7 @@ public class BillCheckInfoController{
 		receiptVo.setLastModifyTime(creTime);
 		receiptVo.setDelFlag("1");
 		
-		if(receiptVo.getReceiptType().equals("预收款冲抵")){
+		if(receiptVo.getReceiptType().equals("预收款")){
 			BigDecimal receiptAmount = receiptVo.getReceiptAmount();
 			//查询账单表
 			Map<String, Object> conditionCheckInfo =new HashMap<String, Object>();
@@ -834,36 +834,38 @@ public class BillCheckInfoController{
 			log.setLogType(0);
 			log.setOperateDesc("回款删除:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
-		}
-		
-		//查询账单
-		Map<String, Object> condition=new HashMap<String, Object>();
-		condition.put("id", receiptVo.getBillCheckId());
-		BillCheckInfoVo bInfoVo=billCheckInfoService.queryOne(condition);
+			//修改回款表
+			billCheckReceiptService.update(receiptVo);
+		}else{
+			int result=billCheckReceiptService.update(receiptVo);
+			if(result<=0){
+				return "删除回款失败";
+			}
 			
-		String groupName=bmsGroupUserService.checkExistGroupName(creatorId);
+			//查询账单
+			Map<String, Object> condition=new HashMap<String, Object>();
+			condition.put("id", receiptVo.getBillCheckId());
+			BillCheckInfoVo bInfoVo=billCheckInfoService.queryOne(condition);
+			
+			String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
 
-		BillCheckLogVo logVo=new BillCheckLogVo();
-		logVo.setBillStatusCode(bInfoVo.getBillStatus());
-		logVo.setBillCheckId(receiptVo.getBillCheckId());
-		logVo.setCreator(JAppContext.currentUserName());
-		logVo.setCreatorId(JAppContext.currentUserID());
-		logVo.setCreateTime(JAppContext.currentTimestamp());
-		logVo.setDeptName(groupName);
-		logVo.setDelFlag("0");
-		logVo.setOperateDesc("删除回款");
-		logVo.setLogType(0);
-		int result=billCheckReceiptService.update(receiptVo);
-		if(result<=0){
-			return "删除回款失败";
+			BillCheckLogVo logVo=new BillCheckLogVo();
+			logVo.setBillStatusCode(bInfoVo.getBillStatus());
+			logVo.setBillCheckId(receiptVo.getBillCheckId());
+			logVo.setCreator(JAppContext.currentUserName());
+			logVo.setCreatorId(JAppContext.currentUserID());
+			logVo.setCreateTime(JAppContext.currentTimestamp());
+			logVo.setDeptName(groupName);
+			logVo.setDelFlag("0");
+			logVo.setOperateDesc("删除回款");
+			logVo.setLogType(0);
+			try {
+				billCheckLogService.addBillCheckLog(logVo);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		try {
-			billCheckLogService.addBillCheckLog(logVo);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		return "删除回款成功";
 	}
 	
