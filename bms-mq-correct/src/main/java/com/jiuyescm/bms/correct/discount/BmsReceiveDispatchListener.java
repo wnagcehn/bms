@@ -21,13 +21,10 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
-import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
-import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
-import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.discount.service.IBmsDiscountService;
@@ -488,8 +485,18 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					queryVo.setCarrierServiceType("");
 					queryVo.setWarehouseCode("");
 					
-					logger.info("查询合同在线折扣报价参数"+JSONObject.fromObject(queryVo));
-					configVo=contractDiscountService.queryDiscount(queryVo);
+					logger.info("查询合同在线折扣报价参数"+JSONObject.fromObject(queryVo));	
+					try {
+						configVo=contractDiscountService.queryDiscount(queryVo);
+					} catch (Exception e) {
+						// TODO: handle exception
+						logger.info("合同在线查询折扣报价失败"+e.getMessage());
+						task.setRemark("合同在线查询折扣报价失败"+e.getMessage());
+						task.setTaskRate(80);
+						task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+						bmsDiscountAsynTaskService.update(task);	
+						return;
+					}					
 					logger.info("查询合同在线折扣报价"+JSONObject.fromObject(configVo));
 				}
 				
