@@ -220,6 +220,7 @@ public class BillCheckReceiptImportController extends HttpNewImport<BillCheckRec
 				vo.setReceiptAmount(newMoney);
 			}
 			
+			vo.setReceiptType("回款导入");
 			vo.setCreatorId(JAppContext.currentUserID());
 			vo.setCreator(JAppContext.currentUserName());
 			vo.setCreateTime(JAppContext.currentTimestamp());

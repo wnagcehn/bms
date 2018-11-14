@@ -142,7 +142,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			logger.info("没有查询到折扣任务记录;");
 			return;
 		}
-		
+
 		if("STORAGE".equals(task.getBizTypecode())){
 			//仓储折扣
 			discountStorage(task);
@@ -218,7 +218,17 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					queryVo.setWarehouseCode("");
 					
 					logger.info("查询合同在线折扣报价参数"+JSONObject.fromObject(queryVo));
-					configVo=contractDiscountService.queryDiscount(queryVo);
+					try {
+						configVo=contractDiscountService.queryDiscount(queryVo);
+					} catch (Exception e) {
+						// TODO: handle exception
+						logger.info("合同在线查询折扣报价失败"+e.getMessage());
+						task.setRemark("合同在线查询折扣报价失败"+e.getMessage());
+						task.setTaskRate(80);
+						task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+						bmsDiscountAsynTaskService.update(task);	
+						return;
+					}					
 					logger.info("查询合同在线折扣报价"+JSONObject.fromObject(configVo));
 				}
 				
