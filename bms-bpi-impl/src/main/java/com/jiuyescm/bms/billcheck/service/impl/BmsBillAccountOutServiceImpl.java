@@ -81,9 +81,9 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		String accountNo =  (String) param.get("accountNo");
 		int idInt =  (int) param.get("id");
 		Long id = Long.valueOf(idInt);
-		Timestamp creTime = JAppContext.currentTimestamp();
-		String creator = JAppContext.currentUserName();
-		String creatorId = JAppContext.currentUserID();
+		Timestamp creTime = (Timestamp) param.get("creTime");
+		String creator = (String) param.get("creator");
+		String creatorId =(String) param.get("creatorId");
 		
 		//查询账户表
 		Map<String,Object> conditionAccount = new HashMap<String,Object>();
@@ -100,11 +100,13 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		//回款信息
 		BillCheckReceiptEntity billCheckReceiptEntity = new BillCheckReceiptEntity();
 		List<BillCheckReceiptEntity> list=new ArrayList<BillCheckReceiptEntity>();
+		billCheckReceiptEntity.setBillCheckId(idInt);
 		billCheckReceiptEntity.setCreateTime(creTime);
 		billCheckReceiptEntity.setReceiptDate(creTime);
 		billCheckReceiptEntity.setCreator(creator);
 		billCheckReceiptEntity.setCreatorId(creatorId);
 		billCheckReceiptEntity.setReceiptType("预收款冲抵");
+		billCheckReceiptEntity.setDelFlag("0");
 		//日志信息
 		BillCheckLogEntity log = new BillCheckLogEntity();
 		log.setBillCheckId(idInt);
@@ -145,7 +147,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			list.add(billCheckReceiptEntity);
 			billCheckReceiptRepository.saveList(list);
 			//插入日志表
-			log.setOperateDesc("冲抵成功，金额为"+unReceiptAmount);
+			log.setOperateDesc("回款增加:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
 			status = "冲抵成功";
 		}else{
@@ -165,7 +167,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			list.add(billCheckReceiptEntity);
 			billCheckReceiptRepository.saveList(list);
 			//插入日志表
-			log.setOperateDesc("冲抵成功，金额为"+amount);
+			log.setOperateDesc("回款增加:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
 			status = "部分冲抵，还有未收款余额";
 		}

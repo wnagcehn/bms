@@ -796,11 +796,6 @@ public class BillCheckInfoController{
 		receiptVo.setLastModifyTime(creTime);
 		receiptVo.setDelFlag("1");
 		
-		int result=billCheckReceiptService.update(receiptVo);
-		if(result<=0){
-			return "删除回款失败";
-		}
-		
 		if(receiptVo.getReceiptType().equals("预收款冲抵")){
 			BigDecimal receiptAmount = receiptVo.getReceiptAmount();
 			//查询账单表
@@ -809,7 +804,7 @@ public class BillCheckInfoController{
 			BillCheckInfoVo billCheckInfoVo = billCheckInfoService.query(conditionCheckInfo, 1, 20).getList().get(0);
 			//查询账户表
 			Map<String, Object> conditionAccountInfo =new HashMap<String, Object>();
-			conditionAccountInfo.put("accountNo", billCheckInfoVo.getInvoiceName());
+			conditionAccountInfo.put("customerName", billCheckInfoVo.getInvoiceName());
 			BillAccountInfoVo accountVo = bmsAccountInfoService.query(conditionAccountInfo, 1, 20).getList().get(0);
 			//修改账单表
 			billCheckInfoVo.setUnReceiptAmount(billCheckInfoVo.getUnReceiptAmount().add(receiptAmount));
@@ -837,7 +832,7 @@ public class BillCheckInfoController{
 			log.setBillStatusCode(billCheckInfoVo.getBillStatus());
 			log.setDelFlag("0");
 			log.setLogType(0);
-			log.setOperateDesc("预收款冲抵");
+			log.setOperateDesc("回款删除:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
 		}
 		
@@ -845,8 +840,7 @@ public class BillCheckInfoController{
 		Map<String, Object> condition=new HashMap<String, Object>();
 		condition.put("id", receiptVo.getBillCheckId());
 		BillCheckInfoVo bInfoVo=billCheckInfoService.queryOne(condition);
-		
-		
+			
 		String groupName=bmsGroupUserService.checkExistGroupName(creatorId);
 
 		BillCheckLogVo logVo=new BillCheckLogVo();
@@ -859,6 +853,10 @@ public class BillCheckInfoController{
 		logVo.setDelFlag("0");
 		logVo.setOperateDesc("删除回款");
 		logVo.setLogType(0);
+		int result=billCheckReceiptService.update(receiptVo);
+		if(result<=0){
+			return "删除回款失败";
+		}
 		try {
 			billCheckLogService.addBillCheckLog(logVo);
 		} catch (Exception e) {

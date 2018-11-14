@@ -19,7 +19,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, bill_check_id, sort_no, receipt_date,receipt_amount,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag, remark
+        id, bill_check_id, sort_no, receipt_date,receipt_amount,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag, remark, receipt_type
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -160,7 +160,7 @@
 #{lastModifyTime,jdbcType=TIMESTAMP}, 
 #{delFlag,jdbcType=VARCHAR}, 
 #{remark,jdbcType=VARCHAR},
-#{receipt_type,jdbcType=VARCHAR}
+#{receiptType,jdbcType=VARCHAR}
         )
     </insert>
 
