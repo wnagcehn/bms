@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +18,11 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.BillCheckReceiptEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountInfoRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountOutRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
+import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -40,6 +43,9 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	
 	@Autowired
     private IBillCheckInfoRepository billCheckInfoRepository;
+	
+	@Autowired
+    private IBillCheckReceiptRepository billCheckReceiptRepository;
 
 	@Override
 	public PageInfo<BillAccountOutVo> query(Map<String, Object> condition,
@@ -70,6 +76,9 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		String accountNo =  (String) param.get("accountNo");
 		int idInt =  (int) param.get("id");
 		Long id = Long.valueOf(idInt);
+		Timestamp creTime = JAppContext.currentTimestamp();
+		String creator = JAppContext.currentUserName();
+		String creatorId = JAppContext.currentUserID();
 		
 		//查询账户表
 		Map<String,Object> conditionAccount = new HashMap<String,Object>();
@@ -85,13 +94,21 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		BillCheckInfoEntity check = billCheckInfoRepository.query(conditionCheck,1,20).getList().get(0);
 		//查询当前账单未收款金额
 		BigDecimal unReceiptAmount = check.getUnReceiptAmount();
+		//回款信息
+		BillCheckReceiptEntity billCheckReceiptEntity = new BillCheckReceiptEntity();
+		List<BillCheckReceiptEntity> list=new ArrayList<BillCheckReceiptEntity>();
+		billCheckReceiptEntity.setCreateTime(creTime);
+		billCheckReceiptEntity.setReceiptDate(creTime);
+		billCheckReceiptEntity.setCreator(creator);
+		billCheckReceiptEntity.setCreatorId(creatorId);
+		billCheckReceiptEntity.setReceiptType("预收款冲抵");
 		
 		BillAccountOutEntity entity = new BillAccountOutEntity();
 		entity.setAccountNo(accountNo);
 		entity.setBillCheckId(idInt);
-		entity.setCreateTime(JAppContext.currentTimestamp());
-		entity.setCreator(JAppContext.currentUserName());
-		entity.setCreatorId(JAppContext.currentUserID());
+		entity.setCreateTime(creTime);
+		entity.setCreator(creator);
+		entity.setCreatorId(creatorId);
 		entity.setDelFlag("0");
 		entity.setOutType("1");
 		
@@ -111,6 +128,10 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			BigDecimal zero = new BigDecimal(zeroInt);
 			check.setUnReceiptAmount(zero);
 			billCheckInfoRepository.update(check);
+			//插入回款表
+			billCheckReceiptEntity.setReceiptAmount(unReceiptAmount);
+			list.add(billCheckReceiptEntity);
+			billCheckReceiptRepository.saveList(list);	
 			status = "冲抵成功";
 		}else{
 			//插入支出表
@@ -123,7 +144,11 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			billAccountInfoRepository.update(account);
 			//修改账单表
 			check.setUnReceiptAmount(unReceiptAmount.subtract(amount));
-			billCheckInfoRepository.update(check);		
+			billCheckInfoRepository.update(check);
+			//插入回款表
+			billCheckReceiptEntity.setReceiptAmount(amount);
+			list.add(billCheckReceiptEntity);
+			billCheckReceiptRepository.saveList(list);
 			status = "部分冲抵，还有未收款余额";
 		}
 

@@ -24,7 +24,7 @@ public class BillAccountDetailController {
 	
 	@DataProvider  
 	public void queryIn(Page<BillAccountInVo> page,Map<String,Object> parameter){
-		
+		parameter.put("confirmStatus", 1);
 		PageInfo<BillAccountInVo> tmpPageInfo = billAccountInService.query(parameter, page.getPageNo(),page.getPageSize());
 		if (tmpPageInfo != null) {
 			page.setEntities(tmpPageInfo.getList());
