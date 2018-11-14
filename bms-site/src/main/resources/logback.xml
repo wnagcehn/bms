@@ -102,7 +102,7 @@
     	<appender-ref ref="DORADO"/>
     </logger>
 	<!-- <logger name="dao" level="debug"/> -->
-	<logger name="dao" level="info"/>
+	<logger name="dao" level="debug"/>
     <!--===============================  日志输出: 默认主业务日志 ======================================-->
     <root level="info">
         <appender-ref ref="APP"/>
