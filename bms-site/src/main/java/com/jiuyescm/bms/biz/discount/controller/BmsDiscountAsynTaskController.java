@@ -190,6 +190,9 @@ public class BmsDiscountAsynTaskController {
 				queryVo.setCustomerId(entity.getCustomerId());
 				queryVo.setSettlementTime(entity.getCreateMonth());
 				queryVo.setBizTypeCode(entity.getBizTypecode());
+				if("DISPATCH".equals(entity.getBizTypecode())){
+					queryVo.setBizTypeCode("DISTRIBUTION");
+				}
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
 				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));

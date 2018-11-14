@@ -141,9 +141,11 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		}
 
 		if("STORAGE".equals(task.getBizTypecode())){
+			logger.info("进入仓储折扣计算");
 			//仓储折扣
 			discountStorage(task);
 		}else if("DISPATCH".equals(task.getBizTypecode())){
+			logger.info("进入配送折扣计算");
 			//配送折扣
 			discountDispatch(task);
 		}
@@ -168,6 +170,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if("wh_b2c_work".equals(task.getSubjectCode())){
 				condition.put("tempretureType", "tempreture");
 			}
+			logger.info("查询费用和统计的参数"+JSONObject.fromObject(condition));		
 			List<FeesReceiveStorageEntity> feeList=feesReceiveStorageService.queryCalculateFail(condition);
 			if(feeList.size()>0){
 				logger.info("该商家存在计算失败的费用");
@@ -197,7 +200,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
 				queryVo.setCustomerId(task.getCustomerId());
 				queryVo.setSettlementTime(task.getCreateMonth());
+				logger.info("查询合同在线服务订购号的参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
+				logger.info("查询合同在线服务订购号的结果"+JSONObject.fromObject(disCountVoList));
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId(task.getSubjectCode());
@@ -395,6 +400,10 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			condition.put("endTime", task.getEndDate());
 			condition.put("customerId", task.getCustomerId());
 			condition.put("carrierId", task.getCarrierId());
+			
+			logger.info("查询费用和统计的参数"+JSONObject.fromObject(condition));		
+
+			
 			List<BizDispatchBillEntity> bizList=bizDispatchBillService.queryNotCalculate(condition);
 			if(bizList.size()>0){
 				logger.info("该商家存在未计算或待重算的业务数据");
@@ -426,7 +435,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				condition.put("contractTypeCode", "CUSTOMER_CONTRACT");
 				condition.put("bizTypeCode", "DISPATCH");
 				condition.put("subjectId", task.getSubjectCode());
+				logger.info("查询签约折扣服务的参数"+JSONObject.fromObject(condition));
 				PriceContractDiscountItemEntity item=priceContractDiscountService.query(condition);
+				logger.info("查询签约折扣服务的结果"+JSONObject.fromObject(item));
 				if(item==null){
 					logger.info("该商家未签约折扣服务");
 					task.setRemark("该商家未签约折扣服务");
@@ -442,6 +453,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				condition=new HashMap<String,Object>();
 				condition.put("templateCode", item.getTemplateCode());
 				template=bmsQuoteDiscountTemplateService.queryOne(condition);
+				logger.info("查询签约折扣模板的结果"+JSONObject.fromObject(template));
 				if(template==null){
 					logger.info("未查询到折扣报价模板");
 					task.setRemark("未查询到折扣报价模板");
@@ -468,7 +480,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				queryVo.setCustomerId(task.getCustomerId());
 				queryVo.setSettlementTime(task.getCreateMonth());
 				queryVo.setBizTypeCode("");
+				logger.info("查询合同在线服务订购号的参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
+				logger.info("查询合同在线服务订购号的结果"+JSONObject.fromObject(disCountVoList));
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId("");
@@ -518,6 +532,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			condition.put("endTime", task.getEndDate());
 			condition.put("customerId", task.getCustomerId());
 			condition.put("carrierId", task.getCarrierId());
+			logger.info("更新折扣费用表的参数"+JSONObject.fromObject(condition));
 			int updateResult=bmsDiscountService.updateFeeDiscountTask(condition);
 			if(updateResult<=0){
 				logger.info("更新taskId到折扣费用表中");
