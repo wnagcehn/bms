@@ -950,6 +950,7 @@ public class BuinessDataExportController extends BaseController {
 		headMapDict.put("carrierCalStatus", "运费计算状态");
 		headMapDict.put("carrierRemark", "运费计算备注");
 		headMapDict.put("orderOperatorAmount", "操作费");
+		headMapDict.put("operateAmount", "折扣后操作费");
 		headMapDict.put("orderCalStatus", "操作费计算状态");
 		headMapDict.put("orderRemark", "操作费计算备注");
 		headMapDict.put("dutyType", "责任方");
@@ -971,6 +972,7 @@ public class BuinessDataExportController extends BaseController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		double yunfei = 0d;
 		double caozao = 0d;
+		double caozuo = 0d;
 		for (FeesReceiveDispatchEntity entity : dataList) {
 			Map<String, Object> map = Maps.newHashMap();
 			map.put("warehouseCode", entity.getWarehouseName());
@@ -1000,6 +1002,7 @@ public class BuinessDataExportController extends BaseController {
 			map.put("orderOperatorAmount",
 					entity.getOrderOperatorAmount() == null ? 0 : entity
 							.getOrderOperatorAmount());
+			map.put("operateAmount", entity.getOperateAmount() == null ? 0 : entity.getOperateAmount());
 			map.put("orderCalStatus", getCalInfo(entity.getStorageCal()));
 			map.put("orderRemark", entity.getStorageRemark());
 			map.put("dutyType", entity.getDutyType());
@@ -1008,11 +1011,13 @@ public class BuinessDataExportController extends BaseController {
 			yunfei = yunfei + (entity.getAmount() == null ? 0 : entity.getAmount());
 			caozao = caozao
 					+ Double.valueOf(entity.getOrderOperatorAmount() == null ? "0" : entity.getOrderOperatorAmount());
+			caozuo = caozuo + (entity.getOperateAmount() == null ? 0 : entity.getOperateAmount());
 		}
 		Map<String, Object> finalMap = Maps.newHashMap();
 		finalMap.put("continuePrice", "合计金额：");
 		finalMap.put("amount", yunfei);
 		finalMap.put("orderOperatorAmount", caozao);
+		finalMap.put("operateAmount", caozuo);
 		list.add(finalMap);
 		return list;
 	}
