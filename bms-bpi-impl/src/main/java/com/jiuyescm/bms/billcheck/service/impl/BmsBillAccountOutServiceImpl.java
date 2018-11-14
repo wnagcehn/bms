@@ -18,10 +18,12 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.BillCheckReceiptEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountInfoRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountOutRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
+import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
@@ -46,6 +48,9 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	
 	@Autowired
     private IBillCheckReceiptRepository billCheckReceiptRepository;
+	
+	@Autowired
+    private IBillCheckLogRepository billCheckLogRepository;
 
 	@Override
 	public PageInfo<BillAccountOutVo> query(Map<String, Object> condition,
@@ -102,7 +107,16 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		billCheckReceiptEntity.setCreator(creator);
 		billCheckReceiptEntity.setCreatorId(creatorId);
 		billCheckReceiptEntity.setReceiptType("预收款冲抵");
-		
+		//日志信息
+		BillCheckLogEntity log = new BillCheckLogEntity();
+		log.setBillCheckId(idInt);
+		log.setCreateTime(creTime);
+		log.setCreator(creator);
+		log.setCreatorId(creatorId);
+		log.setBillStatusCode(check.getBillStatus());
+		log.setDelFlag("0");
+		log.setLogType(0);
+		//支出信息
 		BillAccountOutEntity entity = new BillAccountOutEntity();
 		entity.setAccountNo(accountNo);
 		entity.setBillCheckId(idInt);
@@ -131,7 +145,10 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			//插入回款表
 			billCheckReceiptEntity.setReceiptAmount(unReceiptAmount);
 			list.add(billCheckReceiptEntity);
-			billCheckReceiptRepository.saveList(list);	
+			billCheckReceiptRepository.saveList(list);
+			//插入日志表
+			log.setOperateDesc("冲抵成功，金额为"+unReceiptAmount);
+			billCheckLogRepository.addCheckLog(log);
 			status = "冲抵成功";
 		}else{
 			//插入支出表
@@ -149,6 +166,9 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			billCheckReceiptEntity.setReceiptAmount(amount);
 			list.add(billCheckReceiptEntity);
 			billCheckReceiptRepository.saveList(list);
+			//插入日志表
+			log.setOperateDesc("冲抵成功，金额为"+amount);
+			billCheckLogRepository.addCheckLog(log);
 			status = "部分冲抵，还有未收款余额";
 		}
 
