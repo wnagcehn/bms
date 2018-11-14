@@ -1156,7 +1156,7 @@ public class BillCheckInfoController{
 		 Cell cell18 = row0.createCell(18);
 		 cell18.setCellValue("项目管理员");
 		 cell18.setCellStyle(style);
-		 Cell cell19 = row0.createCell(12);
+		 Cell cell19 = row0.createCell(19);
 		 cell19.setCellValue("责任部门名称");
 		 cell19.setCellStyle(style);
 		 Cell cell20 = row0.createCell(20);
