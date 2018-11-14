@@ -17,4 +17,7 @@ public interface IBmsAccountOutService {
 	//账单冲抵
 	String save(Map<String, Object> param);
 	
+	//新增冲抵表记录
+	void saveInfo(BillAccountOutVo vo);
+	
 }

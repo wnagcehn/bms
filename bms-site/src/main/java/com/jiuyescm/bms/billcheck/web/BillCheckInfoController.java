@@ -43,10 +43,19 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.check.service.IBillCheckFollowService;
 import com.jiuyescm.bms.bill.check.vo.BillCheckInfoFollowVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
+import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
+import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
+import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
+import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInvoiceService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckLogService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckReceiptService;
+import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
+import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
+import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
+import com.jiuyescm.bms.billcheck.vo.BillAccountInfoVo;
+import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo;
@@ -108,8 +117,19 @@ public class BillCheckInfoController{
 	@Autowired
 	private ICustomerService customerService;
 	
+	@Autowired
+	private IBmsBillAccountInService bmsBillAccountInService;
+	
+	@Autowired
+	private IBmsAccountInfoService bmsAccountInfoService;
+	
+	@Autowired
+	private IBmsAccountOutService bmsAccountOutService;
+	
+	@Autowired
+    private IBillCheckLogRepository billCheckLogRepository;
+	
 	final int pageSize = 10000;
-
 	
 	private static final Logger logger = Logger.getLogger(BillCheckInfoController.class.getName());
 
@@ -768,13 +788,57 @@ public class BillCheckInfoController{
 	 */
 	@DataResolver
 	public String deleteReceipt(BillCheckReceiptVo receiptVo){
-		receiptVo.setLastModifier(JAppContext.currentUserName());
-		receiptVo.setLastModifyTime(JAppContext.currentTimestamp());
+		Timestamp creTime = JAppContext.currentTimestamp();
+		String creator = JAppContext.currentUserName();
+		String creatorId = JAppContext.currentUserID();
+		
+		receiptVo.setLastModifier(creator);
+		receiptVo.setLastModifyTime(creTime);
 		receiptVo.setDelFlag("1");
 		
 		int result=billCheckReceiptService.update(receiptVo);
 		if(result<=0){
 			return "删除回款失败";
+		}
+		
+		if(receiptVo.getReceiptType().equals("预收款冲抵")){
+			BigDecimal receiptAmount = receiptVo.getReceiptAmount();
+			//查询账单表
+			Map<String, Object> conditionCheckInfo =new HashMap<String, Object>();
+			conditionCheckInfo.put("id", receiptVo.getBillCheckId());
+			BillCheckInfoVo billCheckInfoVo = billCheckInfoService.query(conditionCheckInfo, 1, 20).getList().get(0);
+			//查询账户表
+			Map<String, Object> conditionAccountInfo =new HashMap<String, Object>();
+			conditionAccountInfo.put("accountNo", billCheckInfoVo.getInvoiceName());
+			BillAccountInfoVo accountVo = bmsAccountInfoService.query(conditionAccountInfo, 1, 20).getList().get(0);
+			//修改账单表
+			billCheckInfoVo.setUnReceiptAmount(billCheckInfoVo.getUnReceiptAmount().add(receiptAmount));
+			billCheckInfoService.update(billCheckInfoVo);
+			//修改账户表
+			accountVo.setAmount(accountVo.getAmount().add(receiptAmount));
+			bmsAccountInfoService.update(accountVo);
+			//插入支出表
+			BillAccountOutVo billAccountOutVo = new BillAccountOutVo();
+			billAccountOutVo.setAccountNo(billCheckInfoVo.getInvoiceName());
+			billAccountOutVo.setBillCheckId(receiptVo.getBillCheckId());
+			billAccountOutVo.setCreateTime(creTime);
+			billAccountOutVo.setCreator(creator);
+			billAccountOutVo.setCreatorId(creatorId);
+			billAccountOutVo.setDelFlag("0");
+			billAccountOutVo.setOutType("1");
+			billAccountOutVo.setAmount(receiptAmount.negate());
+			bmsAccountOutService.saveInfo(billAccountOutVo);
+			//插入日志表
+			BillCheckLogEntity log = new BillCheckLogEntity();
+			log.setBillCheckId(receiptVo.getBillCheckId());
+			log.setCreateTime(creTime);
+			log.setCreator(creator);
+			log.setCreatorId(creatorId);
+			log.setBillStatusCode(billCheckInfoVo.getBillStatus());
+			log.setDelFlag("0");
+			log.setLogType(0);
+			log.setOperateDesc("预收款冲抵");
+			billCheckLogRepository.addCheckLog(log);
 		}
 		
 		//查询账单
@@ -783,7 +847,7 @@ public class BillCheckInfoController{
 		BillCheckInfoVo bInfoVo=billCheckInfoService.queryOne(condition);
 		
 		
-		String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
+		String groupName=bmsGroupUserService.checkExistGroupName(creatorId);
 
 		BillCheckLogVo logVo=new BillCheckLogVo();
 		logVo.setBillStatusCode(bInfoVo.getBillStatus());

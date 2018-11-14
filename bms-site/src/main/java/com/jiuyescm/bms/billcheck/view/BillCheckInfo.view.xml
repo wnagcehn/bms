@@ -509,6 +509,9 @@
         <Property name="label">回款金额</Property>
         <Property name="dataType">BigDecimal</Property>
       </PropertyDef>
+      <PropertyDef name="receiptType">
+        <Property name="label">回款方式</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckAdjustInfo">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo</Property>
@@ -1861,6 +1864,10 @@ if(currentData){&#xD;
                   </DataColumn>
                   <DataColumn name="receiptDate">
                     <Property name="property">receiptDate</Property>
+                  </DataColumn>
+                  <DataColumn>
+                    <Property name="property">receiptType</Property>
+                    <Property name="name">receiptType</Property>
                   </DataColumn>
                   <DataColumn name="receiptAmount">
                     <Property name="property">receiptAmount</Property>

@@ -88,9 +88,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		//查询账户表
 		Map<String,Object> conditionAccount = new HashMap<String,Object>();
 		conditionAccount.put("accountNo", accountNo);
-		System.out.println(accountNo);
 		BillAccountInfoEntity account = billAccountInfoRepository.query(conditionAccount, 1, 20).getList().get(0);
-		System.out.println(account.toString());
 		//查询当前账户金额
 		BigDecimal amount = account.getAmount();
 		//查询账单表
@@ -175,4 +173,16 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		return status;
 	}
 
+	@Override
+	public void saveInfo(BillAccountOutVo vo) {
+		BillAccountOutEntity entity = new BillAccountOutEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		billAccountOutRepository.save(entity);
+	}
+
+	
 }
