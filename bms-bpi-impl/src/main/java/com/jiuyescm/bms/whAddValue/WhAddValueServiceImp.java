@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.common.sequence.repository.SequenceDao;
@@ -21,6 +24,7 @@ import com.jiuyescm.bms.whAddValue.service.IWhAddValueService;
 import com.jiuyescm.bms.whAddValue.vo.ResultVo;
 import com.jiuyescm.bms.whAddValue.vo.WhAddValueVo;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DoubleUtil;
 
 @Service("whAddValueService")
 public class WhAddValueServiceImp implements IWhAddValueService{
@@ -152,6 +156,10 @@ public class WhAddValueServiceImp implements IWhAddValueService{
      public FeesReceiveStorageEntity init(BizAddFeeEntity entity){
 	    	FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
 	    	fee.setFeesNo(entity.getFeesNo());
+	    	fee.setCost(new BigDecimal(0d));
+	    	if(!DoubleUtil.isBlank(entity.getPrice())){
+	    		fee.setCost(new BigDecimal(entity.getPrice()));
+	    	}
 	    	fee.setCost(new BigDecimal(entity.getPrice()));
 	    	fee.setIsCalculated(entity.getIsCalculated());
 	    	fee.setCalculateTime(JAppContext.currentTimestamp());
