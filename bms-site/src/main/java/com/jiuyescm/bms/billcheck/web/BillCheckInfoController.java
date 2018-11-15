@@ -798,6 +798,7 @@ public class BillCheckInfoController{
 		
 		if(receiptVo.getReceiptType().equals("预收款")){
 			BigDecimal receiptAmount = receiptVo.getReceiptAmount();
+			Long id = receiptVo.getId();
 			//查询账单表
 			Map<String, Object> conditionCheckInfo =new HashMap<String, Object>();
 			conditionCheckInfo.put("id", receiptVo.getBillCheckId());
@@ -835,7 +836,13 @@ public class BillCheckInfoController{
 			log.setOperateDesc("回款删除:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
 			//修改回款表
-			billCheckReceiptService.update(receiptVo);
+			Map<String, Object> conditionReceipt =new HashMap<String, Object>();
+			conditionReceipt.put("id", id);
+			BillCheckReceiptVo receipt = billCheckReceiptService.query(conditionReceipt, 1, 20).getList().get(0);
+			receipt.setLastModifier(creator);
+			receipt.setLastModifyTime(creTime);
+			receipt.setDelFlag("1");
+			billCheckReceiptService.update(receipt);
 		}else{
 			int result=billCheckReceiptService.update(receiptVo);
 			if(result<=0){
