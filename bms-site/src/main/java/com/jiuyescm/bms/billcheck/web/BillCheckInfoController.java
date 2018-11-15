@@ -808,14 +808,15 @@ public class BillCheckInfoController{
 			conditionAccountInfo.put("customerName", billCheckInfoVo.getInvoiceName());
 			BillAccountInfoVo accountVo = bmsAccountInfoService.query(conditionAccountInfo, 1, 20).getList().get(0);
 			//修改账单表
-			billCheckInfoVo.setUnReceiptAmount(billCheckInfoVo.getUnReceiptAmount().add(receiptAmount));
+			billCheckInfoVo.setUnReceiptAmount(billCheckInfoVo.getUnReceiptAmount().add(receiptAmount));//未收款金额
+			billCheckInfoVo.setReceiptAmount(billCheckInfoVo.getReceiptAmount().subtract(receiptAmount));//已收款金额
 			billCheckInfoService.update(billCheckInfoVo);
 			//修改账户表
 			accountVo.setAmount(accountVo.getAmount().add(receiptAmount));
 			bmsAccountInfoService.update(accountVo);
 			//插入支出表
 			BillAccountOutVo billAccountOutVo = new BillAccountOutVo();
-			billAccountOutVo.setAccountNo(billCheckInfoVo.getInvoiceName());
+			billAccountOutVo.setAccountNo(accountVo.getAccountNo());
 			billAccountOutVo.setBillCheckId(receiptVo.getBillCheckId());
 			billAccountOutVo.setCreateTime(creTime);
 			billAccountOutVo.setCreator(creator);
