@@ -585,7 +585,6 @@ public class BmsProductTaskListener implements MessageListener{
 			logger.info(taskId+"------------------获取占比最高耗时：" + (end-start) + "毫秒------------------");
 			//循环判断是否有重复之
 			if(list.size()>0){
-				List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();				
 				//循环更新每个商品明细对应的耗材
 				for(int i=0,length=list.size();i<length;i++){					
 					BmsProductsMaterialAccountVo proAccountVo=list.get(i);								
@@ -635,6 +634,8 @@ public class BmsProductTaskListener implements MessageListener{
 							end = System.currentTimeMillis();
 							logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
 							
+							List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();				
+							
 							for(int j=0,lenth=notMaxList.size();j<lenth;j++){
 								BizOutstockPackmaterialEntity entity=notMaxList.get(j);							
 								entity.setDelFlag("2");
@@ -661,10 +662,10 @@ public class BmsProductTaskListener implements MessageListener{
 								newList.add(entity);
 																
 							}
-						}
-						logger.info("------------------删除原对应得保温袋");
-						bizOutstockPackmaterialService.saveList(newList);
-						logger.info("------------------保存新保温袋------------------");					
+							logger.info("------------------删除原对应得保温袋");
+							bizOutstockPackmaterialService.saveList(newList);
+							logger.info("------------------保存新保温袋------------------");	
+						}					
 					}
 				}		
 			}
