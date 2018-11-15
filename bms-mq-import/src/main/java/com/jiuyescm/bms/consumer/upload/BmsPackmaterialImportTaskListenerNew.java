@@ -437,7 +437,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						}
 						
 						BigDecimal num = new BigDecimal(num0);
-						if("保温袋".equals(materialType)){
+						if("干冰".equals(materialType)){
 							tempChild.setWeight(num);
 						}
 						else{
