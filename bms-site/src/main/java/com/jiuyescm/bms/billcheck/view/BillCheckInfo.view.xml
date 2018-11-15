@@ -1867,7 +1867,6 @@ if(currentData){&#xD;
                   </DataColumn>
                   <DataColumn>
                     <Property name="property">receiptType</Property>
-                    <Property name="name">receiptType</Property>
                   </DataColumn>
                   <DataColumn name="receiptAmount">
                     <Property name="property">receiptAmount</Property>
