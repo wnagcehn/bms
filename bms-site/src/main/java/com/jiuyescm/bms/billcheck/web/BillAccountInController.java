@@ -63,6 +63,8 @@ public class BillAccountInController {
 	 */
 	@DataProvider
 	public void query(Page<BillAccountInVo> page, Map<String, Object> param) {
+		String customerName = (String) param.get("mkInvoiceName");
+		param.put("customerName", customerName);
 		PageInfo<BillAccountInVo> pageInfo = billAccountInService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
