@@ -836,32 +836,23 @@ public class BillCheckInfoController{
 			log.setOperateDesc("回款删除:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
 			//修改回款表
-			Map<String, Object> conditionReceipt =new HashMap<String, Object>();
-			conditionReceipt.put("id", id);
-			BillCheckReceiptVo receipt = billCheckReceiptService.query(conditionReceipt, 1, 20).getList().get(0);
-			receipt.setLastModifier(creator);
-			receipt.setLastModifyTime(creTime);
-			receipt.setDelFlag("1");
-			billCheckReceiptService.update(receipt);
+			billCheckReceiptService.update(receiptVo);
 		}else{
 			int result=billCheckReceiptService.update(receiptVo);
 			if(result<=0){
 				return "删除回款失败";
 			}
-			
 			//查询账单
 			Map<String, Object> condition=new HashMap<String, Object>();
 			condition.put("id", receiptVo.getBillCheckId());
 			BillCheckInfoVo bInfoVo=billCheckInfoService.queryOne(condition);
-			
-			String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
-
+			String groupName=bmsGroupUserService.checkExistGroupName(creatorId);
 			BillCheckLogVo logVo=new BillCheckLogVo();
 			logVo.setBillStatusCode(bInfoVo.getBillStatus());
 			logVo.setBillCheckId(receiptVo.getBillCheckId());
-			logVo.setCreator(JAppContext.currentUserName());
-			logVo.setCreatorId(JAppContext.currentUserID());
-			logVo.setCreateTime(JAppContext.currentTimestamp());
+			logVo.setCreator(creator);
+			logVo.setCreatorId(creatorId);
+			logVo.setCreateTime(creTime);
 			logVo.setDeptName(groupName);
 			logVo.setDelFlag("0");
 			logVo.setOperateDesc("删除回款");
@@ -869,7 +860,6 @@ public class BillCheckInfoController{
 			try {
 				billCheckLogService.addBillCheckLog(logVo);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
