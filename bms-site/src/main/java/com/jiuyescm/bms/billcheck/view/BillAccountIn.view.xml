@@ -272,6 +272,7 @@ var action = view.get(&quot;#queryConfirmStatus&quot;);&#xD;
 var customerId = arg.data.get(&quot;customerId&quot;);&#xD;
 &#xD;
 if(status == '0'){&#xD;
+	&#xD;
 	jQuery(arg.dom).xCreate([&#xD;
 		{&#xD;
 		    tagName: &quot;A&quot;,&#xD;
@@ -298,12 +299,12 @@ if(status == '0'){&#xD;
 					if(status == '0'){&#xD;
 						dorado.MessageBox.confirm(&quot;是否确定删除该条记录？&quot;, function() {&#xD;
 							arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
-							var action=view.get(&quot;#updateAction&quot;);&#xD;
+							var action=view.get(&quot;#deleteAction&quot;);&#xD;
 							action.execute(function(result){&#xD;
-						 		alertMsg(result.code, result.message);&#xD;
+						 		//alertMsg(result.code, result.message);&#xD;
 								//获取条件查询数据&#xD;
 								with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
-									set(&quot;parameter&quot;, data);&#xD;
+									//set(&quot;parameter&quot;, view.get(&quot;#dsConditions.data&quot;).current);&#xD;
 									flush();&#xD;
 								}&#xD;
 					 		});&#xD;
@@ -326,7 +327,7 @@ if(status == '0'){&#xD;
 							action.execute(function(result){&#xD;
 				 				alertMsg(result.code, result.message);&#xD;
 									with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
-										set(&quot;parameter&quot;, data);&#xD;
+										//set(&quot;parameter&quot;, view.get(&quot;#dsConditions.data&quot;).current);&#xD;
 										flush();&#xD;
 									}&#xD;
 				 				});&#xD;
@@ -512,5 +513,14 @@ if (data != null) {&#xD;
     <AjaxAction id="queryConfirmStatus">
       <Property name="service">billAccountInController#findById</Property>
     </AjaxAction>
+    <UpdateAction id="deleteAction">
+      <Property name="executingMessage">数据保存中</Property>
+      <Property name="successMessage">删除成功</Property>
+      <Property name="dataResolver">billAccountInController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillAccountIns</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>
