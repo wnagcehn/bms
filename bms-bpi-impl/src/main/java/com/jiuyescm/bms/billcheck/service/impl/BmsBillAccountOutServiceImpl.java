@@ -27,7 +27,6 @@ import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 
 
@@ -67,6 +66,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	    		voList.add(vo);
 	    	}
 	    	result.setList(voList);
+	    	PropertyUtils.copyProperties(result, pageInfo);
 		} catch (Exception ex) {
             logger.error("转换失败:{0}",ex);
         }

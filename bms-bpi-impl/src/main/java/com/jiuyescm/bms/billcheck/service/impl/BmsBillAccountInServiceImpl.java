@@ -47,6 +47,7 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
 	    		voList.add(vo);
 	    	}
 	    	result.setList(voList);
+	    	PropertyUtils.copyProperties(result, pageInfo); 
 		} catch (Exception ex) {
             logger.error("转换失败:{0}",ex);
         }
