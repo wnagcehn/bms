@@ -512,9 +512,15 @@ public class BmsProductTaskListener implements MessageListener{
 			String result=handBwd(taskVo,taskId,errorMessage);		
 			if("sucess".equals(result)){
 				logger.info(taskId+"保温袋调整成功");
-				taskVo.setTaskRate(100);
 				errorMessage.append("保温袋调整成功;");
-				taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
+				if(errorMessage.indexOf("失败")!=-1 || errorMessage.indexOf("异常")!=-1){
+					taskVo.setTaskRate(99);			
+					taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+				}else{
+					taskVo.setTaskRate(100);			
+					taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
+				}
+
 			}else if("fail".equals(result)){
 				//errorMessage.append("耗材调整失败;");
 				taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
