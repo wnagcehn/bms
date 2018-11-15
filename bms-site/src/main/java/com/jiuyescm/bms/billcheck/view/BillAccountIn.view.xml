@@ -19,6 +19,9 @@
       <PropertyDef name="tradeType">
         <Property></Property>
         <Property name="label">交易方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getDictionaryEnum&quot;).getResult(&quot;TRADETYPE&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="tradeDescrip">
         <Property></Property>
@@ -77,6 +80,9 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
+      <PropertyDef name="mkInvoiceName">
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
       <PropertyDef name="customerName">
         <Property name="label">商家名称</Property>
       </PropertyDef>
@@ -147,6 +153,13 @@ data.set(&quot;endCreateTime&quot;,enddate)&#xD;
           <Property name="itemCodes">pages,pageSize</Property>
         </DataPilot>
         <Separator/>
+        <ToolBarButton id="btnAdd">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillAccountIns.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogView&quot;).show();</ClientEvent>
+          <Property name="caption">录入</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
         <ToolBarButton id="btdQuery">
           <ClientEvent name="onClick">var data = view.get(&quot;#dsConditions.data&quot;).current;&#xD;
 with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
@@ -156,13 +169,6 @@ with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
 </ClientEvent>
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-        </ToolBarButton>
-        <ToolBarButton id="btnAdd">
-          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillAccountIns.data&quot;);&#xD;
-datas.insert();&#xD;
-view.get(&quot;#dialogView&quot;).show();</ClientEvent>
-          <Property name="caption">录入</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
         </ToolBarButton>
       </ToolBar>
       <AutoForm id="conditionForm">
@@ -175,8 +181,8 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
         <Property name="showHint">false</Property>
         <Property name="cols">250,200,200,200</Property>
         <AutoFormElement>
-          <Property name="name">customerName</Property>
-          <Property name="property">customerName</Property>
+          <Property name="name">mkInvoiceName</Property>
+          <Property name="property">mkInvoiceName</Property>
           <Property name="trigger">getCustomerNameCondition</Property>
           <Property name="labelWidth">90</Property>
           <Property name="editorWidth">135</Property>
@@ -354,7 +360,7 @@ if(status == '0'){&#xD;
       <FloatPanel id="panelCustomerCondition">
         <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomerCondition.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#conditionForm.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+	view.get(&quot;#conditionForm.entity&quot;).set(&quot;mkInvoiceName&quot;,data.get(&quot;mkInvoiceName&quot;));&#xD;
 }</ClientEvent>
         <Property name="caption">商家选择</Property>
         <Property name="center">true</Property>
