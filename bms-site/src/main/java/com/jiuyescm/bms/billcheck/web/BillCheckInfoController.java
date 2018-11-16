@@ -793,7 +793,7 @@ public class BillCheckInfoController{
 		String creatorId = JAppContext.currentUserID();
 		
 		receiptVo.setLastModifier(creator);
-		receiptVo.setLastModifyTime(creTime);
+		receiptVo.setLastModifyTime(creTime); 
 		receiptVo.setDelFlag("1");
 		
 		if(receiptVo.getReceiptType().equals("预收款")){
@@ -808,9 +808,9 @@ public class BillCheckInfoController{
 			conditionAccountInfo.put("customerName", billCheckInfoVo.getInvoiceName());
 			BillAccountInfoVo accountVo = bmsAccountInfoService.query(conditionAccountInfo, 1, 20).getList().get(0);
 			//修改账单表
-			billCheckInfoVo.setUnReceiptAmount(billCheckInfoVo.getUnReceiptAmount().add(receiptAmount));//未收款金额
-			billCheckInfoVo.setReceiptAmount(billCheckInfoVo.getReceiptAmount().subtract(receiptAmount));//已收款金额
-			billCheckInfoService.update(billCheckInfoVo);
+			//billCheckInfoVo.setUnReceiptAmount(billCheckInfoVo.getUnReceiptAmount().add(receiptAmount));//未收款金额
+			//billCheckInfoVo.setReceiptAmount(billCheckInfoVo.getReceiptAmount().subtract(receiptAmount));//已收款金额
+			//billCheckInfoService.update(billCheckInfoVo);
 			//修改账户表
 			accountVo.setAmount(accountVo.getAmount().add(receiptAmount));
 			bmsAccountInfoService.update(accountVo);
