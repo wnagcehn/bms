@@ -39,7 +39,7 @@
         select a.create_time, a.out_type,b.create_month, a.amount
         from bill_account_out a
         inner join bill_check_info b on a.bill_check_id = b.id 
-        where  a.del_flag = '0' and b.del_flag = '0'
+        where  a.del_flag = '0' and b.del_flag = '0' and b.bill_status != 'INVALIDATE'
 		<include refid="baseSelectColumns" />
 		ORDER BY  create_time DESC
     </select>

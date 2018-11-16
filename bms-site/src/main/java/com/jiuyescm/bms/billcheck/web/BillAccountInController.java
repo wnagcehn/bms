@@ -122,7 +122,10 @@ public class BillAccountInController {
 				BigDecimal accountAmount = account.getAmount();
 				BigDecimal accountAmountAdd = accountAmount.add(amount);
 				account.setAmount(accountAmountAdd);
-				billAccountInfoService.save(account);
+				account.setLastModifier(user);
+				account.setLastModifierId(userId);
+				account.setLastModifyTime(time);
+				billAccountInfoService.update(account);
 			}else{
 				//创建新账户
 				BillAccountInfoVo accountVo = new BillAccountInfoVo();
