@@ -27,7 +27,6 @@ import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 
 
@@ -67,6 +66,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	    		voList.add(vo);
 	    	}
 	    	result.setList(voList);
+	    	PropertyUtils.copyProperties(result, pageInfo);
 		} catch (Exception ex) {
             logger.error("转换失败:{0}",ex);
         }
@@ -137,16 +137,22 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			//修改账户表
 			account.setAmount(amount.subtract(unReceiptAmount));
 			billAccountInfoRepository.update(account);
+			
+			//插入回款表
+			billCheckReceiptEntity.setReceiptAmount(unReceiptAmount);
+			list.add(billCheckReceiptEntity);
+			billCheckReceiptRepository.saveList(list);
 			//修改账单表
 			int zeroInt = 0;
 			BigDecimal zero = new BigDecimal(zeroInt);
 			check.setUnReceiptAmount(zero);
 			check.setReceiptAmount(check.getReceiptAmount().add(unReceiptAmount));
+			//更新主表的收款日期
+			BillCheckReceiptEntity billCheckReceipt=billCheckReceiptRepository.queyReceipt(conditionCheck);
+			if(billCheckReceipt!=null){
+				check.setReceiptDate(billCheckReceipt.getReceiptDate());
+			}
 			billCheckInfoRepository.update(check);
-			//插入回款表
-			billCheckReceiptEntity.setReceiptAmount(unReceiptAmount);
-			list.add(billCheckReceiptEntity);
-			billCheckReceiptRepository.saveList(list);
 			//插入日志表
 			log.setOperateDesc("回款增加:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
@@ -160,14 +166,16 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			BigDecimal zero = new BigDecimal(zeroInt);
 			account.setAmount(zero);
 			billAccountInfoRepository.update(account);
-			//修改账单表
-			check.setUnReceiptAmount(unReceiptAmount.subtract(amount));
-			check.setReceiptAmount(check.getReceiptAmount().add(amount));
-			billCheckInfoRepository.update(check);
 			//插入回款表
 			billCheckReceiptEntity.setReceiptAmount(amount);
 			list.add(billCheckReceiptEntity);
-			billCheckReceiptRepository.saveList(list);
+			billCheckReceiptRepository.saveList(list);	
+			//更新主表的收款日期
+			BillCheckReceiptEntity billCheckReceipt=billCheckReceiptRepository.queyReceipt(conditionCheck);
+			if(billCheckReceipt!=null){
+				check.setReceiptDate(billCheckReceipt.getReceiptDate());
+			}
+			billCheckInfoRepository.update(check);
 			//插入日志表
 			log.setOperateDesc("回款增加:预收款冲抵");
 			billCheckLogRepository.addCheckLog(log);
