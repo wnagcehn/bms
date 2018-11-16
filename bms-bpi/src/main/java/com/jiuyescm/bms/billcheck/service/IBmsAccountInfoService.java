@@ -7,8 +7,7 @@ package com.jiuyescm.bms.billcheck.service;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
-
+import com.jiuyescm.bms.billcheck.vo.BillAccountInfoVo;
 /**
  * 
  * @author stevenl
@@ -16,14 +15,14 @@ import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
  */
 public interface IBmsAccountInfoService {
 
-    PageInfo<BillAccountInfoEntity> query(Map<String, Object> condition, int pageNo,
+    PageInfo<BillAccountInfoVo> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 
-    BillAccountInfoEntity findByCustomerId(String customerId);
+    BillAccountInfoVo findByCustomerId(String customerId);
 
-    BillAccountInfoEntity save(BillAccountInfoEntity entity);
+    BillAccountInfoVo save(BillAccountInfoVo entity);
 
-    BillAccountInfoEntity update(BillAccountInfoEntity entity);
+    BillAccountInfoVo update(BillAccountInfoVo entity);
 
     void delete(Long id);
 

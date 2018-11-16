@@ -29,7 +29,10 @@
     <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillCheckInfoService" ref="billCheckInfoService" />
     <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillCheckInvoiceService" ref="billCheckInvoiceService" />
     <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillCheckLogService" ref="billCheckLogService" />
-    <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillCheckReceiptService" ref="billCheckReceiptService" />
+    <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillCheckReceiptService" ref="billCheckReceiptService" />    
+    <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService" ref="bmsBillAccountInfoService" />
+    <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBmsAccountOutService" ref="bmsBillAccountOutService" />
+    <dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService" ref="bmsBillAccountInService" />  
     <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupService" ref="bmsGroupService" />
     <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupUserService" ref="bmsGroupUserService" />
     <dubbo:service interface="com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService" ref="bmsGroupSubjectService" />

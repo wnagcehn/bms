@@ -39,7 +39,6 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
@@ -52,6 +51,7 @@ import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
@@ -577,7 +577,10 @@ public class BizAddFeeController {
     public FeesReceiveStorageEntity init(BizAddFeeEntity entity){
     	FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
     	fee.setFeesNo(entity.getFeesNo());
-    	fee.setCost(new BigDecimal(entity.getPrice()));
+    	fee.setCost(new BigDecimal(0d));
+    	if(!DoubleUtil.isBlank(entity.getPrice())){
+    		fee.setCost(new BigDecimal(entity.getPrice()));
+    	}
     	fee.setIsCalculated(entity.getIsCalculated());
     	fee.setCalculateTime(JAppContext.currentTimestamp());
 		fee.setUnitPrice(entity.getUnitPrice());

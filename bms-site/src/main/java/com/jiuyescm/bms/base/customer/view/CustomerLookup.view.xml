@@ -4,14 +4,17 @@
   <Context/>
   <Model>
     <DataType name="dtCondLookupCustomer">
-      <PropertyDef name="customercode">
-        <Property name="label">商家助记码</Property>
-      </PropertyDef>
       <PropertyDef name="shortname">
         <Property name="label">商家简称</Property>
       </PropertyDef>
       <PropertyDef name="customername">
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家全称</Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customercode">
+        <Property name="label">商家助记码</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -57,6 +60,11 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
         <Property name="property">customername</Property>
         <Editor/>
       </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">mkInvoiceName</Property>
+        <Property name="property">mkInvoiceName</Property>
+        <Editor/>
+      </AutoFormElement>
     </AutoForm>
     <DataGrid id="gridCustomerLookup">
       <ClientEvent name="onDoubleClick">this.get(&quot;#actionSelectCustomer&quot;).execute();</ClientEvent>
@@ -75,6 +83,11 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <DataColumn name="customername">
         <Property name="property">customername</Property>
         <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">mkInvoiceName</Property>
+        <Property name="width">100</Property>
+        <Property name="name">mkInvoiceName</Property>
       </DataColumn>
       <DataColumn name="linkman">
         <Property name="property">linkman</Property>
