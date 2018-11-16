@@ -59,7 +59,13 @@
 		<dubbo:reference id="billCheckLogService" interface="com.jiuyescm.bms.billcheck.service.IBillCheckLogService" 
 			 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="billCheckReceiptService" interface="com.jiuyescm.bms.billcheck.service.IBillCheckReceiptService" 
-			 version="1.0.0" registry="bms"/> 
+			 version="1.0.0" registry="bms"/> 		
+		<dubbo:reference id="bmsBillAccountInfoService" interface="com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService" 
+			 version="1.0.0" registry="bms"/> 	
+		<dubbo:reference id="bmsBillAccountOutService" interface="com.jiuyescm.bms.billcheck.service.IBmsAccountOutService" 
+			 version="1.0.0" registry="bms"/>	 		 
+		<dubbo:reference id="bmsBillAccountInService" interface="com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService" 
+			 version="1.0.0" registry="bms"/>	 		
 		<dubbo:reference id="bmsGroupService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupService" 
 		 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="bmsGroupUserService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupUserService" 

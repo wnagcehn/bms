@@ -132,9 +132,4 @@
 		</set>
 		where id=#{id}
 	</update>
-
-	<delete id="delete" parameterType="java.lang.Integer">
-		delete from bill_account_in where
-		id=#{id}
-	</delete>
 </mapper>

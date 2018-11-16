@@ -420,7 +420,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						BizOutstockPackmaterialTempEntity tempChild = new BizOutstockPackmaterialTempEntity();
 						tempChild.setConsumerMaterialName(materialMap.get(cells.get(codeName)).getMaterialName());
 						tempChild.setConsumerMaterialCode(cells.get(codeName));
-						
+						//耗材类型
+						String materialType=materialMap.get(cells.get(codeName)).getMaterialType();					
 						if(materialMap.containsKey(cells.get(codeName))){
 							PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(cells.get(codeName));
 							tempChild.setSpecDesc("外径规格【"+pubMaterialInfoVo.getOutLength().doubleValue()+"*"+pubMaterialInfoVo.getOutWidth().doubleValue()+"*"+pubMaterialInfoVo.getOutHeight().doubleValue()+"】,"
@@ -436,7 +437,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						}
 						
 						BigDecimal num = new BigDecimal(num0);
-						if(tempChild.getConsumerMaterialCode().contains("GB")){
+						if("干冰".equals(materialType)){
 							tempChild.setWeight(num);
 						}
 						else{

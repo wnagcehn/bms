@@ -179,6 +179,8 @@ public class BizDispatchBillVo implements IEntity {
 	private Double dsAmount;
 	//折扣后运费
 	private Double discountAmount;
+	//折扣后操作费
+	private Double operateAmount;
 	//运费计算状态
 	private String dsIsCalculated;
 	//运费计算备注
@@ -1381,6 +1383,14 @@ public class BizDispatchBillVo implements IEntity {
 
 	public void setAdjustServiceTypeName(String adjustServiceTypeName) {
 		this.adjustServiceTypeName = adjustServiceTypeName;
+	}
+
+	public Double getOperateAmount() {
+		return operateAmount;
+	}
+
+	public void setOperateAmount(Double operateAmount) {
+		this.operateAmount = operateAmount;
 	}
 
     

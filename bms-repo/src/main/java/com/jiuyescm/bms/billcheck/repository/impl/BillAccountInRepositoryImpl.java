@@ -58,7 +58,7 @@ public class BillAccountInRepositoryImpl extends MyBatisDao<BillAccountInEntity>
 
     @Override
     public void delete(Long id) {
-        delete("com.jiuyescm.bms.billcheck.BillAccountInMapper.delete", id);
+		delete("com.jiuyescm.bms.billcheck.BillAccountInMapper.delete", id);
     }
 	
 }

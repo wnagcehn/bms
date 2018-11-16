@@ -546,6 +546,27 @@
 		where a.del_flag='0' and a.waybill_no=#{waybillNo} and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
 		GROUP BY b.material_type_name) c
     </select>
+  			
+    <select id="getMaxBwdVolumn" parameterType="java.util.Map" resultType="String" >
+    	select
+		   b.material_code
+		from(
+		select 
+		IF(MAX(out_volume)=0,1,2) as re,
+		IF(MAX(out_volume)=0,MAX(out_length*out_width),MAX(out_volume)) as num 
+		from pub_material_info where del_flag='0' and material_code in 
+    	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+    		#{item}
+    	</foreach>
+    	) a
+		INNER JOIN pub_material_info b on
+		IF(a.re=1,a.num=b.out_length*b.out_width,a.num=b.out_volume)
+		where del_flag='0' and material_code in 
+    	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+    		#{item}
+    	</foreach>
+    	 limit 1
+    </select>
     
     <delete id="deleteAllByWayBillNo" parameterType="java.util.Map">
     	delete from biz_outstock_packmaterial

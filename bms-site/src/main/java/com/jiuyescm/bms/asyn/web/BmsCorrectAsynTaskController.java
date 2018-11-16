@@ -227,12 +227,15 @@ public class BmsCorrectAsynTaskController {
 			}
 
 		} else {
-			for (String notCurCust : notCurCustList) {
-				if (notCurCust.equals(voEntity.getCustomerId())) {
-					result.put("fail", "该商家不参与运单纠正！");
-					return result;
+			if (notCurCustList != null && notCurCustList.size() > 0) {
+				for (String notCurCust : notCurCustList) {
+					if (notCurCust.equals(voEntity.getCustomerId())) {
+						result.put("fail", "该商家不参与运单纠正！");
+						return result;
+					}
 				}
 			}
+	
 			if (!bmsCorrectAsynTaskService.existTask(voEntity)) {
 				voEntity.setCreator(JAppContext.currentUserName());
 				voEntity.setCreateTime(JAppContext.currentTimestamp());

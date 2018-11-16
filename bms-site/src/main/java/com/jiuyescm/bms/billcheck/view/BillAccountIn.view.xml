@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtBillAccountIn">
-      <Property name="creationType">com.jiuyescm.bms.billcheck.BillAccountInEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillAccountInVo</Property>
       <PropertyDef name="id">
         <Property name="dataType">Long</Property>
       </PropertyDef>
@@ -80,8 +80,11 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
-      <PropertyDef name="customerName">
+      <PropertyDef name="mkInvoiceName">
         <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="startCreateTime">
         <Property name="label">开始时间</Property>
@@ -150,6 +153,13 @@ data.set(&quot;endCreateTime&quot;,enddate)&#xD;
           <Property name="itemCodes">pages,pageSize</Property>
         </DataPilot>
         <Separator/>
+        <ToolBarButton id="btnAdd">
+          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillAccountIns.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogView&quot;).show();</ClientEvent>
+          <Property name="caption">录入</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+        </ToolBarButton>
         <ToolBarButton id="btdQuery">
           <ClientEvent name="onClick">var data = view.get(&quot;#dsConditions.data&quot;).current;&#xD;
 with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
@@ -159,13 +169,6 @@ with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
 </ClientEvent>
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-        </ToolBarButton>
-        <ToolBarButton id="btnAdd">
-          <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillAccountIns.data&quot;);&#xD;
-datas.insert();&#xD;
-view.get(&quot;#dialogView&quot;).show();</ClientEvent>
-          <Property name="caption">录入</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
         </ToolBarButton>
       </ToolBar>
       <AutoForm id="conditionForm">
@@ -178,11 +181,13 @@ view.get(&quot;#dialogView&quot;).show();</ClientEvent>
         <Property name="showHint">false</Property>
         <Property name="cols">250,200,200,200</Property>
         <AutoFormElement>
-          <Property name="name">customerName</Property>
-          <Property name="property">customerName</Property>
+          <Property name="name">mkInvoiceName</Property>
+          <Property name="property">mkInvoiceName</Property>
           <Property name="trigger">getCustomerNameCondition</Property>
           <Property name="labelWidth">90</Property>
           <Property name="editorWidth">135</Property>
+          <Property name="readOnly">false</Property>
+          <Property name="editable">true</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -267,6 +272,7 @@ var action = view.get(&quot;#queryConfirmStatus&quot;);&#xD;
 var customerId = arg.data.get(&quot;customerId&quot;);&#xD;
 &#xD;
 if(status == '0'){&#xD;
+	&#xD;
 	jQuery(arg.dom).xCreate([&#xD;
 		{&#xD;
 		    tagName: &quot;A&quot;,&#xD;
@@ -288,23 +294,14 @@ if(status == '0'){&#xD;
 		    content:&quot;删除&quot;,&#xD;
 			style:&quot;margin-right:10px;&quot;,&#xD;
 		    onclick: function() {	&#xD;
-				action.set(&quot;parameter&quot;, id).execute(function(BillEntity){&#xD;
-		   			status = BillEntity.confirmStatus;&#xD;
-					if(status == '0'){&#xD;
-						dorado.MessageBox.confirm(&quot;是否确定删除该条记录？&quot;, function() {&#xD;
-							arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
-							var action=view.get(&quot;#updateAction&quot;);&#xD;
-							action.execute(function(result){&#xD;
-						 		alertMsg(result.code, result.message);&#xD;
-								//获取条件查询数据&#xD;
-								with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
-									set(&quot;parameter&quot;, data);&#xD;
-									flush();&#xD;
-								}&#xD;
-					 		});&#xD;
-						}); &#xD;
-					}&#xD;
-				});&#xD;
+				dorado.MessageBox.confirm(&quot;是否确定删除该条记录？&quot;, function() {&#xD;
+					arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
+					var action=view.get(&quot;#deleteAction&quot;);&#xD;
+					action.execute(function(result){&#xD;
+						//获取条件查询数据&#xD;
+						view.get(&quot;#dsBillAccountIns&quot;).set(&quot;parameter&quot;, view.get(&quot;#dsConditions.data&quot;).current).flush();&#xD;
+					});&#xD;
+				}); 	&#xD;
 			}&#xD;
 		},&#xD;
 		{&#xD;
@@ -317,11 +314,11 @@ if(status == '0'){&#xD;
 					 if(status == '0'){&#xD;
 					 	dorado.MessageBox.confirm(&quot;是否确定改商家预收款录入无误？&quot;, function() {&#xD;
 							arg.data.set(&quot;confirmStatus&quot;,&quot;1&quot;);&#xD;
-							var action=view.get(&quot;#updateAction&quot;);&#xD;
+							var action=view.get(&quot;#confirmAction&quot;);&#xD;
 							action.execute(function(result){&#xD;
 				 				alertMsg(result.code, result.message);&#xD;
 									with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
-										set(&quot;parameter&quot;, data);&#xD;
+										//set(&quot;parameter&quot;, view.get(&quot;#dsConditions.data&quot;).current);&#xD;
 										flush();&#xD;
 									}&#xD;
 				 				});&#xD;
@@ -355,7 +352,7 @@ if(status == '0'){&#xD;
       <FloatPanel id="panelCustomerCondition">
         <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomerCondition.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#conditionForm.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+	view.get(&quot;#conditionForm.entity&quot;).set(&quot;mkInvoiceName&quot;,data.get(&quot;mkInvoiceName&quot;));&#xD;
 }</ClientEvent>
         <Property name="caption">商家选择</Property>
         <Property name="center">true</Property>
@@ -409,7 +406,7 @@ if(undefined==tradeDescrip || tradeDescrip==''){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-view.id(&quot;updateAction&quot;).execute(&#xD;
+view.id(&quot;saveAction&quot;).execute(&#xD;
 	function(){&#xD;
 		with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
 			flushAsync();&#xD;
@@ -442,6 +439,7 @@ view.id(&quot;dialogView&quot;).hide();&#xD;
             <Property name="property">customerName</Property>
             <Property name="trigger">getCustomerName</Property>
             <Property name="readOnly">false</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:3">
@@ -452,6 +450,7 @@ view.id(&quot;dialogView&quot;).hide();&#xD;
           <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">tradeType</Property>
             <Property name="property">tradeType</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:3">
@@ -494,7 +493,7 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <UpdateAction id="updateAction">
+    <UpdateAction id="saveAction">
       <Property name="executingMessage">数据保存中</Property>
       <Property name="successMessage">更新成功</Property>
       <Property name="dataResolver">billAccountInController#save</Property>
@@ -506,5 +505,23 @@ if (data != null) {&#xD;
     <AjaxAction id="queryConfirmStatus">
       <Property name="service">billAccountInController#findById</Property>
     </AjaxAction>
+    <UpdateAction id="deleteAction">
+      <Property name="executingMessage">数据保存中</Property>
+      <Property name="successMessage">删除成功</Property>
+      <Property name="dataResolver">billAccountInController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillAccountIns</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="confirmAction">
+      <Property name="executingMessage">数据保存中</Property>
+      <Property name="successMessage">更新成功</Property>
+      <Property name="dataResolver">billAccountInController#confirm</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillAccountIns</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>

@@ -73,6 +73,8 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	private Double amount;
 	// 折扣后运费
 	private Double discountAmount;
+	// 折扣后操作费
+	private Double operateAmount;
 	// 账单编号
 	private String billNo;
 	// 规则编号
@@ -814,6 +816,14 @@ public class FeesReceiveDispatchEntity implements IEntity {
 
 	public void setServiceTypeName(String serviceTypeName) {
 		this.serviceTypeName = serviceTypeName;
+	}
+
+	public Double getOperateAmount() {
+		return operateAmount;
+	}
+
+	public void setOperateAmount(Double operateAmount) {
+		this.operateAmount = operateAmount;
 	}	
 	
 	
