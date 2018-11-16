@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
+import com.jiuyescm.exception.BizException;
 
 /**
  * 
@@ -16,15 +17,37 @@ import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
  */
 public interface IBmsBillAccountInService {
 
-    PageInfo<BillAccountInVo> query(Map<String, Object> condition, int pageNo,
-            int pageSize);
+	/**
+	 * 分页查询预收款录入信息 仅查询未作废
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+    PageInfo<BillAccountInVo> query(Map<String, Object> condition, int pageNo,int pageSize);
 
     BillAccountInVo findById(Long id);
 
     BillAccountInVo save(BillAccountInVo entity);
 
-    BillAccountInVo update(BillAccountInVo entity);
+    /**
+     * 预收款录入更新  仅能对未确认的状态进行更新
+     * @param entity
+     * @return
+     */
+    void update(BillAccountInVo entity) throws BizException;
+    
+    /**
+     * 预收款录入确认
+     * @param id 录入信息主键
+     * @return
+     */
+    void confirm(Long id) throws BizException;
 
-    void delete(Long id);
+    /**
+     * 作废预收款录入 仅能对未确认的状态进行作废
+     * @param id 录入信息主键
+     */
+    void delete(Long id) throws BizException;
 
 }

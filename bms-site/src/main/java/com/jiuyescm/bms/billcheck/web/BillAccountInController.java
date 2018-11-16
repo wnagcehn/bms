@@ -5,8 +5,10 @@
 package com.jiuyescm.bms.billcheck.web;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -16,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -35,7 +35,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 /**
  * 
- * @author stevenl
+ * @author liuzhicheng
  * 
  */
 @Component
@@ -80,42 +80,49 @@ public class BillAccountInController {
 	public void delete(BillAccountInVo entity){
 		logger.info("delete：id-{}",entity.getId());
 		BillAccountInVo vo = billAccountInService.findById(entity.getId());
+    	//0-未确认（可以删除） 1-已确认
+		logger.info("delete：{}",vo.getConfirmStatus());
 		if(vo.getConfirmStatus().equals("0")){
-			entity.setDelFlag("1");
-			logger.info("delete：",entity);
-			billAccountInService.update(entity);
-		}
-		else{
+			billAccountInService.delete(vo.getId());;
+		}else{
 			throw new BizException("未确认状态才能删除");
 		}
-		
-//		boolean ret = true;
-//		logger.info("判断逻辑{},{}",ret,ret);
-//		
-//		if(ret){
-//			
-//		}
 	}
-
 
 	@DataResolver
 	public void save(BillAccountInVo entity) {
 		logger.info("save：{}",entity);
+		Timestamp time = JAppContext.currentTimestamp();
+		String user = JAppContext.currentUserName();
+		String userId = JAppContext.currentUserID();
+		
+		//录入保存
 		if(EntityState.NEW.equals(EntityUtils.getState(entity))){
 			logger.info("save预收款录入");
+			//查询账户
 			Map<String, Object> condition = new HashMap<String, Object>();
 			condition.put("customerName", entity.getCustomerName());
-			
-			BillAccountInfoVo accountEntity = billAccountInfoService.query(condition, 1, 20).getList().get(0);
-			
-			
-			logger.info("save账户信息{}",accountEntity);
+			List<BillAccountInfoVo> accountList =  billAccountInfoService.query(condition, 1, 20).getList();
+			logger.info("save账户信息{}",accountList);
 			//账户是否存在 存在 写入    不存在 创建账户+写入
-			if(accountEntity != null){
-				entity.setLastModifierId(JAppContext.currentUserID());
-				entity.setLastModifyTime(JAppContext.currentTimestamp());
-				entity.setLastModifier(JAppContext.currentUserName());
-				billAccountInService.update(entity);
+			if(accountList != null && accountList.size() > 0){
+				//写入录入表
+				entity.setCreator(user);
+				entity.setCreatorId(userId);
+				entity.setCreateTime(time);
+				entity.setLastModifier(user);
+				entity.setLastModifierId(userId);
+				entity.setLastModifyTime(time);
+				entity.setDelFlag("0");
+				entity.setConfirmStatus("0");
+				billAccountInService.save(entity);
+				//修改账户表金额
+				BillAccountInfoVo account = accountList.get(0);
+				BigDecimal amount = entity.getAmount();
+				BigDecimal accountAmount = account.getAmount();
+				BigDecimal accountAmountAdd = accountAmount.add(amount);
+				account.setAmount(accountAmountAdd);
+				billAccountInfoService.save(account);
 			}else{
 				//创建新账户
 				BillAccountInfoVo accountVo = new BillAccountInfoVo();
@@ -123,79 +130,49 @@ public class BillAccountInController {
 				accountVo.setCustomerName(entity.getCustomerName());
 				String accountNo = sequenceService.getBillNoOne(BillAccountInfoVo.class.getName(), "3131", "000000");
 				accountVo.setAccountNo(accountNo);
-				accountVo.setCreatorId(JAppContext.currentUserID());
-				accountVo.setCreateTime(JAppContext.currentTimestamp());
-				accountVo.setCreator(JAppContext.currentUserName());
+				accountVo.setCreator(user);
+				accountVo.setCreatorId(userId);
+				accountVo.setCreateTime(time);
 				accountVo.setDelFlag("0");
-				BigDecimal amount = new BigDecimal(0);
-				accountVo.setAmount(amount);
+				accountVo.setAmount(entity.getAmount());
 				billAccountInfoService.save(accountVo);
-				//写入
-				entity.setLastModifierId(JAppContext.currentUserID());
-				entity.setLastModifyTime(JAppContext.currentTimestamp());
-				entity.setLastModifier(JAppContext.currentUserName());
-				billAccountInService.update(entity);
+				//写入录入表
+				entity.setCreator(user);
+				entity.setCreatorId(userId);
+				entity.setCreateTime(time);
+				entity.setLastModifier(user);
+				entity.setLastModifierId(userId);
+				entity.setLastModifyTime(time);
+				entity.setDelFlag("0");
+				entity.setConfirmStatus("0");
+				billAccountInService.save(entity);
 			}
+			
+		//操作修改
 		}else if(EntityState.MODIFIED.equals(EntityUtils.getState(entity))){
-			logger.info("预收款修改");
+			BillAccountInVo accountIn = billAccountInService.findById(entity.getId());
 			//能否修改 取决于状态 已确认不可修改
-			if(!entity.getConfirmStatus().equals("已确认")){
-				entity.setLastModifierId(JAppContext.currentUserID());
-				entity.setLastModifyTime(JAppContext.currentTimestamp());
-				entity.setLastModifier(JAppContext.currentUserName());
+			logger.info("save账户信息{}",accountIn.getConfirmStatus());
+			if(!accountIn.getConfirmStatus().equals("1")){
+				entity.setLastModifier(user);
+				entity.setLastModifierId(userId);
+				entity.setLastModifyTime(time);
 				billAccountInService.update(entity);
+			}else{
+				throw new BizException("未确认状态才能修改");
 			}
 			
+		}else if(EntityState.MOVED.equals(EntityUtils.getState(entity))){
+			BillAccountInVo accountIn = billAccountInService.findById(entity.getId());
+			//能否修改 取决于状态 已确认不可再次确认
+			logger.info("save账户信息{}",accountIn.getConfirmStatus());
+			if(!accountIn.getConfirmStatus().equals("1")){
+				billAccountInService.confirm(accountIn.getId());
+			}else{
+				throw new BizException("未确认状态才能确认");
+			}
 		}
-		
-				
-/*		BillAccountInfoVo accountEntity = billAccountInfoService.findByCustomerId(entity.getCustomerId());
-		if(null == accountEntity){
-			//创建新账户
-			BillAccountInfoVo accountVo = new BillAccountInfoVo();
-			accountVo.setCustomerId(entity.getCustomerId());
-			accountVo.setCustomerName(entity.getCustomerName());
-			String accountNo = sequenceService.getBillNoOne(BillAccountInfoVo.class.getName(), "3131", "000000");
-			accountVo.setAccountNo(accountNo);
-			accountVo.setCreatorId(JAppContext.currentUserID());
-			accountVo.setCreateTime(JAppContext.currentTimestamp());
-			
-			accountVo.setCreator(JAppContext.currentUserName());
-			accountVo.setDelFlag("0");
-			BigDecimal amount = new BigDecimal(0);
-			accountVo.setAmount(amount);
-			billAccountInfoService.save(accountVo);
-		}
-		
-		if (entity.getId() == null) {
-			entity.setCreatorId(JAppContext.currentUserID());
-			entity.setCreateTime(JAppContext.currentTimestamp());
-			entity.setCreator(JAppContext.currentUserName());
-			entity.setDelFlag("0");
-			billAccountInService.save(entity);
-		} else if(entity.getConfirmStatus().equals("1")) {
-			BillAccountInfoVo accountVo = billAccountInfoService.findByCustomerId(entity.getCustomerId()); 
-			BillAccountInfoVo updateVo = new BillAccountInfoVo();
 
-			updateVo.setId(accountVo.getId());
-			BigDecimal amount = new BigDecimal(0);
-			amount =accountVo.getAmount().add(entity.getAmount());
-			updateVo.setAmount(amount);
-		
-			BillAccountInfoVo res = billAccountInfoService.update(updateVo);
-			if(null != res){
-				entity.setLastModifierId(JAppContext.currentUserID());
-				entity.setLastModifyTime(JAppContext.currentTimestamp());
-				entity.setLastModifier(JAppContext.currentUserName());
-				entity.setConfirmTime(JAppContext.currentTimestamp());
-				billAccountInService.update(entity);
-			}
-		}else{
-			entity.setLastModifierId(JAppContext.currentUserID());
-			entity.setLastModifyTime(JAppContext.currentTimestamp());
-			entity.setLastModifier(JAppContext.currentUserName());
-			billAccountInService.update(entity);
-		}*/
 	}
 	
 	@DataProvider

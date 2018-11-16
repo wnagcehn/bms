@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,23 +19,23 @@ import com.jiuyescm.bms.billcheck.BillAccountInEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillAccountInRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
 import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
+import com.jiuyescm.exception.BizException;
 
 /**
  * 
- * @author chenwenxin
+ * @author liuzhicheng
  * 
  */
 @Service("bmsBillAccountInService")
 public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
 
-	private static final Logger logger = Logger.getLogger(BmsBillAccountInServiceImpl.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(BmsBillAccountInServiceImpl.class);
 	
 	@Autowired
     private IBillAccountInRepository billAccountInRepository;
 
     @Override
-    public PageInfo<BillAccountInVo> query(Map<String, Object> condition,
-            int pageNo, int pageSize) {
+    public PageInfo<BillAccountInVo> query(Map<String, Object> condition, int pageNo, int pageSize)  throws BizException{
     	
     	PageInfo<BillAccountInEntity> pageInfo=billAccountInRepository.query(condition, pageNo, pageSize);
 		PageInfo<BillAccountInVo> result=new PageInfo<BillAccountInVo>();
@@ -48,14 +49,14 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
 	    	}
 	    	result.setList(voList);
 		} catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("query转换失败:{}",ex);
         }
     	
 		return result;   	
     }
 
     @Override
-    public BillAccountInVo findById(Long id) {
+    public BillAccountInVo findById(Long id)  throws BizException{
     	
     	BillAccountInVo billAccountInVo=new BillAccountInVo();
     	BillAccountInEntity entity=billAccountInRepository.findById(id);
@@ -65,13 +66,13 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
 		try {
             PropertyUtils.copyProperties(billAccountInVo, entity);
         } catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("findById转换失败:{}",ex);
         }
 		return billAccountInVo;
     }
 
     @Override
-    public BillAccountInVo save(BillAccountInVo vo) {
+    public BillAccountInVo save(BillAccountInVo vo)  throws BizException{
     	
     	BillAccountInVo returnVo=new BillAccountInVo();
     	BillAccountInEntity entity=new BillAccountInEntity();
@@ -81,13 +82,13 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
             PropertyUtils.copyProperties(returnVo,returnEntity);
             
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("save转换失败{}",ex);
         }
 		return returnVo;
     }
 
     @Override
-    public BillAccountInVo update(BillAccountInVo vo) {
+    public void update(BillAccountInVo vo)  throws BizException{
     	BillAccountInVo returnVo=new BillAccountInVo();
     	BillAccountInEntity entity=new BillAccountInEntity();
 		try {
@@ -96,14 +97,38 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
             PropertyUtils.copyProperties(returnVo,returnEntity);
             
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败{}",ex);
         }
-		return returnVo;
     }
 
     @Override
-    public void delete(Long id) {
-        billAccountInRepository.delete(id);
+    public void delete(Long id) throws BizException{
+    	logger.info("delete id[{}]",id);
+    	BillAccountInEntity entity=billAccountInRepository.findById(id);
+    	logger.info("delete {}",entity.getConfirmStatus());
+    	//0-未确认（可以删除） 1-已确认
+    	if("1".equals(entity.getConfirmStatus())){
+    		throw new BizException("已确认状态不能删除");
+    	}
+    	else{
+    		entity.setDelFlag("1");
+    		billAccountInRepository.update(entity);
+    	}
+        
     }
+
+	@Override
+	public void confirm(Long id) throws BizException {
+		logger.info("confirm id[{}]",id);
+    	BillAccountInEntity entity=billAccountInRepository.findById(id);
+    	logger.info("confirm {}",entity.getConfirmStatus());
+    	//0-未确认（可以删除） 1-已确认
+		if(entity.getConfirmStatus().equals("1")){
+    		throw new BizException("已确认状态不能再次确认");
+		}else{
+			entity.setConfirmStatus("1");
+			billAccountInRepository.update(entity);
+		}
+	}
 	
 }

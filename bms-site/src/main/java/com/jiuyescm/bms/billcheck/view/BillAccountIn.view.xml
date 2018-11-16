@@ -459,6 +459,7 @@ view.id(&quot;dialogView&quot;).hide();&#xD;
           <AutoFormElement layoutConstraint="colSpan:3">
             <Property name="name">tradeType</Property>
             <Property name="property">tradeType</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement layoutConstraint="colSpan:3">
