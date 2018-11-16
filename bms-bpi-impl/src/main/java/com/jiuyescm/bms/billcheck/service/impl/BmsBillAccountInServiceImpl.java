@@ -103,32 +103,45 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
     }
 
     @Override
-    public void delete(Long id) throws BizException{
-    	logger.info("delete id[{}]",id);
-    	BillAccountInEntity entity=billAccountInRepository.findById(id);
+    public void delete(BillAccountInVo vo) throws BizException{
+    	logger.info("delete vo[{}]",vo);
+    	BillAccountInEntity accountInEntity=new BillAccountInEntity();
+		try {
+            PropertyUtils.copyProperties(accountInEntity, vo);          
+        } catch (Exception ex) {
+            logger.error("转换失败{}",ex);
+        }
+    	BillAccountInEntity entity=billAccountInRepository.findById(vo.getId());
     	logger.info("delete {}",entity.getConfirmStatus());
     	//0-未确认（可以删除） 1-已确认
     	if("1".equals(entity.getConfirmStatus())){
+    		
     		throw new BizException("已确认状态不能删除");
     	}
     	else{
-    		entity.setDelFlag("1");
-    		billAccountInRepository.update(entity);
+    		accountInEntity.setDelFlag("1");
+    		billAccountInRepository.update(accountInEntity);
     	}
         
     }
 
 	@Override
-	public void confirm(Long id) throws BizException {
-		logger.info("confirm id[{}]",id);
-    	BillAccountInEntity entity=billAccountInRepository.findById(id);
+	public void confirm(BillAccountInVo vo) throws BizException {
+		logger.info("confirm vo[{}]",vo);
+    	BillAccountInEntity accountInEntity=new BillAccountInEntity();
+		try {
+            PropertyUtils.copyProperties(accountInEntity, vo);          
+        } catch (Exception ex) {
+            logger.error("转换失败{}",ex);
+        }
+    	BillAccountInEntity entity=billAccountInRepository.findById(vo.getId());
     	logger.info("confirm {}",entity.getConfirmStatus());
     	//0-未确认（可以删除） 1-已确认
 		if(entity.getConfirmStatus().equals("1")){
     		throw new BizException("已确认状态不能再次确认");
 		}else{
-			entity.setConfirmStatus("1");
-			billAccountInRepository.update(entity);
+			accountInEntity.setConfirmStatus("1");
+			billAccountInRepository.update(accountInEntity);
 		}
 	}
 	
