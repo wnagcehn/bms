@@ -1,7 +1,3 @@
-/**
- * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
- *
- */
 package com.jiuyescm.bms.billcheck.web;
 
 import java.math.BigDecimal;
@@ -76,6 +72,11 @@ public class BillAccountInController {
 		}
 	}
 	
+	/**
+	 * 操作删除
+	 * 
+	 * @param vo
+	 */
 	@DataResolver
 	public void delete(BillAccountInVo vo){
 		logger.info("delete：id-{}",vo.getId());
@@ -87,6 +88,27 @@ public class BillAccountInController {
 			throw ex;
 		}
 
+	}
+	
+	/**
+	 * 操作确认
+	 * 
+	 * @param vo
+	 */
+	@DataResolver
+	public void confirm(BillAccountInVo vo) {
+		BillAccountInVo accountIn = billAccountInService.findById(vo.getId());
+		//能否修改 取决于状态 已确认不可再次确认
+		logger.info("confirm确认状态{}",accountIn.getConfirmStatus());
+		if(!accountIn.getConfirmStatus().equals("1")){
+			vo.setLastModifier(JAppContext.currentUserName());
+			vo.setLastModifierId(JAppContext.currentUserID());
+			vo.setLastModifyTime(JAppContext.currentTimestamp());
+			vo.setConfirmTime(JAppContext.currentTimestamp());
+			billAccountInService.confirm(vo);
+		}else{
+			throw new BizException("未确认状态才能确认");
+		}
 	}
 
 	@DataResolver
@@ -151,8 +173,11 @@ public class BillAccountInController {
 				billAccountInService.save(entity);
 			}
 			
+
+		}
+		
 		//操作修改
-		}else if(EntityState.MODIFIED.equals(EntityUtils.getState(entity))){
+		else if(EntityState.MODIFIED.equals(EntityUtils.getState(entity))){
 			BillAccountInVo accountIn = billAccountInService.findById(entity.getId());
 			//能否修改 取决于状态 已确认不可修改
 			logger.info("save账户信息{}",accountIn.getConfirmStatus());
@@ -165,18 +190,6 @@ public class BillAccountInController {
 				throw new BizException("未确认状态才能修改");
 			}
 			
-		}else if(EntityState.MOVED.equals(EntityUtils.getState(entity))){
-			BillAccountInVo accountIn = billAccountInService.findById(entity.getId());
-			//能否修改 取决于状态 已确认不可再次确认
-			logger.info("save账户信息{}",accountIn.getConfirmStatus());
-			if(!accountIn.getConfirmStatus().equals("1")){
-				accountIn.setLastModifier(user);
-				accountIn.setLastModifierId(userId);
-				accountIn.setLastModifyTime(time);
-				billAccountInService.confirm(accountIn);
-			}else{
-				throw new BizException("未确认状态才能确认");
-			}
 		}
 
 	}

@@ -315,7 +315,7 @@ if(status == '0'){&#xD;
 					 if(status == '0'){&#xD;
 					 	dorado.MessageBox.confirm(&quot;是否确定改商家预收款录入无误？&quot;, function() {&#xD;
 							arg.data.set(&quot;confirmStatus&quot;,&quot;1&quot;);&#xD;
-							var action=view.get(&quot;#updateAction&quot;);&#xD;
+							var action=view.get(&quot;#confirmAction&quot;);&#xD;
 							action.execute(function(result){&#xD;
 				 				alertMsg(result.code, result.message);&#xD;
 									with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
@@ -407,7 +407,7 @@ if(undefined==tradeDescrip || tradeDescrip==''){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-view.id(&quot;updateAction&quot;).execute(&#xD;
+view.id(&quot;saveAction&quot;).execute(&#xD;
 	function(){&#xD;
 		with (view.get(&quot;#dsBillAccountIns&quot;)){&#xD;
 			flushAsync();&#xD;
@@ -494,7 +494,7 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <UpdateAction id="updateAction">
+    <UpdateAction id="saveAction">
       <Property name="executingMessage">数据保存中</Property>
       <Property name="successMessage">更新成功</Property>
       <Property name="dataResolver">billAccountInController#save</Property>
@@ -510,6 +510,15 @@ if (data != null) {&#xD;
       <Property name="executingMessage">数据保存中</Property>
       <Property name="successMessage">删除成功</Property>
       <Property name="dataResolver">billAccountInController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillAccountIns</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="confirmAction">
+      <Property name="executingMessage">数据保存中</Property>
+      <Property name="successMessage">更新成功</Property>
+      <Property name="dataResolver">billAccountInController#confirm</Property>
       <UpdateItem>
         <Property name="dataSet">dsBillAccountIns</Property>
         <Property name="dataPath">[#current]</Property>
