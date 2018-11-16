@@ -137,7 +137,6 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			//修改账户表
 			account.setAmount(amount.subtract(unReceiptAmount));
 			billAccountInfoRepository.update(account);
-			
 			//插入回款表
 			billCheckReceiptEntity.setReceiptAmount(unReceiptAmount);
 			list.add(billCheckReceiptEntity);
@@ -169,7 +168,11 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			//插入回款表
 			billCheckReceiptEntity.setReceiptAmount(amount);
 			list.add(billCheckReceiptEntity);
-			billCheckReceiptRepository.saveList(list);	
+			billCheckReceiptRepository.saveList(list);
+			//修改账单表
+			BigDecimal unReceiptAmountNow = unReceiptAmount.subtract(amount);
+			check.setUnReceiptAmount(unReceiptAmountNow);
+			check.setReceiptAmount(check.getReceiptAmount().add(amount));
 			//更新主表的收款日期
 			BillCheckReceiptEntity billCheckReceipt=billCheckReceiptRepository.queyReceipt(conditionCheck);
 			if(billCheckReceipt!=null){
