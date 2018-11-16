@@ -298,7 +298,6 @@ if(status == '0'){&#xD;
 					arg.data.set(&quot;delFlag&quot;,&quot;1&quot;)&#xD;
 					var action=view.get(&quot;#deleteAction&quot;);&#xD;
 					action.execute(function(result){&#xD;
-				 		dorado.MessageBox.alert(result);&#xD;
 						//获取条件查询数据&#xD;
 						view.get(&quot;#dsBillAccountIns&quot;).set(&quot;parameter&quot;, view.get(&quot;#dsConditions.data&quot;).current).flush();&#xD;
 					});&#xD;
