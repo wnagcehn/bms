@@ -12,7 +12,7 @@ import com.jiuyescm.exception.BizException;
 
 /**
  * 
- * @author chenwenxin	
+ * @author liuzhicheng
  * 
  */
 public interface IBmsBillAccountInService {
@@ -42,12 +42,12 @@ public interface IBmsBillAccountInService {
      * @param id 录入信息主键
      * @return
      */
-    void confirm(Long id) throws BizException;
+    void confirm(BillAccountInVo vo) throws BizException;
 
     /**
      * 作废预收款录入 仅能对未确认的状态进行作废
      * @param id 录入信息主键
      */
-    void delete(Long id) throws BizException;
+    void delete(BillAccountInVo vo) throws BizException;
 
 }

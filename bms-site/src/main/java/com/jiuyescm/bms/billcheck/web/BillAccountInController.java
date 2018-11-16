@@ -77,16 +77,16 @@ public class BillAccountInController {
 	}
 	
 	@DataResolver
-	public void delete(BillAccountInVo entity){
-		logger.info("delete：id-{}",entity.getId());
-		BillAccountInVo vo = billAccountInService.findById(entity.getId());
-    	//0-未确认（可以删除） 1-已确认
-		logger.info("delete：{}",vo.getConfirmStatus());
-		if(vo.getConfirmStatus().equals("0")){
-			billAccountInService.delete(vo.getId());;
-		}else{
-			throw new BizException("未确认状态才能删除");
+	public void delete(BillAccountInVo vo){
+		logger.info("delete：id-{}",vo.getId());
+		try{
+			
+			billAccountInService.delete(vo);
+		}catch(Exception ex){
+			logger.info("delete--",ex);
+			throw ex;
 		}
+
 	}
 
 	@DataResolver
@@ -167,7 +167,10 @@ public class BillAccountInController {
 			//能否修改 取决于状态 已确认不可再次确认
 			logger.info("save账户信息{}",accountIn.getConfirmStatus());
 			if(!accountIn.getConfirmStatus().equals("1")){
-				billAccountInService.confirm(accountIn.getId());
+				accountIn.setLastModifier(user);
+				accountIn.setLastModifierId(userId);
+				accountIn.setLastModifyTime(time);
+				billAccountInService.confirm(accountIn);
 			}else{
 				throw new BizException("未确认状态才能确认");
 			}
