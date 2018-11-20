@@ -6,8 +6,8 @@ package com.jiuyescm.bms.billimport.repository.impl;
 
 import java.util.List;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
@@ -60,5 +60,18 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
     public void delete(Long id) {
         delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.delete", id);
     }
+
+	@Override
+	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list) {
+		// TODO Auto-generated method stub
+        int result=insertBatch("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.save", list);
+		return result;
+	}
+
+	@Override
+	public int deleteBatch(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.deleteBatch", condition);
+	}
 	
 }

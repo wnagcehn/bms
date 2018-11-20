@@ -10,3 +10,5 @@
 /disconf/
 *.rules
 configure.properties
+excel-support/target/classes/META-INF/MANIFEST.MF
+drools-support/target/classes/META-INF/MANIFEST.MF

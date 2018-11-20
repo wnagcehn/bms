@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.billimport.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -22,6 +23,10 @@ public interface IBillFeesReceiveDispatchTempService {
     BillFeesReceiveDispatchTempEntity findById(Long id);
 
     BillFeesReceiveDispatchTempEntity save(BillFeesReceiveDispatchTempEntity entity);
+    
+    int insertBatch(List<BillFeesReceiveDispatchTempEntity> list);
+    
+    int deleteBatch(Map<String, Object> condition);
 
     BillFeesReceiveDispatchTempEntity update(BillFeesReceiveDispatchTempEntity entity);
 

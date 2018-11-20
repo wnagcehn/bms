@@ -267,4 +267,9 @@
         delete from bill_fees_receive_dispatch_temp where
         id=#{id}
     </delete>
+    
+    <delete id="deleteBatch" parameterType="java.util.Map">
+        delete from bill_fees_receive_dispatch_temp where
+        bill_no=#{billNo}
+    </delete>
 </mapper>
