@@ -142,6 +142,13 @@ public interface IBillCheckInfoRepository {
 	List<BillCheckInfoEntity> queryAllUnreceipt(Map<String,Object> condition);
 	
 	/**
+	 * 保存
+	 * @param entity
+	 * @return
+	 */
+	int save(BillCheckInfoEntity entity);
+	
+	/**
 	 *账单冲抵页面查询账单
 	 * @param condition
 	 * @param pageNo
@@ -150,4 +157,4 @@ public interface IBillCheckInfoRepository {
 	 */
 	PageInfo<BillCheckInfoEntity> queryForOut(Map<String, Object> condition, int pageNo,
             int pageSize);
-}
+	}

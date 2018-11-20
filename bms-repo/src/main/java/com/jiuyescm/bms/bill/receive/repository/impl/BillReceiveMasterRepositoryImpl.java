@@ -56,9 +56,9 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao<BillReceiveMaste
 	 * @return
 	 */
     @Override
-    public BillReceiveMasterEntity save(BillReceiveMasterEntity entity) {
-        insert("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.save", entity);
-        return entity;
+    public int save(BillReceiveMasterEntity entity) {
+        int k = insert("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.save", entity);
+        return k;
     }
 
 	/**

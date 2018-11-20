@@ -143,7 +143,13 @@ public interface IBillCheckInfoService {
 	 * @return
 	 */
 	PageInfo<BillCheckInfoVo> queryReceiptDetail(Map<String, Object> condition, int pageNo,
-            int pageSize); 
+            int pageSize);
+	/**
+	 * 保存
+	 * @param vo
+	 * @return
+	 */
+	int save(BillCheckInfoVo vo); 
 	
 	/**
 	 * 账单冲抵页面查询账单的信息
@@ -154,5 +160,4 @@ public interface IBillCheckInfoService {
 	 */
 	PageInfo<BillCheckInfoVo> queryForOut(Map<String, Object> condition, int pageNo,
             int pageSize);
-	
-}
+	}

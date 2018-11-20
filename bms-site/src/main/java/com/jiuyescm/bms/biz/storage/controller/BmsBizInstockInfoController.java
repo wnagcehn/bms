@@ -55,6 +55,7 @@ import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
 import com.jiuyescm.bms.common.web.HttpCommanExport;
@@ -104,7 +105,10 @@ public class BmsBizInstockInfoController {
 	private IFeesReceiveStorageService feesReceiveStorageService;
 	@Resource
 	private IFileExportTaskService fileExportTaskService;
-	@Autowired private IBizInStockService service;
+	@Autowired 
+	private IBizInStockService service;
+	@Resource 
+	private SequenceService sequenceService;
 	
 
 	/**
@@ -578,16 +582,21 @@ public class BmsBizInstockInfoController {
 		
         try {
         	//校验该费用是否已生成Excel文件
-        	Map<String, Object> queryEntity = new HashMap<String, Object>();
-        	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_INSTOCK_INFO.getCode());
-        	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
-        	if (StringUtils.isNotEmpty(existDel)) {
-        		return existDel;
-        	}
+//        	Map<String, Object> queryEntity = new HashMap<String, Object>();
+//        	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_INSTOCK_INFO.getCode());
+//        	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
+//        	if (StringUtils.isNotEmpty(existDel)) {
+//        		return existDel;
+//        	}
+        	
+        	String taskid = sequenceService.getBillNoOne(FileExportTaskEntity.class.getName(), "FT", "0000000000");
+    		if (StringUtils.isBlank(taskid)) {
+    			throw new Exception("生成导出文件编号失败,请稍后重试!");
+    		}
         	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_INSTOCK_INFO.getCode() + FileConstant.SUFFIX_XLSX;
+        			FileTaskTypeEnum.BIZ_INSTOCK_INFO.getCode() + taskid + FileConstant.SUFFIX_XLSX;
         	
         	FileExportTaskEntity entity = new FileExportTaskEntity();
         	entity.setStartTime(DateUtil.formatTimestamp(param.get("createTime")));
