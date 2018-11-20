@@ -19,13 +19,16 @@ public class BillReceiveMasterEntity implements IEntity {
 	// id
 	private Long id;
 	// 业务月份 1801
-	private String createMonth;
-	// 商家合同名称
+	private Integer createMonth;
+	// 合同商家名称
 	private String invoiceName;
+	// 合同商家编码
+	private String invoiceId;
 	// 账单名称
 	private String billName;
 	// 导入进度
 	private Integer taskRate;
+	private String rate;
 	// 任务状态
 	private String taskStatus;
 	// 导入金额
@@ -58,6 +61,18 @@ public class BillReceiveMasterEntity implements IEntity {
 	private String resultFileName;
 	// 结果文件路径
 	private String resultFilePath;
+	//总金额
+	private Double totalAmount;
+	
+	private Double totalImportCost;
+	
+	private Double totalAdjustACost;
+	
+	private Double totalCost;
+	
+	private String billCheckStatus;
+	
+	private String isneedInvoice;
 
 	public BillReceiveMasterEntity() {
 		super();
@@ -71,14 +86,14 @@ public class BillReceiveMasterEntity implements IEntity {
 		this.id = id;
 	}
 	
-	public String getCreateMonth() {
-		return this.createMonth;
+	public Integer getCreateMonth() {
+		return createMonth;
 	}
 
-	public void setCreateMonth(String createMonth) {
+	public void setCreateMonth(Integer createMonth) {
 		this.createMonth = createMonth;
 	}
-	
+
 	public String getInvoiceName() {
 		return this.invoiceName;
 	}
@@ -231,6 +246,71 @@ public class BillReceiveMasterEntity implements IEntity {
 
 	public void setResultFilePath(String resultFilePath) {
 		this.resultFilePath = resultFilePath;
+	}
+
+	public Double getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(Double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public Double getTotalImportCost() {
+		return totalImportCost;
+	}
+
+	public void setTotalImportCost(Double totalImportCost) {
+		this.totalImportCost = totalImportCost;
+	}
+
+
+	public Double getTotalAdjustACost() {
+		return totalAdjustACost;
+	}
+
+	public void setTotalAdjustACost(Double totalAdjustACost) {
+		this.totalAdjustACost = totalAdjustACost;
+	}
+
+	public Double getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(Double totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	public String getRate() {
+		return rate;
+	}
+
+	public void setRate(String rate) {
+		this.rate = rate;
+	}
+
+	public String getBillCheckStatus() {
+		return billCheckStatus;
+	}
+
+	public void setBillCheckStatus(String billCheckStatus) {
+		this.billCheckStatus = billCheckStatus;
+	}
+
+	public String getIsneedInvoice() {
+		return isneedInvoice;
+	}
+
+	public void setIsneedInvoice(String isneedInvoice) {
+		this.isneedInvoice = isneedInvoice;
+	}
+
+	public String getInvoiceId() {
+		return invoiceId;
+	}
+
+	public void setInvoiceId(String invoiceId) {
+		this.invoiceId = invoiceId;
 	}
     
 }

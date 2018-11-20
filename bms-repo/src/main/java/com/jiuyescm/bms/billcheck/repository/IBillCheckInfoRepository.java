@@ -140,4 +140,11 @@ public interface IBillCheckInfoRepository {
 	 * 获取所有的未收款及账户金额
 	 */
 	List<BillCheckInfoEntity> queryAllUnreceipt(Map<String,Object> condition);
+	
+	/**
+	 * 保存
+	 * @param entity
+	 * @return
+	 */
+	int save(BillCheckInfoEntity entity);
 }

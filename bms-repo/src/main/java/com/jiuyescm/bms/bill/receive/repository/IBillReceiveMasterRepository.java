@@ -19,7 +19,7 @@ public interface IBillReceiveMasterRepository {
 
 	List<BillReceiveMasterEntity> query(Map<String, Object> condition);
 
-    BillReceiveMasterEntity save(BillReceiveMasterEntity entity);
+    int save(BillReceiveMasterEntity entity);
 
     BillReceiveMasterEntity update(BillReceiveMasterEntity entity);
 

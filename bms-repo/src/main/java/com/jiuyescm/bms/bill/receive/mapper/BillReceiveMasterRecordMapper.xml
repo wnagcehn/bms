@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.receive.BillReceiveMasterRecordMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+		   	<result column="adjust_amount" property="adjustAmount" jdbcType="DECIMAL" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, task_id, create_time, creator, creator_id, adjust_amount, remark
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+task_id, create_time, creator, creator_id, adjust_amount, remark
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_receive_master_record
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_receive_master_record
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" taskId != null and taskId !='' ">
+				and task_id = #{taskId}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" creatorId != null and creatorId !='' ">
+				and creator_id = #{creatorId}
+			</if>
+        	<if test=" adjustAmount != null and adjustAmount !='' ">
+				and adjust_amount = #{adjustAmount}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity">
+        insert into bill_receive_master_record(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{taskId,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{creatorId,jdbcType=VARCHAR}, 
+			#{adjustAmount,jdbcType=DECIMAL}, 
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity">
+        update bill_receive_master_record
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" taskId != null and taskId !='' ">
+				task_id = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" creatorId != null and creatorId !='' ">
+				creator_id = #{creatorId,jdbcType=VARCHAR},
+			</if>
+			<if test=" adjustAmount != null and adjustAmount !='' ">
+				adjust_amount = #{adjustAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bill_receive_master_record 
+        where id = #{id}
+    </delete>
+</mapper>

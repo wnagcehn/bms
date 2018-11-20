@@ -3,8 +3,9 @@
 <mapper namespace="com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper" >
     <resultMap id="BaseResultMap" type="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity" >
        		<id column="id" property="id" jdbcType="INTEGER" />
-		   	<result column="create_month" property="createMonth" jdbcType="VARCHAR" />
+		   	<result column="create_month" property="createMonth" jdbcType="INTEGER" />
 		   	<result column="invoice_name" property="invoiceName" jdbcType="VARCHAR" />
+		   	<result column="invoice_id" property="invoiceId" jdbcType="VARCHAR" />
 		   	<result column="bill_name" property="billName" jdbcType="VARCHAR" />
 		   	<result column="task_rate" property="taskRate" jdbcType="INTEGER" />
 		   	<result column="task_status" property="taskStatus" jdbcType="VARCHAR" />
@@ -26,11 +27,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, origin_file_name, origin_file_path, result_file_name, result_file_path
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, origin_file_name, origin_file_path, result_file_name, result_file_path
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, origin_file_name, origin_file_path, result_file_name, result_file_path
+create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, origin_file_name, origin_file_path, result_file_name, result_file_path
     </sql>
 
 	<!-- 根据id查询 -->
@@ -45,20 +46,33 @@ create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_am
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
         select
-        <include refid="BASE_COLUMNS_ALL" />
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, 
+        IFNULL(amount,0) as amount, IFNULL(adjust_amount,0) as adjustAmount, SUM(IFNULL(amount,0)+IFNULL(adjust_amount,0)) as totalAmount, 
+        creator, creator_id, create_time, finish_time, 
+        last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, 
+        origin_file_name, origin_file_path, result_file_name, result_file_path
         from bill_receive_master
         where 1 = 1
         	<if test=" id != null and id !='' ">
 				and id = #{id}
 			</if>
-        	<if test=" createMonth != null and createMonth !='' ">
+        	<if test=" createMonth != null and createMonth !='' " >
 				and create_month = #{createMonth}
+			</if>
+			<if test=" createMonthStart != null and createMonthStart !='' " >
+				and create_month >= #{createMonthStart}
+			</if>
+			<if test=" createMonthEnd != null and createMonthEnd !='' " >
+				and create_month <![CDATA[<= #{createMonthEnd}]]>
 			</if>
         	<if test=" invoiceName != null and invoiceName !='' ">
 				and invoice_name = #{invoiceName}
 			</if>
+			<if test=" invoiceId != null and invoiceId !='' ">
+				and invoice_id = #{invoiceId}
+			</if>
         	<if test=" billName != null and billName !='' ">
-				and bill_name = #{billName}
+				and bill_name like CONCAT('%',#{billName},'%')
 			</if>
         	<if test=" taskRate != null and taskRate !='' ">
 				and task_rate = #{taskRate}
@@ -73,25 +87,16 @@ create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_am
 				and adjust_amount = #{adjustAmount}
 			</if>
         	<if test=" creator != null and creator !='' ">
-				and creator = #{creator}
+				and creator like CONCAT('%',#{creator},'%')
 			</if>
         	<if test=" creatorId != null and creatorId !='' ">
 				and creator_id = #{creatorId}
 			</if>
-        	<if test=" createTime != null and createTime !='' ">
-				and create_time = #{createTime}
+        	<if test=" createTime != null and createTime !='' " >
+				and <![CDATA[create_time >= #{createTime}]]>
 			</if>
-        	<if test=" finishTime != null and finishTime !='' ">
-				and finish_time = #{finishTime}
-			</if>
-        	<if test=" lastModifier != null and lastModifier !='' ">
-				and last_modifier = #{lastModifier}
-			</if>
-        	<if test=" lastModifierId != null and lastModifierId !='' ">
-				and last_modifier_id = #{lastModifierId}
-			</if>
-        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
-				and last_modify_time = #{lastModifyTime}
+			<if test=" createEndTime != null and createEndTime !='' " >
+				and <![CDATA[create_time <= #{createEndTime}]]>
 			</if>
         	<if test=" delFlag != null and delFlag !='' ">
 				and del_flag = #{delFlag}
@@ -99,18 +104,7 @@ create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_am
         	<if test=" taskId != null and taskId !='' ">
 				and task_id = #{taskId}
 			</if>
-        	<if test=" originFileName != null and originFileName !='' ">
-				and origin_file_name = #{originFileName}
-			</if>
-        	<if test=" originFilePath != null and originFilePath !='' ">
-				and origin_file_path = #{originFilePath}
-			</if>
-        	<if test=" resultFileName != null and resultFileName !='' ">
-				and result_file_name = #{resultFileName}
-			</if>
-        	<if test=" resultFilePath != null and resultFilePath !='' ">
-				and result_file_path = #{resultFilePath}
-			</if>
+			GROUP BY task_id
     </select>
 
 	<!-- 保存 -->
@@ -120,8 +114,9 @@ create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_am
     	)
         values (
 
-			#{createMonth,jdbcType=VARCHAR}, 
+			#{createMonth,jdbcType=INTEGER}, 
 			#{invoiceName,jdbcType=VARCHAR}, 
+			#{invoiceId,jdbcType=VARCHAR}, 
 			#{billName,jdbcType=VARCHAR}, 
 			#{taskRate,jdbcType=INTEGER}, 
 			#{taskStatus,jdbcType=VARCHAR}, 
@@ -147,11 +142,15 @@ create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_am
     <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
         update bill_receive_master
         <trim prefix="set" suffixOverrides=",">
+        	adjust_amount = #{adjustAmount,jdbcType=DECIMAL},
 			<if test=" createMonth != null and createMonth !='' ">
-				create_month = #{createMonth,jdbcType=VARCHAR},
+				create_month = #{createMonth,jdbcType=INTEGER},
 			</if>
 			<if test=" invoiceName != null and invoiceName !='' ">
 				invoice_name = #{invoiceName,jdbcType=VARCHAR},
+			</if>
+			<if test=" invoiceId != null and invoiceId !='' ">
+				invoice_id = #{invoiceId,jdbcType=VARCHAR},
 			</if>
 			<if test=" billName != null and billName !='' ">
 				bill_name = #{billName,jdbcType=VARCHAR},
@@ -164,9 +163,6 @@ create_month, invoice_name, bill_name, task_rate, task_status, amount, adjust_am
 			</if>
 			<if test=" amount != null and amount !='' ">
 				amount = #{amount,jdbcType=DECIMAL},
-			</if>
-			<if test=" adjustAmount != null and adjustAmount !='' ">
-				adjust_amount = #{adjustAmount,jdbcType=DECIMAL},
 			</if>
 			<if test=" creator != null and creator !='' ">
 				creator = #{creator,jdbcType=VARCHAR},

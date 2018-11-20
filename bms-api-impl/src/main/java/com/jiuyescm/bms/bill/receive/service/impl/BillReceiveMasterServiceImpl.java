@@ -58,8 +58,9 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * @return
 	 */
     @Override
-    public BillReceiveMasterEntity save(BillReceiveMasterEntity entity) {
-        return billReceiveMasterRepository.save(entity);
+    public int  save(BillReceiveMasterEntity entity) {
+    	int k = billReceiveMasterRepository.save(entity);
+        return k;
     }
 
 	/**

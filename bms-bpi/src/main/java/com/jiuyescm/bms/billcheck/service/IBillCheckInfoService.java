@@ -143,5 +143,11 @@ public interface IBillCheckInfoService {
 	 * @return
 	 */
 	PageInfo<BillCheckInfoVo> queryReceiptDetail(Map<String, Object> condition, int pageNo,
-            int pageSize); 
+            int pageSize);
+	/**
+	 * 保存
+	 * @param vo
+	 * @return
+	 */
+	int save(BillCheckInfoVo vo); 
 }
