@@ -153,10 +153,11 @@ public class ReportCollectionRateController {
 			}
 			//收款达成率总计
 			try {
-				if (totalRecAmount == 0d || totalRecAmount < 0) {
+				if (totalRecAmount == 0d || totalRecAmount < 0 || totalRecTarget == 0d || totalRecTarget < 0) {
 					totalCollecRate = "0%";
+				}else {
+					totalCollecRate = decimalFormat.format(new BigDecimal(totalRecAmount).divide(new BigDecimal(totalRecTarget), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%";
 				}
-				totalCollecRate = decimalFormat.format(new BigDecimal(totalRecAmount).divide(new BigDecimal(totalRecTarget), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).doubleValue())+"%";
 			} catch (Exception e) {
 				logger.error("达成率计算异常", e);
 			}

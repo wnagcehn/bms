@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+		   	<result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+		   	<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+		   	<result column="material_code" property="materialCode" jdbcType="VARCHAR" />
+		   	<result column="material_name" property="materialName" jdbcType="VARCHAR" />
+		   	<result column="order_type" property="orderType" jdbcType="VARCHAR" />
+		   	<result column="product_type" property="productType" jdbcType="VARCHAR" />
+		   	<result column="tempreture_type" property="tempretureType" jdbcType="VARCHAR" />
+		   	<result column="product_no" property="productNo" jdbcType="VARCHAR" />
+		   	<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		   	<result column="charge_unit" property="chargeUnit" jdbcType="VARCHAR" />
+		   	<result column="total_qty" property="totalQty" jdbcType="INTEGER" />
+		   	<result column="total_weight" property="totalWeight" jdbcType="DECIMAL" />
+		   	<result column="total_volume" property="totalVolume" jdbcType="DECIMAL" />
+		   	<result column="total_sku" property="totalSku" jdbcType="INTEGER" />
+		   	<result column="total_box" property="totalBox" jdbcType="DECIMAL" />
+		   	<result column="amount" property="amount" jdbcType="DECIMAL" />
+		   	<result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="create_month" property="createMonth" jdbcType="INTEGER" />
+		   	<result column="rowExcelNo" property="rowExcelNo" jdbcType="INTEGER" />
+		   	<result column="rowExcelName" property="rowExcelName" jdbcType="VARCHAR" />
+		   	<result column="sheetName" property="sheetName" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month, rowExcelNo, rowExcelName, sheetName
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month, rowExcelNo, rowExcelName, sheetName
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_fees_receive_storage_temp
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_fees_receive_storage_temp
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" billNo != null and billNo !='' ">
+				and bill_no = #{billNo}
+			</if>
+        	<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+        	<if test=" orderNo != null and orderNo !='' ">
+				and order_no = #{orderNo}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" materialCode != null and materialCode !='' ">
+				and material_code = #{materialCode}
+			</if>
+        	<if test=" materialName != null and materialName !='' ">
+				and material_name = #{materialName}
+			</if>
+        	<if test=" orderType != null and orderType !='' ">
+				and order_type = #{orderType}
+			</if>
+        	<if test=" productType != null and productType !='' ">
+				and product_type = #{productType}
+			</if>
+        	<if test=" tempretureType != null and tempretureType !='' ">
+				and tempreture_type = #{tempretureType}
+			</if>
+        	<if test=" productNo != null and productNo !='' ">
+				and product_no = #{productNo}
+			</if>
+        	<if test=" productName != null and productName !='' ">
+				and product_name = #{productName}
+			</if>
+        	<if test=" chargeUnit != null and chargeUnit !='' ">
+				and charge_unit = #{chargeUnit}
+			</if>
+        	<if test=" totalQty != null and totalQty !='' ">
+				and total_qty = #{totalQty}
+			</if>
+        	<if test=" totalWeight != null and totalWeight !='' ">
+				and total_weight = #{totalWeight}
+			</if>
+        	<if test=" totalVolume != null and totalVolume !='' ">
+				and total_volume = #{totalVolume}
+			</if>
+        	<if test=" totalSku != null and totalSku !='' ">
+				and total_sku = #{totalSku}
+			</if>
+        	<if test=" totalBox != null and totalBox !='' ">
+				and total_box = #{totalBox}
+			</if>
+        	<if test=" amount != null and amount !='' ">
+				and amount = #{amount}
+			</if>
+        	<if test=" derateAmount != null and derateAmount !='' ">
+				and derate_amount = #{derateAmount}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				and rowExcelNo = #{rowExcelNo}
+			</if>
+        	<if test=" rowExcelName != null and rowExcelName !='' ">
+				and rowExcelName = #{rowExcelName}
+			</if>
+        	<if test=" sheetName != null and sheetName !='' ">
+				and sheetName = #{sheetName}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity">
+        insert into bill_fees_receive_storage_temp(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{billNo,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{materialCode,jdbcType=VARCHAR}, 
+			#{materialName,jdbcType=VARCHAR}, 
+			#{orderType,jdbcType=VARCHAR}, 
+			#{productType,jdbcType=VARCHAR}, 
+			#{tempretureType,jdbcType=VARCHAR}, 
+			#{productNo,jdbcType=VARCHAR}, 
+			#{productName,jdbcType=VARCHAR}, 
+			#{chargeUnit,jdbcType=VARCHAR}, 
+			#{totalQty,jdbcType=INTEGER}, 
+			#{totalWeight,jdbcType=DECIMAL}, 
+			#{totalVolume,jdbcType=DECIMAL}, 
+			#{totalSku,jdbcType=INTEGER}, 
+			#{totalBox,jdbcType=DECIMAL}, 
+			#{amount,jdbcType=DECIMAL}, 
+			#{derateAmount,jdbcType=DECIMAL}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{rowExcelNo,jdbcType=INTEGER}, 
+			#{rowExcelName,jdbcType=VARCHAR}, 
+			#{sheetName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity">
+        update bill_fees_receive_storage_temp
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" billNo != null and billNo !='' ">
+				bill_no = #{billNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				subject_code = #{subjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" orderNo != null and orderNo !='' ">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseName != null and warehouseName !='' ">
+				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
+			</if>
+			<if test=" materialCode != null and materialCode !='' ">
+				material_code = #{materialCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" materialName != null and materialName !='' ">
+				material_name = #{materialName,jdbcType=VARCHAR},
+			</if>
+			<if test=" orderType != null and orderType !='' ">
+				order_type = #{orderType,jdbcType=VARCHAR},
+			</if>
+			<if test=" productType != null and productType !='' ">
+				product_type = #{productType,jdbcType=VARCHAR},
+			</if>
+			<if test=" tempretureType != null and tempretureType !='' ">
+				tempreture_type = #{tempretureType,jdbcType=VARCHAR},
+			</if>
+			<if test=" productNo != null and productNo !='' ">
+				product_no = #{productNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" productName != null and productName !='' ">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test=" chargeUnit != null and chargeUnit !='' ">
+				charge_unit = #{chargeUnit,jdbcType=VARCHAR},
+			</if>
+			<if test=" totalQty != null and totalQty !='' ">
+				total_qty = #{totalQty,jdbcType=INTEGER},
+			</if>
+			<if test=" totalWeight != null and totalWeight !='' ">
+				total_weight = #{totalWeight,jdbcType=DECIMAL},
+			</if>
+			<if test=" totalVolume != null and totalVolume !='' ">
+				total_volume = #{totalVolume,jdbcType=DECIMAL},
+			</if>
+			<if test=" totalSku != null and totalSku !='' ">
+				total_sku = #{totalSku,jdbcType=INTEGER},
+			</if>
+			<if test=" totalBox != null and totalBox !='' ">
+				total_box = #{totalBox,jdbcType=DECIMAL},
+			</if>
+			<if test=" amount != null and amount !='' ">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test=" derateAmount != null and derateAmount !='' ">
+				derate_amount = #{derateAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" createMonth != null and createMonth !='' ">
+				create_month = #{createMonth,jdbcType=INTEGER},
+			</if>
+			<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				rowExcelNo = #{rowExcelNo,jdbcType=INTEGER},
+			</if>
+			<if test=" rowExcelName != null and rowExcelName !='' ">
+				rowExcelName = #{rowExcelName,jdbcType=VARCHAR},
+			</if>
+			<if test=" sheetName != null and sheetName !='' ">
+				sheetName = #{sheetName,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bill_fees_receive_storage_temp 
+        where id = #{id}
+    </delete>
+    
+    <!-- 批量删除 -->
+    <delete id="deleteBatchTemp" parameterType="java.util.Map">
+        delete from bill_fees_receive_storage_temp 
+        where 1=1
+        <if test=" id != null and id !='' ">
+			and id = #{id}
+		</if>
+       	<if test=" billNo != null and billNo !='' ">
+			and bill_no = #{billNo}
+		</if>
+       	<if test=" subjectCode != null and subjectCode !='' ">
+			and subject_code = #{subjectCode}
+		</if>
+       	<if test=" orderNo != null and orderNo !='' ">
+			and order_no = #{orderNo}
+		</if>
+       	<if test=" waybillNo != null and waybillNo !='' ">
+			and waybill_no = #{waybillNo}
+		</if>
+       	<if test=" customerId != null and customerId !='' ">
+			and customer_id = #{customerId}
+		</if>
+       	<if test=" customerName != null and customerName !='' ">
+			and customer_name = #{customerName}
+		</if>
+       	<if test=" warehouseCode != null and warehouseCode !='' ">
+			and warehouse_code = #{warehouseCode}
+		</if>
+       	<if test=" warehouseName != null and warehouseName !='' ">
+			and warehouse_name = #{warehouseName}
+		</if>
+       	<if test=" materialCode != null and materialCode !='' ">
+			and material_code = #{materialCode}
+		</if>
+       	<if test=" materialName != null and materialName !='' ">
+			and material_name = #{materialName}
+		</if>
+       	<if test=" orderType != null and orderType !='' ">
+			and order_type = #{orderType}
+		</if>
+       	<if test=" productType != null and productType !='' ">
+			and product_type = #{productType}
+		</if>
+       	<if test=" tempretureType != null and tempretureType !='' ">
+			and tempreture_type = #{tempretureType}
+		</if>
+       	<if test=" productNo != null and productNo !='' ">
+			and product_no = #{productNo}
+		</if>
+       	<if test=" productName != null and productName !='' ">
+			and product_name = #{productName}
+		</if>
+       	<if test=" chargeUnit != null and chargeUnit !='' ">
+			and charge_unit = #{chargeUnit}
+		</if>
+       	<if test=" totalQty != null and totalQty !='' ">
+			and total_qty = #{totalQty}
+		</if>
+       	<if test=" totalWeight != null and totalWeight !='' ">
+			and total_weight = #{totalWeight}
+		</if>
+       	<if test=" totalVolume != null and totalVolume !='' ">
+			and total_volume = #{totalVolume}
+		</if>
+       	<if test=" totalSku != null and totalSku !='' ">
+			and total_sku = #{totalSku}
+		</if>
+       	<if test=" totalBox != null and totalBox !='' ">
+			and total_box = #{totalBox}
+		</if>
+       	<if test=" amount != null and amount !='' ">
+			and amount = #{amount}
+		</if>
+       	<if test=" derateAmount != null and derateAmount !='' ">
+			and derate_amount = #{derateAmount}
+		</if>
+       	<if test=" createTime != null and createTime !='' ">
+			and create_time = #{createTime}
+		</if>
+       	<if test=" createMonth != null and createMonth !='' ">
+			and create_month = #{createMonth}
+		</if>
+       	<if test=" rowExcelNo != null and rowExcelNo !='' ">
+			and rowExcelNo = #{rowExcelNo}
+		</if>
+       	<if test=" rowExcelName != null and rowExcelName !='' ">
+			and rowExcelName = #{rowExcelName}
+		</if>
+       	<if test=" sheetName != null and sheetName !='' ">
+			and sheetName = #{sheetName}
+		</if>
+    </delete>
+</mapper>

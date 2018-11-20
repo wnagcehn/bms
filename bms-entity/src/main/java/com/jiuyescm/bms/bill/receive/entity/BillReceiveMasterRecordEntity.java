@@ -19,7 +19,7 @@ public class BillReceiveMasterRecordEntity implements IEntity {
 	// id
 	private Long id;
 	// 任务ID
-	private String taskId;
+	private String billNo;
 	// 账单操作时间
 	private Timestamp createTime;
 	// 操作人
@@ -43,14 +43,15 @@ public class BillReceiveMasterRecordEntity implements IEntity {
 		this.id = id;
 	}
 	
-	public String getTaskId() {
-		return this.taskId;
+	
+	public String getBillNo() {
+		return billNo;
 	}
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
 	}
-	
+
 	public Timestamp getCreateTime() {
 		return this.createTime;
 	}

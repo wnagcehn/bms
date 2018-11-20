@@ -54,8 +54,8 @@
       <PropertyDef name="delFlag">
         <Property name="label">作废标识</Property>
       </PropertyDef>
-      <PropertyDef name="taskId">
-        <Property name="label">任务ID</Property>
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
       </PropertyDef>
       <PropertyDef name="originFileName">
         <Property name="label">原文件下载</Property>
@@ -89,7 +89,7 @@
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
         <Property name="mapping">
-          <Property name="mapValues"/>
+          <Property name="mapValues"></Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="billCheckStatus">
@@ -196,7 +196,7 @@
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
         <Property name="mapping">
-          <Property name="mapValues"/>
+          <Property name="mapValues"></Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="billCheckStatus">

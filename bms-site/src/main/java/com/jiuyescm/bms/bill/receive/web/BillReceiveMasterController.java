@@ -310,11 +310,11 @@ public class BillReceiveMasterController {
 		String userId = JAppContext.currentUserID();
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		// 生成任务，写入主表
-		String taskId =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 		//组装数据
 		try {
 			BillReceiveMasterEntity taskEntity = new BillReceiveMasterEntity();
-			taskEntity.setTaskId(taskId);
+			taskEntity.setBillNo(billNo);
 			taskEntity.setCreateMonth(Integer.valueOf(parameter.get("createMonth").toString()));
 			taskEntity.setBillName(parameter.get("billName").toString());
 			taskEntity.setInvoiceName(parameter.get("invoiceName").toString());
@@ -350,7 +350,7 @@ public class BillReceiveMasterController {
 		//写入应收账单导入记录表
 		try {
 			BillReceiveMasterRecordEntity recordEntity = new BillReceiveMasterRecordEntity();
-			recordEntity.setTaskId(taskId);
+			recordEntity.setBillNo(billNo);
 			recordEntity.setCreateTime(currentTime);
 			recordEntity.setCreator(username);
 			recordEntity.setCreatorId(userId);
@@ -410,7 +410,7 @@ public class BillReceiveMasterController {
 //		}
 			
 		// 写入MQ
-		final String msg = taskId;
+		final String msg = billNo;
 		jmsQueueTemplate.send("BMS_QUE_RECEIVE_BILL_IMPORT", new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
