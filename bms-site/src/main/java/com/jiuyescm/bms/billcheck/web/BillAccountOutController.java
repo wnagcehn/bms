@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billcheck.web;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountInfoService;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
+import com.jiuyescm.cfm.common.JAppContext;
 
 @Controller("billAccountOutController")
 public class BillAccountOutController {
@@ -43,7 +45,7 @@ public class BillAccountOutController {
 			param = new HashMap<String, Object>();
 		}		
 
-		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.query(param, page.getPageNo(), page.getPageSize());
+		PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.queryForOut(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
@@ -57,7 +59,12 @@ public class BillAccountOutController {
 	 */
 	@DataResolver
 	public String save(Map<String, Object> param) {
-
+		Timestamp creTime = JAppContext.currentTimestamp();
+		String creator = JAppContext.currentUserName();
+		String creatorId = JAppContext.currentUserID();
+		param.put("creTime", creTime);
+		param.put("creator", creator);
+		param.put("creatorId", creatorId);
 		return 	bmsAccountOutService.save(param);
 	}
 }

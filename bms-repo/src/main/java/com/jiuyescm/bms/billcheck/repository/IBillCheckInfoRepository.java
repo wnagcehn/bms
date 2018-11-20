@@ -147,4 +147,14 @@ public interface IBillCheckInfoRepository {
 	 * @return
 	 */
 	int save(BillCheckInfoEntity entity);
-}
+	
+	/**
+	 *账单冲抵页面查询账单
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BillCheckInfoEntity> queryForOut(Map<String, Object> condition, int pageNo,
+            int pageSize);
+	}

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Controller;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.billcheck.BillAccountInEntity;
-import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.service.IBmsBillAccountInService;
+import com.jiuyescm.bms.billcheck.vo.BillAccountInVo;
+import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
 
 
 
@@ -23,9 +23,9 @@ public class BillAccountDetailController {
 	@Resource private IBmsAccountOutService billAccountOutService;
 	
 	@DataProvider  
-	public void queryIn(Page<BillAccountInEntity> page,Map<String,Object> parameter){
-		
-		PageInfo<BillAccountInEntity> tmpPageInfo = billAccountInService.query(parameter, page.getPageNo(),page.getPageSize());
+	public void queryIn(Page<BillAccountInVo> page,Map<String,Object> parameter){
+		parameter.put("confirmStatus", 1);
+		PageInfo<BillAccountInVo> tmpPageInfo = billAccountInService.query(parameter, page.getPageNo(),page.getPageSize());
 		if (tmpPageInfo != null) {
 			page.setEntities(tmpPageInfo.getList());
 			page.setEntityCount((int) tmpPageInfo.getTotal());
@@ -41,9 +41,9 @@ public class BillAccountDetailController {
 	}
 	
 	@DataProvider  
-	public void queryOut(Page<BillAccountOutEntity> page,Map<String,Object> parameter){
+	public void queryOut(Page<BillAccountOutVo> page,Map<String,Object> parameter){
 		
-		PageInfo<BillAccountOutEntity> tmpPageInfo = billAccountOutService.query(parameter, page.getPageNo(),page.getPageSize());
+		PageInfo<BillAccountOutVo> tmpPageInfo = billAccountOutService.query(parameter, page.getPageNo(),page.getPageSize());
 		if (tmpPageInfo != null) {
 			page.setEntities(tmpPageInfo.getList());
 			page.setEntityCount((int) tmpPageInfo.getTotal());

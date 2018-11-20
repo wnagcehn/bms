@@ -172,6 +172,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
 				entity.setRemark("合同不存在");
 				entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
+				entity.setPrice(0d);
 				listBiz.add(entity);
 				continue;
 			}
@@ -184,6 +185,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
 				entity.setRemark("未签约服务");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setPrice(0d);
 				listBiz.add(entity);
 				continue;
 			}
@@ -218,6 +220,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			if(ruleEntity == null){
 				entity.setRemark("规则未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				entity.setPrice(0d);
 				listBiz.add(entity);
 				continue;
 			}

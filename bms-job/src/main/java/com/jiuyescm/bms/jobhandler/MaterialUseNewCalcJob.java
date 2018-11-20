@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
@@ -43,6 +44,8 @@ import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
 import com.jiuyescm.contract.quote.vo.ContractQuoteInfoVo;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
+import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
 
@@ -66,7 +69,10 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Autowired private SequenceService sequenceService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
+	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
+
 	
+	Map<String,PubMaterialInfoVo> materialMap = null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	Map<String,List<PriceMaterialQuotationEntity>> mapCusPrice=null;
@@ -75,6 +81,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		mapCusPrice=new ConcurrentHashMap<String,List<PriceMaterialQuotationEntity>>();
 		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
 		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
+		materialMap=queryAllMaterial();
 	}
 	
 
@@ -126,13 +133,21 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		storageFeeEntity.setCostType("FEE_TYPE_MATERIAL");				//费用类别 FEE_TYPE_GENEARL-通用 FEE_TYPE_MATERIAL-耗材 FEE_TYPE_ADD-增值
 		storageFeeEntity.setSubjectCode(SubjectId);						//费用科目
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
-		storageFeeEntity.setProductType("");							//商品类型
-		storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费数量
-		storageFeeEntity.setStatus("0");								//状态
-		storageFeeEntity.setOrderNo(entity.getOutstockNo());
+		storageFeeEntity.setProductType("");//商品类型
 		//根据测试的建议 吧耗材编码设置成商品编号和商品名称 zhangzw
 		storageFeeEntity.setProductNo(entity.getConsumerMaterialCode());
 		storageFeeEntity.setProductName(entity.getConsumerMaterialName());
+		storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费数量
+		if(materialMap!=null && materialMap.containsKey(entity.getConsumerMaterialCode())){
+			String materialType=materialMap.get(entity.getConsumerMaterialCode()).getMaterialType();
+			if("干冰".equals(materialType)){
+				storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getWeight():entity.getAdjustNum());//计费数量
+			}else{
+				storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费重量
+			}
+		}
+		storageFeeEntity.setStatus("0");								//状态
+		storageFeeEntity.setOrderNo(entity.getOutstockNo());
 		storageFeeEntity.setBizId(String.valueOf(entity.getId()));						//业务数据主键
 		storageFeeEntity.setWeight(entity.getWeight());					//设置重量
 		entity.setCalculateTime(JAppContext.currentTimestamp());
@@ -407,7 +422,21 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 
 	
-
+	/**
+	 * 查询耗材编码-耗材映射
+	 * @return
+	 */
+	public Map<String,PubMaterialInfoVo> queryAllMaterial(){
+		Map<String,Object> condition=Maps.newHashMap();
+		List<PubMaterialInfoVo> tmscodels = pubMaterialInfoService.queryList(condition);
+		Map<String,PubMaterialInfoVo> map=Maps.newLinkedHashMap();
+		for(PubMaterialInfoVo materialVo:tmscodels){
+			if(!StringUtils.isBlank(materialVo.getBarcode())){
+				map.put(materialVo.getBarcode().trim(),materialVo);
+			}
+		}
+		return map;
+	}
 	
 	
 	

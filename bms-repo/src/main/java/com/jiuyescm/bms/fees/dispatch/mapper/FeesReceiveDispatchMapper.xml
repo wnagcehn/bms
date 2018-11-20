@@ -480,7 +480,8 @@
 	a.is_calculated as dispatchCal,
 	a.remark as dispatchRemark,
 	(b.amount-IFNULL(b.derate_amount,0)) as discountAmount,
-	f.servicename as serviceTypeName
+	f.servicename as serviceTypeName,
+	(c.cost-IFNULL(c.derate_amount,0)) as operateAmount
 	from biz_dispatch_bill a
 	left join fees_receive_dispatch b on a.fees_no=b.fees_no and b.del_flag='0'
 	left join biz_outstock_master d on d.waybill_no=a.waybill_no  and d.del_flag='0' and d.b2b_flag = '0'

@@ -241,4 +241,10 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 		return repository.deleteAllByWayBillNo(waybillNoList);
 	}
 
+	@Override
+	public String getMaxBwdVolumn(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return repository.getMaxBwdVolumn(condition);
+	}
+
 }

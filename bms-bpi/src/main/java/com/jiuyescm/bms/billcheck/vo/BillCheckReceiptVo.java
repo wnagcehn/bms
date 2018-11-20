@@ -44,6 +44,8 @@ public class BillCheckReceiptVo implements IEntity {
 	private String delFlag;
 	// remark
 	private String remark;
+	// receiptType
+	private String receiptType;
 	
 	//商家合同名称
 	private String invoiceName;
@@ -206,6 +208,22 @@ public class BillCheckReceiptVo implements IEntity {
 		this.remark = remark;
 	}
 
+	/**
+     * receiptType
+     */
+	public String getReceiptType() {
+		return this.receiptType;
+	}
+
+    /**
+     * receiptType
+     *
+     * @param receiptType
+     */
+	public void setReceiptType(String receiptType) {
+		this.receiptType= receiptType;
+	}
+	
 	public BigDecimal getReceiptAmount() {
 		return receiptAmount;
 	}

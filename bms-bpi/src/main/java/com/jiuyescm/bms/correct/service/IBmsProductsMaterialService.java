@@ -3,6 +3,7 @@ package com.jiuyescm.bms.correct.service;
 import java.util.List;
 import java.util.Map;
 
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.correct.vo.BmsMarkingMaterialVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsMaterialAccountVo;
 
@@ -11,16 +12,29 @@ public interface IBmsProductsMaterialService {
 	//查询出所有占比最高的
 	List<BmsProductsMaterialAccountVo> queyAllMax(Map<String,Object> condition);
 	
+	//查询出所有占比最高的保温袋
+	List<BmsProductsMaterialAccountVo> queyAllBwxMax(Map<String,Object> condition);
+
 	//统计占比
 	List<BmsProductsMaterialAccountVo> queyMaterialCount(Map<String,Object> condition);
+	
+	//获取最多使用的保温袋
+	BizOutstockPackmaterialEntity queryBwdMaterial(Map<String,Object> condition);
 	
 	//保存统计数据
 	int saveList(List<BmsProductsMaterialAccountVo> list);
 	
+	//插入耗材统计表
 	int saveMaterial(Map<String,Object> condition);
+	
+	//插入保温袋统计表
+	int saveBwd(Map<String,Object> condition);
 	
 	//查询出所有占比不是最高的
 	List<BmsMarkingMaterialVo> queyNotMax(Map<String,Object> condition);
+	
+	//查询出所有占比不是最高的保温袋
+	List<BizOutstockPackmaterialEntity> queyNotMaxBwd(Map<String,Object> condition);
 	
 	//根据商品明细查询出所有的运单
 	List<BmsMarkingMaterialVo> queryMark(Map<String,Object> condition);

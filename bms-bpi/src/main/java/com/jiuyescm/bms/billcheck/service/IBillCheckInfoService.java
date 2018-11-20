@@ -150,4 +150,14 @@ public interface IBillCheckInfoService {
 	 * @return
 	 */
 	int save(BillCheckInfoVo vo); 
-}
+	
+	/**
+	 * 账单冲抵页面查询账单的信息
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BillCheckInfoVo> queryForOut(Map<String, Object> condition, int pageNo,
+            int pageSize);
+	}
