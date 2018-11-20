@@ -51,8 +51,8 @@ public class BillReceiveMasterEntity implements IEntity {
 	private Timestamp lastModifyTime;
 	// 作废标识
 	private String delFlag;
-	// 任务ID
-	private String taskId;
+	// 账单编号
+	private String billNo;
 	// 原文件名称
 	private String originFileName;
 	// 原文件路径
@@ -208,14 +208,15 @@ public class BillReceiveMasterEntity implements IEntity {
 		this.delFlag = delFlag;
 	}
 	
-	public String getTaskId() {
-		return this.taskId;
+	
+	public String getBillNo() {
+		return billNo;
 	}
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
 	}
-	
+
 	public String getOriginFileName() {
 		return this.originFileName;
 	}

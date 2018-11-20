@@ -19,7 +19,7 @@
 		   	<result column="last_modifier_id" property="lastModifierId" jdbcType="VARCHAR" />
 		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
 		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
-		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
 		   	<result column="origin_file_name" property="originFileName" jdbcType="VARCHAR" />
 		   	<result column="origin_file_path" property="originFilePath" jdbcType="VARCHAR" />
 		   	<result column="result_file_name" property="resultFileName" jdbcType="VARCHAR" />
@@ -27,11 +27,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, origin_file_name, origin_file_path, result_file_name, result_file_path
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, origin_file_name, origin_file_path, result_file_name, result_file_path
+create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path
     </sql>
 
 	<!-- 根据id查询 -->
@@ -49,7 +49,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, 
         IFNULL(amount,0) as amount, IFNULL(adjust_amount,0) as adjustAmount, SUM(IFNULL(amount,0)+IFNULL(adjust_amount,0)) as totalAmount, 
         creator, creator_id, create_time, finish_time, 
-        last_modifier, last_modifier_id, last_modify_time, del_flag, task_id, 
+        last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, 
         origin_file_name, origin_file_path, result_file_name, result_file_path
         from bill_receive_master
         where 1 = 1
@@ -101,10 +101,10 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         	<if test=" delFlag != null and delFlag !='' ">
 				and del_flag = #{delFlag}
 			</if>
-        	<if test=" taskId != null and taskId !='' ">
-				and task_id = #{taskId}
+        	<if test=" billNo != null and billNo !='' ">
+				and bill_no = #{billNo}
 			</if>
-			GROUP BY task_id
+			GROUP BY bill_no
     </select>
 
 	<!-- 保存 -->
@@ -130,7 +130,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			#{lastModifierId,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
 			#{delFlag,jdbcType=VARCHAR}, 
-			#{taskId,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
 			#{originFileName,jdbcType=VARCHAR}, 
 			#{originFilePath,jdbcType=VARCHAR}, 
 			#{resultFileName,jdbcType=VARCHAR}, 
@@ -188,8 +188,8 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			<if test=" delFlag != null and delFlag !='' ">
 				del_flag = #{delFlag,jdbcType=VARCHAR},
 			</if>
-			<if test=" taskId != null and taskId !='' ">
-				task_id = #{taskId,jdbcType=VARCHAR},
+			<if test=" billNo != null and billNo !='' ">
+				bill_no = #{billNo,jdbcType=VARCHAR},
 			</if>
 			<if test=" originFileName != null and originFileName !='' ">
 				origin_file_name = #{originFileName,jdbcType=VARCHAR},

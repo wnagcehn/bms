@@ -3,7 +3,7 @@
 <mapper namespace="com.jiuyescm.bms.bill.receive.BillReceiveMasterRecordMapper" >
     <resultMap id="BaseResultMap" type="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity" >
        		<id column="id" property="id" jdbcType="INTEGER" />
-		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
 		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
 		   	<result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
@@ -12,11 +12,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, task_id, create_time, creator, creator_id, adjust_amount, remark
+        id, bill_no, create_time, creator, creator_id, adjust_amount, remark
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-task_id, create_time, creator, creator_id, adjust_amount, remark
+bill_no, create_time, creator, creator_id, adjust_amount, remark
     </sql>
 
 	<!-- 根据id查询 -->
@@ -37,8 +37,8 @@ task_id, create_time, creator, creator_id, adjust_amount, remark
         	<if test=" id != null and id !='' ">
 				and id = #{id}
 			</if>
-        	<if test=" taskId != null and taskId !='' ">
-				and task_id = #{taskId}
+        	<if test=" billNo != null and billNo !='' ">
+				and bill_no = #{billNo}
 			</if>
         	<if test=" createTime != null and createTime !='' ">
 				and create_time = #{createTime}
@@ -64,7 +64,7 @@ task_id, create_time, creator, creator_id, adjust_amount, remark
     	)
         values (
 
-			#{taskId,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{creator,jdbcType=VARCHAR}, 
 			#{creatorId,jdbcType=VARCHAR}, 
@@ -77,8 +77,8 @@ task_id, create_time, creator, creator_id, adjust_amount, remark
     <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity">
         update bill_receive_master_record
         <trim prefix="set" suffixOverrides=",">
-			<if test=" taskId != null and taskId !='' ">
-				task_id = #{taskId,jdbcType=VARCHAR},
+			<if test=" billNo != null and billNo !='' ">
+				bill_no = #{billNo,jdbcType=VARCHAR},
 			</if>
 			<if test=" createTime != null and createTime !='' ">
 				create_time = #{createTime,jdbcType=TIMESTAMP},
