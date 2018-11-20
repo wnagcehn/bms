@@ -3,6 +3,7 @@ package com.jiuyescm.bms.billimport.repository.impl;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -84,8 +85,9 @@ public class BillFeesReceiveStorageTempRepositoryImpl extends MyBatisDao<BillFee
     
 	@Override
 	public int insertBatch(List<BillFeesReceiveStorageTempEntity> list)throws Exception {
-		int k = insertBatch("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.save", list);
-		return k;
+		SqlSession session = getSqlSessionTemplate();
+		int result = session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.saveBatch", list);
+		return result;
 	}
 	
 	@Override

@@ -373,4 +373,45 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
 			and sheetName = #{sheetName}
 		</if>
     </delete>
+    
+    <!-- 批量保存 -->
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into bill_fees_receive_storage_temp(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+         (
+
+			#{item.billNo}, 
+			#{item.subjectCode}, 
+			#{item.orderNo}, 
+			#{item.waybillNo}, 
+			#{item.customerId}, 
+			#{item.customerName}, 
+			#{item.warehouseCode}, 
+			#{item.warehouseName}, 
+			#{item.materialCode}, 
+			#{item.materialName}, 
+			#{item.orderType}, 
+			#{item.productType}, 
+			#{item.tempretureType}, 
+			#{item.productNo}, 
+			#{item.productName}, 
+			#{item.chargeUnit}, 
+			#{item.totalQty}, 
+			#{item.totalWeight}, 
+			#{item.totalVolume}, 
+			#{item.totalSku}, 
+			#{item.totalBox}, 
+			#{item.amount}, 
+			#{item.derateAmount}, 
+			#{item.createTime}, 
+			#{item.createMonth}, 
+			#{item.rowExcelNo}, 
+			#{item.rowExcelName}, 
+			#{item.sheetName}
+        )
+        </foreach>
+    </insert>
 </mapper>
