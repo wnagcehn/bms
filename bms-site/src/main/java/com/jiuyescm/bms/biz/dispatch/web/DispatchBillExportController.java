@@ -531,6 +531,12 @@ public class DispatchBillExportController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "折扣后操作费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "operateAmount");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
         itemMap.put("title", "操作费计算状态");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "orderIsCalculated");
@@ -612,7 +618,7 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("adjustCarrierName", entity.getAdjustCarrierName());
 	        	dataItem.put("originCarrierName", entity.getOriginCarrierName());
 	        	dataItem.put("chargeCarrierName", entity.getChargeCarrierName());
-	        	
+	        	dataItem.put("operateAmount", entity.getOperateAmount());
         		dataItem.put("dutyType", entity.getDutyType());
 	        	dataItem.put("updateReasonDetail", entity.getUpdateReasonDetail());
 	        	dataItem.put("headPrice", entity.getHeadPrice());

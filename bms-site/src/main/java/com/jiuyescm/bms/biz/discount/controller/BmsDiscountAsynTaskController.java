@@ -14,6 +14,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -188,7 +190,12 @@ public class BmsDiscountAsynTaskController {
 				queryVo.setCustomerId(entity.getCustomerId());
 				queryVo.setSettlementTime(entity.getCreateMonth());
 				queryVo.setBizTypeCode(entity.getBizTypecode());
+				if("DISPATCH".equals(entity.getBizTypecode())){
+					queryVo.setBizTypeCode("DISTRIBUTION");
+				}
+				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
 				}
@@ -220,7 +227,9 @@ public class BmsDiscountAsynTaskController {
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
 				queryVo.setCustomerId(entity.getCustomerId());
 				queryVo.setSettlementTime(entity.getCreateMonth());
+				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					bdatList=getContractList(disCountVo, entity, month);
 				}
@@ -230,6 +239,8 @@ public class BmsDiscountAsynTaskController {
 				// 合同生效期和开始时间比较
 				if (month < 10) {
 					newEntity.setMonth("0" + entity.getMonth().toString());
+				}else{
+					newEntity.setMonth(entity.getMonth().toString());
 				}
 				String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
 				SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -254,7 +265,9 @@ public class BmsDiscountAsynTaskController {
 			try {
 				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
 				queryVo.setSettlementTime(entity.getCreateMonth());
+				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
 				}
@@ -264,6 +277,8 @@ public class BmsDiscountAsynTaskController {
 				// 合同生效期和开始时间比较
 				if (month < 10) {
 					newEntity.setMonth("0" + entity.getMonth().toString());
+				}else{
+					newEntity.setMonth(entity.getMonth().toString());
 				}
 				String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
 				SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -291,6 +306,8 @@ public class BmsDiscountAsynTaskController {
 			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 			if (month < 10) {
 				newEntity.setMonth("0" + entity.getMonth().toString());
+			}else{
+				newEntity.setMonth(entity.getMonth().toString());
 			}
 			if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
 				String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
@@ -360,6 +377,8 @@ public class BmsDiscountAsynTaskController {
 					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 					if (month < 10) {
 						newEntity.setMonth("0" + entity.getMonth().toString());
+					}else{
+						newEntity.setMonth(entity.getMonth().toString());
 					}
 					if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
 						String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
@@ -394,6 +413,8 @@ public class BmsDiscountAsynTaskController {
 					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 					if (month < 10) {
 						newEntity.setMonth("0" + entity.getMonth().toString());
+					}else{
+						newEntity.setMonth(entity.getMonth().toString());
 					}
 					if (StringUtils.isNotBlank(entity.getYear()) && StringUtils.isNotBlank(entity.getMonth())) {
 						String startDateStr = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";

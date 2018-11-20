@@ -10,6 +10,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsMaterialRepository;
 import com.jiuyescm.bms.correct.service.IBmsProductsMaterialService;
 import com.jiuyescm.bms.correct.vo.BmsMarkingMaterialVo;
@@ -42,6 +43,25 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return voList;
 	}
 
+	
+	@Override
+	public List<BmsProductsMaterialAccountVo> queyAllBwxMax(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsProductsMaterialAccountEntity> list=bmsProductsMaterialRepository.queyAllBwxMax(condition);
+		List<BmsProductsMaterialAccountVo> voList = new ArrayList<BmsProductsMaterialAccountVo>();
+    	for(BmsProductsMaterialAccountEntity entity : list) {
+    		BmsProductsMaterialAccountVo vo = new BmsProductsMaterialAccountVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
+	
 	@Override
 	public List<BmsMarkingMaterialVo> queyNotMax(
 			Map<String, Object> condition) {
@@ -58,6 +78,14 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
     		voList.add(vo);
     	}
 		return voList;
+	}
+	
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxBwd(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BizOutstockPackmaterialEntity> list=bmsProductsMaterialRepository.queyNotMaxBwd(condition);
+		return list;
 	}
 	
 	@Override
@@ -178,5 +206,22 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 
 		return bmsProductsMaterialRepository.updateMaterialAccount(condition);
 	}
+
+	@Override
+	public int saveBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.saveBwd(condition);
+	}
+
+
+	@Override
+	public BizOutstockPackmaterialEntity queryBwdMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.queryBwdMaterial(condition);
+	}
+
+
+
 
 }

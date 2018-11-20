@@ -99,6 +99,14 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.save", list);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public int save(BillCheckInfoEntity entity) {
+		// TODO Auto-generated method stub
+		int k = insert("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.save", entity);
+		return k;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -227,4 +235,13 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public PageInfo<BillCheckInfoEntity> queryForOut(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryForOut", condition,new RowBounds(pageNo,pageSize));
+		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
+		return page;
+	}
 }

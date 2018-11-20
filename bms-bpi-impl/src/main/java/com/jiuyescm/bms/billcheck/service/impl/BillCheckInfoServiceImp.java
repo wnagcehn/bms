@@ -282,6 +282,17 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		
 		return billCheckInfoRepository.saveList(enList);
 	}
+	
+	@Override
+	public int save(BillCheckInfoVo vo) {
+		BillCheckInfoEntity entity = new BillCheckInfoEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return billCheckInfoRepository.save(entity);
+	}
 
 	@Override
 	public List<BillCheckInfoVo> queryList(Map<String, Object> condition) {
@@ -658,5 +669,26 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
             logger.error("转换失败:{0}",ex);
         }
 		return billCheckInfoVo;
+	}
+	
+	public PageInfo<BillCheckInfoVo> queryForOut(Map<String, Object> condition,
+			int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		PageInfo<BillCheckInfoEntity> pageInfo=billCheckInfoRepository.queryForOut(condition, pageNo, pageSize);
+		PageInfo<BillCheckInfoVo> result=new PageInfo<BillCheckInfoVo>();
+		
+		try {
+			List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
+	    	for(BillCheckInfoEntity entity : pageInfo.getList()) {
+	    		BillCheckInfoVo vo = new BillCheckInfoVo(); 		
+	            PropertyUtils.copyProperties(vo, entity);  
+	    		voList.add(vo);
+	    	}
+	    	result.setList(voList);
+		} catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+    	
+		return result;
 	}
 }

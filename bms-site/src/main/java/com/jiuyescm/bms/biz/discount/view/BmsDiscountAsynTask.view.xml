@@ -301,14 +301,8 @@ entity.set(&quot;subjectName&quot;, &quot;&quot;);&#xD;
         <Property name="readOnly">true</Property>
         <IndicatorColumn/>
         <RowNumColumn/>
-        <DataColumn name="id">
-          <Property name="property">id</Property>
-          <Property name="visible">false</Property>
-          <Property name="width">110</Property>
-        </DataColumn>
         <DataColumn name="taskId">
           <Property name="property">taskId</Property>
-          <Property name="visible">false</Property>
           <Property name="width">110</Property>
         </DataColumn>
         <DataColumn name="customerId">
