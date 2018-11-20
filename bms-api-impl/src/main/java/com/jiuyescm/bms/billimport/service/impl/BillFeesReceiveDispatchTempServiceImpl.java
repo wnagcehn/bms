@@ -4,9 +4,10 @@
  */
 package com.jiuyescm.bms.billimport.service.impl;
 
+import java.util.List;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +54,17 @@ public class BillFeesReceiveDispatchTempServiceImpl implements IBillFeesReceiveD
     public void delete(Long id) {
         billFeesReceiveDispatchTempRepository.delete(id);
     }
+
+	@Override
+	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveDispatchTempRepository.insertBatch(list);
+	}
+
+	@Override
+	public int deleteBatch(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveDispatchTempRepository.deleteBatch(condition);
+	}
 	
 }
