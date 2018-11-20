@@ -28,6 +28,7 @@
 		<module>bms-base-api</module>
 		<module>bms-base-service</module>
 		<module>bms-mq-billimport</module>
+		<module>excel-support</module>
   </modules>
 
 	<properties>

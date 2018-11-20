@@ -1,11 +1,17 @@
 package com.jiuyescm.bms.excel;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
@@ -44,9 +50,64 @@ public class ExcelXlsxReader extends DefaultHandler{
     private XSSFReader xssfReader;
     private List<OpcSheet> sheets;
     
-    public ExcelXlsxReader(String path) throws Exception{
-    	sheets = new ArrayList<OpcSheet>();
+    public void close() throws IOException{
+    	pkg.close();
+    	delLocalFile();
+    }
+    
+    public ExcelXlsxReader(InputStream inputStream) throws Exception{
+    	copyFileToLoal(inputStream);
+    	read();
+    }
+
+	private void copyFileToLoal(InputStream inputStream)  throws Exception {
+    	String localName = UUID.randomUUID().toString();//本地文件名称
+    	filePath = this.getClass().getClassLoader().getResource("").getPath() +localName+ ".xlsx"; //本地文件路径
+    	logger.info(filePath);
+    	OutputStream os = null;
+    	try{
+    		os = new FileOutputStream(filePath);
+        	byte[] bs = new byte[1024];
+        	int len;
+        	while ((len = inputStream.read(bs)) != -1) {
+                os.write(bs, 0, len);
+            }
+    	}
+    	catch(Exception ex){
+    		logger.error("远程拉取文件到本地异常",ex);
+    		throw ex;
+    	}
+    	finally {
+            try {
+            	if(os !=null){
+            		os.close();// 完毕，关闭所有链接
+            	}
+                inputStream.close();
+            } catch (IOException e) {
+            	logger.error("关闭流异常",e);
+            	throw e;
+            }
+        }
+    }
+    
+    private void delLocalFile(){
+    	File file = new File(filePath); 
+    	if (file.exists() && file.isFile()) {  
+			if (file.delete()) {  
+				logger.info("本地文件删除成功");
+            } else {  
+            	logger.info("本地文件删除失败");
+            }  
+		}
+    }
+    
+    /*public ExcelXlsxReader(String path) throws Exception{
     	filePath = path;
+    	read();
+    }*/
+    
+    private void read() throws Exception{
+    	sheets = new ArrayList<OpcSheet>();
     	pkg = OPCPackage.open(filePath);
         xssfReader = new XSSFReader(pkg);
         sst = xssfReader.getSharedStringsTable();  
@@ -63,6 +124,8 @@ public class ExcelXlsxReader extends DefaultHandler{
             sheetStream.close();
         }
     }
+    
+    
     
     public List<OpcSheet> getSheets(){
     	return sheets;

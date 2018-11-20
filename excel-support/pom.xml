@@ -95,5 +95,18 @@
 		
 		
 	</dependencies>
+	
+	
+	<build>
+	 	<plugins>
+	  		<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-deploy-plugin</artifactId>
+			    <configuration>
+			        <skip>false</skip><!-- 发布设置为false -->
+			    </configuration>
+			</plugin>
+	  	 </plugins>
+	  </build>
 
 </project>
