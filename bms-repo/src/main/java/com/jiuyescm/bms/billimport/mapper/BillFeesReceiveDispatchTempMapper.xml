@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT UNSIGNED" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrierid" property="carrierid" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliveryid" property="deliveryid" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="unpacking" property="unpacking" jdbcType="VARCHAR" />
+	    <result column="unpack_num" property="unpackNum" jdbcType="DECIMAL" />
+	    <result column="temperature_type" property="temperatureType" jdbcType="VARCHAR" />
+	    <result column="bill_type" property="billType" jdbcType="VARCHAR" />
+	    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+	    <result column="send_province" property="sendProvince" jdbcType="VARCHAR" />
+	    <result column="send_city" property="sendCity" jdbcType="VARCHAR" />
+	    <result column="send_district" property="sendDistrict" jdbcType="VARCHAR" />
+	    <result column="receive_province" property="receiveProvince" jdbcType="VARCHAR" />
+	    <result column="receive_city" property="receiveCity" jdbcType="VARCHAR" />
+	    <result column="receive_district" property="receiveDistrict" jdbcType="VARCHAR" />
+	    <result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DECIMAL" />
+	    <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+	    <result column="total_sku" property="totalSku" jdbcType="DECIMAL" />
+	    <result column="amount" property="amount" jdbcType="DECIMAL" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="create_month" property="createMonth" jdbcType="INTEGER" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="rowExcelNo" property="rowExcelNo" jdbcType="INTEGER" />
+	    <result column="rowExcelName" property="rowExcelName" jdbcType="VARCHAR" />
+	    <result column="sheetName" property="sheetName" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="baseColumns">
+        id, bill_no, subject_code, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name, unpacking, unpack_num, temperature_type, bill_type, b2b_flag, send_province, send_city, send_district, receive_province, receive_city, receive_district, service_type_code, total_weight, total_qty, total_sku, amount, derate_amount, create_time, create_month, write_time, rowExcelNo, rowExcelName, sheetName
+    </sql>
+	
+	<sql id="baseSelectColumns">
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and waybill_no = #{waybillNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and outstock_no = #{outstockNo}
+		</if>
+		<if test="(externalNo != null and externalNo !='')" >
+				and external_no = #{externalNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and customer_name = #{customerName}
+		</if>
+		<if test="(carrierid != null and carrierid !='')" >
+				and carrierid = #{carrierid}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and carrier_name = #{carrierName}
+		</if>
+		<if test="(deliveryid != null and deliveryid !='')" >
+				and deliveryid = #{deliveryid}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and deliver_name = #{deliverName}
+		</if>
+		<if test="(unpacking != null and unpacking !='')" >
+				and unpacking = #{unpacking}
+		</if>
+		<if test="(unpackNum != null and unpackNum !='')" >
+				and unpack_num = #{unpackNum}
+		</if>
+		<if test="(temperatureType != null and temperatureType !='')" >
+				and temperature_type = #{temperatureType}
+		</if>
+		<if test="(billType != null and billType !='')" >
+				and bill_type = #{billType}
+		</if>
+		<if test="(b2bFlag != null and b2bFlag !='')" >
+				and b2b_flag = #{b2bFlag}
+		</if>
+		<if test="(sendProvince != null and sendProvince !='')" >
+				and send_province = #{sendProvince}
+		</if>
+		<if test="(sendCity != null and sendCity !='')" >
+				and send_city = #{sendCity}
+		</if>
+		<if test="(sendDistrict != null and sendDistrict !='')" >
+				and send_district = #{sendDistrict}
+		</if>
+		<if test="(receiveProvince != null and receiveProvince !='')" >
+				and receive_province = #{receiveProvince}
+		</if>
+		<if test="(receiveCity != null and receiveCity !='')" >
+				and receive_city = #{receiveCity}
+		</if>
+		<if test="(receiveDistrict != null and receiveDistrict !='')" >
+				and receive_district = #{receiveDistrict}
+		</if>
+		<if test="(serviceTypeCode != null and serviceTypeCode !='')" >
+				and service_type_code = #{serviceTypeCode}
+		</if>
+		<if test="(totalWeight != null and totalWeight !='')" >
+				and total_weight = #{totalWeight}
+		</if>
+		<if test="(totalQty != null and totalQty !='')" >
+				and total_qty = #{totalQty}
+		</if>
+		<if test="(totalSku != null and totalSku !='')" >
+				and total_sku = #{totalSku}
+		</if>
+		<if test="(amount != null and amount !='')" >
+				and amount = #{amount}
+		</if>
+		<if test="(derateAmount != null and derateAmount !='')" >
+				and derate_amount = #{derateAmount}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>
+		<if test="(writeTime != null and writeTime !='')" >
+			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+		</if>
+		<if test="(rowExcelNo != null and rowExcelNo !='')" >
+				and rowExcelNo = #{rowExcelNo}
+		</if>
+		<if test="(rowExcelName != null and rowExcelName !='')" >
+				and rowExcelName = #{rowExcelName}
+		</if>
+		<if test="(sheetName != null and sheetName !='')" >
+				and sheetName = #{sheetName}
+		</if>
+    </sql>
+	  
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_fees_receive_dispatch_temp
+        where 1=1
+		<include refid="baseSelectColumns" />
+    </select>
+
+    <select id="findById" resultType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity">
+        select
+        <include refid="baseColumns" />
+        from bill_fees_receive_dispatch_temp
+        where id=#{id} 
+    </select>
+
+    <insert id="save" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity">
+        insert into bill_fees_receive_dispatch_temp(bill_no, subject_code, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name, unpacking, unpack_num, temperature_type, bill_type, b2b_flag, send_province, send_city, send_district, receive_province, receive_city, receive_district, service_type_code, total_weight, total_qty, total_sku, amount, derate_amount, create_time, create_month, write_time, rowExcelNo, rowExcelName, sheetName)
+        values (
+
+#{billNo,jdbcType=VARCHAR}, 
+#{subjectCode,jdbcType=VARCHAR}, 
+#{waybillNo,jdbcType=VARCHAR}, 
+#{outstockNo,jdbcType=VARCHAR}, 
+#{externalNo,jdbcType=VARCHAR}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{warehouseName,jdbcType=VARCHAR}, 
+#{customerid,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{carrierid,jdbcType=VARCHAR}, 
+#{carrierName,jdbcType=VARCHAR}, 
+#{deliveryid,jdbcType=VARCHAR}, 
+#{deliverName,jdbcType=VARCHAR}, 
+#{unpacking,jdbcType=VARCHAR}, 
+#{unpackNum,jdbcType=DECIMAL}, 
+#{temperatureType,jdbcType=VARCHAR}, 
+#{billType,jdbcType=VARCHAR}, 
+#{b2bFlag,jdbcType=VARCHAR}, 
+#{sendProvince,jdbcType=VARCHAR}, 
+#{sendCity,jdbcType=VARCHAR}, 
+#{sendDistrict,jdbcType=VARCHAR}, 
+#{receiveProvince,jdbcType=VARCHAR}, 
+#{receiveCity,jdbcType=VARCHAR}, 
+#{receiveDistrict,jdbcType=VARCHAR}, 
+#{serviceTypeCode,jdbcType=VARCHAR}, 
+#{totalWeight,jdbcType=DECIMAL}, 
+#{totalQty,jdbcType=DECIMAL}, 
+#{totalSku,jdbcType=DECIMAL}, 
+#{amount,jdbcType=DECIMAL}, 
+#{derateAmount,jdbcType=DECIMAL}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{createMonth,jdbcType=INTEGER}, 
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{rowExcelNo,jdbcType=INTEGER}, 
+#{rowExcelName,jdbcType=VARCHAR}, 
+#{sheetName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity">
+        update bill_fees_receive_dispatch_temp 
+		<set >
+
+<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
+<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+<if test="carrierid != null" >carrierid=#{carrierid,jdbcType=VARCHAR},</if>
+<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+<if test="deliveryid != null" >deliveryid=#{deliveryid,jdbcType=VARCHAR},</if>
+<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+<if test="unpacking != null" >unpacking=#{unpacking,jdbcType=VARCHAR},</if>
+<if test="unpackNum != null" >unpack_num=#{unpackNum,jdbcType=DECIMAL},</if>
+<if test="temperatureType != null" >temperature_type=#{temperatureType,jdbcType=VARCHAR},</if>
+<if test="billType != null" >bill_type=#{billType,jdbcType=VARCHAR},</if>
+<if test="b2bFlag != null" >b2b_flag=#{b2bFlag,jdbcType=VARCHAR},</if>
+<if test="sendProvince != null" >send_province=#{sendProvince,jdbcType=VARCHAR},</if>
+<if test="sendCity != null" >send_city=#{sendCity,jdbcType=VARCHAR},</if>
+<if test="sendDistrict != null" >send_district=#{sendDistrict,jdbcType=VARCHAR},</if>
+<if test="receiveProvince != null" >receive_province=#{receiveProvince,jdbcType=VARCHAR},</if>
+<if test="receiveCity != null" >receive_city=#{receiveCity,jdbcType=VARCHAR},</if>
+<if test="receiveDistrict != null" >receive_district=#{receiveDistrict,jdbcType=VARCHAR},</if>
+<if test="serviceTypeCode != null" >service_type_code=#{serviceTypeCode,jdbcType=VARCHAR},</if>
+<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DECIMAL},</if>
+<if test="totalQty != null" >total_qty=#{totalQty,jdbcType=DECIMAL},</if>
+<if test="totalSku != null" >total_sku=#{totalSku,jdbcType=DECIMAL},</if>
+<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
+<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+<if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>
+<if test="writeTime != null" >write_time=#{writeTime,jdbcType=TIMESTAMP},</if>
+<if test="rowExcelNo != null" >rowExcelNo=#{rowExcelNo,jdbcType=INTEGER},</if>
+<if test="rowExcelName != null" >rowExcelName=#{rowExcelName,jdbcType=VARCHAR},</if>
+<if test="sheetName != null" >sheetName=#{sheetName,jdbcType=VARCHAR},</if>
+		</set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from bill_fees_receive_dispatch_temp where
+        id=#{id}
+    </delete>
+</mapper>
