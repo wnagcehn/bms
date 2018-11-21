@@ -15,11 +15,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-entity</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
@@ -100,7 +95,7 @@
 			</exclusions>
 		</dependency> -->
 		<!-- 引用mdm api包 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-warehouse-api</artifactId>
 			<version>${mdm.version}</version>
@@ -109,7 +104,7 @@
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-customer-api</artifactId>
 			<version>${mdm.version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>

@@ -27,7 +27,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.repository.IFileExportTaskRepository;
-import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+//import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity;
 import com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBmsBillInfoRepository;
@@ -91,8 +91,8 @@ public class BmsBillInfoServiceImpl implements IBmsBillInfoService {
 	@Autowired
 	private IFileExportTaskRepository fileExportTaskRepository;
 	
-	@Resource
-	private IBmsGroupSubjectService bmsGroupSubjectService;
+	/*@Resource
+	private IBmsGroupSubjectService bmsGroupSubjectService;*/
 
     @Override
     public PageInfo<BmsBillInfoEntity> query(Map<String, Object> condition,
@@ -435,8 +435,8 @@ public class BmsBillInfoServiceImpl implements IBmsBillInfoService {
 		for (SystemCodeEntity SystemCodeEntity : tmscodels) {
 			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
 		}*/
-		mapValue=bmsGroupSubjectService.getSubject("receive_wh_contract_subject");
-
+		//mapValue=bmsGroupSubjectService.getSubject("receive_wh_contract_subject");
+		mapValue = null;
 		return mapValue;
 	}
     

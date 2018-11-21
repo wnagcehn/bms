@@ -42,7 +42,7 @@ import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.repository.IFileExportTaskRepository;
-import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+//import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity;
 import com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBmsBillInfoRepository;
@@ -70,8 +70,8 @@ import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
-import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
-import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+/*import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;*/
 
 /**
  * 
@@ -96,8 +96,8 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 	@Autowired
     private ISystemCodeRepository systemCodeRepository;
 	
-	@Autowired 
-	private IWarehouseService warehouseService;
+	/*@Autowired 
+	private IWarehouseService warehouseService;*/
 	
 	@Resource
 	private IPriceContractDao priceContractDao;
@@ -123,8 +123,8 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 	@Resource
 	private ISystemCodeService systemCodeService; //业务类型
 		
-	@Resource
-	private IBmsGroupSubjectService bmsGroupSubjectService;
+	/*@Resource
+	private IBmsGroupSubjectService bmsGroupSubjectService;*/
 	//费用类型 Map
 	private Map<String,String> mapSystemcode;
 	private Map<String,String> mapStatus;
@@ -868,11 +868,11 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 	}
 
 	private Map<String,String> getwarehouse(){
-		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
+//		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
 		Map<String, String> map = new LinkedHashMap<String,String>();
-		for (WarehouseVo warehouseVo : warehouseVos) {
-			map.put(warehouseVo.getWarehouseid(), warehouseVo.getWarehousename());
-		}
+//		for (WarehouseVo warehouseVo : warehouseVos) {
+//			map.put(warehouseVo.getWarehouseid(), warehouseVo.getWarehousename());
+//		}
 		return map;
 	}
 	private Map<String,String> getStatus(){
@@ -904,7 +904,7 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 			}
 		}*/
 		
-		costSubjectMap=bmsGroupSubjectService.getExportSubject("receive_bill_storage_subject");
+		//costSubjectMap=bmsGroupSubjectService.getExportSubject("receive_bill_storage_subject");
 		return costSubjectMap;
 	}
 	//温度类型
@@ -3228,7 +3228,7 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 		 cell13.setCellStyle(style);
 		//仓储增值类型
 		 Map<String, String> temperatureMap = new HashMap<String, String>();
-		 temperatureMap=bmsGroupSubjectService.getExportSubject("receive_wh_valueadd_subject");
+		// temperatureMap=bmsGroupSubjectService.getExportSubject("receive_wh_valueadd_subject");
 		/*Map<String, Object> param = new HashMap<String, Object>();
 		param.put("typeCode", "wh_value_add_subject");
 		List<SystemCodeEntity> temperatureList = systemCodeRepository.queryCodeList(param);
@@ -3327,7 +3327,7 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 		for(SystemCodeEntity en:mList){
 			mapValue.put(en.getCode(),en.getCodeName());
 		}*/
-		mapValue=bmsGroupSubjectService.getExportSubject("receive_bill_transport_subject");
+		//mapValue=bmsGroupSubjectService.getExportSubject("receive_bill_transport_subject");
 		return mapValue;
 	}
 	

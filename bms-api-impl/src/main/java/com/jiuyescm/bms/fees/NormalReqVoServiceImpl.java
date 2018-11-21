@@ -14,7 +14,7 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+//import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
@@ -43,7 +43,7 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 	@Resource private IPriceContractItemRepository priceContractItemRepository;
 	@Resource private IPriceExtraQuotationService priceExtraQuotationService;
 	@Resource  private IGenericTemplateService genericTemplateService;
-	@Resource private IFeesCalcuService feesCalcuService;
+	//@Resource private IFeesCalcuService feesCalcuService;
 	@Resource private IStandardReqVoService standardReqVoService;
 	
 	@SuppressWarnings("unchecked")
@@ -133,7 +133,8 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			System.out.println("数量"+entity.getNum());
 			reqVo.setBizData(entity);
 			//开始进行计算
-			CalcuResultVo calcuResultVo=feesCalcuService.FeesCalcuService(reqVo);
+			//CalcuResultVo calcuResultVo=feesCalcuService.FeesCalcuService(reqVo);
+			CalcuResultVo calcuResultVo = new CalcuResultVo();
 			if(calcuResultVo.getPrice() == null){
 				entity.setRemark("规则计算失败");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -232,7 +233,8 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			entity.setNum(entity.getAdjustNum()==null?entity.getNum():entity.getAdjustNum());
 			reqVo.setBizData(entity);
 			//开始进行计算
-			CalcuResultVo calcuResultVo=feesCalcuService.FeesCalcuService(reqVo);
+			//CalcuResultVo calcuResultVo=feesCalcuService.FeesCalcuService(reqVo);
+			CalcuResultVo calcuResultVo = new CalcuResultVo();
 			if(calcuResultVo.getPrice() == null){
 				entity.setRemark("规则计算失败");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());

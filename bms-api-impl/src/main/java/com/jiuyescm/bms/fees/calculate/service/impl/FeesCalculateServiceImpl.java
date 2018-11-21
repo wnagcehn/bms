@@ -48,9 +48,9 @@ import com.jiuyescm.bms.quotation.transport.service.IPriceTransportLineRangeServ
 import com.jiuyescm.bms.quotation.transport.service.IPriceTransportLineService;
 import com.jiuyescm.bms.quotation.transport.service.IPriceTransportTemplateService;
 import com.jiuyescm.bms.trial.storage.service.IStorageDroolsService;
-import com.jiuyescm.mdm.customer.api.IAddressService;
+/*import com.jiuyescm.mdm.customer.api.IAddressService;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
-import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;*/
 
 
 @Service("feesCalculateServiceImpl")
@@ -73,8 +73,8 @@ public class FeesCalculateServiceImpl implements IFeesCalculateService {
 	@Resource private IPriceGeneralQuotationService generalService;
 	@Resource private IPriceMaterialQuotationService materialService;	
 	@Resource private IPubAddressService pubAddressService;	
-	@Resource private IAddressService addressService;
-	@Autowired private IWarehouseService warehouseService;
+	/*@Resource private IAddressService addressService;
+	@Autowired private IWarehouseService warehouseService;*/
 	@Resource
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	private static final String CONTRACTCODE="contractCode";
@@ -809,11 +809,12 @@ public class FeesCalculateServiceImpl implements IFeesCalculateService {
 	 */
 	@DataProvider
 	public Map<String, String> getPubWareHouse(){
-		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
+		/*List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
 		Map<String, String> map = new LinkedHashMap<String,String>();
 		for (WarehouseVo warehouseVo : warehouseVos) {
 			map.put(warehouseVo.getWarehouseid(), warehouseVo.getWarehousename());
-		}
+		}*/
+		Map<String, String> map = new LinkedHashMap<String,String>();
 		return map;
 	}
 

@@ -49,8 +49,8 @@ import com.jiuyescm.bms.quotation.storage.service.IPriceGeneralQuotationService;
 import com.jiuyescm.bms.quotation.storage.service.IPriceMaterialQuotationService;
 import com.jiuyescm.bms.quotation.storage.service.IPriceStepQuotationService;
 import com.jiuyescm.bms.trial.storage.service.IStorageDroolsService;
-import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
-import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+/*import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;*/
 
 @Service("feesCalculatePayServiceImpl")
 public class FeesCalculatePayServiceImpl implements IFeesCalculatePayService {
@@ -97,7 +97,7 @@ public class FeesCalculatePayServiceImpl implements IFeesCalculatePayService {
 	private IPriceGeneralQuotationService generalService;
 	@Resource
 	private IPriceMaterialQuotationService materialService;
-	@Autowired private IWarehouseService warehouseService;
+	//@Autowired private IWarehouseService warehouseService;
 
 	@Override
 	public CalculateVo calculate(CalculateVo vo) {
@@ -624,11 +624,12 @@ public class FeesCalculatePayServiceImpl implements IFeesCalculatePayService {
 	 */
 	@DataProvider
 	public Map<String, String> getPubWareHouse(){
-		List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
-		Map<String, String> map = new LinkedHashMap<String,String>();
+		/*List<WarehouseVo> warehouseVos = warehouseService.queryAllWarehouse();
+		
 		for (WarehouseVo warehouseVo : warehouseVos) {
 			map.put(warehouseVo.getWarehouseid(), warehouseVo.getWarehousename());
-		}
+		}*/
+		Map<String, String> map = new LinkedHashMap<String,String>();
 		return map;
 	}
 

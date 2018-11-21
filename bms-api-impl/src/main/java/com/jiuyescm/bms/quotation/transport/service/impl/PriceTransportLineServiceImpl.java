@@ -21,7 +21,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+//import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CargoIsLightEnum;
 import com.jiuyescm.bms.common.enumtype.TransportWayBillTypeEnum;
@@ -49,8 +49,8 @@ public class PriceTransportLineServiceImpl implements IPriceTransportLineService
 	private IPriceTransportLineRangeRepository priceTransportLineRangeRepository;
 	@Autowired
 	private IReceiveRuleRepository receiveRuleRepository;
-	@Resource 
-	private IFeesCalcuService feesCalcuService;
+	/*@Resource 
+	private IFeesCalcuService feesCalcuService;*/
 
     @Override
     public PageInfo<PriceTransportLineEntity> query(Map<String, Object> condition,
@@ -167,7 +167,8 @@ public class PriceTransportLineServiceImpl implements IPriceTransportLineService
 		reqVo.setRuleNo(ruleEntity.getQuotationNo());
 		reqVo.setRuleStr(ruleEntity.getRule());
 		
-		resultVo=feesCalcuService.FeesCalcuService(reqVo);				
+		//resultVo=feesCalcuService.FeesCalcuService(reqVo);	
+		resultVo = null;
 		return resultVo;
 	}
 
