@@ -207,6 +207,9 @@
       <PropertyDef name="isDeliveryFreeJ2c">
         <Property></Property>
         <Property name="label">是否免运费</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesAbnormalController#getIsDeliveryValue&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="confirmPayAmount">
         <Property name="dataType">Double</Property>

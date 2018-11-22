@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -16,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -343,6 +343,16 @@ public class FeesAbnormalController {
 				setMessage(infoList, rowNum+1,"第"+lieshu+"列确认是否免运费不能为空！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				continue;
+			}else{
+				if("是".equals(confirmIsDeliveryFree)){
+					entity.setConfirmIsDeliveryFree("1");
+				}else if("否".equals(confirmIsDeliveryFree)){
+					entity.setConfirmIsDeliveryFree("0");
+				}else{
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列确认是否免运费只能填是或否！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					continue;
+				}
 			}
 			
 			Double confirmPayAmount=0d;
@@ -410,7 +420,7 @@ public class FeesAbnormalController {
 			entity.setOrderStatus("2");
 			entity.setConfirmYear(confirmYear);
 			entity.setConfirmMonth(confirmMonth);
-			entity.setConfirmIsDeliveryFree(confirmIsDeliveryFree);
+			//entity.setConfirmIsDeliveryFree(confirmIsDeliveryFree);
 			entity.setConfirmPayAmount(confirmPayAmount);
 			// 导入确认时间
 			entity.setImportConfirmTime(nowdate);
@@ -625,7 +635,7 @@ public class FeesAbnormalController {
 				Cell cel10 = row.createCell(10);
 				cel10.setCellValue(fee.getProductAmountJ2c());
 				Cell cel11 = row.createCell(11);
-				cel11.setCellValue(fee.getIsDeliveryFreeJ2c());
+				cel11.setCellValue(getIsDeliveryValue().get(fee.getIsDeliveryFreeJ2c()));
 				Cell cel12 = row.createCell(12);
 				cel12.setCellValue(fee.getReturnedAmountC2j());
 				Cell cel13 = row.createCell(13);
@@ -867,7 +877,7 @@ public class FeesAbnormalController {
 				Cell cel10 = row.createCell(10);
 				cel10.setCellValue(fee.getProductAmountD2j()==null?0d:fee.getProductAmountD2j());
 				Cell cel11 = row.createCell(11);
-				cel11.setCellValue(fee.getIsDeliveryFreeD2j());
+				cel11.setCellValue(getIsDeliveryValue().get(fee.getIsDeliveryFreeD2j()));
 				Cell cel12 = row.createCell(12);
 				cel12.setCellValue(fee.getReturnedAmountJ2d()==null?0d:fee.getReturnedAmountJ2d());
 				Cell cel13 = row.createCell(13);
@@ -877,7 +887,7 @@ public class FeesAbnormalController {
 				Cell cel15 = row.createCell(15);
 				cel15.setCellValue(fee.getConfirmPayAmount()==null?0d:fee.getConfirmPayAmount());
 				Cell cel16 = row.createCell(16);
-				cel16.setCellValue(fee.getConfirmIsDeliveryFree());
+				cel16.setCellValue(getIsDeliveryValue().get(fee.getConfirmIsDeliveryFree()));
 				Cell cel17 = row.createCell(17);
 				cel17.setCellValue(statusMap.get(fee.getOrderStatus()));
 				Cell cel18 = row.createCell(18);
@@ -969,5 +979,17 @@ public class FeesAbnormalController {
 
 		}
 		return "";
+	}
+	
+	/**
+	 * 是否免运费
+	 * @return
+	 */
+	@DataProvider
+	public Map<String,String> getIsDeliveryValue(){
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("0", "否");
+		mapValue.put("1", "是");
+		return mapValue;
 	}
 }
