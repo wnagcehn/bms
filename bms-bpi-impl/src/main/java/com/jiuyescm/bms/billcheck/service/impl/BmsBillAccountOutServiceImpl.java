@@ -181,8 +181,17 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			billCheckReceiptRepository.saveList(list);
 			//修改账单表
 			BigDecimal unReceiptAmountNow = unReceiptAmount.subtract(amount);
-			check.setUnReceiptAmount(unReceiptAmountNow);
-			check.setReceiptAmount(check.getReceiptAmount().add(amount));
+			check.setUnReceiptAmount(unReceiptAmountNow);//未收款金额
+			check.setReceiptAmount(check.getReceiptAmount().add(amount));//收款金额
+			//开票未回款金额
+			BigDecimal adjustMoney=new BigDecimal(0);
+			Map<String, Object> condition=new HashMap<String, Object>();
+			param.put("billCheckId", id);
+			BillCheckAdjustInfoEntity adjustEntity = billCheckInfoRepository.queryOneAdjust(condition);
+			if(adjustEntity!=null && adjustEntity.getAdjustAmount()!=null){
+				adjustMoney=adjustEntity.getAdjustAmount();
+			}
+			check.setInvoiceUnReceiptAmount(check.getInvoiceAmount().subtract(check.getReceiptAmount()).add(adjustMoney));		
 			//更新主表的收款日期
 			BillCheckReceiptEntity billCheckReceipt=billCheckReceiptRepository.queyReceipt(conditionCheck);
 			if(billCheckReceipt!=null){
