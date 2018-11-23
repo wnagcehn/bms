@@ -27,8 +27,8 @@ public class ReceiveBillImportListener implements MessageListener{
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceiveBillImportListener.class);
 
-	@Autowired 
-	private StorageClient storageClient;
+	/*@Autowired 
+	private StorageClient storageClient;*/
 	
 	private ExcelXlsxReader xlsxReader;
 	
