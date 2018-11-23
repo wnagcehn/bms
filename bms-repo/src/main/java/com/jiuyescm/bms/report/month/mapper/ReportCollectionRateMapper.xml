@@ -16,7 +16,7 @@
 		from
 		(select a.seller_name,b.receipt_amount,u.area_code,a.create_month,
 				CASE
-						when c.origin_seller_id is not null and a.seller_id!=c.origin_seller_id then 4
+						when c.origin_seller_name is not null and a.seller_name!=c.origin_seller_name then 4
 						else
 							case
 								when TIMESTAMPDIFF(YEAR,a.bill_start_time,b.receipt_date)=0 then 1
