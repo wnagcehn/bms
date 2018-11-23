@@ -23,7 +23,7 @@ public class DispatchHandler implements IFeesHandler {
 	@Override
 	public void getRows() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("宅配");
 	}
 
 	@Override

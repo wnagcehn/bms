@@ -20,6 +20,8 @@ import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
+import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 
 @Service("receiveBillImportListener")
@@ -27,8 +29,11 @@ public class ReceiveBillImportListener implements MessageListener{
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceiveBillImportListener.class);
 
-	/*@Autowired 
-	private StorageClient storageClient;*/
+	@Autowired 
+	private StorageClient storageClient;
+	
+	@Autowired
+	private IWarehouseService warehouseService;
 	
 	private ExcelXlsxReader xlsxReader;
 	
@@ -47,19 +52,32 @@ public class ReceiveBillImportListener implements MessageListener{
 	
 	@SuppressWarnings("unused")
 	public void readExcel(String taskId) throws Throwable{
-		File file = new File("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx");
-		//byte[] bytes = storageClient.downloadFile("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx", new DownloadByteArray());
-		//InputStream inputStream = new ByteArrayInputStream(bytes);
-		InputStream inputStream = new FileInputStream(file);
+		//File file = new File("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx");
+		//InputStream inputStream = new FileInputStream(file);
+		byte[] bytes = storageClient.downloadFile("path", new DownloadByteArray());
+		InputStream inputStream = new ByteArrayInputStream(bytes);	
 		try{
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
 				logger.info("准备读取sheet - {0}",sheetName);
+				
+				//仓储--上海01仓，北京01仓...............
+				WarehouseVo warehouseVo = warehouseService.queryWarehouseByWarehouseName(sheetName);
+				if (null != warehouseVo.getWarehousename()) {
+					sheetName = "仓储";
+				}
+				//耗材使用费
+				if (sheetName.contains("耗材使用费")) {
+					sheetName = "耗材使用费";
+				}
 				IFeesHandler handler = FeesHandlerFactory.getHandler(sheetName);
-				handler.getRows();
-				//handler.process(xlsxReader, opcSheet);
+				if (null == handler) {
+					continue;
+				}
+				//handler.getRows();
+				handler.process(xlsxReader, opcSheet);
 			}
 			xlsxReader.close();
 		}

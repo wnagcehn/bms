@@ -13,7 +13,8 @@
 	<import resource="classpath*:spring-redis.xml" />
 	<import resource="classpath*:spring-lock.xml" />
 	<import resource="classpath*:spring-fastdfs.xml"/>
+	<import resource="classpath:spring/applicationContext-consumer.xml" /> 
     <import resource="classpath:spring/spring-activeMQ.xml" />
-    <import resource="classpath*:applicationContext-consumer.xml" />  
+    
 </beans>
  

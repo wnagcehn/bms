@@ -27,7 +27,7 @@ public class ProductStorageHandler implements IFeesHandler {
 	@Override
 	public void getRows() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("仓储");
 	}
 
 	@Override
