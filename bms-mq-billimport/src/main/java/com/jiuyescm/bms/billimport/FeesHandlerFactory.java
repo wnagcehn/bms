@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.billimport;
 
 import com.jiuyescm.bms.billimport.handler.DispatchHandler;
-import com.jiuyescm.bms.billimport.handler.StorageHandler;
+import com.jiuyescm.bms.billimport.handler.ProductStorageHandler;
 
 public class FeesHandlerFactory {
 
@@ -10,7 +10,7 @@ public class FeesHandlerFactory {
 			return new DispatchHandler();
 		}
 		else if("仓储".equals(sheetName)){
-			return new StorageHandler();
+			return new ProductStorageHandler();
 		}
 		else{
 			return null;
