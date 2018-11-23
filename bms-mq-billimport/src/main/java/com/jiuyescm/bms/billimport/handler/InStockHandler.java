@@ -1,5 +1,7 @@
 package com.jiuyescm.bms.billimport.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.billimport.IFeesHandler;
@@ -7,17 +9,19 @@ import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 
 /**
- * 宅配
+ * 入库
  * @author zhaofeng
  *
  */
-@Component("宅配")
-public class DispatchHandler implements IFeesHandler {
+@Component("入库")
+public class InStockHandler implements IFeesHandler {
 
+	private static final Logger logger = LoggerFactory.getLogger(InStockHandler.class);
+	//List<BillFeesReceiveDispatchTempEntity> rowList = new ArrayList<>();
 	
 	@Override
-	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet) throws Exception{
-		
+	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet) throws Exception {
+
 	}
 	
 	@Override
@@ -44,10 +48,4 @@ public class DispatchHandler implements IFeesHandler {
 		
 	}
 
-	
-
-
-
-	
-	
 }
