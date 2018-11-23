@@ -17,8 +17,7 @@ import com.jiuyescm.bms.excel.opc.OpcSheet;
 public class StorageAddHandler implements IFeesHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(StorageAddHandler.class);
-	//List<BillFeesReceiveDispatchTempEntity> rowList = new ArrayList<>();
-	
+
 	@Override
 	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet) throws Exception {
 
@@ -27,7 +26,7 @@ public class StorageAddHandler implements IFeesHandler {
 	@Override
 	public void getRows() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("仓储费");
 	}
 
 	@Override

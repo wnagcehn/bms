@@ -1,6 +1,8 @@
 package com.jiuyescm.bms.billimport;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class ReceiveBillImportListener implements MessageListener{
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceiveBillImportListener.class);
 
-	@Autowired private StorageClient storageClient;
+	@Autowired 
+	private StorageClient storageClient;
 	
 	private ExcelXlsxReader xlsxReader;
 	
@@ -42,9 +45,12 @@ public class ReceiveBillImportListener implements MessageListener{
 		}
 	}
 	
-	private void readExcel(String taskId){
-		byte[] bytes = storageClient.downloadFile("path", new DownloadByteArray());
-		InputStream inputStream = new ByteArrayInputStream(bytes);
+	@SuppressWarnings("unused")
+	public void readExcel(String taskId) throws Throwable{
+		File file = new File("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx");
+		//byte[] bytes = storageClient.downloadFile("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx", new DownloadByteArray());
+		//InputStream inputStream = new ByteArrayInputStream(bytes);
+		InputStream inputStream = new FileInputStream(file);
 		try{
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
@@ -52,7 +58,8 @@ public class ReceiveBillImportListener implements MessageListener{
 				String sheetName = opcSheet.getSheetName();
 				logger.info("准备读取sheet - {0}",sheetName);
 				IFeesHandler handler = FeesHandlerFactory.getHandler(sheetName);
-				handler.process(xlsxReader, opcSheet);
+				handler.getRows();
+				//handler.process(xlsxReader, opcSheet);
 			}
 			xlsxReader.close();
 		}
