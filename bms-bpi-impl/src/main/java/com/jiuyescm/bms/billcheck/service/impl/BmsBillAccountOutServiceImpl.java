@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
 import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
+import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.BillCheckReceiptEntity;
@@ -144,8 +145,17 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			//修改账单表
 			int zeroInt = 0;
 			BigDecimal zero = new BigDecimal(zeroInt);
-			check.setUnReceiptAmount(zero);
-			check.setReceiptAmount(check.getReceiptAmount().add(unReceiptAmount));
+			check.setUnReceiptAmount(zero);//未收款金额
+			check.setReceiptAmount(check.getReceiptAmount().add(unReceiptAmount));//收款金额
+			//开票未回款金额
+			BigDecimal adjustMoney=new BigDecimal(0);
+			Map<String, Object> condition=new HashMap<String, Object>();
+			param.put("billCheckId", id);
+			BillCheckAdjustInfoEntity adjustEntity = billCheckInfoRepository.queryOneAdjust(condition);
+			if(adjustEntity!=null && adjustEntity.getAdjustAmount()!=null){
+				adjustMoney=adjustEntity.getAdjustAmount();
+			}
+			check.setInvoiceUnReceiptAmount(check.getInvoiceAmount().subtract(check.getReceiptAmount()).add(adjustMoney));
 			//更新主表的收款日期
 			BillCheckReceiptEntity billCheckReceipt=billCheckReceiptRepository.queyReceipt(conditionCheck);
 			if(billCheckReceipt!=null){
