@@ -25,9 +25,14 @@
  */
 package com.jiuyescm.bms.excel.utils;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 
 import com.jiuyescm.bms.excel.exceptions.TimeMatchFormatException;
 
@@ -208,5 +213,29 @@ public class DateUtils {
         }
         return date;
     }
+    
+    public static Timestamp changeValueToTimestamp(String value) throws ParseException{
+    	if(isNumeric(value)){
+    		Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            value = dateFormat.format(date);
+    	}
+    	//String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy","yyyy/MM/dd","yyyy/MM/dd HH:mm:ss","yyyy年MM月dd日" };
+		Date date = str2Date(value);
+		Timestamp ts=new Timestamp(date.getTime());
+		return ts;
+    } 
+    
+    private static boolean isNumeric(String str){ 
+		if(str == null || str.length()==0){
+			return false;
+		}
+		Pattern pattern = Pattern.compile("([1-9]+[0-9]*|0)(\\.[\\d]+)?"); 
+		Matcher isNum = pattern.matcher(str);
+		if( !isNum.matches() ){
+		    return false; 
+		} 
+		return true; 
+	}   
 
 }
