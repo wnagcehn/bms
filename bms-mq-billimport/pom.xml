@@ -72,6 +72,13 @@
 	<build>
 		<resources>
 			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>dubbo/*</include>
+					<include>spring/*</include>
+				</includes>
+			</resource>
+			<resource>
 				<targetPath>${project.build.directory}/classes</targetPath>
 				<directory>src/main/resources/conf</directory>
 				<excludes>
