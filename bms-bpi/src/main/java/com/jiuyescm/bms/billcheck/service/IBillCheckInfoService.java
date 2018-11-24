@@ -175,13 +175,6 @@ public interface IBillCheckInfoService {
 	public void importCheck(String billNo) throws BizException;
 	
 	/**
-	 * 导入校验
-	 * @param condition
-	 * @return
-	 */
-	public void deleteCheck(String billNo) throws BizException;
-	
-	/**
 	 * 调整金额
 	 * @param condition
 	 */
