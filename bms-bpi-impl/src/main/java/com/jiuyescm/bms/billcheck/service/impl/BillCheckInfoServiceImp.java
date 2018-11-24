@@ -742,7 +742,11 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		//确认金额
 		entity.setConfirmAmount(entity.getConfirmAmount().add(adjustAmount));
 		
-		billCheckInfoRepository.update(entity);
+		int result=billCheckInfoRepository.update(entity);
+		
+		if(result<=0){
+			throw new BizException("UPDATE_NULL","更新确认金额失败!");
+		}
 		
 	}
 }

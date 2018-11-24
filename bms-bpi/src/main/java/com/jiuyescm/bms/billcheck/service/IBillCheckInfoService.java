@@ -8,6 +8,7 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
+import com.jiuyescm.exception.BizException;
 
 public interface IBillCheckInfoService {
 	/**
@@ -171,18 +172,18 @@ public interface IBillCheckInfoService {
 	 * @param condition
 	 * @return
 	 */
-	public void importCheck(String billNo);
+	public void importCheck(String billNo) throws BizException;
 	
 	/**
 	 * 导入校验
 	 * @param condition
 	 * @return
 	 */
-	public void deleteCheck(String billNo);
+	public void deleteCheck(String billNo) throws BizException;
 	
 	/**
 	 * 调整金额
 	 * @param condition
 	 */
-	public void adjustMoney(String billNo,Double adjustMoney);
+	public void adjustMoney(String billNo,Double adjustMoney) throws BizException;
 	}
