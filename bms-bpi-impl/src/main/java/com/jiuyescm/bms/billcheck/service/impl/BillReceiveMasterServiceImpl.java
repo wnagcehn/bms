@@ -1,8 +1,11 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
+import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.exception.BizException;
@@ -28,6 +33,8 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 
 	@Autowired
     private IBillReceiveMasterRepository billReceiveMasterRepository;
+	
+	@Resource private IBillCheckInfoRepository billCheckInfoRepository;
 
 	/**
 	 * 根据id查询
@@ -142,8 +149,21 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * @param entity
 	 */
     @Override
-    public void delete(String billNo) {
-        billReceiveMasterRepository.delete(billNo);
+    public void delete(String billNo,String status) {
+    	if("sucess".equals(status)){
+    		Map<String, Object> condition=new HashMap<>();
+    		condition.put("billNo", billNo);
+    		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
+    		if(entity==null){
+    			throw new BizException("BILL_NULL","账单不存在!");
+    		}
+    		//状态为已确认
+    		if("CONFIRMED".equals(entity.getBillCheckStatus())){
+    			throw new BizException("CONFIRMED_NULL","已确认状态的账单无法删除!");
+    		}
+    	}else{
+            billReceiveMasterRepository.delete(billNo);
+    	}  	
     }
 	
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.exception.BizException;
 
 /**
  * ..Service
@@ -23,7 +24,7 @@ public interface IBillReceiveMasterService {
     int save(BillReceiveMasterVo entity);
 
     BillReceiveMasterVo update(BillReceiveMasterVo entity);
-
-	void delete(String billNo);
+    
+	void delete(String billNo,String status) throws BizException;
 
 }
