@@ -157,4 +157,11 @@ public interface IBillCheckInfoRepository {
 	 */
 	PageInfo<BillCheckInfoEntity> queryForOut(Map<String, Object> condition, int pageNo,
             int pageSize);
+	
+	
+	/**
+	 * 获取最近账单的信息
+	 */
+	BillCheckInfoEntity getLatestBill(Map<String, Object> condition);
+	
 	}

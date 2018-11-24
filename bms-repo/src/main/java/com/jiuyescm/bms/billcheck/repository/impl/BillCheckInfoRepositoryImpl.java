@@ -244,4 +244,12 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public BillCheckInfoEntity getLatestBill(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillCheckInfoEntity entity=(BillCheckInfoEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.getLatestBill", condition);
+		return entity;
+	}
 }
