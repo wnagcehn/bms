@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtBillReceiveMasterEntity">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="id">
         <Property name="label">id</Property>
       </PropertyDef>
@@ -167,19 +167,31 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckStatus">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="billCheckStatus">
         <Property name="label">对账状态</Property>
       </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+        <Property name="label">确认人id</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+        <Property name="label">确认人</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">确认日期</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtIsneedInvoice">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtImport">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
       </PropertyDef>
@@ -458,6 +470,7 @@ if(currentData){&#xD;
           <Property name="showHint">true</Property>
           <Property name="labelWidth">90</Property>
           <Property name="editorWidth">250</Property>
+          <Property name="trigger">triggerQueryInvoice</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement layoutConstraint="colSpan:2">
@@ -957,6 +970,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="property">confirmMan</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="readOnly">true</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -966,6 +981,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="showHint">false</Property>
             <Property name="hideMode">display</Property>
             <Property name="visible">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="readOnly">true</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -973,6 +990,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="property">confirmDate</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="readOnly">true</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="fileName">
@@ -1173,10 +1192,22 @@ arg.processDefault = false;</ClientEvent>
 subDropDown.set(&quot;dataSet&quot;,&quot;dsBillCheckStatusEntity&quot;);&#xD;
 view.get(&quot;#dsBillCheckStatusEntity&quot;).flushAsync();</ClientEvent>
       <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsImportEntity&quot;).getData(&quot;#&quot;);&#xD;
+var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
 data.set({&#xD;
 	billCheckStatus:arg.selectedValue.get(&quot;billCheckStatus&quot;),&#xD;
 });&#xD;
-arg.processDefault = false;</ClientEvent>
+arg.processDefault = false;&#xD;
+&#xD;
+if(arg.selectedValue.get(&quot;billCheckStatus&quot;) == '已确认'){&#xD;
+	entity.set(&quot;confirmMan&quot;,arg.selectedValue.get(&quot;confirmMan&quot;));&#xD;
+	entity.set(&quot;confirmManId&quot;,arg.selectedValue.get(&quot;confirmManId&quot;));&#xD;
+	entity.set(&quot;confirmDate&quot;,arg.selectedValue.get(&quot;confirmDate&quot;));&#xD;
+}else{&#xD;
+	entity.set(&quot;confirmMan&quot;,&quot;&quot;);&#xD;
+	entity.set(&quot;confirmManId&quot;,&quot;&quot;);&#xD;
+	entity.set(&quot;confirmDate&quot;,&quot;&quot;);&#xD;
+}&#xD;
+</ClientEvent>
       <Property name="autoOpen">true</Property>
       <Property name="editable">false</Property>
       <Property name="useEmptyItem">true</Property>
@@ -1220,6 +1251,30 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectInvoice">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerQueryInvoice">
+      <ClientEvent name="onExecute">view.get(&quot;#panelQueryInvoice&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelQueryInvoice">
+      <ClientEvent name="onHide">var data = this.get(&quot;#queyViewSelectInvoice.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;mkInvoiceName&quot;)),&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;mkInvoiceId&quot;))&#xD;
+	}</ClientEvent>
+      <Property name="caption">合同商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">500</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="queyViewSelectInvoice">
           <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
         </SubViewHolder>
       </Children>
