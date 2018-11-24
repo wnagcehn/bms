@@ -706,7 +706,9 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	}
 
 	@Override
-	public void importCheck(Map<String, Object> condition) {		
+	public void importCheck(String billNo) {
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("billNo", billNo);
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
 		//状态为已确认
 		if("CONFIRMED".equals(entity.getBillCheckStatus())){
@@ -715,7 +717,9 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	}
 
 	@Override
-	public void deleteCheck(Map<String, Object> condition) {
+	public void deleteCheck(String billNo) {
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("billNo", billNo);
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
 		//状态为已确认
 		if("CONFIRMED".equals(entity.getBillCheckStatus())){
@@ -724,15 +728,17 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	}
 
 	@Override
-	public void adjustMoney(Map<String, Object> condition) {
+	public void adjustMoney(String billNo,Double adjustMoney) {
 		// TODO Auto-generated method stub
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("billNo", billNo);
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
 		//状态为已收款
 		if("RECEIPTED".equals(entity.getBillStatus())){
 			throw new BizException("RECEIPTED_NULL","已收款的账单不能调整金额!");
 		}
 		
-		BigDecimal adjustAmount=(BigDecimal) condition.get("adjustAmount");
+		BigDecimal adjustAmount=BigDecimal.valueOf(adjustMoney);
 		//确认金额
 		entity.setConfirmAmount(entity.getConfirmAmount().add(adjustAmount));
 		

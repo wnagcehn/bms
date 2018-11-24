@@ -171,18 +171,18 @@ public interface IBillCheckInfoService {
 	 * @param condition
 	 * @return
 	 */
-	public void importCheck(Map<String, Object> condition);
+	public void importCheck(String billNo);
 	
 	/**
 	 * 导入校验
 	 * @param condition
 	 * @return
 	 */
-	public void deleteCheck(Map<String, Object> condition);
+	public void deleteCheck(String billNo);
 	
 	/**
 	 * 调整金额
 	 * @param condition
 	 */
-	public void adjustMoney(Map<String, Object> condition);
+	public void adjustMoney(String billNo,Double adjustMoney);
 	}
