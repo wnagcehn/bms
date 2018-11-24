@@ -142,8 +142,8 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * @param entity
 	 */
     @Override
-    public void delete(Long id) {
-        billReceiveMasterRepository.delete(id);
+    public void delete(String billNo) {
+        billReceiveMasterRepository.delete(billNo);
     }
 	
 }
