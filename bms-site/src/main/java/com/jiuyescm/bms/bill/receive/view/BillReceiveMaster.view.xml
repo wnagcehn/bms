@@ -365,7 +365,6 @@ if(isNullOrEmpty(originFilePath)){
       <ToolBarButton id="btnRemove">
         <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillReceiveMasterEntity.data&quot;);&#xD;
 var currentData = datas.current;&#xD;
-if(currentData.get(&quot;&quot;))&#xD;
 if(currentData){&#xD;
     dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
         view.get(&quot;#deleteAction&quot;).execute({&#xD;

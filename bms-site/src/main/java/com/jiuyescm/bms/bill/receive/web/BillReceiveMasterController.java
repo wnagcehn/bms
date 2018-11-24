@@ -475,11 +475,11 @@ public class BillReceiveMasterController {
      * @return
      */
     @DataProvider
-    public List<BillReceiveMasterEntity> getIsneedInvoice(){
-    	List<BillReceiveMasterEntity> list = new ArrayList<BillReceiveMasterEntity>();
-    	BillReceiveMasterEntity entity1 = new BillReceiveMasterEntity();
+    public List<BillReceiveMasterVo> getIsneedInvoice(){
+    	List<BillReceiveMasterVo> list = new ArrayList<BillReceiveMasterVo>();
+    	BillReceiveMasterVo entity1 = new BillReceiveMasterVo();
     	entity1.setIsneedInvoice("是");
-    	BillReceiveMasterEntity entity2 = new BillReceiveMasterEntity();
+    	BillReceiveMasterVo entity2 = new BillReceiveMasterVo();
     	entity2.setIsneedInvoice("否");
     	list.add(entity1);
     	list.add(entity2);
@@ -491,17 +491,17 @@ public class BillReceiveMasterController {
      * @return
      */
     @DataProvider
-    public List<BillReceiveMasterEntity> getBillCheckStatus(){
+    public List<BillReceiveMasterVo> getBillCheckStatus(){
     	String username = JAppContext.currentUserName();
     	String userId = JAppContext.currentUserID();
     	//Timestamp currentTime = new Timestamp(System.currentTimeMillis());
     	Date date = new Date();
     	Map<String, String> map = BillCheckStateEnum.getMap();
-    	BillReceiveMasterEntity entity = null;
-    	List<BillReceiveMasterEntity> list = new ArrayList<BillReceiveMasterEntity>();
+    	BillReceiveMasterVo entity = null;
+    	List<BillReceiveMasterVo> list = new ArrayList<BillReceiveMasterVo>();
     	if (map.keySet() != null && map.keySet().size() > 0) {
     		for (String code : map.keySet()) {
-    			entity = new BillReceiveMasterEntity();
+    			entity = new BillReceiveMasterVo();
     			if ("CONFIRMED".equals(code)) {
 					entity.setConfirmMan(username);
 					entity.setConfirmManId(userId);
@@ -520,8 +520,14 @@ public class BillReceiveMasterController {
 	 * @param entity
 	 */
 	@DataResolver
-	public void delete(BillReceiveMasterEntity entity) throws Exception {
-		billReceiveMasterService.delete(entity.getBillNo());
+	public void delete(BillReceiveMasterVo vo){
+		try {
+			billReceiveMasterService.delete(vo.getBillNo(), vo.getTaskStatus());
+		} catch (Exception e) {
+			logger.error("BillReceiveMasterController.delete", e);
+			throw new BizException(e.getMessage());
+		}
+		
 	}
 	
 }
