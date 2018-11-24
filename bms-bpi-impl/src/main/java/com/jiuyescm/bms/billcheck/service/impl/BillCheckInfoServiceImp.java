@@ -691,4 +691,35 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
     	
 		return result;
 	}
+
+	@Override
+	public BillCheckInfoVo getLatestBill(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillCheckInfoVo vo=new BillCheckInfoVo();
+		BillCheckInfoEntity entity=billCheckInfoRepository.getLatestBill(condition);
+		try {
+            PropertyUtils.copyProperties(vo, entity);
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return vo;
+	}
+
+	@Override
+	public void importCheck(Map<String, Object> condition) {		
+		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
+		//状态为已确认
+		if("CONFIRMED".equals(entity.getBillCheckStatus())){
+			throw new BizException("CUSTOMERID_NULL","对账状态为已确认，无法导入!");
+		}
+	}
+
+	@Override
+	public void deleteCheck(Map<String, Object> condition) {
+		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
+		//状态为已确认
+		if("CONFIRMED".equals(entity.getBillCheckStatus())){
+			throw new BizException("CUSTOMERID_NULL","已确认状态的账单无法删除!");
+		}
+	}
 }

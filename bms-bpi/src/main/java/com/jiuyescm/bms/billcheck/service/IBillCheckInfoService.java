@@ -160,4 +160,23 @@ public interface IBillCheckInfoService {
 	 */
 	PageInfo<BillCheckInfoVo> queryForOut(Map<String, Object> condition, int pageNo,
             int pageSize);
+	
+	/**
+	 * 获取最近账单的信息
+	 */
+	BillCheckInfoVo getLatestBill(Map<String, Object> condition);
+	
+	/**
+	 * 导入校验
+	 * @param condition
+	 * @return
+	 */
+	public void importCheck(Map<String, Object> condition);
+	
+	/**
+	 * 导入校验
+	 * @param condition
+	 * @return
+	 */
+	public void deleteCheck(Map<String, Object> condition);
 	}
