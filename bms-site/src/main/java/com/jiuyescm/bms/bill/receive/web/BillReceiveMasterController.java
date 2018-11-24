@@ -24,6 +24,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -58,6 +60,7 @@ import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.redis.client.IRedisClient;
+import com.jiuyescm.utils.JsonUtils;
 
 /**
  * ..Controller
@@ -406,12 +409,15 @@ public class BillReceiveMasterController {
 //			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 //			return map;
 //		}
+		
 			
 		// 写入MQ
 		final String msg = billNo;
 		jmsQueueTemplate.send("BMS_QUE_RECEIVE_BILL_IMPORT", new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
+				JsonUtils.toJson("");
+				JsonUtils.formJson("msg", Message.class);
 				return session.createTextMessage(msg);
 			}
 		});
@@ -514,12 +520,8 @@ public class BillReceiveMasterController {
 	 * @param entity
 	 */
 	@DataResolver
-	public void delete(BillReceiveMasterEntity entity) {
-		try {
-			billReceiveMasterService.delete(entity.getBillNo());
-		} catch (Exception e) {
-			logger.error("删除失败", e);
-		}
+	public void delete(BillReceiveMasterEntity entity) throws Exception {
+		billReceiveMasterService.delete(entity.getBillNo());
 	}
 	
 }
