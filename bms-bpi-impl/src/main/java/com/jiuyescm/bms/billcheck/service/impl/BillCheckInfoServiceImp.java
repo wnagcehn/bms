@@ -710,7 +710,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
 		//状态为已确认
 		if("CONFIRMED".equals(entity.getBillCheckStatus())){
-			throw new BizException("CUSTOMERID_NULL","对账状态为已确认，无法导入!");
+			throw new BizException("CONFIRMED_NULL","对账状态为已确认，无法导入!");
 		}
 	}
 
@@ -719,7 +719,24 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
 		//状态为已确认
 		if("CONFIRMED".equals(entity.getBillCheckStatus())){
-			throw new BizException("CUSTOMERID_NULL","已确认状态的账单无法删除!");
+			throw new BizException("CONFIRMED_NULL","已确认状态的账单无法删除!");
 		}
+	}
+
+	@Override
+	public void adjustMoney(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
+		//状态为已收款
+		if("RECEIPTED".equals(entity.getBillStatus())){
+			throw new BizException("RECEIPTED_NULL","已收款的账单不能调整金额!");
+		}
+		
+		BigDecimal adjustAmount=(BigDecimal) condition.get("adjustAmount");
+		//确认金额
+		entity.setConfirmAmount(entity.getConfirmAmount().add(adjustAmount));
+		
+		billCheckInfoRepository.update(entity);
+		
 	}
 }

@@ -179,4 +179,10 @@ public interface IBillCheckInfoService {
 	 * @return
 	 */
 	public void deleteCheck(Map<String, Object> condition);
+	
+	/**
+	 * 调整金额
+	 * @param condition
+	 */
+	public void adjustMoney(Map<String, Object> condition);
 	}
