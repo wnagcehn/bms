@@ -24,6 +24,6 @@ public interface IBillReceiveMasterService {
 
     BillReceiveMasterVo update(BillReceiveMasterVo entity);
 
-	void delete(String billNo);
+	void delete(String billNo,String status);
 
 }
