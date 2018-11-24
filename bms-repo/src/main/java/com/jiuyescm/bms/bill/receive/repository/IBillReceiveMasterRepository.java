@@ -23,6 +23,6 @@ public interface IBillReceiveMasterRepository {
 
     BillReceiveMasterEntity update(BillReceiveMasterEntity entity);
 
-    void delete(Long id);
+	void delete(String billNo);
 
 }

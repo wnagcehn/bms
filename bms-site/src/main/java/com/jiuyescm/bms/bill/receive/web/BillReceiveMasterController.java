@@ -515,9 +515,8 @@ public class BillReceiveMasterController {
 	 */
 	@DataResolver
 	public void delete(BillReceiveMasterEntity entity) {
-		
 		try {
-			billReceiveMasterService.delete(entity.getId());
+			billReceiveMasterService.delete(entity.getBillNo());
 		} catch (Exception e) {
 			logger.error("删除失败", e);
 		}

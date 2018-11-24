@@ -77,8 +77,8 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao<BillReceiveMaste
 	 * @param entity
 	 */
     @Override
-    public void delete(Long id) {
-        delete("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.delete", id);
+    public void delete(String billNo) {
+        delete("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.delete", billNo);
     }
 	
 }
