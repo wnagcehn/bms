@@ -353,7 +353,7 @@
     </PropertyDef>
     <PropertyDef name="mkInvoiceName">
       <Property></Property>
-      <Property name="label">商家合同名称</Property>
+      <Property name="label">合同商家名称</Property>
     </PropertyDef>
     <PropertyDef name="linkman">
       <Property></Property>
@@ -452,6 +452,10 @@
     </PropertyDef>
     <PropertyDef name="projectContents">
       <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="mkInvoiceId">
+      <Property></Property>
+      <Property name="label">合同商家编号</Property>
     </PropertyDef>
   </DataType>
   <DataType name="dtCarrierEntity" meta="x:1029;y:10">
