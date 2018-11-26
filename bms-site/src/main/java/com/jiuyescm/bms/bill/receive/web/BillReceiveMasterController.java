@@ -3,6 +3,8 @@ package com.jiuyescm.bms.bill.receive.web;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -148,22 +151,27 @@ public class BillReceiveMasterController {
 	}
 
 	/**
-	 * 保存
+	 * 调整金额
 	 * @param entity
 	 * @return
 	 */
 	@DataResolver
-	public void save(BillReceiveMasterVo entity) {
-		String username = JAppContext.currentUserName();
-		String userId = JAppContext.currentUserID();
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-		if (null == entity.getId()) {
-			billReceiveMasterService.save(entity);
-		} else {
-			entity.setLastModifier(username);
-			entity.setLastModifierId(userId);
-			entity.setLastModifyTime(currentTime);
-			billReceiveMasterService.update(entity);
+	public void update(BillReceiveMasterVo entity) {
+		try {
+			billCheckInfoService.adjustMoney(entity.getBillNo(), entity.getAdjustAmount(), JAppContext.currentUserName(), JAppContext.currentUserID());
+		} catch (Exception e) {
+			logger.error("BillReceiveMfdasterController.update", e);
+			if (e.toString().contains("账单不存在")) {
+				throw new BizException("账单不存在!");
+			}else if(e.toString().contains("已收款的账单不能调整金额!")){
+				throw new BizException("已收款的账单不能调整金额!");
+			}else if (e.toString().contains("账单跟踪更新确认金额失败!")) {
+				throw new BizException("账单跟踪更新确认金额失败!");
+			}else if (e.toString().contains("账单主表更新确认金额失败!")) {
+				throw new BizException("账单主表更新确认金额失败!");
+			}else {
+				throw new BizException(e.toString());
+			}
 		}
 	}
 
@@ -182,6 +190,14 @@ public class BillReceiveMasterController {
 		if (!maps.isEmpty()) {
 			return maps;
 		}
+		
+		//导入校验，已确认账单不能导入
+//		try {
+//			billCheckInfoService.importCheck(parameter.get("createMonth").toString(), parameter.get("billName").toString());
+//		} catch (Exception e) {
+//			logger.error("已确定账单不能导入", e);
+//			throw new BizException(e.getMessage());
+//		}
 		
 		//重复性校验
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -242,21 +258,27 @@ public class BillReceiveMasterController {
 	}
 
 	private void checkNull(final Map<String, Object> parameter, final List<ErrorMessageVo> infoList, Map<String, Object> maps) {
-		if ("null".equals(parameter.get("invoiceName").toString()) || "".equals(parameter.get("invoiceName").toString())) {
+		if ("null".equals(parameter.get("invoiceName").toString()) || "".equals(parameter.get("invoiceName").toString()) || "undefined".equals(parameter.get("invoiceName").toString())) {
 			ErrorMessageVo errorVo = new ErrorMessageVo();
 			errorVo.setMsg("商家合同名称不能为空！");
 			infoList.add(errorVo);
 			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		}
-		if ("null".equals(parameter.get("createMonth").toString()) || "".equals(parameter.get("createMonth").toString())) {
+		if ("null".equals(parameter.get("createMonth").toString()) || "".equals(parameter.get("createMonth").toString()) || "undefined".equals(parameter.get("createMonth").toString())) {
 			ErrorMessageVo errorVo = new ErrorMessageVo();
 			errorVo.setMsg("业务月份不能为空！");
 			infoList.add(errorVo);
 			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		}
-		if ("null".equals(parameter.get("billName").toString()) || "".equals(parameter.get("billName").toString())) {
+		if ("null".equals(parameter.get("billName").toString()) || "".equals(parameter.get("billName").toString()) || "undefined".equals(parameter.get("billName").toString())) {
 			ErrorMessageVo errorVo = new ErrorMessageVo();
 			errorVo.setMsg("账单名称不能为空！");
+			infoList.add(errorVo);
+			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+		}
+		if ("null".equals(parameter.get("billCheckStatus").toString()) || "".equals(parameter.get("billCheckStatus").toString()) || "undefined".equals(parameter.get("billCheckStatus").toString())) {
+			ErrorMessageVo errorVo = new ErrorMessageVo();
+			errorVo.setMsg("对账状态不能为空！");
 			infoList.add(errorVo);
 			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		}
@@ -271,7 +293,7 @@ public class BillReceiveMasterController {
 	 * @throws IOException
 	 */
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public Map<String,Object> importFileAsyn(UploadFile file, Map<String, Object> parameter) throws Exception{
+	public Map<String,Object> importFileAsyn(UploadFile file, final Map<String, Object> parameter) throws Exception{
 		setProgress(0);
 		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 100);
 		Map<String, Object> map = Maps.newHashMap();
@@ -373,23 +395,66 @@ public class BillReceiveMasterController {
 			return map;
 		}
 		DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
+		
 		//写入账单跟踪主表
 //		try {
 //			BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
-//			if (null != parameter.get("createMonth")) {
-//				checkInfoVo.setCreateMonth(Integer.valueOf(parameter.get("createMonth").toString()));
-//			}
-//			if (null != parameter.get("billName")) {
-//				checkInfoVo.setBillName(parameter.get("billName").toString());
-//			}
-//			if (null != parameter.get("invoiceName")) {
-//				checkInfoVo.setInvoiceName(parameter.get("invoiceName").toString());
-//			}
+//			checkInfoVo.setCreateMonth(Integer.valueOf(parameter.get("createMonth").toString()));
+//			checkInfoVo.setBillName(parameter.get("billName").toString());
+//			checkInfoVo.setInvoiceName(parameter.get("invoiceName").toString());
+//			checkInfoVo.setInvoiceId(parameter.get("invoiceId")==null?null:parameter.get("invoiceId").toString());
 //			if (null != parameter.get("billCheckStatus")) {
-//				checkInfoVo.setBillCheckStatus(parameter.get("billCheckStatus").toString());
+//				checkInfoVo.setBillCheckStatus(parameter.get("billCheckStatus")==null?null:parameter.get("billCheckStatus").toString());
 //			}
 //			if (null != parameter.get("isneedInvoice")) {
 //				checkInfoVo.setIsneedInvoice(parameter.get("isneedInvoice").toString());
+//			}
+//			if (null != parameter.get("billStartTime")) {
+//				Format f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				checkInfoVo.setBillStartTime((Timestamp)f.parseObject(parameter.get("billStartTime").toString()));
+//			}
+//			if (null != parameter.get("firstClassName")) {
+//				checkInfoVo.setFirstClassName(parameter.get("firstClassName").toString());
+//			}
+//			if (null != parameter.get("bizTypeName")) {
+//				checkInfoVo.setBizTypeName(parameter.get("bizTypeName").toString());
+//			}
+//			if (null != parameter.get("projectName")) {
+//				checkInfoVo.setProjectName(parameter.get("projectName").toString());
+//			}
+//			if (null != parameter.get("sellerId")) {
+//				checkInfoVo.setSellerId(parameter.get("sellerId").toString());
+//			}
+//			if (null != parameter.get("sellerName")) {
+//				checkInfoVo.setSellerName(parameter.get("sellerName").toString());
+//			}
+//			if (null != parameter.get("deptName")) {
+//				checkInfoVo.setDeptName(parameter.get("deptName").toString());
+//			}
+//			if (null != parameter.get("deptCode")) {
+//				checkInfoVo.setDeptCode(parameter.get("deptCode").toString());
+//			}
+//			if (null != parameter.get("projectManagerId")) {
+//				checkInfoVo.setProjectManagerId(parameter.get("projectManagerId").toString());
+//			}
+//			if (null != parameter.get("projectManagerName")) {
+//				checkInfoVo.setProjectManagerName(parameter.get("projectManagerName").toString());
+//			}
+//			if (null != parameter.get("balanceId")) {
+//				checkInfoVo.setBalanceId(parameter.get("balanceId").toString());
+//			}
+//			if (null != parameter.get("balanceName")) {
+//				checkInfoVo.setBalanceName(parameter.get("balanceName").toString());
+//			}
+//			if (null != parameter.get("confirmManId")) {
+//				checkInfoVo.setConfirmManId(parameter.get("confirmManId").toString());
+//			}
+//			if (null != parameter.get("confirmMan")) {
+//				checkInfoVo.setConfirmMan(parameter.get("confirmMan").toString());
+//			}
+//			if (null != parameter.get("confirmDate")) {
+//				Format f = new SimpleDateFormat("yyyy-MM-dd");
+//				checkInfoVo.setConfirmDate((Date)f.parseObject(parameter.get("confirmDate").toString()));
 //			}
 //			checkInfoVo.setDelFlag("0");
 //			checkInfoVo.setCreator(username);
@@ -412,13 +477,13 @@ public class BillReceiveMasterController {
 		
 			
 		// 写入MQ
-		final String msg = billNo;
+		//final String msg = billNo;
 		jmsQueueTemplate.send("BMS_QUE_RECEIVE_BILL_IMPORT", new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				JsonUtils.toJson("");
-				JsonUtils.formJson("msg", Message.class);
-				return session.createTextMessage(msg);
+				String json = JsonUtils.toJson(parameter);
+//				JsonUtils.formJson("msg", Message.class);
+				return session.createTextMessage(json);
 			}
 		});
 		

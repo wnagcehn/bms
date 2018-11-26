@@ -136,6 +136,8 @@ public class BillCheckInfoEntity implements IEntity {
 	private BigDecimal tbDunAmount;
 	//账户余额
 	private BigDecimal accountAmount;
+	
+	private String billNo;
 	public BillCheckInfoEntity() {
 
 	}
@@ -921,6 +923,14 @@ public class BillCheckInfoEntity implements IEntity {
 
 	public void setAccountAmount(BigDecimal accountAmount) {
 		this.accountAmount = accountAmount;
+	}
+
+	public String getBillNo() {
+		return billNo;
+	}
+
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
 	}
 
 	

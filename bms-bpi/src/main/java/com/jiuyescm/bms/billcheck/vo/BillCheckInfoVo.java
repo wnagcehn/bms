@@ -26,6 +26,8 @@ public class BillCheckInfoVo implements IEntity {
 	private int createMonth;
 	// 商家合同名称
 	private String invoiceName;
+	//合同商家id
+	private String invoiceId;
 	// 账单名称
 	private String billName;
 	// bms商家名称
@@ -1059,6 +1061,14 @@ public class BillCheckInfoVo implements IEntity {
 
 	public void setTbDunAmount(BigDecimal tbDunAmount) {
 		this.tbDunAmount = tbDunAmount;
+	}
+
+	public String getInvoiceId() {
+		return invoiceId;
+	}
+
+	public void setInvoiceId(String invoiceId) {
+		this.invoiceId = invoiceId;
 	}
    
 	

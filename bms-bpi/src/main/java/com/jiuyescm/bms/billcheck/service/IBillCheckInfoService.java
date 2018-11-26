@@ -168,15 +168,16 @@ public interface IBillCheckInfoService {
 	BillCheckInfoVo getLatestBill(Map<String, Object> condition);
 	
 	/**
-	 * 导入校验
-	 * @param condition
+	 * 导入校验(已确定账单不能导入)
+	 * @param 业务月份+账单名称
 	 * @return
 	 */
-	public void importCheck(String billNo) throws BizException;
+	public void importCheck(String createMonth, String billName) throws BizException;
 	
 	/**
 	 * 调整金额
 	 * @param condition
 	 */
-	public void adjustMoney(String billNo,Double adjustMoney) throws BizException;
+	public void adjustMoney(String billNo, Double adjustMoney, String username, String userId);
+	
 	}

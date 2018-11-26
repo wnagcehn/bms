@@ -57,5 +57,5 @@
 	<dubbo:service interface="com.jiuyescm.bms.report.biz.service.IReportCustomerService" ref="reportCustomerService"/>
 	<dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" ref="billReceiveMasterRecordService"/>
 	<dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService" ref="billReceiveMasterService"/>
-
+	
 </beans>

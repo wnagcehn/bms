@@ -4,11 +4,115 @@
   <Context/>
   <Model>
     <DataType name="dtCondLookupCustomer">
-      <PropertyDef name="mkInvoiceId">
+      <PropertyDef name="invoiceId">
         <Property name="label">合同商家编号</Property>
       </PropertyDef>
-      <PropertyDef name="mkInvoiceName">
+      <PropertyDef name="customName">
         <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtInvoice">
+      <Property name="creationType">com.jiuyescm.contract.custom.vo.ContractCustomBaseVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="customNo">
+        <Property/>
+        <Property name="label">合同商家编号</Property>
+      </PropertyDef>
+      <PropertyDef name="customName">
+        <Property/>
+        <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="prePayCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="businessNum">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="taxId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="companyType">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="level">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="businessPicName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="businessPicPath">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="linkMan">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="linkManPhone">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="linkManTelphone">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="province">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="city">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="customAddress">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="zipCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="billAddress">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="bigArea">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="seller">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="creatorName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="mainProduct">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="productDescription">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="companyProfile">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="projectContent">
+        <Property/>
       </PropertyDef>
     </DataType>
   </Model>
@@ -20,7 +124,7 @@
       </DataPilot>
       <Separator/>
       <ToolBarButton id="btnQueryCustomer">
-        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsCustomerLookup&quot;);&#xD;
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsInvoiceLookup&quot;);&#xD;
 var tmpFormCondition=view.get(&quot;#formConditionCustomer&quot;);&#xD;
 tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
 </ClientEvent>
@@ -34,8 +138,8 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsInvoiceLookup">
-      <Property name="dataType">[dtCustomerEntity]</Property>
-      <Property name="dataProvider">customerController#query</Property>
+      <Property name="dataType">[dtInvoice]</Property>
+      <Property name="dataProvider">invoiceController#query</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
     </DataSet>
@@ -45,8 +149,8 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <Property name="cols">*,*</Property>
       <Property name="labelWidth">100</Property>
       <AutoFormElement>
-        <Property name="name">mkInvoiceName</Property>
-        <Property name="property">mkInvoiceName</Property>
+        <Property name="name">customName</Property>
+        <Property name="property">customName</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -57,14 +161,14 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <Property name="readOnly">true</Property>
       <RowNumColumn/>
       <DataColumn>
-        <Property name="property">mkInvoiceId</Property>
-        <Property name="name">mkInvoiceId</Property>
+        <Property name="property">customNo</Property>
+        <Property name="name">customNo</Property>
         <Property name="visible">true</Property>
         <Property name="width">230</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">mkInvoiceName</Property>
-        <Property name="name">mkInvoiceName</Property>
+        <Property name="property">customName</Property>
+        <Property name="name">customName</Property>
         <Property name="width">230</Property>
       </DataColumn>
     </DataGrid>

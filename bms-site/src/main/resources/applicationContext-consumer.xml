@@ -85,11 +85,12 @@
 		 
 		<dubbo:reference id="bmsSubjectService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" 
 		 version="1.0.0" registry="bms"/>
-		 <dubbo:reference id="billReceiveMasterService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService" 
+		<dubbo:reference id="billReceiveMasterService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService" 
 		 version="1.0.0" registry="bms"/>
-		 <dubbo:reference id="billReceiveMasterRecordService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" 
+		<dubbo:reference id="billReceiveMasterRecordService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" 
 		 version="1.0.0" registry="bms"/>
-
+		 
+		<dubbo:reference id="contractCustomBaseService" interface="com.jiuyescm.contract.custom.api.IContractCustomBaseService" registry="message"/>
 		 
 		<!-- 耗材导入报表服务  -->
 		 <dubbo:reference id="materialReportService" interface="com.jiuyescm.bms.report.service.IMaterialReportService" version="1.0.0" registry="bms"/>
