@@ -1,10 +1,8 @@
 package com.jiuyescm.bms.billimport;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +11,6 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
-import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
@@ -87,7 +83,13 @@ public class ReceiveBillImportListener implements MessageListener{
 				//handler.getRows();
 
 				Map<String, Object> param = null;
-				handler.process(xlsxReader, opcSheet,param);
+				try{
+					handler.process(xlsxReader, opcSheet,param);
+				}
+				catch(Exception ex){
+					
+				}
+				//saveAll 保存临时表数据到正式表
 			}
 			xlsxReader.close();
 		}
