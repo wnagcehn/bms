@@ -104,7 +104,6 @@ public class BillFeesReceiveStorageTempServiceImpl implements IBillFeesReceiveSt
 			i = 1;
 		} catch (Exception e) {
 			//写入日志
-			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			logger.error("批量写入异常", e);
 		}	
 		return i;
@@ -118,7 +117,6 @@ public class BillFeesReceiveStorageTempServiceImpl implements IBillFeesReceiveSt
 			result = 1;
 		} catch (Exception e) {
 			//写入日志
-			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			logger.error("批量删除异常", e);
 		}
 		return result;

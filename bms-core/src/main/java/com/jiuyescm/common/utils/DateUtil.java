@@ -7,8 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+
+import com.jiuyescm.bs.util.StringUtil;
 
 public class DateUtil {
 	
@@ -391,5 +395,22 @@ public class DateUtil {
 		return sdf.format(cl.getTime()); 
 	}
 	
+	/**
+	 * 字符串转Timestamp格式
+	 * @param value
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Timestamp transStringToTimeStamp(String value) throws ParseException{
+		if(StringUtil.isNumeric(value)){
+    		Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            value = dateFormat.format(date);
+    	}
+    	String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy","yyyy/MM/dd","yyyy/MM/dd HH:mm:ss","yyyy年MM月dd日" };
+		Date date = DateUtils.parseDate(value, dataPatterns);
+		Timestamp ts=new Timestamp(date.getTime());
+		return ts;
+	}
 	
 }
