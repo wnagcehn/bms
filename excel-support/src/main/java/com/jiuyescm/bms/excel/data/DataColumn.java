@@ -43,6 +43,10 @@ public class DataColumn {
 	public String getColValue() {
 		return colValue;
 	}
+	
+	public void setColValue(String colValue) {
+		this.colValue = colValue;
+	}
 
 	public String getColName() {
 		return colName;

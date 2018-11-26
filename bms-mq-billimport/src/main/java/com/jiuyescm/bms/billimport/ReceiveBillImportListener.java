@@ -4,13 +4,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,11 @@ public class ReceiveBillImportListener implements MessageListener{
 		try {
 			taskId = ((TextMessage)message).getText();
 			logger.info("消息id【{}】",taskId);
+			try {
+				readExcel(taskId);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 		} catch (JMSException e1) {
 			logger.info("获取消息失败-{}",e1);
 			return;
@@ -52,10 +60,10 @@ public class ReceiveBillImportListener implements MessageListener{
 	
 	@SuppressWarnings("unused")
 	public void readExcel(String taskId) throws Throwable{
-		//File file = new File("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx");
-		//InputStream inputStream = new FileInputStream(file);
-		byte[] bytes = storageClient.downloadFile("path", new DownloadByteArray());
-		InputStream inputStream = new ByteArrayInputStream(bytes);	
+		File file = new File("D:\\航空账单导入模板.xlsx");
+		InputStream inputStream = new FileInputStream(file);
+		/*byte[] bytes = storageClient.downloadFile(taskId, new DownloadByteArray());
+		InputStream inputStream = new ByteArrayInputStream(bytes);	*/
 		try{
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
@@ -77,7 +85,9 @@ public class ReceiveBillImportListener implements MessageListener{
 					continue;
 				}
 				//handler.getRows();
-				handler.process(xlsxReader, opcSheet);
+
+				Map<String, Object> param = null;
+				handler.process(xlsxReader, opcSheet,param);
 			}
 			xlsxReader.close();
 		}

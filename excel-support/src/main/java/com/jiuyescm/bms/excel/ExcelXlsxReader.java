@@ -141,6 +141,13 @@ public class ExcelXlsxReader extends DefaultHandler{
     	new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback,1,2);
     }
     
+    /**
+     * 读取sheet内容 表格title行默认在第一行 内容默认从第二行开始
+     * titleRowNo:表头结束行 contentRowNo：内容开始行
+     * @param index sheet 索引值
+     * @param callback
+     * @throws Exception
+     */
     public void readRow(int index,SheetReadCallBack callback,int titleRowNo,int contentRowNo) throws Exception{
     	new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback,titleRowNo,contentRowNo);
     }

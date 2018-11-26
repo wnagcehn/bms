@@ -1,11 +1,14 @@
 package com.jiuyescm.bms.billimport.handler;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
+import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 
 /**
@@ -16,35 +19,18 @@ import com.jiuyescm.bms.excel.opc.OpcSheet;
 @Component("增值")
 public class StorageAddHandler implements IFeesHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(StorageAddHandler.class);
-
 	@Override
-	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet) throws Exception {
-
-	}
-	
-	@Override
-	public void getRows() {
-		// TODO Auto-generated method stub
-		System.out.println("仓储费");
-	}
-
-	@Override
-	public void saveTo() {
+	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet,
+			Map<String, Object> param) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void validate() {
+	public Object transRowToObj(DataRow dr) throws Exception {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
-	@Override
-	public void errExport() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
