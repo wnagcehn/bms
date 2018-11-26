@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+		   	<result column="fees_type" property="feesType" jdbcType="VARCHAR" />
+		   	<result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+		   	<result column="send_site" property="sendSite" jdbcType="VARCHAR" />
+		   	<result column="receive_site" property="receiveSite" jdbcType="VARCHAR" />
+		   	<result column="total_weight" property="totalWeight" jdbcType="DECIMAL" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="create_month" property="createMonth" jdbcType="INTEGER" />
+		   	<result column="amount" property="amount" jdbcType="DECIMAL" />
+		   	<result column="derate_amount" property="derateAmount" jdbcType="DECIMAL" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="rowExcelNo" property="rowExcelNo" jdbcType="INTEGER" />
+		   	<result column="rowExcelName" property="rowExcelName" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, send_site, receive_site, total_weight, create_time, create_month, amount, derate_amount, write_time, rowExcelNo, rowExcelName
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, send_site, receive_site, total_weight, create_time, create_month, amount, derate_amount, write_time, rowExcelNo, rowExcelName
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_fees_receive_air_temp
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_fees_receive_air_temp
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" billNo != null and billNo !='' ">
+				and bill_no = #{billNo}
+			</if>
+        	<if test=" feesType != null and feesType !='' ">
+				and fees_type = #{feesType}
+			</if>
+        	<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" sendSite != null and sendSite !='' ">
+				and send_site = #{sendSite}
+			</if>
+        	<if test=" receiveSite != null and receiveSite !='' ">
+				and receive_site = #{receiveSite}
+			</if>
+        	<if test=" totalWeight != null and totalWeight !='' ">
+				and total_weight = #{totalWeight}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" amount != null and amount !='' ">
+				and amount = #{amount}
+			</if>
+        	<if test=" derateAmount != null and derateAmount !='' ">
+				and derate_amount = #{derateAmount}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+        	<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				and rowExcelNo = #{rowExcelNo}
+			</if>
+        	<if test=" rowExcelName != null and rowExcelName !='' ">
+				and rowExcelName = #{rowExcelName}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity">
+        insert into bill_fees_receive_air_temp(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{billNo,jdbcType=VARCHAR}, 
+			#{feesType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{sendSite,jdbcType=VARCHAR}, 
+			#{receiveSite,jdbcType=VARCHAR}, 
+			#{totalWeight,jdbcType=DECIMAL}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{amount,jdbcType=DECIMAL}, 
+			#{derateAmount,jdbcType=DECIMAL}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{rowExcelNo,jdbcType=INTEGER}, 
+			#{rowExcelName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity">
+        update bill_fees_receive_air_temp
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" billNo != null and billNo !='' ">
+				bill_no = #{billNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" feesType != null and feesType !='' ">
+				fees_type = #{feesType,jdbcType=VARCHAR},
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' ">
+				subject_code = #{subjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseName != null and warehouseName !='' ">
+				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
+			</if>
+			<if test=" sendSite != null and sendSite !='' ">
+				send_site = #{sendSite,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiveSite != null and receiveSite !='' ">
+				receive_site = #{receiveSite,jdbcType=VARCHAR},
+			</if>
+			<if test=" totalWeight != null and totalWeight !='' ">
+				total_weight = #{totalWeight,jdbcType=DECIMAL},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" createMonth != null and createMonth !='' ">
+				create_month = #{createMonth,jdbcType=INTEGER},
+			</if>
+			<if test=" amount != null and amount !='' ">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test=" derateAmount != null and derateAmount !='' ">
+				derate_amount = #{derateAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				rowExcelNo = #{rowExcelNo,jdbcType=INTEGER},
+			</if>
+			<if test=" rowExcelName != null and rowExcelName !='' ">
+				rowExcelName = #{rowExcelName,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bill_fees_receive_air_temp 
+        where id = #{id}
+    </delete>
+    
+        <!-- 批量删除 -->
+    <delete id="deleteBatch" parameterType="java.util.Map">
+        delete from bill_fees_receive_air_temp 
+        where 1=1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" billNo != null and billNo !='' ">
+				and bill_no = #{billNo}
+			</if>
+        	<if test=" feesType != null and feesType !='' ">
+				and fees_type = #{feesType}
+			</if>
+        	<if test=" subjectCode != null and subjectCode !='' ">
+				and subject_code = #{subjectCode}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" sendSite != null and sendSite !='' ">
+				and send_site = #{sendSite}
+			</if>
+        	<if test=" receiveSite != null and receiveSite !='' ">
+				and receive_site = #{receiveSite}
+			</if>
+        	<if test=" totalWeight != null and totalWeight !='' ">
+				and total_weight = #{totalWeight}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" amount != null and amount !='' ">
+				and amount = #{amount}
+			</if>
+        	<if test=" derateAmount != null and derateAmount !='' ">
+				and derate_amount = #{derateAmount}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+        	<if test=" rowExcelNo != null and rowExcelNo !='' ">
+				and rowExcelNo = #{rowExcelNo}
+			</if>
+        	<if test=" rowExcelName != null and rowExcelName !='' ">
+				and rowExcelName = #{rowExcelName}
+			</if>
+    </delete>
+    
+    <!-- 批量保存 -->
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into bill_fees_receive_air_temp(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+         (
+			#{billNo,jdbcType=VARCHAR}, 
+			#{feesType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{sendSite,jdbcType=VARCHAR}, 
+			#{receiveSite,jdbcType=VARCHAR}, 
+			#{totalWeight,jdbcType=DECIMAL}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{amount,jdbcType=DECIMAL}, 
+			#{derateAmount,jdbcType=DECIMAL}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{rowExcelNo,jdbcType=INTEGER}, 
+			#{rowExcelName,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+</mapper>
