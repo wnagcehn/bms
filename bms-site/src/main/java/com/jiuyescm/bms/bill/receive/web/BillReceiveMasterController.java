@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -33,20 +36,17 @@ import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
-import com.jiuyescm.bms.base.dictionary.web.BmsDictionaryEnum;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
-import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
-import com.jiuyescm.bms.bill.receive.service.IBillReceiveMasterRecordService;
-import com.jiuyescm.bms.bill.receive.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
-import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
-import com.jiuyescm.bms.common.enumtype.type.ExeclOperateTypeEnum;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
@@ -60,6 +60,7 @@ import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.redis.client.IRedisClient;
+import com.jiuyescm.utils.JsonUtils;
 
 /**
  * ..Controller
@@ -100,7 +101,7 @@ public class BillReceiveMasterController {
 	 * @throws Exception
 	 */
 	@DataProvider
-	public BillReceiveMasterEntity findById(Long id) throws Exception {
+	public BillReceiveMasterVo findById(Long id) throws Exception {
 		return billReceiveMasterService.findById(id);
 	}
 
@@ -110,18 +111,18 @@ public class BillReceiveMasterController {
 	 * @param param
 	 */
 	@DataProvider
-	public void query(Page<BillReceiveMasterEntity> page, Map<String, Object> param) {
+	public void query(Page<BillReceiveMasterVo> page, Map<String, Object> param) {
 		if (param == null){
 			param = new HashMap<String, Object>();
 		}
 		double totalImportCost = 0.0;
 		double totalAdjustCost = 0.0;
 		double totalCost = 0.0;
-		PageInfo<BillReceiveMasterEntity> pageInfo = billReceiveMasterService.query(param, page.getPageNo(), page.getPageSize());
+		PageInfo<BillReceiveMasterVo> pageInfo = billReceiveMasterService.query(param, page.getPageNo(), page.getPageSize());
 		//汇总金额
 		if (pageInfo != null) {
 			try {
-				for (BillReceiveMasterEntity entity : pageInfo.getList()) {
+				for (BillReceiveMasterVo entity : pageInfo.getList()) {
 					if (null == entity) {
 						continue;
 					}
@@ -152,7 +153,7 @@ public class BillReceiveMasterController {
 	 * @return
 	 */
 	@DataResolver
-	public void save(BillReceiveMasterEntity entity) {
+	public void save(BillReceiveMasterVo entity) {
 		String username = JAppContext.currentUserName();
 		String userId = JAppContext.currentUserID();
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -185,8 +186,8 @@ public class BillReceiveMasterController {
 		//重复性校验
 		Map<String, Object> param = new HashMap<String, Object>();
 		//param.put("delFlag", "0");
-		List<BillReceiveMasterEntity> checkList = billReceiveMasterService.query(param);
-		for (BillReceiveMasterEntity billReceiveMasterEntity : checkList) {
+		List<BillReceiveMasterVo> checkList = billReceiveMasterService.query(param);
+		for (BillReceiveMasterVo billReceiveMasterEntity : checkList) {
 			if ((parameter.get("createMonth").toString()+parameter.get("billName").toString()).equals(billReceiveMasterEntity.getCreateMonth().toString()+billReceiveMasterEntity.getBillName())) {
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
@@ -313,7 +314,7 @@ public class BillReceiveMasterController {
 		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 		//组装数据
 		try {
-			BillReceiveMasterEntity taskEntity = new BillReceiveMasterEntity();
+			BillReceiveMasterVo taskEntity = new BillReceiveMasterVo();
 			taskEntity.setBillNo(billNo);
 			taskEntity.setCreateMonth(Integer.valueOf(parameter.get("createMonth").toString()));
 			taskEntity.setBillName(parameter.get("billName").toString());
@@ -349,7 +350,7 @@ public class BillReceiveMasterController {
 		
 		//写入应收账单导入记录表
 		try {
-			BillReceiveMasterRecordEntity recordEntity = new BillReceiveMasterRecordEntity();
+			BillReceiveMasterRecordVo recordEntity = new BillReceiveMasterRecordVo();
 			recordEntity.setBillNo(billNo);
 			recordEntity.setCreateTime(currentTime);
 			recordEntity.setCreator(username);
@@ -408,12 +409,15 @@ public class BillReceiveMasterController {
 //			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 //			return map;
 //		}
+		
 			
 		// 写入MQ
 		final String msg = billNo;
 		jmsQueueTemplate.send("BMS_QUE_RECEIVE_BILL_IMPORT", new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
+				JsonUtils.toJson("");
+				JsonUtils.formJson("msg", Message.class);
 				return session.createTextMessage(msg);
 			}
 		});
@@ -471,11 +475,11 @@ public class BillReceiveMasterController {
      * @return
      */
     @DataProvider
-    public List<BillReceiveMasterEntity> getIsneedInvoice(){
-    	List<BillReceiveMasterEntity> list = new ArrayList<BillReceiveMasterEntity>();
-    	BillReceiveMasterEntity entity1 = new BillReceiveMasterEntity();
+    public List<BillReceiveMasterVo> getIsneedInvoice(){
+    	List<BillReceiveMasterVo> list = new ArrayList<BillReceiveMasterVo>();
+    	BillReceiveMasterVo entity1 = new BillReceiveMasterVo();
     	entity1.setIsneedInvoice("是");
-    	BillReceiveMasterEntity entity2 = new BillReceiveMasterEntity();
+    	BillReceiveMasterVo entity2 = new BillReceiveMasterVo();
     	entity2.setIsneedInvoice("否");
     	list.add(entity1);
     	list.add(entity2);
@@ -487,17 +491,27 @@ public class BillReceiveMasterController {
      * @return
      */
     @DataProvider
-    public List<BillReceiveMasterEntity> getBillCheckStatus(){
+    public List<BillReceiveMasterVo> getBillCheckStatus(){
+    	String username = JAppContext.currentUserName();
+    	String userId = JAppContext.currentUserID();
+    	//Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    	Date date = new Date();
     	Map<String, String> map = BillCheckStateEnum.getMap();
-    	BillReceiveMasterEntity entity = null;
-    	List<BillReceiveMasterEntity> list = new ArrayList<BillReceiveMasterEntity>();
+    	BillReceiveMasterVo entity = null;
+    	List<BillReceiveMasterVo> list = new ArrayList<BillReceiveMasterVo>();
     	if (map.keySet() != null && map.keySet().size() > 0) {
     		for (String code : map.keySet()) {
-    			entity = new BillReceiveMasterEntity();
+    			entity = new BillReceiveMasterVo();
+    			if ("CONFIRMED".equals(code)) {
+					entity.setConfirmMan(username);
+					entity.setConfirmManId(userId);
+					entity.setConfirmDate(date);
+				}
     			entity.setBillCheckStatus(map.get(code));
     			list.add(entity);
     		}
 		}
+    	
     	return list;
     }
     
@@ -506,12 +520,14 @@ public class BillReceiveMasterController {
 	 * @param entity
 	 */
 	@DataResolver
-	public void delete(BillReceiveMasterEntity entity) {
+	public void delete(BillReceiveMasterVo vo){
 		try {
-			billReceiveMasterService.delete(entity.getId());
+			billReceiveMasterService.delete(vo.getBillNo(), vo.getTaskStatus());
 		} catch (Exception e) {
-			logger.error("删除失败", e);
+			logger.error("BillReceiveMasterController.delete", e);
+			throw new BizException(e.getMessage());
 		}
+		
 	}
 	
 }

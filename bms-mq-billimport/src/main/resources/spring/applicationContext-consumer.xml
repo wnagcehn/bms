@@ -4,8 +4,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://code.alibabatech.com/schema/dubbo
-        http://code.Ralibabatech.com/schema/dubbo/dubbo.xsd">
-		<dubbo:application name="bms-mq-import" />
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+        
+		<dubbo:application name="bms-mq-billimport"/>
+		
  		<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}"/>
 	
 		<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" />
@@ -25,4 +27,4 @@
 		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialSupplierService"
 				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/>	
 									
-		</beans> 
+</beans> 

@@ -8,6 +8,7 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
+import com.jiuyescm.exception.BizException;
 
 public interface IBillCheckInfoService {
 	/**
@@ -160,4 +161,22 @@ public interface IBillCheckInfoService {
 	 */
 	PageInfo<BillCheckInfoVo> queryForOut(Map<String, Object> condition, int pageNo,
             int pageSize);
+	
+	/**
+	 * 获取最近账单的信息
+	 */
+	BillCheckInfoVo getLatestBill(Map<String, Object> condition);
+	
+	/**
+	 * 导入校验
+	 * @param condition
+	 * @return
+	 */
+	public void importCheck(String billNo) throws BizException;
+	
+	/**
+	 * 调整金额
+	 * @param condition
+	 */
+	public void adjustMoney(String billNo,Double adjustMoney) throws BizException;
 	}

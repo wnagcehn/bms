@@ -84,7 +84,11 @@
 		 version="1.0.0" registry="bms"/>
 		 
 		<dubbo:reference id="bmsSubjectService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" 
-		 version="1.0.0" registry="bms"/>	
+		 version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="billReceiveMasterService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService" 
+		 version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="billReceiveMasterRecordService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" 
+		 version="1.0.0" registry="bms"/>
 
 		 
 		<!-- 耗材导入报表服务  -->

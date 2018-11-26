@@ -691,4 +691,56 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
     	
 		return result;
 	}
+
+	@Override
+	public BillCheckInfoVo getLatestBill(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillCheckInfoVo vo=new BillCheckInfoVo();
+		BillCheckInfoEntity entity=billCheckInfoRepository.getLatestBill(condition);
+		try {
+            PropertyUtils.copyProperties(vo, entity);
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return vo;
+	}
+
+	@Override
+	public void importCheck(String billNo) {
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("billNo", billNo);
+		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
+		if(entity==null){
+			throw new BizException("BILL_NULL","账单不存在!");
+		}
+		//状态为已确认
+		if("CONFIRMED".equals(entity.getBillCheckStatus())){
+			throw new BizException("CONFIRMED_NULL","对账状态为已确认，无法导入!");
+		}
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
+	@Override
+	public void adjustMoney(String billNo,Double adjustMoney) {
+		// TODO Auto-generated method stub
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("billNo", billNo);
+		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
+		if(entity==null){
+			throw new BizException("BILL_NULL","账单不存在!");
+		}		
+		//状态为已收款
+		if("RECEIPTED".equals(entity.getBillStatus())){
+			throw new BizException("RECEIPTED_NULL","已收款的账单不能调整金额!");
+		}		
+		BigDecimal adjustAmount=BigDecimal.valueOf(adjustMoney);
+		//确认金额
+		entity.setConfirmAmount(entity.getConfirmAmount().add(adjustAmount));		
+		int result=billCheckInfoRepository.update(entity);
+		
+		if(result<=0){
+			throw new BizException("UPDATE_NULL","更新确认金额失败!");
+		}
+		
+	}
 }

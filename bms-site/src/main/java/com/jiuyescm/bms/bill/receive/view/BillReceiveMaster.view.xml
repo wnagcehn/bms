@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtBillReceiveMasterEntity">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="id">
         <Property name="label">id</Property>
       </PropertyDef>
@@ -13,7 +13,7 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="invoiceName">
-        <Property name="label">商家合同名称</Property>
+        <Property name="label">合同商家名称</Property>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property name="label">账单名称</Property>
@@ -113,7 +113,7 @@
     </DataType>
     <DataType name="dtBillReceiveMasterEntityQuery">
       <PropertyDef name="invoiceName">
-        <Property name="label">商家合同名称</Property>
+        <Property name="label">合同商家名称</Property>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property name="label">账单名称</Property>
@@ -167,19 +167,31 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckStatus">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="billCheckStatus">
         <Property name="label">对账状态</Property>
       </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+        <Property name="label">确认人id</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+        <Property name="label">确认人</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">确认日期</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtIsneedInvoice">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtImport">
-      <Property name="creationType">com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
       </PropertyDef>
@@ -188,7 +200,7 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="invoiceName">
-        <Property name="label">商家合同名称</Property>
+        <Property name="label">合同商家名称</Property>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property name="label">账单名称</Property>
@@ -207,6 +219,69 @@
       </PropertyDef>
       <PropertyDef name="fileName"/>
       <PropertyDef name="importBtn"/>
+      <PropertyDef name="billStartTime">
+        <Property name="label">业务启动时间</Property>
+      </PropertyDef>
+      <PropertyDef name="firstClassName">
+        <Property></Property>
+        <Property name="label">一级品类</Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeName">
+        <Property></Property>
+        <Property name="label">业务类型</Property>
+      </PropertyDef>
+      <PropertyDef name="projectName">
+        <Property></Property>
+        <Property name="label">项目</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+        <Property name="label">销售员id</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="deptCode">
+        <Property></Property>
+        <Property name="label">部门ID</Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerId">
+        <Property></Property>
+        <Property name="label">项目管理员id</Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerName">
+        <Property></Property>
+        <Property name="label">项目管理员</Property>
+      </PropertyDef>
+      <PropertyDef name="balanceId">
+        <Property></Property>
+        <Property name="label">结算员id</Property>
+      </PropertyDef>
+      <PropertyDef name="balanceName">
+        <Property></Property>
+        <Property name="label">结算员</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+        <Property name="label">确认人id</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+        <Property name="label">确认人</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">确认日期</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -258,7 +333,6 @@ entity.set(&quot;invoiceId&quot;,&quot;&quot;);&#xD;
 entity.set(&quot;createMonth&quot;,&quot;&quot;);&#xD;
 entity.set(&quot;billName&quot;,&quot;&quot;);&#xD;
 entity.set(&quot;isneedInvoice&quot;,&quot;是&quot;);&#xD;
-entity.set(&quot;billCheckStatus&quot;,&quot;客户未反馈&quot;);&#xD;
 view.get(&quot;#ImportDialog&quot;).show();</ClientEvent>
         <Property name="caption">导入</Property>
         <Property name="icon"> url(>skin>common/icons.gif) -220px -240px</Property>
@@ -395,6 +469,7 @@ if(currentData){&#xD;
           <Property name="showHint">true</Property>
           <Property name="labelWidth">90</Property>
           <Property name="editorWidth">250</Property>
+          <Property name="trigger">triggerQueryInvoice</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement layoutConstraint="colSpan:2">
@@ -723,8 +798,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
 </ClientEvent>
       <Property name="caption">导入</Property>
       <Property name="closeable">false</Property>
-      <Property name="height">240</Property>
-      <Property name="width">600</Property>
+      <Property name="height">280</Property>
+      <Property name="width">800</Property>
       <Buttons>
         <Button id="importCloseBtn">
           <ClientEvent name="onClick">view.get(&quot;#ImportDialog&quot;).hide();&#xD;
@@ -734,14 +809,23 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
       </Buttons>
       <Children>
         <AutoForm id="AutoForma">
-          <Property name="cols">*,*,*</Property>
+          <Property name="cols">*,*,*,*</Property>
           <Property name="dataSet">dsImportEntity</Property>
+          <AutoFormElement id="createMonth">
+            <Property name="name">createMonth</Property>
+            <Property name="property">createMonth</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="label">业务月份</Property>
+            <Editor/>
+          </AutoFormElement>
           <AutoFormElement id="invoiceName">
             <Property name="name">invoiceName</Property>
             <Property name="property">invoiceName</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
             <Property name="label">商家合同名称</Property>
+            <Property name="trigger">triggerInvoice</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="invoiceId">
@@ -754,29 +838,112 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="hideMode">display</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement id="createMonth">
-            <Property name="name">createMonth</Property>
-            <Property name="property">createMonth</Property>
-            <Property name="labelWidth">90</Property>
-            <Property name="showHint">false</Property>
-            <Property name="label">业务月份</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement id="isneedInvoice">
-            <Property name="name">isneedInvoice</Property>
-            <Property name="property">isneedInvoice</Property>
-            <Property name="labelWidth">90</Property>
-            <Property name="showHint">false</Property>
-            <Property name="label">是否需要发票</Property>
-            <Property name="trigger">IsNeedInvoiceDataSetDropDown</Property>
-            <Editor/>
-          </AutoFormElement>
           <AutoFormElement id="billName">
             <Property name="name">billName</Property>
             <Property name="property">billName</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
             <Property name="label">账单名称</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">creator</Property>
+            <Property name="property">creator</Property>
+            <Property name="visible">false</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="billStartTime">
+            <Property name="name">billStartTime</Property>
+            <Property name="property">billStartTime</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="firstClassName">
+            <Property name="name">firstClassName</Property>
+            <Property name="property">firstClassName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="bizTypeName">
+            <Property name="name">bizTypeName</Property>
+            <Property name="property">bizTypeName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="projectName">
+            <Property name="name">projectName</Property>
+            <Property name="property">projectName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="sellerName">
+            <Property name="name">sellerName</Property>
+            <Property name="property">sellerName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement id="sellerId">
+            <Property name="name">sellerId</Property>
+            <Property name="property">sellerId</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deptName</Property>
+            <Property name="property">deptName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deptCode</Property>
+            <Property name="property">deptCode</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">projectManagerName</Property>
+            <Property name="property">projectManagerName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">projectManagerId</Property>
+            <Property name="property">projectManagerId</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">balanceName</Property>
+            <Property name="property">balanceName</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">balanceId</Property>
+            <Property name="property">balanceId</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="billCheckStatus">
@@ -788,12 +955,42 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="trigger">billCheckStatusDataSetDropDown</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">creator</Property>
-            <Property name="property">creator</Property>
-            <Property name="visible">false</Property>
+          <AutoFormElement id="isneedInvoice">
+            <Property name="name">isneedInvoice</Property>
+            <Property name="property">isneedInvoice</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
+            <Property name="label">是否需要发票</Property>
+            <Property name="trigger">IsNeedInvoiceDataSetDropDown</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">confirmMan</Property>
+            <Property name="property">confirmMan</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">confirmManId</Property>
+            <Property name="property">confirmManId</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">confirmDate</Property>
+            <Property name="property">confirmDate</Property>
+            <Property name="labelWidth">90</Property>
+            <Property name="showHint">false</Property>
+            <Property name="editable">false</Property>
+            <Property name="readOnly">true</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="fileName">
@@ -817,6 +1014,24 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Editor>
               <Button id="importBtn2">
                 <ClientEvent name="onClick">var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
+//新加的&#xD;
+var billStartTime = entity.get(&quot;billStartTime&quot;);&#xD;
+var firstClassName = entity.get(&quot;firstClassName&quot;);&#xD;
+var bizTypeName = entity.get(&quot;bizTypeName&quot;);&#xD;
+var projectName = entity.get(&quot;projectName&quot;);&#xD;
+var sellerId = entity.get(&quot;sellerId&quot;);&#xD;
+var sellerName = entity.get(&quot;sellerName&quot;);&#xD;
+var deptName = entity.get(&quot;deptName&quot;);&#xD;
+var deptCode = entity.get(&quot;deptCode&quot;);&#xD;
+var projectManagerId = entity.get(&quot;projectManagerId&quot;);&#xD;
+var projectManagerName = entity.get(&quot;projectManagerName&quot;);&#xD;
+var balanceId = entity.get(&quot;balanceId&quot;);&#xD;
+var balanceName = entity.get(&quot;balanceName&quot;);&#xD;
+var confirmManId = entity.get(&quot;confirmManId&quot;);&#xD;
+var confirmMan = entity.get(&quot;confirmMan&quot;);&#xD;
+var confirmDate = entity.get(&quot;confirmDate&quot;);&#xD;
+&#xD;
+&#xD;
 var invoiceName = entity.get(&quot;invoiceName&quot;);&#xD;
 var invoiceId = entity.get(&quot;invoiceId&quot;);&#xD;
 var createMonth = entity.get(&quot;createMonth&quot;);&#xD;
@@ -830,7 +1045,22 @@ var param = {&#xD;
 	&quot;createMonth&quot;:createMonth,&#xD;
 	&quot;isneedInvoice&quot;:isneedInvoice,&#xD;
 	&quot;billName&quot;:billName,&#xD;
-	&quot;billCheckStatus&quot;:billCheckStatus&#xD;
+	&quot;billCheckStatus&quot;:billCheckStatus,&#xD;
+	&quot;billStartTime&quot;:billStartTime,&#xD;
+	&quot;firstClassName&quot;:firstClassName,&#xD;
+	&quot;bizTypeName&quot;:bizTypeName,&#xD;
+	&quot;projectName&quot;:projectName,&#xD;
+	&quot;sellerId&quot;:sellerId,&#xD;
+	&quot;sellerName&quot;:sellerName,&#xD;
+	&quot;deptName&quot;:deptName,&#xD;
+	&quot;deptCode&quot;:deptCode,&#xD;
+	&quot;projectManagerId&quot;:projectManagerId,&#xD;
+	&quot;projectManagerName&quot;:projectManagerName,&#xD;
+	&quot;balanceId&quot;:balanceId,&#xD;
+	&quot;balanceName&quot;:balanceName,&#xD;
+	&quot;confirmManId&quot;:confirmManId,&#xD;
+	&quot;confirmMan&quot;:confirmMan,&#xD;
+	&quot;confirmDate&quot;:confirmDate&#xD;
 };&#xD;
 &#xD;
 view.get(&quot;#uploadMaterialAction&quot;).set(&quot;parameter&quot;,param).execute();&#xD;
@@ -994,13 +1224,25 @@ arg.processDefault = false;</ClientEvent>
 subDropDown.set(&quot;dataSet&quot;,&quot;dsBillCheckStatusEntity&quot;);&#xD;
 view.get(&quot;#dsBillCheckStatusEntity&quot;).flushAsync();</ClientEvent>
       <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsImportEntity&quot;).getData(&quot;#&quot;);&#xD;
+var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
 data.set({&#xD;
 	billCheckStatus:arg.selectedValue.get(&quot;billCheckStatus&quot;),&#xD;
 });&#xD;
-arg.processDefault = false;</ClientEvent>
+arg.processDefault = false;&#xD;
+&#xD;
+if(arg.selectedValue.get(&quot;billCheckStatus&quot;) == '已确认'){&#xD;
+	entity.set(&quot;confirmMan&quot;,arg.selectedValue.get(&quot;confirmMan&quot;));&#xD;
+	entity.set(&quot;confirmManId&quot;,arg.selectedValue.get(&quot;confirmManId&quot;));&#xD;
+	entity.set(&quot;confirmDate&quot;,arg.selectedValue.get(&quot;confirmDate&quot;));&#xD;
+}else{&#xD;
+	entity.set(&quot;confirmMan&quot;,&quot;&quot;);&#xD;
+	entity.set(&quot;confirmManId&quot;,&quot;&quot;);&#xD;
+	entity.set(&quot;confirmDate&quot;,&quot;&quot;);&#xD;
+}&#xD;
+</ClientEvent>
       <Property name="autoOpen">true</Property>
       <Property name="editable">false</Property>
-      <Property name="useEmptyItem">false</Property>
+      <Property name="useEmptyItem">true</Property>
       <Property name="displayProperty">billCheckStatus</Property>
       <Property name="dataSet">dsBillCheckStatusEntity</Property>
       <Property name="assignmentMap">billCheckStatus=billCheckStatus</Property>
@@ -1021,5 +1263,54 @@ if(data){&#xD;
 }</ClientEvent>
       <Property name="fileProvider">bmsFileAsynTaskController#downloadExcel</Property>
     </DownloadAction>
+    <Trigger id="triggerInvoice">
+      <ClientEvent name="onExecute">view.get(&quot;#panelInvoice&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelInvoice">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoice.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;mkInvoiceName&quot;)),&#xD;
+	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;mkInvoiceId&quot;)),&#xD;
+	view.get(&quot;#AutoForma.entity&quot;).set(&quot;billName&quot;,data.get(&quot;mkInvoiceName&quot;))&#xD;
+}</ClientEvent>
+      <Property name="caption">合同商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">500</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectInvoice">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerQueryInvoice">
+      <ClientEvent name="onExecute">view.get(&quot;#panelQueryInvoice&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelQueryInvoice">
+      <ClientEvent name="onHide">var data = this.get(&quot;#queyViewSelectInvoice.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;mkInvoiceName&quot;)),&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;mkInvoiceId&quot;))&#xD;
+	}</ClientEvent>
+      <Property name="caption">合同商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">500</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="queyViewSelectInvoice">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

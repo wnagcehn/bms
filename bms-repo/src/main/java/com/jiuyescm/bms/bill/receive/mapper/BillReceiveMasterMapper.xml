@@ -208,8 +208,8 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
     </update>
 
 	<!-- 删除 -->
-    <delete id="delete" parameterType="java.lang.Long">
+    <delete id="delete" parameterType="java.lang.String">
         delete from bill_receive_master 
-        where id = #{id}
+        where bill_no = #{billNo}
     </delete>
 </mapper>

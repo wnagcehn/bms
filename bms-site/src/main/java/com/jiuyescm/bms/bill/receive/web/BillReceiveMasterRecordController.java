@@ -8,7 +8,8 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
-import com.jiuyescm.bms.bill.receive.service.IBillReceiveMasterRecordService;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
 
 /**
  * ..Controller
@@ -30,7 +31,7 @@ public class BillReceiveMasterRecordController {
 	 * @throws Exception
 	 */
 	@DataProvider
-	public BillReceiveMasterRecordEntity findById(Long id) throws Exception {
+	public BillReceiveMasterRecordVo findById(Long id) throws Exception {
 		return billReceiveMasterRecordService.findById(id);
 	}
 
@@ -40,8 +41,8 @@ public class BillReceiveMasterRecordController {
 	 * @param param
 	 */
 	@DataProvider
-	public void query(Page<BillReceiveMasterRecordEntity> page, Map<String, Object> param) {
-		PageInfo<BillReceiveMasterRecordEntity> pageInfo = billReceiveMasterRecordService.query(param, page.getPageNo(), page.getPageSize());
+	public void query(Page<BillReceiveMasterRecordVo> page, Map<String, Object> param) {
+		PageInfo<BillReceiveMasterRecordVo> pageInfo = billReceiveMasterRecordService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
@@ -54,7 +55,7 @@ public class BillReceiveMasterRecordController {
 	 * @return
 	 */
 	@DataResolver
-	public void save(BillReceiveMasterRecordEntity entity) {
+	public void save(BillReceiveMasterRecordVo entity) {
 		if (null == entity.getId()) {
 			billReceiveMasterRecordService.save(entity);
 		} else {
@@ -67,7 +68,7 @@ public class BillReceiveMasterRecordController {
 	 * @param entity
 	 */
 	@DataResolver
-	public void delete(BillReceiveMasterRecordEntity entity) {
+	public void delete(BillReceiveMasterRecordVo entity) {
 		billReceiveMasterRecordService.delete(entity.getId());
 	}
 	
