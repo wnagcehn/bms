@@ -132,14 +132,17 @@ public class ExcelXlsxReader extends DefaultHandler{
     }
     
     /**
-     * 读取sheet内容
+     * 读取sheet内容 表格title行默认在第一行 内容默认从第二行开始
      * @param index sheet 索引值
-     * @return
+     * @param callback
      * @throws Exception
      */
-    public OpcSheet readRow(int index,SheetReadCallBack callback) throws Exception{
-    	OpcSheet sheet = new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback,null,false);
-    	return sheet;
+    public void readRow(int index,SheetReadCallBack callback) throws Exception{
+    	new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback,1,2);
+    }
+    
+    public void readRow(int index,SheetReadCallBack callback,int titleRowNo,int contentRowNo) throws Exception{
+    	new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback,titleRowNo,contentRowNo);
     }
     
     /**
@@ -149,9 +152,8 @@ public class ExcelXlsxReader extends DefaultHandler{
      * @return
      * @throws Exception
      */
-    public <T> OpcSheet readRowToObj(int index,Class<T> clazz,SheetReadCallBack callback) throws Exception{
-    	OpcSheet sheet = new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback,clazz,true);
-    	return sheet;
+    private <T> void readRowToObj(int index,Class<T> clazz,SheetReadCallBack callback) throws Exception{
+    	//new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback);
     }
 	
 }
