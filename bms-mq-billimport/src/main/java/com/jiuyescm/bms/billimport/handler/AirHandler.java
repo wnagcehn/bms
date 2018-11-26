@@ -35,7 +35,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 
 
 	@Override
-	public BillFeesReceiveAirTempEntity transRowToObj(DataRow dr) throws Exception {
+	public List<BillFeesReceiveAirTempEntity> transRowToObj(DataRow dr) throws Exception {
 		BillFeesReceiveAirTempEntity entity = new BillFeesReceiveAirTempEntity();
 		for (DataColumn dc : dr.getColumns()) {
 			try{

@@ -60,8 +60,10 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			public void read(DataRow dr) {
 				System.out.println("----行号【" + dr.getRowNo() + "】");
 				try {
-					T entity = transRowToObj(dr);
-					list.add(entity);
+					List<T> entityList = transRowToObj(dr);
+					for( int i = 0 ; i < list.size() ; i++){
+						list.add(entityList.get(i));
+					}
 					if(list.size()==batchNum){
 						saveTo();
 					}
@@ -82,7 +84,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		},titleRowNo,contentRowNo);
 	}
 	
-	public abstract T transRowToObj(DataRow dr) throws Exception;
+	public abstract List<T> transRowToObj(DataRow dr) throws Exception;
 	
 	public abstract void transErr(DataRow dr) throws Exception; 
 	
