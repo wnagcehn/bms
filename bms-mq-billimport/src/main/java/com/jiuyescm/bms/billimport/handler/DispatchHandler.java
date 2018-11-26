@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billimport.handler;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import com.jiuyescm.bms.excel.opc.OpcSheet;
 public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEntity> {
 
 	@Override
-	public BillFeesReceiveDispatchTempEntity transRowToObj(DataRow dr)
+	public List<BillFeesReceiveDispatchTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

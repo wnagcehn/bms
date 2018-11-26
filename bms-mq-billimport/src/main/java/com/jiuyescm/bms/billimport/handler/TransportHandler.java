@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billimport.handler;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import com.jiuyescm.bms.excel.data.DataRow;
 public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTempEntity> {
 
 	@Override
-	public BillFeesReceiveTransportTempEntity transRowToObj(DataRow dr) throws Exception {
+	public List<BillFeesReceiveTransportTempEntity> transRowToObj(DataRow dr) throws Exception {
 		// TODO Auto-generated method stub
 		try{
 			

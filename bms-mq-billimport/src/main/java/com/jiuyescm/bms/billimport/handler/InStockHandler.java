@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billimport.handler;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import com.jiuyescm.bms.excel.opc.OpcSheet;
 public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
 	@Override
-	public BillFeesReceiveStorageTempEntity transRowToObj(DataRow dr)
+	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
