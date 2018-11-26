@@ -13,8 +13,6 @@ public interface IFeesHandler {
 
 	void process(ExcelXlsxReader xlsxReader,OpcSheet sheet,Map<String, Object> param) throws Exception;
 	
-	Object transRowToObj(DataRow dr) throws Exception;
-	
 	
 	/*void saveTo();
 	
