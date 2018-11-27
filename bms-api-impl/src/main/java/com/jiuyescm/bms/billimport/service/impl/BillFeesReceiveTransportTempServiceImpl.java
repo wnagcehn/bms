@@ -96,8 +96,10 @@ public class BillFeesReceiveTransportTempServiceImpl implements IBillFeesReceive
 	public int insertBatchTemp(List<BillFeesReceiveTransportTempEntity> list) {
 		int i = 0;
 		try {
-			billFeesReceiveTransportTempRepository.insertBatch(list);
-			i = 1;
+			if(list.size()>0){
+				billFeesReceiveTransportTempRepository.insertBatch(list);
+				i = 1;	
+			}
 		} catch (Exception e) {
 			//写入日志
 			logger.info("insertBatchTemp：e-{}",e);;
@@ -114,8 +116,10 @@ public class BillFeesReceiveTransportTempServiceImpl implements IBillFeesReceive
 	public int deleteBatchTemp(Map<String, Object> condition) {
 		int result = 0;
 		try {
-			billFeesReceiveTransportTempRepository.deleteBatch(condition);
-			result = 1;
+			if(condition.size()>0){
+				billFeesReceiveTransportTempRepository.deleteBatch(condition);
+				result = 1;	
+			}
 		} catch (Exception e) {
 			//写入日志
 			logger.info("insertBatchTemp：e-{}",e);;
