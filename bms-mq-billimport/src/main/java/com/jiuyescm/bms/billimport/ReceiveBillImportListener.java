@@ -22,57 +22,61 @@ import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
-
 @Service("receiveBillImportListener")
-public class ReceiveBillImportListener implements MessageListener{
+public class ReceiveBillImportListener implements MessageListener {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReceiveBillImportListener.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReceiveBillImportListener.class);
 
-	@Autowired 
+	@Autowired
 	private StorageClient storageClient;
-	
+
 	@Autowired
 	private IWarehouseService warehouseService;
-	
+
 	private ExcelXlsxReader xlsxReader;
-	
+
 	@Override
 	public void onMessage(Message message) {
 		logger.info("应收账单导入异步处理");
 		String taskId = "";
 		try {
-			taskId = ((TextMessage)message).getText();
-			logger.info("消息id【{}】",taskId);
+			taskId = ((TextMessage) message).getText();
+			logger.info("消息id【{}】", taskId);
 			try {
 				readExcel(taskId);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		} catch (JMSException e1) {
-			logger.info("获取消息失败-{}",e1);
+			logger.info("获取消息失败-{}", e1);
 			return;
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
-	public void readExcel(String taskId) throws Throwable{
+	public void readExcel(String taskId) throws Throwable {
 		File file = new File("D:\\航空账单导入模板.xlsx");
 		InputStream inputStream = new FileInputStream(file);
-		/*byte[] bytes = storageClient.downloadFile(taskId, new DownloadByteArray());
-		InputStream inputStream = new ByteArrayInputStream(bytes);	*/
-		try{
+		/*
+		 * byte[] bytes = storageClient.downloadFile(taskId, new
+		 * DownloadByteArray()); InputStream inputStream = new
+		 * ByteArrayInputStream(bytes);
+		 */
+		try {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
-				logger.info("准备读取sheet - {0}",sheetName);
-				
-				//仓储--上海01仓，北京01仓...............
-				WarehouseVo warehouseVo = warehouseService.queryWarehouseByWarehouseName(sheetName);
+				logger.info("准备读取sheet - {0}", sheetName);
+
+				// 仓储--上海01仓，北京01仓...............
+				WarehouseVo warehouseVo = warehouseService
+						.queryWarehouseByWarehouseName(sheetName);
 				if (null != warehouseVo.getWarehousename()) {
 					sheetName = "仓储";
 				}
-				//耗材使用费
+				// 耗材使用费
 				if (sheetName.contains("耗材使用费")) {
 					sheetName = "耗材使用费";
 				}
@@ -80,23 +84,20 @@ public class ReceiveBillImportListener implements MessageListener{
 				if (null == handler) {
 					continue;
 				}
-				//handler.getRows();
+				// handler.getRows();
 
 				Map<String, Object> param = null;
-				try{
-					handler.process(xlsxReader, opcSheet,param);
+				try {
+					handler.process(xlsxReader, opcSheet, param);
+				} catch (Exception ex) {
+
 				}
-				catch(Exception ex){
-					
-				}
-				//saveAll 保存临时表数据到正式表
+				// saveAll 保存临时表数据到正式表
 			}
 			xlsxReader.close();
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error("readExcel 异常 {}", ex);
 		}
 	}
-	
-	
+
 }

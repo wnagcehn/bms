@@ -90,6 +90,7 @@ public class BillFeesReceiveAirTempRepositoryImpl extends MyBatisDao<BillFeesRec
      */
 	@Override
 	public int insertBatch(List<BillFeesReceiveAirTempEntity> list){
+		System.out.println(list);
 	SqlSession session = getSqlSessionTemplate();
 	int result = session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper.saveBatch", list);
 	return result;
