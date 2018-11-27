@@ -9,9 +9,11 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.exception.BizException;
@@ -24,7 +26,9 @@ import com.jiuyescm.exception.BizException;
 
 @Component("仓库理赔")
 public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
-
+	
+	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
@@ -68,8 +72,9 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
-		
+		if (null != list && list.size() > 0) {
+			billFeesReceiveStorageTempService.insertBatchTemp(list);
+		}
 	}
 	
 }

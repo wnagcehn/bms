@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.exception.BizException;
@@ -22,7 +24,8 @@ import com.jiuyescm.exception.BizException;
 @Component("TB")
 public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
-
+	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
@@ -84,6 +87,13 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 			} catch (Exception e) {
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
+//			if ("B2B订单操作费".equals(dc.getColName()) || StringUtils.isNotBlank(dc.getColValue())) {
+//				entity.setAmount(Double.valueOf(dc.getColValue()));
+//			}
+//			if ("出库装车费".equals(dc.getColName()) || StringUtils.isNotBlank(dc.getColValue())) {
+//				PropertyUtils.copyProperties(zEntity, entity);
+//				zEntity.setAmount(Double.valueOf(dc.getColValue()));
+//			}
 		}
 		//B2B订单操作费，出库装车费
 		list.add(entity);
@@ -99,8 +109,9 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
-		
+		if (null != list && list.size() > 0) {
+			billFeesReceiveStorageTempService.insertBatchTemp(list);
+		}
 	}
 
 

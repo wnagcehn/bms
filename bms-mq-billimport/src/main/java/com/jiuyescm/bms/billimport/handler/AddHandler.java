@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.exception.BizException;
@@ -23,6 +25,8 @@ import com.jiuyescm.exception.BizException;
 @Component("增值")
 public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 
+	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
@@ -71,8 +75,9 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
-		
+		if (null != list && list.size() > 0) {
+			billFeesReceiveStorageTempService.insertBatchTemp(list);
+		}
 	}
 
 }
