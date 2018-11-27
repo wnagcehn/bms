@@ -60,9 +60,9 @@ public class BillFeesReceiveStorageTempEntity implements IEntity {
 	// 箱数
 	private BigDecimal totalBox;
 	// 总金额
-	private Double amount;
+	private BigDecimal amount;
 	// 折扣金额
-	private Double derateAmount;
+	private BigDecimal derateAmount;
 	// 业务时间
 	private Timestamp createTime;
 	// 业务年月 1810
@@ -254,19 +254,21 @@ public class BillFeesReceiveStorageTempEntity implements IEntity {
 		this.totalBox = totalBox;
 	}
 	
-	public Double getAmount() {
+	
+
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public Double getDerateAmount() {
+	public BigDecimal getDerateAmount() {
 		return derateAmount;
 	}
 
-	public void setDerateAmount(Double derateAmount) {
+	public void setDerateAmount(BigDecimal derateAmount) {
 		this.derateAmount = derateAmount;
 	}
 

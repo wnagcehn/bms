@@ -53,7 +53,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveSto
 					break;
 				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setAmount(Double.valueOf(dc.getColValue()));
+						entity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}			
 					break;
 				default:

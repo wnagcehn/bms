@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billimport.handler;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 					break;
 				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setAmount(Double.parseDouble(dc.getColValue()));
+						entity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}		
 					break;
 				default:
