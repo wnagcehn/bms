@@ -47,6 +47,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				readExcel(taskId);
 			} catch (Throwable e) {
 				e.printStackTrace();
+				logger.info("获取消息失败-{}", e);
 			}
 		} catch (JMSException e1) {
 			logger.info("获取消息失败-{}", e1);
@@ -56,7 +57,8 @@ public class ReceiveBillImportListener implements MessageListener {
 
 	@SuppressWarnings("unused")
 	public void readExcel(String taskId) throws Throwable {
-		File file = new File("E:\\user\\desktop\\wangchen870\\Desktop\\账单导入Test.xlsx");
+		
+		File file = new File("E:\\user\\desktop\\zhaofeng\\Desktop\\账单导入模板-宅配理赔.xlsx");
 		InputStream inputStream = new FileInputStream(file);
 		/*
 		 * byte[] bytes = storageClient.downloadFile(taskId, new

@@ -563,38 +563,24 @@ public class BillFeesReceiveDispatchTempEntity implements IEntity {
 		this.totalSku = totalSku;
 	}
 	
-	/**
-     * 金额
-     */
+
+
 	public BigDecimal getAmount() {
-		return this.amount;
+		return amount;
 	}
 
-    /**
-     * 金额
-     *
-     * @param amount
-     */
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	
-	/**
-     * 折扣
-     */
+
 	public BigDecimal getDerateAmount() {
-		return this.derateAmount;
+		return derateAmount;
 	}
 
-    /**
-     * 折扣
-     *
-     * @param derateAmount
-     */
 	public void setDerateAmount(BigDecimal derateAmount) {
 		this.derateAmount = derateAmount;
 	}
-	
+
 	/**
      * 业务时间
      */

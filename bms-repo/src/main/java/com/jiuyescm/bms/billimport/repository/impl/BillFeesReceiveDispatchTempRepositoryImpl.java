@@ -7,14 +7,15 @@ package com.jiuyescm.bms.billimport.repository.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveDispatchTempRepository;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
 	
 	@Override
     public PageInfo<BillFeesReceiveDispatchTempEntity> query(Map<String, Object> condition, int pageNo, int pageSize) {
-        List<BillFeesReceiveDispatchTempEntity> list = selectList("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.query", condition, new RowBounds(
+        List<BillFeesReceiveDispatchTempEntity> list = selectList("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.query", condition, new RowBounds(
                 pageNo, pageSize));
         PageInfo<BillFeesReceiveDispatchTempEntity> pageInfo = new PageInfo<BillFeesReceiveDispatchTempEntity>(list);
         return pageInfo;
@@ -40,38 +41,39 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
 
     @Override
     public BillFeesReceiveDispatchTempEntity findById(Long id) {
-        BillFeesReceiveDispatchTempEntity entity = selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.findById", id);
+        BillFeesReceiveDispatchTempEntity entity = selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.findById", id);
         return entity;
     }
 
     @Override
     public BillFeesReceiveDispatchTempEntity save(BillFeesReceiveDispatchTempEntity entity) {
-        insert("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.save", entity);
+        insert("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.save", entity);
         return entity;
     }
 
     @Override
     public BillFeesReceiveDispatchTempEntity update(BillFeesReceiveDispatchTempEntity entity) {
-        update("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.update", entity);
+        update("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.update", entity);
         return entity;
     }
 
     @Override
     public void delete(Long id) {
-        delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.delete", id);
+        delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.delete", id);
     }
 
 	@Override
-	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list) {
+	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list)throws Exception {
 		// TODO Auto-generated method stub
-        int result=insertBatch("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.save", list);
+		SqlSession session = getSqlSessionTemplate();
+        int result=session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.insertBatch", list);
 		return result;
 	}
 
 	@Override
 	public int deleteBatch(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		return delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper.deleteBatch", condition);
+		return delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.deleteBatch", condition);
 	}
 	
 }

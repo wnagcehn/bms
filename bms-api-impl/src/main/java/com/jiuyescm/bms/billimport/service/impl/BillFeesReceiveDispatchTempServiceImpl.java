@@ -58,7 +58,13 @@ public class BillFeesReceiveDispatchTempServiceImpl implements IBillFeesReceiveD
 	@Override
 	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list) {
 		// TODO Auto-generated method stub
-		return billFeesReceiveDispatchTempRepository.insertBatch(list);
+		try {
+			return billFeesReceiveDispatchTempRepository.insertBatch(list);
+		} catch (Exception e) {
+			//写入日志
+			logger.error("批量写入异常", e);
+		}
+		return 0;
 	}
 
 	@Override

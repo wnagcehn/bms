@@ -28,7 +28,7 @@ public interface IBillFeesReceiveDispatchTempRepository {
 
     public void delete(Long id);
     
-    int insertBatch(List<BillFeesReceiveDispatchTempEntity> list);
+    int insertBatch(List<BillFeesReceiveDispatchTempEntity> list) throws Exception;
     
     int deleteBatch(Map<String, Object> condition);
 

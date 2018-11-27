@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempEntityMapper" >
+<mapper namespace="com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper" >
     <resultMap id="baseResultMap" type="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity" >
         <id column="id" property="id" jdbcType="INTEGER" />
 	    <result column="id" property="id" jdbcType="INTEGER" />
@@ -44,6 +44,10 @@
   
     <sql id="baseColumns">
         id, bill_no, subject_code, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name, unpacking, unpack_num, temperature_type, bill_type, b2b_flag, send_province, send_city, send_district, receive_province, receive_city, receive_district, service_type_code, total_weight, total_qty, total_sku, amount, derate_amount, create_time, create_month, write_time, rowExcelNo, rowExcelName, sheetName
+    </sql>
+	
+	<sql id="BASE_COLUMNS_WITHOUT_ID">
+        bill_no, subject_code, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name, unpacking, unpack_num, temperature_type, bill_type, b2b_flag, send_province, send_city, send_district, receive_province, receive_city, receive_district, service_type_code, total_weight, total_qty, total_sku, amount, derate_amount, create_time, create_month, write_time, rowExcelNo, rowExcelName, sheetName
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -218,6 +222,55 @@
 #{sheetName,jdbcType=VARCHAR}
         )
     </insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+        insert into bill_fees_receive_dispatch_temp(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />       
+        )
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+         (
+	        #{item.billNo}, 
+			#{item.subjectCode}, 
+			#{item.waybillNo}, 
+			#{item.outstockNo}, 
+			#{item.externalNo}, 
+			#{item.warehouseCode}, 
+			#{item.warehouseName}, 
+			#{item.customerid}, 
+			#{item.customerName}, 
+			#{item.carrierid}, 
+			#{item.carrierName}, 
+			#{item.deliveryid}, 
+			#{item.deliverName}, 
+			#{item.unpacking}, 
+			#{item.unpackNum}, 
+			#{item.temperatureType}, 
+			#{item.billType}, 
+			#{item.b2bFlag}, 
+			#{item.sendProvince}, 
+			#{item.sendCity}, 
+			#{item.sendDistrict}, 
+			#{item.receiveProvince}, 
+			#{item.receiveCity}, 
+			#{item.receiveDistrict}, 
+			#{item.serviceTypeCode}, 
+			#{item.totalWeight}, 
+			#{item.totalQty}, 
+			#{item.totalSku}, 
+			#{item.amount}, 
+			#{item.derateAmount}, 
+			#{item.createTime}, 
+			#{item.createMonth}, 
+			#{item.writeTime}, 
+			#{item.rowExcelNo}, 
+			#{item.rowExcelName}, 
+			#{item.sheetName}
+          )
+        </foreach>
+    </insert>
+
+
 
     <update id="update" parameterType="com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity">
         update bill_fees_receive_dispatch_temp 

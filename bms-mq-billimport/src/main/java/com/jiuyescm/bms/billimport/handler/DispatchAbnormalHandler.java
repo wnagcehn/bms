@@ -17,12 +17,12 @@ import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
 /**
- * 改地址退件费
+ * 宅配理赔
  * @author zhaofeng
  *
  */
-@Component("改地址退件费")
-public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDispatchTempEntity>{
+@Component("宅配理赔")
+public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispatchTempEntity>{
 
 	@Autowired
 	private IBillFeesReceiveDispatchTempService billFeesReceiveDispatchTempService;
@@ -53,7 +53,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 				case "运单号":
 					entity.setWaybillNo(dc.getColValue());
 					break;
-				case "金额":
+				case "赔付商品金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}			
