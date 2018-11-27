@@ -36,6 +36,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveSto
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 		for (DataColumn dc:dr.getColumns()) {
 			try {
+				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "发货仓库":
 					entity.setWarehouseName(dc.getColValue());
@@ -62,7 +63,8 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveSto
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
-		//B2B订单操作费，出库装车费
+		//改地址退件费
+		entity.setSubjectCode("de_change");
 		list.add(entity);
 		return list;
 	}

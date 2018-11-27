@@ -341,7 +341,7 @@ public class BillReceiveMasterController {
 			taskEntity.setCreateMonth(Integer.valueOf(parameter.get("createMonth").toString()));
 			taskEntity.setBillName(parameter.get("billName").toString());
 			taskEntity.setInvoiceName(parameter.get("invoiceName").toString());
-			//taskEntity.setInvoiceId(parameter.get("invoiceId").toString());
+			taskEntity.setInvoiceId(parameter.get("invoiceId").toString());
 			taskEntity.setTaskRate(0);
 			taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
 			taskEntity.setCreator(JAppContext.currentUserName());

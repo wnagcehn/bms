@@ -34,6 +34,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 		for (DataColumn dc:dr.getColumns()) {
 			try {
+				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "仓库名称":
 					entity.setWarehouseName(dc.getColValue());
@@ -62,7 +63,8 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
-		//B2B订单操作费，出库装车费
+		//增值费
+		entity.setSubjectCode("wh_value_add_subject");
 		list.add(entity);
 		return list;
 	}

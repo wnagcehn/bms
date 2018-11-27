@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +32,10 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 			throws Exception {
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
-		BillFeesReceiveStorageTempEntity zEntity = new BillFeesReceiveStorageTempEntity();
+		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();
+		BillFeesReceiveStorageTempEntity entity2 = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
+			System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 			try {
 				switch (dc.getColName()) {
 				case "仓库名称":
@@ -70,17 +73,17 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
 					}
 					break;
-				case "B2B订单操作费":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setAmount(Double.valueOf(dc.getColValue()));
-					}	
-					break;
-				case "出库装车费":
-					PropertyUtils.copyProperties(zEntity, entity);
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						zEntity.setAmount(Double.valueOf(dc.getColValue()));
-					}	
-					break;
+//				case "B2B订单操作费":
+//					if (StringUtils.isNotBlank(dc.getColValue())) {
+//						entity.setAmount(Double.valueOf(dc.getColValue()));
+//					}	
+//					break;
+//				case "出库装车费":
+//					PropertyUtils.copyProperties(zEntity, entity);
+//					if (StringUtils.isNotBlank(dc.getColValue())) {
+//						zEntity.setAmount(Double.valueOf(dc.getColValue()));
+//					}	
+//					break;
 				default:
 					break;
 				}
@@ -95,9 +98,29 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 //				zEntity.setAmount(Double.valueOf(dc.getColValue()));
 //			}
 		}
+		for (DataColumn dc:dr.getColumns()) {
+			switch (dc.getColName()) {
+			case "B2B订单操作费":
+				if (StringUtils.isNotBlank(dc.getColValue())) {
+					PropertyUtils.copyProperties(entity1, entity);
+					entity1.setSubjectCode("wh_b2b_work");
+					entity1.setAmount(Double.parseDouble(dc.getColValue()));
+				}
+				break;
+			case "出库装车费":
+				if (StringUtils.isNotBlank(dc.getColValue())) {
+					PropertyUtils.copyProperties(entity2, entity);
+					entity2.setSubjectCode("wh_b2b_handwork");
+					entity2.setAmount(Double.parseDouble(dc.getColValue()));
+				}
+				break;
+			default:
+				break;
+			}
+		}
 		//B2B订单操作费，出库装车费
-		list.add(entity);
-		list.add(zEntity);
+		list.add(entity1);
+		list.add(entity2);
 		return list;
 	}
 
