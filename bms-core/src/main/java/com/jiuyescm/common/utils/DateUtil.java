@@ -413,4 +413,18 @@ public class DateUtil {
 		return ts;
 	}
 	
+	/**
+	 * Timestamp转int类型YYMM格式
+	 * @param value
+	 * @return
+	 * @throws ParseException
+	 */
+	public static int timeStamp2YYMM(Timestamp value) throws ParseException{
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(value);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int year = calendar.get(Calendar.YEAR);
+		int yymm = year%1000*100+month;
+		return yymm;
+	}
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,13 +67,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 						Timestamp createTime =DateUtil.transStringToTimeStamp(dc
 								.getColValue());
 						entity.setCreateTime(createTime);
-						createTime.getYear();
-						
-						String str1 = DateUtil.formatYYYYMMDD(dc.getColValue());
-						String str2 = str1.substring(2);
-						String str3 = str2.substring(0, str2.length()-2);
-						entity.setCreateMonth(Integer.parseInt(str3));
-						System.out.println("CreateMonth----"+Integer.parseInt(str3)+"dc.getColValue()"+dc.getColValue()+"--str1:"+str1+"--str2:"+str2+"--str3:"+str3);
+						entity.setCreateMonth(DateUtil.timeStamp2YYMM(createTime));
 						}
 					break;
 				case "始发站":
@@ -112,7 +107,6 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					PropertyUtils.copyProperties(entity1, entity);
 					entity1.setAmount(new BigDecimal(dc.getColValue()));
 					entity1.setFeesType("BASE");
-					entity1.setBillNo("1");
 					listEntity.add(entity1);	
 				}
 				break;
@@ -121,7 +115,6 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					PropertyUtils.copyProperties(entity2, entity);
 					entity2.setAmount(new BigDecimal(dc.getColValue()));
 					entity2.setFeesType("OTHER");
-					entity1.setBillNo("2");
 					listEntity.add(entity2);	
 				}
 				break;
@@ -130,8 +123,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					PropertyUtils.copyProperties(entity3, entity);
 					entity3.setAmount(new BigDecimal(dc.getColValue()));
 					entity3.setFeesType("BASE");
-					entity1.setBillNo("3");
-					listEntity.add(entity3);	
+					listEntity.add(entity3);
 				}
 				break;
 			default:

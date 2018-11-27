@@ -272,24 +272,6 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
         values
         <foreach item="item" index="index" collection="list" separator=",">
          (
-			<!-- #{item.billNo}, 
-			#{feesType,jdbcType=VARCHAR}, 
-			#{subjectCode,jdbcType=VARCHAR}, 
-			#{waybillNo,jdbcType=VARCHAR}, 
-			#{customerId,jdbcType=VARCHAR}, 
-			#{customerName,jdbcType=VARCHAR}, 
-			#{warehouseCode,jdbcType=VARCHAR}, 
-			#{warehouseName,jdbcType=VARCHAR}, 
-			#{sendSite,jdbcType=VARCHAR}, 
-			#{receiveSite,jdbcType=VARCHAR}, 
-			#{totalWeight,jdbcType=DECIMAL}, 
-			#{createTime,jdbcType=TIMESTAMP}, 
-			#{createMonth,jdbcType=INTEGER}, 
-			#{amount,jdbcType=DECIMAL}, 
-			#{derateAmount,jdbcType=DECIMAL}, 
-			#{writeTime,jdbcType=TIMESTAMP}, 
-			#{rowExcelNo,jdbcType=INTEGER}, 
-			#{rowExcelName,jdbcType=VARCHAR} -->
 			#{item.billNo}, 
 			#{item.feesType},
 			#{item.subjectCode},
