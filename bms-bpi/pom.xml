@@ -18,21 +18,37 @@
             <artifactId>bms-entity</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
-        <!-- <dependency>
-        	<groupId>com.jiuyescm.inv</groupId>
-        	<artifactId>inv-entity</artifactId>
-        	<version>${inv.version}</version>
-        	<exclusions>
-        		<exclusion>
-        			<groupId>com.jiuyescm</groupId>
-        			<artifactId>scm-core</artifactId>
-        		</exclusion>
-        		<exclusion>
-				    <groupId>org.slf4j</groupId>
-				    <artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-        	</exclusions>
-        </dependency> -->
+        
+        <dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+		  <artifactId>mdm-customer-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-warehouse-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-carrier-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-deliver-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.jiuyescm.contract</groupId>
+			<artifactId>contract-api</artifactId>
+			<version>${contract.version}</version>
+		</dependency>
+        
     </dependencies>
     
     <!-- 添加部署插件，生效设置为false -->

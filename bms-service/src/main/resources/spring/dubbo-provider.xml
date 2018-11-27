@@ -58,4 +58,10 @@
 	<dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" ref="billReceiveMasterRecordService"/>
 	<dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService" ref="billReceiveMasterService"/>
 
+	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.ICarrierDictService" ref="carrierDictService"/>
+	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService" ref="customerDictService"/>
+	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IDeliverDictService" ref="deliverDictService"/>
+	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IWarehouseDictService" ref="warehouseDictService"/>
+	
+
 </beans>

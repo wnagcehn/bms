@@ -49,6 +49,8 @@
 		<log.version>1.0.0</log.version>
 		<drools.version>6.4.0.Final</drools.version>
 		<mdm.version>1.0.0-SNAPSHOT</mdm.version>
+		<redis-client.version>1.2.3-SNAPSHOT</redis-client.version>
+		<contract.version>0.0.1-SNAPSHOT</contract.version>
 		<snapshotDependencyAllowed>true</snapshotDependencyAllowed>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
