@@ -73,7 +73,7 @@ public class WarehouseDictService implements IWarehouseDictService {
 	}
 
 	@Override
-	public WarehouseVo getWarehouseByCode(String code) {
+	public WarehouseVo getWarehouseByCode(final String code) {
 		WarehouseVo result = redisClient.get(code, RedisCache.WAREHOUSECODE_SPACE,WarehouseVo.class, new GetDataCallBack<WarehouseVo>(){
 
 			@Override
@@ -91,7 +91,7 @@ public class WarehouseDictService implements IWarehouseDictService {
 	}
 
 	@Override
-	public WarehouseVo getWarehouseByName(String name) {
+	public WarehouseVo getWarehouseByName(final String name) {
 		WarehouseVo result = redisClient.get(name, RedisCache.WAREHOUSENAME_SPACE,WarehouseVo.class, new GetDataCallBack<WarehouseVo>(){
 
 			@Override
