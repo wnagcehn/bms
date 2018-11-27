@@ -150,7 +150,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 */
     @Override
     public void delete(String billNo,String status) {
-    	if("sucess".equals(status)){
+    	if("SUCCESS".equals(status)){
     		Map<String, Object> condition=new HashMap<>();
     		condition.put("billNo", billNo);
     		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);

@@ -2,6 +2,8 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,68 +17,39 @@ import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.exception.BizException;
 
 /**
- * TB
- * @author zhaofeng
+ * 改地址退件费
+ * @author wangchen870
  *
  */
-@Component("TB")
-public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
+@Component("改地址退件费")
+public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 
 	@Override
-	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
-			throws Exception {
+	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
-		BillFeesReceiveStorageTempEntity zEntity = new BillFeesReceiveStorageTempEntity();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
-				case "仓库名称":
+				case "发货仓库":
 					entity.setWarehouseName(dc.getColValue());
 					break;
-				case "发货时间":
+				case "运单日期":
+					Timestamp time = null;
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setCreateTime(Timestamp.valueOf(dc.getColValue()));
-					}	
-					break;
-				case "商家名称":
-					entity.setCustomerName(dc.getColValue());
-					break;
-				case "单据类型":
-					entity.setOrderType(dc.getColValue());
-					break;
-				case "出库单号":
-					entity.setOrderNo(dc.getColValue());
-					break;
-				case "温度类型":
-					entity.setTempretureType(dc.getColValue());
-					break;
-				case "出库件数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setTotalQty(Integer.valueOf(dc.getColValue()));
-					}	
-					break;
-				case "出库箱数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setTotalBox(new BigDecimal(dc.getColValue()));
+						time = new Timestamp(sdf.parse(dc.getColValue()).getTime());
 					}
+					entity.setCreateTime(time);
 					break;
-				case "出库重量(吨)":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
-					}
+				case "运单号":
+					entity.setWaybillNo(dc.getColValue());
 					break;
-				case "B2B订单操作费":
+				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setAmount(Double.valueOf(dc.getColValue()));
-					}	
-					break;
-				case "出库装车费":
-					PropertyUtils.copyProperties(zEntity, entity);
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						zEntity.setAmount(Double.valueOf(dc.getColValue()));
-					}	
+					}			
 					break;
 				default:
 					break;
@@ -87,7 +60,6 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		}
 		//B2B订单操作费，出库装车费
 		list.add(entity);
-		list.add(zEntity);
 		return list;
 	}
 
@@ -102,7 +74,5 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
+	
 }

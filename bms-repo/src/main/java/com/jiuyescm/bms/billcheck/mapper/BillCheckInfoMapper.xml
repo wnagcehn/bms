@@ -329,6 +329,9 @@
 		<if test="(customerName != null and customerName !='')" >
 				and customer_name = #{customerName}
 		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
 		limit 1
     </select>
 

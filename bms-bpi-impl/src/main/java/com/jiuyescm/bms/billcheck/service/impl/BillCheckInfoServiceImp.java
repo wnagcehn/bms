@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
+import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
+import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRecordRepository;
+import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
@@ -28,10 +33,12 @@ import com.jiuyescm.bms.billcheck.BillReceiptFollowEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 
@@ -44,6 +51,10 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	@Resource private IBillCheckInfoRepository billCheckInfoRepository;
 	@Resource 
 	private IBillCheckLogRepository billCheckLogRepository;
+	@Resource
+	private IBillReceiveMasterRepository billReceiveMasterRepository;
+	@Resource
+	private IBillReceiveMasterRecordRepository billReceiveMasterRecordRepository;
 	@Override
 	public PageInfo<BillCheckInfoVo> query(Map<String, Object> condition,
 			int pageNo, int pageSize) {
@@ -694,7 +705,6 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 
 	@Override
 	public BillCheckInfoVo getLatestBill(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		BillCheckInfoVo vo=new BillCheckInfoVo();
 		BillCheckInfoEntity entity=billCheckInfoRepository.getLatestBill(condition);
 		try {
@@ -704,11 +714,12 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
         }
 		return vo;
 	}
-
+	
 	@Override
-	public void importCheck(String billNo) {
+	public void importCheck(String createMonth, String billName) {
 		Map<String, Object> condition=new HashMap<>();
-		condition.put("billNo", billNo);
+		condition.put("createMonth", createMonth);
+		condition.put("billName", billName);
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
 		if(entity==null){
 			throw new BizException("BILL_NULL","账单不存在!");
@@ -721,7 +732,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
-	public void adjustMoney(String billNo,Double adjustMoney) {
+	public void adjustMoney(String billNo,Double adjustMoney,String username,String userId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> condition=new HashMap<>();
 		condition.put("billNo", billNo);
@@ -734,13 +745,39 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 			throw new BizException("RECEIPTED_NULL","已收款的账单不能调整金额!");
 		}		
 		BigDecimal adjustAmount=BigDecimal.valueOf(adjustMoney);
-		//确认金额
+		//账单跟踪更新确认金额
 		entity.setConfirmAmount(entity.getConfirmAmount().add(adjustAmount));		
 		int result=billCheckInfoRepository.update(entity);
-		
 		if(result<=0){
-			throw new BizException("UPDATE_NULL","更新确认金额失败!");
+			throw new BizException("UPDATE_NULL","账单跟踪更新确认金额失败!");
 		}
+		//账单导入主表更新调整金额
+		BillReceiveMasterEntity brmVo = new BillReceiveMasterEntity();
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		brmVo.setBillNo(billNo);
+		brmVo.setLastModifier(username);
+		brmVo.setLastModifierId(userId);
+		brmVo.setLastModifyTime(currentTime);
+		brmVo.setAdjustAmount(adjustMoney);
+		try {
+			billReceiveMasterRepository.update(brmVo);
+		} catch (Exception e) {
+			throw new BizException("UPDATE_NULL","账单主表更新确认金额失败!");
+		}
+		
+		//账单导入记录表写入
+		BillReceiveMasterRecordEntity recordEntity = new BillReceiveMasterRecordEntity();
+		recordEntity.setBillNo(billNo);
+		recordEntity.setCreateTime(currentTime);
+		recordEntity.setCreator(username);
+		recordEntity.setCreatorId(userId);
+		recordEntity.setAdjustAmount(BigDecimal.ZERO);
+		try {
+			billReceiveMasterRecordRepository.save(recordEntity);
+		} catch (Exception e) {
+			throw new BizException("UPDATE_NULL","账单导入记录表更新确认金额失败!");
+		}
+		
 		
 	}
 }

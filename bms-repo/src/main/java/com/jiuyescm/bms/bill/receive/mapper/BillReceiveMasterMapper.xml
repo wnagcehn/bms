@@ -204,7 +204,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 				result_file_path = #{resultFilePath,jdbcType=VARCHAR},
 			</if>
         </trim>
-        where id = #{id}
+        where bill_no = #{billNo}
     </update>
 
 	<!-- 删除 -->

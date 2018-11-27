@@ -198,12 +198,15 @@
       <PropertyDef name="createMonth">
         <Property name="label">业务月份</Property>
         <Property name="dataType">Integer</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="invoiceName">
         <Property name="label">合同商家名称</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="billName">
         <Property name="label">账单名称</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="isneedInvoice">
         <Property name="label">是否需要发票</Property>
@@ -213,6 +216,7 @@
       </PropertyDef>
       <PropertyDef name="billCheckStatus">
         <Property name="label">对账状态</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="invoiceId">
         <Property name="label">合同商家编码</Property>
@@ -221,6 +225,7 @@
       <PropertyDef name="importBtn"/>
       <PropertyDef name="billStartTime">
         <Property name="label">业务启动时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="firstClassName">
         <Property></Property>
@@ -759,7 +764,7 @@ var data = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;&#
 				}</ClientEvent>
       <Property name="successMessage">数据保存成功！</Property>
       <Property name="modal">true</Property>
-      <Property name="dataResolver">billReceiveMasterController#save</Property>
+      <Property name="dataResolver">billReceiveMasterController#update</Property>
       <UpdateItem>
         <Property name="dataSet">dsBillReceiveMasterEntity</Property>
         <Property name="dataPath">[#current]</Property>
@@ -824,7 +829,6 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="property">invoiceName</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
-            <Property name="label">商家合同名称</Property>
             <Property name="trigger">triggerInvoice</Property>
             <Editor/>
           </AutoFormElement>
@@ -969,8 +973,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="property">confirmMan</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
-            <Property name="editable">false</Property>
-            <Property name="readOnly">true</Property>
+            <Property name="editable">true</Property>
+            <Property name="readOnly">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -980,8 +984,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="showHint">false</Property>
             <Property name="hideMode">display</Property>
             <Property name="visible">false</Property>
-            <Property name="editable">false</Property>
-            <Property name="readOnly">true</Property>
+            <Property name="editable">true</Property>
+            <Property name="readOnly">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -989,8 +993,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="property">confirmDate</Property>
             <Property name="labelWidth">90</Property>
             <Property name="showHint">false</Property>
-            <Property name="editable">false</Property>
-            <Property name="readOnly">true</Property>
+            <Property name="editable">true</Property>
+            <Property name="readOnly">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="fileName">
@@ -1037,7 +1041,7 @@ var invoiceId = entity.get(&quot;invoiceId&quot;);&#xD;
 var createMonth = entity.get(&quot;createMonth&quot;);&#xD;
 var isneedInvoice = entity.get(&quot;isneedInvoice&quot;);&#xD;
 var billName = entity.get(&quot;billName&quot;);&#xD;
-var billCheckStatus = entity.get(&quot;illCheckStatus&quot;);&#xD;
+var billCheckStatus = entity.get(&quot;billCheckStatus&quot;);&#xD;
 &#xD;
 var param = {&#xD;
 	&quot;invoiceName&quot;:invoiceName,&#xD;
@@ -1269,10 +1273,36 @@ if(data){&#xD;
     <FloatPanel id="panelInvoice">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoice.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;mkInvoiceName&quot;)),&#xD;
-	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;mkInvoiceId&quot;)),&#xD;
-	view.get(&quot;#AutoForma.entity&quot;).set(&quot;billName&quot;,data.get(&quot;mkInvoiceName&quot;))&#xD;
-}</ClientEvent>
+	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;customName&quot;)),&#xD;
+	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;customNo&quot;)),&#xD;
+	view.get(&quot;#AutoForma.entity&quot;).set(&quot;billName&quot;,data.get(&quot;customName&quot;))&#xD;
+}&#xD;
+/*&#xD;
+var datas = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;&#xD;
+datas.set({&#xD;
+	invoiceName:data.get(&quot;customName&quot;)&#xD;
+});&#xD;
+*/&#xD;
+view.id(&quot;getInportParamAction&quot;).set(&quot;parameter&quot;,{invoiceName:data.get(&quot;customName&quot;)}).execute(&#xD;
+                        function(result){&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;billStartTime&quot;,result[&quot;billStartTime&quot;]);&#xD;
+                            view.get(&quot;#AutoForma.entity&quot;).set(&quot;firstClassName&quot;,result[&quot;firstClassName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;bizTypeName&quot;,result[&quot;bizTypeName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;projectName&quot;,result[&quot;projectName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;sellerId&quot;,result[&quot;sellerId&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;sellerName&quot;,result[&quot;sellerName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;deptName&quot;,result[&quot;deptName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;deptCode&quot;,result[&quot;deptCode&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;projectManagerId&quot;,result[&quot;projectManagerId&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;projectManagerName&quot;,result[&quot;projectManagerName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;balanceId&quot;,result[&quot;balanceId&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;balanceName&quot;,result[&quot;balanceName&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmManId&quot;,result[&quot;confirmManId&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmMan&quot;,result[&quot;confirmMan&quot;]);&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmDate&quot;,result[&quot;confirmDate&quot;]);&#xD;
+                        }&#xD;
+                    );&#xD;
+</ClientEvent>
       <Property name="caption">合同商家选择</Property>
       <Property name="center">true</Property>
       <Property name="closeable">true</Property>
@@ -1294,8 +1324,8 @@ if (data != null) {&#xD;
     <FloatPanel id="panelQueryInvoice">
       <ClientEvent name="onHide">var data = this.get(&quot;#queyViewSelectInvoice.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;mkInvoiceName&quot;)),&#xD;
-	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;mkInvoiceId&quot;))&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;customName&quot;)),&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;customNo&quot;))&#xD;
 	}</ClientEvent>
       <Property name="caption">合同商家选择</Property>
       <Property name="center">true</Property>
@@ -1312,5 +1342,8 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <AjaxAction id="getInportParamAction">
+      <Property name="service">invoiceController#query</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>
