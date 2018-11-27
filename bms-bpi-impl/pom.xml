@@ -60,6 +60,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<artifactId>mdm-customer-api</artifactId>
 			<version>${mdm.version}</version>
 		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.framework</groupId>
+		  <artifactId>redis-client</artifactId>
+		  <version>${redis-client.version}</version>
+		</dependency>
 	</dependencies>
 	
 	<!-- 添加部署插件，生效设置为false -->

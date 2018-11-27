@@ -18,7 +18,7 @@ import com.jiuyescm.bms.excel.opc.OpcSheet;
  * @author zhaofeng
  *
  */
-@Component("增值")
+@Component("仓储增值")
 public class StorageAddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
 

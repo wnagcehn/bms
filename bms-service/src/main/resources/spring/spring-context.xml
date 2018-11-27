@@ -11,6 +11,7 @@
     <import resource="classpath*:applicationContext-config.xml" />
 	<import resource="classpath*:applicationContext-datasource.xml" />
 	<import resource="classpath:spring/dubbo-provider.xml" /> 
-    <import resource="classpath:spring/dubbo-consumer.xml" /> 
+    <import resource="classpath:spring/dubbo-consumer.xml" />
+    <import resource="classpath*:spring-redis.xml" /> 
 
 </beans>

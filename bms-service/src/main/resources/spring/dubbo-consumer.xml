@@ -7,5 +7,24 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         ">
 	 
-	<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" /> 
+	<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" />
+	
+	<dubbo:reference interface="com.jiuyescm.mdm.warehouse.api.IWarehouseService"
+				version="1.0.0" id="warehouseService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.carrier.api.ICarrierService"
+				version="1.0.0" id="carrierService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.deliver.api.IDeliverService"
+				version="1.0.0" id="deliverService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.ICustomerService"
+				version="1.0.0" id="customerService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IOmsCsrReasonService"
+				version="1.0.0" id="omsCsrReasonService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IAddressService"
+				version="1.0.0" id="addressService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IProjectService"
+				version="1.0.0" id="projectService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialInfoService"
+				version="1.0.0" id="pubMaterialInfoService" timeout="1200000" check="false"/>
+		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialSupplierService"
+				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/> 
 </beans>
