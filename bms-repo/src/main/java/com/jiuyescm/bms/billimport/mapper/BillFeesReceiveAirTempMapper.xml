@@ -272,7 +272,7 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
         values
         <foreach item="item" index="index" collection="list" separator=",">
          (
-			#{billNo,jdbcType=VARCHAR}, 
+			<!-- #{item.billNo}, 
 			#{feesType,jdbcType=VARCHAR}, 
 			#{subjectCode,jdbcType=VARCHAR}, 
 			#{waybillNo,jdbcType=VARCHAR}, 
@@ -289,7 +289,25 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
 			#{derateAmount,jdbcType=DECIMAL}, 
 			#{writeTime,jdbcType=TIMESTAMP}, 
 			#{rowExcelNo,jdbcType=INTEGER}, 
-			#{rowExcelName,jdbcType=VARCHAR}
+			#{rowExcelName,jdbcType=VARCHAR} -->
+			#{item.billNo}, 
+			#{item.feesType},
+			#{item.subjectCode},
+			#{item.waybillNo},
+			#{item.customerId},
+			#{item.customerName},
+			#{item.warehouseCode},
+			#{item.warehouseName},
+			#{item.sendSite},
+			#{item.receiveSite},
+			#{item.totalWeight},
+			#{item.createTime},
+			#{item.createMonth},
+			#{item.amount},
+			#{item.derateAmount},
+			#{item.writeTime},
+			#{item.rowExcelNo},
+			#{item.rowExcelName}
         )
         </foreach>
     </insert>

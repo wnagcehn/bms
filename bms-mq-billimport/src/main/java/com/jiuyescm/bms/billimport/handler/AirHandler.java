@@ -57,42 +57,47 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 				
 				switch (dc.getColName()) {
 				case "区域仓":
-					entity.setWarehouseName(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setWarehouseName(dc.getColValue());
+					}
 					break;
 				case "发货日期":
-					entity.setCreateTime(DateUtil.transStringToTimeStamp(dc
-							.getColValue()));
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						Timestamp createTime =DateUtil.transStringToTimeStamp(dc
+								.getColValue());
+						entity.setCreateTime(createTime);
+						createTime.getYear();
+						
+						String str1 = DateUtil.formatYYYYMMDD(dc.getColValue());
+						String str2 = str1.substring(2);
+						String str3 = str2.substring(0, str2.length()-2);
+						entity.setCreateMonth(Integer.parseInt(str3));
+						System.out.println("CreateMonth----"+Integer.parseInt(str3)+"dc.getColValue()"+dc.getColValue()+"--str1:"+str1+"--str2:"+str2+"--str3:"+str3);
+						}
 					break;
 				case "始发站":
-					entity.setSendSite(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setSendSite(dc.getColValue());
+					}
 					break;
 				case "目的站":
-					entity.setReceiveSite(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setReceiveSite(dc.getColValue());
+					}
 					break;
 				case "计费重量":
-					entity.setTotalWeight(new BigDecimal(dc.getColValue()));
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setTotalWeight(new BigDecimal(dc.getColValue()));	
+					}
 					break;
 				case "运单号":
-					entity.setWaybillNo(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setWaybillNo(dc.getColValue());	
+					}
 					break;
 				default:
 					break;
 				}
-
-/*				if (dc.getColName().equals("区域仓")) {
-					entity.setWarehouseName(dc.getColValue());
-				} else if (dc.getColName().equals("发货日期")) {
-					entity.setCreateTime(DateUtil.transStringToTimeStamp(dc
-							.getColValue()));
-				} else if (dc.getColName().equals("始发站")) {
-					entity.setSendSite(dc.getColValue());
-				} else if (dc.getColName().equals("目的站")) {
-					entity.setReceiveSite(dc.getColValue());
-				} else if (dc.getColName().equals("计费重量")) {
-					entity.setTotalWeight(new BigDecimal(dc.getColValue()));
-				} else if (dc.getColName().equals("运单号")) {
-					entity.setWaybillNo(dc.getColValue());
-				}*/
 
 			} catch (Exception ex) {
 				throw new BizException("行【" + dr.getRowNo() + "】，列【"
@@ -103,22 +108,31 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		for(DataColumn dc : dr.getColumns()){
 			switch (dc.getColName()) {
 			case "航空运费":
-				PropertyUtils.copyProperties(entity1, entity);
-				entity1.setAmount(new BigDecimal(dc.getColValue()));
-				entity1.setFeesType("BASE");
-				listEntity.add(entity1);
+				if (StringUtils.isNotBlank(dc.getColValue())) {
+					PropertyUtils.copyProperties(entity1, entity);
+					entity1.setAmount(new BigDecimal(dc.getColValue()));
+					entity1.setFeesType("BASE");
+					entity1.setBillNo("1");
+					listEntity.add(entity1);	
+				}
 				break;
 			case "其他费用":
-				PropertyUtils.copyProperties(entity2, entity);
-				entity2.setAmount(new BigDecimal(dc.getColValue()));
-				entity2.setFeesType("OTHER");
-				listEntity.add(entity2);
+				if (StringUtils.isNotBlank(dc.getColValue())) {
+					PropertyUtils.copyProperties(entity2, entity);
+					entity2.setAmount(new BigDecimal(dc.getColValue()));
+					entity2.setFeesType("OTHER");
+					entity1.setBillNo("2");
+					listEntity.add(entity2);	
+				}
 				break;
 			case "货物赔偿费":
-				PropertyUtils.copyProperties(entity3, entity);
-				entity3.setAmount(new BigDecimal(dc.getColValue()));
-				entity3.setFeesType("BASE");
-				listEntity.add(entity3);
+				if (StringUtils.isNotBlank(dc.getColValue())) {
+					PropertyUtils.copyProperties(entity3, entity);
+					entity3.setAmount(new BigDecimal(dc.getColValue()));
+					entity3.setFeesType("BASE");
+					entity1.setBillNo("3");
+					listEntity.add(entity3);	
+				}
 				break;
 			default:
 				break;

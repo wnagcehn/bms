@@ -97,8 +97,10 @@ public class BillFeesReceiveAirTempServiceImpl implements IBillFeesReceiveAirTem
 	public int insertBatchTemp(List<BillFeesReceiveAirTempEntity> list) {
 		int i = 0;
 		try {
-			billFeesReceiveAirTempRepository.insertBatch(list);
-			i = 1;
+			if(list.size()>0){
+				billFeesReceiveAirTempRepository.insertBatch(list);
+				i = 1;	
+			}
 		} catch (Exception e) {
 			//写入日志
 			logger.info("insertBatchTemp：e-{}",e);;
@@ -115,8 +117,10 @@ public class BillFeesReceiveAirTempServiceImpl implements IBillFeesReceiveAirTem
 	public int deleteBatchTemp(Map<String, Object> condition) {
 		int result = 0;
 		try {
-			billFeesReceiveAirTempRepository.deleteBatch(condition);
-			result = 1;
+			if(condition.size()>0){
+				billFeesReceiveAirTempRepository.deleteBatch(condition);
+				result = 1;	
+			}
 		} catch (Exception e) {
 			//写入日志
 			logger.info("insertBatchTemp：e-{}",e);;

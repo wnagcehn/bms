@@ -12,19 +12,17 @@
 	
 		<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" />
 		
-		<dubbo:reference interface="com.jiuyescm.mdm.warehouse.api.IWarehouseService"
-				version="1.0.0" id="warehouseService" timeout="1200000" check="false"/>
-		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.ICustomerService"
-				version="1.0.0" id="customerService" timeout="1200000" check="false"/>
-		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IOmsCsrReasonService"
-				version="1.0.0" id="omsCsrReasonService" timeout="1200000" check="false"/>
-		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IAddressService"
-				version="1.0.0" id="addressService" timeout="1200000" check="false"/>
-		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IProjectService"
-				version="1.0.0" id="projectService" timeout="1200000" check="false"/>
-		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialInfoService"
-				version="1.0.0" id="pubMaterialInfoService" timeout="1200000" check="false"/>
-		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialSupplierService"
-				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/>	
+		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.ICarrierDictService"
+				version="1.0.0" id="carrierDictService" timeout="1200000" check="false"/>
+				
+		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService"
+				version="1.0.0" id="customerDictService" timeout="1200000" check="false"/>
+				
+		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.IDeliverDictService"
+				version="1.0.0" id="deliverDictService" timeout="1200000" check="false"/>
+				
+		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.IWarehouseDictService"
+				version="1.0.0" id="warehouseDictService" timeout="1200000" check="false"/>
+		
 									
 </beans> 

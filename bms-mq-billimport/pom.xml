@@ -38,6 +38,12 @@
 		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-bpi</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-repo</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
@@ -96,6 +102,10 @@
 					<groupId>org.javassist</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		
 	</dependencies>
