@@ -16,10 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
-import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 @Service("receiveBillImportListener")
@@ -32,7 +32,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	private StorageClient storageClient;
 
 	@Autowired
-	private IWarehouseService warehouseService;
+	private IWarehouseDictService warehouseDictService;
 
 	private ExcelXlsxReader xlsxReader;
 
@@ -71,8 +71,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				logger.info("准备读取sheet - {0}", sheetName);
 
 				// 仓储--上海01仓，北京01仓...............
-				WarehouseVo warehouseVo = warehouseService
-						.queryWarehouseByWarehouseName(sheetName);
+				WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
 				if (null != warehouseVo.getWarehousename()) {
 					sheetName = "仓储";
 				}

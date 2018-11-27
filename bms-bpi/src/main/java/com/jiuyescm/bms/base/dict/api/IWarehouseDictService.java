@@ -2,6 +2,8 @@ package com.jiuyescm.bms.base.dict.api;
 
 import java.util.Map;
 
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+
 /**
  * 仓库管理与查询服务
  * @author caojianwei
@@ -34,5 +36,19 @@ public interface IWarehouseDictService {
 	 * @return
 	 */
 	String getWarehouseCodeByName(String name);
+	
+	/**
+	 * 根据仓库编号查询仓库信息
+	 * @param code
+	 * @return
+	 */
+	WarehouseVo getWarehouseByCode(String code);
+	
+	/**
+	 * 根据仓库名称查询仓库信息
+	 * @param name
+	 * @return
+	 */
+	WarehouseVo getWarehouseByName(String name);
 	
 }
