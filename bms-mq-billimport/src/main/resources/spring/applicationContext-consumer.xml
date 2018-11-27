@@ -23,6 +23,9 @@
 				
 		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.IWarehouseDictService"
 				version="1.0.0" id="warehouseDictService" timeout="1200000" check="false"/>
+				
+		<dubbo:reference interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService"
+				version="1.0.0" id="bmsSubjectService" timeout="1200000" check="false"/>
 		
 									
 </beans> 

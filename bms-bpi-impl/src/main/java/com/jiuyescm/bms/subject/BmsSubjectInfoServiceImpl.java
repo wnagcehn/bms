@@ -18,7 +18,6 @@ import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
 import com.jiuyescm.constants.RedisCache;
 import com.jiuyescm.framework.redis.callback.GetDataCallBack;
 import com.jiuyescm.framework.redis.client.IRedisClient;
-import com.jiuyescm.mdm.carrier.vo.CarrierVo;
 
 @Service("bmsSubjectService")
 public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
