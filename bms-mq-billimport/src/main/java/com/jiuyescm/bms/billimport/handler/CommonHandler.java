@@ -61,11 +61,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				System.out.println("----行号【" + dr.getRowNo() + "】");
 				try {
 					List<T> entityList = transRowToObj(dr);
-					System.out.println("entityList"+"="+entityList.toString());
 					for( int i = 0 ; i < entityList.size() ; i++){
-						System.out.println("i------"+i);
 						list.add(entityList.get(i));
-						System.out.println("list.size"+"-----"+list.size());
 					}
 					if(list.size()==batchNum){
 						saveTo();
@@ -79,8 +76,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 
 			@Override
 			public void finish() {
-				System.out.println(errMap.toString());
-				System.out.println(list);
 				if(list.size()>0){
 					saveTo();
 				}
