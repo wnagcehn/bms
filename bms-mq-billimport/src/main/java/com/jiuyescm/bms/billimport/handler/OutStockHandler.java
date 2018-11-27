@@ -15,6 +15,7 @@ import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -43,12 +44,12 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 					break;
 				case "发货时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setCreateTime(Timestamp.valueOf(dc.getColValue()));
+						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}	
 					break;
-				case "商家名称":
-					entity.setCustomerName(dc.getColValue());
-					break;
+//				case "商家名称":
+//					entity.setCustomerName(dc.getColValue());
+//					break;
 				case "单据类型":
 					entity.setOrderType(dc.getColValue());
 					break;

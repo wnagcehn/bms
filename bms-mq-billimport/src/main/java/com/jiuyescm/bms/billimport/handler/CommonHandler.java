@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billimport.IFeesHandler;
@@ -23,6 +24,7 @@ import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
+import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 public abstract class CommonHandler<T> implements IFeesHandler {
 
@@ -30,6 +32,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	
 	@Autowired private StorageClient storageClient;
 	@Autowired private IBillReceiveMasterRepository billReceiveMasterRepository;
+	@Autowired private IWarehouseDictService warehouseDictService;
 	
 	private int batchNum = 1000;
 	private String sheetName;
@@ -42,7 +45,16 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map param) throws Exception{
 		this.billEntity = null;//根据param中的bill_no查询
 		sheetName = sheet.getSheetName();
-		
+		// 仓储--上海01仓，北京01仓...............
+		WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
+		if (null != warehouseVo.getWarehousename()) {
+			sheetName = "仓储";
+		}
+		// 耗材使用费
+		if (sheetName.contains("耗材使用费")) {
+			sheetName = "耗材使用费";
+		}
+		System.out.println(sheetName);
 		if(sheetName.equals("仓储")){
 			readExcel(xlsxReader,sheet,3,5);
 		}else {

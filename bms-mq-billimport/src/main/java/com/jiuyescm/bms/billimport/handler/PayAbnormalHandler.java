@@ -16,6 +16,7 @@ import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -33,7 +34,7 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
-		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		//DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
@@ -42,11 +43,9 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 					entity.setWarehouseName(dc.getColValue());
 					break;
 				case "日期":
-					Timestamp time = null;
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						time = new Timestamp(sdf.parse(dc.getColValue()).getTime());
-					}		
-					entity.setCreateTime(time);
+						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+					}				
 					break;
 				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
