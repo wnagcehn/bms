@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
@@ -14,14 +15,18 @@ import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.dictionary.repository.IBmsSubjectInfoRepository;
 import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
 import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
+import com.jiuyescm.constants.RedisCache;
+import com.jiuyescm.framework.redis.callback.GetDataCallBack;
+import com.jiuyescm.framework.redis.client.IRedisClient;
+import com.jiuyescm.mdm.carrier.vo.CarrierVo;
 
 @Service("bmsSubjectService")
 public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
 	private static final Logger logger = Logger.getLogger(BmsSubjectInfoServiceImpl.class.getName());
 
-	@Resource
-	private IBmsSubjectInfoRepository bmsSubjectInfoRepository;
+	@Autowired private IRedisClient redisClient;
+	@Resource private IBmsSubjectInfoRepository bmsSubjectInfoRepository;
 	
 	@Override
 	public List<BmsSubjectInfoVo> querySubject(BmsSubjectInfoVo queryVo) {
@@ -114,6 +119,51 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
         	logger.error("转换失败:{0}",ex);
         }
 		return null;
+	}
+
+	@Override
+	public BmsSubjectInfoVo querySubjectByCode(final String inOutTypecode,final String bizType, final String subjectCode) {
+		
+		BmsSubjectInfoVo vo = redisClient.get(subjectCode, RedisCache.SUBJECTCODE_SPACE,BmsSubjectInfoVo.class, new GetDataCallBack<BmsSubjectInfoVo>(){
+
+			@Override
+			public int getExpiredTime() {
+				return RedisCache.halfHour;
+			}
+
+			@Override
+			public BmsSubjectInfoVo invoke() {
+				BmsSubjectInfoVo vo = new BmsSubjectInfoVo();
+				vo.setInOutTypecode(inOutTypecode);
+				vo.setBizTypecode(bizType);
+				vo.setSubjectCode(subjectCode);
+				List<BmsSubjectInfoVo> vos = querySubject(vo);
+				return vos.get(0);
+			}
+		});
+		return vo;
+	}
+
+	@Override
+	public BmsSubjectInfoVo querySubjectByName(final String inOutTypecode,final String bizType, final String subjectName) {
+		BmsSubjectInfoVo vo = redisClient.get(subjectName, RedisCache.SUBJECTCODE_SPACE,BmsSubjectInfoVo.class, new GetDataCallBack<BmsSubjectInfoVo>(){
+
+			@Override
+			public int getExpiredTime() {
+				return RedisCache.halfHour;
+			}
+
+			@Override
+			public BmsSubjectInfoVo invoke() {
+				BmsSubjectInfoVo vo = new BmsSubjectInfoVo();
+				vo.setInOutTypecode(inOutTypecode);
+				vo.setBizTypecode(bizType);
+				vo.setSubjectCode(subjectName);
+				List<BmsSubjectInfoVo> vos = querySubject(vo);
+				return vos.get(0);
+			}
+		});
+		return vo;
 	}
 
 }
