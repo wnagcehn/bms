@@ -32,7 +32,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
+		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");

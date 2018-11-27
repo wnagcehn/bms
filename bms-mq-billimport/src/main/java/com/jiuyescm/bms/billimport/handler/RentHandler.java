@@ -69,7 +69,8 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
-		
+		if (null != list && list.size() > 0) {
+			billFeesReceiveStorageTempService.insertBatchTemp(list);
+		}
 	}
 }

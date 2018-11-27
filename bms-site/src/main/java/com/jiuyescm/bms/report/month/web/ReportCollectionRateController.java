@@ -405,7 +405,7 @@ public class ReportCollectionRateController {
 				logger.error("达成率计算异常", e);
 			}
 			
-			if (newList != null || newList.size() == 0) {
+			if (newList != null) {
 				RowIndex++;
 			}
 			

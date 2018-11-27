@@ -17,6 +17,7 @@ import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.billimport.service.impl.BillFeesReceiveAirTempServiceImpl;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -42,11 +43,9 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveSto
 					entity.setWarehouseName(dc.getColValue());
 					break;
 				case "运单日期":
-					Timestamp time = null;
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						time = new Timestamp(sdf.parse(dc.getColValue()).getTime());
+						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}
-					entity.setCreateTime(time);
 					break;
 				case "运单号":
 					entity.setWaybillNo(dc.getColValue());

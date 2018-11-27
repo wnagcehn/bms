@@ -452,7 +452,7 @@ public class ReportOverdueUnaccountController {
 			logger.error("占比计算异常", e);
 		}
 		
-		if (newList != null || newList.size() == 0) {
+		if (newList != null) {
 			RowIndex++;
 		}
 		Row lastRow = sheet.createRow(RowIndex);
