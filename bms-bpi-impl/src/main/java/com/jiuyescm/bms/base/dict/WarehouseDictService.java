@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.constants.RedisCache;
@@ -48,6 +49,31 @@ public class WarehouseDictService implements IWarehouseDictService {
 	@Override
 	public String getWarehouseNameByCode(final String code) {
 		
+		WarehouseVo result = getWarehouseByCode(code);
+		if(result == null){
+			Logger.info("未查询到仓库信息 code:{}",code);
+			return null;
+		}
+		else{
+			return result.getWarehousename();
+		}
+	}
+	
+
+	@Override
+	public String getWarehouseCodeByName(final String name) {
+		WarehouseVo result = getWarehouseByName(name);
+		if(result == null){
+			Logger.info("未查询到仓库信息 name:{}",name);
+			return null;
+		}
+		else{
+			return result.getWarehousename();
+		}
+	}
+
+	@Override
+	public WarehouseVo getWarehouseByCode(String code) {
 		WarehouseVo result = redisClient.get(code, RedisCache.WAREHOUSECODE_SPACE,WarehouseVo.class, new GetDataCallBack<WarehouseVo>(){
 
 			@Override
@@ -61,18 +87,11 @@ public class WarehouseDictService implements IWarehouseDictService {
 				return vo;
 			}
 		});
-		if(result == null){
-			Logger.info("未查询到仓库信息 code:{}",code);
-			return null;
-		}
-		else{
-			return result.getWarehousename();
-		}
+		return result;
 	}
-	
 
 	@Override
-	public String getWarehouseCodeByName(final String name) {
+	public WarehouseVo getWarehouseByName(String name) {
 		WarehouseVo result = redisClient.get(name, RedisCache.WAREHOUSENAME_SPACE,WarehouseVo.class, new GetDataCallBack<WarehouseVo>(){
 
 			@Override
@@ -86,13 +105,7 @@ public class WarehouseDictService implements IWarehouseDictService {
 				return vo;
 			}
 		});
-		if(result == null){
-			Logger.info("未查询到仓库信息 name:{}",name);
-			return null;
-		}
-		else{
-			return result.getWarehousename();
-		}
+		return result;
 	}
 
 }
