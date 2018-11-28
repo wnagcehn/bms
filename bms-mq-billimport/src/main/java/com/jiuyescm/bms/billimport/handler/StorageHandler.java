@@ -71,7 +71,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "冷冻费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity1) {
 						entity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -86,7 +86,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "冷藏费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity2) {
 						entity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -101,7 +101,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "恒温费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity3) {
 						entity3.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -116,7 +116,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "常温费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity4) {
 						entity4.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -131,7 +131,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "常温包材费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity5) {
 						entity5.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -146,7 +146,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "冷冻包材费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity6) {
 						entity6.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -160,7 +160,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "存储费按件小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity7) {
 						entity7.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
@@ -174,7 +174,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "处置费小计/元":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity8) {
 						entity8.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 					break;
