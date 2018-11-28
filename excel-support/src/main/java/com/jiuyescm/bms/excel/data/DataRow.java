@@ -2,6 +2,7 @@ package com.jiuyescm.bms.excel.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class DataRow {
 	 */
 	private List<DataColumn> columns = new ArrayList<>();
 	
-	private Map<Integer, DataColumn> colsMap = new HashMap<Integer, DataColumn>();
+	private Map<Integer, DataColumn> colsMap = new LinkedHashMap<>();
 
 	/**
 	 * 行索引
