@@ -58,7 +58,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	@SuppressWarnings("unused")
 	public void readExcel(String taskId) throws Throwable {
 		
-		File file = new File("D:\\航空账单导入模板.xlsx");
+		File file = new File("D:\\干线账单导入模板.xlsx");
 		InputStream inputStream = new FileInputStream(file);
 		/*
 		 * byte[] bytes = storageClient.downloadFile(taskId, new
