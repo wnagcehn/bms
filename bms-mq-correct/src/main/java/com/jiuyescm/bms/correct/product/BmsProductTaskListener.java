@@ -178,8 +178,8 @@ public class BmsProductTaskListener implements MessageListener{
 			start = System.currentTimeMillis();
 			int re=bmsProductsWeightService.saveWeight(condition);
 			if(re<=0){
-				logger.info(taskId+"插入重量汇总统计失败");
-				errorMessage.append("插入重量汇总统计失败");
+				logger.info(taskId+"未查询到该商家重量汇总统计");
+				errorMessage.append("未查询到该商家重量汇总统计");
 				return "fail";
 			}
 			logger.info(taskId+"重量汇总统计 耗时--" + (System.currentTimeMillis()-start));
@@ -188,7 +188,6 @@ public class BmsProductTaskListener implements MessageListener{
 			
 			
 			List<BmsProductsWeightAccountVo> list=bmsProductsWeightService.queyAllMax(condition);
-			logger.info(taskId+"占比最高的记录"+JSONObject.fromObject(list));		
 
 			if(list.size()>0){
 				//循环更新每个商品明细对应的运单
@@ -270,16 +269,9 @@ public class BmsProductTaskListener implements MessageListener{
 		}
 		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
 		try{
-			String result=handMaterial(taskVo,taskId,errorMessage);		
-			if("sucess".equals(result)){
-				logger.info(taskId+"耗材调整成功");
-				taskVo.setTaskRate(70);
-				errorMessage.append("耗材调整成功;");
-				taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
-			}else if("fail".equals(result)){
-				//errorMessage.append("耗材调整失败;");
-				taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
-			}
+			handMaterial(taskVo,taskId,errorMessage);		
+			taskVo.setTaskRate(70);
+			taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
 			taskVo.setRemark(errorMessage.toString());
 			int returnTask=bmsCorrectAsynTaskService.update(taskVo);
 			if(returnTask<=0){
@@ -320,8 +312,8 @@ public class BmsProductTaskListener implements MessageListener{
 			int re=bmsProductsMaterialService.saveMaterial(condition);
 			long en = System.currentTimeMillis();
 			if(re<=0){
-				errorMessage.append("耗材汇总统计失败;");
-				logger.info(taskId+"耗材汇总统计失败");
+				errorMessage.append("耗材不存在;");
+				logger.info(taskId+"耗材不存在;");
 				return "fail";
 			}
 			updateProgress(taskVo, 50);
@@ -488,6 +480,8 @@ public class BmsProductTaskListener implements MessageListener{
 		long totalEnd = System.currentTimeMillis();
 		logger.info(taskId+"------------------修改重算状态耗时占比:" + totalRetry*1.0/(totalEnd-totalStart)*100 + "%------------------");
 		updateProgress(taskVo, 60);
+		errorMessage.append("耗材调整成功;");
+		logger.info(taskId+"耗材调整成功;");
 		return "sucess";
 	}
 	
@@ -509,21 +503,13 @@ public class BmsProductTaskListener implements MessageListener{
 		}
 		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
 		try{
-			String result=handBwd(taskVo,taskId,errorMessage);		
-			if("sucess".equals(result)){
-				logger.info(taskId+"保温袋调整成功");
-				errorMessage.append("保温袋调整成功;");
-				if(errorMessage.indexOf("失败")!=-1 || errorMessage.indexOf("异常")!=-1){
-					taskVo.setTaskRate(99);			
-					taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
-				}else{
-					taskVo.setTaskRate(100);			
-					taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
-				}
-
-			}else if("fail".equals(result)){
-				//errorMessage.append("耗材调整失败;");
+			handBwd(taskVo,taskId,errorMessage);		
+			if(errorMessage.indexOf("失败")!=-1 || errorMessage.indexOf("异常")!=-1){
+				taskVo.setTaskRate(99);			
 				taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+			}else{
+				taskVo.setTaskRate(100);			
+				taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
 			}
 			taskVo.setRemark(errorMessage.toString());
 			int returnTask=bmsCorrectAsynTaskService.update(taskVo);
@@ -571,8 +557,8 @@ public class BmsProductTaskListener implements MessageListener{
 			//插入汇总统计
 			int re=bmsProductsMaterialService.saveBwd(condition);
 			if(re<=0){
-				errorMessage.append("保温袋汇总统计失败;");
-				logger.info(taskId+"保温袋汇总统计失败");
+				errorMessage.append("保温袋不存在;");
+				logger.info(taskId+"保温袋不存在");
 				return "fail";
 			}
 			updateProgress(taskVo, 80);
@@ -673,6 +659,8 @@ public class BmsProductTaskListener implements MessageListener{
 		long totalEnd = System.currentTimeMillis();
 		logger.info(taskId+"------------------修改保温袋总耗时:" + totalRetry*1.0/(totalEnd-totalStart)*100 + "%------------------");
 		updateProgress(taskVo, 90);
+		logger.info(taskId+"保温袋调整成功");
+		errorMessage.append("保温袋调整成功;");
 		return "sucess";
 	}
 	
