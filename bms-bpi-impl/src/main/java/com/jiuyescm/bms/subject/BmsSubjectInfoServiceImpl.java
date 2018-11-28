@@ -137,6 +137,9 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 				vo.setBizTypecode(bizType);
 				vo.setSubjectCode(subjectCode);
 				List<BmsSubjectInfoVo> vos = querySubject(vo);
+				if(vos == null || vos.size()==0){
+					return new BmsSubjectInfoVo();
+				}
 				return vos.get(0);
 			}
 		});
@@ -159,6 +162,9 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 				vo.setBizTypecode(bizType);
 				vo.setSubjectCode(subjectName);
 				List<BmsSubjectInfoVo> vos = querySubject(vo);
+				if(vos == null || vos.size()==0){
+					return new BmsSubjectInfoVo();
+				}
 				return vos.get(0);
 			}
 		});
