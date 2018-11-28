@@ -55,9 +55,9 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		BillFeesReceiveAirTempEntity entity1 = new BillFeesReceiveAirTempEntity();
 		BillFeesReceiveAirTempEntity entity2 = new BillFeesReceiveAirTempEntity();
 		BillFeesReceiveAirTempEntity entity3 = new BillFeesReceiveAirTempEntity();
-//		BmsSubjectInfoVo  subject1 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "航空运费");
-//		BmsSubjectInfoVo  subject2 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "其他费用");
-//		BmsSubjectInfoVo  subject3 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "货物赔偿费");
+		BmsSubjectInfoVo  subject1 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "航空运费");
+		BmsSubjectInfoVo  subject2 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "其他费用");
+		BmsSubjectInfoVo  subject3 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "货物赔偿费");
 		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
