@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
@@ -30,6 +31,7 @@ import com.jiuyescm.exception.BizException;
 public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	@Autowired IWarehouseDictService warehouseDictService;
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
@@ -41,7 +43,12 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "仓库名称":
-					entity.setWarehouseName(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						//如果没找到，报错
+						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						entity.setWarehouseCode(warehouseCode);
+						entity.setWarehouseName(dc.getColValue());
+					}
 					break;
 				case "定货单号":
 					entity.setOrderNo(dc.getColValue());
@@ -63,9 +70,11 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
-		//商城耗材费
-		entity.setSubjectCode("wh_mall_material");
-		list.add(entity);
+		//商城耗材费(防止空白行)
+		if (StringUtils.isNotBlank(entity.getOrderNo())) {
+			entity.setSubjectCode("wh_mall_material");
+			list.add(entity);
+		}
 		return list;
 	}
 

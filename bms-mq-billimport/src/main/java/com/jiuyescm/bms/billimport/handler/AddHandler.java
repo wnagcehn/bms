@@ -11,10 +11,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -27,6 +29,7 @@ import com.jiuyescm.exception.BizException;
 public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	@Autowired IWarehouseDictService warehouseDictService;
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
@@ -37,8 +40,21 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			try {
 				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
+				case "增值编号":
+					entity.setOrderNo(dc.getColValue());
+					break;
+				case "日期":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+					}		
+					break;
 				case "仓库名称":
-					entity.setWarehouseName(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						//如果没找到，报错
+						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						entity.setWarehouseCode(warehouseCode);
+						entity.setWarehouseName(dc.getColValue());
+					}			
 					break;
 				//需转Code
 				case "增值项目":
@@ -64,9 +80,11 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
-		//增值费
-		entity.setSubjectCode("wh_value_add_subject");
-		list.add(entity);
+		//增值费 (防止空白行)
+		if (StringUtils.isNotBlank(entity.getOrderNo())) {
+			entity.setSubjectCode("wh_value_add_subject");
+			list.add(entity);
+		}	
 		return list;
 	}
 

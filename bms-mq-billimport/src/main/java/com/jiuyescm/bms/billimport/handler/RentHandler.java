@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
@@ -27,6 +28,7 @@ import com.jiuyescm.exception.BizException;
 public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 	
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	@Autowired IWarehouseDictService warehouseDictService;
 
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
@@ -37,7 +39,12 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "仓库名称":
-					entity.setWarehouseName(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						//如果没找到，报错
+						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						entity.setWarehouseCode(warehouseCode);
+						entity.setWarehouseName(dc.getColValue());
+					}
 					break;
 				case "温度":	
 					//需映射Code
@@ -55,9 +62,11 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
-		//仓租费
-		entity.setSubjectCode("wh_rent");
-		list.add(entity);
+		//仓租费(防空白行)
+		if (null != entity && StringUtils.isNotBlank(entity.getWarehouseName())) {
+			entity.setSubjectCode("wh_rent");
+			list.add(entity);
+		}		
 		return list;
 	}
 

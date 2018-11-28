@@ -204,7 +204,7 @@ public class BillReceiveMasterController {
 		//param.put("delFlag", "0");
 		List<BillReceiveMasterVo> checkList = billReceiveMasterService.query(param);
 		for (BillReceiveMasterVo billReceiveMasterEntity : checkList) {
-			if ((parameter.get("createMonth").toString()+parameter.get("billName").toString()).equals(billReceiveMasterEntity.getCreateMonth().toString()+billReceiveMasterEntity.getBillName())) {
+			if ((parameter.get("createMonth").toString()+parameter.get("billName").toString()+"SUCCESS").equals(billReceiveMasterEntity.getCreateMonth().toString()+billReceiveMasterEntity.getBillName()+billReceiveMasterEntity.getTaskStatus())) {
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("同一月份存在相同账单名称，请删除后重试！");
