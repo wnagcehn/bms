@@ -30,6 +30,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
+		
+		//异常信息
+		String errorMessage="";
+		
 		List<BillFeesReceiveStorageTempEntity> lists = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//商品按托存储--LD
@@ -193,9 +197,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			
 			} catch (Exception e) {
 				System.out.println("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
-				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
+		
 		//商品按托+耗材按托+商品按件+入库+出库(防止空白行)
 		if (null != entity1 && null != entity1.getCreateTime()) {
 			lists.add(entity1);
@@ -224,6 +229,11 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		if (null != entity9 && null != entity9.getCreateTime()) {
 			lists.add(entity9);
 		}
+		
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		}
+		
 		return lists;
 	}
 

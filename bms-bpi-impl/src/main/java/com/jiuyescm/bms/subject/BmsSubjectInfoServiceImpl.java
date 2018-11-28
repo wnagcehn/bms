@@ -127,7 +127,7 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
 			@Override
 			public int getExpiredTime() {
-				return RedisCache.halfHour;
+				return RedisCache.fiveMinutes;
 			}
 
 			@Override
@@ -152,7 +152,7 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
 			@Override
 			public int getExpiredTime() {
-				return RedisCache.halfHour;
+				return RedisCache.fiveMinutes;
 			}
 
 			@Override
@@ -160,7 +160,7 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 				BmsSubjectInfoVo vo = new BmsSubjectInfoVo();
 				vo.setInOutTypecode(inOutTypecode);
 				vo.setBizTypecode(bizType);
-				vo.setSubjectCode(subjectName);
+				vo.setSubjectName(subjectName);
 				List<BmsSubjectInfoVo> vos = querySubject(vo);
 				if(vos == null || vos.size()==0){
 					return new BmsSubjectInfoVo();
