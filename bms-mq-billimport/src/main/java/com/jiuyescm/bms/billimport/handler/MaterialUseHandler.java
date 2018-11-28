@@ -1,28 +1,23 @@
 package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
-import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
-import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
-import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
@@ -51,6 +46,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		// TODO Auto-generated method stub
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
+		Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 		for (DataColumn dc:dr.getColumns()) {
 			System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 			try {
@@ -147,6 +143,16 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				}
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
+			}
+		}
+		
+		
+		//重复性校验
+		if(StringUtils.isNotBlank(entity.getWaybillNo())){
+			if(repeatMap.containsKey(entity.getWaybillNo())){
+				errorMessage += "数据重复--第【"+repeatMap.get(entity.getWaybillNo())+"】行已存在运单【"+entity.getWaybillNo()+";";
+			}else{
+				repeatMap.put(entity.getWaybillNo(), dr.getRowNo());
 			}
 		}
 		

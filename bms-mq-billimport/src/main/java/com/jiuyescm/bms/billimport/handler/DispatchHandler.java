@@ -2,7 +2,9 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +42,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 	@Autowired
 	private ICarrierDictService carrierDictService;
 	
+	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 		
 	public List<BillFeesReceiveStorageTempEntity> storageList=new ArrayList<BillFeesReceiveStorageTempEntity>();
 	
@@ -48,7 +51,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			throws Exception {
 		//异常信息
 		String errorMessage="";
-		
+
+
 		// TODO Auto-generated method stub
 		//配送费
 		List<BillFeesReceiveDispatchTempEntity> dispatchList = new ArrayList<BillFeesReceiveDispatchTempEntity>();
@@ -175,6 +179,15 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			} catch (Exception ex) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 				
+			}
+		}
+		
+		//重复性校验
+		if(StringUtils.isNotBlank(dispatchEntity.getWaybillNo())){
+			if(repeatMap.containsKey(dispatchEntity.getWaybillNo())){
+				errorMessage += "数据重复--第【"+repeatMap.get(dispatchEntity.getWaybillNo())+"】行已存在运单【"+dispatchEntity.getWaybillNo()+";";
+			}else{
+				repeatMap.put(dispatchEntity.getWaybillNo(), dr.getRowNo());
 			}
 		}
 		
