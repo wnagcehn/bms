@@ -2,6 +2,10 @@ package com.jiuyescm.bms.excel.data;
 
 public class DataColumn {
 	
+	public DataColumn(){
+		
+	}
+	
 	/**
 	 * 
 	 * @param colNo 列索引
@@ -35,6 +39,10 @@ public class DataColumn {
 	 */
 	public int getColNo() {
 		return colNo;
+	}
+	
+	public void setColNo(int colNo) {
+		this.colNo = colNo;
 	}
 
 	/**

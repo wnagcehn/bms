@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.excel;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,11 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.XMLReader;
@@ -24,7 +21,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
-import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.ExcelXlsxSheetReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 
@@ -162,9 +158,9 @@ public class ExcelXlsxReader extends DefaultHandler{
      * @return
      * @throws Exception
      */
-    private <T> void readRowToObj(int index,Class<T> clazz,SheetReadCallBack callback) throws Exception{
+    /*private <T> void readRowToObj(int index,Class<T> clazz,SheetReadCallBack callback) throws Exception{
     	//new ExcelXlsxSheetReader().readSheet(index, pkg,xssfReader, sst,callback);
-    }
+    }*/
     
     
 	
