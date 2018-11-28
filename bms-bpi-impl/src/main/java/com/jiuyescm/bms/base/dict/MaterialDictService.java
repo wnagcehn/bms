@@ -33,7 +33,7 @@ public class MaterialDictService implements IMaterialDictService {
 		List<PubMaterialInfoVo> list = getMaterials();
 		Map<String, String> map = new HashMap<>();
 		for (PubMaterialInfoVo vo : list) {
-			map.put(vo.getMaterialNo(), vo.getMaterialName());
+			map.put(vo.getBarcode(), vo.getMaterialName());
 		}
 		return map;
 	}
@@ -43,7 +43,7 @@ public class MaterialDictService implements IMaterialDictService {
 		List<PubMaterialInfoVo> list = getMaterials();
 		Map<String, String> map = new HashMap<>();
 		for (PubMaterialInfoVo vo : list) {
-			map.put(vo.getMaterialName(), vo.getMaterialNo());
+			map.put(vo.getMaterialName(), vo.getBarcode());
 		}
 		return map;
 	}
@@ -65,7 +65,7 @@ public class MaterialDictService implements IMaterialDictService {
 	public String getMaterialCodeByName(final String name) {
 		PubMaterialInfoVo result = getMaterialByName(name);
 		if(result != null){
-			return result.getMaterialNo();
+			return result.getBarcode(); 
 		}
 		else{
 			return null;
@@ -85,7 +85,7 @@ public class MaterialDictService implements IMaterialDictService {
 			public PubMaterialInfoVo invoke() {
 				Map<String, Object> condition = new HashMap<>();
 				condition.put("delFlag", "0");
-				condition.put("materialNo", code);
+				condition.put("barcode", code);
 				List<PubMaterialInfoVo> list =  pubMaterialInfoService.queryList(condition);
 				return list.get(0);
 			}
