@@ -16,6 +16,8 @@ import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
+import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
@@ -30,9 +32,13 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired IWarehouseDictService warehouseDictService;
+	@Autowired IBmsSubjectInfoService bmsSubjectInfoService;
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
+		//异常信息
+		String errorMessage="";
+		
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
@@ -50,15 +56,26 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 					break;
 				case "仓库名称":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());
-						entity.setWarehouseCode(warehouseCode);
 						entity.setWarehouseName(dc.getColValue());
+						//如果没找到，报错
+						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());	
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity.setWarehouseCode(warehouseCode);
+						}else{
+							errorMessage+="仓库不存在;";
+						}
 					}			
 					break;
-				//需转Code
+				//转Code
 				case "增值项目":
-					entity.setSubjectCode(dc.getColValue());;
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						BmsSubjectInfoVo bmsSubjectInfoVo = bmsSubjectInfoService.querySubjectByName("INPUT", "STORAGE", dc.getColValue());
+						if (null == bmsSubjectInfoVo) {
+							entity.setSubjectCode("wh_other");
+						}else {
+							entity.setSubjectCode(bmsSubjectInfoVo.getSubjectCode());
+						}
+					}
 					break;
 				case "数量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -77,14 +94,20 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 					break;
 				}
 			} catch (Exception e) {
-				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
+		
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		}
+		
 		//增值费 (防止空白行)
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
 			entity.setSubjectCode("wh_value_add_subject");
 			list.add(entity);
-		}	
+		}
+		
 		return list;
 	}
 

@@ -32,6 +32,8 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
+		//异常信息
+		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
@@ -40,10 +42,14 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 				switch (dc.getColName()) {
 				case "仓库名称":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setWarehouseName(dc.getColValue());
 						//如果没找到，报错
 						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());
-						entity.setWarehouseCode(warehouseCode);
-						entity.setWarehouseName(dc.getColValue());
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity.setWarehouseCode(warehouseCode);
+						}else{
+							errorMessage+="仓库不存在;";
+						}
 					}
 					break;
 				case "温度":	
@@ -59,14 +65,19 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 					break;
 				}
 			} catch (Exception e) {
-				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
 		//仓租费(防空白行)
-		if (null != entity && StringUtils.isNotBlank(entity.getWarehouseName())) {
+		if (null != entity && StringUtils.isNotBlank(entity.getWarehouseName()) && null != entity.getAmount()) {
 			entity.setSubjectCode("wh_rent");
 			list.add(entity);
-		}		
+		}	
+		
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		}
+		
 		return list;
 	}
 
