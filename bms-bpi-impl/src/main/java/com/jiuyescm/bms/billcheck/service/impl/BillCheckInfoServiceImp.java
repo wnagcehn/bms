@@ -39,6 +39,10 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
+import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
+import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
+import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 
@@ -744,9 +748,80 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		if("RECEIPTED".equals(entity.getBillStatus())){
 			throw new BizException("RECEIPTED_NULL","已收款的账单不能调整金额!");
 		}		
-		BigDecimal adjustAmount=BigDecimal.valueOf(adjustMoney);
-		//账单跟踪更新确认金额
-		entity.setConfirmAmount(entity.getConfirmAmount().add(adjustAmount));		
+		BigDecimal masterAdjustMoney=BigDecimal.valueOf(adjustMoney);
+		
+		//调整的金额
+		BigDecimal adjustAmount=new BigDecimal(0);
+		Map<String, Object> param=new HashMap<String, Object>();
+		param.put("billCheckId", entity.getId());
+		BillCheckAdjustInfoEntity adjustEntity = billCheckInfoRepository.queryOneAdjust(param);
+		if(adjustEntity!=null && adjustEntity.getAdjustAmount()!=null){
+			adjustAmount=adjustEntity.getAdjustAmount();
+		}
+		//最终确认额
+		BigDecimal confirmAmount=new BigDecimal(0);
+		if(entity.getConfirmAmount()!=null){
+			confirmAmount=entity.getConfirmAmount();
+		}
+		//账单导入调整金额
+		confirmAmount=confirmAmount.add(masterAdjustMoney);	
+		//发票金额
+		BigDecimal invoiceAmount=new BigDecimal(0);
+		if(entity.getInvoiceAmount()!=null){
+			invoiceAmount=entity.getInvoiceAmount();
+		}
+		//收款金额
+		BigDecimal receiptAmount=new BigDecimal(0);
+		if(entity.getReceiptAmount()!=null){
+			receiptAmount=entity.getReceiptAmount();
+		}
+
+		//确认金额
+		entity.setConfirmAmount(confirmAmount);
+		//未收款金额
+		entity.setUnReceiptAmount(confirmAmount.add(adjustAmount).subtract(receiptAmount));
+		//已确认未开票金额
+		entity.setConfirmUnInvoiceAmount(confirmAmount.subtract(invoiceAmount));
+		
+		//2.发票状态修改
+		if(confirmAmount.compareTo(invoiceAmount)==0){
+			entity.setInvoiceStatus(BillCheckInvoiceStateEnum.INVOICED.getCode());//已开票
+		}else if(confirmAmount.compareTo(invoiceAmount)>0){
+			if(invoiceAmount.compareTo(BigDecimal.ZERO)==0){
+				entity.setInvoiceStatus(BillCheckInvoiceStateEnum.NO_INVOICE.getCode());//未开票
+			}else{
+				entity.setInvoiceStatus(BillCheckInvoiceStateEnum.PART_INVOICE.getCode());//部分开票
+			}
+		}			
+		//3.收款状态判断				
+		if((adjustAmount.add(confirmAmount)).compareTo(receiptAmount)==0){
+			//回款状态
+			entity.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());//已收款
+		}else if((adjustAmount.add(confirmAmount)).compareTo(receiptAmount)>0|| (adjustAmount.add(confirmAmount)).compareTo(receiptAmount)<0){
+			//回款状态
+			if(receiptAmount.compareTo(BigDecimal.ZERO)==0){
+				entity.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());//未收款
+			}else{
+				entity.setReceiptStatus(BillCheckReceiptStateEnum.PART_RECEIPT.getCode());//部分收款
+			}
+		
+		}				
+		
+		//账单状态修改
+		//1）如果对账状态为“已确认”and是否需要开票为“是”and开票状态为“未开票”，将账单状态置为“待开票”；
+		//2）如果对账状态为“已确认”and是否需要开票为“是”and开票状态为“部分开票”or“已开票”，将账单状态置为“待收款”；
+		//3）如果对账状态为“已确认”and是否需要开票为“否”，将账单状态置为“待收款”；
+		//4）如果对账状态不为“已确认”，账单状态为“待确认”不变；
+		if(BillCheckStateEnum.CONFIRMED.getCode().equals(entity.getBillCheckStatus()) && "1".equals(entity.getIsneedInvoice()) && BillCheckInvoiceStateEnum.NO_INVOICE.getCode().equals(entity.getInvoiceStatus())){
+			entity.setBillStatus(CheckBillStatusEnum.TB_INVOICE.getCode());
+		}else if(BillCheckStateEnum.CONFIRMED.getCode().equals(entity.getBillCheckStatus()) && "1".equals(entity.getIsneedInvoice()) && (BillCheckInvoiceStateEnum.PART_INVOICE.getCode().equals(entity.getInvoiceStatus()) || BillCheckInvoiceStateEnum.INVOICED.getCode().equals(entity.getInvoiceStatus()))){
+			entity.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+		}else if(BillCheckStateEnum.CONFIRMED.getCode().equals(entity.getBillCheckStatus()) && "0".equals(entity.getIsneedInvoice())){
+			entity.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+		}else{
+			entity.setBillStatus(CheckBillStatusEnum.TB_CONFIRMED.getCode());
+		}
+
 		int result=billCheckInfoRepository.update(entity);
 		if(result<=0){
 			throw new BizException("UPDATE_NULL","账单跟踪更新确认金额失败!");
@@ -771,7 +846,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		recordEntity.setCreateTime(currentTime);
 		recordEntity.setCreator(username);
 		recordEntity.setCreatorId(userId);
-		recordEntity.setAdjustAmount(BigDecimal.ZERO);
+		recordEntity.setAdjustAmount(masterAdjustMoney);
 		try {
 			billReceiveMasterRecordRepository.save(recordEntity);
 		} catch (Exception e) {
