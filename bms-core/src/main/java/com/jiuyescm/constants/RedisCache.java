@@ -3,9 +3,9 @@ package com.jiuyescm.constants;
 public class RedisCache {
 
 	/**
-	 * 默认过期时间  30分钟
+	 * 默认过期时间  10分钟
 	 */
-	public static int expiredTime = 1800;  
+	public static int expiredTime = 600;  
 	public static int halfHour = 1800;// 半小时
 	public static int oneHour = 3600;// 1小时
 	public static int fiveMinutes = 300;//5分钟
@@ -61,4 +61,15 @@ public class RedisCache {
 	 * BMS 费用科目缓存地址
 	 */
 	public static final String SUBJECTNAME_SPACE = "BMS.JIUYESCM.COM.CACHE.SUBJECTNAME";
+	
+	
+	/**
+	 * BMS 耗材缓存地址
+	 */
+	public static final String MATERIALCODE_SPACE = "BMS.JIUYESCM.COM.CACHE.MATERIALCODE";
+	
+	/**
+	 * BMS 耗材缓存地址
+	 */
+	public static final String MATERIALNAME_SPACE = "BMS.JIUYESCM.COM.CACHE.MATERIALNAME";
 }
