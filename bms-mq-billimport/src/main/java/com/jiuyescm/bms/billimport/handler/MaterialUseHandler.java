@@ -14,15 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 
 /**
  * 耗材使用费
@@ -35,10 +38,16 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 	private IWarehouseDictService warehouseDictService;
 	@Autowired
 	private ICustomerDictService customerDictService;
+	@Autowired
+	private IMaterialDictService materialDictService;
+	@Autowired 
+	IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
+		//异常信息
+		String errorMessage="";
 		// TODO Auto-generated method stub
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
@@ -51,13 +60,8 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 					String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
 					if(StringUtils.isNotBlank(wareId)){
 						entity.setWarehouseCode(wareId);
-					}
-					break;
-				case "商家名称":
-					entity.setCustomerName(dc.getColValue());
-					String customerId=customerDictService.getCustomerCodeByName(dc.getColValue());
-					if(StringUtils.isNotBlank(customerId)){
-						entity.setCustomerId(customerId);
+					}else{
+						errorMessage+="仓库不存在;";
 					}
 					break;
 				case "运单号":
@@ -80,33 +84,75 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 					break;
 				}
 			} catch (Exception e) {
-				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
 		
 		//起始列
-		int start=0;
+		int index=1;;
 		for (DataColumn dc:dr.getColumns()) {
-			if("收件人地址".equals(dc.getColValue())){
-				start=dc.getColNo()+1;
-			}
+			if("收件人地址".equals(dc.getColName())){
+				index+=dc.getColNo();
+			}		
 		}
-		
-		//6个字段循环一次
 		int count=1;
-		for(int i=start;i<dr.getColumns().size();i++){
+		BillFeesReceiveStorageTempEntity feeEntity=new BillFeesReceiveStorageTempEntity();
+		for(int i=index;i<dr.getColumns().size();i++){
 			DataColumn dc=dr.getColumn(i);
-			if(count<=6){
-				BillFeesReceiveStorageTempEntity feeEntity = new BillFeesReceiveStorageTempEntity();
-				PropertyUtils.copyProperties(feeEntity, entity);
-				
+			try {				
+				if(count==1){
+					feeEntity=new BillFeesReceiveStorageTempEntity();
+					PropertyUtils.copyProperties(feeEntity, entity);
+				}
+				switch (dc.getColName()) {
+				case "编码":
+					PubMaterialInfoVo vo=materialDictService.getMaterialByCode(dc.getColValue());
+					if(vo!=null){
+						feeEntity.setMaterialCode(dc.getColValue());
+					}else{
+						errorMessage+="编码不存在;";
+					}
+					break;
+				case "数量":
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						feeEntity.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "金额":
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						feeEntity.setAmount(new BigDecimal(dc.getColValue()));
+					}
+					break;
+				case "规格":
+					break;
+				case "单价":
+					break;
+				default:
+					PubMaterialInfoVo pubvo=materialDictService.getMaterialByCode(dc.getColValue());
+					if(pubvo!=null){
+						feeEntity.setMaterialName(dc.getColValue());
+					}else{
+						errorMessage+="耗材名称不存在;";
+					}
+					break;
+				}
+	
+				count++;
+				if(count>6){
+					if(StringUtils.isNotBlank(feeEntity.getMaterialCode())){
+						feeEntity.setSubjectCode("wh_material_use");
+						list.add(feeEntity);
+					}
+					count=1;
+				}
+			} catch (Exception e) {
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
-			count++;
 		}
 		
-		
-		
-		
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		}
 		return list;
 	}
 
@@ -119,7 +165,9 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
-		
+		if(null != list && list.size()>0){
+			billFeesReceiveStorageTempService.insertBatchTemp(list);
+		}
 	}
 
 

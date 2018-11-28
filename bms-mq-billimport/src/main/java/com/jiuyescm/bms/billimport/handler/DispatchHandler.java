@@ -137,45 +137,49 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			}
 		}
 		
-		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		for(DataColumn dc : dr.getColumns()){
+			try {
+				switch (dc.getColName()) {
+				case "运费":
+					if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isNotBlank(dispatchEntity.getWaybillNo())) {
+						dispatchEntity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+						dispatchEntity.setSubjectCode("de_delivery_amount");
+						dispatchList.add(dispatchEntity);
+					}
+					break;
+				case "折扣后运费":
+					if (StringUtils.isNotBlank(dc.getColValue()) && dispatchEntity.getAmount()!=null) {
+						BigDecimal derateAmount=new BigDecimal(dc.getColValue());
+						dispatchEntity.setDerateAmount(dispatchEntity.getAmount().subtract(derateAmount));	
+					}	
+					break;
+				case "操作费":
+					if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isNotBlank(dispatchEntity.getWaybillNo())) {
+						PropertyUtils.copyProperties(storageEntity1, storageEntity);
+						storageEntity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+						storageEntity1.setSubjectCode("wh_b2c_work");
+						storageList.add(storageEntity1);
+					}	
+					break;
+				case "包材费":
+					if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isNotBlank(dispatchEntity.getWaybillNo())) {
+						PropertyUtils.copyProperties(storageEntity2, storageEntity);
+						storageEntity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+						storageEntity2.setSubjectCode("wh_package");
+						storageList.add(storageEntity2);
+					}			
+					break;
+				default:
+					break;
+				}
+			} catch (Exception ex) {
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
+				
+			}
 		}
 		
-		for(DataColumn dc : dr.getColumns()){
-			switch (dc.getColName()) {
-			case "运费":
-				if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isNotBlank(dispatchEntity.getWaybillNo())) {
-					dispatchEntity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
-					dispatchEntity.setSubjectCode("de_delivery_amount");
-					dispatchList.add(dispatchEntity);
-				}
-				break;
-			case "折扣后运费":
-				if (StringUtils.isNotBlank(dc.getColValue()) && dispatchEntity.getAmount()!=null) {
-					BigDecimal derateAmount=new BigDecimal(dc.getColValue());
-					dispatchEntity.setDerateAmount(dispatchEntity.getAmount().subtract(derateAmount));	
-				}	
-				break;
-			case "操作费":
-				if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isNotBlank(dispatchEntity.getWaybillNo())) {
-					PropertyUtils.copyProperties(storageEntity1, storageEntity);
-					storageEntity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
-					storageEntity1.setSubjectCode("wh_b2c_work");
-					storageList.add(storageEntity1);
-				}	
-				break;
-			case "包材费":
-				if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isNotBlank(dispatchEntity.getWaybillNo())) {
-					PropertyUtils.copyProperties(storageEntity2, storageEntity);
-					storageEntity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
-					storageEntity2.setSubjectCode("wh_package");
-					storageList.add(storageEntity2);
-				}			
-				break;
-			default:
-				break;
-			}
-
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
 		}
 		
 		return dispatchList;
