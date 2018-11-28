@@ -27,5 +27,7 @@
 		<dubbo:reference interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService"
 				version="1.0.0" id="bmsSubjectService" timeout="1200000" check="false"/>
 		
+		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService"
+				version="1.0.0" id="materialDictService" timeout="1200000" check="false"/>
 									
 </beans> 
