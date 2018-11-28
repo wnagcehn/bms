@@ -90,7 +90,7 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
 	@Override
 	public int insertBatch(List<BillFeesReceiveTransportTempEntity> list){
 	SqlSession session = getSqlSessionTemplate();
-	int result = session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempEntityMapper.saveBatch", list);
+	int result = session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.saveBatch", list);
 	return result;
 	}
 
@@ -99,7 +99,7 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
 	 */
 	@Override
 	public int deleteBatch(Map<String, Object> condition) {
-		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempEntityMapper.deleteBatch", condition);
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.deleteBatch", condition);
 		return d;
 	}
 	
