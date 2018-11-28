@@ -1,24 +1,14 @@
 package com.jiuyescm.bms.excel.opc;
 
-import java.beans.PropertyDescriptor;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javassist.expr.NewArray;
-
-import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
@@ -34,7 +24,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.google.common.collect.Maps;
-import com.jiuyescm.bms.excel.annotation.ExcelField;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
@@ -54,17 +43,20 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 
 	private SharedStringsTable sst; // 共享字符串表
 	private String lastIndex; // 上一次的索引值
-	private String filePath = "";// 文件的绝对路径
-	private int sheetIndex = 0;// 工作表索引
-	private String sheetName = "";// sheet名
-	private int totalRows = 0;// 总行数
-	private List<String> cellList = new ArrayList<String>();// 一行内cell集合
-	private Map<Integer, String> cellMap = Maps.newLinkedHashMap();
+	//private String filePath = "";// 文件的绝对路径
+	//private int sheetIndex = 0;// 工作表索引
+	//private String sheetName = "";// sheet名
+	//private int totalRows = 0;// 总行数
+	//private List<String> cellList = new ArrayList<String>();// 一行内cell集合
+	private Map<String, String> cellMap = Maps.newLinkedHashMap();
 	private boolean flag = false;// 判断整行是否为空行的标记
 	private int curRow = 1;// 当前行
-	private int curCol = 0;// 当前列
+	private int curCol = 1;// 当前列
 	private boolean isTElement;// T元素标识
 	private String exceptionMessage;// 异常信息，如果为空则表示没有异常
+	
+	DataColumn _dc = new DataColumn();
+	private Map<Integer, DataColumn> curDataRow = new HashMap<>();
 
 	/**
 	 * 单元格数据类型，默认为字符串类型
@@ -80,10 +72,13 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	private StylesTable stylesTable;// 单元格
 	private OpcSheet sheet;
 	// 注解名与字段名映射 <注解名,字段名>
-	private Map<String, String> titleMap = new HashMap<String, String>();
+	//private Map<String, String> titleMap = new HashMap<String, String>();
 
 	// 列索引和列名映射
-	private Map<Integer, String> headMap = new HashMap<>();
+	private Map<String,Integer> headMap = new HashMap<>();
+	
+	//列索引和列名映射
+	private Map<String, String> headAMap = new LinkedHashMap<>();
 
 	boolean transObj = false; // 是否将行转为obj对象 true-转 false-不转
 	Object sheetObj;
@@ -97,7 +92,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public <T> void readSheet(int index, OPCPackage pkg, XSSFReader xssfReader,
+	public void readSheet(int index, OPCPackage pkg, XSSFReader xssfReader,
 			SharedStringsTable sst, SheetReadCallBack callback, int titleRowNo,
 			int contentRowNo) throws Exception {
 		this.titleRowNo = titleRowNo;
@@ -116,35 +111,36 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		callback.finish();
 	}
 
-	private void headHander(Map<Integer, String> cellMap) {
-		Map<Integer, String> colMapTemp = new HashMap<Integer, String>();
-		colMapTemp.putAll(cellMap);
-		headMap.putAll(cellMap);
-		sheet.getColValueMap().putAll(colMapTemp);
-		// 获取字段名与注解名映射
-		/*
-		 * if(transObj){ Field[] field =
-		 * sheetObj.getClass().getDeclaredFields(); try{ for(Field f : field){
-		 * ExcelField fa = f.getAnnotation(ExcelField.class); if(fa!=null){
-		 * titleMap.put(fa.title(), f.getName()); } } } catch(Exception ex){
-		 * 
-		 * } }
-		 */
+	private void headHander(Map<String, String> cellMap) {
+
+		Iterator<Map.Entry<String, String>> columnIterator = cellMap.entrySet().iterator();
+		while (columnIterator.hasNext()) {
+			Map.Entry<String, String> entry = columnIterator.next();
+			String name = entry.getValue();//列名
+			String titleA = entry.getKey();//列的索引
+			if(name.length()>0){
+				headAMap.put(titleA, entry.getValue());
+			}
+		}
 	}
 
-	private void rowHander(Map<Integer, String> cellMap) {
+	private void rowHander(Map<String, String> cellMap) {
 		DataRow drRow = new DataRow(curRow);
-		Iterator<Map.Entry<Integer, String>> columnIterator = headMap
-				.entrySet().iterator();
-		while (columnIterator.hasNext()) {
-			Map.Entry<Integer, String> entry = columnIterator.next();
+		
+		Iterator<Map.Entry<String, String>> headIterator = headAMap.entrySet().iterator();
+		while (headIterator.hasNext()) {
+			Map.Entry<String, String> entry = headIterator.next();
+			String titleA = entry.getKey();
 			String colName = entry.getValue();
-			DataColumn dColumn = new DataColumn(colName,
-					cellMap.containsKey(entry.getKey()) ? cellMap.get(entry
-							.getKey()) : "");
-			drRow.addColumn(dColumn);
+			Integer colNo = headMap.get(titleA);
+			String colValue="";
+			if(cellMap.containsKey(titleA)){
+				colValue = cellMap.get(titleA);
+			}
+			DataColumn dColumn = new DataColumn(colName,colValue);
+			dColumn.setColNo(colNo);
+			drRow.addColumn(colNo,dColumn);
 		}
-
 		callback.read(drRow);
 	}
 
@@ -166,12 +162,14 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			// 前一个单元格的位置
 			if (preRef == null) {
 				preRef = attributes.getValue("r");
+				preRef = replaceString(preRef);
 			} else {
 				preRef = ref;
 			}
 
 			// 当前单元格的位置
 			ref = attributes.getValue("r");
+			ref = replaceString(ref);
 			// System.out.println("【startElement】  localName:"+localName+"  name:"+name+"  ref:"+ref+"  preRef:"+preRef);
 			// 设定单元格类型
 			this.setNextDataType(attributes);
@@ -211,54 +209,25 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	 * @param name
 	 * @throws SAXException
 	 */
-	/*
-	 * @Override public void endElement(String uri, String localName, String
-	 * name) throws SAXException {
-	 * 
-	 * //t元素也包含字符串 if (isTElement) {//这个程序没经过
-	 * //将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符 String value = lastIndex.trim();
-	 * cellMap.put(curCol, value); //cellList.add(curCol, value);
-	 * System.out.println(curCol+"--"+value); curCol++; isTElement = false;
-	 * //如果里面某个单元格含有值，则标识该行不为空行 if (value != null && !"".equals(value)) { flag =
-	 * true; } } else if ("v".equals(name)) {
-	 * 
-	 * //v => 单元格的值，如果单元格是字符串，则v标签的值为该字符串在SST中的索引 String value =
-	 * this.getDataValue(lastIndex.trim(), "");//根据索引值获取对应的单元格值
-	 * //System.out.println
-	 * ("   【endElement】 url:"+uri+"   name:"+name+"  ref:"+ref
-	 * +"  preRef:"+preRef+"  value:"+value); //补全单元格之间的空单元格 if
-	 * (!ref.equals(preRef)) { int len = countNullCell(ref, preRef); for (int i
-	 * = 0; i < len; i++) { //cellList.add(curCol, ""); cellMap.put(curCol,
-	 * value); curCol++; } } cellMap.put(curCol, value); //cellList.add(curCol,
-	 * value); curCol++; //如果里面某个单元格含有值，则标识该行不为空行 if (value != null &&
-	 * !"".equals(value)) { flag = true; } } else {
-	 * //如果标签名称为row，这说明已到行尾，调用optRows()方法 if ("row".equals(name)) {
-	 * //默认第一行为表头，以该行单元格数目为最大数目 if (curRow == 1) { maxRef = ref; }
-	 * //补全一行尾部可能缺失的单元格 if (maxRef != null) { int len = countNullCell(maxRef,
-	 * ref); for (int i = 0; i <= len; i++) { //cellList.add(curCol, "");
-	 * cellMap.put(curCol, ""); curCol++; } }
-	 * 
-	 * if(curRow<=titleRowNo){ headHander(cellMap); } if
-	 * (flag&&curRow>=contentRowNo){ //该行不为空行且该行不是第一行，则发送（第一行为列名，不需要）
-	 * while(!ref.contains(String.valueOf(curRow))){ curRow++; }
-	 * rowHander(cellMap); totalRows++; }
-	 * 
-	 * //cellList.clear(); curRow++; curCol = 1; preRef = null; ref = null;
-	 * flag=false; } } }
-	 */
-
 	@Override
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 
 		if ("c".equals(name)) {
+			DataColumn dc = new DataColumn();
+			dc.setColNo(curCol);
+			curDataRow.put(curCol,dc);
+			if(curRow == 1){
+				headMap.put(ref,curCol);
+				headAMap.put(ref,"");
+			}
 			curCol++;
 		}
 		// t元素也包含字符串
 		if (isTElement) {// 这个程序没经过
 			// 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
 			String value = lastIndex.trim();
-			cellMap.put(curCol, value);
+			cellMap.put(ref, value);
 			// curCol++;
 			isTElement = false;
 			// 如果里面某个单元格含有值，则标识该行不为空行
@@ -268,16 +237,15 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		} else if ("v".equals(name)) {
 			// v => 单元格的值，如果单元格是字符串，则v标签的值为该字符串在SST中的索引
 			String value = this.getDataValue(lastIndex.trim(), "");// 根据索引值获取对应的单元格值
-			// System.out.println("   【endElement】 url:"+uri+"   name:"+name+"  ref:"+ref+"  preRef:"+preRef+"  value:"+value);
 			// 补全单元格之间的空单元格
 			if (!ref.equals(preRef)) {
 				int len = countNullCell(ref, preRef);
 				for (int i = 0; i < len; i++) {
-					cellMap.put(curCol, value);
+					cellMap.put(ref, value);
 					// curCol++;
 				}
 			}
-			cellMap.put(curCol, value);
+			cellMap.put(ref, value);
 			// 如果里面某个单元格含有值，则标识该行不为空行
 			if (value != null && !"".equals(value)) {
 				flag = true;
@@ -293,7 +261,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 				if (maxRef != null) {
 					int len = countNullCell(maxRef, ref);
 					for (int i = 0; i <= len; i++) {
-						cellMap.put(curCol, "");
+						cellMap.put(ref, "");
 					}
 				}
 				if (curRow <= titleRowNo) {
@@ -301,12 +269,12 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 				}
 				if (flag && curRow >= contentRowNo) { // 该行不为空行且该行不是第一行，则发送（第一行为列名，不需要）
 					rowHander(cellMap);
-					totalRows++;
+					//totalRows++;
 				}
 				curRow++;
 				// 初始化
 				cellMap = Maps.newLinkedHashMap();
-				curCol = 0;
+				curCol = 1;
 				preRef = null;
 				ref = null;
 				flag = false;
@@ -314,10 +282,10 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		}
 	}
 
-	private String rowToString(Map<Integer, String> map) {
+	/*private String rowToString(Map<Integer, String> map) {
 
 		return map.toString();
-	}
+	}*/
 
 	/**
 	 * 处理数据类型
@@ -477,5 +445,10 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	 */
 	public String getExceptionMessage() {
 		return exceptionMessage;
+	}
+	
+	private String replaceString(String titleRef){
+		titleRef = titleRef.replaceAll("\\d+","");
+		return titleRef;
 	}
 }

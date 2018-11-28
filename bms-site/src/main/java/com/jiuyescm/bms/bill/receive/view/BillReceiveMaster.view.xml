@@ -371,6 +371,7 @@ entity.set(&quot;confirmManId&quot;);&#xD;
 entity.set(&quot;confirmMan&quot;);&#xD;
 entity.set(&quot;confirmDate&quot;);&#xD;
 entity.set(&quot;isneedInvoice&quot;,&quot;&quot;);&#xD;
+entity.set(&quot;billCheckStatus&quot;,&quot;&quot;);&#xD;
 view.get(&quot;#ImportDialog&quot;).show();</ClientEvent>
         <Property name="caption">导入</Property>
         <Property name="icon"> url(>skin>common/icons.gif) -220px -240px</Property>
@@ -1051,15 +1052,7 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Editor>
               <Button id="importBtn2">
                 <ClientEvent name="onClick">var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
-alert(entity.get(&quot;billCheckStatus&quot;));&#xD;
-if(entity.get(&quot;billCheckStatus&quot;) == '已确认' &amp;&amp; isNullOrEmpty(entity.get(&quot;confirmMan&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;已确认状态必填确认人!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-if(entity.get(&quot;billCheckStatus&quot;) == '已确认' &amp;&amp; isNullOrEmpty(entity.get(&quot;confirmDate&quot;))){&#xD;
-	dorado.MessageBox.alert(&quot;已确认状态必填确认日期!&quot;);&#xD;
-	return;&#xD;
-}&#xD;
+&#xD;
 //新加的&#xD;
 var billStartTime = entity.get(&quot;billStartTime&quot;);&#xD;
 var firstClassName = entity.get(&quot;firstClassName&quot;);&#xD;

@@ -46,6 +46,9 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 	@Override
 	public List<BillFeesReceiveDispatchTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
+		//异常信息
+		String errorMessage="";
+		
 		// TODO Auto-generated method stub
 		//配送费
 		List<BillFeesReceiveDispatchTempEntity> dispatchList = new ArrayList<BillFeesReceiveDispatchTempEntity>();
@@ -69,15 +72,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					if(StringUtils.isNotBlank(wareId)){
 						dispatchEntity.setWarehouseCode(wareId);
 						storageEntity.setWarehouseCode(wareId);
-					}
-					break;
-				case "商家名称":
-					dispatchEntity.setCustomerName(dc.getColValue());
-					storageEntity.setCustomerName(dc.getColValue());
-					String customerId=customerDictService.getCustomerCodeByName(dc.getColValue());
-					if(StringUtils.isNotBlank(customerId)){
-						dispatchEntity.setCustomerid(customerId);
-						storageEntity.setCustomerId(customerId);
+					}else{
+						errorMessage+="仓库不存在;";
 					}
 					break;
 				case "九曳订单号":
@@ -106,7 +102,11 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 				case "计费物流商":
 					dispatchEntity.setCarrierName(dc.getColValue());
 					String carrierCode=carrierDictService.getCarrierCodeByName(dc.getColValue());
-					dispatchEntity.setCarrierid(carrierCode);
+					if(StringUtils.isNotBlank(carrierCode)){
+						dispatchEntity.setCarrierid(carrierCode);
+					}else{
+						errorMessage+="计费物流商不存在;";
+					}					
 					break;
 				case "收件人省":
 					dispatchEntity.setReceiveProvince(dc.getColValue());
@@ -130,15 +130,17 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 				default:
 					break;
 				}
-				
-				dispatchEntity.setBillNo("1111");
-				storageEntity.setBillNo("1111");
+
 			} catch (Exception ex) {
-				throw new BizException("行【" + dr.getRowNo() + "】，列【"
-						+ dc.getColName() + "】格式不正确");
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
+				
 			}
-		
 		}
+		
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		}
+		
 		for(DataColumn dc : dr.getColumns()){
 			switch (dc.getColName()) {
 			case "运费":

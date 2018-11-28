@@ -63,6 +63,8 @@ import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.redis.client.IRedisClient;
+import com.jiuyescm.iaccount.api.IUserService;
+import com.jiuyescm.iaccount.vo.UserVO;
 import com.jiuyescm.utils.JsonUtils;
 
 /**
@@ -93,6 +95,8 @@ public class BillReceiveMasterController {
 	private SequenceService sequenceService;
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
+	@Autowired
+	private IUserService userService;
 	
 	String sessionId=JAppContext.currentUserID()+"_import_Receive_Bill";
 	final String nameSpace="com.jiuyescm.bms.bill.receive.web.BillReceiveMasterController";
@@ -184,11 +188,84 @@ public class BillReceiveMasterController {
 		// 校验信息（报错提示）
 		final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
 		
-		//空校验
+		//空校验(确认人和确认日期)
 		Map<String, Object> maps = Maps.newHashMap();
 		checkNull(parameter, infoList, maps);
 		if (!maps.isEmpty()) {
 			return maps;
+		}
+		
+		//人员变更，ID修改
+		List<UserVO> userList = userService.findAllUsers();
+		if (null != userList && userList.size() > 0) {
+			//确认人
+			boolean exe1 = false;
+			for (UserVO userVO : userList) {
+				if (userVO.getCname().equals(parameter.get("confirmMan"))) {
+					parameter.put("confirmManId", userVO.getUsername());
+					exe1 = true;
+					break;
+				}
+			}
+			if (!exe1) {
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("未找到确认人，请重新输入！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			//销售员
+			boolean exe2 = false;
+			for (UserVO userVO : userList) {
+				if (userVO.getCname().equals(parameter.get("sellerName"))) {
+					parameter.put("sellerId", userVO.getUsername());
+					exe2 = true;
+					break;
+				}
+			}
+			if (!exe2) {
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("未找到销售员，请重新输入！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			//项目管理员
+			boolean exe3 = false;
+			for (UserVO userVO : userList) {
+				if (userVO.getCname().equals(parameter.get("projectManagerName"))) {
+					parameter.put("projectManagerId", userVO.getUsername());
+					exe3 = true;
+					break;
+				}
+			}
+			if (exe3) {
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("未找到项目管理员，请重新输入！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			//结算员
+			boolean exe4 = false;
+			for (UserVO userVO : userList) {
+				if (userVO.getCname().equals(parameter.get("balanceName"))) {
+					parameter.put("balanceId", userVO.getUsername());
+					exe4 = true;
+					break;
+				}
+			}
+			if (exe4) {
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("未找到结算员，请重新输入！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
 		}
 		
 		//导入校验，已确认账单不能导入
@@ -258,30 +335,42 @@ public class BillReceiveMasterController {
 	}
 
 	private void checkNull(final Map<String, Object> parameter, final List<ErrorMessageVo> infoList, Map<String, Object> maps) {
-		if ("null".equals(parameter.get("invoiceName").toString()) || "".equals(parameter.get("invoiceName").toString()) || "undefined".equals(parameter.get("invoiceName").toString())) {
+		if ("已确认".equals(parameter.get("billCheckStatus")) && ("null".equals(parameter.get("confirmMan").toString()) || "".equals(parameter.get("confirmMan").toString()) || "undefined".equals(parameter.get("confirmMan").toString()))) {
 			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("商家合同名称不能为空！");
+			errorVo.setMsg("对账状态为已确认，确认人必填！");
 			infoList.add(errorVo);
 			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		}
-		if ("null".equals(parameter.get("createMonth").toString()) || "".equals(parameter.get("createMonth").toString()) || "undefined".equals(parameter.get("createMonth").toString())) {
+		if ("已确认".equals(parameter.get("billCheckStatus")) && ("null".equals(parameter.get("confirmDate").toString()) || "".equals(parameter.get("confirmDate").toString()) || "undefined".equals(parameter.get("confirmDate").toString()))) {
 			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("业务月份不能为空！");
+			errorVo.setMsg("对账状态为已确认，确认日期必填！");
 			infoList.add(errorVo);
 			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		}
-		if ("null".equals(parameter.get("billName").toString()) || "".equals(parameter.get("billName").toString()) || "undefined".equals(parameter.get("billName").toString())) {
-			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("账单名称不能为空！");
-			infoList.add(errorVo);
-			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		}
-		if ("null".equals(parameter.get("billCheckStatus").toString()) || "".equals(parameter.get("billCheckStatus").toString()) || "undefined".equals(parameter.get("billCheckStatus").toString())) {
-			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("对账状态不能为空！");
-			infoList.add(errorVo);
-			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		}
+//		if ("null".equals(parameter.get("invoiceName").toString()) || "".equals(parameter.get("invoiceName").toString()) || "undefined".equals(parameter.get("invoiceName").toString())) {
+//			ErrorMessageVo errorVo = new ErrorMessageVo();
+//			errorVo.setMsg("商家合同名称不能为空！");
+//			infoList.add(errorVo);
+//			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//		}
+//		if ("null".equals(parameter.get("createMonth").toString()) || "".equals(parameter.get("createMonth").toString()) || "undefined".equals(parameter.get("createMonth").toString())) {
+//			ErrorMessageVo errorVo = new ErrorMessageVo();
+//			errorVo.setMsg("业务月份不能为空！");
+//			infoList.add(errorVo);
+//			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//		}
+//		if ("null".equals(parameter.get("billName").toString()) || "".equals(parameter.get("billName").toString()) || "undefined".equals(parameter.get("billName").toString())) {
+//			ErrorMessageVo errorVo = new ErrorMessageVo();
+//			errorVo.setMsg("账单名称不能为空！");
+//			infoList.add(errorVo);
+//			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//		}
+//		if ("null".equals(parameter.get("billCheckStatus").toString()) || "".equals(parameter.get("billCheckStatus").toString()) || "undefined".equals(parameter.get("billCheckStatus").toString())) {
+//			ErrorMessageVo errorVo = new ErrorMessageVo();
+//			errorVo.setMsg("对账状态不能为空！");
+//			infoList.add(errorVo);
+//			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//		}
 	}
 	
 	

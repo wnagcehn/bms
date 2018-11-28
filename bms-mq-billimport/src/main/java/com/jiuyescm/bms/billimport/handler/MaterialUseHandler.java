@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,6 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		// TODO Auto-generated method stub
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
-		
 		for (DataColumn dc:dr.getColumns()) {
 			System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 			try {
@@ -83,6 +83,30 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
+		
+		//起始列
+		int start=0;
+		for (DataColumn dc:dr.getColumns()) {
+			if("收件人地址".equals(dc.getColValue())){
+				start=dc.getColNo()+1;
+			}
+		}
+		
+		//6个字段循环一次
+		int count=1;
+		for(int i=start;i<dr.getColumns().size();i++){
+			DataColumn dc=dr.getColumn(i);
+			if(count<=6){
+				BillFeesReceiveStorageTempEntity feeEntity = new BillFeesReceiveStorageTempEntity();
+				PropertyUtils.copyProperties(feeEntity, entity);
+				
+			}
+			count++;
+		}
+		
+		
+		
+		
 		return list;
 	}
 
