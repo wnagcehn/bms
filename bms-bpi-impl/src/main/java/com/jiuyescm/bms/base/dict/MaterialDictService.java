@@ -87,6 +87,9 @@ public class MaterialDictService implements IMaterialDictService {
 				condition.put("delFlag", "0");
 				condition.put("barcode", code);
 				List<PubMaterialInfoVo> list =  pubMaterialInfoService.queryList(condition);
+				if(list == null || list.size()==0){
+					return null;
+				}
 				return list.get(0);
 			}
 		});
@@ -108,6 +111,9 @@ public class MaterialDictService implements IMaterialDictService {
 				condition.put("delFlag", "0");
 				condition.put("materialName", name);
 				List<PubMaterialInfoVo> list =  pubMaterialInfoService.queryList(condition);
+				if(list == null || list.size()==0){
+					return null;
+				}
 				return list.get(0);
 			}
 		});
