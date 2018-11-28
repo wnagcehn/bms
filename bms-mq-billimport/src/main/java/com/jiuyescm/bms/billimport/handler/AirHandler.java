@@ -25,6 +25,8 @@ import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
+import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
+import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
@@ -41,20 +43,26 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 	
 	@Autowired
 	private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
+	
+	@Autowired IBmsSubjectInfoService bmsSubjectService;
 
 	@Override
 	public List<BillFeesReceiveAirTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
 		List<BillFeesReceiveAirTempEntity> listEntity = new ArrayList<BillFeesReceiveAirTempEntity>();
 		BillFeesReceiveAirTempEntity entity = new BillFeesReceiveAirTempEntity();
+		entity.setRowExcelNo(dr.getRowNo());
 		BillFeesReceiveAirTempEntity entity1 = new BillFeesReceiveAirTempEntity();
 		BillFeesReceiveAirTempEntity entity2 = new BillFeesReceiveAirTempEntity();
 		BillFeesReceiveAirTempEntity entity3 = new BillFeesReceiveAirTempEntity();
+		BmsSubjectInfoVo  subject1 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "航空运费");
+		BmsSubjectInfoVo  subject2 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "其他费用");
+		BmsSubjectInfoVo  subject3 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "货物赔偿费");
+		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				System.out.println("列名【" + dc.getColName() + "】|值【"
 						+ dc.getColValue() + "】");
-				
 				
 				switch (dc.getColName()) {
 				case "区域仓":
@@ -106,7 +114,10 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 				if (StringUtils.isNotBlank(dc.getColValue())) {
 					PropertyUtils.copyProperties(entity1, entity);
 					entity1.setAmount(new BigDecimal(dc.getColValue()));
-					entity1.setFeesType("BASE");
+//					entity1.setFeesType("BASE");
+					if(subject1.getSubjectCode()!=null){
+						entity1.setSubjectCode(subject1.getSubjectCode());
+					}
 					listEntity.add(entity1);	
 				}
 				break;
@@ -114,7 +125,10 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 				if (StringUtils.isNotBlank(dc.getColValue())) {
 					PropertyUtils.copyProperties(entity2, entity);
 					entity2.setAmount(new BigDecimal(dc.getColValue()));
-					entity2.setFeesType("OTHER");
+//					entity2.setFeesType("OTHER");
+					if(subject2.getSubjectCode()!=null){
+						entity2.setSubjectCode(subject2.getSubjectCode());
+					}
 					listEntity.add(entity2);	
 				}
 				break;
@@ -122,7 +136,10 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 				if (StringUtils.isNotBlank(dc.getColValue())) {
 					PropertyUtils.copyProperties(entity3, entity);
 					entity3.setAmount(new BigDecimal(dc.getColValue()));
-					entity3.setFeesType("BASE");
+//					entity3.setFeesType("BASE");
+					if(subject3.getSubjectCode()!=null){
+						entity3.setSubjectCode(subject3.getSubjectCode());
+					}
 					listEntity.add(entity3);
 				}
 				break;
