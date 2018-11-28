@@ -41,6 +41,8 @@ import com.jiuyescm.framework.fastdfs.model.StorePath;
 @Component("航空")
 public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 	
+	private HashMap<String, Object> map;
+	
 	@Autowired
 	private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
 	
@@ -49,6 +51,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 	@Override
 	public List<BillFeesReceiveAirTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
+		String errorMessage ="";
 		List<BillFeesReceiveAirTempEntity> listEntity = new ArrayList<BillFeesReceiveAirTempEntity>();
 		BillFeesReceiveAirTempEntity entity = new BillFeesReceiveAirTempEntity();
 		entity.setRowExcelNo(dr.getRowNo());
@@ -61,13 +64,12 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				System.out.println("列名【" + dc.getColName() + "】|值【"
-						+ dc.getColValue() + "】");
-				
 				switch (dc.getColName()) {
 				case "区域仓":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
+					}else{
+						errorMessage+="区域仓不存在;";
 					}
 					break;
 				case "发货日期":
@@ -76,26 +78,36 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 								.getColValue());
 						entity.setCreateTime(createTime);
 						entity.setCreateMonth(DateUtil.timeStamp2YYMM(createTime));
+						}else{
+							errorMessage+="发货日期不存在;";
 						}
 					break;
 				case "始发站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendSite(dc.getColValue());
+					}else{
+						errorMessage+="始发站不存在;";
 					}
 					break;
 				case "目的站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveSite(dc.getColValue());
+					}else{
+						errorMessage+="目的站不存在;";
 					}
 					break;
 				case "计费重量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalWeight(new BigDecimal(dc.getColValue()));	
+					}else{
+						errorMessage+="计费重量不存在;";
 					}
 					break;
 				case "运单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWaybillNo(dc.getColValue());	
+					}else{
+						errorMessage+="运单号不存在;";
 					}
 					break;
 				default:
@@ -115,9 +127,9 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					PropertyUtils.copyProperties(entity1, entity);
 					entity1.setAmount(new BigDecimal(dc.getColValue()));
 //					entity1.setFeesType("BASE");
-//					if(subject1.getSubjectCode()!=null){
-//						entity1.setSubjectCode(subject1.getSubjectCode());
-//					}
+					if(subject1.getSubjectCode()!=null){
+						entity1.setSubjectCode(subject1.getSubjectCode());
+					}
 					listEntity.add(entity1);	
 				}
 				break;
@@ -126,9 +138,9 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					PropertyUtils.copyProperties(entity2, entity);
 					entity2.setAmount(new BigDecimal(dc.getColValue()));
 //					entity2.setFeesType("OTHER");
-//					if(subject2.getSubjectCode()!=null){
-//						entity2.setSubjectCode(subject2.getSubjectCode());
-//					}
+					if(subject2.getSubjectCode()!=null){
+						entity2.setSubjectCode(subject2.getSubjectCode());
+					}
 					listEntity.add(entity2);	
 				}
 				break;
@@ -137,9 +149,9 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					PropertyUtils.copyProperties(entity3, entity);
 					entity3.setAmount(new BigDecimal(dc.getColValue()));
 //					entity3.setFeesType("BASE");
-//					if(subject3.getSubjectCode()!=null){
-//						entity3.setSubjectCode(subject3.getSubjectCode());
-//					}
+					if(subject3.getSubjectCode()!=null){
+						entity3.setSubjectCode(subject3.getSubjectCode());
+					}
 					listEntity.add(entity3);
 				}
 				break;

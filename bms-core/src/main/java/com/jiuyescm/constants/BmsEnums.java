@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class BmsEnums {
 
+	
+	
 	/**
 	 * 是否开票 枚举
 	 * @author caojianwei
@@ -24,6 +26,15 @@ public class BmsEnums {
 			this.code = code;
 			this.desc = desc;
 		}
+		
+		public String getCode(){
+			return code;
+		}
+		
+		public String getDesc(){
+			return desc;
+		}
+		
 		private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
 		private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
 		static{
@@ -67,6 +78,15 @@ public class BmsEnums {
 			this.code = code;
 			this.desc = desc;
 		}
+		
+		public String getCode(){
+			return code;
+		}
+		
+		public String getDesc(){
+			return desc;
+		}
+		
 		private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
 		private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
 		static{
@@ -122,20 +142,14 @@ public class BmsEnums {
 		private String code;
 		private String desc;
 		private BillCheckStateEnum(String code, String desc){
-			this.setCode(code);
-			this.setDesc(desc);
+			this.code = code;
+			this.desc = desc;
 		}
 		public String getCode() {
 			return code;
 		}
-		public void setCode(String code) {
-			this.code = code;
-		}
 		public String getDesc() {
 			return desc;
-		}
-		public void setDesc(String desc) {
-			this.desc = desc;
 		}
 		
 		private static Map<String,String> maps = new HashMap<String,String>();

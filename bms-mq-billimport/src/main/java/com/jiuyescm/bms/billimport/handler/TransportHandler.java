@@ -3,6 +3,7 @@ package com.jiuyescm.bms.billimport.handler;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -27,11 +28,14 @@ import com.jiuyescm.exception.BizException;
 @Component("干线")
 public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTempEntity> {
 	
+	private HashMap<String, Object> map;
+	
 	@Autowired
 	private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
 
 	@Override
 	public List<BillFeesReceiveTransportTempEntity> transRowToObj(DataRow dr) throws Exception {
+		String errorMessage ="";
 		List<BillFeesReceiveTransportTempEntity> listEntity = new ArrayList<BillFeesReceiveTransportTempEntity>();
 		BillFeesReceiveTransportTempEntity entity = new BillFeesReceiveTransportTempEntity();
 		entity.setRowExcelNo(dr.getRowNo());
@@ -58,9 +62,6 @@ public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTemp
 
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				System.out.println("列名【" + dc.getColName() + "】|值【"
-						+ dc.getColValue() + "】");
-
 				switch (dc.getColName()) {
 				case "订单创建日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -68,97 +69,132 @@ public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTemp
 								.getColValue());
 						entity.setCreateTime(createTime);
 						entity.setCreateMonth(DateUtil.timeStamp2YYMM(createTime));
+						}else{
+							errorMessage+="订单创建日期不存在;";
 						}
 					break;
 				case "订单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setOrderNo(dc.getColValue());
+					}else{
+						errorMessage+="订单号不存在;";
 					}
 					break;
-//				case "外部订单号":
-//					if (StringUtils.isNotBlank(dc.getColValue())) {
-//						entity.setWarehouseName(dc.getColValue());
-//					}
-//					break;
 				case "温控":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTemperatureType(dc.getColValue());
-						entity.setTemperatureCode(BmsEnums.tempretureType.getCode(dc.getColValue()));
+//						try {
+//							entity.setTemperatureCode(BmsEnums.tempretureType.getCode(dc.getColValue()));
+//						} catch (Exception e) {
+//							errorMessage+="温控未定义;";
+//						}
+					}else{
+						errorMessage+="温控不存在;";
 					}
 					break;
 				case "派车单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendNo(dc.getColValue());
+						}else{
+							errorMessage+="派车单号不存在;";
 						}
 					break;
 				case "运单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWaybillNo(dc.getColValue());
+					}else{
+						errorMessage+="运单号不存在;";
 					}
 					break;
 				case "业务类型":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setBizType(dc.getColValue());
+					}else{
+						errorMessage+="业务类型不存在;";
 					}
 					break;
 				case "始发站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendSite(dc.getColValue());
+					}else{
+						errorMessage+="始发站不存在;";
 					}
 					break;
 				case "始发省份":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendProvince(dc.getColValue());
+					}else{
+						errorMessage+="始发省份不存在;";
 					}
 					break;
 				case "始发城市":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendCity(dc.getColValue());
+					}else{
+						errorMessage+="始发城市不存在;";
 					}
 					break;
 				case "始发区":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendDistinct(dc.getColValue());
+					}else{
+						errorMessage+="始发区不存在;";
 					}
 					break;
 				case "目的站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveSite(dc.getColValue());
+					}else{
+						errorMessage+="目的站不存在;";
 					}
 					break;
 				case "目的省份":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveProvince(dc.getColValue());
+					}else{
+						errorMessage+="目的省份不存在;";
 					}
 					break;
 				case "目的城市":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveCity(dc.getColValue());
+					}else{
+						errorMessage+="目的城市不存在;";
 					}
 					break;
 				case "目的区":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveDistinct(dc.getColValue());
+					}else{
+						errorMessage+="目的区不存在;";
 					}
 					break;
 				case "体积":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalVolumn(new BigDecimal(dc.getColValue()));
+					}else{
+						errorMessage+="体积不存在;";
 					}
 					break;
 				case "重量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
-						}
+					}else{
+							errorMessage+="重量不存在;";
+					}
 					break;
 				case "是否泡货":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setIsLight(dc.getColValue());
+					}else{
+						errorMessage+="是否泡货不存在;";
 					}
 					break;
 				case "车型":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCarModel(dc.getColValue());
+					}else{
+						errorMessage+="车型不存在;";
 					}
 					break;
 				default:
