@@ -88,6 +88,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 
 			@Override
 			public void finish() {
+				System.out.println("list.size()--"+list.size());
 				if(list.size()>0){
 					saveTo();
 				}

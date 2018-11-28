@@ -17,6 +17,12 @@ import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
+/**
+ * 干线
+ * 
+ * @author liuzhicheng
+ * 
+ */
 @Component("干线")
 public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTempEntity> {
 	

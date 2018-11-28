@@ -213,6 +213,7 @@
         <Property name="mapping">
           <Property name="mapValues"></Property>
         </Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="billCheckStatus">
         <Property name="label">对账状态</Property>
@@ -220,56 +221,73 @@
       </PropertyDef>
       <PropertyDef name="invoiceId">
         <Property name="label">合同商家编码</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
-      <PropertyDef name="fileName"/>
-      <PropertyDef name="importBtn"/>
+      <PropertyDef name="fileName">
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="importBtn">
+        <Property name="required">true</Property>
+      </PropertyDef>
       <PropertyDef name="billStartTime">
         <Property name="label">业务启动时间</Property>
         <Property name="dataType">DateTime</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="firstClassName">
         <Property></Property>
         <Property name="label">一级品类</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="bizTypeName">
         <Property></Property>
         <Property name="label">业务类型</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="projectName">
         <Property></Property>
         <Property name="label">项目</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="sellerId">
         <Property></Property>
         <Property name="label">销售员id</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="sellerName">
         <Property></Property>
         <Property name="label">销售员</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="deptName">
         <Property></Property>
         <Property name="label">部门名称</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="deptCode">
         <Property></Property>
         <Property name="label">部门ID</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="projectManagerId">
         <Property></Property>
         <Property name="label">项目管理员id</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="projectManagerName">
         <Property></Property>
         <Property name="label">项目管理员</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="balanceId">
         <Property></Property>
         <Property name="label">结算员id</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="balanceName">
         <Property></Property>
         <Property name="label">结算员</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="confirmManId">
         <Property></Property>
@@ -337,7 +355,22 @@ entity.set(&quot;invoiceName&quot;,&quot;&quot;);&#xD;
 entity.set(&quot;invoiceId&quot;,&quot;&quot;);&#xD;
 entity.set(&quot;createMonth&quot;,&quot;&quot;);&#xD;
 entity.set(&quot;billName&quot;,&quot;&quot;);&#xD;
-entity.set(&quot;isneedInvoice&quot;,&quot;是&quot;);&#xD;
+entity.set(&quot;billStartTime&quot;);&#xD;
+entity.set(&quot;firstClassName&quot;);&#xD;
+entity.set(&quot;bizTypeName&quot;);&#xD;
+entity.set(&quot;projectName&quot;);&#xD;
+entity.set(&quot;sellerId&quot;);&#xD;
+entity.set(&quot;sellerName&quot;);&#xD;
+entity.set(&quot;deptName&quot;);&#xD;
+entity.set(&quot;deptCode&quot;);&#xD;
+entity.set(&quot;projectManagerId&quot;);&#xD;
+entity.set(&quot;projectManagerName&quot;);&#xD;
+entity.set(&quot;balanceId&quot;);&#xD;
+entity.set(&quot;balanceName&quot;);&#xD;
+entity.set(&quot;confirmManId&quot;);&#xD;
+entity.set(&quot;confirmMan&quot;);&#xD;
+entity.set(&quot;confirmDate&quot;);&#xD;
+entity.set(&quot;isneedInvoice&quot;,&quot;&quot;);&#xD;
 view.get(&quot;#ImportDialog&quot;).show();</ClientEvent>
         <Property name="caption">导入</Property>
         <Property name="icon"> url(>skin>common/icons.gif) -220px -240px</Property>
@@ -1018,6 +1051,15 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Editor>
               <Button id="importBtn2">
                 <ClientEvent name="onClick">var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
+alert(entity.get(&quot;billCheckStatus&quot;));&#xD;
+if(entity.get(&quot;billCheckStatus&quot;) == '已确认' &amp;&amp; isNullOrEmpty(entity.get(&quot;confirmMan&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;已确认状态必填确认人!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(entity.get(&quot;billCheckStatus&quot;) == '已确认' &amp;&amp; isNullOrEmpty(entity.get(&quot;confirmDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;已确认状态必填确认日期!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 //新加的&#xD;
 var billStartTime = entity.get(&quot;billStartTime&quot;);&#xD;
 var firstClassName = entity.get(&quot;firstClassName&quot;);&#xD;
@@ -1068,6 +1110,15 @@ var param = {&#xD;
 };&#xD;
 &#xD;
 view.get(&quot;#uploadMaterialAction&quot;).set(&quot;parameter&quot;,param).execute();&#xD;
+&#xD;
+&#xD;
+function isNullOrEmpty(e) {&#xD;
+    if (e == null || e == undefined || e == &quot;&quot;) {&#xD;
+        return true;&#xD;
+    } else {&#xD;
+        return false;&#xD;
+    }&#xD;
+}&#xD;
 </ClientEvent>
                 <Property name="caption">导入</Property>
                 <Property name="action">uploadMaterialAction</Property>
@@ -1219,7 +1270,7 @@ data.set({&#xD;
 arg.processDefault = false;</ClientEvent>
       <Property name="autoOpen">true</Property>
       <Property name="editable">false</Property>
-      <Property name="useEmptyItem">false</Property>
+      <Property name="useEmptyItem">true</Property>
       <Property name="displayProperty">isneedInvoice</Property>
       <Property name="dataSet">dsIsneedInvoiceEntity</Property>
     </DataSetDropDown>
@@ -1300,6 +1351,13 @@ view.id(&quot;getInportParamAction&quot;).set(&quot;parameter&quot;,{invoiceName
 							view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmManId&quot;,result[&quot;confirmManId&quot;]);&#xD;
 							view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmMan&quot;,result[&quot;confirmMan&quot;]);&#xD;
 							view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmDate&quot;,result[&quot;confirmDate&quot;]);&#xD;
+							if(result[&quot;isneedInvoice&quot;] == '1'){&#xD;
+								result[&quot;isneedInvoice&quot;] = '是';&#xD;
+							}&#xD;
+							if(result[&quot;isneedInvoice&quot;] == '0'){&#xD;
+								result[&quot;isneedInvoice&quot;] = '否';&#xD;
+							}&#xD;
+							view.get(&quot;#AutoForma.entity&quot;).set(&quot;isneedInvoice&quot;,result[&quot;isneedInvoice&quot;]);&#xD;
                         }&#xD;
                     );&#xD;
 </ClientEvent>

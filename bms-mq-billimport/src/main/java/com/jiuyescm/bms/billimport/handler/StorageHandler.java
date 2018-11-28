@@ -1,27 +1,20 @@
 package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
-import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
-import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -65,7 +58,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
-					}			
+					}		
 					break;
 				case "冷冻":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -73,7 +66,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity1.setSubjectCode("wh_product_storage");
 						entity1.setChargeUnit("PALLETS");
 						entity1.setCreateTime(entity.getCreateTime());
-						entity1.setTempretureType("LD");
+						entity1.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity1.setTotalQty(Integer.valueOf(dc.getColValue()));
 					}
 					break;
@@ -88,7 +81,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2.setSubjectCode("wh_product_storage");
 						entity2.setChargeUnit("PALLETS");
 						entity2.setCreateTime(entity.getCreateTime());
-						entity2.setTempretureType("LC");
+						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity2.setTotalQty(Integer.valueOf(dc.getColValue()));
 					}
 					break;
@@ -103,7 +96,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity3.setSubjectCode("wh_product_storage");
 						entity3.setChargeUnit("PALLETS");
 						entity3.setCreateTime(entity.getCreateTime());
-						entity3.setTempretureType("HW");
+						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity3.setTotalQty(Integer.valueOf(dc.getColValue()));
 					}
 					break;
@@ -118,7 +111,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4.setSubjectCode("wh_product_storage");
 						entity4.setChargeUnit("PALLETS");
 						entity4.setCreateTime(entity.getCreateTime());
-						entity4.setTempretureType("CW");
+						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity4.setTotalQty(Integer.valueOf(dc.getColValue()));
 					}
 					break;
@@ -199,34 +192,36 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 				}
 			
 			} catch (Exception e) {
+				System.out.println("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 				throw new BizException("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 			}
 		}
-		if (null != entity1) {
+		//商品按托+耗材按托+商品按件+入库+出库(防止空白行)
+		if (null != entity1 && null != entity1.getCreateTime()) {
 			lists.add(entity1);
 		}
-		if (null != entity2) {
+		if (null != entity2 && null != entity2.getCreateTime()) {
 			lists.add(entity2);
 		}
-		if (null != entity3) {
+		if (null != entity3 && null != entity3.getCreateTime()) {
 			lists.add(entity3);
 		}
-		if (null != entity4) {
+		if (null != entity4 && null != entity4.getCreateTime()) {
 			lists.add(entity4);
 		}
-		if (null != entity5) {
+		if (null != entity5 && null != entity5.getCreateTime()) {
 			lists.add(entity5);
 		}
-		if (null != entity6) {
+		if (null != entity6 && null != entity6.getCreateTime()) {
 			lists.add(entity6);
 		}
-		if (null != entity7) {
+		if (null != entity7 && null != entity7.getCreateTime()) {
 			lists.add(entity7);
 		}
-		if (null != entity8) {
+		if (null != entity8 && null != entity8.getCreateTime()) {
 			lists.add(entity8);
 		}
-		if (null != entity9) {
+		if (null != entity9 && null != entity9.getCreateTime()) {
 			lists.add(entity9);
 		}
 		return lists;

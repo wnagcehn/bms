@@ -11,11 +11,13 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -27,6 +29,7 @@ import com.jiuyescm.exception.BizException;
 public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	@Autowired IWarehouseDictService warehouseDictService;
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
@@ -40,16 +43,18 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 			try {
 				switch (dc.getColName()) {
 				case "仓库名称":
-					entity.setWarehouseName(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						//如果没找到，报错
+						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						entity.setWarehouseCode(warehouseCode);
+						entity.setWarehouseName(dc.getColValue());
+					}			
 					break;
 				case "发货时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}	
 					break;
-//				case "商家名称":
-//					entity.setCustomerName(dc.getColValue());
-//					break;
 				case "单据类型":
 					entity.setOrderType(dc.getColValue());
 					break;
@@ -57,7 +62,7 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 					entity.setOrderNo(dc.getColValue());
 					break;
 				case "温度类型":
-					entity.setTempretureType(dc.getColValue());
+					entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColValue()));
 					break;
 				case "出库件数":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -119,9 +124,13 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 				break;
 			}
 		}
-		//B2B订单操作费，出库装车费
-		list.add(entity1);
-		list.add(entity2);
+		//B2B订单操作费，出库装车费(防空白行)
+		if (null != entity1 && StringUtils.isNotBlank(entity1.getOrderNo())) {
+			list.add(entity1);
+		}
+		if (null != entity2 && StringUtils.isNotBlank(entity2.getOrderNo())) {
+			list.add(entity2);
+		}
 		return list;
 	}
 
