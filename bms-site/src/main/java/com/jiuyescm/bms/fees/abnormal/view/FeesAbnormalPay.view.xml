@@ -221,6 +221,9 @@
       <PropertyDef name="isDeliveryFreeD2j">
         <Property></Property>
         <Property name="label">是否免运费</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesAbnormalController#getIsDeliveryValue&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="returnedAmountC2j">
         <Property name="dataType">Double</Property>
@@ -254,6 +257,9 @@
       <PropertyDef name="confirmIsDeliveryFree">
         <Property></Property>
         <Property name="label">确认是否免运费</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesAbnormalController#getIsDeliveryValue&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="confirmYear">
         <Property></Property>
