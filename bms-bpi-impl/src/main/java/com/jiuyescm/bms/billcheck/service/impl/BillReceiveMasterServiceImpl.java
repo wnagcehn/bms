@@ -130,18 +130,13 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * @return
 	 */
     @Override
-    public BillReceiveMasterVo update(BillReceiveMasterVo vo) {   	
-    	BillReceiveMasterVo returnVo=new BillReceiveMasterVo();
+    public void update(BillReceiveMasterVo vo) {   	
     	BillReceiveMasterEntity entity=new BillReceiveMasterEntity();
 		try {
-            PropertyUtils.copyProperties(entity, vo);          
-            BillReceiveMasterEntity returnEntity=billReceiveMasterRepository.update(entity);
-            PropertyUtils.copyProperties(returnVo,returnEntity);
-            return returnVo;
+            int k = billReceiveMasterRepository.update(entity);
         } catch (Exception ex) {
             logger.error("转换失败");
         }
-		return returnVo;  
     }
 
 	/**

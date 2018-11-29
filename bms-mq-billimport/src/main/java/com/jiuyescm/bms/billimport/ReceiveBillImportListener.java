@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billimport;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
+import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 @Service("receiveBillImportListener")
@@ -38,7 +40,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	private IWarehouseDictService warehouseDictService;
 	
 	@Autowired
-	private static IBillReceiveMasterService billReceiveMasterService;
+	private IBillReceiveMasterService billReceiveMasterService;
 
 	private ExcelXlsxReader xlsxReader;
 
@@ -74,13 +76,14 @@ public class ReceiveBillImportListener implements MessageListener {
 		
 		map.put("fullPath", "E:\\user\\desktop\\zhaofeng\\Desktop\\账单导入模板.xlsx");
 		logger.info("获取文件路径：{}",map.get("fullPath").toString());
-		File file = new File(map.get("fullPath").toString());
-		InputStream inputStream = new FileInputStream(file);
-		/*
-		 * byte[] bytes = storageClient.downloadFile(taskId, new
-		 * DownloadByteArray()); InputStream inputStream = new
-		 * ByteArrayInputStream(bytes);
-		 */
+//		File file = new File(map.get("fullPath").toString());
+//		InputStream inputStream = new FileInputStream(file);
+		
+		String filePath = map.get("fullPath").toString();
+		
+		byte[] bytes = storageClient.downloadFile(filePath, new DownloadByteArray());
+		InputStream inputStream = new ByteArrayInputStream(bytes);
+
 		try {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
@@ -125,7 +128,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	 * @param map
 	 * @param status
 	 */
-	public static void updateStatus(String billNo, String status, int rate) {
+	public void updateStatus(String billNo, String status, int rate) {
 		BillReceiveMasterVo entity = new BillReceiveMasterVo();
 		entity.setBillNo(billNo);
 		entity.setTaskStatus(status);

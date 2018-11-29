@@ -84,7 +84,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		System.out.println("errMap.size()--"+errMap.size());
 		//Excel校验未通过
 		if(errMap.size()>0){
-			//ReceiveBillImportListener.updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);	
+			updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);	
 			String resultPath = exportErr();
 //			String billNo = (String) param.get("billNo");
 			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
@@ -268,6 +268,19 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 //		}
 	    errMap.clear();
 	    return resultFullPath;
+	}
+	
+	/**
+	 * 更新主表导入状态
+	 * @param map
+	 * @param status
+	 */
+	public void updateStatus(String billNo, String status, int rate) {
+		BillReceiveMasterVo entity = new BillReceiveMasterVo();
+		entity.setBillNo(billNo);
+		entity.setTaskStatus(status);
+		entity.setTaskRate(rate);
+		billReceiveMasterService.update(entity);
 	}
 	
 }

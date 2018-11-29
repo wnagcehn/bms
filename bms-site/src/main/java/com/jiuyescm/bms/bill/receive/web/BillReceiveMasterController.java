@@ -490,6 +490,7 @@ public class BillReceiveMasterController {
 		
 		// 生成任务，写入主表
 		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		parameter.put("billNo", billNo);
 		//组装数据
 		try {
 			BillReceiveMasterVo taskEntity = new BillReceiveMasterVo();
