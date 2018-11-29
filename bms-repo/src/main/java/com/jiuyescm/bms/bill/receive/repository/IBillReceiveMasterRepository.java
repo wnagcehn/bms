@@ -21,7 +21,7 @@ public interface IBillReceiveMasterRepository {
 
     int save(BillReceiveMasterEntity entity);
 
-    BillReceiveMasterEntity update(BillReceiveMasterEntity entity);
+    int update(BillReceiveMasterEntity entity);
 
 	void delete(String billNo);
 

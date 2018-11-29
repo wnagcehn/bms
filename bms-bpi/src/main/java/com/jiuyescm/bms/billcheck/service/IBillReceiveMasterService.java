@@ -23,7 +23,7 @@ public interface IBillReceiveMasterService {
 
     int save(BillReceiveMasterVo entity);
 
-    BillReceiveMasterVo update(BillReceiveMasterVo entity);
+    void update(BillReceiveMasterVo entity);
     
 	void delete(String billNo,String status) throws BizException;
 
