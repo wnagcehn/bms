@@ -39,6 +39,12 @@ public interface IBillFeesReceiveAirTempService {
      * @param condition
      * @return
      */
-	int deleteBatchTemp(Map<String, Object> condition);
-
+	int deleteBatchTemp(String billNo);
+	
+	/**
+	 * 从临时表保存数据到正式表
+	 * @param billNo
+	 * @return
+	 */
+	int saveDataFromTemp(String billNo);
 }

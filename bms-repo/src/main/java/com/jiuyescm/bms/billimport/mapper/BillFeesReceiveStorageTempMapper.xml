@@ -414,4 +414,21 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
         )
         </foreach>
     </insert>
+    
+    <insert id="saveDataFromTemp" parameterType="java.util.Map">
+     INSERT INTO  bill_fees_receive_air (
+           bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month
+     )
+	 select 
+	       bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month
+	 from bill_fees_receive_air_temp where bill_no=#{billNo}
+	 </insert>
+	 
+	 <select id="getImportTotalAmount" parameterType="String">
+	 	select IFNULL(SUM(a.amount),0)+IFNULL(SUM(b.amount),0)+IFNULL(SUM(c.amount),0)+IFNULL(SUM(d.amount),0) from bill_fees_receive_dispatch a
+		LEFT JOIN bill_fees_receive_storage b on a.bill_no=b.bill_no
+		LEFT JOIN bill_fees_receive_transport c on a.bill_no=c.bill_no
+		LEFT JOIN bill_fees_receive_air d on a.bill_no=d.bill_no
+		where a.bill_no=#{billNo}
+	 </select>
 </mapper>

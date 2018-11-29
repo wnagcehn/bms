@@ -25,11 +25,22 @@ public interface IBillFeesReceiveDispatchTempService {
     BillFeesReceiveDispatchTempEntity save(BillFeesReceiveDispatchTempEntity entity);
     
     int insertBatch(List<BillFeesReceiveDispatchTempEntity> list);
-    
-    int deleteBatch(Map<String, Object> condition);
 
     BillFeesReceiveDispatchTempEntity update(BillFeesReceiveDispatchTempEntity entity);
 
     void delete(Long id);
 
+    /**
+     * 批量删除
+     * @param condition
+     * @return
+     */
+	int deleteBatchTemp(String billNo);
+    
+	/**
+	 * 从临时表保存数据到正式表
+	 * @param billNo
+	 * @return
+	 */
+	int saveDataFromTemp(String billNo);
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveStorageTempRepository;
@@ -110,16 +111,28 @@ public class BillFeesReceiveStorageTempServiceImpl implements IBillFeesReceiveSt
 	}
 	
 	@Override
-	public int deleteBatchTemp(Map<String, Object> condition){
+	public int deleteBatchTemp(String billNo){
 		int result = 0;
 		try {
-			billFeesReceiveStorageTempRepository.deleteBatch(condition);
+			billFeesReceiveStorageTempRepository.deleteBatch(billNo);
 			result = 1;
 		} catch (Exception e) {
 			//写入日志
 			logger.error("批量删除异常", e);
 		}
 		return result;
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveStorageTempRepository.saveDataFromTemp(billNo);
+	}
+
+	@Override
+	public Double getImportTotalAmount(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveStorageTempRepository.getImportTotalAmount(billNo);
 	}
 	
 }

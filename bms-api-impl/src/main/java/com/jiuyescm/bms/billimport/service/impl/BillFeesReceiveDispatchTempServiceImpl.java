@@ -68,9 +68,15 @@ public class BillFeesReceiveDispatchTempServiceImpl implements IBillFeesReceiveD
 	}
 
 	@Override
-	public int deleteBatch(Map<String, Object> condition) {
+	public int deleteBatchTemp(String billNo) {
 		// TODO Auto-generated method stub
-		return billFeesReceiveDispatchTempRepository.deleteBatch(condition);
+		return billFeesReceiveDispatchTempRepository.deleteBatch(billNo);
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveDispatchTempRepository.saveDataFromTemp(billNo);
 	}
 	
 }

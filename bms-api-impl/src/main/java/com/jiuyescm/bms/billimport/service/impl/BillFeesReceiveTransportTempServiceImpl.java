@@ -113,18 +113,22 @@ public class BillFeesReceiveTransportTempServiceImpl implements IBillFeesReceive
      * @return
      */
 	@Override
-	public int deleteBatchTemp(Map<String, Object> condition) {
+	public int deleteBatchTemp(String billNo) {
 		int result = 0;
 		try {
-			if(condition.size()>0){
-				billFeesReceiveTransportTempRepository.deleteBatch(condition);
-				result = 1;	
-			}
+			billFeesReceiveTransportTempRepository.deleteBatchTemp(billNo);
+			result = 1;	
 		} catch (Exception e) {
 			//写入日志
 			logger.info("insertBatchTemp：e-{}",e);;
 		}
 		return result;
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveTransportTempRepository.saveDataFromTemp(billNo);
 	}
     
 }

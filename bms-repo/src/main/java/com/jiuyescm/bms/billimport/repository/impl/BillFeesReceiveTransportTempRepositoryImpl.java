@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveTransportTempEntity;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveTransportTempRepository;
@@ -98,9 +99,18 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
 	 * 批量 删除
 	 */
 	@Override
-	public int deleteBatch(Map<String, Object> condition) {
-		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.deleteBatch", condition);
+	public int deleteBatchTemp(String billNo) {
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.deleteBatch", billNo);
 		return d;
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		 SqlSession session = getSqlSessionTemplate();
+		 Map<String,String> map=Maps.newHashMap();
+		 map.put("billNo", billNo);
+		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.saveDataFromTemp", map);
 	}
 	
 }
