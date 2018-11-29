@@ -23,6 +23,8 @@ public class DataRow {
 	private List<DataColumn> columns = new ArrayList<>();
 	
 	private Map<Integer, DataColumn> colsMap = new LinkedHashMap<>();
+	
+	private Map<String, Integer> colNameMap = new HashMap<>();
 
 	/**
 	 * 行索引
@@ -38,6 +40,11 @@ public class DataRow {
 		return columns;
 	}
 	
+	public DataColumn getColumn(String colName){
+		Integer index = colNameMap.get(colName);
+		return colsMap.get(index);
+	}
+	
 	public DataColumn getColumn(Integer index){
 		return colsMap.get(index);
 	}
@@ -45,6 +52,7 @@ public class DataRow {
 	public void addColumn(Integer index,DataColumn dc){
 		this.columns.add(dc);
 		this.colsMap.put(index, dc);
+		this.colNameMap.put(dc.getColName(), index);
 	}
 	
 	public void addColumn(DataColumn dc){
