@@ -45,6 +45,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	private String sheetName;
 	List<T> list = new ArrayList<T>();
 	List<DataRow> errMap = new ArrayList<DataRow>();
+	protected Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 	
 	private BillReceiveMasterEntity billEntity;
 	
@@ -73,6 +74,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		if(errMap.size()>0){
 			exportErr();
 		}
+		repeatMap.clear();
 	}
 	
 	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{

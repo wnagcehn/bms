@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,8 +29,6 @@ import com.jiuyescm.exception.BizException;
 @Component("干线")
 public class TransportHandler extends
 		CommonHandler<BillFeesReceiveTransportTempEntity> {
-
-	private HashMap<String, Object> map;
 
 	@Autowired
 	private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
@@ -400,6 +399,14 @@ public class TransportHandler extends
 		}
 
 		System.out.println("errorMessage---" + errorMessage);
+		if(StringUtils.isNotBlank(entity.getWaybillNo())){
+			if(repeatMap.containsKey(entity.getWaybillNo())){
+				errorMessage += "数据重复--第【"+repeatMap.get(entity.getWaybillNo())+"】行已存在运单号【"+entity.getWaybillNo()+"】;";
+			}else{
+				repeatMap.put(entity.getWaybillNo(), dr.getRowNo());
+			}
+		}
+		
 		if (!errorMessage.equals("")) {
 
 			throw new Exception(errorMessage);

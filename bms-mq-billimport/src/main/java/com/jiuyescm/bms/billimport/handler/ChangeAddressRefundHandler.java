@@ -31,8 +31,6 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 	@Autowired
 	private IWarehouseDictService warehouseDictService;
 	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
-	
 	@Override
 	public List<BillFeesReceiveDispatchTempEntity> transRowToObj(DataRow dr) throws Exception {
 		//异常信息

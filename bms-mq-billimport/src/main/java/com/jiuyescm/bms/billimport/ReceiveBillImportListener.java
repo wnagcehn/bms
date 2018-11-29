@@ -67,13 +67,13 @@ public class ReceiveBillImportListener implements MessageListener {
 
 
 	public void readExcel(String json) throws Throwable {
-		Map<String, Object> map = resolveJsonToMap(json);
-		if (null == map) {
-			return;
-		}
+//		Map<String, Object> map = resolveJsonToMap(json);
+//		if (null == map) {
+//			return;
+//		}
 		
 		//MQ拿到消息，更新状态
-		updateStatus(map, "PROCESS", 1);
+//		updateStatus(map, "PROCESS", 1);
 		File file = new File("D:\\干线账单导入模板.xlsx");
 		//File file = new File(map.get("fullPath").toString());
 		InputStream inputStream = new FileInputStream(file);
@@ -108,14 +108,14 @@ public class ReceiveBillImportListener implements MessageListener {
 				try {
 					handler.process(xlsxReader, opcSheet, param);
 				} catch (Exception ex) {
-					updateStatus(map, "EXCEPTION", 99);
+//					updateStatus(map, "EXCEPTION", 99);
 				}
 				// saveAll 保存临时表数据到正式表
 			}
 			xlsxReader.close();
 		} catch (Exception ex) {
 			logger.error("readExcel 异常 {}", ex);
-			updateStatus(map, "EXCEPTION", 99);
+//			updateStatus(map, "EXCEPTION", 99);
 		}
 	}
 
