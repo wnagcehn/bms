@@ -152,6 +152,27 @@ public class FeesReceiveStorageEntity implements IEntity {
 	// 续价
 	private Double continuePrice;
 	
+	//增值编号
+	private String wmsId;
+	//外部单号
+	private String externalNum;
+	
+	public String getExternalNum() {
+		return externalNum;
+	}
+
+	public void setExternalNum(String externalNum) {
+		this.externalNum = externalNum;
+	}
+
+	public String getWmsId() {
+		return wmsId;
+	}
+
+	public void setWmsId(String wmsId) {
+		this.wmsId = wmsId;
+	}
+
 	public Long getId() {
 		return id;
 	}
