@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveTransportTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
@@ -398,17 +399,18 @@ public class TransportHandler extends
 
 		}
 
-		System.out.println("errorMessage---" + errorMessage);
-		if(StringUtils.isNotBlank(entity.getWaybillNo())){
-			if(repeatMap.containsKey(entity.getWaybillNo())){
-				errorMessage += "数据重复--第【"+repeatMap.get(entity.getWaybillNo())+"】行已存在运单号【"+entity.getWaybillNo()+"】;";
-			}else{
+		// 重复性校验
+		if (StringUtils.isNotBlank(entity.getWaybillNo())) {
+			if (repeatMap.containsKey(entity.getWaybillNo())) {
+				errorMessage += "数据重复--第【"
+						+ repeatMap.get(entity.getWaybillNo()) + "】行已存在运单号【"
+						+ entity.getWaybillNo() + "】;";
+			} else {
 				repeatMap.put(entity.getWaybillNo(), dr.getRowNo());
 			}
 		}
-		
-		if (!errorMessage.equals("")) {
 
+		if (!errorMessage.equals("")) {
 			throw new Exception(errorMessage);
 		}
 
