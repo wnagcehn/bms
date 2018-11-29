@@ -51,11 +51,18 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			throws Exception {
 		//异常信息
 		String errorMessage="";
-
+		
 
 		// TODO Auto-generated method stub
 		//配送费
 		List<BillFeesReceiveDispatchTempEntity> dispatchList = new ArrayList<BillFeesReceiveDispatchTempEntity>();
+		
+		DataColumn waybillCo=dr.getColumn("运单号");
+		DataColumn customerCo=dr.getColumn("商家名称");
+		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
+			return dispatchList;
+		}
+		
 		BillFeesReceiveDispatchTempEntity dispatchEntity = new BillFeesReceiveDispatchTempEntity();
 		//仓储费
 		BillFeesReceiveStorageTempEntity storageEntity = new BillFeesReceiveStorageTempEntity();
@@ -70,15 +77,19 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 
 				switch (dc.getColName()) {
 				case "仓库":
-					dispatchEntity.setWarehouseName(dc.getColValue());
-					storageEntity.setWarehouseName(dc.getColValue());
-					String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
-					if(StringUtils.isNotBlank(wareId)){
-						dispatchEntity.setWarehouseCode(wareId);
-						storageEntity.setWarehouseCode(wareId);
+					if(StringUtils.isNotBlank(dc.getColName())){
+						dispatchEntity.setWarehouseName(dc.getColValue());
+						storageEntity.setWarehouseName(dc.getColValue());
+						String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						if(StringUtils.isNotBlank(wareId)){
+							dispatchEntity.setWarehouseCode(wareId);
+							storageEntity.setWarehouseCode(wareId);
+						}else{
+							errorMessage+="仓库不存在;";
+						}
 					}else{
-						errorMessage+="仓库不存在;";
-					}
+						errorMessage+="仓库不能为空;";
+					}				
 					break;
 				case "九曳订单号":
 					dispatchEntity.setOutstockNo(dc.getColValue());
