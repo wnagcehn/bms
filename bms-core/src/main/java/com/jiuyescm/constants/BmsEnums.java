@@ -153,6 +153,7 @@ public class BmsEnums {
 		}
 		
 		private static Map<String,String> maps = new HashMap<String,String>();
+		private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
 		static{
 			maps.put(BEGIN.getCode(), BEGIN.getDesc());
 			maps.put(WH_FOLLOW.getCode(), WH_FOLLOW.getDesc());
@@ -164,6 +165,16 @@ public class BmsEnums {
 			maps.put(PROJECT_PROBLEM.getCode(), PROJECT_PROBLEM.getDesc());
 			maps.put(TS_PROBLEM.getCode(), TS_PROBLEM.getDesc());
 			maps.put(CONFIRMED.getCode(), CONFIRMED.getDesc());
+			mapValue.put(BEGIN.getCode(), BEGIN.getDesc());
+			mapValue.put(WH_FOLLOW.getCode(), WH_FOLLOW.getDesc());
+			mapValue.put(CUST_FOLLOW.getCode(), CUST_FOLLOW.getDesc());
+			mapValue.put(CUST_NO_FEEDBACK.getCode(), CUST_NO_FEEDBACK.getDesc());
+			mapValue.put(CUST_CHECKING.getCode(), CUST_CHECKING.getDesc());
+			mapValue.put(QUOTATION.getCode(), QUOTATION.getDesc());
+			mapValue.put(WH_PROBLEM.getCode(), WH_PROBLEM.getDesc());
+			mapValue.put(PROJECT_PROBLEM.getCode(), PROJECT_PROBLEM.getDesc());
+			mapValue.put(TS_PROBLEM.getCode(), TS_PROBLEM.getDesc());
+			mapValue.put(CONFIRMED.getCode(), CONFIRMED.getDesc());
 		}
 		public static Map<String,String> getMap(){
 			return maps;
@@ -177,5 +188,74 @@ public class BmsEnums {
 			}
 			return null;
 		}
+		
+		public static String getCode(String desc)
+		{
+			if (mapValue.containsKey(desc))
+			{
+				return mapValue.get(desc);
+			}
+			return null;
+		}	
 	}
+	
+	/**
+	 * 任务状态
+	 * @author wangchen870
+	 * WAIT-等待，PROCESS-处理中，SUCCESS-成功，FAIL-失败，EXCEPTION-异常
+	 */
+	public enum taskStatus{
+		WAIT("WAIT","等待"),PROCESS("PROCESS","处理中"),SUCCESS("SUCCESS","成功"),FAIL("FAIL","失败"),EXCEPTION("EXCEPTION","异常");
+		private String code;
+		private String desc;
+		private taskStatus(String code, String desc){
+			this.code = code;
+			this.desc = desc;
+		}
+		
+		public String getCode(){
+			return code;
+		}
+		
+		public String getDesc(){
+			return desc;
+		}
+		
+		private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
+		private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
+		static{
+			mapKey.put(WAIT.code, WAIT.desc);
+			mapKey.put(PROCESS.code, PROCESS.desc);
+			mapKey.put(SUCCESS.code, SUCCESS.desc);
+			mapKey.put(FAIL.code, FAIL.desc);
+			mapKey.put(EXCEPTION.code, EXCEPTION.desc);
+			mapValue.put(WAIT.desc,WAIT.code);
+			mapValue.put(PROCESS.desc, PROCESS.code);
+			mapValue.put(SUCCESS.desc, SUCCESS.code);
+			mapValue.put(FAIL.desc, FAIL.code);
+			mapValue.put(EXCEPTION.desc, EXCEPTION.code);
+		}
+		public static Map<String,String> getMap(){
+			return mapKey;
+		}
+		
+		public static String getDesc(String code)
+		{
+			if (mapKey.containsKey(code))
+			{
+				return mapKey.get(code);
+			}
+			return null;
+		}
+		
+		public static String getCode(String desc)
+		{
+			if (mapValue.containsKey(desc))
+			{
+				return mapValue.get(desc);
+			}
+			return null;
+		}	
+	}
+	
 }

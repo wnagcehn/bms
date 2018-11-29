@@ -40,8 +40,13 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		
 		//异常信息
 		String errorMessage="";
-		
 		List<BillFeesReceiveStorageTempEntity> lists = new ArrayList<BillFeesReceiveStorageTempEntity>();
+		
+		DataColumn createTime=dr.getColumn("日期");
+		if(createTime!=null &&StringUtils.isBlank(createTime.getColValue())){
+			return lists;
+		}
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//商品按托存储--LD
 		BillFeesReceiveStorageTempEntity entity1 = null;
@@ -208,32 +213,32 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			}
 		}
 		
-		//商品按托+耗材按托+商品按件+入库+出库(防止空白行)
-		if (null != entity1 && null != entity1.getCreateTime()) {
+		//商品按托+耗材按托+商品按件+入库+出库
+		if (null != entity1) {
 			lists.add(entity1);
 		}
-		if (null != entity2 && null != entity2.getCreateTime()) {
+		if (null != entity2) {
 			lists.add(entity2);
 		}
-		if (null != entity3 && null != entity3.getCreateTime()) {
+		if (null != entity3) {
 			lists.add(entity3);
 		}
-		if (null != entity4 && null != entity4.getCreateTime()) {
+		if (null != entity4) {
 			lists.add(entity4);
 		}
-		if (null != entity5 && null != entity5.getCreateTime()) {
+		if (null != entity5) {
 			lists.add(entity5);
 		}
-		if (null != entity6 && null != entity6.getCreateTime()) {
+		if (null != entity6) {
 			lists.add(entity6);
 		}
-		if (null != entity7 && null != entity7.getCreateTime()) {
+		if (null != entity7) {
 			lists.add(entity7);
 		}
-		if (null != entity8 && null != entity8.getCreateTime()) {
+		if (null != entity8) {
 			lists.add(entity8);
 		}
-		if (null != entity9 && null != entity9.getCreateTime()) {
+		if (null != entity9) {
 			lists.add(entity9);
 		}
 		

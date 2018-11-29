@@ -2,7 +2,12 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
+import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.billimport.IFeesHandler;
+import com.jiuyescm.bms.billimport.ReceiveBillImportListener;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
@@ -24,9 +32,11 @@ import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 public abstract class CommonHandler<T> implements IFeesHandler {
 
@@ -36,6 +46,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	@Autowired private IBillReceiveMasterRepository billReceiveMasterRepository;
 	@Autowired private IWarehouseDictService warehouseDictService;
 	@Autowired private IBillReceiveMasterService billReceiveMasterService;
+	@Autowired private IBillCheckInfoService billCheckInfoService;
 	
 	private int batchNum = 1000;
 	private String sheetName;
@@ -45,35 +56,71 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	private BillReceiveMasterEntity billEntity;
 	
 	@Override
-	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map param) throws Exception{
-		this.billEntity = null;//根据param中的bill_no查询
+	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map<String, Object> param) throws Exception{
+		//this.billEntity = null;//根据param中的bill_no查询 ???
 		sheetName = sheet.getSheetName();
+		logger.info("正在处理sheet:{}", sheetName);
+		
 		// 仓储--上海01仓，北京01仓...............
 		WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
 		if (null != warehouseVo.getWarehousename()) {
 			sheetName = "仓储";
 		}
-		// 耗材使用费
-		if (sheetName.contains("耗材使用费")) {
-			sheetName = "耗材使用费";
-		}
-		System.out.println(sheetName);
+
 		if(sheetName.equals("仓储")){
 			readExcel(xlsxReader,sheet,3,5);
 		}else {
 			readExcel(xlsxReader,sheet,1,2);
 		}
-			
+		logger.info("sheet读取完成");	
+		//Excel校验未通过
 		if(errMap.size()>0){
+			ReceiveBillImportListener.updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);
 			exportErr();
 		}
+		
+		//账单跟踪 组装数据
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
+		checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
+		checkInfoVo.setBillNo(param.get("billNo").toString());
+		checkInfoVo.setBillName(param.get("billName").toString());
+		checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
+		checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
+		checkInfoVo.setBillStartTime(format.parse(param.get("billStartTime").toString()));
+		checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
+		checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
+		checkInfoVo.setProjectName(param.get("projectName").toString());
+		checkInfoVo.setSellerId(param.get("sellerId").toString());
+		checkInfoVo.setSellerName(param.get("sellerName").toString());
+		checkInfoVo.setDeptName(param.get("deptName").toString());
+		checkInfoVo.setDeptCode(param.get("deptCode").toString());
+		checkInfoVo.setProjectManagerId(param.get("projectManagerId").toString());
+		checkInfoVo.setProjectManagerName(param.get("projectManagerName").toString());
+		checkInfoVo.setBalanceId(param.get("balanceId").toString());
+		checkInfoVo.setBalanceName(param.get("balanceName").toString());
+		checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
+		checkInfoVo.setIsneedInvoice(BmsEnums.BillCheckStateEnum.getCode(param.get("isneedInvoice").toString()));
+		if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
+			checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
+			checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
+			checkInfoVo.setConfirmDate(format.parse(param.get("confirmDate").toString()));
+		}
+		checkInfoVo.setDelFlag("0");
+		checkInfoVo.setCreator(param.get("creator").toString());
+		checkInfoVo.setCreatorId(param.get("creatorId").toString());
+		checkInfoVo.setCreateTime(Timestamp.valueOf(param.get("createTime").toString()));
+		//存储金额
+		
+		billCheckInfoService.saveNew(checkInfoVo);
+		
 	}
 	
 	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{
 		xlsxReader.readRow(1, new SheetReadCallBack() {
 			@Override
 			public void read(DataRow dr) {
-				System.out.println("----行号【" + dr.getRowNo() + "】");
+				logger.info("----行号: {}----",dr.getRowNo());
 				try {
 					List<T> entityList = transRowToObj(dr);
 					for( int i = 0 ; i < entityList.size() ; i++){
@@ -91,12 +138,14 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 
 			@Override
 			public void finish() {
-				System.out.println("list.size()--"+list.size());
+				logger.info("list.size: {}", list.size());
 				if(list.size()>0){
 					saveTo();
 				}
-				System.out.println("读取完毕");
+				//System.out.println("读取完毕");
+				logger.info("读取完毕");
 			}
+			
 		},titleRowNo,contentRowNo);
 	}
 	
@@ -111,6 +160,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 * @throws Exception
 	 */
 	public void saveTo(){
+		logger.info("错误信息: {}", errMap);
+		logger.info("errMap.size: {}", errMap.size());
 		if(errMap.size()==0){
 			save();
 		}
@@ -146,20 +197,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	    //billReceiveMasterRepository.delete(null);  //删除临时表数据
 	    billReceiveMasterRepository.update(null); //更新账单导入主表状态和结果文件路径
 	    logger.info("上传结果文件到FastDfs - 成功");
-	}
-	
-	
-	/**
-	 * 更新主表导入状态
-	 * @param map
-	 * @param status
-	 */
-	private void updateStatus(Map<String, Object> map, String status, int rate) {
-		BillReceiveMasterVo entity = new BillReceiveMasterVo();
-		entity.setBillNo(map.get("billNo").toString());
-		entity.setTaskStatus(status);
-		entity.setTaskRate(rate);
-		billReceiveMasterService.update(entity);
 	}
 	
 }
