@@ -18,6 +18,8 @@ import redis.clients.jedis.params.sortedset.ZAddParams;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
@@ -37,6 +39,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	@Autowired private StorageClient storageClient;
 	@Autowired private IBillReceiveMasterRepository billReceiveMasterRepository;
 	@Autowired private IWarehouseDictService warehouseDictService;
+	@Autowired private IBillReceiveMasterService billReceiveMasterService;
 	
 	private int batchNum = 1000;
 	private String sheetName;
@@ -186,6 +189,18 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	    errMap.clear();
 	}
 	
-
+	
+	/**
+	 * 更新主表导入状态
+	 * @param map
+	 * @param status
+	 */
+	private void updateStatus(Map<String, Object> map, String status, int rate) {
+		BillReceiveMasterVo entity = new BillReceiveMasterVo();
+		entity.setBillNo(map.get("billNo").toString());
+		entity.setTaskStatus(status);
+		entity.setTaskRate(rate);
+		billReceiveMasterService.update(entity);
+	}
 	
 }

@@ -3,7 +3,9 @@ package com.jiuyescm.bms.billimport.handler;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +32,8 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired IWarehouseDictService warehouseDictService;
+	
+	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
@@ -138,6 +142,15 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		}
 		if (null != entity2 && StringUtils.isNotBlank(entity2.getOrderNo())) {
 			list.add(entity2);
+		}
+		
+		//重复性校验
+		if(StringUtils.isNotBlank(entity.getOrderNo())){
+			if(repeatMap.containsKey(entity.getOrderNo())){
+				errorMessage += "数据重复--第【"+repeatMap.get(entity.getOrderNo())+"】行已存在出库单号【"+entity.getOrderNo()+";";
+			}else{
+				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
+			}
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
