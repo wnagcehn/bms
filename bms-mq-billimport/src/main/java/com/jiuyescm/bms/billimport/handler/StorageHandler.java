@@ -1,8 +1,12 @@
 package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,6 +30,9 @@ import com.jiuyescm.exception.BizException;
 public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
 
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	
+	
+	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
@@ -230,7 +237,20 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			lists.add(entity9);
 		}
 		
+		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		
+		//重复性校验
+		if(null != entity.getCreateTime()){
+			String time = sdf.format(entity.getCreateTime());
+			if(repeatMap.containsKey(time)){
+				errorMessage += "数据重复--第【"+repeatMap.get(time)+"】行已存在日期【"+time+";";
+			}else{
+				repeatMap.put(time, dr.getRowNo());
+			}
+		}
+		
 		if(StringUtils.isNotBlank(errorMessage)){
+			System.out.println("行【" + dr.getRowNo()+"】存在重复");
 			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
 		}
 		

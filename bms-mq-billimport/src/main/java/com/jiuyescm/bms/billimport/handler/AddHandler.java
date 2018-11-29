@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired IWarehouseDictService warehouseDictService;
 	@Autowired IBmsSubjectInfoService bmsSubjectInfoService;
+	
+	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
@@ -98,16 +102,25 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			}
 		}
 		
-		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
-		}
-		
 		//增值费 (防止空白行)
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
 			entity.setSubjectCode("wh_value_add_subject");
 			list.add(entity);
 		}
 		
+		//重复性校验
+		if(StringUtils.isNotBlank(entity.getOrderNo())){
+			if(repeatMap.containsKey(entity.getOrderNo())){
+				errorMessage += "数据重复--第【"+repeatMap.get(entity.getOrderNo())+"】行已存在【"+entity.getOrderNo()+";";
+			}else{
+				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
+			}
+		}
+		
+		if(StringUtils.isNotBlank(errorMessage)){
+			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+		}
+				
 		return list;
 	}
 

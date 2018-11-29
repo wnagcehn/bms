@@ -16,11 +16,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
+import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.utils.JsonUtils;
 
 @Service("receiveBillImportListener")
 public class ReceiveBillImportListener implements MessageListener {
@@ -33,18 +40,21 @@ public class ReceiveBillImportListener implements MessageListener {
 
 	@Autowired
 	private IWarehouseDictService warehouseDictService;
+	
+	@Autowired
+	private IBillReceiveMasterService billReceiveMasterService;
 
 	private ExcelXlsxReader xlsxReader;
 
 	@Override
 	public void onMessage(Message message) {
 		logger.info("应收账单导入异步处理");
-		String taskId = "";
+		String json = "";
 		try {
-			taskId = ((TextMessage) message).getText();
-			logger.info("消息id【{}】", taskId);
+			json = ((TextMessage) message).getText();
+			logger.info("消息Json【{}】", json);
 			try {
-				readExcel(taskId);
+				readExcel(json);
 			} catch (Throwable e) {
 				e.printStackTrace();
 				logger.info("获取消息失败-{}", e);
@@ -55,10 +65,17 @@ public class ReceiveBillImportListener implements MessageListener {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	public void readExcel(String taskId) throws Throwable {
+
+	public void readExcel(String json) throws Throwable {
+		Map<String, Object> map = resolveJsonToMap(json);
+		if (null == map) {
+			return;
+		}
 		
-		File file = new File("E:\\user\\desktop\\wangchen870\\Desktop\\增值.xlsx");
+		//MQ拿到消息，更新状态
+		updateStatus(map, "PROCESS", 1);
+		
+		File file = new File(map.get("fullPath").toString());
 		InputStream inputStream = new FileInputStream(file);
 		/*
 		 * byte[] bytes = storageClient.downloadFile(taskId, new
@@ -91,14 +108,47 @@ public class ReceiveBillImportListener implements MessageListener {
 				try {
 					handler.process(xlsxReader, opcSheet, param);
 				} catch (Exception ex) {
-
+					updateStatus(map, "EXCEPTION", 99);
 				}
 				// saveAll 保存临时表数据到正式表
 			}
 			xlsxReader.close();
 		} catch (Exception ex) {
 			logger.error("readExcel 异常 {}", ex);
+			updateStatus(map, "EXCEPTION", 99);
 		}
+	}
+
+	/**
+	 * 更新主表导入状态
+	 * @param map
+	 * @param status
+	 */
+	private void updateStatus(Map<String, Object> map, String status, int rate) {
+		BillReceiveMasterVo entity = new BillReceiveMasterVo();
+		entity.setBillNo(map.get("billNo").toString());
+		entity.setTaskStatus(status);
+		entity.setTaskRate(rate);
+		billReceiveMasterService.update(entity);
+	}
+
+	
+	/**
+	 * 解析Json成Map
+	 * @param json
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> resolveJsonToMap(String json) {
+		//解析JSON
+		Map<String, Object> map = null;
+		try {
+			map = (Map<String, Object>)JSON.parse(json);
+		} catch (Exception e) {
+			logger.error("JSON解析异常 {}", e);
+			return null;
+		}
+		return map;
 	}
 
 }

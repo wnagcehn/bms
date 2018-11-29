@@ -16,6 +16,7 @@ import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -53,8 +54,8 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 					}
 					break;
 				case "温度":	
-					//需映射Code
-					entity.setTempretureType(dc.getColValue());
+					//映射Code
+					entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 					break;
 				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {

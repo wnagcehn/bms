@@ -1051,7 +1051,8 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Property name="width">80</Property>
             <Editor>
               <Button id="importBtn2">
-                <ClientEvent name="onClick">var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
+                <ClientEvent name="onClick">&#xD;
+var entity = view.id(&quot;AutoForma&quot;).get(&quot;entity&quot;);&#xD;
 &#xD;
 //新加的&#xD;
 var billStartTime = entity.get(&quot;billStartTime&quot;);&#xD;
@@ -1244,6 +1245,7 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
           <DataColumn name="lineNo">
             <Property name="property">lineNo</Property>
             <Property name="width">30</Property>
+            <Property name="visible">false</Property>
           </DataColumn>
           <DataColumn name="msg">
             <Property name="property">msg</Property>
