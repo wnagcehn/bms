@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.billimport.handler;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,6 +37,7 @@ import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
+import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 public abstract class CommonHandler<T> implements IFeesHandler {
@@ -83,8 +85,13 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		System.out.println("errMap.size()--"+errMap.size());
 		//Excel校验未通过
 		if(errMap.size()>0){
-			ReceiveBillImportListener.updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);
-			exportErr();
+			ReceiveBillImportListener.updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);	
+			String resultPath = exportErr();
+//			String billNo = (String) param.get("billNo");
+			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
+			billReceiveMasterVo.setBillNo("AT0000000469");
+			billReceiveMasterVo.setResultFilePath(resultPath);
+			billReceiveMasterService.update(billReceiveMasterVo);
 		}else{
 			String billNo=param.get("billNo").toString();			
 			//将临时表的数据写入正式表（仓储、配送、干线、航空）
@@ -193,7 +200,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	
 	public abstract void save();
 	
-	public void exportErr() throws Exception{
+	public String exportErr() throws Exception{
 		
 //		if(!StringUtil.isEmpty(billEntity.getResultFilePath())){
 //			logger.info("删除历史结果文件");
@@ -235,26 +242,28 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	        dataDetailList.add(dataItem);
 		}
 
-//		poiUtil.exportExcel2FilePath(poiUtil, workbook, sheetName,1, headDetailMapList, dataDetailList);
-//    	ByteArrayOutputStream os = new ByteArrayOutputStream();
-//		workbook.write(os);
-//		byte[] b1 = os.toByteArray();
-//		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
-//	    String resultFullPath = resultStorePath.getFullPath();
+		poiUtil.exportExcel2FilePath(poiUtil, workbook, sheetName,1, headDetailMapList, dataDetailList);
+    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+		workbook.write(os);
+		byte[] b1 = os.toByteArray();
+		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
+	    String resultFullPath = resultStorePath.getFullPath();
+	    System.out.println(resultFullPath);
 	    
 	    //billReceiveMasterRepository.delete(null);  //删除临时表数据
 //	    billReceiveMasterRepository.update(null); //更新账单导入主表状态和结果文件路径
 //	    logger.info("上传结果文件到FastDfs - 成功");
 	    
-        try {
-        	poiUtil.exportExcel2FilePath(poiUtil,workbook,"test sheet 1",1, headDetailMapList, dataDetailList);
-//        	poiUtil.exportExcel2FilePath(poiUtil,hssfWorkbook,"test sheet 1",dataList.size()+1, headInfoList, dataList);
-//        	poiUtil.exportExcelFilePath(poiUtil,hssfWorkbook,"test sheet 2","e:\\tmp\\customer2.xlsx", headInfoList, dataList);
-        	poiUtil.write2FilePath(workbook, "D:\\testhaha.xlsx");
-		} catch (IOException e) {
-			logger.error("写入文件异常", e);
-		}
+//        try {
+//        	poiUtil.exportExcel2FilePath(poiUtil,workbook,"test sheet 1",1, headDetailMapList, dataDetailList);
+////        	poiUtil.exportExcel2FilePath(poiUtil,hssfWorkbook,"test sheet 1",dataList.size()+1, headInfoList, dataList);
+////        	poiUtil.exportExcelFilePath(poiUtil,hssfWorkbook,"test sheet 2","e:\\tmp\\customer2.xlsx", headInfoList, dataList);
+//        	poiUtil.write2FilePath(workbook, "D:\\testhaha.xlsx");
+//		} catch (IOException e) {
+//			logger.error("写入文件异常", e);
+//		}
 	    errMap.clear();
+	    return resultFullPath;
 	}
 	
 }
