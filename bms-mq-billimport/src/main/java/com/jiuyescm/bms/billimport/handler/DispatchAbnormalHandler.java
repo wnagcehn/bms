@@ -30,8 +30,6 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 	private IBillFeesReceiveDispatchTempService billFeesReceiveDispatchTempService;
 	@Autowired
 	private IWarehouseDictService warehouseDictService;
-	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 
 	@Override
 	public List<BillFeesReceiveDispatchTempEntity> transRowToObj(DataRow dr) throws Exception {

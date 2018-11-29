@@ -36,27 +36,36 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 	@Autowired IWarehouseDictService warehouseDictService;
 	@Autowired IBmsSubjectInfoService bmsSubjectInfoService;
 	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
-	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		//异常信息
 		String errorMessage="";
-		
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
+		
+		DataColumn addCo=dr.getColumn("增值编号");
+		DataColumn customerCo=dr.getColumn("客户名称");
+		if(addCo!=null && customerCo!=null &&StringUtils.isBlank(addCo.getColValue()+customerCo.getColValue())){
+			return list;
+		}
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
-		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "增值编号":
-					entity.setOrderNo(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setOrderNo(dc.getColValue());
+					}else {
+						errorMessage+="增值编号必填";
+					}
 					break;
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
-					}		
+					}else {
+						errorMessage+="日期必填";
+					}	
 					break;
 				case "仓库名称":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -68,7 +77,9 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 						}else{
 							errorMessage+="仓库不存在;";
 						}
-					}			
+					}else {
+						errorMessage+="仓库名称必填";
+					}		
 					break;
 				//转Code
 				case "增值项目":
@@ -79,12 +90,16 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 						}else {
 							entity.setSubjectCode(bmsSubjectInfoVo.getSubjectCode());
 						}
+					}else {
+						errorMessage+="增值项目必填";
 					}
 					break;
 				case "数量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalQty(Integer.parseInt(dc.getColValue()));
-					}	
+					}else {
+						errorMessage+="数量必填";
+					}
 					break;
 				case "单位":
 					entity.setChargeUnit(dc.getColValue());			
@@ -102,7 +117,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			}
 		}
 		
-		//增值费 (防止空白行)
+		//增值费
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
 			entity.setSubjectCode("wh_value_add_subject");
 			list.add(entity);

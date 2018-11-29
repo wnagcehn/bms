@@ -16,7 +16,7 @@
 		from
 		(select a.seller_name,b.receipt_amount,u.area_code,a.create_month,
 				CASE
-						when c.origin_seller_id is not null and a.seller_id!=c.origin_seller_id then 4
+						when c.origin_seller_name is not null and a.seller_name!=c.origin_seller_name then 4
 						else
 							case
 								when TIMESTAMPDIFF(YEAR,a.bill_start_time,b.receipt_date)=0 then 1
@@ -27,7 +27,7 @@
 		from bill_check_info a
 		left join bill_check_receipt b on a.id = b.bill_check_id and b.del_flag='0'
 		left join pub_customer_sale_mapper c on c.customer_name = a.invoice_name
-		left join bms_group_user u on a.seller_name=u.user_name
+		left join bms_group_user u on a.seller_name=u.user_name and u.group_id='192'
 		where 1=1
 		<if test="billList != null and billList != ''">
 			and a.invoice_name not in

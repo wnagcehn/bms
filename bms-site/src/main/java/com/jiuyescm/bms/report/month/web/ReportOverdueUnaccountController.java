@@ -198,10 +198,11 @@ public class ReportOverdueUnaccountController {
 
 	private void unCreateMonthTran(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString())-2;
-		if (month < 0) {
+		if (month <= 0) {
 			Integer year = Integer.parseInt(param.get("year").toString())-1;
-			param.put("createMonth", String.valueOf(year).substring(2,4) + "0" + month);
-		}else if (month > 10) {
+			Integer newmonth=month+12;
+			param.put("createMonth", String.valueOf(year).substring(2,4) +newmonth);
+		}else if (month >= 10) {
 			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
 		}else {
 			param.put("createMonth", param.get("year").toString().substring(2, 4) + "0" + month.toString());
