@@ -51,7 +51,7 @@
 							</if>
 							group by a.seller_name,bill_month) b on a.seller_name = b.seller_name and a.bill_month=b.bill_month
 			group by a.seller_name) m
-			left join bms_group_user n on m.seller_id=n.user_id
+			left join bms_group_user n on m.seller_id=n.user_id and n.group_id='192'
 			where 1=1
 			<if test="(sellerName != null and sellerName !='')" >
 				and m.seller_name like CONCAT('%',#{sellerName},'%')

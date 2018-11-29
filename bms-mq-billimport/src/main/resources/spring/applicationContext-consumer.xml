@@ -29,5 +29,10 @@
 		
 		<dubbo:reference interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService"
 				version="1.0.0" id="materialDictService" timeout="1200000" check="false"/>
-									
+				
+		<dubbo:reference interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService"
+				version="1.0.0" id="billReceiveMasterService" timeout="1200000" check="false"/>
+				
+		<dubbo:reference interface="com.jiuyescm.bms.billcheck.service.IBillCheckInfoService"
+				version="1.0.0" id="billCheckInfoService" timeout="1200000" check="false"/>
 </beans> 

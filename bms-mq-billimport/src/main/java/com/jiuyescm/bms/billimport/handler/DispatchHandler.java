@@ -41,8 +41,6 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 	private ICustomerDictService customerDictService;
 	@Autowired
 	private ICarrierDictService carrierDictService;
-	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 		
 	public List<BillFeesReceiveStorageTempEntity> storageList=new ArrayList<BillFeesReceiveStorageTempEntity>();
 	

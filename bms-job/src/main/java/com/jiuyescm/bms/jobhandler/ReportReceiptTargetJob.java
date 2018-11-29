@@ -148,9 +148,10 @@ public class ReportReceiptTargetJob extends IJobHandler{
 	
 	private void createMonthTran2(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString())-2;
-		if (month < 0) {
+		if (month <= 0) {
 			Integer year = Integer.parseInt(param.get("year").toString())-1;
-			param.put("createMonthTran2", String.valueOf(year).substring(2,4) + "0" + month);
+			Integer newmonth=month+12;
+			param.put("createMonthTran2", String.valueOf(year).substring(2,4) + newmonth);
 		}else if (month >= 10) {
 			param.put("createMonthTran2", param.get("year").toString().substring(2, 4) + month.toString());
 		}else {
@@ -160,15 +161,17 @@ public class ReportReceiptTargetJob extends IJobHandler{
 	
 	private void createMonthTran1To2(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString())-1;
-		if (month < 0) {
+		if (month <= 0) {
 			Integer year = Integer.parseInt(param.get("year").toString())-1;
-			param.put("createMonthTran1To2", String.valueOf(year).substring(2,4) + "0" + month);
+			Integer newmonth=month+12;
+			param.put("createMonthTran1To2", String.valueOf(year).substring(2,4) + newmonth);
 		}else if (month >= 10) {
 			param.put("createMonthTran1To2", param.get("year").toString().substring(2, 4) + month.toString());
 		}else {
 			param.put("createMonthTran1To2", param.get("year").toString().substring(2, 4) + "0" + month.toString());
 		}
 	}
+	
 	private void createMonthTran1(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString());
 		if(month>=10){

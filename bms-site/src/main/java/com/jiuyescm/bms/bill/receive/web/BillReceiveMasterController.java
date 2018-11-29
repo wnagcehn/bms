@@ -197,7 +197,7 @@ public class BillReceiveMasterController {
 		}
 		
 		
-		if ("CONFIRM".equals(parameter.get("billCheckStatus"))) {
+		if ("CONFIRMED".equals(parameter.get("billCheckStatus"))) {
 			//确认人
 			boolean exe1 = false;
 			for (UserVO userVO : userList) {
@@ -484,6 +484,10 @@ public class BillReceiveMasterController {
 		String username = JAppContext.currentUserName();
 		String userId = JAppContext.currentUserID();
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		parameter.put("creator", username);
+		parameter.put("creatorId", userId);
+		parameter.put("createTime", currentTime);
+		
 		// 生成任务，写入主表
 		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 		//组装数据

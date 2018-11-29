@@ -17,6 +17,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
@@ -40,125 +41,155 @@ import com.jiuyescm.framework.fastdfs.model.StorePath;
  */
 @Component("航空")
 public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
-	
-	private HashMap<String, Object> map;
-	
+
 	@Autowired
 	private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
-	
-	@Autowired IBmsSubjectInfoService bmsSubjectService;
+	@Autowired IWarehouseDictService warehouseDictService;
+	@Autowired
+	IBmsSubjectInfoService bmsSubjectService;
 
 	@Override
 	public List<BillFeesReceiveAirTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
-		String errorMessage ="";
+		String errorMessage = "";
 		List<BillFeesReceiveAirTempEntity> listEntity = new ArrayList<BillFeesReceiveAirTempEntity>();
 		BillFeesReceiveAirTempEntity entity = new BillFeesReceiveAirTempEntity();
 		entity.setRowExcelNo(dr.getRowNo());
 		BillFeesReceiveAirTempEntity entity1 = new BillFeesReceiveAirTempEntity();
 		BillFeesReceiveAirTempEntity entity2 = new BillFeesReceiveAirTempEntity();
 		BillFeesReceiveAirTempEntity entity3 = new BillFeesReceiveAirTempEntity();
-		BmsSubjectInfoVo  subject1 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "航空运费");
-		BmsSubjectInfoVo  subject2 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "其他费用");
-		BmsSubjectInfoVo  subject3 = bmsSubjectService.querySubjectByName("INPUT", "AIRTRANSPORT", "货物赔偿费");
-		
+		BmsSubjectInfoVo subject1 = bmsSubjectService.querySubjectByName(
+				"INPUT", "AIRTRANSPORT", "航空运费");
+		BmsSubjectInfoVo subject2 = bmsSubjectService.querySubjectByName(
+				"INPUT", "AIRTRANSPORT", "其他费用");
+		BmsSubjectInfoVo subject3 = bmsSubjectService.querySubjectByName(
+				"INPUT", "AIRTRANSPORT", "货物赔偿费");
+
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
 				case "区域仓":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setWarehouseName(dc.getColValue());
-					}else{
-						errorMessage+="区域仓不存在;";
+						//如果没找到，报错
+						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());	
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity.setWarehouseName(dc.getColValue());
+							entity.setWarehouseCode(warehouseCode);
+						}else{
+							errorMessage+="仓库不存在;";
+						}
+					} else {
+						errorMessage += "区域仓不能为空;";
 					}
 					break;
 				case "发货日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						Timestamp createTime =DateUtil.transStringToTimeStamp(dc
-								.getColValue());
+						Timestamp createTime = DateUtil
+								.transStringToTimeStamp(dc.getColValue());
 						entity.setCreateTime(createTime);
-						entity.setCreateMonth(DateUtil.timeStamp2YYMM(createTime));
-						}else{
-							errorMessage+="发货日期不存在;";
-						}
+						entity.setCreateMonth(DateUtil
+								.timeStamp2YYMM(createTime));
+					} else {
+						errorMessage += "发货日期不能为空;";
+					}
 					break;
 				case "始发站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendSite(dc.getColValue());
-					}else{
-						errorMessage+="始发站不存在;";
+					} else {
+						errorMessage += "始发站不能为空;";
 					}
 					break;
 				case "目的站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveSite(dc.getColValue());
-					}else{
-						errorMessage+="目的站不存在;";
+					} else {
+						errorMessage += "目的站不能为空;";
 					}
 					break;
 				case "计费重量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setTotalWeight(new BigDecimal(dc.getColValue()));	
-					}else{
-						errorMessage+="计费重量不存在;";
+						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
+					} else {
+						errorMessage += "计费重量不能为空;";
 					}
 					break;
 				case "运单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setWaybillNo(dc.getColValue());	
-					}else{
-						errorMessage+="运单号不存在;";
+						entity.setWaybillNo(dc.getColValue());
+					} else {
+						errorMessage += "运单号不能为空;";
 					}
 					break;
 				default:
 					break;
 				}
 
-			} catch (Exception ex) {
-				throw new BizException("行【" + dr.getRowNo() + "】，列【"
-						+ dc.getColName() + "】格式不正确");
+			} catch (Exception e) {
+				errorMessage += "列名(" + dc.getColName() + ")值("
+						+ dc.getColValue() + ")" + "转换失败;";
 			}
 		}
-	
-		for(DataColumn dc : dr.getColumns()){
-			switch (dc.getColName()) {
-			case "航空运费":
-				if (StringUtils.isNotBlank(dc.getColValue())) {
-					PropertyUtils.copyProperties(entity1, entity);
-					entity1.setAmount(new BigDecimal(dc.getColValue()));
-//					entity1.setFeesType("BASE");
-					if(subject1.getSubjectCode()!=null){
-						entity1.setSubjectCode(subject1.getSubjectCode());
+
+		for (DataColumn dc : dr.getColumns()) {
+			try {
+				switch (dc.getColName()) {
+				case "航空运费":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						PropertyUtils.copyProperties(entity1, entity);
+						entity1.setAmount(new BigDecimal(dc.getColValue()));
+						// entity1.setFeesType("BASE");
+						if (subject1.getSubjectCode() != null) {
+							entity1.setSubjectCode(subject1.getSubjectCode());
+						}
+						listEntity.add(entity1);
 					}
-					listEntity.add(entity1);	
-				}
-				break;
-			case "其他费用":
-				if (StringUtils.isNotBlank(dc.getColValue())) {
-					PropertyUtils.copyProperties(entity2, entity);
-					entity2.setAmount(new BigDecimal(dc.getColValue()));
-//					entity2.setFeesType("OTHER");
-					if(subject2.getSubjectCode()!=null){
-						entity2.setSubjectCode(subject2.getSubjectCode());
+					break;
+				case "其他费用":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						PropertyUtils.copyProperties(entity2, entity);
+						entity2.setAmount(new BigDecimal(dc.getColValue()));
+						// entity2.setFeesType("OTHER");
+						if (subject2.getSubjectCode() != null) {
+							entity2.setSubjectCode(subject2.getSubjectCode());
+						}
+						listEntity.add(entity2);
 					}
-					listEntity.add(entity2);	
-				}
-				break;
-			case "货物赔偿费":
-				if (StringUtils.isNotBlank(dc.getColValue())) {
-					PropertyUtils.copyProperties(entity3, entity);
-					entity3.setAmount(new BigDecimal(dc.getColValue()));
-//					entity3.setFeesType("BASE");
-					if(subject3.getSubjectCode()!=null){
-						entity3.setSubjectCode(subject3.getSubjectCode());
+					break;
+				case "货物赔偿费":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						PropertyUtils.copyProperties(entity3, entity);
+						entity3.setAmount(new BigDecimal(dc.getColValue()));
+						// entity3.setFeesType("BASE");
+						if (subject3.getSubjectCode() != null) {
+							entity3.setSubjectCode(subject3.getSubjectCode());
+						}
+						listEntity.add(entity3);
 					}
-					listEntity.add(entity3);
+					break;
+				default:
+					break;
 				}
-				break;
-			default:
-				break;
+			} catch (Exception e) {
+				errorMessage += "列名(" + dc.getColName() + ")值("
+						+ dc.getColValue() + ")转换失败;";
 			}
 
+		}
+
+		// 重复性校验
+		if (StringUtils.isNotBlank(entity.getWaybillNo())) {
+			if (repeatMap.containsKey(entity.getWaybillNo())) {
+				errorMessage += "数据重复--第【"
+						+ repeatMap.get(entity.getWaybillNo()) + "】行已存在运单号【"
+						+ entity.getWaybillNo() + "】;";
+			} else {
+				repeatMap.put(entity.getWaybillNo(), dr.getRowNo());
+			}
+		}
+		
+		if (!errorMessage.equals("")) {
+			throw new Exception(errorMessage);
 		}
 		
 		return listEntity;

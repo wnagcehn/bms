@@ -184,10 +184,12 @@
       <PropertyDef name="confirmAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">最终确认额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="invoiceAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">发票金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="invoiceDate">
         <Property name="dataType">Date</Property>
@@ -200,14 +202,17 @@
       <PropertyDef name="unReceiptAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">未收款金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="invoiceUnReceiptAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">开票未回款金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">收款金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="receiptDate">
         <Property name="dataType">Date</Property>
@@ -319,6 +324,7 @@
       <PropertyDef name="confirmUnInvoiceAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">已确认未开票金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="overDays">
         <Property></Property>
@@ -328,21 +334,27 @@
       </PropertyDef>
       <PropertyDef name="totalConfirmAmount">
         <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="totalInvoiceAmount">
         <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="totalUnReceiptAmount">
         <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="totalInvoiceUnReceiptAmount">
         <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="totalConfirmUnInvoiceAmount">
         <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="totalReceiptAmount">
         <Property name="dataType">BigDecimal</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="area">
         <Property></Property>
@@ -369,10 +381,12 @@
       <PropertyDef name="preDistibutionAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">预分配金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="tbDunAmount">
         <Property name="dataType">BigDecimal</Property>
         <Property name="label">待催款金额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInvoice">
@@ -1472,28 +1486,18 @@ arg.processDefault = true;</ClientEvent>
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="confirmAmount">
-              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
-var amount=0;&#xD;
-if(datas &amp;&amp; datas.getFirst()){&#xD;
-	amount = datas.getFirst().get(&quot;totalConfirmAmount&quot;);&#xD;
-}&#xD;
-arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">confirmAmount</Property>
               <Property name="width">80</Property>
+              <Property name="summaryType">sum</Property>
             </DataColumn>
             <DataColumn name="confirmDate">
               <Property name="property">confirmDate</Property>
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="invoiceAmount">
-              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
-var amount=0;&#xD;
-if(datas &amp;&amp; datas.getFirst()){&#xD;
-	amount = datas.getFirst().get(&quot;totalInvoiceAmount&quot;);&#xD;
-}&#xD;
-arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">invoiceAmount</Property>
               <Property name="width">80</Property>
+              <Property name="summaryType">sum</Property>
             </DataColumn>
             <DataColumn name="invoiceDate">
               <Property name="property">invoiceDate</Property>
@@ -1504,14 +1508,9 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="receiptAmount">
-              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
-var amount=0;&#xD;
-if(datas &amp;&amp; datas.getFirst()){&#xD;
-	amount = datas.getFirst().get(&quot;totalReceiptAmount&quot;);&#xD;
-}&#xD;
-arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">receiptAmount</Property>
               <Property name="width">80</Property>
+              <Property name="summaryType">sum</Property>
             </DataColumn>
             <DataColumn name="receiptDate">
               <Property name="property">receiptDate</Property>
@@ -1546,24 +1545,15 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn name="unReceiptAmount">
-              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
-var amount=0;&#xD;
-if(datas &amp;&amp; datas.getFirst()){&#xD;
-	amount = datas.getFirst().get(&quot;totalUnReceiptAmount&quot;);&#xD;
-}&#xD;
-arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">unReceiptAmount</Property>
               <Property name="width">80</Property>
+              <Property name="summaryType">sum</Property>
             </DataColumn>
             <DataColumn name="invoiceUnReceiptAmount">
-              <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
-var amount=0;&#xD;
-if(datas &amp;&amp; datas.getFirst()){&#xD;
-	amount = datas.getFirst().get(&quot;totalInvoiceUnReceiptAmount&quot;);&#xD;
-}&#xD;
-arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">invoiceUnReceiptAmount</Property>
               <Property name="width">100</Property>
+              <Property name="summaryType">sum</Property>
+              <Property name="visible">false</Property>
             </DataColumn>
             <DataColumn name="confirmUnInvoiceAmount">
               <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
@@ -1574,6 +1564,7 @@ if(datas &amp;&amp; datas.getFirst()){&#xD;
 arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/span>&quot;;</ClientEvent>
               <Property name="property">confirmUnInvoiceAmount</Property>
               <Property name="width">100</Property>
+              <Property name="visible">false</Property>
             </DataColumn>
             <DataColumn name="adjustMoney">
               <Property name="property">adjustMoney</Property>

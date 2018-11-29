@@ -25,6 +25,7 @@ import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 import com.jiuyescm.utils.JsonUtils;
@@ -42,7 +43,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	private IWarehouseDictService warehouseDictService;
 	
 	@Autowired
-	private IBillReceiveMasterService billReceiveMasterService;
+	private static IBillReceiveMasterService billReceiveMasterService;
 
 	private ExcelXlsxReader xlsxReader;
 
@@ -67,14 +68,16 @@ public class ReceiveBillImportListener implements MessageListener {
 
 
 	public void readExcel(String json) throws Throwable {
+		logger.info("JSON开始解析……");
 		Map<String, Object> map = resolveJsonToMap(json);
 		if (null == map) {
 			return;
 		}
-		
+		logger.info("JSON解析成Map结果:{}",map);
 		//MQ拿到消息，更新状态
-		updateStatus(map, "PROCESS", 1);
+		updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 1);
 		
+		logger.info("获取文件路径：{}",map.get("fullPath").toString());
 		File file = new File(map.get("fullPath").toString());
 		InputStream inputStream = new FileInputStream(file);
 		/*
@@ -85,6 +88,8 @@ public class ReceiveBillImportListener implements MessageListener {
 		try {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
+			logger.info("解析Excel, 获取Sheet：{}", sheets);
+			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 20);
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
 				logger.info("准备读取sheet - {0}", sheetName);
@@ -102,20 +107,20 @@ public class ReceiveBillImportListener implements MessageListener {
 				if (null == handler) {
 					continue;
 				}
+				logger.info("匹配Handler为: {}", handler);
+				updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
 				// handler.getRows();
 
-				Map<String, Object> param = null;
 				try {
-					handler.process(xlsxReader, opcSheet, param);
+					handler.process(xlsxReader, opcSheet, map);
 				} catch (Exception ex) {
-					updateStatus(map, "EXCEPTION", 99);
+
 				}
 				// saveAll 保存临时表数据到正式表
 			}
 			xlsxReader.close();
 		} catch (Exception ex) {
 			logger.error("readExcel 异常 {}", ex);
-			updateStatus(map, "EXCEPTION", 99);
 		}
 	}
 
@@ -124,9 +129,9 @@ public class ReceiveBillImportListener implements MessageListener {
 	 * @param map
 	 * @param status
 	 */
-	private void updateStatus(Map<String, Object> map, String status, int rate) {
+	public static void updateStatus(String billNo, String status, int rate) {
 		BillReceiveMasterVo entity = new BillReceiveMasterVo();
-		entity.setBillNo(map.get("billNo").toString());
+		entity.setBillNo(billNo);
 		entity.setTaskStatus(status);
 		entity.setTaskRate(rate);
 		billReceiveMasterService.update(entity);
