@@ -124,12 +124,6 @@ with (view.get(&quot;#dsBillAccountInfo&quot;)){&#xD;
           <Editor/>
         </DataColumn>
         <DataColumn>
-          <Property name="name">customerId</Property>
-          <Property name="property">customerId</Property>
-          <Property name="visible">true</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
           <Property name="name">customerName</Property>
           <Property name="property">customerName</Property>
           <Property name="visible">true</Property>

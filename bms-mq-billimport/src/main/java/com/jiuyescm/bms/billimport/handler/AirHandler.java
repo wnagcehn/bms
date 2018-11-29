@@ -40,9 +40,7 @@ import com.jiuyescm.framework.fastdfs.model.StorePath;
  */
 @Component("航空")
 public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
-	
-	private HashMap<String, Object> map;
-	
+
 	@Autowired
 	private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
 	

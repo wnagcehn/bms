@@ -34,8 +34,6 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired IWarehouseDictService warehouseDictService;
 	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
-	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {

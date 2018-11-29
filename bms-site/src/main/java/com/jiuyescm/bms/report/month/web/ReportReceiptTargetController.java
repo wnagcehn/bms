@@ -118,10 +118,11 @@ public class ReportReceiptTargetController {
 	
 	private void createMonthTran2(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString())-2;
-		if (month < 0) {
+		if (month <= 0) {
 			Integer year = Integer.parseInt(param.get("year").toString())-1;
-			param.put("createMonthTran2", String.valueOf(year).substring(2,4) + "0" + month);
-		}else if (month > 10) {
+			Integer newmonth=month+12;
+			param.put("createMonthTran2", String.valueOf(year).substring(2,4) + newmonth);
+		}else if (month >= 10) {
 			param.put("createMonthTran2", param.get("year").toString().substring(2, 4) + month.toString());
 		}else {
 			param.put("createMonthTran2", param.get("year").toString().substring(2, 4) + "0" + month.toString());
@@ -130,10 +131,11 @@ public class ReportReceiptTargetController {
 	
 	private void createMonthTran1To2(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString())-1;
-		if (month < 0) {
+		if (month <= 0) {
 			Integer year = Integer.parseInt(param.get("year").toString())-1;
-			param.put("createMonthTran1To2", String.valueOf(year).substring(2,4) + "0" + month);
-		}else if (month > 10) {
+			Integer newmonth=month+12;
+			param.put("createMonthTran1To2", String.valueOf(year).substring(2,4) +  newmonth);
+		}else if (month >= 10) {
 			param.put("createMonthTran1To2", param.get("year").toString().substring(2, 4) + month.toString());
 		}else {
 			param.put("createMonthTran1To2", param.get("year").toString().substring(2, 4) + "0" + month.toString());
@@ -141,7 +143,7 @@ public class ReportReceiptTargetController {
 	}
 	private void createMonthTran1(Map<String, Object> param) {
 		Integer month = Integer.parseInt(param.get("month").toString());
-		if(month>10){
+		if(month>=10){
 			param.put("createMonthTran1", param.get("year").toString().substring(2, 4) + month);
 		}else{
 			param.put("createMonthTran1", param.get("year").toString().substring(2, 4) +"0"+ month);

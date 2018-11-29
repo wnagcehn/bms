@@ -33,8 +33,6 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 	@Autowired IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired IWarehouseDictService warehouseDictService;
 	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
-	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {

@@ -282,11 +282,6 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		}
 	}
 
-	/*private String rowToString(Map<Integer, String> map) {
-
-		return map.toString();
-	}*/
-
 	/**
 	 * 处理数据类型
 	 * 
@@ -387,20 +382,6 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 					Double.parseDouble(value), formatIndex, formatString);
 			// 对日期字符串作特殊处理，去掉T
 			thisStr = thisStr.replace("T", " ");
-
-//			List<String> list = new ArrayList<String>();
-//			Pattern p = Pattern.compile("[^0-9]");
-//			Matcher m = p.matcher(thisStr);
-//			String result = m.replaceAll("");
-//			for (int i = 0; i < result.length(); i++) {
-//				list.add(result.substring(i, i + 1));
-//			}
-//			thisStr="";
-//			if(list.size()==8){
-//				thisStr=list.get(0)+list.get(1)+list.get(2)+list.get(3)+"-"+list.get(4)+list.get(5)+"-"+list.get(6)+list.get(7)+" 00:00:00";
-//			}else if(list.size()>=14){
-//				thisStr=list.get(0)+list.get(1)+list.get(2)+list.get(3)+"-"+list.get(4)+list.get(5)+"-"+list.get(6)+list.get(7)+" "+list.get(8)+list.get(9)+":"+list.get(10)+list.get(11)+":"+list.get(12)+list.get(13);	
-//			}
 			break;
 		default:
 			thisStr = " ";

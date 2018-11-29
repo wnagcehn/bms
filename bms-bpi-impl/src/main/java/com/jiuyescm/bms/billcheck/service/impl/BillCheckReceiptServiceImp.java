@@ -148,6 +148,8 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 			billmoney=bInfoEntity.getConfirmAmount();
 			
 			//调整的金额
+			condition.clear();
+			condition.put("billCheckId", vo.getBillCheckId());
 			BillCheckAdjustInfoEntity adjustEntity = billCheckInfoRepository.queryOneAdjust(condition);
 			if(adjustEntity!=null && adjustEntity.getAdjustAmount()!=null){
 				adjustMoney=adjustEntity.getAdjustAmount();

@@ -1290,18 +1290,19 @@ public class BillCheckInfoController{
 		Cell cellast = lastRow.createCell(0);
 		cellast.setCellValue("合计：");
 		
-		Cell cellast0 = lastRow.createCell(18);
+		Cell cellast0 = lastRow.createCell(10);
 		cellast0.setCellValue(totalConfirmAmount);
-		Cell cellast1 = lastRow.createCell(19);
+		Cell cellast1 = lastRow.createCell(12);
 		cellast1.setCellValue(totalInvoiceAmount);
-		Cell cellast2 = lastRow.createCell(22);
-		cellast2.setCellValue(totalUnReceiptAmount);
-		Cell cellast3 = lastRow.createCell(23);
-		cellast3.setCellValue(totalInvoiceUnReceiptAmount);
-		Cell cellast4 = lastRow.createCell(24);
-		cellast4.setCellValue(totalConfirmUnInvoiceAmount);
-		Cell cellast5 = lastRow.createCell(25);
+		Cell cellast5 = lastRow.createCell(15);
 		cellast5.setCellValue(totalReceiptAmount);
+		Cell cellast2 = lastRow.createCell(24);
+		cellast2.setCellValue(totalUnReceiptAmount);
+		Cell cellast3 = lastRow.createCell(25);
+		cellast3.setCellValue(totalInvoiceUnReceiptAmount);
+		Cell cellast4 = lastRow.createCell(26);
+		cellast4.setCellValue(totalConfirmUnInvoiceAmount);
+
 	}
 	
 	/**

@@ -36,8 +36,6 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 	@Autowired IWarehouseDictService warehouseDictService;
 	@Autowired IBmsSubjectInfoService bmsSubjectInfoService;
 	
-	private Map<String,Integer> repeatMap=new HashMap<String, Integer>();
-	
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr) throws Exception {
 		//异常信息
