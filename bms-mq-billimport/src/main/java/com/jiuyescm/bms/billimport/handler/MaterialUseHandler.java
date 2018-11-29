@@ -45,6 +45,14 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		String errorMessage="";
 		// TODO Auto-generated method stub
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
+		
+		DataColumn waybillCo=dr.getColumn("运单号");
+		DataColumn customerCo=dr.getColumn("商家名称");
+		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
+			return list;
+		}
+		
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 		for (DataColumn dc:dr.getColumns()) {
