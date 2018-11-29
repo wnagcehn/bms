@@ -308,6 +308,17 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
         }
 		return billCheckInfoRepository.save(entity);
 	}
+	
+	@Override
+	public int saveNew(BillCheckInfoVo vo) {
+		BillCheckInfoEntity entity = new BillCheckInfoEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return billCheckInfoRepository.saveNew(entity);
+	}
 
 	@Override
 	public List<BillCheckInfoVo> queryList(Map<String, Object> condition) {

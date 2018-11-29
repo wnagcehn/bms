@@ -77,8 +77,8 @@
               <Property name="WAIT">等待</Property>
               <Property name="PROCESS">处理中</Property>
               <Property name="SUCCESS">成功</Property>
-              <Property name="EXCEPTION">失败</Property>
-              <Property name="CANCEL">取消</Property>
+              <Property name="EXCEPTION">异常</Property>
+              <Property name="FAIL">失败</Property>
             </Entity>
           </Property>
         </Property>
@@ -231,7 +231,7 @@
       </PropertyDef>
       <PropertyDef name="billStartTime">
         <Property name="label">业务启动时间</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
         <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="firstClassName">

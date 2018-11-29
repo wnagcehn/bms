@@ -164,4 +164,11 @@ public interface IBillCheckInfoRepository {
 	 */
 	BillCheckInfoEntity getLatestBill(Map<String, Object> condition);
 	
+	/**
+	 * entity新增billNo
+	 * @param entity
+	 * @return
+	 */
+	int saveNew(BillCheckInfoEntity entity);
+	
 	}

@@ -293,4 +293,11 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
         )
         </foreach>
     </insert>
+    
+    <insert id="saveDataFromTemp" parameterType="java.util.Map">
+    	 INSERT INTO  bill_fees_receive_air (
+				bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, send_site, receive_site, total_weight, create_time, create_month, amount, derate_amount)
+		 select bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, send_site, receive_site, total_weight, create_time, create_month, amount, derate_amount
+		 from bill_fees_receive_air_temp where bill_no=#{billNo}
+    </insert>
 </mapper>

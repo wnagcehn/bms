@@ -28,6 +28,8 @@ public class BillCheckInfoVo implements IEntity {
 	private String invoiceName;
 	//合同商家id
 	private String invoiceId;
+	// 账单编号
+	private String billNo;
 	// 账单名称
 	private String billName;
 	// bms商家名称
@@ -1069,6 +1071,14 @@ public class BillCheckInfoVo implements IEntity {
 
 	public void setInvoiceId(String invoiceId) {
 		this.invoiceId = invoiceId;
+	}
+
+	public String getBillNo() {
+		return billNo;
+	}
+
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
 	}
    
 	

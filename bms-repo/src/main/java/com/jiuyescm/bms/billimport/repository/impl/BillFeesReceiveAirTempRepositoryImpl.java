@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.zookeeper.server.SessionTracker.Session;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveTransportTempEntity;
@@ -99,9 +101,18 @@ public class BillFeesReceiveAirTempRepositoryImpl extends MyBatisDao<BillFeesRec
 	 * 批量 删除
 	 */
 	@Override
-	public int deleteBatch(Map<String, Object> condition) {
-		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper.deleteBatch", condition);
+	public int deleteBatch(String billNo) {
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper.deleteBatch", billNo);
 		return d;
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		 SqlSession session = getSqlSessionTemplate();
+		 Map<String,String> map=Maps.newHashMap();
+		 map.put("billNo", billNo);
+		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper.saveDataFromTemp", map);
 	}
 	
 }

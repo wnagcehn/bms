@@ -2,14 +2,16 @@ package com.jiuyescm.bms.billimport.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveStorageTempRepository;
-import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
  * ..RepositoryImpl
@@ -91,9 +93,30 @@ public class BillFeesReceiveStorageTempRepositoryImpl extends MyBatisDao<BillFee
 	}
 	
 	@Override
-	public int deleteBatch(Map<String, Object> condition){
-		int k = delete("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.deleteBatchTemp", condition);
+	public int deleteBatch(String billNo){
+		int k = delete("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.deleteBatchTemp", billNo);
 		return k;
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		 SqlSession session = getSqlSessionTemplate();
+		 Map<String,String> map=Maps.newHashMap();
+		 map.put("billNo", billNo);
+		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.saveDataFromTemp", map);
+	
+	}
+
+	@Override
+	public Double getImportTotalAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.getImportTotalAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
 	}
 	
 }

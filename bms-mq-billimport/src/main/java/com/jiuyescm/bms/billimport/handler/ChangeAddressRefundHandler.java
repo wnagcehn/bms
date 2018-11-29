@@ -50,21 +50,31 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 				
 				switch (dc.getColName()) {
 				case "发货仓库":
-					entity.setWarehouseName(dc.getColValue());
-					String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
-					if(StringUtils.isNotBlank(wareId)){
-						entity.setWarehouseCode(wareId);
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setWarehouseName(dc.getColValue());
+						String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						if(StringUtils.isNotBlank(wareId)){
+							entity.setWarehouseCode(wareId);
+						}else{
+							errorMessage+="仓库不存在;";
+						}
 					}else{
-						errorMessage+="仓库不存在;";
-					}
+						errorMessage+="发货仓库不能为空;";
+					}					
 					break;
 				case "运单日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+					}else{
+						errorMessage+="运单日期不能为空;";
 					}
 					break;
 				case "运单号":
-					entity.setWaybillNo(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setWaybillNo(dc.getColValue());
+					}else{
+						errorMessage+="运单号不能为空;";
+					}
 					break;
 				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {

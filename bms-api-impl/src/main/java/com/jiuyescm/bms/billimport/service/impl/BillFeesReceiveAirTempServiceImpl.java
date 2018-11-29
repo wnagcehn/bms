@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.billimport.service.impl;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveAirTempEntity;
-import com.jiuyescm.bms.billimport.entity.BillFeesReceiveTransportTempEntity;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveAirTempRepository;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
 
@@ -114,18 +113,22 @@ public class BillFeesReceiveAirTempServiceImpl implements IBillFeesReceiveAirTem
      * @return
      */
 	@Override
-	public int deleteBatchTemp(Map<String, Object> condition) {
+	public int deleteBatchTemp(String billNo) {
 		int result = 0;
 		try {
-			if(condition.size()>0){
-				billFeesReceiveAirTempRepository.deleteBatch(condition);
+				billFeesReceiveAirTempRepository.deleteBatch(billNo);
 				result = 1;	
-			}
 		} catch (Exception e) {
 			//写入日志
 			logger.info("insertBatchTemp：e-{}",e);;
 		}
 		return result;
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveAirTempRepository.saveDataFromTemp(billNo);
 	}
 	
 }

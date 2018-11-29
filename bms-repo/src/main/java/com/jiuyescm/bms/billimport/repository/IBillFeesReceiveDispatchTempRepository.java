@@ -30,6 +30,12 @@ public interface IBillFeesReceiveDispatchTempRepository {
     
     int insertBatch(List<BillFeesReceiveDispatchTempEntity> list) throws Exception;
     
-    int deleteBatch(Map<String, Object> condition);
+    int deleteBatch(String billNo);
 
+	/**
+	 * 从临时表保存数据到正式表
+	 * @param billNo
+	 * @return
+	 */
+	int saveDataFromTemp(String billNo);
 }

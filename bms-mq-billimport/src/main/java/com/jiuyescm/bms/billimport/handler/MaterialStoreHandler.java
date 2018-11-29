@@ -40,8 +40,14 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 		
 		//异常信息
 		String errorMessage="";
-		
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
+		
+		DataColumn orderCo=dr.getColumn("定货单号");
+		DataColumn customerCo=dr.getColumn("客户名称");
+		if(orderCo!=null && customerCo!=null &&StringUtils.isBlank(orderCo.getColValue()+customerCo.getColValue())){
+			return list;
+		}
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
@@ -57,15 +63,23 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 						}else{
 							errorMessage+="仓库不存在;";
 						}
+					}else {
+						errorMessage+="仓库必填;";
 					}
 					break;
 				case "定货单号":
-					entity.setOrderNo(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setOrderNo(dc.getColValue());
+					}else {
+						errorMessage+="定货单号必填;";
+					}
 					break;
 				case "定货日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
-					}	
+					}else {
+						errorMessage+="定货日期必填;";
+					}
 					break;
 				case "销售额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -79,7 +93,7 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
-		//商城耗材费(防止空白行)
+		//商城耗材费
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
 			entity.setSubjectCode("wh_mall_material");
 			list.add(entity);
@@ -88,7 +102,7 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getOrderNo())){
 			if(repeatMap.containsKey(entity.getOrderNo())){
-				errorMessage += "数据重复--第【"+repeatMap.get(entity.getOrderNo())+"】行已存在订货单号【"+entity.getOrderNo()+";";
+				errorMessage += "数据重复--第【"+repeatMap.get(entity.getOrderNo())+"】行已存在定货单号【"+entity.getOrderNo()+";";
 			}else{
 				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
 			}

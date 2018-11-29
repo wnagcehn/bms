@@ -41,6 +41,14 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		String errorMessage="";
 		
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
+		
+		//判断空白行
+		DataColumn outStockCo=dr.getColumn("出库单号");
+		DataColumn customerCo=dr.getColumn("商家名称");
+		if(outStockCo!=null && customerCo!=null &&StringUtils.isBlank(outStockCo.getColValue()+customerCo.getColValue())){
+			return list;
+		}
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity2 = new BillFeesReceiveStorageTempEntity();
@@ -58,18 +66,26 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 						}else {
 							errorMessage+="仓库不存在;";
 						}
-					}			
+					}else {
+						errorMessage+="仓库必填;";
+					}		
 					break;
 				case "发货时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
-					}	
+					}else {
+						errorMessage+="发货时间必填;";
+					}
 					break;
 				case "单据类型":
 					entity.setOrderType(dc.getColValue());
 					break;
 				case "出库单号":
-					entity.setOrderNo(dc.getColValue());
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity.setOrderNo(dc.getColValue());
+					}else {
+						errorMessage+="出库单号必填;";
+					}
 					break;
 				case "温度类型":
 					entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColValue()));
@@ -82,64 +98,54 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 				case "出库箱数":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalBox(new BigDecimal(dc.getColValue()));
+					}else {
+						errorMessage+="出库箱数必填;";
 					}
 					break;
 				case "出库重量(吨)":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
+					}else {
+						errorMessage+="出库重量必填;";
 					}
 					break;
-//				case "B2B订单操作费":
-//					if (StringUtils.isNotBlank(dc.getColValue())) {
-//						entity.setAmount(Double.valueOf(dc.getColValue()));
-//					}	
-//					break;
-//				case "出库装车费":
-//					PropertyUtils.copyProperties(zEntity, entity);
-//					if (StringUtils.isNotBlank(dc.getColValue())) {
-//						zEntity.setAmount(Double.valueOf(dc.getColValue()));
-//					}	
-//					break;
 				default:
 					break;
 				}
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
-//			if ("B2B订单操作费".equals(dc.getColName()) || StringUtils.isNotBlank(dc.getColValue())) {
-//				entity.setAmount(Double.valueOf(dc.getColValue()));
-//			}
-//			if ("出库装车费".equals(dc.getColName()) || StringUtils.isNotBlank(dc.getColValue())) {
-//				PropertyUtils.copyProperties(zEntity, entity);
-//				zEntity.setAmount(Double.valueOf(dc.getColValue()));
-//			}
 		}
+	
 		for (DataColumn dc:dr.getColumns()) {
-			switch (dc.getColName()) {
-			case "B2B订单操作费":
-				if (StringUtils.isNotBlank(dc.getColValue())) {
-					PropertyUtils.copyProperties(entity1, entity);
-					entity1.setSubjectCode("wh_b2b_work");
-					entity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+			try {
+				switch (dc.getColName()) {
+				case "B2B订单操作费":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						PropertyUtils.copyProperties(entity1, entity);
+						entity1.setSubjectCode("wh_b2b_work");
+						entity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+						//list.add(entity1);
+					}else {
+						errorMessage+="B2B订单操作费必填;";
+					}
+					break;
+				case "出库装车费":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						PropertyUtils.copyProperties(entity2, entity);
+						entity2.setSubjectCode("wh_b2b_handwork");
+						entity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+						//list.add(entity2);
+					}else {
+						errorMessage+="出库装车费必填;";
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			case "出库装车费":
-				if (StringUtils.isNotBlank(dc.getColValue())) {
-					PropertyUtils.copyProperties(entity2, entity);
-					entity2.setSubjectCode("wh_b2b_handwork");
-					entity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
-				}
-				break;
-			default:
-				break;
-			}
-		}
-		//B2B订单操作费，出库装车费(防空白行)
-		if (null != entity1 && StringUtils.isNotBlank(entity1.getOrderNo())) {
-			list.add(entity1);
-		}
-		if (null != entity2 && StringUtils.isNotBlank(entity2.getOrderNo())) {
-			list.add(entity2);
+			} catch (Exception e) {
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
+			}	
 		}
 		
 		//重复性校验
@@ -149,6 +155,13 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 			}else{
 				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
 			}
+		}
+		
+		if (StringUtils.isNotBlank(entity1.getOrderNo())) {
+			list.add(entity1);
+		}
+		if (StringUtils.isNotBlank(entity2.getOrderNo())) {
+			list.add(entity2);
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){

@@ -91,19 +91,29 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					break;
 				case "九曳订单号":
 					dispatchEntity.setOutstockNo(dc.getColValue());
-					storageEntity.setOrderNo(dc.getColValue());
+					storageEntity.setOrderNo(dc.getColValue());			
 					break;
 				case "商家订单号":
-					dispatchEntity.setExternalNo(dc.getColValue());
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						dispatchEntity.setExternalNo(dc.getColValue());
+					}else{
+						errorMessage+="商家订单号不能为空;";
+					}
 					break;
 				case "运单号":
-					dispatchEntity.setWaybillNo(dc.getColValue());
-					storageEntity.setWaybillNo(dc.getColValue());
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						dispatchEntity.setWaybillNo(dc.getColValue());
+						storageEntity.setWaybillNo(dc.getColValue());
+					}else{
+						errorMessage+="运单号不能为空;";
+					}	
 					break;
 				case "运单生成时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						dispatchEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 						storageEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+					}else{
+						errorMessage+="运单生成时间不能为空;";
 					}
 					break;
 				case "商品数量":
@@ -113,13 +123,17 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					}
 					break;
 				case "计费物流商":
-					dispatchEntity.setCarrierName(dc.getColValue());
-					String carrierCode=carrierDictService.getCarrierCodeByName(dc.getColValue());
-					if(StringUtils.isNotBlank(carrierCode)){
-						dispatchEntity.setCarrierid(carrierCode);
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						dispatchEntity.setCarrierName(dc.getColValue());
+						String carrierCode=carrierDictService.getCarrierCodeByName(dc.getColValue());
+						if(StringUtils.isNotBlank(carrierCode)){
+							dispatchEntity.setCarrierid(carrierCode);
+						}else{
+							errorMessage+="计费物流商不存在;";
+						}	
 					}else{
-						errorMessage+="计费物流商不存在;";
-					}					
+						errorMessage+="计费物流商不能为空;";
+					}								
 					break;
 				case "收件人省":
 					dispatchEntity.setReceiveProvince(dc.getColValue());
@@ -138,12 +152,13 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						dispatchEntity.setTotalWeight(new BigDecimal(dc.getColValue()));
 						storageEntity.setTotalWeight(new BigDecimal(dc.getColValue()));
+					}else{
+						errorMessage+="计费重量不能为空;";
 					}
 					break;
 				default:
 					break;
 				}
-
 			} catch (Exception ex) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 				

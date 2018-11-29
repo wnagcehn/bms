@@ -180,4 +180,11 @@ public interface IBillCheckInfoService {
 	 */
 	public void adjustMoney(String billNo, Double adjustMoney, String username, String userId);
 	
+	/**
+	 * 新保存 vo新增billNo字段
+	 * @param vo
+	 * @return
+	 */
+	int saveNew(BillCheckInfoVo vo);
+	
 	}

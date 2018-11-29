@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveDispatchTempRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -71,9 +72,18 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
 	}
 
 	@Override
-	public int deleteBatch(Map<String, Object> condition) {
+	public int deleteBatch(String billNo) {
 		// TODO Auto-generated method stub
-		return delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.deleteBatch", condition);
+		return delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.deleteBatch", billNo);
+	}
+
+	@Override
+	public int saveDataFromTemp(String billNo) {
+		// TODO Auto-generated method stub
+		 SqlSession session = getSqlSessionTemplate();
+		 Map<String,String> map=Maps.newHashMap();
+		 map.put("billNo", billNo);
+		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.saveDataFromTemp", map);
 	}
 	
 }

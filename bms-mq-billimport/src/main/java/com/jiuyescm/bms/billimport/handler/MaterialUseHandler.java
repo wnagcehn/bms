@@ -60,16 +60,24 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			try {
 				switch (dc.getColName()) {
 				case "仓库":
-					entity.setWarehouseName(dc.getColValue());
-					String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
-					if(StringUtils.isNotBlank(wareId)){
-						entity.setWarehouseCode(wareId);
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						entity.setWarehouseName(dc.getColValue());
+						String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						if(StringUtils.isNotBlank(wareId)){
+							entity.setWarehouseCode(wareId);
+						}else{
+							errorMessage+="仓库不存在;";
+						}
 					}else{
-						errorMessage+="仓库不存在;";
-					}
+						errorMessage+="仓库不能为空;";
+					}					
 					break;
 				case "运单号":
-					entity.setWaybillNo(dc.getColValue());
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						entity.setWaybillNo(dc.getColValue());
+					}else{
+						errorMessage+="运单号不能为空;";
+					}
 					break;
 				case "出库单号":
 					entity.setOrderNo(dc.getColValue());
@@ -82,6 +90,8 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				case "接单时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+					}else{
+						errorMessage+="接单时间不能为空;";
 					}
 					break;
 				default:
@@ -110,11 +120,13 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				}
 				switch (dc.getColName()) {
 				case "编码":
-					PubMaterialInfoVo vo=materialDictService.getMaterialByCode(dc.getColValue());
-					if(vo!=null){
-						feeEntity.setMaterialCode(dc.getColValue());
-					}else{
-						errorMessage+="编码不存在;";
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						PubMaterialInfoVo vo=materialDictService.getMaterialByCode(dc.getColValue());
+						if(vo!=null){
+							feeEntity.setMaterialCode(dc.getColValue());
+						}else{
+							errorMessage+="编码不存在;";
+						}
 					}
 					break;
 				case "数量":
@@ -132,12 +144,14 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				case "单价":
 					break;
 				default:
-					PubMaterialInfoVo pubvo=materialDictService.getMaterialByCode(dc.getColValue());
-					if(pubvo!=null){
-						feeEntity.setMaterialName(dc.getColValue());
-					}else{
-						errorMessage+="耗材名称不存在;";
-					}
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						PubMaterialInfoVo pubvo=materialDictService.getMaterialByCode(dc.getColValue());
+						if(pubvo!=null){
+							feeEntity.setMaterialName(dc.getColValue());
+						}else{
+							errorMessage+="耗材名称不存在;";
+						}
+					}			
 					break;
 				}
 	

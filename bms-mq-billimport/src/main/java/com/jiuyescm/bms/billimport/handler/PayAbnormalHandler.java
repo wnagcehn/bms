@@ -37,6 +37,13 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		//异常信息
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
+		
+		DataColumn warehouseCo=dr.getColumn("仓库");
+		DataColumn customerCo=dr.getColumn("客户名称");
+		if(warehouseCo!=null && customerCo!=null &&StringUtils.isBlank(warehouseCo.getColValue()+customerCo.getColValue())){
+			return list;
+		}
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		for (DataColumn dc:dr.getColumns()) {
@@ -53,12 +60,16 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 						}else{
 							errorMessage+="仓库不存在;";
 						}
+					}else {
+						errorMessage+="仓库必填;";
 					}
 					break;
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
-					}				
+					}else {
+						errorMessage+="日期不存在;";
+					}			
 					break;
 				case "金额":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -72,8 +83,8 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
-		//仓库理赔费(防空白行)
-		if (null != entity && null != entity.getCreateTime() && null != entity.getAmount()) {
+		//仓库理赔费
+		if (null != entity) {
 			entity.setSubjectCode("wh_abnormal_pay");
 			list.add(entity);
 		}
