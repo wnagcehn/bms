@@ -2,13 +2,10 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +14,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import redis.clients.jedis.params.sortedset.ZAddParams;
 
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
@@ -29,18 +24,21 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.ReceiveBillImportListener;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveHandService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
-import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 public abstract class CommonHandler<T> implements IFeesHandler {
 
@@ -50,7 +48,12 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	@Autowired private IBillReceiveMasterRepository billReceiveMasterRepository;
 	@Autowired private IWarehouseDictService warehouseDictService;
 	@Autowired private IBillReceiveMasterService billReceiveMasterService;
-	@Autowired private IBillCheckInfoService billCheckInfoService;
+	@Autowired private IBillCheckInfoService billCheckInfoService;	
+	@Autowired private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
+	@Autowired private IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	@Autowired private IBillFeesReceiveDispatchTempService billFeesReceiveDispatchTempService;
+	@Autowired private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
+	@Autowired private IBillFeesReceiveHandService billFeesReceiveHandService;
 	
 	private int batchNum = 1000;
 	private String sheetName;
@@ -82,55 +85,66 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		System.out.println("errMap.size()--"+errMap.size());
 		//Excel校验未通过
 		if(errMap.size()>0){
+			ReceiveBillImportListener.updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);	
 			String resultPath = exportErr();
 //			String billNo = (String) param.get("billNo");
 			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 			billReceiveMasterVo.setBillNo("AT0000000469");
 			billReceiveMasterVo.setResultFilePath(resultPath);
 			billReceiveMasterService.update(billReceiveMasterVo);
+		}else{
+			String billNo=param.get("billNo").toString();			
+			//将临时表的数据写入正式表（仓储、配送、干线、航空）
+			billFeesReceiveHandService.saveDataFromTemp(billNo);
+			//无论保存成功与否删除所有临时表的数据
+			billFeesReceiveStorageTempService.deleteBatchTemp(billNo);
+			billFeesReceiveDispatchTempService.deleteBatchTemp(billNo);
+			billFeesReceiveTransportTempService.deleteBatchTemp(billNo);
+			billFeesReceiveAirTempService.deleteBatchTemp(billNo);
+			//统计金额
+			Double totalMoney=billFeesReceiveStorageTempService.getImportTotalAmount(billNo);
+			BillReceiveMasterVo entity=new BillReceiveMasterVo();
+			entity.setAmount(totalMoney);
+			entity.setBillNo(billNo);
+			//更新导入主表
+			billReceiveMasterService.update(entity);	
+			
+			//账单跟踪 组装数据
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
+			checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
+			checkInfoVo.setBillNo(param.get("billNo").toString());
+			checkInfoVo.setBillName(param.get("billName").toString());
+			checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
+			checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
+			checkInfoVo.setBillStartTime(format.parse(param.get("billStartTime").toString()));
+			checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
+			checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
+			checkInfoVo.setProjectName(param.get("projectName").toString());
+			checkInfoVo.setSellerId(param.get("sellerId").toString());
+			checkInfoVo.setSellerName(param.get("sellerName").toString());
+			checkInfoVo.setDeptName(param.get("deptName").toString());
+			checkInfoVo.setDeptCode(param.get("deptCode").toString());
+			checkInfoVo.setProjectManagerId(param.get("projectManagerId").toString());
+			checkInfoVo.setProjectManagerName(param.get("projectManagerName").toString());
+			checkInfoVo.setBalanceId(param.get("balanceId").toString());
+			checkInfoVo.setBalanceName(param.get("balanceName").toString());
+			checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
+			checkInfoVo.setIsneedInvoice(BmsEnums.BillCheckStateEnum.getCode(param.get("isneedInvoice").toString()));
+			if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
+				checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
+				checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
+				checkInfoVo.setConfirmDate(format.parse(param.get("confirmDate").toString()));
+			}
+			checkInfoVo.setDelFlag("0");
+			checkInfoVo.setCreator(param.get("creator").toString());
+			checkInfoVo.setCreatorId(param.get("creatorId").toString());
+			checkInfoVo.setCreateTime(Timestamp.valueOf(param.get("createTime").toString()));
+			//存储金额
+			
+			billCheckInfoService.saveNew(checkInfoVo);
 		}
-		
-			ReceiveBillImportListener.updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);
-			exportErr();
-		}
-
-		
-		
-//		//账单跟踪 组装数据
-//		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//		BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
-//		checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
-//		checkInfoVo.setBillNo(param.get("billNo").toString());
-//		checkInfoVo.setBillName(param.get("billName").toString());
-//		checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
-//		checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
-//		checkInfoVo.setBillStartTime(format.parse(param.get("billStartTime").toString()));
-//		checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
-//		checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
-//		checkInfoVo.setProjectName(param.get("projectName").toString());
-//		checkInfoVo.setSellerId(param.get("sellerId").toString());
-//		checkInfoVo.setSellerName(param.get("sellerName").toString());
-//		checkInfoVo.setDeptName(param.get("deptName").toString());
-//		checkInfoVo.setDeptCode(param.get("deptCode").toString());
-//		checkInfoVo.setProjectManagerId(param.get("projectManagerId").toString());
-//		checkInfoVo.setProjectManagerName(param.get("projectManagerName").toString());
-//		checkInfoVo.setBalanceId(param.get("balanceId").toString());
-//		checkInfoVo.setBalanceName(param.get("balanceName").toString());
-//		checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
-//		checkInfoVo.setIsneedInvoice(BmsEnums.BillCheckStateEnum.getCode(param.get("isneedInvoice").toString()));
-//		if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
-//			checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
-//			checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
-//			checkInfoVo.setConfirmDate(format.parse(param.get("confirmDate").toString()));
-//		}
-//		checkInfoVo.setDelFlag("0");
-//		checkInfoVo.setCreator(param.get("creator").toString());
-//		checkInfoVo.setCreatorId(param.get("creatorId").toString());
-//		checkInfoVo.setCreateTime(Timestamp.valueOf(param.get("createTime").toString()));
-//		//存储金额
-//		
-//		billCheckInfoService.saveNew(checkInfoVo);
-		
+	}
 	
 	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{
 		xlsxReader.readRow(1, new SheetReadCallBack() {
