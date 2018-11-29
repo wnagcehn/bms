@@ -300,100 +300,7 @@ bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, ord
     <!-- 批量删除 -->
     <delete id="deleteBatch" parameterType="java.util.Map">
         delete from bill_fees_receive_transport_temp 
-        where 1=1
-        	<if test=" id != null and id !='' ">
-				and id = #{id}
-			</if>
-        	<if test=" billNo != null and billNo !='' ">
-				and bill_no = #{billNo}
-			</if>
-        	<if test=" subjectCode != null and subjectCode !='' ">
-				and subject_code = #{subjectCode}
-			</if>
-        	<if test=" subjectName != null and subjectName !='' ">
-				and subject_name = #{subjectName}
-			</if>
-        	<if test=" customerId != null and customerId !='' ">
-				and customer_id = #{customerId}
-			</if>
-        	<if test=" customerName != null and customerName !='' ">
-				and customer_name = #{customerName}
-			</if>
-        	<if test=" waybillNo != null and waybillNo !='' ">
-				and waybill_no = #{waybillNo}
-			</if>
-        	<if test=" orderNo != null and orderNo !='' ">
-				and order_no = #{orderNo}
-			</if>
-        	<if test=" sendNo != null and sendNo !='' ">
-				and send_no = #{sendNo}
-			</if>
-        	<if test=" temperatureType != null and temperatureType !='' ">
-				and temperature_type = #{temperatureType}
-			</if>
-        	<if test=" temperatureCode != null and temperatureCode !='' ">
-				and temperature_code = #{temperatureCode}
-			</if>
-        	<if test=" bizType != null and bizType !='' ">
-				and biz_type = #{bizType}
-			</if>
-        	<if test=" sendSite != null and sendSite !='' ">
-				and send_site = #{sendSite}
-			</if>
-        	<if test=" sendProvince != null and sendProvince !='' ">
-				and send_province = #{sendProvince}
-			</if>
-        	<if test=" sendCity != null and sendCity !='' ">
-				and send_city = #{sendCity}
-			</if>
-        	<if test=" sendDistinct != null and sendDistinct !='' ">
-				and send_distinct = #{sendDistinct}
-			</if>
-        	<if test=" receiveSite != null and receiveSite !='' ">
-				and receive_site = #{receiveSite}
-			</if>
-        	<if test=" receiveProvince != null and receiveProvince !='' ">
-				and receive_province = #{receiveProvince}
-			</if>
-        	<if test=" receiveCity != null and receiveCity !='' ">
-				and receive_city = #{receiveCity}
-			</if>
-        	<if test=" receiveDistinct != null and receiveDistinct !='' ">
-				and receive_distinct = #{receiveDistinct}
-			</if>
-        	<if test=" totalWeight != null and totalWeight !='' ">
-				and total_weight = #{totalWeight}
-			</if>
-        	<if test=" totalVolumn != null and totalVolumn !='' ">
-				and total_volumn = #{totalVolumn}
-			</if>
-        	<if test=" isLight != null and isLight !='' ">
-				and is_light = #{isLight}
-			</if>
-        	<if test=" carModel != null and carModel !='' ">
-				and car_model = #{carModel}
-			</if>
-        	<if test=" amount != null and amount !='' ">
-				and amount = #{amount}
-			</if>
-        	<if test=" derateAmount != null and derateAmount !='' ">
-				and derate_amount = #{derateAmount}
-			</if>
-        	<if test=" createTime != null and createTime !='' ">
-				and create_time = #{createTime}
-			</if>
-        	<if test=" createMonth != null and createMonth !='' ">
-				and create_month = #{createMonth}
-			</if>
-        	<if test=" writeTime != null and writeTime !='' ">
-				and write_time = #{writeTime}
-			</if>
-        	<if test=" rowExcelNo != null and rowExcelNo !='' ">
-				and rowExcelNo = #{rowExcelNo}
-			</if>
-        	<if test=" rowExcelName != null and rowExcelName !='' ">
-				and rowExcelName = #{rowExcelName}
-			</if>
+        where 1=1 and bill_no = #{billNo}
     </delete>
     
     <!-- 批量保存 -->
@@ -439,11 +346,11 @@ bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, ord
     </insert>
     
      <insert id="saveDataFromTemp" parameterType="java.util.Map">
-     INSERT INTO  bill_fees_receive_air (
-       bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, order_no, send_no, temperature_type, temperature_code, biz_type, send_site, send_province, send_city, send_distinct, receive_site, receive_province, receive_city, receive_distinct, total_weight, total_volumn, is_light, car_model, amount, derate_amount, create_time, create_month
-	 )
-	 select 
-	       bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, order_no, send_no, temperature_type, temperature_code, biz_type, send_site, send_province, send_city, send_distinct, receive_site, receive_province, receive_city, receive_distinct, total_weight, total_volumn, is_light, car_model, amount, derate_amount, create_time, create_month
-	 from bill_fees_receive_air_temp where bill_no=#{billNo}
+       INSERT INTO  bill_fees_receive_transport (
+        bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, order_no, send_no, temperature_type, temperature_code, biz_type, send_site, send_province, send_city, send_distinct, receive_site, receive_province, receive_city, receive_distinct, total_weight, total_volumn, is_light, car_model, amount, derate_amount, create_time, create_month
+		  )
+		  select 
+        bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, order_no, send_no, temperature_type, temperature_code, biz_type, send_site, send_province, send_city, send_distinct, receive_site, receive_province, receive_city, receive_distinct, total_weight, total_volumn, is_light, car_model, amount, derate_amount, create_time, create_month
+		  from bill_fees_receive_transport_temp where bill_no=#{billNo}
 	 </insert>
 </mapper>

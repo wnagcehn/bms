@@ -2,9 +2,7 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +50,12 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 				case "发货仓库":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
-						String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						/*String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
 						if(StringUtils.isNotBlank(wareId)){
 							entity.setWarehouseCode(wareId);
 						}else{
 							errorMessage+="仓库不存在;";
-						}
+						}*/
 					}else{
 						errorMessage+="发货仓库不能为空;";
 					}					
@@ -104,6 +102,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 		
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			//改地址退件费
+			entity.setBillNo("AT0000000482");
 			entity.setSubjectCode("de_change");
 			list.add(entity);
 		}	

@@ -282,96 +282,10 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
     </delete>
     
     <!-- 批量删除 -->
-    <delete id="deleteBatchTemp" parameterType="java.util.Map">
+    <delete id="deleteBatchTemp" parameterType="String">
         delete from bill_fees_receive_storage_temp 
         where 1=1
-        <if test=" id != null and id !='' ">
-			and id = #{id}
-		</if>
-       	<if test=" billNo != null and billNo !='' ">
-			and bill_no = #{billNo}
-		</if>
-       	<if test=" subjectCode != null and subjectCode !='' ">
-			and subject_code = #{subjectCode}
-		</if>
-       	<if test=" orderNo != null and orderNo !='' ">
-			and order_no = #{orderNo}
-		</if>
-       	<if test=" waybillNo != null and waybillNo !='' ">
-			and waybill_no = #{waybillNo}
-		</if>
-       	<if test=" customerId != null and customerId !='' ">
-			and customer_id = #{customerId}
-		</if>
-       	<if test=" customerName != null and customerName !='' ">
-			and customer_name = #{customerName}
-		</if>
-       	<if test=" warehouseCode != null and warehouseCode !='' ">
-			and warehouse_code = #{warehouseCode}
-		</if>
-       	<if test=" warehouseName != null and warehouseName !='' ">
-			and warehouse_name = #{warehouseName}
-		</if>
-       	<if test=" materialCode != null and materialCode !='' ">
-			and material_code = #{materialCode}
-		</if>
-       	<if test=" materialName != null and materialName !='' ">
-			and material_name = #{materialName}
-		</if>
-       	<if test=" orderType != null and orderType !='' ">
-			and order_type = #{orderType}
-		</if>
-       	<if test=" productType != null and productType !='' ">
-			and product_type = #{productType}
-		</if>
-       	<if test=" tempretureType != null and tempretureType !='' ">
-			and tempreture_type = #{tempretureType}
-		</if>
-       	<if test=" productNo != null and productNo !='' ">
-			and product_no = #{productNo}
-		</if>
-       	<if test=" productName != null and productName !='' ">
-			and product_name = #{productName}
-		</if>
-       	<if test=" chargeUnit != null and chargeUnit !='' ">
-			and charge_unit = #{chargeUnit}
-		</if>
-       	<if test=" totalQty != null and totalQty !='' ">
-			and total_qty = #{totalQty}
-		</if>
-       	<if test=" totalWeight != null and totalWeight !='' ">
-			and total_weight = #{totalWeight}
-		</if>
-       	<if test=" totalVolume != null and totalVolume !='' ">
-			and total_volume = #{totalVolume}
-		</if>
-       	<if test=" totalSku != null and totalSku !='' ">
-			and total_sku = #{totalSku}
-		</if>
-       	<if test=" totalBox != null and totalBox !='' ">
-			and total_box = #{totalBox}
-		</if>
-       	<if test=" amount != null and amount !='' ">
-			and amount = #{amount}
-		</if>
-       	<if test=" derateAmount != null and derateAmount !='' ">
-			and derate_amount = #{derateAmount}
-		</if>
-       	<if test=" createTime != null and createTime !='' ">
-			and create_time = #{createTime}
-		</if>
-       	<if test=" createMonth != null and createMonth !='' ">
-			and create_month = #{createMonth}
-		</if>
-       	<if test=" rowExcelNo != null and rowExcelNo !='' ">
-			and rowExcelNo = #{rowExcelNo}
-		</if>
-       	<if test=" rowExcelName != null and rowExcelName !='' ">
-			and rowExcelName = #{rowExcelName}
-		</if>
-       	<if test=" sheetName != null and sheetName !='' ">
-			and sheetName = #{sheetName}
-		</if>
+		and bill_no = #{billNo}
     </delete>
     
     <!-- 批量保存 -->
@@ -416,15 +330,15 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
     </insert>
     
     <insert id="saveDataFromTemp" parameterType="java.util.Map">
-     INSERT INTO  bill_fees_receive_air (
-           bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month
-     )
-	 select 
-	       bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month
-	 from bill_fees_receive_air_temp where bill_no=#{billNo}
+      INSERT INTO  bill_fees_receive_storage (
+        bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month
+		  )
+		  select 
+        bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, material_code, material_name, order_type, product_type, tempreture_type, product_no, product_name, charge_unit, total_qty, total_weight, total_volume, total_sku, total_box, amount, derate_amount, create_time, create_month
+		  from bill_fees_receive_storage_temp where bill_no=#{billNo}
 	 </insert>
 	 
-	 <select id="getImportTotalAmount" parameterType="String">
+	 <select id="getImportTotalAmount" parameterType="String" resultType="java.lang.Double">
 	 	select IFNULL(SUM(a.amount),0)+IFNULL(SUM(b.amount),0)+IFNULL(SUM(c.amount),0)+IFNULL(SUM(d.amount),0) from bill_fees_receive_dispatch a
 		LEFT JOIN bill_fees_receive_storage b on a.bill_no=b.bill_no
 		LEFT JOIN bill_fees_receive_transport c on a.bill_no=c.bill_no

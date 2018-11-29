@@ -132,7 +132,14 @@ public class BillFeesReceiveStorageTempServiceImpl implements IBillFeesReceiveSt
 	@Override
 	public Double getImportTotalAmount(String billNo) {
 		// TODO Auto-generated method stub
-		return billFeesReceiveStorageTempRepository.getImportTotalAmount(billNo);
+		try {
+			return billFeesReceiveStorageTempRepository.getImportTotalAmount(billNo);
+
+		} catch (Exception e) {
+			//写入日志
+			logger.error("获取导入总金额异常", e);
+		}
+		return 0d;
 	}
 	
 }

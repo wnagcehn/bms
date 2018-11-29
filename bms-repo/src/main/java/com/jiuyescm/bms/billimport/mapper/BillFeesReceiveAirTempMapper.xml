@@ -202,66 +202,9 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
     </delete>
     
         <!-- 批量删除 -->
-    <delete id="deleteBatch" parameterType="java.util.Map">
+    <delete id="deleteBatch" parameterType="String">
         delete from bill_fees_receive_air_temp 
-        where 1=1
-        	<if test=" id != null and id !='' ">
-				and id = #{id}
-			</if>
-        	<if test=" billNo != null and billNo !='' ">
-				and bill_no = #{billNo}
-			</if>
-        	<if test=" feesType != null and feesType !='' ">
-				and fees_type = #{feesType}
-			</if>
-        	<if test=" subjectCode != null and subjectCode !='' ">
-				and subject_code = #{subjectCode}
-			</if>
-        	<if test=" waybillNo != null and waybillNo !='' ">
-				and waybill_no = #{waybillNo}
-			</if>
-        	<if test=" customerId != null and customerId !='' ">
-				and customer_id = #{customerId}
-			</if>
-        	<if test=" customerName != null and customerName !='' ">
-				and customer_name = #{customerName}
-			</if>
-        	<if test=" warehouseCode != null and warehouseCode !='' ">
-				and warehouse_code = #{warehouseCode}
-			</if>
-        	<if test=" warehouseName != null and warehouseName !='' ">
-				and warehouse_name = #{warehouseName}
-			</if>
-        	<if test=" sendSite != null and sendSite !='' ">
-				and send_site = #{sendSite}
-			</if>
-        	<if test=" receiveSite != null and receiveSite !='' ">
-				and receive_site = #{receiveSite}
-			</if>
-        	<if test=" totalWeight != null and totalWeight !='' ">
-				and total_weight = #{totalWeight}
-			</if>
-        	<if test=" createTime != null and createTime !='' ">
-				and create_time = #{createTime}
-			</if>
-        	<if test=" createMonth != null and createMonth !='' ">
-				and create_month = #{createMonth}
-			</if>
-        	<if test=" amount != null and amount !='' ">
-				and amount = #{amount}
-			</if>
-        	<if test=" derateAmount != null and derateAmount !='' ">
-				and derate_amount = #{derateAmount}
-			</if>
-        	<if test=" writeTime != null and writeTime !='' ">
-				and write_time = #{writeTime}
-			</if>
-        	<if test=" rowExcelNo != null and rowExcelNo !='' ">
-				and rowExcelNo = #{rowExcelNo}
-			</if>
-        	<if test=" rowExcelName != null and rowExcelName !='' ">
-				and rowExcelName = #{rowExcelName}
-			</if>
+        where 1=1 and bill_no = #{billNo}
     </delete>
     
     <!-- 批量保存 -->

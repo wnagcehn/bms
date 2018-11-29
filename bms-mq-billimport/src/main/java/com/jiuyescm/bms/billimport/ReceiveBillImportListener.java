@@ -18,17 +18,12 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
-import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
-import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
-import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
-import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
-import com.jiuyescm.utils.JsonUtils;
 
 @Service("receiveBillImportListener")
 public class ReceiveBillImportListener implements MessageListener {
@@ -75,8 +70,9 @@ public class ReceiveBillImportListener implements MessageListener {
 		}
 		logger.info("JSON解析成Map结果:{}",map);
 		//MQ拿到消息，更新状态
-		updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 1);
+		////updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 1);
 		
+		map.put("fullPath", "E:\\user\\desktop\\zhaofeng\\Desktop\\账单导入模板.xlsx");
 		logger.info("获取文件路径：{}",map.get("fullPath").toString());
 		File file = new File(map.get("fullPath").toString());
 		InputStream inputStream = new FileInputStream(file);
@@ -89,7 +85,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
 			logger.info("解析Excel, 获取Sheet：{}", sheets);
-			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 20);
+			////updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 20);
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
 				logger.info("准备读取sheet - {0}", sheetName);
@@ -108,7 +104,7 @@ public class ReceiveBillImportListener implements MessageListener {
 					continue;
 				}
 				logger.info("匹配Handler为: {}", handler);
-				updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
+				//updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
 				// handler.getRows();
 
 				try {
