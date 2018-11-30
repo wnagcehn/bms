@@ -24,14 +24,15 @@
 		   	<result column="origin_file_path" property="originFilePath" jdbcType="VARCHAR" />
 		   	<result column="result_file_name" property="resultFileName" jdbcType="VARCHAR" />
 		   	<result column="result_file_path" property="resultFilePath" jdbcType="VARCHAR" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path
+create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark
     </sql>
 
 	<!-- 根据id查询 -->
@@ -50,7 +51,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         IFNULL(amount,0) as amount, IFNULL(adjust_amount,0) as adjustAmount, SUM(IFNULL(amount,0)+IFNULL(adjust_amount,0)) as totalAmount, 
         creator, creator_id, create_time, finish_time, 
         last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, 
-        origin_file_name, origin_file_path, result_file_name, result_file_path
+        origin_file_name, origin_file_path, result_file_name, result_file_path, remark
         from bill_receive_master
         where 1 = 1
         	<if test=" id != null and id !='' ">
@@ -101,6 +102,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         	<if test=" delFlag != null and delFlag !='' ">
 				and del_flag = #{delFlag}
 			</if>
+			<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
         	<if test=" billNo != null and billNo !='' ">
 				and bill_no = #{billNo}
 			</if>
@@ -134,7 +138,8 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			#{originFileName,jdbcType=VARCHAR}, 
 			#{originFilePath,jdbcType=VARCHAR}, 
 			#{resultFileName,jdbcType=VARCHAR}, 
-			#{resultFilePath,jdbcType=VARCHAR}
+			#{resultFilePath,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -202,6 +207,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			</if>
 			<if test=" resultFilePath != null and resultFilePath !='' ">
 				result_file_path = #{resultFilePath,jdbcType=VARCHAR},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
 			</if>
         </trim>
         where bill_no = #{billNo}

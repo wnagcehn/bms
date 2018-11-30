@@ -110,6 +110,9 @@
       <PropertyDef name="invoiceId">
         <Property name="label">合同商家编码</Property>
       </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillReceiveMasterEntityQuery">
       <PropertyDef name="invoiceName">
@@ -700,6 +703,11 @@ jQuery(arg.dom).xCreate({&#xD;
         <DataColumn name="delFlag">
           <Property name="property">delFlag</Property>
           <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">remark</Property>
+          <Property name="width">100</Property>
+          <Property name="name">remark</Property>
         </DataColumn>
       </DataGrid>
     </Container>
