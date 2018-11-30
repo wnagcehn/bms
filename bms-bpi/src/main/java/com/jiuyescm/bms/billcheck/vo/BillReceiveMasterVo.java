@@ -2,7 +2,9 @@ package com.jiuyescm.bms.billcheck.vo;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.math.BigDecimal;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**
@@ -113,7 +115,7 @@ public class BillReceiveMasterVo implements IEntity {
 
 		//限制备注字段长度
 		public void setRemark(String remark) {
-			if(remark.length()>128){
+			if(StringUtils.isNotBlank(remark) && remark.length()>128){
 				remark=remark.substring(0,128);
 			}
 			this.remark = remark;

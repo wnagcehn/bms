@@ -33,6 +33,7 @@ import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
@@ -116,7 +117,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				checkInfoVo.setBillName(param.get("billName").toString());
 				checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
 				checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
-				checkInfoVo.setBillStartTime(format.parse(param.get("billStartTime").toString()));
+				//checkInfoVo.setBillStartTime(format.parse(param.get("billStartTime").toString()));
 				checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
 				checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
 				checkInfoVo.setProjectName(param.get("projectName").toString());
@@ -138,16 +139,17 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				checkInfoVo.setDelFlag("0");
 				checkInfoVo.setCreator(param.get("creator").toString());
 				checkInfoVo.setCreatorId(param.get("creatorId").toString());
-				checkInfoVo.setCreateTime(Timestamp.valueOf(param.get("createTime").toString()));
+				//checkInfoVo.setCreateTime(DateUtil.transStringToTimeStamp((param.get("createTime").toString())));
 				//存储金额
 				billCheckInfoService.saveNew(checkInfoVo);
 				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);
 			}catch (Exception e) {
-				logger.info("异常信息",e.getMessage());
+				logger.info("异常信息{}",e.getMessage());
 				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 				billReceiveMasterVo.setBillNo(billNo);
 				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
 				billReceiveMasterVo.setTaskRate(99);
+				billReceiveMasterVo.setRemark(e.getMessage());
 				billReceiveMasterService.update(billReceiveMasterVo);
 			}
 		}

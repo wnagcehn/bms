@@ -119,7 +119,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
             int k = billReceiveMasterRepository.save(entity);
             return k;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败:{0}",ex);
         }
 		return 0;
     }
@@ -133,9 +133,10 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     public void update(BillReceiveMasterVo vo) {   	
     	BillReceiveMasterEntity entity=new BillReceiveMasterEntity();
 		try {
+			PropertyUtils.copyProperties(entity, vo);      
             int k = billReceiveMasterRepository.update(entity);
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败:{0}",ex);
         }
     }
 
