@@ -63,7 +63,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {

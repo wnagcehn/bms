@@ -52,11 +52,9 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			return list;
 		}
 		
-		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 		for (DataColumn dc:dr.getColumns()) {
-			System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 			try {
 				switch (dc.getColName()) {
 				case "仓库":
@@ -168,8 +166,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
-		
-		
+
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			if(repeatMap.containsKey(entity.getWaybillNo())){

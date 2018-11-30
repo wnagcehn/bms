@@ -84,7 +84,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		}
 		logger.info("sheet读取完成");	
 		repeatMap.clear();
-		System.out.println("errMap.size()--"+errMap.size());
 		//Excel校验未通过
 		if(errMap.size()>0){
 			updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);	
@@ -94,7 +93,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			billReceiveMasterVo.setResultFilePath(resultPath);
 			billReceiveMasterService.update(billReceiveMasterVo);
 		}else{
-			
 			try{
 				//将临时表的数据写入正式表（仓储、配送、干线、航空）
 				billFeesReceiveHandService.saveDataFromTemp(billNo);
@@ -109,8 +107,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				entity.setAmount(totalMoney);
 				entity.setBillNo(billNo);
 				//更新导入主表
-				billReceiveMasterService.update(entity);	
-				
+				billReceiveMasterService.update(entity);
 				//账单跟踪 组装数据
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
@@ -143,11 +140,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				checkInfoVo.setCreatorId(param.get("creatorId").toString());
 				checkInfoVo.setCreateTime(Timestamp.valueOf(param.get("createTime").toString()));
 				//存储金额
-				
 				billCheckInfoService.saveNew(checkInfoVo);
-				
-				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);	
-
+				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);
 			}catch (Exception e) {
 				logger.info("异常信息",e.getMessage());
 				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
@@ -185,7 +179,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				if(list.size()>0){
 					saveTo();
 				}
-				//System.out.println("读取完毕");
 				logger.info("读取完毕");
 			}
 			
@@ -195,8 +188,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	public abstract List<T> transRowToObj(DataRow dr) throws Exception;
 	
 	public abstract void transErr(DataRow dr) throws Exception; 
-	
-	
 	
 	/**
 	 * 分批保存数据到临时表
@@ -214,17 +205,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	public abstract void save();
 	
 	public String exportErr() throws Exception{
-		
-//		if(!StringUtil.isEmpty(billEntity.getResultFilePath())){
-//			logger.info("删除历史结果文件");
-//			boolean resultF = storageClient.deleteFile(billEntity.getResultFilePath());
-//			if(resultF){
-//				logger.info("删除历史结果文件-成功");
-//			}
-//			else{
-//				logger.info("删除历史结果文件-失败");
-//			}
-//		}
 		
 		POISXSSUtil poiUtil = new POISXSSUtil();
 		SXSSFWorkbook workbook = new SXSSFWorkbook(10000);		
@@ -263,18 +243,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	    String resultFullPath = resultStorePath.getFullPath();
 	    System.out.println(resultFullPath);
 	    
-	    //billReceiveMasterRepository.delete(null);  //删除临时表数据
-//	    billReceiveMasterRepository.update(null); //更新账单导入主表状态和结果文件路径
-//	    logger.info("上传结果文件到FastDfs - 成功");
-	    
-//        try {
-//        	poiUtil.exportExcel2FilePath(poiUtil,workbook,"test sheet 1",1, headDetailMapList, dataDetailList);
-////        	poiUtil.exportExcel2FilePath(poiUtil,hssfWorkbook,"test sheet 1",dataList.size()+1, headInfoList, dataList);
-////        	poiUtil.exportExcelFilePath(poiUtil,hssfWorkbook,"test sheet 2","e:\\tmp\\customer2.xlsx", headInfoList, dataList);
-//        	poiUtil.write2FilePath(workbook, "D:\\testhaha.xlsx");
-//		} catch (IOException e) {
-//			logger.error("写入文件异常", e);
-//		}
 	    errMap.clear();
 	    return resultFullPath;
 	}

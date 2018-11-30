@@ -49,8 +49,6 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			throws Exception {
 		//异常信息
 		String errorMessage="";
-		
-
 		// TODO Auto-generated method stub
 		//配送费
 		List<BillFeesReceiveDispatchTempEntity> dispatchList = new ArrayList<BillFeesReceiveDispatchTempEntity>();
@@ -60,7 +58,6 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
 			return dispatchList;
 		}
-		
 		BillFeesReceiveDispatchTempEntity dispatchEntity = new BillFeesReceiveDispatchTempEntity();
 		//仓储费
 		BillFeesReceiveStorageTempEntity storageEntity = new BillFeesReceiveStorageTempEntity();
@@ -71,8 +68,6 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
-
 				switch (dc.getColName()) {
 				case "仓库":
 					if(StringUtils.isNotBlank(dc.getColName())){

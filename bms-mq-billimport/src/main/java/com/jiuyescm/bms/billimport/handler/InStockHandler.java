@@ -49,7 +49,6 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity2 = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
-			System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 			try {
 				switch (dc.getColName()) {
 				case "仓库名称":

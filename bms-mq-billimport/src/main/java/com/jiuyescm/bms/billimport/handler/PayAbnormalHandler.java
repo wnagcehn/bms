@@ -44,7 +44,6 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		//DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				System.out.println("列名【" + dc.getColName() + "】|值【"+ dc.getColValue() + "】");
 				switch (dc.getColName()) {
 				case "仓库":
 					if (StringUtils.isNotBlank(dc.getColValue())) {

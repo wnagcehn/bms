@@ -58,8 +58,6 @@ public class TransportHandler extends
 		BillFeesReceiveTransportTempEntity entity20 = new BillFeesReceiveTransportTempEntity();
 
 		for (DataColumn dc : dr.getColumns()) {
-			System.out.println("列名【" + dc.getColName() + "】|值【"
-					+ dc.getColValue() + "】" + "||列号：" + dc.getColNo());
 			try {
 				switch (dc.getColName()) {
 				case "订单创建日期":
