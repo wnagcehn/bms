@@ -71,6 +71,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	private String maxRef = null;
 	private StylesTable stylesTable;// 单元格
 	private OpcSheet sheet;
+	private boolean isTitle=true; //是否为表格抬头行
 	// 注解名与字段名映射 <注解名,字段名>
 	//private Map<String, String> titleMap = new HashMap<String, String>();
 
@@ -217,6 +218,9 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			DataColumn dc = new DataColumn();
 			dc.setColNo(curCol);
 			curDataRow.put(curCol,dc);
+			if(curRow>titleRowNo){
+				isTitle = false;
+			}
 			if(curRow == 1){
 				headMap.put(ref,curCol);
 				headAMap.put(ref,"");
@@ -338,6 +342,19 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	 */
 	@SuppressWarnings("deprecation")
 	public String getDataValue(String value, String thisStr) {
+		//如果是表格头行
+		if(isTitle){
+			String sstIndex = value.toString();
+			try {
+				int idx = Integer.parseInt(sstIndex);
+				XSSFRichTextString rtss = new XSSFRichTextString(sst.getEntryAt(idx));// 根据idx索引值获取内容值
+				thisStr = rtss.toString();
+				rtss = null;
+			} catch (NumberFormatException ex) {
+				thisStr = value.toString();
+			}
+			return thisStr;
+		}
 		switch (nextDataType) {
 		// 这几个的顺序不能随便交换，交换了很可能会导致数据错误
 		case BOOL: // 布尔值
