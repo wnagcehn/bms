@@ -105,13 +105,17 @@ public class BillReceiveMasterVo implements IEntity {
 		//确认日期
 		private Date confirmDate;
 		//备注
-		private Date remark;
+		private String remark;
 		
-		public Date getRemark() {
+		public String getRemark() {
 			return remark;
 		}
 
-		public void setRemark(Date remark) {
+		//限制备注字段长度
+		public void setRemark(String remark) {
+			if(remark.length()>128){
+				remark=remark.substring(0,128);
+			}
 			this.remark = remark;
 		}
 

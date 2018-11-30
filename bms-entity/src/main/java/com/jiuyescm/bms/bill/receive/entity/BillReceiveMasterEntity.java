@@ -105,13 +105,13 @@ public class BillReceiveMasterEntity implements IEntity {
 	//确认日期
 	private Date confirmDate;
 	//备注
-	private Date remark;
+	private String remark;
 	
-	public Date getRemark() {
+	public String getRemark() {
 		return remark;
 	}
 
-	public void setRemark(Date remark) {
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
