@@ -67,7 +67,7 @@ public class WarehouseDictService implements IWarehouseDictService {
 			return null;
 		}
 		else{
-			return result.getWarehousecode();
+			return result.getWarehouseid();
 		}
 	}
 

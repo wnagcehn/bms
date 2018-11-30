@@ -95,6 +95,7 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 		}
 		//商城耗材费
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
+			entity.setBillNo(billNo);
 			entity.setSubjectCode("wh_mall_material");
 			list.add(entity);
 		}

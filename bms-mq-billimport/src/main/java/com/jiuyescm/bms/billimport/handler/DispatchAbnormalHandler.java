@@ -105,6 +105,7 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 		
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			//改地址退件费
+			entity.setBillNo(billNo);
 			entity.setSubjectCode("de_change");
 			list.add(entity);
 		}	

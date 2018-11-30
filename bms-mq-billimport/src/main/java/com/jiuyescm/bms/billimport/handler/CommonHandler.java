@@ -62,9 +62,12 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	
 	private BillReceiveMasterEntity billEntity;
 	
+	protected String billNo;
+	
 	@Override
 	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map<String, Object> param) throws Exception{
 		//this.billEntity = null;//根据param中的bill_no查询 ???
+		billNo=param.get("billNo").toString();
 		sheetName = sheet.getSheetName();
 		logger.info("正在处理sheet:{}", sheetName);
 		
@@ -84,17 +87,15 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		System.out.println("errMap.size()--"+errMap.size());
 		//Excel校验未通过
 		if(errMap.size()>0){
-			updateStatus(param.get("billNo").toString(), BmsEnums.taskStatus.FAIL.getCode(), 99);	
+			updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);	
 			String resultPath = exportErr();
-//			String billNo = (String) param.get("billNo");
 			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
-			billReceiveMasterVo.setBillNo("AT0000000469");
+			billReceiveMasterVo.setBillNo(billNo);
 			billReceiveMasterVo.setResultFilePath(resultPath);
 			billReceiveMasterService.update(billReceiveMasterVo);
 		}else{
 			
 			try{
-				String billNo=param.get("billNo").toString();			
 				//将临时表的数据写入正式表（仓储、配送、干线、航空）
 				billFeesReceiveHandService.saveDataFromTemp(billNo);
 				//无论保存成功与否删除所有临时表的数据
@@ -114,7 +115,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
 				checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
-				checkInfoVo.setBillNo(param.get("billNo").toString());
+				checkInfoVo.setBillNo(billNo);
 				checkInfoVo.setBillName(param.get("billName").toString());
 				checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
 				checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
@@ -144,8 +145,16 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				//存储金额
 				
 				billCheckInfoService.saveNew(checkInfoVo);
+				
+				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);	
+
 			}catch (Exception e) {
 				logger.info("异常信息",e.getMessage());
+				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
+				billReceiveMasterVo.setBillNo(billNo);
+				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
+				billReceiveMasterVo.setTaskRate(99);
+				billReceiveMasterService.update(billReceiveMasterVo);
 			}
 		}
 	}

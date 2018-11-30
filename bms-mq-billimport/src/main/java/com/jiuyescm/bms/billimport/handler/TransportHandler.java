@@ -3,23 +3,18 @@ package com.jiuyescm.bms.billimport.handler;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveTransportTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.common.utils.DateUtil;
-import com.jiuyescm.constants.BmsEnums;
-import com.jiuyescm.exception.BizException;
 
 /**
  * 干线
@@ -205,7 +200,7 @@ public class TransportHandler extends
 						+ dc.getColValue() + ")" + "转换失败;";
 			}
 		}
-
+		entity.setBillNo(billNo);
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
