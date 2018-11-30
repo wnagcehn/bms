@@ -1,9 +1,6 @@
 package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +86,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 		
 		//仓租费
 		entity.setSubjectCode("wh_rent");
+		entity.setBillNo(billNo);
 		list.add(entity);	
 		
 		return list;

@@ -131,6 +131,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 			}
 		}
 
+		entity.setBillNo(billNo);
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
@@ -139,7 +140,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 						PropertyUtils.copyProperties(entity1, entity);
 						entity1.setAmount(new BigDecimal(dc.getColValue()));
 						// entity1.setFeesType("BASE");
-						if (subject1.getSubjectCode() != null) {
+						if (subject1.getSubjectCode() != null) {							
 							entity1.setSubjectCode(subject1.getSubjectCode());
 						}
 						listEntity.add(entity1);

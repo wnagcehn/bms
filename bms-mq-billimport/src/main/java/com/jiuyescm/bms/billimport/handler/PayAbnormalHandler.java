@@ -1,13 +1,9 @@
 package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -85,6 +81,7 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 		//仓库理赔费
 		if (null != entity) {
+			entity.setBillNo(billNo);
 			entity.setSubjectCode("wh_abnormal_pay");
 			list.add(entity);
 		}

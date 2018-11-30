@@ -19,66 +19,39 @@ import com.jiuyescm.bms.excel.utils.DateUtils;
 public class ExcelReaderTest {
 
 	private static Logger logger = LoggerFactory.getLogger(ExcelReaderTest.class);
-	
-//	public static void main(String[] org){
-//		String path = "D:\\账单导入模板.xlsx";
-//		File file = new File(path);
-//		
-//		ExcelXlsxReader er;
-//		try {
-//			FileInputStream inputStream = new FileInputStream(file);
-//			er = new ExcelXlsxReader(inputStream);
-//			List<OpcSheet> sheets = er.getSheets();
-//			System.out.println(sheets.size());
-//			er.readRow(3, new SheetReadCallBack() {
-//				@Override
-//				public void read(DataRow dr) {
-//					
-//					System.out.println("----行号【" + dr.getRowNo() + "】");
-//					for (DataColumn dc : dr.getColumns()) {
-//
-//						System.out.println("列名【" + dc.getColName() + "】|值【"
-//								+ dc.getColValue() + "】");
-//					}
-//
-//				}
-//
-//				@Override
-//				public void finish() {
-//					System.out.println("读取完毕");
-//				}
-//			},3,5);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	@Test
 	public void test2() throws FileNotFoundException {
-		String path = "D:\\456.xlsx";
+		String path = "E:\\cmap\\file\\123.xlsx";
 		File file = new File(path);
 		FileInputStream inputStream = new FileInputStream(file);
 		ExcelXlsxReader er;
-		try {			
+		try {
+			
+//			System.out.println("-------------------"+DateUtils.changeValueToTimestamp("43347.74"));
+			
 			er = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = er.getSheets();
 			System.out.println(sheets.size());
 			er.readRow(1, new SheetReadCallBack() {
 				@Override
 				public void read(DataRow dr) {
+					
 					System.out.println("----行号【" + dr.getRowNo() + "】");
 					for (DataColumn dc : dr.getColumns()) {
 
 						System.out.println("列名【" + dc.getColName() + "】|值【"
 								+ dc.getColValue() + "】");
 					}
+
 				}
+
 				@Override
 				public void finish() {
 					System.out.println("读取完毕");
 				}
 			},1,2);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

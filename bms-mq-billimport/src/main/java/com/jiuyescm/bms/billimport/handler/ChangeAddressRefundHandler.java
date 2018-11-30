@@ -102,7 +102,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 		
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			//改地址退件费
-			entity.setBillNo("AT0000000482");
+			entity.setBillNo(billNo);
 			entity.setSubjectCode("de_change");
 			list.add(entity);
 		}	

@@ -158,6 +158,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				count++;
 				if(count>6){
 					if(StringUtils.isNotBlank(feeEntity.getMaterialCode())){
+						feeEntity.setBillNo(billNo);
 						feeEntity.setSubjectCode("wh_material_use");
 						list.add(feeEntity);
 					}

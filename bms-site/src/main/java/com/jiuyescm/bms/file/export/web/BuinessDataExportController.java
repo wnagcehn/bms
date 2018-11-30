@@ -380,6 +380,12 @@ public class BuinessDataExportController extends BaseController {
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "instockNo");
 		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "外部单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "externalNum");
+		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "入库件数");
@@ -436,6 +442,7 @@ public class BuinessDataExportController extends BaseController {
 				dataItem.put("customerName", entity.getCustomerName());
 				dataItem.put("instockType", entity.getInstockType());
 				dataItem.put("instockNo", entity.getInstockNo());
+				dataItem.put("externalNum", entity.getExternalNum());
 				dataItem.put("totalQty", entity.getQuantity());
 				dataItem.put("totalBox", entity.getBox());
 				dataItem.put("totalWeight", entity.getWeight() == null ? "":(double)entity.getWeight()/1000);
@@ -1783,7 +1790,13 @@ public class BuinessDataExportController extends BaseController {
 	private List<Map<String, Object>> getAddHead() {
 		List<Map<String, Object>> headInfoList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
-
+		
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "增值编号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "wmsId");
+		headInfoList.add(itemMap);
+		
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "日期");
 		itemMap.put("columnWidth", 25);
@@ -1857,6 +1870,7 @@ public class BuinessDataExportController extends BaseController {
 		double amount = 0d;
 		for (FeesReceiveStorageEntity entity : list) {
 			dataItem = new HashMap<String, Object>();
+			dataItem.put("wmsId", entity.getWmsId());
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("warehouseName", entity.getWarehouseName());
 			dataItem.put("customerName", entity.getCustomerName());
