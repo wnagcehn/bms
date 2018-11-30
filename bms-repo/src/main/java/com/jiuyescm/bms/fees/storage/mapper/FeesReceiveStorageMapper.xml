@@ -651,7 +651,7 @@
    
 	<!-- 预账单增值费 -->
 	<select id="queryPreBillStorageAddFee" parameterType="Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
-	   	SELECT b.warehouse_code as warehouseCode, b.warehouse_name as warehouseName, b.customerid as customerId, 
+	   	SELECT b.wms_id as wmsId, b.warehouse_code as warehouseCode, b.warehouse_name as warehouseName, b.customerid as customerId, 
 	   		b.customer_name as customerName, b.fees_no as feesNo, b.fees_type as otherSubjectCode,
 			a.cost, a.derate_amount as derateAmount, ifnull(a.cost,0)-ifnull(a.derate_amount,0) as receiptAmount,
 			b.num as quantity, b.fees_unit as unit, a.unit_price as unitPrice, b.create_time as createTime,
