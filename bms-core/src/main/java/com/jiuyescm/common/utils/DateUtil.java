@@ -407,7 +407,7 @@ public class DateUtil {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             value = dateFormat.format(date);
     	}
-    	String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy","yyyy/MM/dd","yyyy/MM/dd HH:mm:ss","yyyy年MM月dd日","yyyy/MM/dd HH:mm" };
+    	String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy","yyyy/MM/dd","yyyy/MM/dd HH:mm:ss","yyyy年MM月dd日","yyyy/MM/dd HH:mm","yyyy-MM-dd hh:mm:ss.0" };
 		Date date = DateUtils.parseDate(value, dataPatterns);
 		Timestamp ts=new Timestamp(date.getTime());
 		return ts;

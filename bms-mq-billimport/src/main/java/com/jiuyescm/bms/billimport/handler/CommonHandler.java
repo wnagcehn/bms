@@ -99,7 +99,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	}
 	
 	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{
-		xlsxReader.readRow(1, new SheetReadCallBack() {
+		xlsxReader.readRow(sheet.getSheetId(), new SheetReadCallBack() {
 			@Override
 			public void read(DataRow dr) {
 				try {
