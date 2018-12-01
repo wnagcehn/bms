@@ -2,6 +2,12 @@ package com.jiuyescm.bms.billimport;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +23,18 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
+import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveHandService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
+import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
+import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
+import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.constants.BmsEnums;
@@ -40,6 +56,13 @@ public class ReceiveBillImportListener implements MessageListener {
 	
 	@Autowired
 	private IBillReceiveMasterService billReceiveMasterService;
+	
+	@Autowired private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
+	@Autowired private IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
+	@Autowired private IBillFeesReceiveDispatchTempService billFeesReceiveDispatchTempService;
+	@Autowired private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
+	@Autowired private IBillFeesReceiveHandService billFeesReceiveHandService;
+	@Autowired private IBillCheckInfoService billCheckInfoService;	
 
 	private ExcelXlsxReader xlsxReader;
 
@@ -111,14 +134,19 @@ public class ReceiveBillImportListener implements MessageListener {
 				try {
 					handler.process(xlsxReader, opcSheet, map);
 				} catch (Exception ex) {
-
-				}
-				// saveAll 保存临时表数据到正式表
+					logger.info("异常"+ex.getMessage());
+					break;
+				}			
 			}
+			
+			// saveAll 保存临时表数据到正式表
+			saveAll(map);
 			xlsxReader.close();
 		} catch (Exception ex) {
 			logger.error("readExcel 异常 {}", ex);
 		}
+		
+		
 	}
 
 	/**
@@ -152,5 +180,129 @@ public class ReceiveBillImportListener implements MessageListener {
 		}
 		return map;
 	}
+	
+	public void saveAll(Map<String, Object> param){
+		String billNo=param.get("billNo").toString();
+		try{
+			if("sucess".equals(param.get("result").toString())){
+				logger.info(billNo+"临时表数据开始写入正式表");
+				//将临时表的数据写入正式表（仓储、配送、干线、航空）
+				billFeesReceiveHandService.saveDataFromTemp(billNo);
+				//无论保存成功与否删除所有临时表的数据
+				logger.info(billNo+"删除临时表数据");
+				billFeesReceiveStorageTempService.deleteBatchTemp(billNo);
+				billFeesReceiveDispatchTempService.deleteBatchTemp(billNo);
+				billFeesReceiveTransportTempService.deleteBatchTemp(billNo);
+				billFeesReceiveAirTempService.deleteBatchTemp(billNo);
+				//统计金额
+				logger.info(billNo+"更新总金额至主表数据");
+				Double totalMoney=billFeesReceiveStorageTempService.getImportTotalAmount(billNo);
+				BillReceiveMasterVo entity=new BillReceiveMasterVo();
+				entity.setAmount(totalMoney);
+				entity.setBillNo(billNo);
+				//更新导入主表
+				billReceiveMasterService.update(entity);
+				logger.info(billNo+"写入账单主表");
+				//账单跟踪 组装数据
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
+				checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
+				checkInfoVo.setBillNo(billNo);
+				checkInfoVo.setBillName(param.get("billName").toString());
+				checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
+				checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
+				//checkInfoVo.setBillStartTime(DateUtil.formatTimestamp(param.get("billStartTime")));
+				checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
+				checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
+				checkInfoVo.setProjectName(param.get("projectName").toString());
+				checkInfoVo.setSellerId(param.get("sellerId").toString());
+				checkInfoVo.setSellerName(param.get("sellerName").toString());
+				checkInfoVo.setDeptName(param.get("deptName").toString());
+				checkInfoVo.setDeptCode(param.get("deptCode").toString());
+				checkInfoVo.setProjectManagerId(param.get("projectManagerId").toString());
+				checkInfoVo.setProjectManagerName(param.get("projectManagerName").toString());
+				checkInfoVo.setBalanceId(param.get("balanceId").toString());
+				checkInfoVo.setBalanceName(param.get("balanceName").toString());
+				checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
+				checkInfoVo.setIsneedInvoice(BmsEnums.BillCheckStateEnum.getCode(param.get("isneedInvoice").toString()));
+				if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
+					checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
+					checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
+					checkInfoVo.setConfirmDate(format.parse(param.get("confirmDate").toString()));
+				}
+				//新增账单状态判断
+				//1）如果对账状态为“已确认”and是否需要开票为“是”，将账单状态置为“待开票”；
+				//2）如果对账状态为“已确认”and是否需要开票为“否”，将账单状态置为“待收款”；
+				//3）如果对账状态不为“已确认”，将账单状态置为“待确认”；
+				if(BillCheckStateEnum.CONFIRMED.getCode().equals(checkInfoVo.getBillCheckStatus()) && "1".equals(checkInfoVo.getIsneedInvoice())){
+					checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_INVOICE.getCode());
+				}else if(BillCheckStateEnum.CONFIRMED.getCode().equals(checkInfoVo.getBillCheckStatus()) && "0".equals(checkInfoVo.getIsneedInvoice())){
+					checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+				}else{
+					checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_CONFIRMED.getCode());
+				}
+				BigDecimal money=BigDecimal.valueOf(totalMoney);
+				checkInfoVo.setConfirmAmount(money);
+				checkInfoVo.setConfirmUnInvoiceAmount(money);
+				checkInfoVo.setUnReceiptAmount(money);
+				checkInfoVo.setDelFlag("0");
+				checkInfoVo.setCreator(param.get("creator").toString());
+				checkInfoVo.setCreatorId(param.get("creatorId").toString());
+				checkInfoVo.setIsapplyBad("0");
+				checkInfoVo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());//未收款
+				//账单逾期时间
+				Date overdueDate=getDate(checkInfoVo.getCreateMonth());
+				checkInfoVo.setOverdueDate(overdueDate);
+				//checkInfoVo.setCreateTime(DateUtil.formatTimestamp(param.get("createTime")));
+				//存储金额
+				billCheckInfoService.saveNew(checkInfoVo);
+				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);
+			}else{
+				//无论保存成功与否删除所有临时表的数据
+				logger.info(billNo+"删除临时表数据");
+				billFeesReceiveStorageTempService.deleteBatchTemp(billNo);
+				billFeesReceiveDispatchTempService.deleteBatchTemp(billNo);
+				billFeesReceiveTransportTempService.deleteBatchTemp(billNo);
+				billFeesReceiveAirTempService.deleteBatchTemp(billNo);
+				updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);
+			}
+			
+		}catch (Exception e) {
+			logger.info("异常信息{}",e.getMessage());
+			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
+			billReceiveMasterVo.setBillNo(billNo);
+			billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
+			billReceiveMasterVo.setTaskRate(99);
+			billReceiveMasterVo.setRemark(e.getMessage());
+			billReceiveMasterService.update(billReceiveMasterVo);
+		}
+	}
 
+	public Date getDate(int createMonth){
+		try {
+			String createDate="20"+createMonth+"";
+			int year=Integer.parseInt(createDate.substring(0, 4));
+			int month=Integer.parseInt(createDate.substring(4, 6));
+			
+			if(month<=0){
+				year=year-1;
+			}
+			 Calendar cal = Calendar.getInstance();    
+	         cal.set(Calendar.YEAR, year);     
+	         cal.set(Calendar.MONTH, month);     
+	         cal.set(Calendar.DAY_OF_MONTH,20);  
+			
+	         String date=new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime()); 
+	         
+	         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");		
+	         
+	 		 Date date1 = df.parse(date);
+	 		 
+	 		 return date1;
+ 		} catch (ParseException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+		return null;
+	}
 }

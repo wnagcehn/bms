@@ -147,7 +147,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
     <update id="update" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
         update bill_receive_master
         <trim prefix="set" suffixOverrides=",">
-        	adjust_amount = #{adjustAmount,jdbcType=DECIMAL},
+        	<if test=" adjustAmount != null and adjustAmount !='' ">
+        	    adjust_amount = #{adjustAmount,jdbcType=DECIMAL},        	
+        	</if>
 			<if test=" createMonth != null and createMonth !='' ">
 				create_month = #{createMonth,jdbcType=INTEGER},
 			</if>

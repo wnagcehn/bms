@@ -672,7 +672,7 @@ jQuery(arg.dom).xCreate({&#xD;
 			dorado.MessageBox.alert(&quot;下载文件不存在!&quot;);&#xD;
 			return;&#xD;
 		}else{&#xD;
-			var action=view.get(&quot;#downloadAction&quot;);&#xD;
+			var action=view.get(&quot;#downloadResultAction&quot;);&#xD;
 			action.execute();&#xD;
 		}&#xD;
 	}&#xD;
