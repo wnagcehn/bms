@@ -15,7 +15,6 @@ import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.common.utils.DateUtil;
-import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -157,7 +156,7 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		return list;

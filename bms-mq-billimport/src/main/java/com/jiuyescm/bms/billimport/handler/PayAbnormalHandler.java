@@ -86,7 +86,7 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		return list;

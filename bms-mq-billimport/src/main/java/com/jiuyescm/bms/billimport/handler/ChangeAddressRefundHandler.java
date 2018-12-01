@@ -96,7 +96,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 		}
 	
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){

@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.jms.JMSException;
@@ -211,7 +212,11 @@ public class ReceiveBillImportListener implements MessageListener {
 				checkInfoVo.setBillName(param.get("billName").toString());
 				checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
 				checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
-				//checkInfoVo.setBillStartTime(DateUtil.formatTimestamp(param.get("billStartTime")));
+				
+				Date d=getNewDate(param.get("billStartTime").toString());
+				if(d!=null){
+					checkInfoVo.setBillStartTime(d);
+				}
 				checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
 				checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
 				checkInfoVo.setProjectName(param.get("projectName").toString());
@@ -303,6 +308,24 @@ public class ReceiveBillImportListener implements MessageListener {
  			// TODO Auto-generated catch block
  			e.printStackTrace();
  		}
+		return null;
+	}
+	
+	
+	public Date getNewDate(String datdString){
+		try {
+			datdString = datdString.replace("GMT", "").replaceAll("\\(.*\\)", "");
+			SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+			Date dateTrans = null;
+			 dateTrans = format.parse(datdString);
+			 String d= new SimpleDateFormat("yyyy-MM-dd").format(dateTrans);
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//yyyy-mm-dd, 会出现时间不对, 因为小写的mm是代表: 秒
+			 Date utilDate = sdf.parse(d);
+			 return utilDate;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("转换异常",e.getMessage());
+		}
 		return null;
 	}
 }

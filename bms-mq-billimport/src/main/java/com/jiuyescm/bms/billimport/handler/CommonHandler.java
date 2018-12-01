@@ -111,7 +111,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 						saveTo();
 					}
 				} catch (Exception e) {
-					DataColumn dColumn = new DataColumn("异常描述",dr.getRowNo()+"行："+e.getMessage());
+					DataColumn dColumn = new DataColumn("异常描述","第"+dr.getRowNo()+"行："+e.getMessage());
 					dr.addColumn(dColumn);
 					errMap.add(dr);
 				}

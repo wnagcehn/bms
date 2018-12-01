@@ -88,7 +88,7 @@ public class MaterialDictService implements IMaterialDictService {
 				condition.put("barcode", code);
 				List<PubMaterialInfoVo> list =  pubMaterialInfoService.queryList(condition);
 				if(list == null || list.size()==0){
-					return new PubMaterialInfoVo();
+					return null;
 				}
 				return list.get(0);
 			}
@@ -112,7 +112,7 @@ public class MaterialDictService implements IMaterialDictService {
 				condition.put("materialName", name);
 				List<PubMaterialInfoVo> list =  pubMaterialInfoService.queryList(condition);
 				if(list == null || list.size()==0){
-					return new PubMaterialInfoVo();
+					return null;
 				}
 				return list.get(0);
 			}

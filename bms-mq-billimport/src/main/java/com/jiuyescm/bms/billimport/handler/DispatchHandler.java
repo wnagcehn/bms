@@ -2,9 +2,7 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -165,6 +163,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 				switch (dc.getColName()) {
 				case "运费":
 					dispatchEntity.setSubjectCode("de_delivery_amount");
+					dispatchEntity.setBillNo(billNo);
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						dispatchEntity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}else{
@@ -185,6 +184,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					}else{
 						storageEntity1.setAmount(new BigDecimal(0));
 					}
+					storageEntity1.setBillNo(billNo);
 					storageEntity1.setSubjectCode("wh_b2c_work");
 					storageList.add(storageEntity1);
 					break;
@@ -195,6 +195,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					}else{
 						storageEntity2.setAmount(new BigDecimal(0));
 					}
+					storageEntity2.setBillNo(billNo);
 					storageEntity2.setSubjectCode("wh_package");
 					storageList.add(storageEntity2);
 					break;
@@ -217,7 +218,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		return dispatchList;

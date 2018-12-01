@@ -80,7 +80,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		//仓租费

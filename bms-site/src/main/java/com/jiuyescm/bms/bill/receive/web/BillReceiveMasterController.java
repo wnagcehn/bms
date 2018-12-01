@@ -1,14 +1,14 @@
 package com.jiuyescm.bms.bill.receive.web;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.Format;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -26,8 +26,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.dubbo.common.json.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -35,16 +33,15 @@ import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileResolver;
+import com.bstek.dorado.util.DateUtils;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
-import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
-import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -55,6 +52,7 @@ import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
@@ -185,6 +183,17 @@ public class BillReceiveMasterController {
 	 */
 	@FileResolver
 	public Map<String, Object> importReceiveBillTemplate(final UploadFile file,final Map<String, Object> parameter) throws Exception {
+		
+		String  datdString=parameter.get("billStartTime").toString();
+		
+		SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+		  Date dateTrans = null;
+		 dateTrans = format.parse(datdString);
+		 String d= new SimpleDateFormat("yyyy-MM-dd").format(dateTrans).replace("-","/");
+		 Date d2=DateUtils.parse(d);
+		 
+		 System.out.println(d2);
+		 
 		// 校验信息（报错提示）
 		final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
 		List<UserVO> userList = userService.findAllUsers();
@@ -195,6 +204,7 @@ public class BillReceiveMasterController {
 		if (!maps.isEmpty()) {
 			return maps;
 		}
+		
 		
 		
 		if ("CONFIRMED".equals(parameter.get("billCheckStatus"))) {
@@ -304,7 +314,7 @@ public class BillReceiveMasterController {
 			public Map<String, Object> handleObtainLock() {
 				Map<String, Object> map = Maps.newHashMap();
 				try {
-				   map = importFileAsyn(file,parameter);
+				  /* map = importFileAsyn(file,parameter);*/
 				   return map;
 				} catch (Exception e) {
 					ErrorMessageVo errorVo = new ErrorMessageVo();

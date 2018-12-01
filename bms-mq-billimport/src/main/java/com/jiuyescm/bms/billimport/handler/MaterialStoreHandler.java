@@ -2,24 +2,17 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
-import com.jiuyescm.bms.billimport.IFeesHandler;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
-import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
-import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
@@ -110,7 +103,7 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		return list;

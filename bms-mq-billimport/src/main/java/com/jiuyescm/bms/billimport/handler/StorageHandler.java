@@ -261,8 +261,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			System.out.println("行【" + dr.getRowNo()+"】存在重复");
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		return lists;

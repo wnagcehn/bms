@@ -123,13 +123,18 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 						if(vo!=null){
 							feeEntity.setMaterialCode(dc.getColValue());
 						}else{
-							errorMessage+="编码不存在;";
+							errorMessage+="列"+dc.getColNo()+"编码不存在;";
 						}
 					}
 					break;
 				case "数量":
 					if(StringUtils.isNotBlank(dc.getColValue())){
 						feeEntity.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "重量":
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						feeEntity.setTotalWeight(new BigDecimal(dc.getColValue()));
 					}
 					break;
 				case "金额":
@@ -143,11 +148,11 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 					break;
 				default:
 					if(StringUtils.isNotBlank(dc.getColValue())){
-						PubMaterialInfoVo pubvo=materialDictService.getMaterialByCode(dc.getColValue());
+						PubMaterialInfoVo pubvo=materialDictService.getMaterialByName(dc.getColValue());
 						if(pubvo!=null){
 							feeEntity.setMaterialName(dc.getColValue());
 						}else{
-							errorMessage+="耗材名称不存在;";
+							errorMessage+="列"+dc.getColNo()+"耗材名称不存在;";
 						}
 					}			
 					break;
@@ -178,7 +183,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		return list;
 	}

@@ -2,9 +2,7 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,13 +97,13 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){
-			throw new BizException("行【" + dr.getRowNo()+"】"+ errorMessage);
+			throw new BizException(errorMessage);
 		}
 		
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
-			//改地址退件费
+			//宅配理赔
 			entity.setBillNo(billNo);
-			entity.setSubjectCode("de_change");
+			entity.setSubjectCode("de_abnormal_pay");
 			list.add(entity);
 		}	
 		return list;

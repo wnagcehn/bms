@@ -1079,7 +1079,7 @@ var confirmManId = entity.get(&quot;confirmManId&quot;);&#xD;
 var confirmMan = entity.get(&quot;confirmMan&quot;);&#xD;
 var confirmDate = entity.get(&quot;confirmDate&quot;);&#xD;
 &#xD;
-&#xD;
+alert(billStartTime);&#xD;
 var invoiceName = entity.get(&quot;invoiceName&quot;);&#xD;
 var invoiceId = entity.get(&quot;invoiceId&quot;);&#xD;
 var createMonth = entity.get(&quot;createMonth&quot;);&#xD;
