@@ -88,7 +88,8 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			if(repeatMap.containsKey(entity.getWaybillNo())){
-				errorMessage += "数据重复--第【"+repeatMap.get(entity.getWaybillNo())+"】行已存在运单【"+entity.getWaybillNo()+";";
+				errorMessage += "与第"
+						+ repeatMap.get(entity.getWaybillNo()) + "行运单号重复;";
 			}else{
 				repeatMap.put(entity.getWaybillNo(), dr.getRowNo());
 			}

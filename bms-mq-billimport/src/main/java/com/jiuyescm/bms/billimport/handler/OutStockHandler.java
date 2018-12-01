@@ -152,7 +152,8 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getOrderNo())){
 			if(repeatMap.containsKey(entity.getOrderNo())){
-				errorMessage += "数据重复--第【"+repeatMap.get(entity.getOrderNo())+"】行已存在出库单号【"+entity.getOrderNo()+";";
+				errorMessage += "与第"
+						+ repeatMap.get(entity.getOrderNo()) + "行出库单号重复;";
 			}else{
 				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
 			}

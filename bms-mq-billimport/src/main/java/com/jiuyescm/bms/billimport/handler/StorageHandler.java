@@ -253,7 +253,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		if(null != entity.getCreateTime()){
 			String time = sdf.format(entity.getCreateTime());
 			if(repeatMap.containsKey(time)){
-				errorMessage += "数据重复--第【"+repeatMap.get(time)+"】行已存在日期【"+time+";";
+				errorMessage += "与第"
+						+ repeatMap.get(entity.getCreateTime()) + "行日期重复;";
 			}else{
 				repeatMap.put(time, dr.getRowNo());
 			}

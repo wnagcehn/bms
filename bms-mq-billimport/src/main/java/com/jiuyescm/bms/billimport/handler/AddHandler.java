@@ -126,7 +126,8 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getOrderNo())){
 			if(repeatMap.containsKey(entity.getOrderNo())){
-				errorMessage += "数据重复--第【"+repeatMap.get(entity.getOrderNo())+"】行已存在【"+entity.getOrderNo()+";";
+				errorMessage += "与第"
+						+ repeatMap.get(entity.getOrderNo()) + "行单据编号重复;";
 			}else{
 				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
 			}
