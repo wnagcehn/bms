@@ -832,7 +832,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		}else{
 			entity.setBillStatus(CheckBillStatusEnum.TB_CONFIRMED.getCode());
 		}
-
+		
 		int result=billCheckInfoRepository.update(entity);
 		if(result<=0){
 			throw new BizException("UPDATE_NULL","账单跟踪更新确认金额失败!");
