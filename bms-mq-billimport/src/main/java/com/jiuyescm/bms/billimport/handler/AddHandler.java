@@ -114,7 +114,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		//增值费
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
 			entity.setBillNo(billNo);
-			entity.setSubjectCode("wh_value_add_subject");
+			//entity.setSubjectCode("wh_value_add_subject");
 			list.add(entity);
 		}
 		
