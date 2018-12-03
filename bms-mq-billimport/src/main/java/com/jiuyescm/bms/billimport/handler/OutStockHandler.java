@@ -68,6 +68,7 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 				case "发货时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}else {
 						errorMessage+="发货时间必填;";
 					}
@@ -119,7 +120,7 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 					PropertyUtils.copyProperties(entity1, entity);
 					entity1.setBillNo(billNo);
 					entity1.setCustomerName(customerName);
-					entity1.setCustomerId(errorMessage);
+					entity1.setCustomerId(customerId);
 					entity1.setSubjectCode("wh_b2b_work");
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));

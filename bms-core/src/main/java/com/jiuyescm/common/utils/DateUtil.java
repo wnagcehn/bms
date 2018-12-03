@@ -427,4 +427,22 @@ public class DateUtil {
 		int yymm = year%1000*100+month;
 		return yymm;
 	}
+	
+	/**
+	 * 字符串转1810格式
+	 * @param value
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Integer transStringToInteger(String value) throws ParseException{
+		if(StringUtil.isNumeric(value)){
+    		Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            value = dateFormat.format(date);
+    	}
+    	String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy","yyyy/MM/dd","yyyy/MM/dd HH:mm:ss","yyyy年MM月dd日","yyyy/MM/dd HH:mm","yyyy-MM-dd hh:mm:ss.0" };
+		Date date = DateUtils.parseDate(value, dataPatterns);
+		String dateStr = new SimpleDateFormat("yyMM").format(date);
+		return Integer.parseInt(dateStr);
+	}
 }

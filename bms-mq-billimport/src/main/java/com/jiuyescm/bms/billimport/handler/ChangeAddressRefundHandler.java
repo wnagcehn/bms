@@ -61,6 +61,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 				case "运单日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}else{
 						errorMessage+="运单日期不能为空;";
 					}

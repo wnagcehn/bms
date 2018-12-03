@@ -74,6 +74,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}		
 					break;
 				case "冷冻":
@@ -87,6 +88,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity1.setSubjectCode("wh_product_storage");
 						entity1.setChargeUnit("PALLETS");
 						entity1.setCreateTime(entity.getCreateTime());
+						entity1.setCreateMonth(entity.getCreateMonth());
 						entity1.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity1.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity1.setBillNo(billNo);
@@ -110,6 +112,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2.setSubjectCode("wh_product_storage");
 						entity2.setChargeUnit("PALLETS");
 						entity2.setCreateTime(entity.getCreateTime());
+						entity2.setCreateMonth(entity.getCreateMonth());
 						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity2.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity2.setBillNo(billNo);
@@ -133,6 +136,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity3.setSubjectCode("wh_product_storage");
 						entity3.setChargeUnit("PALLETS");
 						entity3.setCreateTime(entity.getCreateTime());
+						entity3.setCreateMonth(entity.getCreateMonth());
 						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity3.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity3.setBillNo(billNo);
@@ -156,6 +160,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4.setSubjectCode("wh_product_storage");
 						entity4.setChargeUnit("PALLETS");
 						entity4.setCreateTime(entity.getCreateTime());
+						entity4.setCreateMonth(entity.getCreateMonth());
 						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity4.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity4.setBillNo(billNo);
@@ -179,6 +184,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity5.setSubjectCode("wh_material_storage");
 						entity5.setChargeUnit("PALLETS");
 						entity5.setCreateTime(entity.getCreateTime());
+						entity5.setCreateMonth(entity.getCreateMonth());
 						entity5.setTempretureType("CW");
 						entity5.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity5.setBillNo(billNo);
@@ -202,6 +208,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity6.setSubjectCode("wh_material_storage");
 						entity6.setChargeUnit("PALLETS");
 						entity6.setCreateTime(entity.getCreateTime());
+						entity6.setCreateMonth(entity.getCreateMonth());
 						entity6.setTempretureType("LD");
 						entity6.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity6.setBillNo(billNo);
@@ -226,6 +233,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity7.setSubjectCode("wh_product_storage");
 						entity7.setChargeUnit("ITEMS");
 						entity7.setCreateTime(entity.getCreateTime());
+						entity7.setCreateMonth(entity.getCreateMonth());
 						entity7.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity7.setBillNo(billNo);
 						entity7.setCustomerId(customerId);
@@ -249,6 +257,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity8.setSubjectCode("wh_disposal");
 						//entity8.setChargeUnit("ITEMS");
 						entity8.setCreateTime(entity.getCreateTime());
+						entity8.setCreateMonth(entity.getCreateMonth());
 						entity8.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity8.setBillNo(billNo);
 						entity8.setCustomerId(customerId);
@@ -271,6 +280,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						}	
 						entity9.setSubjectCode("outstock_pallet_vm");
 						entity9.setCreateTime(entity.getCreateTime());
+						entity9.setCreateMonth(entity.getCreateMonth());
 						entity9.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity9.setAmount(BigDecimal.ZERO);
 						entity9.setBillNo(billNo);

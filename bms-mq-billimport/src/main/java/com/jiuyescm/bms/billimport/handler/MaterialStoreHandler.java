@@ -69,6 +69,7 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 				case "定货日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}else {
 						errorMessage+="定货日期必填;";
 					}

@@ -2,6 +2,7 @@ package com.jiuyescm.bms.billimport.handler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -105,6 +106,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						dispatchEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 						storageEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						dispatchEntity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
+						storageEntity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}else{
 						errorMessage+="运单生成时间不能为空;";
 					}

@@ -57,6 +57,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}else {
 						errorMessage+="日期必填";
 					}	

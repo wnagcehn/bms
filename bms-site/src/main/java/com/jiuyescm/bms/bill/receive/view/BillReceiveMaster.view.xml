@@ -157,6 +157,12 @@
       <PropertyDef name="invoiceId">
         <Property name="label">合同商家编码</Property>
       </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+      <PropertyDef name="billNo">
+        <Property name="label">账单编号</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
       <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
@@ -569,6 +575,11 @@ if(currentData){&#xD;
         <DataColumn name="billName">
           <Property name="property">billName</Property>
           <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">billNo</Property>
+          <Property name="width">100</Property>
+          <Property name="name">billNo</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">rate</Property>

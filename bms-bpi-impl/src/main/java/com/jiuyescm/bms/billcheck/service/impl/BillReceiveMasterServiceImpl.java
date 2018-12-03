@@ -61,27 +61,26 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * @param page
 	 * @param param
 	 */
-    @Override
-    public PageInfo<BillReceiveMasterVo> query(Map<String, Object> condition,
-            int pageNo, int pageSize) {
-    	
-    	PageInfo<BillReceiveMasterEntity> pageInfo=billReceiveMasterRepository.query(condition, pageNo, pageSize);
-		PageInfo<BillReceiveMasterVo> result=new PageInfo<BillReceiveMasterVo>();
+	@Override
+	public PageInfo<BillReceiveMasterVo> query(Map<String, Object> condition, int pageNo, int pageSize) {
 
-		List<BillReceiveMasterVo> voList = new ArrayList<BillReceiveMasterVo>();
-    	for(BillReceiveMasterEntity entity : pageInfo.getList()) {
-    		BillReceiveMasterVo vo = new BillReceiveMasterVo();
-    		try {
-                PropertyUtils.copyProperties(vo, entity);
-            } catch (Exception ex) {
-                logger.error("转换失败:{0}",ex);
-            }
-    		voList.add(vo);
-    	}
-		
-    	result.setList(voList);
+		PageInfo<BillReceiveMasterEntity> pageInfo = billReceiveMasterRepository.query(condition, pageNo, pageSize);
+		PageInfo<BillReceiveMasterVo> result = new PageInfo<BillReceiveMasterVo>();
+		try {
+			PropertyUtils.copyProperties(result, pageInfo);
+			List<BillReceiveMasterVo> voList = new ArrayList<BillReceiveMasterVo>();
+			for (BillReceiveMasterEntity entity : pageInfo.getList()) {
+				BillReceiveMasterVo vo = new BillReceiveMasterVo();
+				PropertyUtils.copyProperties(vo, entity);
+				voList.add(vo);
+			}
+			
+			result.setList(voList);
+		} catch (Exception ex) {
+			logger.error("转换失败:{0}", ex);
+		}
 		return result;
-     }
+	}
     
      /**
 	 * 查询

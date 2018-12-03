@@ -88,6 +88,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				case "接单时间":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
 					}else{
 						errorMessage+="接单时间不能为空;";
 					}
