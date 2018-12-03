@@ -3,7 +3,6 @@ package com.jiuyescm.bms.billimport;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -186,6 +185,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	
 	public void saveAll(Map<String, Object> param){
 		String billNo=param.get("billNo").toString();
+		BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 		try{
 			if("sucess".equals(param.get("result").toString())){
 				logger.info(billNo+"临时表数据开始写入正式表");
@@ -266,27 +266,34 @@ public class ReceiveBillImportListener implements MessageListener {
 				checkInfoVo.setOverdueDate(overdueDate);
 				checkInfoVo.setCreateTime(JAppContext.currentTimestamp());
 				//存储金额
-				billCheckInfoService.saveNew(checkInfoVo);
-				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);
+				billCheckInfoService.saveNew(checkInfoVo);				
+				//更新导入主表		
+				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.SUCCESS.getCode());
+				billReceiveMasterVo.setRemark("导入完成");
+				billReceiveMasterVo.setTaskRate(100);
 			}else{
 				//无论保存成功与否删除所有临时表的数据
 				logger.info(billNo+"删除临时表数据");
 				billFeesReceiveStorageTempService.deleteBatchTemp(billNo);
 				billFeesReceiveDispatchTempService.deleteBatchTemp(billNo);
 				billFeesReceiveTransportTempService.deleteBatchTemp(billNo);
-				billFeesReceiveAirTempService.deleteBatchTemp(billNo);
-				updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);
+				billFeesReceiveAirTempService.deleteBatchTemp(billNo);				
+				//更新导入主表		
+				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
+				billReceiveMasterVo.setRemark("导入失败:"+param.get("detail").toString());
+				billReceiveMasterVo.setTaskRate(99);
 			}
 			
 		}catch (Exception e) {
 			logger.info("异常信息{}",e.getMessage());
-			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
-			billReceiveMasterVo.setBillNo(billNo);
 			billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
 			billReceiveMasterVo.setTaskRate(99);
 			billReceiveMasterVo.setRemark(e.getMessage());
-			billReceiveMasterService.update(billReceiveMasterVo);
 		}
+		//更新主表
+		billReceiveMasterVo.setBillNo(billNo);
+		billReceiveMasterVo.setFinishTime(JAppContext.currentTimestamp());
+		billReceiveMasterService.update(billReceiveMasterVo);
 	}
 
 	public Date getDate(int createMonth){
