@@ -89,7 +89,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		}else {
 			readExcel(xlsxReader,sheet,1,2);
 		}
-		logger.info(billNo+"sheet读取完成");	
+		logger.info(billNo+sheet+"读取完成");	
 		repeatMap.clear();
 		//Excel校验未通过
 		if(errMap.size()>0){
@@ -100,6 +100,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			billReceiveMasterVo.setResultFilePath(resultPath);
 			billReceiveMasterService.update(billReceiveMasterVo);
 			param.put("result", "fail");
+			param.put("detail", sheetName+"校验不通过");
 			throw new BizException(sheetName+"校验不通过");			
 		}else{
 			param.put("result", "sucess");
