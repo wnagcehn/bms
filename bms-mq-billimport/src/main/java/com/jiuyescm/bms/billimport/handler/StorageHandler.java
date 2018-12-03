@@ -88,6 +88,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity1.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity1.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity1.setBillNo(billNo);
+						entity1.setCustomerId(customerId);
+						entity1.setCustomerName(customerName);
 					}
 					break;
 				case "冷冻费小计/元":
@@ -112,6 +114,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity2.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity2.setBillNo(billNo);
+						entity2.setCustomerId(customerId);
+						entity2.setCustomerName(customerName);
 					}
 					break;
 				case "冷藏费小计/元":
@@ -136,6 +140,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity3.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity3.setBillNo(billNo);
+						entity3.setCustomerId(customerId);
+						entity3.setCustomerName(customerName);
 					}
 					break;
 				case "恒温费小计/元":
@@ -160,6 +166,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
 						entity4.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity4.setBillNo(billNo);
+						entity4.setCustomerId(customerId);
+						entity4.setCustomerName(customerName);
 					}
 					break;
 				case "常温费小计/元":
@@ -184,6 +192,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity5.setTempretureType("CW");
 						entity5.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity5.setBillNo(billNo);
+						entity5.setCustomerId(customerId);
+						entity5.setCustomerName(customerName);
 					}
 					break;
 				case "常温包材费小计/元":
@@ -208,6 +218,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity6.setTempretureType("LD");
 						entity6.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity6.setBillNo(billNo);
+						entity6.setCustomerId(customerId);
+						entity6.setCustomerName(customerName);
 
 					}
 					break;
@@ -232,7 +244,9 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity7.setCreateTime(entity.getCreateTime());
 						entity7.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity7.setBillNo(billNo);
-
+						entity7.setCustomerId(customerId);
+						entity7.setCustomerName(customerName);
+						
 					}
 					break;
 				case "存储费按件小计/元":
@@ -256,6 +270,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity8.setCreateTime(entity.getCreateTime());
 						entity8.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity8.setBillNo(billNo);
+						entity8.setCustomerId(customerId);
+						entity8.setCustomerName(customerName);
 
 					}
 					break;
@@ -280,6 +296,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity9.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity9.setAmount(BigDecimal.ZERO);
 						entity9.setBillNo(billNo);
+						entity9.setCustomerId(customerId);
+						entity9.setCustomerName(customerName);
 					}
 					break;
 				default:

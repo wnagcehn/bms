@@ -164,6 +164,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 				case "运费":
 					dispatchEntity.setSubjectCode("de_delivery_amount");
 					dispatchEntity.setBillNo(billNo);
+					dispatchEntity.setCustomerName(customerName);
+					dispatchEntity.setCustomerid(customerId);
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						dispatchEntity.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}else{
@@ -185,6 +187,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 						storageEntity1.setAmount(new BigDecimal(0));
 					}
 					storageEntity1.setBillNo(billNo);
+					storageEntity1.setCustomerId(customerId);
+					storageEntity1.setCustomerName(customerName);
 					storageEntity1.setSubjectCode("wh_b2c_work");
 					storageList.add(storageEntity1);
 					break;
@@ -196,6 +200,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 						storageEntity2.setAmount(new BigDecimal(0));
 					}
 					storageEntity2.setBillNo(billNo);
+					storageEntity2.setCustomerName(customerName);
+					storageEntity2.setCustomerId(customerId);
 					storageEntity2.setSubjectCode("wh_package");
 					storageList.add(storageEntity2);
 					break;

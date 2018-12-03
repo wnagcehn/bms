@@ -118,6 +118,8 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		}
 
 		entity.setBillNo(billNo);
+		entity.setCustomerName(customerName);
+		entity.setCustomerId(customerId);
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {

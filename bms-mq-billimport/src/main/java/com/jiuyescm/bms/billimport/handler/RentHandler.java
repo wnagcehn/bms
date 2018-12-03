@@ -86,6 +86,8 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 		//仓租费
 		entity.setSubjectCode("wh_rent");
 		entity.setBillNo(billNo);
+		entity.setCustomerName(customerName);
+		entity.setCustomerId(customerId);
 		list.add(entity);	
 		
 		return list;

@@ -118,6 +118,8 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity1.setAmount(new BigDecimal(0));
 					}
 					entity1.setBillNo(billNo);
+					entity1.setCustomerName(customerName);
+					entity1.setCustomerId(customerId);
 					entity1.setSubjectCode("wh_instock_work");			
 					break;
 				case "入库卸货费":
@@ -128,6 +130,8 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2.setAmount(new BigDecimal(0));
 					}
 					entity2.setBillNo(billNo);
+					entity2.setCustomerName(customerName);
+					entity2.setCustomerId(customerId);
 					entity2.setSubjectCode("wh_b2c_handwork");				
 					break;
 				default:

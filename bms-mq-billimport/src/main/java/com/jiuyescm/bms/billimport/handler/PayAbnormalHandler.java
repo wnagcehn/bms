@@ -81,6 +81,8 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		//仓库理赔费
 		if (null != entity) {
 			entity.setBillNo(billNo);
+			entity.setCustomerName(customerName);
+			entity.setCustomerId(customerId);
 			entity.setSubjectCode("wh_abnormal_pay");
 			list.add(entity);
 		}

@@ -233,7 +233,10 @@ public class ReceiveBillImportListener implements MessageListener {
 				if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
 					checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
 					checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
-					checkInfoVo.setConfirmDate(format.parse(param.get("confirmDate").toString()));
+					Date date=getNewDate(param.get("confirmDate").toString());
+					if (null != date) {
+						checkInfoVo.setConfirmDate(date);
+					}	
 				}
 				//新增账单状态判断
 				//1）如果对账状态为“已确认”and是否需要开票为“是”，将账单状态置为“待开票”；

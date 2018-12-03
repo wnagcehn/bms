@@ -103,6 +103,8 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			//宅配理赔
 			entity.setBillNo(billNo);
+			entity.setCustomerName(customerName);
+			entity.setCustomerid(customerId);
 			entity.setSubjectCode("de_abnormal_pay");
 			list.add(entity);
 		}	

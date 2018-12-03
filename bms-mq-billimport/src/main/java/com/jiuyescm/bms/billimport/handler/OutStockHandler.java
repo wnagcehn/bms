@@ -118,6 +118,8 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 				case "B2B订单操作费":
 					PropertyUtils.copyProperties(entity1, entity);
 					entity1.setBillNo(billNo);
+					entity1.setCustomerName(customerName);
+					entity1.setCustomerId(errorMessage);
 					entity1.setSubjectCode("wh_b2b_work");
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -129,6 +131,8 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 				case "出库装车费":
 					PropertyUtils.copyProperties(entity2, entity);
 					entity2.setBillNo(billNo);
+					entity2.setCustomerName(customerName);
+					entity2.setCustomerId(customerId);
 					entity2.setSubjectCode("wh_b2b_handwork");
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
