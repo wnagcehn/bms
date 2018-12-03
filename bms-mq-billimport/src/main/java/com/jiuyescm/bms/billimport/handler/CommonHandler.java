@@ -60,13 +60,20 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	List<T> list = new ArrayList<T>();
 	List<DataRow> errMap = new ArrayList<DataRow>();
 	protected Map<String,Integer> repeatMap=new HashMap<String, Integer>();
-	
+	//账单编号
 	protected String billNo;
+	//商家名称
+	protected String customerName;
+	//商家id
+	protected String customerId;
+
 	
 	@Override
 	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map<String, Object> param) throws Exception{
 		//this.billEntity = null;//根据param中的bill_no查询 ???
 		billNo=param.get("billNo").toString();
+		customerName=param.get("invoiceName").toString();
+		customerId=param.get("invoiceId").toString();
 		sheetName = sheet.getSheetName();
 		logger.info("正在处理sheet:{}", sheetName);
 		
