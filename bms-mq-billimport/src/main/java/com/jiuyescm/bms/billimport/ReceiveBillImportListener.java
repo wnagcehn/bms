@@ -94,7 +94,6 @@ public class ReceiveBillImportListener implements MessageListener {
 		if (null == map) {
 			return;
 		}
-		logger.info("JSON解析成Map结果:{}",map);
 		//MQ拿到消息，更新状态
 		updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 1);
 		
@@ -110,12 +109,12 @@ public class ReceiveBillImportListener implements MessageListener {
 		try {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
-			logger.info("解析Excel, 获取Sheet：{}", sheets);
+			logger.info("解析Excel, 获取Sheet：{}", sheets.size());
 			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 20);
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
-				logger.info("准备读取sheet - {0}", sheetName);
-
+				logger.info("--------------准备读取sheet - {}", sheetName);
+				long startTime = System.currentTimeMillis();
 				// 仓储--上海01仓，北京01仓...............
 				WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
 				if (null != warehouseVo.getWarehousename()) {
@@ -138,7 +137,10 @@ public class ReceiveBillImportListener implements MessageListener {
 				} catch (Exception ex) {
 					logger.info("异常"+ex.getMessage());
 					break;
-				}			
+				}
+				finally {
+					logger.info("------------读取耗时：【"+(System.currentTimeMillis()-startTime)+"】毫秒");
+				}
 			}
 			
 			// saveAll 保存临时表数据到正式表

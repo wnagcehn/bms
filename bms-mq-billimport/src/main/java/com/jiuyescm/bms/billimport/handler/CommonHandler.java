@@ -132,7 +132,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 
 			@Override
 			public void finish() {
-				logger.info("list.size: {}", list.size());
 				if(list.size()>0){
 					saveTo();
 				}
