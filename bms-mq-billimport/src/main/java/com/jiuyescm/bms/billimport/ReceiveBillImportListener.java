@@ -189,7 +189,7 @@ public class ReceiveBillImportListener implements MessageListener {
 		try{
 			if("sucess".equals(param.get("result").toString())){
 				logger.info(billNo+"临时表数据开始写入正式表");
-				updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), 80);
+				updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), 90);
 				//将临时表的数据写入正式表（仓储、配送、干线、航空）
 				billFeesReceiveHandService.saveDataFromTemp(billNo);
 				//无论保存成功与否删除所有临时表的数据

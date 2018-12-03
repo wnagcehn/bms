@@ -66,6 +66,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	protected String customerName;
 	//商家id
 	protected String customerId;
+	//进度
+	protected Integer taskRate = 30;
 
 	
 	@Override
@@ -89,7 +91,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		}else {
 			readExcel(xlsxReader,sheet,1,2);
 		}
-		logger.info(billNo+sheet+"读取完成");	
+		logger.info(billNo+sheet+"读取完成");
+		taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
+		updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	
 		repeatMap.clear();
 		//Excel校验未通过
 		if(errMap.size()>0){
