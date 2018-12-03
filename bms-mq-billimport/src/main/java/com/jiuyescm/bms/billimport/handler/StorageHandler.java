@@ -327,14 +327,14 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			lists.add(entity9);
 		}
 		
-		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		
 		//重复性校验
 		if(null != entity.getCreateTime()){
 			String time = sdf.format(entity.getCreateTime());
 			if(repeatMap.containsKey(time)){
 				errorMessage += "与第"
-						+ repeatMap.get(entity.getCreateTime()) + "行日期重复;";
+						+ repeatMap.get(sdf.format(entity.getCreateTime())) + "行日期重复;";
 			}else{
 				repeatMap.put(time, dr.getRowNo());
 			}

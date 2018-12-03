@@ -494,7 +494,7 @@ public class BillReceiveMasterController {
 			boolean res = formatMonth(Integer.valueOf(parameter.get("createMonth").toString()));
 			if (!res) {
 				ErrorMessageVo errorVo = new ErrorMessageVo();
-				errorVo.setMsg("日期格式错误!");
+				errorVo.setMsg("导入的业务月份格式错误!");
 				infoList.add(errorVo);
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
