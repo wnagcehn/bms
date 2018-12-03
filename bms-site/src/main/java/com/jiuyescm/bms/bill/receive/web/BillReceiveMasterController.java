@@ -300,7 +300,7 @@ public class BillReceiveMasterController {
 			public Map<String, Object> handleObtainLock() {
 				Map<String, Object> map = Maps.newHashMap();
 				try {
-				  /* map = importFileAsyn(file,parameter);*/
+				   map = importFileAsyn(file,parameter);
 				   return map;
 				} catch (Exception e) {
 					ErrorMessageVo errorVo = new ErrorMessageVo();
