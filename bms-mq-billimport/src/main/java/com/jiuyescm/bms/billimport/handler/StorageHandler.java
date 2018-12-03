@@ -63,6 +63,11 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		//出库
 		BillFeesReceiveStorageTempEntity entity9 = null;
 		
+		String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);
+		if (StringUtils.isBlank(warehouseCode)) {
+			errorMessage+="仓库不存在;";
+		}
+		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
@@ -76,11 +81,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity1 = new BillFeesReceiveStorageTempEntity();
 						entity1.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity1.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity1.setSubjectCode("wh_product_storage");
 						entity1.setChargeUnit("PALLETS");
@@ -102,11 +104,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2 = new BillFeesReceiveStorageTempEntity();
 						entity2.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity2.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity2.setSubjectCode("wh_product_storage");
 						entity2.setChargeUnit("PALLETS");
@@ -128,11 +127,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity3 = new BillFeesReceiveStorageTempEntity();
 						entity3.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity3.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity3.setSubjectCode("wh_product_storage");
 						entity3.setChargeUnit("PALLETS");
@@ -154,12 +150,9 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4 = new BillFeesReceiveStorageTempEntity();
 						entity4.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity4.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
-						}	
+						}
 						entity4.setSubjectCode("wh_product_storage");
 						entity4.setChargeUnit("PALLETS");
 						entity4.setCreateTime(entity.getCreateTime());
@@ -180,11 +173,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity5 = new BillFeesReceiveStorageTempEntity();
 						entity5.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity5.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity5.setSubjectCode("wh_material_storage");
 						entity5.setChargeUnit("PALLETS");
@@ -206,11 +196,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity6 = new BillFeesReceiveStorageTempEntity();
 						entity6.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity6.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity6.setSubjectCode("wh_material_storage");
 						entity6.setChargeUnit("PALLETS");
@@ -233,11 +220,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity7 = new BillFeesReceiveStorageTempEntity();
 						entity7.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity7.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity7.setSubjectCode("wh_product_storage");
 						entity7.setChargeUnit("ITEMS");
@@ -259,11 +243,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity8 = new BillFeesReceiveStorageTempEntity();
 						entity8.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity8.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity8.setSubjectCode("wh_disposal");
 						//entity8.setChargeUnit("ITEMS");
@@ -285,11 +266,8 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity9 = new BillFeesReceiveStorageTempEntity();
 						entity9.setWarehouseName(sheetName);
 						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(sheetName);	
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity9.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
 						}	
 						entity9.setSubjectCode("outstock_pallet_vm");
 						entity9.setCreateTime(entity.getCreateTime());
