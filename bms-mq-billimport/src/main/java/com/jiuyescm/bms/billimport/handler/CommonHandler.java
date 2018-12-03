@@ -84,6 +84,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		}
 
 		if(sheetName.equals("仓储")){
+			sheetName = sheet.getSheetName();
 			readExcel(xlsxReader,sheet,3,5);
 		}else {
 			readExcel(xlsxReader,sheet,1,2);

@@ -491,6 +491,14 @@ public class BillReceiveMasterController {
 		try {
 			BillReceiveMasterVo taskEntity = new BillReceiveMasterVo();
 			taskEntity.setBillNo(billNo);
+			boolean res = formatMonth(Integer.valueOf(parameter.get("createMonth").toString()));
+			if (!res) {
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("日期格式错误!");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
 			taskEntity.setCreateMonth(Integer.valueOf(parameter.get("createMonth").toString()));
 			taskEntity.setBillName(parameter.get("billName").toString());
 			taskEntity.setInvoiceName(parameter.get("invoiceName").toString());
@@ -747,5 +755,25 @@ public class BillReceiveMasterController {
 		}
 		
 	}
+	
+	/**
+	 * createMonth校验
+	 * @param date
+	 * @return
+	 */
+	private boolean formatMonth(int date){
+		String createMonth=date+"";
+		if(createMonth.length()!=4){
+			return false;
+		}else{
+			String month=createMonth.substring(2, 4);
+			int m=Integer.parseInt(month);
+			if(m<=0 || m>12){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	
 }

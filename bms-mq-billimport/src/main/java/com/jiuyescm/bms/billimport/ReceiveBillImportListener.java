@@ -3,6 +3,7 @@ package com.jiuyescm.bms.billimport;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
+import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
@@ -261,7 +263,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				//账单逾期时间
 				Date overdueDate=getDate(checkInfoVo.getCreateMonth());
 				checkInfoVo.setOverdueDate(overdueDate);
-				//checkInfoVo.setCreateTime(DateUtil.formatTimestamp(param.get("createTime")));
+				checkInfoVo.setCreateTime(JAppContext.currentTimestamp());
 				//存储金额
 				billCheckInfoService.saveNew(checkInfoVo);
 				updateStatus(billNo, BmsEnums.taskStatus.SUCCESS.getCode(), 100);
