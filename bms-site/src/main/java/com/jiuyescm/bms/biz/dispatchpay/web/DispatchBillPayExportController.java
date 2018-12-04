@@ -213,29 +213,39 @@ public class DispatchBillPayExportController extends BaseController{
 		int pageNo = 1;
 		int lineNo = 1;
 		boolean doLoop = true;
-		while (doLoop) {			
-			PageInfo<BizDispatchBillPayEntity> pageInfo = 
-					bizDispatchBillPayService.queryAllToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
-					doLoop = false;
+		String startTime = (String) myparam.get("createTime");
+		String endTime = (String) myparam.get("endTime");
+		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
+
+		for (Map.Entry<String, String> entry : diffMap.entrySet()) { 
+			logger.info("startTime:["+entry.getKey()+"] endTime["+entry.getValue()+"]");
+			myparam.put("createTime", entry.getKey());
+			myparam.put("endTime", entry.getValue());
+			while (doLoop) {			
+				PageInfo<BizDispatchBillPayEntity> pageInfo = 
+						bizDispatchBillPayService.queryAllToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+				if (null != pageInfo && pageInfo.getList().size() > 0) {
+					if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
+						doLoop = false;
+					}else {
+						pageNo += 1; 
+					}
 				}else {
-					pageNo += 1; 
+					doLoop = false;
 				}
-			}else {
-				doLoop = false;
-			}
-			
-			//头、内容信息
-			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), 
-					lineNo, headDetailMapList, dataDetailList);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				lineNo += pageInfo.getList().size();
+				
+				//头、内容信息
+				List<Map<String, Object>> headDetailMapList = getBizHead(); 
+				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
+				
+				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), 
+						lineNo, headDetailMapList, dataDetailList);
+				if (null != pageInfo && pageInfo.getList().size() > 0) {
+					lineNo += pageInfo.getList().size();
+				}
 			}
 		}
+				
 	}
 	
 	/**
