@@ -213,8 +213,9 @@ public class DispatchBillPayExportController extends BaseController{
 		int pageNo = 1;
 		int lineNo = 1;
 		boolean doLoop = true;
-		String startTime = (String) myparam.get("createTime");
-		String endTime = (String) myparam.get("endTime");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startTime =formatter.format(myparam.get("createTime")) ;
+		String endTime = formatter.format( myparam.get("endTime"));
 		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
 
 		for (Map.Entry<String, String> entry : diffMap.entrySet()) { 
