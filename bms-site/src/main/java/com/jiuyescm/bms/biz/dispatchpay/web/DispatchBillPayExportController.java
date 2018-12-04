@@ -237,11 +237,11 @@ public class DispatchBillPayExportController extends BaseController{
 				//头、内容信息
 				
 				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
-				
-				if (null != pageInfo && pageInfo.getList().size() > 0) {
-					lineNo += pageInfo.getList().size();
-				}
+				logger.info("lineNo:"+lineNo);
 				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), lineNo, headDetailMapList, dataDetailList);
+				if(dataDetailList !=null){
+					lineNo += dataDetailList.size();
+				}
 			}
 		}
 				
