@@ -118,8 +118,9 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		fee.setCustomerName(entity.getCustomerName());
 		fee.setWarehouseCode(entity.getWarehouseCode());
 		fee.setUnit(entity.getFeesUnit());
-		if(entity.getNum()!=null){
-			fee.setQuantity(entity.getAdjustNum()==null?entity.getNum():entity.getAdjustNum());//商品数量
+		double num=DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum();
+		if(!DoubleUtil.isBlank(num)){
+			fee.setQuantity(num);
 		}
         fee.setParam1(entity.getItem());
         fee.setCustomerName(entity.getCustomerName());
