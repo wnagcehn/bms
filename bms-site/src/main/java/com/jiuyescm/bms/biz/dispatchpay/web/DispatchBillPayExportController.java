@@ -209,10 +209,7 @@ public class DispatchBillPayExportController extends BaseController{
 		}
 		
 		Map<String,String> serviceMap=getServiceMap();
-		
-		int pageNo = 1;
-		int lineNo = 1;
-		boolean doLoop = true;
+
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String startTime =formatter.format(myparam.get("createTime")) ;
 		String endTime = formatter.format( myparam.get("endTime"));
@@ -222,6 +219,9 @@ public class DispatchBillPayExportController extends BaseController{
 			logger.info("startTime:["+entry.getKey()+"] endTime["+entry.getValue()+"]");
 			myparam.put("createTime", entry.getKey());
 			myparam.put("endTime", entry.getValue());
+			int pageNo = 1;
+			int lineNo = 1;
+			boolean doLoop = true;
 			while (doLoop) {			
 				PageInfo<BizDispatchBillPayEntity> pageInfo = 
 						bizDispatchBillPayService.queryAllToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
