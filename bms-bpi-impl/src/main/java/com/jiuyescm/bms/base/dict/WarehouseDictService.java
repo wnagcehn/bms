@@ -67,6 +67,7 @@ public class WarehouseDictService implements IWarehouseDictService {
 			return null;
 		}
 		else{
+			Logger.info("查询到的仓库id:{}",result.getWarehouseid());
 			return result.getWarehouseid();
 		}
 	}
