@@ -188,12 +188,13 @@ public class BillReceiveMasterController {
 		Map<String, Object> maps = Maps.newHashMap();
 		checkNull(parameter, infoList, maps);
 		if (!maps.isEmpty()) {
+			setProgress(6);
 			return maps;
 		}
 		
 		
-		
-		if ("CONFIRMED".equals(parameter.get("billCheckStatus"))) {
+		//"CONFIRMED".equals(parameter.get("billCheckStatus"))
+		if (parameter.get("confirmMan") != null && StringUtils.isNotBlank(parameter.get("confirmMan").toString())) {
 			//确认人
 			boolean exe1 = false;
 			for (UserVO userVO : userList) {
@@ -204,6 +205,7 @@ public class BillReceiveMasterController {
 				}
 			}
 			if (!exe1) {
+				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("未找到确认人，请重新输入！");
@@ -226,6 +228,7 @@ public class BillReceiveMasterController {
 				}
 			}
 			if (!exe2) {
+				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("未找到销售员，请重新输入！");
@@ -243,6 +246,7 @@ public class BillReceiveMasterController {
 				}
 			}
 			if (!exe3) {
+				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("未找到项目管理员，请重新输入！");
@@ -260,6 +264,7 @@ public class BillReceiveMasterController {
 				}
 			}
 			if (!exe4) {
+				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("未找到结算员，请重新输入！");
@@ -283,6 +288,7 @@ public class BillReceiveMasterController {
 		List<BillReceiveMasterVo> checkList = billReceiveMasterService.query(param);
 		for (BillReceiveMasterVo billReceiveMasterEntity : checkList) {
 			if ((parameter.get("createMonth").toString()+parameter.get("billName").toString()+"SUCCESS").equals(billReceiveMasterEntity.getCreateMonth().toString()+billReceiveMasterEntity.getBillName()+billReceiveMasterEntity.getTaskStatus())) {
+				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("同一月份存在相同账单名称，请删除后重试！");
@@ -456,6 +462,7 @@ public class BillReceiveMasterController {
 		double maxFileSize=getMaxFileSize();
 		double importFileSize=BigDecimal.valueOf(file.getSize()).divide(BigDecimal.valueOf(1024*1024)).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		if(importFileSize>maxFileSize){
+			setProgress(6);
 			infoList.add(new ErrorMessageVo(1, "Excel 导入文件过大,最多能导入"+maxFileSize+"M,请分批次导入"));
 			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			return map;
@@ -493,6 +500,7 @@ public class BillReceiveMasterController {
 			taskEntity.setBillNo(billNo);
 			boolean res = formatMonth(Integer.valueOf(parameter.get("createMonth").toString()));
 			if (!res) {
+				setProgress(6);
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("导入的业务月份格式错误!");
 				infoList.add(errorVo);
