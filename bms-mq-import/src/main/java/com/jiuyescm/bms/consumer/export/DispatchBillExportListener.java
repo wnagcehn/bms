@@ -1,5 +1,4 @@
-
-package com.jiuyescm.bms.biz.dispatch.web;
+package com.jiuyescm.bms.consumer.export;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,163 +10,94 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.Session;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
-import org.springframework.stereotype.Controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.bstek.dorado.annotation.DataProvider;
-import com.bstek.dorado.annotation.DataResolver;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
-import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
-import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
-import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
-import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.enumtype.OrderStatus;
-import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
-import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
-import com.jiuyescm.bms.common.sequence.service.SequenceService;
-import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.ConstantInterface;
-import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
-import com.jiuyescm.utils.JsonUtils;
+import com.jiuyescm.exception.BizException;
 
 /**
  * 应收运单导出
- * @author yangss
+ * @author wangchen870
+ *
  */
-@Controller("dispatchBillExportController")
-public class DispatchBillExportController extends BaseController{
+
+@Service("dispatchBillExportListener")
+public class DispatchBillExportListener implements MessageListener{
+
+	private static final Logger logger = LoggerFactory.getLogger(DispatchBillExportListener.class);
 	
-	private static final Logger logger = Logger.getLogger(DispatchBillExportController.class.getName());
+	@Resource
+	private IFileExportTaskService fileExportTaskService;
+	
+	@Resource
+	private ISystemCodeService systemCodeService;
 	
 	@Resource
 	private IBizDispatchBillService bizDispatchBillService;
-	@Resource
-	private IFileExportTaskService fileExportTaskService;
-
-	@Resource
-	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	
-	@Resource
-	private ISystemCodeService systemCodeService; //业务类型
-	
-	@Autowired
-	private SequenceService sequenceService;
-	
-	@Resource
-	private JmsTemplate jmsQueueTemplate;
-	/**
-	 * 导出
-	 */
-	@DataResolver
-	public String asynExport(Map<String, Object> param) {
-		if (null == param) {
-			return MessageConstant.QUERY_PARAM_NULL_MSG;
+	@Override
+	public void onMessage(Message message) {
+		logger.info("--------------------MQ处理操作日志开始---------------------------");
+		long start = System.currentTimeMillis();
+		logger.info("应收运单导出异步处理");
+		String json = "";
+		try {
+			json = ((TextMessage)message).getText();
+			logger.info("消息Json【{}】", json);
+		} catch (JMSException e1) {
+			logger.info("取出消息失败");
+			return;
 		}
-		
-		String customerId ="";
-		if(param.get("merchantId")!=null){
-			customerId=param.get("merchantId").toString();
+		try {
+			//导出
+			export(json);
+		} catch (Exception e1) {
+			logger.info("文件导出失败");
+			return;
 		}
-
-		String customerName="";
-		if(param.get("customerName")!=null){
-			customerName=param.get("customerName").toString();
+		long end = System.currentTimeMillis();
+		try {
+			message.acknowledge();
+		} catch (JMSException e) {
+			logger.info("消息应答失败");
 		}
-        try {
-        	
-         	String key=sequenceService.getBillNoOne(DispatchBillExportController.class.getName(), "RD", "000000000");   	
-        	String path = getBizReceiveExportPath();
-        	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_REC_DIS.getCode() + key + FileConstant.SUFFIX_XLSX;
-        	FileExportTaskEntity entity = new FileExportTaskEntity();
-        	entity.setCustomerid(customerId);
-        	entity.setStartTime(DateUtil.formatTimestamp(param.get("createTime")));
-        	entity.setEndTime(DateUtil.formatTimestamp(param.get("endTime")));
-            entity.setTaskName(FileTaskTypeEnum.BIZ_REC_DIS.getDesc()+customerName+"导出");
-        	entity.setTaskType(FileTaskTypeEnum.BIZ_REC_DIS.getCode());
-        	entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
-        	entity.setProgress(0d);
-        	entity.setFilePath(filepath);
-        	entity.setCreator(JAppContext.currentUserName());
-        	entity.setCreateTime(JAppContext.currentTimestamp());
-        	entity.setDelFlag(ConstantInterface.DelFlag.NO);
-        	entity = fileExportTaskService.save(entity);
-        	
-        	//生成费用文件
-//    		final Map<String, Object> condition = param;
-//    		final String taskId = entity.getTaskId();
-//    		final String filePath=filepath;
-//    		new Thread(){
-//    			public void run() {
-//    				try {
-//    					export(condition, taskId,filePath);
-//    				} catch (Exception e) {
-//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-//    					//写入日志
-//    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-//    					bmsErrorLogInfoEntity.setClassName("DispatchBillExportController");
-//    					bmsErrorLogInfoEntity.setMethodName("asynExport");
-//    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-//    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-//    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-//    				}
-//    			};
-//    		}.start();
-        	
-    		// 写入MQ
-        	param.put("taskId", entity.getTaskId());
-        	param.put("filePath", filepath);
-        	final Map<String, Object> condition = param;
-    		jmsQueueTemplate.send("BMS.QUEUE.DISPATCH_BILL_EXPORT", new MessageCreator() {
-    			@Override
-    			public Message createMessage(Session session) throws JMSException {
-    				String json = JsonUtils.toJson(condition);
-    				return session.createTextMessage(json);
-    			}
-    		});
-    		
-		} catch (Exception e) {
-			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
-			//写入日志
-			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-			bmsErrorLogInfoEntity.setClassName("DispatchBillExportController");
-			bmsErrorLogInfoEntity.setMethodName("asynExport");
-			bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
-			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-			return ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG;
-		}
-		return FileTaskTypeEnum.BIZ_REC_DIS.getDesc() +customerName + MessageConstant.EXPORT_TASK_BIZ_MSG;
+		logger.info("--------------------MQ处理操作日志结束,耗时:"+(end-start)+"ms---------------");
 	}
 	
 	/**
 	 * 异步导出
-	 * @param param
-	 * @param taskId
-	 * @param file
-	 * @throws Exception
+	 * @param json
+	 * @throws Exception 
 	 */
-	private void export(Map<String, Object> param,String taskId,String filePath)throws Exception{
-		fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 10);
+	private void export(String json) throws Exception{
+		logger.info("JSON开始解析……");
+		Map<String, Object> map = resolveJsonToMap(json);
+		if (null == map) {
+			return;
+		}
+		//拿到TaskId,更新状态
+		logger.info("====taskId:" + map.get("taskId").toString());
+		fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.INPROCESS.getCode(), 10);
 		String path = getBizReceiveExportPath();
 		long beginTime = System.currentTimeMillis();
 		
@@ -177,19 +107,22 @@ public class DispatchBillExportController extends BaseController{
 		if(!storeFolder.isDirectory()){
 			storeFolder.mkdirs();
 		}
-		
-    	logger.info("====应收运单导出：写入Excel begin.");
-    	fileExportTaskService.updateExportTask(taskId, null, 30);
-    	POISXSSUtil poiUtil = new POISXSSUtil();
+		logger.info("====应收运单导出：写入Excel begin.");
+		fileExportTaskService.updateExportTask(map.get("taskId").toString(), null, 30);
+		POISXSSUtil poiUtil = new POISXSSUtil();
     	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
         //应收运单
-    	fileExportTaskService.updateExportTask(taskId, null, 70);
-    	handBiz(poiUtil, workbook, filePath, param);
+    	fileExportTaskService.updateExportTask(map.get("taskId").toString(), null, 70);
+    	try {
+    		handBiz(poiUtil, workbook, map.get("filePath").toString(), map);
+		} catch (Exception e) {
+			fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.FAIL.getCode(), 10);
+		}	
     	//最后写到文件
-    	fileExportTaskService.updateExportTask(taskId, null, 90);
-    	poiUtil.write2FilePath(workbook, filePath);
+    	fileExportTaskService.updateExportTask(map.get("taskId").toString(), null, 90);
+    	poiUtil.write2FilePath(workbook, map.get("filePath").toString());
     	
-    	fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), 100);
+    	fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.SUCCESS.getCode(), 100);
     	logger.info("====应收运单导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 	}
 	
@@ -242,7 +175,8 @@ public class DispatchBillExportController extends BaseController{
 	}
 	
 	/**
-	 * 运单
+	 * 抬头
+	 * @return
 	 */
 	public List<Map<String, Object>> getBizHead(){
 		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
@@ -573,6 +507,14 @@ public class DispatchBillExportController extends BaseController{
         return headInfoList;
 	}
 	
+	/**
+	 * 数据
+	 * @param list
+	 * @param temMap
+	 * @param b2bMap
+	 * @param orderStatusMap
+	 * @return
+	 */
 	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap){
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
@@ -659,6 +601,51 @@ public class DispatchBillExportController extends BaseController{
 	}
 	
 	/**
+	 * 解析Json成Map
+	 * @param json
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> resolveJsonToMap(String json) {
+		//解析JSON
+		Map<String, Object> map = null;
+		try {
+			map = (Map<String, Object>)JSON.parse(json);
+		} catch (Exception e) {
+			logger.error("JSON解析异常 {}", e);
+			return null;
+		}
+		return map;
+	}
+	
+	/**
+	 * 获取应收业务数据导出的文件路径
+	 * @return
+	 */
+	public String getBizReceiveExportPath(){
+		SystemCodeEntity systemCodeEntity = getSystemCode("GLOABL_PARAM", "EXPORT_RECEIVE_BIZ");
+		return systemCodeEntity.getExtattr1();
+	}
+	
+	/**
+	 * 获取系统参数对象
+	 * @param typeCode
+	 * @param code
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public SystemCodeEntity getSystemCode(String typeCode, String code){
+		if (StringUtils.isNotEmpty(typeCode) && StringUtils.isNotEmpty(code)) {
+			SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode(typeCode, code);
+			if(systemCodeEntity == null){
+				throw new BizException("请在系统参数中配置文件上传路径,参数" + typeCode + "," + code);
+			}
+			return systemCodeEntity;
+		}
+		return null;
+	}
+	
+	/**
 	 * 温度类型
 	 * @return
 	 */
@@ -694,4 +681,5 @@ public class DispatchBillExportController extends BaseController{
 	public Map<String,String> getOrderStatus(){	
 		return OrderStatus.getMap();
 	}
+
 }
