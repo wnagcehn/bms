@@ -13,10 +13,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 
-<<<<<<< HEAD
-=======
 import com.google.common.collect.Maps;
->>>>>>> dev
 import com.jiuyescm.bs.util.StringUtil;
 
 public class DateUtil {
