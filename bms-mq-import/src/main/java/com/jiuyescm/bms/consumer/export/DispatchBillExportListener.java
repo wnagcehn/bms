@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.consumer.export;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +33,7 @@ import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.enumtype.OrderStatus;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 
@@ -146,30 +148,42 @@ public class DispatchBillExportListener implements MessageListener{
 		Map<String,String> b2bMap=getIstB();
 		Map<String,String> orderStatusMap=getOrderStatus();
 		
-		int pageNo = 1;
+		//切分时间
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startTime =formatter.format(myparam.get("createTime")) ;
+		String endTime = formatter.format( myparam.get("endTime"));
+		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
+		//抬头信息
+		List<Map<String, Object>> headDetailMapList = getBizHead();
+		
 		int lineNo = 1;
-		boolean doLoop = true;
-		while (doLoop) {			
-			PageInfo<BizDispatchBillVo> pageInfo = 
-					bizDispatchBillService.queryData(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
-					doLoop = false;
+		for (Map.Entry<String, String> entry : diffMap.entrySet()) { 
+			logger.info("startTime:["+entry.getKey()+"] endTime["+entry.getValue()+"]");
+			myparam.put("createTime", entry.getKey());
+			myparam.put("endTime", entry.getValue());
+			int pageNo = 1;
+			boolean doLoop = true;
+			while (doLoop) {			
+				PageInfo<BizDispatchBillVo> pageInfo = 
+						bizDispatchBillService.queryData(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+				if (null != pageInfo && pageInfo.getList().size() > 0) {
+					if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
+						doLoop = false;
+					}else {
+						pageNo += 1; 
+					}
 				}else {
-					pageNo += 1; 
+					doLoop = false;
 				}
-			}else {
-				doLoop = false;
-			}
-			
-			//头、内容信息
-			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap);
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
-					lineNo, headDetailMapList, dataDetailList);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				lineNo += pageInfo.getList().size();
+				
+				//内容
+				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap);
+				
+				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
+						lineNo, headDetailMapList, dataDetailList);
+				if (null != pageInfo && pageInfo.getList().size() > 0) {
+					lineNo += pageInfo.getList().size();
+				}
 			}
 		}
 	}
