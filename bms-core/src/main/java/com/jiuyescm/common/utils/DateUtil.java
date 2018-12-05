@@ -6,12 +6,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 
+<<<<<<< HEAD
+=======
+import com.google.common.collect.Maps;
+>>>>>>> dev
 import com.jiuyescm.bs.util.StringUtil;
 
 public class DateUtil {
@@ -444,5 +449,50 @@ public class DateUtil {
 		Date date = DateUtils.parseDate(value, dataPatterns);
 		String dateStr = new SimpleDateFormat("yyMM").format(date);
 		return Integer.parseInt(dateStr);
+	}
+
+	public static long getDaysDiff(Timestamp t1,Timestamp t2){
+		Calendar calendar1=Calendar.getInstance();
+        calendar1.setTime(t1);
+        int year1 = calendar1.get(Calendar.YEAR);
+        int month1 = calendar1.get(Calendar.MONTH)+1;
+        int date1 = calendar1.get(Calendar.DATE);
+        Calendar calendar2=Calendar.getInstance();
+        calendar2.setTime(t2);
+        int year2 = calendar2.get(Calendar.YEAR);
+        int month2 = calendar2.get(Calendar.MONTH)+1;
+        int date2 = calendar2.get(Calendar.DATE);
+        long diffTime = (calendar2.getTimeInMillis() - calendar1.getTimeInMillis());
+        long diffDays = diffTime/ (1000 * 60 * 60 * 24);
+        return diffDays;
+	}
+	
+	/**
+	 * 将日期分隔为几等分
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @param num
+	 * @return
+	 */
+	public static Map<String, String> getSplitTime(String startTime,String endTime,int num){
+		Timestamp timestamp1 = Timestamp.valueOf(startTime);
+        Timestamp timestamp2 = Timestamp.valueOf(endTime);
+        
+        long diffDays = getDaysDiff(timestamp1,timestamp2);
+        Map<String, String> map = Maps.newLinkedHashMap();
+        long site = (diffDays/num);
+        for(int i=0;i<=site;i++){
+        	if((diffDays-i*num)<num){
+        		map.put(timestamp1.toString(), timestamp2.toString());
+        	}
+        	else{
+        		
+        		Timestamp endTimestamp = DateUtil.addDays(timestamp1, num);
+            	map.put(timestamp1.toString(), endTimestamp.toString());
+            	timestamp1 = endTimestamp;
+        	}
+        }
+        return map; 
+        
 	}
 }

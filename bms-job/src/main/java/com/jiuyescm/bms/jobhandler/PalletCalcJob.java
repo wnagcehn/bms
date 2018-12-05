@@ -177,8 +177,9 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		storageFeeEntity.setSubjectCode(SubjectId);		//费用科目
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setProductType("");							//商品类型
-		if(entity.getPalletNum()!=null){
-			storageFeeEntity.setQuantity(entity.getAdjustPalletNum()==null?entity.getPalletNum():entity.getAdjustPalletNum());//商品数量
+		double num=DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum();
+		if(!DoubleUtil.isBlank(num)){
+			storageFeeEntity.setQuantity(num);
 		}
 		//storageFeeEntity.setStatus("0");			
 		storageFeeEntity.setUnit("PALLETS");

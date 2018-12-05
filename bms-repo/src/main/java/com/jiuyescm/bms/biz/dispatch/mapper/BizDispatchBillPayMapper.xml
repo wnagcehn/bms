@@ -188,14 +188,10 @@
 		a.system_weight, a.total_weight, a.origin_weight, a.totalqty, a.product_detail,
 		a.deliver_name, a.month_fee_count, a.expresstype, a.receive_name,
 		a.receive_province_id, a.receive_city_id, a.receive_district_id,
-		a.adjust_province_id, a.adjust_city_id, a.adjust_district_id,
-		s.servicename as servicename,SUM(b.throw_weight) as originThrowWeight from biz_dispatch_pay_bill a
-		LEFT JOIN pub_carrier_servicetype s on a.service_type_code=s.servicecode and s.delflag='0' and a.carrier_id=s.carrierid
-		LEFT JOIN biz_dispatch_bill b on a.outstock_no=b.outstock_no
+		a.adjust_province_id, a.adjust_city_id, a.adjust_district_id,a.service_type_code,a.carrier_id,
+		a.origin_throw_weight as originThrowWeight from biz_dispatch_pay_bill a
 		where 1=1
-		and b.del_flag='0'
-		<include refid="baseSelectColumns" />
-		GROUP BY a.outstock_no
+        <include refid="baseSelectColumns" />
     </select>
     
     <update id="adjustBillPay"  parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">

@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,6 +27,8 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
+import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
+import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
@@ -41,7 +42,6 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
-import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
@@ -77,6 +77,8 @@ public class DispatchBillPayExportController extends BaseController{
 	private IBizOutstockPackmaterialService bizOutstockPackmaterialServiceImpl;
 	@Resource 
 	private SequenceService sequenceService;
+	@Resource
+	private IPubCarrierServicetypeService pubCarrierServicetypeService;
 	
 	/**
 	 * 导出
@@ -169,18 +171,18 @@ public class DispatchBillPayExportController extends BaseController{
 		String path = getBizPayExportPath();
 		long beginTime = System.currentTimeMillis();
 		
-		logger.info("====应收商品按托库存导出：");
+		logger.info("====应付运单导出：");
 		//如果存放上传文件的目录不存在就新建
     	File storeFolder=new File(path);
 		if(!storeFolder.isDirectory()){
 			storeFolder.mkdirs();
 		}
 		
-    	logger.info("====应收商品按托库存导出：写入Excel begin.");
+    	logger.info("====应付运单导出：写入Excel begin.");
     	fileExportTaskService.updateExportTask(taskId, null, 30);
     	POISXSSUtil poiUtil = new POISXSSUtil();
     	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
-        //干线运单
+        //应付运单
     	fileExportTaskService.updateExportTask(taskId, null, 70);
     	handBiz(poiUtil, workbook, filePath, param);
     	//最后写到文件
@@ -188,11 +190,11 @@ public class DispatchBillPayExportController extends BaseController{
     	poiUtil.write2FilePath(workbook, filePath);
     	
     	fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), 100);
-    	logger.info("====应收商品按托库存导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
+    	logger.info("====应付运单导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 	}
 	
 	/**
-	 * 商品按托库存
+	 * 应付运单
 	 * @param poiUtil
 	 * @param workbook
 	 * @param path
@@ -206,32 +208,43 @@ public class DispatchBillPayExportController extends BaseController{
 			myparam.put("logistics", null);
 		}
 		
-		int pageNo = 1;
+		Map<String,String> serviceMap=getServiceMap();
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startTime =formatter.format(myparam.get("createTime")) ;
+		String endTime = formatter.format( myparam.get("endTime"));
+		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
+		List<Map<String, Object>> headDetailMapList = getBizHead(); 
 		int lineNo = 1;
-		boolean doLoop = true;
-		while (doLoop) {			
-			PageInfo<BizDispatchBillPayEntity> pageInfo = 
-					bizDispatchBillPayService.queryAllToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
-					doLoop = false;
+		for (Map.Entry<String, String> entry : diffMap.entrySet()) { 
+			logger.info("startTime:["+entry.getKey()+"] endTime["+entry.getValue()+"]");
+			myparam.put("createTime", entry.getKey());
+			myparam.put("endTime", entry.getValue());
+			int pageNo = 1;
+			boolean doLoop = true;
+			while (doLoop) {			
+				PageInfo<BizDispatchBillPayEntity> pageInfo = bizDispatchBillPayService.queryAllToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+				if (null != pageInfo && pageInfo.getList().size() > 0) {
+					if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
+						doLoop = false;
+					}else {
+						pageNo += 1; 
+					}
 				}else {
-					pageNo += 1; 
+					doLoop = false;
 				}
-			}else {
-				doLoop = false;
-			}
-			
-			//头、内容信息
-			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList());
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), 
-					lineNo, headDetailMapList, dataDetailList);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				lineNo += pageInfo.getList().size();
+				
+				//头、内容信息
+				
+				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
+				logger.info("lineNo:"+lineNo);
+				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), lineNo, headDetailMapList, dataDetailList);
+				if(dataDetailList !=null){
+					lineNo += dataDetailList.size();
+				}
 			}
 		}
+				
 	}
 	
 	/**
@@ -374,7 +387,7 @@ public class DispatchBillPayExportController extends BaseController{
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillPayEntity> list){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillPayEntity> list,Map<String,String> serviceMap){
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	        Map<String, Object> dataItem = null;
 	        Map<String, String> warehouseMap = getWarehouse();
@@ -397,7 +410,7 @@ public class DispatchBillPayExportController extends BaseController{
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("deliverName", entity.getDeliverName());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
-	        	dataItem.put("servicename", entity.getServicename());
+	        	dataItem.put("servicename", serviceMap.get(entity.getServiceTypeCode()+"&"+entity.getCarrierId()));	        	
 	        	dataItem.put("expresstype", entity.getExpresstype());
 	        	dataItem.put("receiveName", entity.getReceiveName());
 	        	String provinceId="";
@@ -821,4 +834,15 @@ public class DispatchBillPayExportController extends BaseController{
 		return systemCodeEntity.getExtattr1();
 	}
 	
+	
+	public Map<String,String> getServiceMap(){
+		Map<String,String> map=new HashMap<String,String>();
+		Map<String,Object> con=new HashMap<String,Object>();
+		con.put("delflag", "0");
+		List<PubCarrierServicetypeEntity> list=pubCarrierServicetypeService.query(con);
+		for(PubCarrierServicetypeEntity p:list){
+			map.put(p.getServicecode()+"&"+p.getCarrierid(), p.getServicename());
+		}
+		return map;
+	}
 }
