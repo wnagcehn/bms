@@ -155,7 +155,9 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     		//状态为已确认
     		if("CONFIRMED".equals(entity.getBillCheckStatus())){
     			throw new BizException("CONFIRMED_NULL","已确认状态的账单无法删除!");
-    		}
+    		}else {
+    			billReceiveMasterRepository.delete(billNo);
+			}
     	}else{
             billReceiveMasterRepository.delete(billNo);
     	}  	
