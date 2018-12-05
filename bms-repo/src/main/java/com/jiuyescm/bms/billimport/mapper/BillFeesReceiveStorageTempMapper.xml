@@ -339,10 +339,13 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
 	 </insert>
 	 
 	 <select id="getImportTotalAmount" parameterType="String" resultType="java.lang.Double">
-	 	select IFNULL(SUM(a.amount),0)+IFNULL(SUM(b.amount),0)+IFNULL(SUM(c.amount),0)+IFNULL(SUM(d.amount),0) from bill_fees_receive_dispatch a
-		LEFT JOIN bill_fees_receive_storage b on a.bill_no=b.bill_no
-		LEFT JOIN bill_fees_receive_transport c on a.bill_no=c.bill_no
-		LEFT JOIN bill_fees_receive_air d on a.bill_no=d.bill_no
-		where a.bill_no=#{billNo}
+	    select SUM(IFNULL(a.amount,0)) from (
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no=#{billNo}
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_transport where bill_no=#{billNo}
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo}) a;
 	 </select>
 </mapper>
