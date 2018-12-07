@@ -360,5 +360,11 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		}
 	}
 
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

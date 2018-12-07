@@ -253,5 +253,25 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		
 	}
 
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"仓库", "商家名称", "商家订单号","运单号","运单生成时间","计费物流商","计费重量"}; //必填列
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="Excel表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
+	}
+
 	
 }

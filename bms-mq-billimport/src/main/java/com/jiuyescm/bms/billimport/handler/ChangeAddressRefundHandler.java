@@ -123,5 +123,26 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 			billFeesReceiveDispatchTempService.insertBatch(list);
 		}
 	}
+
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"发货仓库", "运单日期", "运单号"}; //必填列
+
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="Excel表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
+	}
 	
 }

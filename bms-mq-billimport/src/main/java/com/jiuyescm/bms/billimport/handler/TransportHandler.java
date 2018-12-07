@@ -423,4 +423,24 @@ public class TransportHandler extends
 
 	}
 
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"订单创建日期", "订单号","运单号","业务类型"}; //必填列
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="Excel表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
+	}
+
 }

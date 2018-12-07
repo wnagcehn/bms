@@ -123,6 +123,14 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 				headAMap.put(titleA, entry.getValue());
 			}
 		}
+		
+		if(curRow == titleRowNo){
+			List<String> columns = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : headAMap.entrySet()) { 
+				columns.add(entry.getValue());
+			}
+			callback.readTitle(columns);
+		}
 	}
 
 	private void rowHander(Map<String, String> cellMap) {
