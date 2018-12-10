@@ -137,7 +137,7 @@ public class ImportTempletExcelController {
 		 BmsTempletInfoEntity entity = new BmsTempletInfoEntity();
 		 try{
 			 XSSFWorkbook xssfWorkbook = new XSSFWorkbook(file.getInputStream());
-			 if(xssfWorkbook.getNumberOfSheets()!=3){
+		/*	 if(xssfWorkbook.getNumberOfSheets()!=3){
 				 return "标准模板 有且只能有3个sheet，请检查";
 			 }
 			 if(!"业务数据".equals(xssfWorkbook.getSheetAt(0).getSheetName())){
@@ -148,7 +148,7 @@ public class ImportTempletExcelController {
 			 }
 			 if(!"配置".equals(xssfWorkbook.getSheetAt(2).getSheetName())){
 				 return "标准模板 第三个sheet名称必须为【配置】";
-			 }
+			 }*/
 			 long length = file.getSize();
 			 StorePath storePath = storageClient.uploadFile(file.getInputStream(), length, "xlsx");
 			 String fullPath = storePath.getFullPath();
