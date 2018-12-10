@@ -31,7 +31,8 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
-import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
 import com.jiuyescm.bms.common.constants.FileConstant;
@@ -60,7 +61,7 @@ public class DispatchBillPayExportListener implements MessageListener{
 	private ISystemCodeService systemCodeService;
 	
 	@Resource
-	private IPubCarrierServicetypeService pubCarrierServicetypeService;
+	private ICarrierProductService pubCarrierServicetypeService;
 	
 	@Resource
 	private IBizDispatchBillPayService bizDispatchBillPayService;
@@ -142,11 +143,9 @@ public class DispatchBillPayExportListener implements MessageListener{
 	 * @param workbook
 	 * @param path
 	 * @param myparam
-	 * @throws IOException 
-	 * @throws ParseException 
 	 * @throws Exception
 	 */
-	private void handBiz(POISXSSUtil poiUtil, SXSSFWorkbook workbook, String string, Map<String, Object> myparam) throws IOException, ParseException {
+	private void handBiz(POISXSSUtil poiUtil, SXSSFWorkbook workbook, String string, Map<String, Object> myparam) throws Exception {
 		//物流商
 		if(myparam.get("logistics") != null && StringUtils.equalsIgnoreCase(myparam.get("logistics").toString(), "ALL")){
 			myparam.put("logistics", null);
@@ -428,12 +427,12 @@ public class DispatchBillPayExportListener implements MessageListener{
 		return null;
 	}
 	
-	public Map<String,String> getServiceMap(){
+	public Map<String,String> getServiceMap() throws Exception{
 		Map<String,String> map=new HashMap<String,String>();
 		Map<String,Object> con=new HashMap<String,Object>();
 		con.put("delflag", "0");
-		List<PubCarrierServicetypeEntity> list=pubCarrierServicetypeService.query(con);
-		for(PubCarrierServicetypeEntity p:list){
+		List<CarrierProductVo> list=pubCarrierServicetypeService.query(con);
+		for(CarrierProductVo p:list){
 			map.put(p.getServicecode()+"&"+p.getCarrierid(), p.getServicename());
 		}
 		return map;
