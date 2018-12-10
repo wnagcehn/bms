@@ -19,6 +19,7 @@ import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -140,8 +141,10 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					dispatchEntity.setReceiveDistrict(dc.getColValue());
 					break;
 				case "温度":
-					dispatchEntity.setTemperatureType(dc.getColValue());
-					storageEntity.setTempretureType(dc.getColValue());
+					if(StringUtils.isNotBlank(dc.getColValue())){
+						dispatchEntity.setTemperatureType(BmsEnums.tempretureType.getCode(dc.getColValue()));
+						storageEntity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColValue()));
+					}
 					break;
 				case "计费重量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
