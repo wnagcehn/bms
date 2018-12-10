@@ -57,6 +57,7 @@
 	<dubbo:service interface="com.jiuyescm.bms.report.biz.service.IReportCustomerService" ref="reportCustomerService"/>
 	<dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" ref="billReceiveMasterRecordService"/>
 	<dubbo:service interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService" ref="billReceiveMasterService"/>
+	<dubbo:service interface="com.jiuyescm.bms.base.servicetype.service.ICarrierProductService" ref="carrierProductService"/>
 
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.ICarrierDictService" ref="carrierDictService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService" ref="customerDictService"/>

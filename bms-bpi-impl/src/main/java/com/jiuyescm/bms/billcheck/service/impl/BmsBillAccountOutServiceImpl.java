@@ -69,7 +69,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 	    	result.setList(voList);
 	    	PropertyUtils.copyProperties(result, pageInfo);
 		} catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:{}",ex);
         }
     	
 		return result;
@@ -213,7 +213,7 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 		try {
             PropertyUtils.copyProperties(entity, vo);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:{}",ex);
         }
 		billAccountOutRepository.save(entity);
 	}

@@ -3,8 +3,8 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="dtPubCarrierServicetypeEntity">
-      <Property name="creationType">com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity</Property>
+    <DataType name="CarrierProductVo">
+      <Property name="creationType">com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo</Property>
       <PropertyDef name="id">
         <Property name="label">主键ID</Property>
       </PropertyDef>
@@ -140,11 +140,11 @@
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsPubCarrierServicetypeEntity">
-      <Property name="dataType">[dtPubCarrierServicetypeEntity]</Property>
       <Property name="dataProvider">pubCarrierServicetypeController#query</Property>
       <Property name="readOnly">false</Property>
       <Property name="loadMode">lazy</Property>
       <Property name="pageSize">20</Property>
+      <Property name="dataType">[CarrierProductVo]</Property>
     </DataSet>
     <DataSet id="dsPubCarrierServicetypeEntityQuery">
       <ClientEvent name="onCreate">view.get(&quot;#dsPubCarrierServicetypeEntityQuery&quot;).getData().insert();</ClientEvent>

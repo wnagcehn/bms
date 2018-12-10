@@ -89,6 +89,8 @@
 		 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="billReceiveMasterRecordService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" 
 		 version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="carrierProductService" interface="com.jiuyescm.bms.base.servicetype.service.ICarrierProductService" 
+		 version="1.0.0" registry="bms"/>
 		 
 		<dubbo:reference id="contractCustomBaseService" interface="com.jiuyescm.contract.custom.api.IContractCustomBaseService" registry="message"/>
 		 

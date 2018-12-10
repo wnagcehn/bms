@@ -33,7 +33,8 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
-import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
@@ -84,10 +85,11 @@ public class DispatchBillPayExportController extends BaseController{
 	private IBizOutstockPackmaterialService bizOutstockPackmaterialServiceImpl;
 	@Resource 
 	private SequenceService sequenceService;
-	@Resource
-	private IPubCarrierServicetypeService pubCarrierServicetypeService;
+	@Autowired
+	private ICarrierProductService carrierProductService;
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
+
 	
 	/**
 	 * 导出
@@ -868,12 +870,12 @@ public class DispatchBillPayExportController extends BaseController{
 	}
 	
 	
-	public Map<String,String> getServiceMap(){
+	public Map<String,String> getServiceMap() throws Exception{
 		Map<String,String> map=new HashMap<String,String>();
 		Map<String,Object> con=new HashMap<String,Object>();
 		con.put("delflag", "0");
-		List<PubCarrierServicetypeEntity> list=pubCarrierServicetypeService.query(con);
-		for(PubCarrierServicetypeEntity p:list){
+		List<CarrierProductVo> list=carrierProductService.query(con);
+		for(CarrierProductVo p:list){
 			map.put(p.getServicecode()+"&"+p.getCarrierid(), p.getServicename());
 		}
 		return map;
