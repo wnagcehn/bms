@@ -3,9 +3,11 @@ package com.jiuyescm.bms.consumer.export;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -118,7 +120,8 @@ public class DispatchBillExportListener implements MessageListener{
     	try {
     		handBiz(poiUtil, workbook, map.get("filePath").toString(), map);
 		} catch (Exception e) {
-			fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.FAIL.getCode(), 10);
+			fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.FAIL.getCode(), 99);
+			return;
 		}	
     	//最后写到文件
     	fileExportTaskService.updateExportTask(map.get("taskId").toString(), null, 90);
@@ -150,8 +153,11 @@ public class DispatchBillExportListener implements MessageListener{
 		
 		//切分时间
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String startTime =formatter.format(myparam.get("createTime")) ;
-		String endTime = formatter.format( myparam.get("endTime"));
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy K:m:s a",Locale.ENGLISH);
+		Date convertCreateTime = sdf.parse(myparam.get("createTime").toString());
+		Date convertEndTime = sdf.parse(myparam.get("endTime").toString());
+		String startTime =formatter.format(convertCreateTime) ;
+		String endTime = formatter.format(convertEndTime);
 		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
 		//抬头信息
 		List<Map<String, Object>> headDetailMapList = getBizHead();

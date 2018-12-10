@@ -65,6 +65,10 @@
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListenerNew"/>
     	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListener"/>
     	<jms:listener destination="BMS.QUEUE.DISPATCH_BILL_EXPORT" ref="dispatchBillExportListener"/>
+    	<jms:listener destination="BMS.QUEUE.DISPATCH_BILL_PAY_EXPORT" ref="dispatchBillPayExportListener"/>
+    	<jms:listener destination="BMS.QUEUE.OUTSTOCK_PACKMATERIAL_EXPORT" ref="bizOutStockPackMaterialExportListener"/>
+    	<jms:listener destination="BMS.QUEUE.BUINESSDATA_EXPORT" ref="buinessDataExportListener"/>
+    	<jms:listener destination="BMS.QUEUE.OUTSTOCK_PACKMATERIAL_ORIGIN_EXPORT" ref="bizOutStockPackOriginExportListener"/>
     </jms:listener-container>
    
 </beans>

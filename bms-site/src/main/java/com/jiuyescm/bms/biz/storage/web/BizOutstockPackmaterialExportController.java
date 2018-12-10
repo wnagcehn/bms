@@ -7,11 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -36,6 +41,8 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.MQConstants;
+import com.jiuyescm.utils.JsonUtils;
 
 @Controller("bizOutstockPackmaterialExportController")
 public class BizOutstockPackmaterialExportController extends BaseController{
@@ -50,6 +57,8 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	@Resource 
 	private SequenceService sequenceService;
+	@Resource
+	private JmsTemplate jmsQueueTemplate;
 	
 	@DataProvider
 	public void query(Page<BizOutstockPackmaterialEntity> page, Map<String, Object> param){
@@ -87,13 +96,13 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 		}
         try {
         	//校验该费用是否已生成Excel文件
-        	Map<String, Object> queryEntity = new HashMap<String, Object>();
-        	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
-        	queryEntity.put("customerid", customerId);
-        	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
-        	if (StringUtils.isNotEmpty(existDel)) {
-        		return existDel;
-        	}
+//        	Map<String, Object> queryEntity = new HashMap<String, Object>();
+//        	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getCode());
+//        	queryEntity.put("customerid", customerId);
+//        	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
+//        	if (StringUtils.isNotEmpty(existDel)) {
+//        		return existDel;
+//        	}
         	
         	String path = getBizReceiveExportPath();
         	String filepath=path+ FileConstant.SEPARATOR + 
@@ -114,22 +123,34 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         	entity = fileExportTaskService.save(entity);
         	
         	//生成账单文件
-    		final Map<String, Object> condition = param;
-    		final String taskId = entity.getTaskId();
-    		final String filePath=filepath;
-    		new Thread(){
-    			public void run() {
-    				try {
-    					export(condition, taskId,filePath);
-    				} catch (Exception e) {
-    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-    					//写入日志
-						BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-						bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
-    				}
-    			};
-    		}.start();
+//    		final Map<String, Object> condition = param;
+//    		final String taskId = entity.getTaskId();
+//    		final String filePath=filepath;
+//    		new Thread(){
+//    			public void run() {
+//    				try {
+//    					export(condition, taskId,filePath);
+//    				} catch (Exception e) {
+//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+//    					//写入日志
+//						BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
+//						bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
+//    				}
+//    			};
+//    		}.start();
+        	
+        	// 写入MQ
+        	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send(MQConstants.OUTSTOCK_PACKMATERIAL_EXPORT, new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
