@@ -17,27 +17,27 @@
         <Property name="dataType">int</Property>
       </PropertyDef>
       <PropertyDef name="customNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">合同商家编号</Property>
       </PropertyDef>
       <PropertyDef name="customName">
-        <Property/>
+        <Property></Property>
         <Property name="label">合同商家名称</Property>
       </PropertyDef>
       <PropertyDef name="status">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="invoiceName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="prePayCode">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="businessNum">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="taxId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="companyType">
         <Property name="dataType">Long</Property>
@@ -46,37 +46,37 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="businessPicName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="businessPicPath">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="linkMan">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="linkManPhone">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="linkManTelphone">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="province">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="city">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="area">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="customAddress">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="zipCode">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="billAddress">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="bigArea">
         <Property name="dataType">Long</Property>
@@ -85,41 +85,41 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="sellerName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="creatorName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="lastModifierName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="delFlag">
         <Property name="dataType">int</Property>
       </PropertyDef>
       <PropertyDef name="mainProduct">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="productDescription">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="companyProfile">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="projectContent">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
     </DataType>
   </Model>
   <View>
     <ToolBar>
       <DataPilot>
-        <Property name="dataSet">dsCustomerLookup</Property>
+        <Property name="dataSet">dsInvoiceLookup</Property>
         <Property name="itemCodes">pages,pageSize</Property>
       </DataPilot>
       <Separator/>
