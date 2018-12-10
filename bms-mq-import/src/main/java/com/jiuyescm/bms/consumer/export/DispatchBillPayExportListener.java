@@ -61,7 +61,7 @@ public class DispatchBillPayExportListener implements MessageListener{
 	private ISystemCodeService systemCodeService;
 	
 	@Resource
-	private ICarrierProductService pubCarrierServicetypeService;
+	private ICarrierProductService carrierProductService;
 	
 	@Resource
 	private IBizDispatchBillPayService bizDispatchBillPayService;
@@ -151,7 +151,7 @@ public class DispatchBillPayExportListener implements MessageListener{
 			myparam.put("logistics", null);
 		}
 		
-		Map<String,String> serviceMap=getServiceMap();
+		//Map<String,String> serviceMap=getServiceMap();
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy K:m:s a",Locale.ENGLISH);
@@ -182,7 +182,7 @@ public class DispatchBillPayExportListener implements MessageListener{
 				
 				//头、内容信息
 				
-				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
+				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList());
 				logger.info("lineNo:"+lineNo);
 				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), lineNo, headDetailMapList, dataDetailList);
 				if(dataDetailList !=null){
@@ -333,7 +333,7 @@ public class DispatchBillPayExportListener implements MessageListener{
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillPayEntity> list,Map<String,String> serviceMap){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillPayEntity> list) throws Exception{
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	        Map<String, Object> dataItem = null;
 	        Map<String, String> warehouseMap = getWarehouse();
@@ -356,7 +356,7 @@ public class DispatchBillPayExportListener implements MessageListener{
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("deliverName", entity.getDeliverName());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
-	        	dataItem.put("servicename", serviceMap.get(entity.getServiceTypeCode()+"&"+entity.getCarrierId()));	        	
+	        	dataItem.put("servicename", carrierProductService.getCarrierNameById(entity.getCarrierId(), entity.getServiceTypeCode()));	        	
 	        	dataItem.put("expresstype", entity.getExpresstype());
 	        	dataItem.put("receiveName", entity.getReceiveName());
 	        	String provinceId="";
@@ -425,17 +425,6 @@ public class DispatchBillPayExportListener implements MessageListener{
 			return systemCodeEntity;
 		}
 		return null;
-	}
-	
-	public Map<String,String> getServiceMap() throws Exception{
-		Map<String,String> map=new HashMap<String,String>();
-		Map<String,Object> con=new HashMap<String,Object>();
-		con.put("delflag", "0");
-		List<CarrierProductVo> list=pubCarrierServicetypeService.query(con);
-		for(CarrierProductVo p:list){
-			map.put(p.getServicecode()+"&"+p.getCarrierid(), p.getServicename());
-		}
-		return map;
 	}
 	
 	/**
