@@ -41,6 +41,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.utils.JsonUtils;
 
 @Controller("bizOutstockPackmaterialExportController")
@@ -143,7 +144,7 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         	param.put("taskId", entity.getTaskId());
         	param.put("filePath", filepath);
         	final Map<String, Object> condition = param;
-    		jmsQueueTemplate.send("BMS.QUEUE.OUTSTOCK_PACKMATERIAL_EXPORT", new MessageCreator() {
+    		jmsQueueTemplate.send(MQConstants.OUTSTOCK_PACKMATERIAL_EXPORT, new MessageCreator() {
     			@Override
     			public Message createMessage(Session session) throws JMSException {
     				String json = JsonUtils.toJson(condition);

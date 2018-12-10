@@ -63,6 +63,7 @@ import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
@@ -676,7 +677,7 @@ public class BizPalletInfoController {
 		
 		// 写入MQ
 		final String msg = taskId;
-		jmsQueueTemplate.send("BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK", new MessageCreator() {
+		jmsQueueTemplate.send(MQConstants.PALLET_STORAGE_IMPORT_TASK, new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				return session.createTextMessage(msg);
