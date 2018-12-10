@@ -72,4 +72,9 @@ public class RedisCache {
 	 * BMS 耗材缓存地址
 	 */
 	public static final String MATERIALNAME_SPACE = "BMS.JIUYESCM.COM.CACHE.MATERIALNAME";
+	
+	/**
+	 * BMS 物流产品类型缓存地址
+	 */
+	public static final String CARRIERPRODUCTCODE_SPACE = "BMS.JIUYESCM.COM.CACHE.CARRIERPRODUCTCODE";
 }
