@@ -175,11 +175,11 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
     }
 
 	@Override
-	public CarrierProductVo findByCode(final String carrierid, final String servicecode)
+	public String getCarrierNameById(final String carrierid, final String servicecode)
 			throws Exception {
 		String code = carrierid + servicecode;
-		System.out.println("进入find方法");
-		CarrierProductVo result = redisClient.get(code, RedisCache.CARRIERPRODUCTCODE_SPACE,CarrierProductVo.class, new GetDataCallBack<CarrierProductVo>(){
+		String result ="";
+		CarrierProductVo resultVo = redisClient.get(code, RedisCache.CARRIERPRODUCTCODE_SPACE,CarrierProductVo.class, new GetDataCallBack<CarrierProductVo>(){
 
 			@Override
 			public int getExpiredTime() {
@@ -191,6 +191,7 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
 				Map<String, Object> condition = new HashMap<String, Object>();
 				condition.put("carrierid", carrierid);
 				condition.put("servicecode", servicecode);
+				condition.put("delflag", "0");
 				List<CarrierProductVo> list = new ArrayList<CarrierProductVo>();
 				
 				System.out.println("进入invoke方法");
@@ -203,9 +204,6 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
 					
 				}
 				if(list!=null && list.size()>0){
-					
-					System.out.println("list.size大于0");
-					
 					return list.get(0);
 				}
 				else{
@@ -213,7 +211,10 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
 				}
 			}
 		});
-		
+
+		if(resultVo!=null){
+			result += resultVo.getCarriername();
+		}
 		return result;
 	}
     

@@ -30,6 +30,6 @@ public interface ICarrierProductService {
      */
 	List<CarrierProductVo> queryByCarrierid(String carrierid) throws Exception;
 	
-	CarrierProductVo findByCode(String carriercode,String servicecode) throws Exception;
+	String getCarrierNameById(String carriercode,String servicecode) throws Exception;
 
 }
