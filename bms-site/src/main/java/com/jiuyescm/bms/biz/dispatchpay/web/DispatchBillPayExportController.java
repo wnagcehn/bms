@@ -13,11 +13,16 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataResolver;
@@ -53,6 +58,7 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.utils.JsonUtils;
 
 @Controller("dispatchBillPayExportController")
 public class DispatchBillPayExportController extends BaseController{
@@ -79,6 +85,8 @@ public class DispatchBillPayExportController extends BaseController{
 	private SequenceService sequenceService;
 	@Resource
 	private IPubCarrierServicetypeService pubCarrierServicetypeService;
+	@Resource
+	private JmsTemplate jmsQueueTemplate;
 	
 	/**
 	 * 导出
@@ -124,27 +132,39 @@ public class DispatchBillPayExportController extends BaseController{
         	entity = fileExportTaskService.save(entity);
         	
         	//生成账单文件
-    		final Map<String, Object> condition = param;
-    		final String taskId = entity.getTaskId();
-    		final String filePath=filepath;
-    		new Thread(){
-    			public void run() {
-    				try {
-    					export(condition, taskId,filePath);
-    				} catch (Exception e) {
-    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-    					
-    					//写入日志
-    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
-    					bmsErrorLogInfoEntity.setMethodName("asynExport");
-    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-    				}
-    			};
-    		}.start();
+//    		final Map<String, Object> condition = param;
+//    		final String taskId = entity.getTaskId();
+//    		final String filePath=filepath;
+//    		new Thread(){
+//    			public void run() {
+//    				try {
+//    					export(condition, taskId,filePath);
+//    				} catch (Exception e) {
+//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+//    					
+//    					//写入日志
+//    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+//    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
+//    					bmsErrorLogInfoEntity.setMethodName("asynExport");
+//    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+//    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+//    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+//    				}
+//    			};
+//    		}.start();
+        	
+        	// 写入MQ
+        	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send("BMS.QUEUE.DISPATCH_BILL_PAY_EXPORT", new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -527,27 +547,39 @@ public class DispatchBillPayExportController extends BaseController{
         	entity = fileExportTaskService.save(entity);
         	
         	//生成账单文件
-    		final Map<String, Object> condition = param;
-    		final String taskId = entity.getTaskId();
-    		final String filePath=filepath;
-    		new Thread(){
-    			public void run() {
-    				try {
-    					originExport(condition, taskId,filePath);
-    				} catch (Exception e) {
-    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-    					
-    					//写入日志
-    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
-    					bmsErrorLogInfoEntity.setMethodName("originAsynExport");
-    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-    				}
-    			};
-    		}.start();
+//    		final Map<String, Object> condition = param;
+//    		final String taskId = entity.getTaskId();
+//    		final String filePath=filepath;
+//    		new Thread(){
+//    			public void run() {
+//    				try {
+//    					originExport(condition, taskId,filePath);
+//    				} catch (Exception e) {
+//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+//    					
+//    					//写入日志
+//    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+//    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
+//    					bmsErrorLogInfoEntity.setMethodName("originAsynExport");
+//    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+//    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+//    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+//    				}
+//    			};
+//    		}.start();
+        	
+        	// 写入MQ
+        	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send("BMS.QUEUE.OUTSTOCK_PACKMATERIAL_ORIGIN_EXPORT", new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
