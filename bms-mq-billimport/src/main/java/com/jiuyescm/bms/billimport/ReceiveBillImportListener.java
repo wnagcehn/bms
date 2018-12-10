@@ -234,7 +234,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				checkInfoVo.setBalanceId(param.get("balanceId").toString());
 				checkInfoVo.setBalanceName(param.get("balanceName").toString());
 				checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
-				checkInfoVo.setIsneedInvoice(BmsEnums.BillCheckStateEnum.getCode(param.get("isneedInvoice").toString()));
+				checkInfoVo.setIsneedInvoice(BmsEnums.isInvoice.getCode(param.get("isneedInvoice").toString()));
 				if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
 					checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
 					checkInfoVo.setConfirmManId(param.get("confirmManId").toString());

@@ -61,7 +61,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 				case "温度":	
 					//映射Code
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
+						entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColValue()));
 					}else {
 						errorMessage+="温度必填;";
 					}		
