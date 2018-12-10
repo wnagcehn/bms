@@ -28,6 +28,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 import com.jiuyescm.bms.common.constants.FileConstant;
@@ -58,6 +59,9 @@ public class DispatchBillExportListener implements MessageListener{
 	
 	@Resource
 	private IBizDispatchBillService bizDispatchBillService;
+	
+	@Resource
+	private ICarrierProductService carrierProductService;
 	
 	@Override
 	public void onMessage(Message message) {
@@ -534,8 +538,9 @@ public class DispatchBillExportListener implements MessageListener{
 	 * @param b2bMap
 	 * @param orderStatusMap
 	 * @return
+	 * @throws Exception 
 	 */
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap) throws Exception{
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
 	        for (BizDispatchBillVo entity : list) {
@@ -569,8 +574,6 @@ public class DispatchBillExportListener implements MessageListener{
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
 	        	//dataItem.put("expresstype", entity.getExpresstype());
-	        	dataItem.put("servicename", entity.getServicename());
-	        	dataItem.put("adjustServiceTypeName", entity.getAdjustServiceTypeName());
 	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
 	        	dataItem.put("sendCityId", entity.getSendCityId());        	
 	        	dataItem.put("receiveName", entity.getReceiveName());
@@ -599,9 +602,25 @@ public class DispatchBillExportListener implements MessageListener{
 	        	dataItem.put("signTime", entity.getSignTime());     	
 	        	dataItem.put("deliverName", entity.getDeliverName());
 	        	dataItem.put("carrierName", entity.getCarrierName());
+	        	if (StringUtils.isNotBlank(entity.getAdjustCarrierId()) && StringUtils.isNotBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("adjustServiceTypeName", carrierProductService.getCarrierNameById(entity.getAdjustCarrierId(), entity.getAdjustServiceTypeCode()));
+				}else if (StringUtils.isBlank(entity.getAdjustCarrierId()) && StringUtils.isNotBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("adjustServiceTypeName", carrierProductService.getCarrierNameById(entity.getCarrierId(), entity.getAdjustServiceTypeCode()));
+				}else {
+					dataItem.put("adjustServiceTypeName", "");
+				}
+	        	if (StringUtils.isBlank(entity.getAdjustCarrierId()) && StringUtils.isBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("servicename", carrierProductService.getCarrierNameById(entity.getCarrierId(), entity.getServicecode()));
+				}else if (StringUtils.isNotBlank(entity.getAdjustCarrierId()) && StringUtils.isBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("servicename", carrierProductService.getCarrierNameById(entity.getAdjustCarrierId(), entity.getServicecode()));
+				}else {
+					dataItem.put("servicename", "");
+				}
 	        	dataItem.put("adjustCarrierName", entity.getAdjustCarrierName());
 	        	dataItem.put("originCarrierName", entity.getOriginCarrierName());
 	        	dataItem.put("chargeCarrierName", entity.getChargeCarrierName());
+//	        	dataItem.put("servicename", entity.getServicename());
+//	        	dataItem.put("adjustServiceTypeName", entity.getAdjustServiceTypeName());
 	        	dataItem.put("operateAmount", entity.getOperateAmount());
         		dataItem.put("dutyType", entity.getDutyType());
 	        	dataItem.put("updateReasonDetail", entity.getUpdateReasonDetail());
