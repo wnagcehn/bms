@@ -8,13 +8,13 @@
         <Property></Property>
         <Property name="label">年份</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getYear&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="month">
         <Property name="label">月份</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getAllMonth&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
     </DataType>
@@ -57,6 +57,15 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	year = year -1;&#xD;
+	month=12;&#xD;
+}&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
 </ClientEvent>
