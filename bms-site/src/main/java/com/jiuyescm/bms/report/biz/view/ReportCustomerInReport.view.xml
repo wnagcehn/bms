@@ -72,12 +72,12 @@
         <Property name="label">统计时间</Property>
       </PropertyDef>
       <PropertyDef name="shortName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家简称</Property>
       </PropertyDef>
       <PropertyDef name="mkInvoiceName">
-        <Property/>
-        <Property name="label">商家合同名称</Property>
+        <Property></Property>
+        <Property name="label">合同商家名称</Property>
       </PropertyDef>
     </DataType>
   </Model>
