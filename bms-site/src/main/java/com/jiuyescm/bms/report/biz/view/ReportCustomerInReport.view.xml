@@ -34,10 +34,11 @@
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property></Property>
+        <Property name="label">商家ID</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
         <Property></Property>
-        <Property name="label">商家名称</Property>
+        <Property name="label">商家全称</Property>
       </PropertyDef>
       <PropertyDef name="lastMonthStorage">
         <Property name="dataType">Integer</Property>
@@ -69,6 +70,14 @@
       <PropertyDef name="writeTime">
         <Property name="dataType">DateTime</Property>
         <Property name="label">统计时间</Property>
+      </PropertyDef>
+      <PropertyDef name="shortName">
+        <Property/>
+        <Property name="label">商家简称</Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property/>
+        <Property name="label">商家合同名称</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -141,35 +150,20 @@ tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
         <DataColumn name="createMonth">
           <Property name="property">createMonth</Property>
         </DataColumn>
+        <DataColumn name="customerId">
+          <Property name="property">customerId</Property>
+        </DataColumn>
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
         </DataColumn>
-        <DataColumn name="lastMonthStorage">
-          <Property name="property">lastMonthStorage</Property>
-          <Property name="visible">false</Property>
+        <DataColumn name="shortName">
+          <Property name="property">shortName</Property>
         </DataColumn>
-        <DataColumn name="curMonthStorage">
-          <Property name="property">curMonthStorage</Property>
-          <Property name="visible">false</Property>
+        <DataColumn name="mkInvoiceName">
+          <Property name="property">mkInvoiceName</Property>
         </DataColumn>
         <DataColumn name="minInTime">
           <Property name="property">minInTime</Property>
-        </DataColumn>
-        <DataColumn name="maxOutTime">
-          <Property name="property">maxOutTime</Property>
-          <Property name="visible">false</Property>
-        </DataColumn>
-        <DataColumn name="isCalculated">
-          <Property name="property">isCalculated</Property>
-          <Property name="visible">false</Property>
-        </DataColumn>
-        <DataColumn name="calculateTime">
-          <Property name="property">calculateTime</Property>
-          <Property name="visible">false</Property>
-        </DataColumn>
-        <DataColumn name="writeTime">
-          <Property name="property">writeTime</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>

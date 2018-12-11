@@ -25,8 +25,15 @@ public class ReportCustomerInOutEntity implements IEntity {
 	private Integer createMonth;
 	// 商家id
 	private String customerId;
-	// 商家名称
+	// 商家全称
 	private String customerName;
+	
+	//商家简称
+	private String shortName;
+	
+	//开票名称
+	private String mkInvoiceName;
+	
 	// 上月库存 0-无库存 1-有库存
 	private Integer lastMonthStorage;
 	// 本月库存 0-无库存 1-有库存
@@ -236,6 +243,22 @@ public class ReportCustomerInOutEntity implements IEntity {
      */
 	public void setWriteTime(Timestamp writeTime) {
 		this.writeTime = writeTime;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
 	}
     
 }
