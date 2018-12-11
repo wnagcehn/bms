@@ -3,7 +3,7 @@ package com.jiuyescm.constants;
 public class RedisCache {
 
 	/**
-	 * 默认过期时间  10分钟
+	 * 默认过期时间  5分钟
 	 */
 	public static int expiredTime = 300;  
 	public static int halfHour = 1800;// 半小时
@@ -25,6 +25,17 @@ public class RedisCache {
 	 * BMS 商家信息缓存地址
 	 */
 	public static final String CUSTOMERCODE_SPACE = "BMS.JIUYESCM.COM.CACHE.CUSTOMERCODE";
+	
+	/**
+	 * BMS 合同商家信息缓存地址
+	 */
+	public static final String MKINVOICENAME_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICENAME";
+	
+	/**
+	 * BMS 合同商家信息缓存地址
+	 */
+	public static final String MKINVOICEID_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICEID";
+	
 	
 	/**
 	 * BMS 商家信息缓存地址

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.customer.PubCustomerMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.base.customer.entity.PubCustomerEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="mk_id" property="mkId" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		   	<result column="linkman" property="linkman" jdbcType="VARCHAR" />
+		   	<result column="tel" property="tel" jdbcType="VARCHAR" />
+		   	<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		   	<result column="address" property="address" jdbcType="VARCHAR" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifier, last_modify_time, del_flag, linkman, tel, mobile, address, write_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifier, last_modify_time, del_flag, linkman, tel, mobile, address, write_time
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from pub_customer
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.customer.entity.PubCustomerEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from pub_customer
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" mkId != null and mkId !='' ">
+				and mk_id = #{mkId}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" shortName != null and shortName !='' ">
+				and short_name = #{shortName}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				and last_modifier = #{lastModifier}
+			</if>
+        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				and last_modify_time = #{lastModifyTime}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+        	<if test=" linkman != null and linkman !='' ">
+				and linkman = #{linkman}
+			</if>
+        	<if test=" tel != null and tel !='' ">
+				and tel = #{tel}
+			</if>
+        	<if test=" mobile != null and mobile !='' ">
+				and mobile = #{mobile}
+			</if>
+        	<if test=" address != null and address !='' ">
+				and address = #{address}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+    </select>
+</mapper>

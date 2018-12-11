@@ -104,4 +104,55 @@ public class CustomerDictService implements ICustomerDictService {
 		return map;
 	}
 
+	@Override
+	public String getMkInvoiceNameById(final String customerid) {
+		
+		CustomerVo result = redisClient.get(customerid, RedisCache.MKINVOICENAME_SPACE,CustomerVo.class, new GetDataCallBack<CustomerVo>(){
+
+			@Override
+			public int getExpiredTime() {
+				return RedisCache.expiredTime;
+			}
+
+			@Override
+			public CustomerVo invoke() {
+				CustomerVo vo = customerService.queryByCustomerId(customerid);
+				return vo;
+			}
+		});
+		if(result == null){
+			Logger.info("未查询到商家信息 customerid:{}",customerid);
+			return null;
+		}
+		else{
+			return result.getMkInvoiceName();
+		}
+		
+
+	}
+
+	@Override
+	public String getMkInvoiceIdByMkInvoiceName(final String mkInvoiceName) {
+		String result = redisClient.get(mkInvoiceName, RedisCache.MKINVOICEID_SPACE,String.class, new GetDataCallBack<String>(){
+
+			@Override
+			public int getExpiredTime() {
+				return RedisCache.expiredTime;
+			}
+
+			@Override
+			public String invoke() {
+				CustomerVo vo = customerService.queryByCustomerId(mkInvoiceName);
+				return null;
+			}
+		});
+		if(result == null){
+			Logger.info("未查询到商家信息 mkInvoiceName:{}",mkInvoiceName);
+			return null;
+		}
+		else{
+			return result;
+		}
+	}
+
 }

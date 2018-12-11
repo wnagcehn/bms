@@ -9,10 +9,7 @@ import com.jiuyescm.cfm.domain.IEntity;
  * 
  */
 public class PubCustomerSaleMapperEntity implements IEntity {
-    
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 455982683995900769L;
 	// 自增标识
 	private Integer id;
