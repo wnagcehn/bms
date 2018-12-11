@@ -8,14 +8,14 @@
         <Property name="dataType">Integer</Property>
         <Property name="label">统计年份</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;reportCompanyProfitController#getYear&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getYear&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="createMonth">
         <Property name="dataType">Integer</Property>
         <Property name="label">统计月份</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getAllMonth&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
     </DataType>

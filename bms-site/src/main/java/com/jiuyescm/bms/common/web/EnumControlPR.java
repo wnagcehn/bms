@@ -1022,11 +1022,9 @@ public class EnumControlPR {
 	@DataProvider
 	public Map<String, String> getReportMonthForYear(){		
 		Map<String, String> map =new LinkedHashMap<String,String>();
-		int startYear = 2017;
 		int endYear = DateUtil.getCurrentYYYY();
-		while (endYear>=startYear) {
-			map.put(String.valueOf(endYear), String.valueOf(endYear));
-			endYear--;
+		for(int i=5;i>0;i--){
+			map.put(String.valueOf(endYear-i), String.valueOf(endYear-i));
 		}
 		return map;
 	}
