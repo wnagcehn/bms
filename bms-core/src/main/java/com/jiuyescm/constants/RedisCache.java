@@ -27,20 +27,24 @@ public class RedisCache {
 	public static final String CUSTOMERCODE_SPACE = "BMS.JIUYESCM.COM.CACHE.CUSTOMERCODE";
 	
 	/**
-	 * BMS 合同商家信息缓存地址
+	 * BMS 商家信息缓存地址
 	 */
-	public static final String MKINVOICENAME_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICENAME";
+	public static final String CUSTOMERNAME_SPACE = "BMS.JIUYESCM.COM.CACHE.CUSTOMERNAME";
+	
+	/**
+	 * BMS 合同商家信息缓存地址（K是商家ID，V是合同商家名称）
+	 */
+	public static final String MKINVOICENAMEBYCUSTOMERID_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICENAMEBYCUSTOMERID";
 	
 	/**
 	 * BMS 合同商家信息缓存地址
 	 */
 	public static final String MKINVOICEID_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICEID";
 	
-	
 	/**
-	 * BMS 商家信息缓存地址
+	 * BMS 合同商家信息缓存地址
 	 */
-	public static final String CUSTOMERNAME_SPACE = "BMS.JIUYESCM.COM.CACHE.CUSTOMERNAME";
+	public static final String MKINVOICENAME_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICENAME";
 	
 	/**
 	 * BMS 物流商信息缓存地址

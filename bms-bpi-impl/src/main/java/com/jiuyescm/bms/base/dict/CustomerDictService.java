@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
+import com.jiuyescm.bms.base.customer.repository.IPubCustomerBaseRepository;
+import com.jiuyescm.bms.base.customer.repository.IPubCustomerRepository;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.constants.RedisCache;
 import com.jiuyescm.framework.redis.callback.GetDataCallBack;
@@ -22,6 +25,8 @@ public class CustomerDictService implements ICustomerDictService {
 	private static Logger Logger = LoggerFactory.getLogger(CustomerDictService.class);
 	
 	@Autowired ICustomerService customerService;
+	@Autowired IPubCustomerRepository pubCustomerRepository;
+	@Autowired IPubCustomerBaseRepository pubCustomerBaseRepository;
 	@Autowired private IRedisClient redisClient;
 	
 	@Override
@@ -105,9 +110,9 @@ public class CustomerDictService implements ICustomerDictService {
 	}
 
 	@Override
-	public String getMkInvoiceNameById(final String customerid) {
+	public String getMkInvoiceNameByCustomerId(final String customerId) {
 		
-		CustomerVo result = redisClient.get(customerid, RedisCache.MKINVOICENAME_SPACE,CustomerVo.class, new GetDataCallBack<CustomerVo>(){
+		CustomerVo result = redisClient.get(customerId, RedisCache.MKINVOICENAME_SPACE,CustomerVo.class, new GetDataCallBack<CustomerVo>(){
 
 			@Override
 			public int getExpiredTime() {
@@ -116,24 +121,22 @@ public class CustomerDictService implements ICustomerDictService {
 
 			@Override
 			public CustomerVo invoke() {
-				CustomerVo vo = customerService.queryByCustomerId(customerid);
+				CustomerVo vo = customerService.queryByCustomerId(customerId);
 				return vo;
 			}
 		});
 		if(result == null){
-			Logger.info("未查询到商家信息 customerid:{}",customerid);
+			Logger.info("未查询到合同商家名称 customerId:{}",customerId);
 			return null;
 		}
 		else{
 			return result.getMkInvoiceName();
 		}
-		
-
 	}
 
 	@Override
-	public String getMkInvoiceIdByMkInvoiceName(final String mkInvoiceName) {
-		String result = redisClient.get(mkInvoiceName, RedisCache.MKINVOICEID_SPACE,String.class, new GetDataCallBack<String>(){
+	public String getMkIdByMkInvoiceName(final String mkInvoiceName) {
+		String result = redisClient.get(mkInvoiceName, RedisCache.MKINVOICENAMEBYCUSTOMERID_SPACE,String.class, new GetDataCallBack<String>(){
 
 			@Override
 			public int getExpiredTime() {
@@ -142,17 +145,31 @@ public class CustomerDictService implements ICustomerDictService {
 
 			@Override
 			public String invoke() {
-				CustomerVo vo = customerService.queryByCustomerId(mkInvoiceName);
-				return null;
+				Map<String, Object> condition = new HashMap<String, Object>();
+				condition.put("delFlag", "0");
+				condition.put("mkInvoiceName", mkInvoiceName);
+				List<PubCustomerBaseEntity> list = pubCustomerBaseRepository.query(condition);
+				if(list==null||list.size()==0){
+					return null;
+				}else{
+					String mkId = list.get(0).getMkId();
+					return mkId;
+				}
 			}
 		});
 		if(result == null){
-			Logger.info("未查询到商家信息 mkInvoiceName:{}",mkInvoiceName);
+			Logger.info("未查询到合同商家ID mkInvoiceName:{}",mkInvoiceName);
 			return null;
 		}
 		else{
 			return result;
 		}
+	}
+
+	@Override
+	public String getMkInvoiceNameByMkId(String mkId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

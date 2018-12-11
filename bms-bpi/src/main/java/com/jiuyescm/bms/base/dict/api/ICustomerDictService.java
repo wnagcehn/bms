@@ -40,13 +40,20 @@ public interface ICustomerDictService {
 	 * @param ID 商家ID
 	 * @return
 	 */
-	String getMkInvoiceNameById(String customerid);
+	String getMkInvoiceNameByCustomerId(String customerId);
 	
 	/**
 	 * 通过合同商家名称查询合同商家ID
 	 * @param mkInvoiceName 合同商家名称
 	 * @return
 	 */
-	String getMkInvoiceIdByMkInvoiceName(String mkInvoiceName);
+	String getMkIdByMkInvoiceName(String mkInvoiceName);
+	
+	/**
+	 * 通过合同商家ID查询合同商家名称
+	 * @param MkId 合同商家ID
+	 * @return
+	 */
+	String getMkInvoiceNameByMkId(String mkId);
 	
 }
