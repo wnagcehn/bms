@@ -30,6 +30,22 @@ public interface ICarrierProductService {
      */
 	List<CarrierProductVo> queryByCarrierid(String carrierid) throws Exception;
 	
-	String getCarrierNameById(String carriercode,String servicecode) throws Exception;
+	/**
+	 * 查询缓存，有值返回CarrierName，无值返回空字符串
+	 * @param carrierid
+	 * @param servicecode
+	 * @return
+	 * @throws Exception
+	 */
+	String getCarrierNameById(String carrierid,String servicecode) throws Exception;
+	
+	/**
+	 * 查询缓存，返回CarrierProductVo对象
+	 * @param carrierid
+	 * @param servicecode
+	 * @return
+	 * @throws Exception
+	 */
+	CarrierProductVo findByCode(String carrierid,String servicecode) throws Exception;
 
 }

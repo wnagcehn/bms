@@ -217,6 +217,45 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
 		}
 		return result;
 	}
+
+	@Override
+	public CarrierProductVo findByCode(final String carrierid, final String servicecode)
+			throws Exception {
+		String code = carrierid + servicecode;
+		CarrierProductVo resultVo = redisClient.get(code, RedisCache.CARRIERPRODUCTCODE_SPACE,CarrierProductVo.class, new GetDataCallBack<CarrierProductVo>(){
+
+			@Override
+			public int getExpiredTime() {
+				return RedisCache.fiveMinutes;
+			}
+
+			@Override
+			public CarrierProductVo invoke() {
+				Map<String, Object> condition = new HashMap<String, Object>();
+				condition.put("carrierid", carrierid);
+				condition.put("servicecode", servicecode);
+				condition.put("delflag", "0");
+				List<CarrierProductVo> list = new ArrayList<CarrierProductVo>();
+				
+				System.out.println("进入invoke方法");
+				
+				
+				try{
+					list = query(condition);
+				}
+				catch(Exception ex){
+					
+				}
+				if(list!=null && list.size()>0){
+					return list.get(0);
+				}
+				else{
+					return null;
+				}
+			}
+		});
+		return resultVo;
+	}
     
     
 }
