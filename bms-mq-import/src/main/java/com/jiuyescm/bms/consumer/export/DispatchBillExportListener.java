@@ -3,9 +3,11 @@ package com.jiuyescm.bms.consumer.export;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -26,6 +28,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 import com.jiuyescm.bms.common.constants.FileConstant;
@@ -56,6 +59,9 @@ public class DispatchBillExportListener implements MessageListener{
 	
 	@Resource
 	private IBizDispatchBillService bizDispatchBillService;
+	
+	@Resource
+	private ICarrierProductService carrierProductService;
 	
 	@Override
 	public void onMessage(Message message) {
@@ -118,7 +124,8 @@ public class DispatchBillExportListener implements MessageListener{
     	try {
     		handBiz(poiUtil, workbook, map.get("filePath").toString(), map);
 		} catch (Exception e) {
-			fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.FAIL.getCode(), 10);
+			fileExportTaskService.updateExportTask(map.get("taskId").toString(), FileTaskStateEnum.FAIL.getCode(), 99);
+			return;
 		}	
     	//最后写到文件
     	fileExportTaskService.updateExportTask(map.get("taskId").toString(), null, 90);
@@ -150,8 +157,11 @@ public class DispatchBillExportListener implements MessageListener{
 		
 		//切分时间
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String startTime =formatter.format(myparam.get("createTime")) ;
-		String endTime = formatter.format( myparam.get("endTime"));
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy K:m:s a",Locale.ENGLISH);
+		Date convertCreateTime = sdf.parse(myparam.get("createTime").toString());
+		Date convertEndTime = sdf.parse(myparam.get("endTime").toString());
+		String startTime =formatter.format(convertCreateTime) ;
+		String endTime = formatter.format(convertEndTime);
 		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
 		//抬头信息
 		List<Map<String, Object>> headDetailMapList = getBizHead();
@@ -528,8 +538,9 @@ public class DispatchBillExportListener implements MessageListener{
 	 * @param b2bMap
 	 * @param orderStatusMap
 	 * @return
+	 * @throws Exception 
 	 */
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap) throws Exception{
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
 	        for (BizDispatchBillVo entity : list) {
@@ -563,8 +574,6 @@ public class DispatchBillExportListener implements MessageListener{
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
 	        	//dataItem.put("expresstype", entity.getExpresstype());
-	        	dataItem.put("servicename", entity.getServicename());
-	        	dataItem.put("adjustServiceTypeName", entity.getAdjustServiceTypeName());
 	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
 	        	dataItem.put("sendCityId", entity.getSendCityId());        	
 	        	dataItem.put("receiveName", entity.getReceiveName());
@@ -593,9 +602,25 @@ public class DispatchBillExportListener implements MessageListener{
 	        	dataItem.put("signTime", entity.getSignTime());     	
 	        	dataItem.put("deliverName", entity.getDeliverName());
 	        	dataItem.put("carrierName", entity.getCarrierName());
+	        	if (StringUtils.isNotBlank(entity.getAdjustCarrierId()) && StringUtils.isNotBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("adjustServiceTypeName", carrierProductService.getCarrierNameById(entity.getAdjustCarrierId(), entity.getAdjustServiceTypeCode()));
+				}else if (StringUtils.isBlank(entity.getAdjustCarrierId()) && StringUtils.isNotBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("adjustServiceTypeName", carrierProductService.getCarrierNameById(entity.getCarrierId(), entity.getAdjustServiceTypeCode()));
+				}else {
+					dataItem.put("adjustServiceTypeName", "");
+				}
+	        	if (StringUtils.isBlank(entity.getAdjustCarrierId()) && StringUtils.isBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("servicename", carrierProductService.getCarrierNameById(entity.getCarrierId(), entity.getServicecode()));
+				}else if (StringUtils.isNotBlank(entity.getAdjustCarrierId()) && StringUtils.isBlank(entity.getAdjustServiceTypeCode())) {
+					dataItem.put("servicename", carrierProductService.getCarrierNameById(entity.getAdjustCarrierId(), entity.getServicecode()));
+				}else {
+					dataItem.put("servicename", "");
+				}
 	        	dataItem.put("adjustCarrierName", entity.getAdjustCarrierName());
 	        	dataItem.put("originCarrierName", entity.getOriginCarrierName());
 	        	dataItem.put("chargeCarrierName", entity.getChargeCarrierName());
+//	        	dataItem.put("servicename", entity.getServicename());
+//	        	dataItem.put("adjustServiceTypeName", entity.getAdjustServiceTypeName());
 	        	dataItem.put("operateAmount", entity.getOperateAmount());
         		dataItem.put("dutyType", entity.getDutyType());
 	        	dataItem.put("updateReasonDetail", entity.getUpdateReasonDetail());

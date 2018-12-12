@@ -13,11 +13,16 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataResolver;
@@ -28,7 +33,8 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
-import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
@@ -46,6 +52,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
@@ -53,6 +60,7 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.utils.JsonUtils;
 
 @Controller("dispatchBillPayExportController")
 public class DispatchBillPayExportController extends BaseController{
@@ -77,8 +85,11 @@ public class DispatchBillPayExportController extends BaseController{
 	private IBizOutstockPackmaterialService bizOutstockPackmaterialServiceImpl;
 	@Resource 
 	private SequenceService sequenceService;
+	@Autowired
+	private ICarrierProductService carrierProductService;
 	@Resource
-	private IPubCarrierServicetypeService pubCarrierServicetypeService;
+	private JmsTemplate jmsQueueTemplate;
+
 	
 	/**
 	 * 导出
@@ -124,27 +135,39 @@ public class DispatchBillPayExportController extends BaseController{
         	entity = fileExportTaskService.save(entity);
         	
         	//生成账单文件
-    		final Map<String, Object> condition = param;
-    		final String taskId = entity.getTaskId();
-    		final String filePath=filepath;
-    		new Thread(){
-    			public void run() {
-    				try {
-    					export(condition, taskId,filePath);
-    				} catch (Exception e) {
-    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-    					
-    					//写入日志
-    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
-    					bmsErrorLogInfoEntity.setMethodName("asynExport");
-    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-    				}
-    			};
-    		}.start();
+//    		final Map<String, Object> condition = param;
+//    		final String taskId = entity.getTaskId();
+//    		final String filePath=filepath;
+//    		new Thread(){
+//    			public void run() {
+//    				try {
+//    					export(condition, taskId,filePath);
+//    				} catch (Exception e) {
+//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+//    					
+//    					//写入日志
+//    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+//    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
+//    					bmsErrorLogInfoEntity.setMethodName("asynExport");
+//    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+//    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+//    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+//    				}
+//    			};
+//    		}.start();
+        	
+        	// 写入MQ
+        	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send(MQConstants.DISPATCH_BILL_PAY_EXPORT, new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -527,27 +550,39 @@ public class DispatchBillPayExportController extends BaseController{
         	entity = fileExportTaskService.save(entity);
         	
         	//生成账单文件
-    		final Map<String, Object> condition = param;
-    		final String taskId = entity.getTaskId();
-    		final String filePath=filepath;
-    		new Thread(){
-    			public void run() {
-    				try {
-    					originExport(condition, taskId,filePath);
-    				} catch (Exception e) {
-    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-    					
-    					//写入日志
-    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
-    					bmsErrorLogInfoEntity.setMethodName("originAsynExport");
-    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-    				}
-    			};
-    		}.start();
+//    		final Map<String, Object> condition = param;
+//    		final String taskId = entity.getTaskId();
+//    		final String filePath=filepath;
+//    		new Thread(){
+//    			public void run() {
+//    				try {
+//    					originExport(condition, taskId,filePath);
+//    				} catch (Exception e) {
+//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+//    					
+//    					//写入日志
+//    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+//    					bmsErrorLogInfoEntity.setClassName("DispatchBillPayExportController");
+//    					bmsErrorLogInfoEntity.setMethodName("originAsynExport");
+//    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+//    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+//    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+//    				}
+//    			};
+//    		}.start();
+        	
+        	// 写入MQ
+        	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send(MQConstants.OUTSTOCK_PACKMATERIAL_ORIGIN_EXPORT, new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -835,12 +870,12 @@ public class DispatchBillPayExportController extends BaseController{
 	}
 	
 	
-	public Map<String,String> getServiceMap(){
+	public Map<String,String> getServiceMap() throws Exception{
 		Map<String,String> map=new HashMap<String,String>();
 		Map<String,Object> con=new HashMap<String,Object>();
 		con.put("delflag", "0");
-		List<PubCarrierServicetypeEntity> list=pubCarrierServicetypeService.query(con);
-		for(PubCarrierServicetypeEntity p:list){
+		List<CarrierProductVo> list=carrierProductService.query(con);
+		for(CarrierProductVo p:list){
 			map.put(p.getServicecode()+"&"+p.getCarrierid(), p.getServicename());
 		}
 		return map;

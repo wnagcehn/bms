@@ -3,7 +3,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
@@ -19,7 +20,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 @Component
 @Controller("billCheckPR")
 public class BillAccountInfoController {
-	private static final Logger logger = Logger.getLogger(BillAccountInfoController.class.getName());
+
 	@Resource private IBmsAccountInfoService billAccountInfoService;
 
 	@Expose
