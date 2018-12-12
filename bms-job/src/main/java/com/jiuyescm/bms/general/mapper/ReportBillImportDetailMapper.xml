@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.general.entity.ReportBillImportDetailEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="pallet_cw_num" property="palletCwNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_hw_num" property="palletHwNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_ld_num" property="palletLdNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_lc_num" property="palletLcNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_out_num" property="palletOutNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_trans_num" property="palletTransNum" jdbcType="DECIMAL" />
+		   	<result column="rent_cw_amount" property="rentCwAmount" jdbcType="DECIMAL" />
+		   	<result column="rent_hw_amount" property="rentHwAmount" jdbcType="DECIMAL" />
+		   	<result column="rent_ld_amount" property="rentLdAmount" jdbcType="DECIMAL" />
+		   	<result column="rent_lc_amount" property="rentLcAmount" jdbcType="DECIMAL" />
+		   	<result column="operate_amount" property="operateAmount" jdbcType="DECIMAL" />
+		   	<result column="material_amount" property="materialAmount" jdbcType="DECIMAL" />
+		   	<result column="st_add_amount" property="stAddAmount" jdbcType="DECIMAL" />
+		   	<result column="st_abnormal_amount" property="stAbnormalAmount" jdbcType="DECIMAL" />
+		   	<result column="st_tbout_num" property="stTboutNum" jdbcType="DECIMAL" />
+		   	<result column="de_jy_amount" property="deJyAmount" jdbcType="DECIMAL" />
+		   	<result column="de_jy_orders" property="deJyOrders" jdbcType="DECIMAL" />
+		   	<result column="de_sf_amount" property="deSfAmount" jdbcType="DECIMAL" />
+		   	<result column="de_sf_orders" property="deSfOrders" jdbcType="DECIMAL" />
+		   	<result column="de_yto_amount" property="deYtoAmount" jdbcType="DECIMAL" />
+		   	<result column="de_yto_orders" property="deYtoOrders" jdbcType="DECIMAL" />
+		   	<result column="de_zto_amount" property="deZtoAmount" jdbcType="DECIMAL" />
+		   	<result column="de_zto_orders" property="deZtoOrders" jdbcType="DECIMAL" />
+		   	<result column="de_uc_amount" property="deUcAmount" jdbcType="DECIMAL" />
+		   	<result column="de_uc_orders" property="deUcOrders" jdbcType="DECIMAL" />
+		   	<result column="de_dbang_amount" property="deDbangAmount" jdbcType="DECIMAL" />
+		   	<result column="de_dbang_orders" property="deDbangOrders" jdbcType="DECIMAL" />
+		   	<result column="de_kye_amount" property="deKyeAmount" jdbcType="DECIMAL" />
+		   	<result column="de_kye_orders" property="deKyeOrders" jdbcType="DECIMAL" />
+		   	<result column="de_yunda_amount" property="deYundaAmount" jdbcType="DECIMAL" />
+		   	<result column="de_yunda_orders" property="deYundaOrders" jdbcType="DECIMAL" />
+		   	<result column="de_htky_amount" property="deHtkyAmount" jdbcType="DECIMAL" />
+		   	<result column="de_htky_orders" property="deHtkyOrders" jdbcType="DECIMAL" />
+		   	<result column="de_ems_amount" property="deEmsAmount" jdbcType="DECIMAL" />
+		   	<result column="de_ems_orders" property="deEmsOrders" jdbcType="DECIMAL" />
+		   	<result column="de_opt_amount" property="deOptAmount" jdbcType="DECIMAL" />
+		   	<result column="de_opt_orders" property="deOptOrders" jdbcType="DECIMAL" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, bill_no, warehouse_code, pallet_cw_num, pallet_hw_num, pallet_ld_num, pallet_lc_num, pallet_out_num, pallet_trans_num, rent_cw_amount, rent_hw_amount, rent_ld_amount, rent_lc_amount, operate_amount, material_amount, st_add_amount, st_abnormal_amount, st_tbout_num, de_jy_amount, de_jy_orders, de_sf_amount, de_sf_orders, de_yto_amount, de_yto_orders, de_zto_amount, de_zto_orders, de_uc_amount, de_uc_orders, de_dbang_amount, de_dbang_orders, de_kye_amount, de_kye_orders, de_yunda_amount, de_yunda_orders, de_htky_amount, de_htky_orders, de_ems_amount, de_ems_orders, de_opt_amount, de_opt_orders, write_time, last_modify_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+		bill_no, warehouse_code, pallet_cw_num, pallet_hw_num, pallet_ld_num, pallet_lc_num, pallet_out_num, pallet_trans_num, rent_cw_amount, rent_hw_amount, rent_ld_amount, rent_lc_amount, operate_amount, material_amount, st_add_amount, st_abnormal_amount, st_tbout_num, de_jy_amount, de_jy_orders, de_sf_amount, de_sf_orders, de_yto_amount, de_yto_orders, de_zto_amount, de_zto_orders, de_uc_amount, de_uc_orders, de_dbang_amount, de_dbang_orders, de_kye_amount, de_kye_orders, de_yunda_amount, de_yunda_orders, de_htky_amount, de_htky_orders, de_ems_amount, de_ems_orders, de_opt_amount, de_opt_orders, write_time, last_modify_time
+    </sql>
+	
+	<select id="queryBill" resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity"  parameterType="java.util.Map">
+		select bill_no as billNo,create_time as createTime from bill_receive_master where del_flag='0' and task_status='SUCCESS' and create_time>#{time} limit 1;
+	</select>
+	
+	<select id="queryAllWare" resultType="String"  parameterType="java.util.Map">
+		select DISTINCT warehouse_code from bill_fees_receive_storage where bill_no=#{billNo}
+	</select>
+	
+	<select id="queryStorageNum" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select IFNULL(SUM(total_qty),0) from bill_fees_receive_storage where 1=1
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(tempretureType != null and tempretureType !='')" >
+				and tempreture_type = #{tempretureType}
+		</if>
+		<if test="(chargeUnit != null and chargeUnit !='')" >
+				and charge_unit = #{chargeUnit}
+		</if>
+	</select>
+	
+	<select id="queryStorageAmount" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select IFNULL(SUM(amount),0) from bill_fees_receive_storage where 1=1
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and subject_code = #{subjectCode}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(tempretureType != null and tempretureType !='')" >
+				and tempreture_type = #{tempretureType}
+		</if>
+		<if test="(chargeUnit != null and chargeUnit !='')" >
+				and charge_unit = #{chargeUnit}
+		</if>
+	</select>
+	
+	<select id="queryStorageAdd" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select IFNULL(SUM(a.amount),0) from bill_fees_receive_storage a
+		INNER JOIN bms_subject_info b on a.subject_code=b.subject_code
+		where b.in_out_typecode='INPUT' and b.biz_typecode='STORAGE' and b.fees_type='ADD'
+		<if test="(billNo != null and billNo !='')" >
+			and a.bill_no = #{billNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and a.warehouse_code = #{warehouseCode}
+		</if>
+	</select>
+	
+	<select id="queryStorageTbBox" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select IFNULL(SUM(total_box),0) from bill_fees_receive_storage
+		where subject_code='wh_b2b_work' 
+		<if test="(billNo != null and billNo !='')" >
+				and bill_no = #{billNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and warehouse_code = #{warehouseCode}
+		</if>
+	</select>
+	
+	<select id="queryDispatch" parameterType="java.util.Map" resultType="java.util.Map">
+		select COUNT(0) as count,IFNULL(SUM(amount),0) as amount from bill_fees_receive_dispatch
+		where subject_code=#{subjectCode} and bill_no= #{billNo} and warehouse_code=#{warehouseCode} and carrierid=#{carrierid}
+	</select>
+	
+	<select id="getTime" parameterType="java.util.Map" resultType="java.sql.Timestamp">
+		select last_time from etl_condition where pull_type='reportBillImport'
+	</select>
+	
+	 <insert id="saveList" parameterType="com.jiuyescm.bms.general.entity.ReportBillImportDetailEntity">
+        insert into report_bill_import_detail(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+    	select
+			#{billNo,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{palletCwNum,jdbcType=DECIMAL}, 
+			#{palletHwNum,jdbcType=DECIMAL}, 
+			#{palletLdNum,jdbcType=DECIMAL}, 
+			#{palletLcNum,jdbcType=DECIMAL}, 
+			#{palletOutNum,jdbcType=DECIMAL}, 
+			#{palletTransNum,jdbcType=DECIMAL}, 
+			#{rentCwAmount,jdbcType=DECIMAL}, 
+			#{rentHwAmount,jdbcType=DECIMAL}, 
+			#{rentLdAmount,jdbcType=DECIMAL}, 
+			#{rentLcAmount,jdbcType=DECIMAL}, 
+			#{operateAmount,jdbcType=DECIMAL}, 
+			#{materialAmount,jdbcType=DECIMAL}, 
+			#{stAddAmount,jdbcType=DECIMAL}, 
+			#{stAbnormalAmount,jdbcType=DECIMAL}, 
+			#{stTboutNum,jdbcType=DECIMAL}, 
+			#{deJyAmount,jdbcType=DECIMAL}, 
+			#{deJyOrders,jdbcType=DECIMAL}, 
+			#{deSfAmount,jdbcType=DECIMAL}, 
+			#{deSfOrders,jdbcType=DECIMAL}, 
+			#{deYtoAmount,jdbcType=DECIMAL}, 
+			#{deYtoOrders,jdbcType=DECIMAL}, 
+			#{deZtoAmount,jdbcType=DECIMAL}, 
+			#{deZtoOrders,jdbcType=DECIMAL}, 
+			#{deUcAmount,jdbcType=DECIMAL}, 
+			#{deUcOrders,jdbcType=DECIMAL}, 
+			#{deDbangAmount,jdbcType=DECIMAL}, 
+			#{deDbangOrders,jdbcType=DECIMAL}, 
+			#{deKyeAmount,jdbcType=DECIMAL}, 
+			#{deKyeOrders,jdbcType=DECIMAL}, 
+			#{deYundaAmount,jdbcType=DECIMAL}, 
+			#{deYundaOrders,jdbcType=DECIMAL}, 
+			#{deHtkyAmount,jdbcType=DECIMAL}, 
+			#{deHtkyOrders,jdbcType=DECIMAL}, 
+			#{deEmsAmount,jdbcType=DECIMAL}, 
+			#{deEmsOrders,jdbcType=DECIMAL}, 
+			#{deOptAmount,jdbcType=DECIMAL}, 
+			#{deOptOrders,jdbcType=DECIMAL}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}
+		from dual
+		where not exists (select id from report_bill_import_detail where bill_no= #{billNo} and warehouse_code=#{warehouseCode}) 
+    </insert>
+    
+    <update id="updateEtlTime" parameterType="java.util.Map">
+    	update etl_condition set last_time=#{lastTime} where pull_type='reportBillImport'
+    </update>
+</mapper>
