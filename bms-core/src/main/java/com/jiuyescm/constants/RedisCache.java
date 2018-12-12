@@ -37,12 +37,12 @@ public class RedisCache {
 	public static final String MKINVOICENAMEBYCUSTOMERID_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICENAMEBYCUSTOMERID";
 	
 	/**
-	 * BMS 合同商家信息缓存地址
+	 * BMS 合同商家信息缓存地址（K是合同商家名称，V是合同商家ID）
 	 */
 	public static final String MKINVOICEID_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICEID";
 	
 	/**
-	 * BMS 合同商家信息缓存地址
+	 * BMS 合同商家信息缓存地址（K是合同商家ID，V是合同商家名称）
 	 */
 	public static final String MKINVOICENAME_SPACE = "BMS.JIUYESCM.COM.CACHE.MKINVOICENAME";
 	
