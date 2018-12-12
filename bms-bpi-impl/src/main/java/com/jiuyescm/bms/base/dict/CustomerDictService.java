@@ -235,6 +235,13 @@ public class CustomerDictService implements ICustomerDictService {
 		if (pageEntity != null) {
 			try {
 				PropertyUtils.copyProperties(page, pageEntity);
+			if(pageEntity.getList()!=null&&pageEntity.getList().size()>0){
+				for(int i=0;pageEntity.getList().size()>i;i++){
+					PubCustomerBaseVo vo = new PubCustomerBaseVo();
+					PropertyUtils.copyProperties(vo, pageEntity.getList().get(i));
+					page.getList().set(i, vo);
+				}
+			}
 			} catch (IllegalAccessException | InvocationTargetException
 					| NoSuchMethodException e) {
 				logger.info("转换失败 pageEntity:{}", pageEntity);

@@ -2,10 +2,12 @@ package com.jiuyescm.bms.base.airport.web;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -16,6 +18,8 @@ import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.airport.entity.PubAirportEntity;
 import com.jiuyescm.bms.base.airport.service.IPubAirportService;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -25,8 +29,9 @@ public class AirPortController {
 	
 	@Resource private IPubAirportService pubAirportService;
 	@Resource private SequenceService sequenceService;
+	@Autowired ICustomerDictService customerDictService;
 	
-	@DataProvider  
+	@DataProvider
 	public void queryAll(Page<PubAirportEntity> page,Map<String,Object> parameter){
 		
 		PageInfo<PubAirportEntity> tmpPageInfo = pubAirportService.query(parameter, page.getPageNo(),page.getPageSize());
