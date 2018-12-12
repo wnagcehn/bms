@@ -44,6 +44,11 @@ public class ExcelReaderTest {
 				public void finish() {
 					System.out.println("读取完毕");
 				}
+				@Override
+				public void readTitle(List<String> columns) {
+					// TODO Auto-generated method stub
+					
+				}
 			},1,2);
 		} catch (Exception e) {
 			e.printStackTrace();
