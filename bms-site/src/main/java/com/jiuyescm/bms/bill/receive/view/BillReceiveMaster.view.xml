@@ -1126,6 +1126,7 @@ var param = {&#xD;
 	&quot;confirmManId&quot;:confirmManId,&#xD;
 	&quot;confirmMan&quot;:confirmMan,&#xD;
 	&quot;confirmDate&quot;:confirmDate&#xD;
+&#xD;
 };&#xD;
 &#xD;
 view.get(&quot;#uploadMaterialAction&quot;).set(&quot;parameter&quot;,param).execute();&#xD;

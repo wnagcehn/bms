@@ -9,69 +9,29 @@
 	    <result column="create_month" property="createMonth" jdbcType="INTEGER" />
 	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="short_name" property="shortName" jdbcType="VARCHAR" />
+	    <result column="mk_invoice_name" property="mkInvoiceName" jdbcType="VARCHAR" />
 	    <result column="last_month_storage" property="lastMonthStorage" jdbcType="INTEGER" />
 	    <result column="cur_month_storage" property="curMonthStorage" jdbcType="INTEGER" />
 	    <result column="min_in_time" property="minInTime" jdbcType="VARCHAR" />
 	    <result column="max_out_time" property="maxOutTime" jdbcType="VARCHAR" />
-	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
-	    <result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
-	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
     </resultMap>
-  
-    <sql id="baseColumns">
-        id, create_year, create_month, customer_id, customer_name, last_month_storage, cur_month_storage, min_in_time, max_out_time, is_calculated, calculate_time, write_time
-    </sql>
-    
-    <sql id="baseSelectColumns">
-		<if test="(id != null and id !='')" >
-				and id = #{id}
-		</if>
-		<if test="(createYear != null and createYear !='')" >
-				and create_year = #{createYear}
-		</if>
-		<if test="(createMonth != null and createMonth !='')" >
-				and create_month = #{createMonth}
-		</if>
-		<if test="(customerId != null and customerId !='')" >
-				and customer_id = #{customerId}
-		</if>
-		<if test="(customerName != null and customerName !='')" >
-				and customer_name = #{customerName}
-		</if>
-		<if test="(lastMonthStorage != null and lastMonthStorage !='')" >
-				and last_month_storage = #{lastMonthStorage}
-		</if>
-		<if test="(curMonthStorage != null and curMonthStorage !='')" >
-				and cur_month_storage = #{curMonthStorage}
-		</if>
-		<if test="(minInTime != null and minInTime !='')" >
-				and min_in_time = #{minInTime}
-		</if>
-		<if test="(maxOutTime != null and maxOutTime !='')" >
-				and max_out_time = #{maxOutTime}
-		</if>
-		<if test="(isCalculated != null and isCalculated !='')" >
-				and is_calculated = #{isCalculated}
-		</if>
-		<if test="(calculateTime != null and calculateTime !='')" >
-			    and calculate_time >= #{calculateTime} add <![CDATA[calculate_time <= #{calculateTime}]]>
-		</if>
-		<if test="(writeTime != null and writeTime !='')" >
-			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
-		</if>
-    </sql>
     
     <select id="queryIn" parameterType="java.util.Map" resultMap="baseResultMap">
- 		select <include refid="baseColumns" /> 
- 		from report_customer_in_out 
+ 		select a.create_year,a.create_month,a.customer_id,a.min_in_time,b.customer_name,b.short_name ,c.mk_invoice_name
+		from report_customer_in_out a
+		left join pub_customer b on a.customer_id = b.customer_id
+		left join pub_customer_base c on c.mk_id = b.mk_id
  		where 1=1 
  		and create_year =#{createYear} and create_month =#{createMonth} and last_month_storage = 0 and cur_month_storage = 1
     </select>
     
        
     <select id="queryOut" parameterType="java.util.Map" resultMap="baseResultMap">
-       select <include refid="baseColumns" /> 
-       from report_customer_in_out 
+       select a.create_year,a.create_month,a.customer_id,a.max_out_time,b.customer_name,b.short_name ,c.mk_invoice_name
+		from report_customer_in_out a
+		left join pub_customer b on a.customer_id = b.customer_id
+		left join pub_customer_base c on c.mk_id = b.mk_id
        where create_year =#{createYear} and create_month =#{createMonth} and last_month_storage = 1 and cur_month_storage = 0
     </select>
     

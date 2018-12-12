@@ -61,7 +61,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 				case "温度":	
 					//映射Code
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
+						entity.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColValue()));
 					}else {
 						errorMessage+="温度必填;";
 					}		
@@ -104,5 +104,25 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 		if (null != list && list.size() > 0) {
 			billFeesReceiveStorageTempService.insertBatchTemp(list);
 		}
+	}
+
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"仓库名称", "温度"}; //必填列
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="【"+sheetName+"】表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
 	}
 }

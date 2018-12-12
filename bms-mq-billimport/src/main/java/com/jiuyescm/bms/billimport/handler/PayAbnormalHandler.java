@@ -107,5 +107,25 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			billFeesReceiveStorageTempService.insertBatchTemp(list);
 		}
 	}
+
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"仓库", "日期"}; //必填列
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="【"+sheetName+"】表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
+	}
 	
 }

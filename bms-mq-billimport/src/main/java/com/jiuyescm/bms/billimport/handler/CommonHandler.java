@@ -73,42 +73,48 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	@Override
 	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map<String, Object> param) throws Exception{
 		//this.billEntity = null;//根据param中的bill_no查询 ???
-		billNo=param.get("billNo").toString();
-		customerName=param.get("invoiceName").toString();
-		customerId=param.get("invoiceId").toString();
-		sheetName = sheet.getSheetName();
-		logger.info("正在处理sheet:{}", sheetName);
-		
-		// 仓储--上海01仓，北京01仓...............
-		WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
-		if (null != warehouseVo.getWarehousename()) {
-			sheetName = "仓储";
-		}
-
-		if(sheetName.equals("仓储")){
+		try {
+			billNo=param.get("billNo").toString();
+			customerName=param.get("invoiceName").toString();
+			customerId=param.get("invoiceId").toString();
 			sheetName = sheet.getSheetName();
-			readExcel(xlsxReader,sheet,3,5);
-		}else {
-			readExcel(xlsxReader,sheet,1,2);
-		}
-		logger.info(billNo+sheet+"读取完成");
-		taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
-		updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	
-		repeatMap.clear();
-		//Excel校验未通过
-		if(errMap.size()>0){
-			updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);	
-			String resultPath = exportErr();
-			BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
-			billReceiveMasterVo.setBillNo(billNo);
-			billReceiveMasterVo.setResultFilePath(resultPath);
-			billReceiveMasterService.update(billReceiveMasterVo);
+			logger.info("正在处理sheet:{}", sheetName);
+			
+			// 仓储--上海01仓，北京01仓...............
+			WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
+			if (null != warehouseVo.getWarehousename()) {
+				sheetName = "仓储";
+			}
+
+			if(sheetName.equals("仓储")){
+				sheetName = sheet.getSheetName();
+				readExcel(xlsxReader,sheet,3,5);
+			}else {
+				readExcel(xlsxReader,sheet,1,2);
+			}
+			logger.info(billNo+sheet+"读取完成");
+			taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
+			updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	
+			repeatMap.clear();
+			//Excel校验未通过
+			if(errMap.size()>0){
+				updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);	
+				String resultPath = exportErr();
+				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
+				billReceiveMasterVo.setBillNo(billNo);
+				billReceiveMasterVo.setResultFilePath(resultPath);
+				billReceiveMasterService.update(billReceiveMasterVo);
+				param.put("result", "fail");
+				param.put("detail", sheetName+"校验不通过");
+				throw new BizException(sheetName+"校验不通过");			
+			}else{
+				param.put("result", "sucess");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 			param.put("result", "fail");
-			param.put("detail", sheetName+"校验不通过");
-			throw new BizException(sheetName+"校验不通过");			
-		}else{
-			param.put("result", "sucess");
-		}
+			param.put("detail", e.getMessage());
+		}	
 	}
 	
 	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{
@@ -138,6 +144,22 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				logger.info("读取完毕");
 			}
 			
+			@Override
+			public void readTitle(List<String> columns) {
+				try{
+					String ret = validate(columns);
+					if("SUCC".equals(ret)){
+						logger.info("表头校验通过");
+					}
+					else{
+						throw new BizException("title_error",ret);
+					}
+				}
+				catch(Exception ex){
+					throw new BizException("title_error","excel处理异常："+ex.getMessage());
+				}
+			}
+			
 		},titleRowNo,contentRowNo);
 	}
 	
@@ -145,6 +167,13 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	
 	public abstract void transErr(DataRow dr) throws Exception; 
 	
+	/**
+	 * 
+	 * @param columns
+	 * @return SUCC - 校验成功
+	 * @throws Exception
+	 */
+	public abstract String validate(List<String> columns) throws Exception;
 	/**
 	 * 分批保存数据到临时表
 	 * @throws Exception

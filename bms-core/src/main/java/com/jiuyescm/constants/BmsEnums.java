@@ -155,26 +155,26 @@ public class BmsEnums {
 		private static Map<String,String> maps = new HashMap<String,String>();
 		private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
 		static{
-			maps.put(BEGIN.getCode(), BEGIN.getDesc());
-			maps.put(WH_FOLLOW.getCode(), WH_FOLLOW.getDesc());
-			maps.put(CUST_FOLLOW.getCode(), CUST_FOLLOW.getDesc());
-			maps.put(CUST_NO_FEEDBACK.getCode(), CUST_NO_FEEDBACK.getDesc());
-			maps.put(CUST_CHECKING.getCode(), CUST_CHECKING.getDesc());
-			maps.put(QUOTATION.getCode(), QUOTATION.getDesc());
-			maps.put(WH_PROBLEM.getCode(), WH_PROBLEM.getDesc());
-			maps.put(PROJECT_PROBLEM.getCode(), PROJECT_PROBLEM.getDesc());
-			maps.put(TS_PROBLEM.getCode(), TS_PROBLEM.getDesc());
-			maps.put(CONFIRMED.getCode(), CONFIRMED.getDesc());
-			mapValue.put(BEGIN.getCode(), BEGIN.getDesc());
-			mapValue.put(WH_FOLLOW.getCode(), WH_FOLLOW.getDesc());
-			mapValue.put(CUST_FOLLOW.getCode(), CUST_FOLLOW.getDesc());
-			mapValue.put(CUST_NO_FEEDBACK.getCode(), CUST_NO_FEEDBACK.getDesc());
-			mapValue.put(CUST_CHECKING.getCode(), CUST_CHECKING.getDesc());
-			mapValue.put(QUOTATION.getCode(), QUOTATION.getDesc());
-			mapValue.put(WH_PROBLEM.getCode(), WH_PROBLEM.getDesc());
-			mapValue.put(PROJECT_PROBLEM.getCode(), PROJECT_PROBLEM.getDesc());
-			mapValue.put(TS_PROBLEM.getCode(), TS_PROBLEM.getDesc());
-			mapValue.put(CONFIRMED.getCode(), CONFIRMED.getDesc());
+			maps.put(BEGIN.code, BEGIN.desc);
+			maps.put(WH_FOLLOW.code, WH_FOLLOW.desc);
+			maps.put(CUST_FOLLOW.code, CUST_FOLLOW.desc);
+			maps.put(CUST_NO_FEEDBACK.code, CUST_NO_FEEDBACK.desc);
+			maps.put(CUST_CHECKING.code, CUST_CHECKING.desc);
+			maps.put(QUOTATION.code, QUOTATION.desc);
+			maps.put(WH_PROBLEM.code, WH_PROBLEM.desc);
+			maps.put(PROJECT_PROBLEM.code, PROJECT_PROBLEM.desc);
+			maps.put(TS_PROBLEM.code, TS_PROBLEM.desc);
+			maps.put(CONFIRMED.code, CONFIRMED.desc);
+			mapValue.put(BEGIN.desc, BEGIN.code);
+			mapValue.put(WH_FOLLOW.desc, WH_FOLLOW.code);
+			mapValue.put(CUST_FOLLOW.desc, CUST_FOLLOW.code);
+			mapValue.put(CUST_NO_FEEDBACK.desc, CUST_NO_FEEDBACK.code);
+			mapValue.put(CUST_CHECKING.desc, CUST_CHECKING.code);
+			mapValue.put(QUOTATION.desc, QUOTATION.code);
+			mapValue.put(WH_PROBLEM.desc, WH_PROBLEM.code);
+			mapValue.put(PROJECT_PROBLEM.desc, PROJECT_PROBLEM.code);
+			mapValue.put(TS_PROBLEM.desc, TS_PROBLEM.code);
+			mapValue.put(CONFIRMED.desc, CONFIRMED.code);
 		}
 		public static Map<String,String> getMap(){
 			return maps;

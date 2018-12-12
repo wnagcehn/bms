@@ -187,6 +187,26 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		}
 	}
 
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"仓库名称", "发货时间", "出库单号","出库箱数","出库重量(吨)","B2B订单操作费","出库装车费"}; //必填列
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="【"+sheetName+"】表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
+	}
+
 
 
 }

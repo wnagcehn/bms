@@ -205,6 +205,26 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 	}
 
+	@Override
+	public String validate(List<String> columns) throws Exception {
+		// TODO Auto-generated method stub
+		String result="";
+		String[] str = {"仓库", "运单号", "接单时间"}; //必填列
+		
+		for (String s : str) {
+			if(!columns.contains(s)){
+				result+=s+"必须存在;";
+			}
+		} 
+		
+		if(StringUtils.isNotBlank(result)){
+			result="【"+sheetName+"】表头:"+result;
+			return result;
+		}
+		
+		return "SUCC";
+	}
+
 
 
 }

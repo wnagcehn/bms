@@ -35,4 +35,25 @@ public interface ICustomerDictService {
 	 */
 	String getCustomerCodeByName(String name);
 	
+	/**
+	 * 通过商家ID查询合同商家名称
+	 * @param ID 商家ID
+	 * @return
+	 */
+	String getMkInvoiceNameByCustomerId(String customerId);
+	
+	/**
+	 * 通过合同商家名称查询合同商家ID
+	 * @param mkInvoiceName 合同商家名称
+	 * @return
+	 */
+	String getMkIdByMkInvoiceName(String mkInvoiceName);
+	
+	/**
+	 * 通过合同商家ID查询合同商家名称
+	 * @param MkId 合同商家ID
+	 * @return
+	 */
+	String getMkInvoiceNameByMkId(String mkId);
+	
 }
