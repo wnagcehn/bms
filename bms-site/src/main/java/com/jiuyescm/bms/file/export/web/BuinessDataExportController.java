@@ -206,7 +206,7 @@ public class BuinessDataExportController extends BaseController {
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM");
 			String path = getPath();
 			String filePath = path + FileConstant.SEPARATOR + param.get("customerName").toString() + "-"
-					+ sdf.format(startDate) + "-预账单" + FileConstant.SUFFIX_XLSX;
+					+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
 			FileExportTaskEntity entity = new FileExportTaskEntity();
 
 			entity.setTaskName(param.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
@@ -1877,7 +1877,7 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("subjectCode",
 					entity.getOtherSubjectCode() == null ? "" : dictcodeMap.get(entity.getOtherSubjectCode()));
 			dataItem.put("serviceContent", entity.getServiceContent());
-			dataItem.put("quality", entity.getQuantity());
+			dataItem.put("quality", entity.getExactQuantity());
 			dataItem.put("unit", entity.getUnit());
 			dataItem.put("unitPrice", entity.getUnitPrice());
 			if (null != entity.getCost()) {

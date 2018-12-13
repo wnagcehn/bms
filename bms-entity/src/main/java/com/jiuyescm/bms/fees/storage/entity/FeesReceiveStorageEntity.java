@@ -151,11 +151,20 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private Double continueNum;
 	// 续价
 	private Double continuePrice;
-	
 	//增值编号
 	private String wmsId;
 	//外部单号
 	private String externalNum;
+	//精确数量
+	private BigDecimal exactQuantity;
+	
+	public BigDecimal getExactQuantity() {
+		return exactQuantity;
+	}
+
+	public void setExactQuantity(BigDecimal exactQuantity) {
+		this.exactQuantity = exactQuantity;
+	}
 	
 	public String getExternalNum() {
 		return externalNum;
