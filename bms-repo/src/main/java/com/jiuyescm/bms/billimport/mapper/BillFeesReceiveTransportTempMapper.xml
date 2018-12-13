@@ -353,4 +353,8 @@ bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, ord
         bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, order_no, send_no, temperature_type, temperature_code, biz_type, send_site, send_province, send_city, send_distinct, receive_site, receive_province, receive_city, receive_distinct, total_weight, total_volumn, is_light, car_model, amount, derate_amount, create_time, create_month
 		  from bill_fees_receive_transport_temp where bill_no=#{billNo}
 	 </insert>
+	 
+	 <select id="getImportTransportAmount" parameterType="String" resultType="java.lang.Double">
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_transport where bill_no=#{billNo}
+	 </select>
 </mapper>

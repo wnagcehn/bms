@@ -335,4 +335,8 @@
         bill_no, subject_code, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name, unpacking, unpack_num, temperature_type, bill_type, b2b_flag, send_province, send_city, send_district, receive_province, receive_city, receive_district, service_type_code, total_weight, total_qty, total_sku, amount, derate_amount, create_time, create_month
 		  from bill_fees_receive_dispatch_temp where bill_no=#{billNo}
      </insert>
+
+     <select id="getImportDispatchAmount" parameterType="String" resultType="java.lang.Double">
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
+	 </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billcheck.vo;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -108,7 +109,14 @@ public class BillReceiveMasterVo implements IEntity {
 		private Date confirmDate;
 		//备注
 		private String remark;
-		
+		//预估金额
+		private BigDecimal expectMoney;
+		//预估状态
+		private String expectStatus;
+		//差异率
+		private BigDecimal differentRate;
+		//差异说明
+		private String differentRemark;
 		public String getRemark() {
 			return remark;
 		}
@@ -479,6 +487,38 @@ public class BillReceiveMasterVo implements IEntity {
 
 		public void setConfirmDate(Date confirmDate) {
 			this.confirmDate = confirmDate;
+		}
+
+		public String getExpectStatus() {
+			return expectStatus;
+		}
+
+		public void setExpectStatus(String expectStatus) {
+			this.expectStatus = expectStatus;
+		}
+
+		public String getDifferentRemark() {
+			return differentRemark;
+		}
+
+		public void setDifferentRemark(String differentRemark) {
+			this.differentRemark = differentRemark;
+		}
+
+		public BigDecimal getExpectMoney() {
+			return expectMoney;
+		}
+
+		public void setExpectMoney(BigDecimal expectMoney) {
+			this.expectMoney = expectMoney;
+		}
+
+		public BigDecimal getDifferentRate() {
+			return differentRate;
+		}
+
+		public void setDifferentRate(BigDecimal differentRate) {
+			this.differentRate = differentRate;
 		}
     
 }

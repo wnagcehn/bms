@@ -47,4 +47,11 @@ public interface IBillFeesReceiveTransportTempRepository {
 	 * @return
 	 */
 	int saveDataFromTemp(String billNo);
+	
+	/**
+	 * 导入金额汇总
+	 * @param billNo
+	 * @return
+	 */
+	Double getImportTransportAmount(String billNo);
 }

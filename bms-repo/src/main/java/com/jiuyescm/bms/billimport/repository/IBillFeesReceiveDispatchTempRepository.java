@@ -38,4 +38,11 @@ public interface IBillFeesReceiveDispatchTempRepository {
 	 * @return
 	 */
 	int saveDataFromTemp(String billNo);
+	
+	/**
+	 * 导入金额汇总
+	 * @param billNo
+	 * @return
+	 */
+	Double getImportDispatchAmount(String billNo);
 }

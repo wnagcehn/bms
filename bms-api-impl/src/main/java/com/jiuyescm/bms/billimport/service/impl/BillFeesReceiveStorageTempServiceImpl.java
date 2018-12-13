@@ -141,5 +141,11 @@ public class BillFeesReceiveStorageTempServiceImpl implements IBillFeesReceiveSt
 		}
 		return 0d;
 	}
+
+	@Override
+	public Double getImportStorageAmount(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveStorageTempRepository.getImportStorageAmount(billNo);
+	}
 	
 }

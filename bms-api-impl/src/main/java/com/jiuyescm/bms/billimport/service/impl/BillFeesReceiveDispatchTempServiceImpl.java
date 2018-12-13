@@ -78,5 +78,11 @@ public class BillFeesReceiveDispatchTempServiceImpl implements IBillFeesReceiveD
 		// TODO Auto-generated method stub
 		return billFeesReceiveDispatchTempRepository.saveDataFromTemp(billNo);
 	}
+
+	@Override
+	public Double getImportDispatchAmount(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveDispatchTempRepository.getImportDispatchAmount(billNo);
+	}
 	
 }

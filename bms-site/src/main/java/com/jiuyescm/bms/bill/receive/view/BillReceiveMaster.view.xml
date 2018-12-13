@@ -113,6 +113,25 @@
       <PropertyDef name="remark">
         <Property name="label">备注</Property>
       </PropertyDef>
+      <PropertyDef name="expectMoney">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">预估金额</Property>
+      </PropertyDef>
+      <PropertyDef name="expectStatus">
+        <Property></Property>
+        <Property name="label">预估状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;billReceiveMasterController#getStatus&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="differentRate">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">差异率</Property>
+      </PropertyDef>
+      <PropertyDef name="differentRemark">
+        <Property></Property>
+        <Property name="label">差异说明</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillReceiveMasterEntityQuery">
       <PropertyDef name="invoiceName">
@@ -162,6 +181,20 @@
       </PropertyDef>
       <PropertyDef name="billNo">
         <Property name="label">账单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="expectStatus">
+        <Property></Property>
+        <Property name="label">预估状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;billReceiveMasterController#getStatus&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="differentRate">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">差异率</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;billReceiveMasterController#getRate&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
@@ -437,6 +470,29 @@ if(currentData){&#xD;
         <Property name="caption">删除</Property>
         <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
       </ToolBarButton>
+      <ToolBarButton id="btnExpectConfirm">
+        <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillReceiveMasterEntity.data&quot;).current;&#xD;
+var status=entity.get(&quot;expectStatus&quot;);&#xD;
+if(!isNullOrEmpty(status) &amp;&amp; status=='1'){&#xD;
+	dorado.MessageBox.alert(&quot;状态为已确认，无法预估确认！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
+		view.get(&quot;#saveExpectAction&quot;).execute({&#xD;
+			callback:function(success){&#xD;
+				with (view.get(&quot;#dsBillReceiveMasterEntity&quot;)){&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+	});</ClientEvent>
+        <Property name="caption">预估确认</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnRemark">
+        <ClientEvent name="onClick">view.get(&quot;#dialogRemarkEdit&quot;).show();&#xD;
+</ClientEvent>
+        <Property name="caption">差异说明</Property>
+      </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBillCheckStatusEntity">
       <Property name="dataProvider">billReceiveMasterController#getBillCheckStatus</Property>
@@ -548,6 +604,16 @@ if(currentData){&#xD;
           <Property name="showHint">false</Property>
           <Property name="visible">false</Property>
           <Property name="hideMode">display</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">expectStatus</Property>
+          <Property name="property">expectStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">differentRate</Property>
+          <Property name="property">differentRate</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -722,8 +788,24 @@ jQuery(arg.dom).xCreate({&#xD;
         </DataColumn>
         <DataColumn>
           <Property name="property">remark</Property>
-          <Property name="width">100</Property>
+          <Property name="width">160</Property>
           <Property name="name">remark</Property>
+        </DataColumn>
+        <DataColumn name="expectMoney">
+          <Property name="property">expectMoney</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="expectStatus">
+          <Property name="property">expectStatus</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="differentRate">
+          <Property name="property">differentRate</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="differentRemark">
+          <Property name="property">differentRemark</Property>
+          <Property name="width">120</Property>
         </DataColumn>
       </DataGrid>
     </Container>
@@ -1424,5 +1506,90 @@ if (data != null) {&#xD;
     <AjaxAction id="getInportParamAction">
       <Property name="service">invoiceController#query</Property>
     </AjaxAction>
+    <UpdateAction id="saveExpectAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBillReceiveMasterEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">billReceiveMasterController#saveExpect</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateMasterAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBillReceiveMasterEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">billReceiveMasterController#updateMaster</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogRemarkEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBillReceiveMasterEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onShow">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var amount = entity.get(&quot;amount&quot;);&#xD;
+view.id(&quot;formEdit&quot;).getElement(&quot;amount&quot;).set(&quot;style&quot;,&quot;color:red&quot;);&#xD;
+view.id(&quot;formEdit&quot;).getElement(&quot;totalAmount&quot;).set(&quot;style&quot;,&quot;color:red&quot;);&#xD;
+//console.log(view.id(&quot;formEdit&quot;).getElement(&quot;amount&quot;).get(&quot;style&quot;));&#xD;
+</ClientEvent>
+      <Property name="caption">差异说明</Property>
+      <Property name="center">true</Property>
+      <Property name="height">250</Property>
+      <Property name="width">390</Property>
+      <Buttons>
+        <Button id="btnSaveRemark">
+          <ClientEvent name="onClick">view.id(&quot;updateMasterAction&quot;).execute(&#xD;
+    function(){&#xD;
+        view.id(&quot;dialogRemarkEdit&quot;).hide();&#xD;
+    }&#xD;
+);&#xD;
+					</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancelRemark">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillReceiveMasterEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogRemarkEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formRemarkEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBillReceiveMasterEntity</Property>
+          <Property name="dataType">dtBillReceiveMasterEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">differentRemark</Property>
+            <Property name="property">differentRemark</Property>
+            <Editor>
+              <TextArea>
+                <Property name="width">240</Property>
+                <Property name="height">160</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

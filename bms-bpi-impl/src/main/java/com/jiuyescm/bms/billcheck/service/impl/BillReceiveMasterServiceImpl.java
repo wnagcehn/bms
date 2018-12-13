@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +17,10 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.exception.BizException;
 
@@ -122,6 +125,21 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
         }
 		return 0;
     }
+    
+    
+	@Override
+	public int saveExpect(BillReceiveExpectVo vo) {
+		// TODO Auto-generated method stub
+		BillReceiveExpectEntity entity=new BillReceiveExpectEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);          
+            int k = billReceiveMasterRepository.saveExpect(entity);
+            return k;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return 0;
+	}
 
 	/**
 	 * 更新
@@ -162,5 +180,27 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
             billReceiveMasterRepository.delete(billNo);
     	}  	
     }
+
+	@Override
+	public BillReceiveExpectVo queryExpect(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillReceiveExpectVo vo=new BillReceiveExpectVo();
+		BillReceiveExpectEntity entity=billReceiveMasterRepository.queryExpect(condition);
+		try {
+            PropertyUtils.copyProperties(vo, entity);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		
+		return vo;
+	}
+
+	@Override
+	public Double getAbnormalMoney(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.getAbnormalMoney(billNo);
+	}
+
+
 	
 }

@@ -54,6 +54,13 @@ public interface IBillFeesReceiveStorageTempRepository {
 	 * @return
 	 */
 	Double getImportTotalAmount(String billNo);
+	
+	/**
+	 * 导入金额汇总
+	 * @param billNo
+	 * @return
+	 */
+	Double getImportStorageAmount(String billNo);
 
 }
 

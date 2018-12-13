@@ -25,14 +25,16 @@
 		   	<result column="result_file_name" property="resultFileName" jdbcType="VARCHAR" />
 		   	<result column="result_file_path" property="resultFilePath" jdbcType="VARCHAR" />
 		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="expect_status" property="expectStatus" jdbcType="VARCHAR" />
+		   	<result column="different_remark" property="differentRemark" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark
+create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark
     </sql>
 
 	<!-- 根据id查询 -->
@@ -46,69 +48,71 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
-        select
-        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, 
-        IFNULL(amount,0) as amount, IFNULL(adjust_amount,0) as adjustAmount, SUM(IFNULL(amount,0)+IFNULL(adjust_amount,0)) as totalAmount, 
-        creator, creator_id, create_time, finish_time, 
-        last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, 
-        origin_file_name, origin_file_path, result_file_name, result_file_path, remark
-        from bill_receive_master
-        where 1 = 1 and del_flag='0'
+       select
+        a.id, a.create_month, a.invoice_name, a.invoice_id, a.bill_name, a.task_rate, a.task_status, 
+        IFNULL(a.amount,0) as amount, IFNULL(a.adjust_amount,0) as adjustAmount, SUM(IFNULL(a.amount,0)+IFNULL(a.adjust_amount,0)) as totalAmount, 
+        a.creator, a.creator_id, a.create_time, a.finish_time, 
+        a.last_modifier, a.last_modifier_id, a.last_modify_time, a.del_flag, a.bill_no, 
+        a.origin_file_name, a.origin_file_path, a.result_file_name, a.result_file_path, a.remark,a.different_remark,b.expect_money,
+        IF(b.expect_money is null,0,1) as expect_status
+        from bill_receive_master a
+		LEFT JOIN bill_receive_expect b on a.create_month=b.create_month and a.bill_name=b.bill_name and b.del_flag='0'
+        where 1 = 1 and a.del_flag='0'
         	<if test=" id != null and id !='' ">
-				and id = #{id}
+				and a.id = #{id}
 			</if>
         	<if test=" createMonth != null and createMonth !='' " >
-				and create_month = #{createMonth}
+				and a.create_month = #{createMonth}
 			</if>
 			<if test=" createMonthStart != null and createMonthStart !='' " >
-				and create_month >= #{createMonthStart}
+				and a.create_month >= #{createMonthStart}
 			</if>
 			<if test=" createMonthEnd != null and createMonthEnd !='' " >
-				and create_month <![CDATA[<= #{createMonthEnd}]]>
+				and a.create_month <![CDATA[<= #{createMonthEnd}]]>
 			</if>
         	<if test=" invoiceName != null and invoiceName !='' ">
-				and invoice_name = #{invoiceName}
+				and a.invoice_name = #{invoiceName}
 			</if>
 			<if test=" invoiceId != null and invoiceId !='' ">
-				and invoice_id = #{invoiceId}
+				and a.invoice_id = #{invoiceId}
 			</if>
         	<if test=" billName != null and billName !='' ">
-				and bill_name like CONCAT('%',#{billName},'%')
+				and a.bill_name like CONCAT('%',#{billName},'%')
 			</if>
         	<if test=" taskRate != null and taskRate !='' ">
-				and task_rate = #{taskRate}
+				and a.task_rate = #{taskRate}
 			</if>
         	<if test=" taskStatus != null and taskStatus !='' ">
-				and task_status = #{taskStatus}
+				and a.task_status = #{taskStatus}
 			</if>
         	<if test=" amount != null and amount !='' ">
-				and amount = #{amount}
+				and a.amount = #{amount}
 			</if>
         	<if test=" adjustAmount != null and adjustAmount !='' ">
-				and adjust_amount = #{adjustAmount}
+				and a.adjust_amount = #{adjustAmount}
 			</if>
         	<if test=" creator != null and creator !='' ">
-				and creator like CONCAT('%',#{creator},'%')
+				and a.creator like CONCAT('%',#{creator},'%')
 			</if>
         	<if test=" creatorId != null and creatorId !='' ">
-				and creator_id = #{creatorId}
+				and a.creator_id = #{creatorId}
 			</if>
         	<if test=" createTime != null and createTime !='' " >
-				and <![CDATA[create_time >= #{createTime}]]>
+				and <![CDATA[a.create_time >= #{createTime}]]>
 			</if>
 			<if test=" createEndTime != null and createEndTime !='' " >
-				and <![CDATA[create_time <= #{createEndTime}]]>
+				and <![CDATA[a.create_time <= #{createEndTime}]]>
 			</if>
         	<if test=" delFlag != null and delFlag !='' ">
-				and del_flag = #{delFlag}
+				and a.del_flag = #{delFlag}
 			</if>
 			<if test=" remark != null and remark !='' ">
-				and remark = #{remark}
+				and a.remark = #{remark}
 			</if>
         	<if test=" billNo != null and billNo !='' ">
-				and bill_no = #{billNo}
+				and a.bill_no = #{billNo}
 			</if>
-			GROUP BY bill_no
+			GROUP BY a.bill_no
     </select>
 
 	<!-- 保存 -->
@@ -139,7 +143,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			#{originFilePath,jdbcType=VARCHAR}, 
 			#{resultFileName,jdbcType=VARCHAR}, 
 			#{resultFilePath,jdbcType=VARCHAR}, 
-			#{remark,jdbcType=VARCHAR}
+			#{remark,jdbcType=VARCHAR},
+			#{expectStatus,jdbcType=VARCHAR},
+			#{differentRemark,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -213,6 +219,12 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			<if test=" remark != null and remark !='' ">
 				remark = #{remark,jdbcType=VARCHAR},
 			</if>
+			<if test=" expectStatus != null and expectStatus !='' ">
+				expect_status = #{expectStatus,jdbcType=VARCHAR},
+			</if>
+			<if test=" differentRemark != null and differentRemark !='' ">
+				different_remark = #{differentRemark,jdbcType=VARCHAR},
+			</if>
         </trim>
         where bill_no = #{billNo}
     </update>
@@ -222,4 +234,73 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         delete from bill_receive_master 
         where bill_no = #{billNo}
     </delete>
+    
+    <insert id="saveExpect" parameterType="com.jiuyescm.bms.billcheck.BillReceiveExpectEntity">
+		insert into bill_receive_expect(
+			create_month, bill_name, expect_money, expect_storage_money, expect_dispatch_money, expect_transport_money, expect_air_money, creator, create_time, del_flag
+    	)
+        values (
+			#{createMonth,jdbcType=INTEGER}, 
+			#{billName,jdbcType=VARCHAR}, 
+			#{expectMoney,jdbcType=DECIMAL}, 
+			#{expectStorageMoney,jdbcType=DECIMAL}, 
+			#{expectDispatchMoney,jdbcType=DECIMAL}, 
+			#{expectTransportMoney,jdbcType=DECIMAL}, 
+			#{expectAirMoney,jdbcType=DECIMAL}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <select id="queryExpect" parameterType="com.jiuyescm.bms.billcheck.BillReceiveExpectEntity">
+    	 select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_receive_expect
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" billName != null and billName !='' ">
+				and bill_name = #{billName}
+			</if>
+        	<if test=" expectMoney != null and expectMoney !='' ">
+				and expect_money = #{expectMoney}
+			</if>
+        	<if test=" expectStorageMoney != null and expectStorageMoney !='' ">
+				and expect_storage_money = #{expectStorageMoney}
+			</if>
+        	<if test=" expectDispatchMoney != null and expectDispatchMoney !='' ">
+				and expect_dispatch_money = #{expectDispatchMoney}
+			</if>
+        	<if test=" expectTransportMoney != null and expectTransportMoney !='' ">
+				and expect_transport_money = #{expectTransportMoney}
+			</if>
+        	<if test=" expectAirMoney != null and expectAirMoney !='' ">
+				and expect_air_money = #{expectAirMoney}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+			and del_flag ='0'
+    </select>
+    
+    <select id="getAbnormalMoney" parameterType="String" resultType="java.lang.Double">
+		select SUM(IFNULL(a.amount,0)) as amount from (
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo} and subject_code='de_abnormal_pay'
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo} and subject_code='de_change'
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no=#{billNo} and subject_code='wh_abnormal_pay'
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_transport where bill_no=#{billNo} and subject_code='YS_PF'
+		UNION ALL
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo} and subject_code='at_abnormal_pay') a
+    </select>
 </mapper>

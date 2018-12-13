@@ -118,5 +118,16 @@ public class BillFeesReceiveStorageTempRepositoryImpl extends MyBatisDao<BillFee
 		}
 		return money;
 	}
+
+	@Override
+	public Double getImportStorageAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.getImportStorageAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
 	
 }
