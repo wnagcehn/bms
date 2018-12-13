@@ -1999,11 +1999,11 @@ public class BuinessDataExportController extends BaseController {
 		itemMap.put("dataKey", "productAmountJ2c");
 		headInfoList.add(itemMap);
 
-		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "赔付运费");
-		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "deliveryCost");
-		headInfoList.add(itemMap);
+//		itemMap = new HashMap<String, Object>();
+//		itemMap.put("title", "赔付运费");
+//		itemMap.put("columnWidth", 25);
+//		itemMap.put("dataKey", "deliveryCost");
+//		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "是否免运费");
@@ -2040,15 +2040,19 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("expressnum", entity.getExpressnum());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("dutyType", entity.getDutyType());
-			dataItem.put("payType", entity.getPayType());
+			dataItem.put("dutyType", entity.getReason());
+			dataItem.put("payType", entity.getReasonDetail());
 			double productAmount=entity.getProductAmountJ2c()==null?0d:entity.getProductAmountJ2c();
 			t_productAmount+=productAmount;
 			dataItem.put("productAmountJ2c", productAmount);
 			double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
 			t_deliveryCost+=deliveryCost;
-			dataItem.put("deliveryCost", deliveryCost);
-			dataItem.put("isDeliveryFreeJ2c", entity.getIsDeliveryFreeJ2c());
+//			dataItem.put("deliveryCost", deliveryCost);
+			if(entity.getIsDeliveryFreeJ2c().equals("0")){
+				dataItem.put("isDeliveryFreeJ2c", "否");	
+			}else if(entity.getIsDeliveryFreeJ2c().equals("1")){
+				dataItem.put("isDeliveryFreeJ2c", "是");
+			}
 			dataItem.put("createPersonName", entity.getCreatePersonName());
 			dataItem.put("remark", entity.getRemark());
 			dataList.add(dataItem);
@@ -2197,8 +2201,8 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("expressnum", entity.getExpressnum());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("dutyType", entity.getDutyType());
-			dataItem.put("payType", entity.getPayType());
+			dataItem.put("dutyType", entity.getReason());
+			dataItem.put("payType", entity.getReasonDetail());
 			double amount = (entity.getReturnedAmountC2j() == null ? 0 : entity.getReturnedAmountC2j());
 			t_amount += amount;
 			dataItem.put("returnedAmountC2j", amount);
