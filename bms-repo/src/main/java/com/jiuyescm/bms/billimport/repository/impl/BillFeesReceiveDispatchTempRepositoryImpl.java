@@ -85,5 +85,17 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
 		 map.put("billNo", billNo);
 		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.saveDataFromTemp", map);
 	}
+
+	@Override
+	public Double getImportDispatchAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.getImportDispatchAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+		
+	}
 	
 }

@@ -2,6 +2,7 @@ package com.jiuyescm.bms.bill.receive.web;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,8 +40,13 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
@@ -91,6 +97,15 @@ public class BillReceiveMasterController {
 	private JmsTemplate jmsQueueTemplate;
 	@Autowired
 	private IUserService userService;
+	@Resource
+	private IBillFeesReceiveStorageTempService feesReceiveStorageTempService;
+	@Resource
+	private IBillFeesReceiveDispatchTempService feesReceiveDispatchTempService;
+	@Resource
+	private IBillFeesReceiveTransportTempService feesReceiveTransportTempService;
+	@Resource
+	private IBillFeesReceiveAirTempService feesReceiveAirTempService;
+	
 	
 	String sessionId=JAppContext.currentUserID()+"_import_Receive_Bill";
 	final String nameSpace="com.jiuyescm.bms.bill.receive.web.BillReceiveMasterController";
@@ -131,6 +146,22 @@ public class BillReceiveMasterController {
 					totalImportCost = totalImportCost + entity.getAmount();
 					totalAdjustCost = totalAdjustCost + entity.getAdjustAmount();
 					totalCost = totalCost + entity.getTotalAmount();
+					if(entity.getExpectMoney()!=null){
+						//获取所有的理赔金额
+						Double abnormalMoney=billReceiveMasterService.getAbnormalMoney(entity.getBillNo());
+						BigDecimal abnormal=new BigDecimal(abnormalMoney);
+						//差异率 = (预估金额-( 总金额 - 理赔金额 ) ) / (总金额 - 理赔金额)
+						//总金额
+						BigDecimal amount=new BigDecimal(entity.getAmount());
+						
+						BigDecimal cha=amount.subtract(abnormal);
+						if(cha.compareTo(BigDecimal.ZERO)!=0){
+							BigDecimal rate=(entity.getExpectMoney().subtract(amount.subtract(abnormal)).divide(amount.subtract(abnormal),2, RoundingMode.HALF_UP));
+							//差异率
+							entity.setDifferentRate(rate);
+						}		
+					}
+					
 				}
 				if (pageInfo.getList().size() > 0 && null != pageInfo.getList().get(0)) {
 					pageInfo.getList().get(0).setTotalImportCost(totalImportCost);
@@ -171,6 +202,63 @@ public class BillReceiveMasterController {
 				throw new BizException(e.toString());
 			}
 		}
+	}
+
+	/**
+	 * 保存预计金额
+	 * @param entity
+	 * @return
+	 */
+	@DataResolver
+	public String updateMaster(BillReceiveMasterVo entity) {
+		String result="";
+		entity.setLastModifier(JAppContext.currentUserName());
+		entity.setLastModifyTime(JAppContext.currentTimestamp());
+		billReceiveMasterService.update(entity);
+		return result;
+	}
+	
+	/**
+	 * 保存预计金额
+	 * @param entity
+	 * @return
+	 */
+	@DataResolver
+	public String saveExpect(BillReceiveMasterVo entity) {
+		String billNo=entity.getBillNo();
+		String result="";
+		BillReceiveExpectVo billExpect=new BillReceiveExpectVo();
+		billExpect.setBillNo(billNo);
+		billExpect.setBillName(entity.getBillName());
+		billExpect.setCreateMonth(entity.getCreateMonth());
+		//仓储费用
+		Double storageMoney=feesReceiveStorageTempService.getImportStorageAmount(billNo);
+		//配送费用
+		Double dispatchMoney=feesReceiveDispatchTempService.getImportDispatchAmount(billNo);
+		//干线费用
+		Double transportMoney=feesReceiveTransportTempService.getImportTransportAmount(billNo);
+		//航空费用
+		Double airMoney=feesReceiveAirTempService.getImportAirAmount(billNo);
+		
+		Double totalMoney=storageMoney+dispatchMoney+transportMoney+airMoney;
+		billExpect.setExpectStorageMoney(new BigDecimal(storageMoney));
+		billExpect.setExpectDispatchMoney(new BigDecimal(dispatchMoney));
+		billExpect.setExpectTransportMoney(new BigDecimal(transportMoney));
+		billExpect.setExpectAirMoney(new BigDecimal(airMoney));
+		billExpect.setExpectMoney(new BigDecimal(totalMoney));
+		billExpect.setCreator(JAppContext.currentUserName());
+		billExpect.setCreateTime(JAppContext.currentTimestamp());
+		billExpect.setDelFlag("0");
+		//更新预估金额
+		int update=billReceiveMasterService.saveExpect(billExpect);
+		if(update>0){
+			//已确认
+			entity.setExpectStatus("1");
+			entity.setLastModifier(JAppContext.currentUserName());
+			entity.setLastModifyTime(JAppContext.currentTimestamp());
+			billReceiveMasterService.update(entity);
+		}
+		return result;
 	}
 
 	
@@ -783,5 +871,21 @@ public class BillReceiveMasterController {
 		return true;
 	}
 
+	@DataProvider
+	public Map<String,String> getStatus(){
+		Map<String,String> map=Maps.newLinkedHashMap();
+		map.put("", "全部");
+		map.put("0", "未确认");
+		map.put("1", "已确认");
+		return map;
+	}
 	
+	@DataProvider
+	public Map<String,String> getRate(){
+		Map<String,String> map=Maps.newLinkedHashMap();
+		map.put("", "全部");
+		map.put("0", "小于5%");
+		map.put("1", "大于等于5%");
+		return map;
+	}
 }

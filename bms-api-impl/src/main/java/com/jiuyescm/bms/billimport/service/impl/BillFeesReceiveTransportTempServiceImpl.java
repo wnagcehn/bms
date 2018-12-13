@@ -130,5 +130,11 @@ public class BillFeesReceiveTransportTempServiceImpl implements IBillFeesReceive
 		// TODO Auto-generated method stub
 		return billFeesReceiveTransportTempRepository.saveDataFromTemp(billNo);
 	}
+
+	@Override
+	public Double getImportTransportAmount(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveTransportTempRepository.getImportTransportAmount(billNo);
+	}
     
 }

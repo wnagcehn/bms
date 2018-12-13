@@ -112,5 +112,16 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
 		 map.put("billNo", billNo);
 		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.saveDataFromTemp", map);
 	}
+
+	@Override
+	public Double getImportTransportAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.getImportTransportAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
 	
 }

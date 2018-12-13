@@ -1,9 +1,12 @@
 package com.jiuyescm.bms.bill.receive.repository;
 
-import java.util.Map;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
+import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
 
 /**
  * ..Repository
@@ -24,5 +27,13 @@ public interface IBillReceiveMasterRepository {
     int update(BillReceiveMasterEntity entity);
 
 	void delete(String billNo);
+	
+	/**
+	 * 保存预估金额
+	 */
+	int saveExpect(BillReceiveExpectEntity entity);
 
+	BillReceiveExpectEntity queryExpect(Map<String, Object> condition);
+	
+	Double getAbnormalMoney(String billNo);
 }

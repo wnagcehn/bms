@@ -48,5 +48,12 @@ public interface IBillFeesReceiveAirTempRepository {
 	 * @return
 	 */
 	int saveDataFromTemp(String billNo);
+	
+	/**
+	 * 导入金额汇总
+	 * @param billNo
+	 * @return
+	 */
+	Double getImportAirAmount(String billNo);
 
 }
