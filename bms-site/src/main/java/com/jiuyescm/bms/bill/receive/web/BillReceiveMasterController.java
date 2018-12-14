@@ -40,6 +40,7 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
@@ -385,6 +386,23 @@ public class BillReceiveMasterController {
 				return map;
 			}
 		}
+		
+		//账单跟踪判断是否校验
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("createMonth", parameter.get("createMonth"));
+		condition.put("invoiceName", parameter.get("invoiceName"));
+		condition.put("billName", parameter.get("billName"));
+		BillCheckInfoVo billVo=billCheckInfoService.queryBillCheck(condition);
+		if (billVo!=null) {
+			setProgress(6);
+			Map<String, Object> map = Maps.newHashMap();
+			ErrorMessageVo errorVo = new ErrorMessageVo();
+			errorVo.setMsg("账单跟踪已存在，无法继续导入！");
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		
 		
 		String userId=ContextHolder.getLoginUserName();
 		String lockString=Tools.getMd5(userId + "BMS_QUE_RECEIVE_BILL_IMPORT");

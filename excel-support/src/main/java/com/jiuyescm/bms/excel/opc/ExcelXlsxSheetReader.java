@@ -2,6 +2,7 @@ package com.jiuyescm.bms.excel.opc;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -126,16 +127,28 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		
 		if(curRow == titleRowNo){
 			List<String> columns = new ArrayList<String>();
+			List<String> colnos = new ArrayList<String>();
 			for (Map.Entry<String, String> entry : headAMap.entrySet()) { 
 				columns.add(entry.getValue());
+				colnos.add(entry.getKey());
+			}
+			Collections.sort(colnos);
+			//System.out.println("排序后"+colnos);
+			int i = 1;
+			for (String string : colnos) {
+				headMap.put(string, i);
+				i++;
 			}
 			callback.readTitle(columns);
 		}
 	}
 
 	private void rowHander(Map<String, String> cellMap) {
+		/*System.out.println("cellMap -- "+cellMap);
+		System.out.println("headAMap -- "+headAMap);*/
+		//System.out.println("headMap -- "+headMap);
 		DataRow drRow = new DataRow(curRow);
-		
+		//System.out.println(curRow);
 		Iterator<Map.Entry<String, String>> headIterator = headAMap.entrySet().iterator();
 		while (headIterator.hasNext()) {
 			Map.Entry<String, String> entry = headIterator.next();
@@ -229,8 +242,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			if(curRow>titleRowNo){
 				isTitle = false;
 			}
-			if(curRow == 1){
-				headMap.put(ref,curCol);
+			if(curRow <=titleRowNo){
 				headAMap.put(ref,"");
 			}
 			curCol++;
@@ -247,16 +259,17 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 				flag = true;
 			}
 		} else if ("v".equals(name)) {
+			
 			// v => 单元格的值，如果单元格是字符串，则v标签的值为该字符串在SST中的索引
 			String value = this.getDataValue(lastIndex.trim(), "");// 根据索引值获取对应的单元格值
 			// 补全单元格之间的空单元格
-			if (!ref.equals(preRef)) {
+			/*if (!ref.equals(preRef)) {
 				int len = countNullCell(ref, preRef);
 				for (int i = 0; i < len; i++) {
 					cellMap.put(ref, value);
 					// curCol++;
 				}
-			}
+			}*/
 			cellMap.put(ref, value);
 			// 如果里面某个单元格含有值，则标识该行不为空行
 			if (value != null && !"".equals(value)) {
@@ -268,13 +281,6 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 				// 默认第一行为表头，以该行单元格数目为最大数目
 				if (curRow == 1) {
 					maxRef = ref;
-				}
-				// 补全一行尾部可能缺失的单元格
-				if (maxRef != null) {
-					int len = countNullCell(maxRef, ref);
-					for (int i = 0; i <= len; i++) {
-						cellMap.put(ref, "");
-					}
 				}
 				if (curRow <= titleRowNo) {
 					headHander(cellMap);

@@ -340,7 +340,7 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
 	 
 	 <select id="getImportTotalAmount" parameterType="String" resultType="java.lang.Double">
 	    select SUM(IFNULL(a.amount,0)) from (
-		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
+		select SUM(IFNULL(amount,0)-IFNULL(derate_amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
 		UNION ALL
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no=#{billNo}
 		UNION ALL

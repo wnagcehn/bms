@@ -337,6 +337,6 @@
      </insert>
 
      <select id="getImportDispatchAmount" parameterType="String" resultType="java.lang.Double">
-		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
+		select SUM(IFNULL(amount,0)-IFNULL(derate_amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
 	 </select>
 </mapper>

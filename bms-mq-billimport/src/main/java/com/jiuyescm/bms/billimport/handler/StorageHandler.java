@@ -33,10 +33,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
-		
+		List<BillFeesReceiveStorageTempEntity> lists = new ArrayList<BillFeesReceiveStorageTempEntity>();
+
 		//异常信息 
 		String errorMessage="";
-		List<BillFeesReceiveStorageTempEntity> lists = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
 		DataColumn createTime=dr.getColumn("日期");
 		if(createTime!=null &&StringUtils.isBlank(createTime.getColValue())){
@@ -345,6 +345,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		}
 		
 		return lists;
+
 	}
 
 	@Override

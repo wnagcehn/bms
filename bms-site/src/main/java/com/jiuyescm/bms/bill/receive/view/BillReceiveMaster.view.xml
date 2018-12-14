@@ -1323,7 +1323,6 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,true);&#xD;
 view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEvent>
           <Property name="fileResolver">billReceiveMasterController#importReceiveBillTemplate</Property>
           <Property name="caption">导入Excel</Property>
-          <Property name="maxFileSize">5MB</Property>
           <Property name="parameter">
             <Entity>
               <Property name="invoiceName">商家合同名称</Property>

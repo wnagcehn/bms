@@ -134,6 +134,9 @@ public class ReceiveBillImportListener implements MessageListener {
 
 				try {
 					handler.process(xlsxReader, opcSheet, map);
+					if("fail".equals(map.get("result"))){
+						break;
+					}					
 				} catch (Exception ex) {
 					logger.info("异常"+ex.getMessage());
 					break;
@@ -287,7 +290,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			}
 			
 		}catch (Exception e) {
-			logger.info("异常信息{}",e.getMessage());
+			logger.info("异常信息"+e.getMessage());
 			billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
 			billReceiveMasterVo.setTaskRate(99);
 			billReceiveMasterVo.setRemark(e.getMessage());
