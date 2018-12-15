@@ -86,6 +86,13 @@ public class BillFeesReceiveStorageTempRepositoryImpl extends MyBatisDao<BillFee
     }
     
 	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.delete", billNo);
+		return d;
+	}
+    
+	@Override
 	public int insertBatch(List<BillFeesReceiveStorageTempEntity> list)throws Exception {
 		SqlSession session = getSqlSessionTemplate();
 		int result = session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.saveBatch", list);

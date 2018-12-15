@@ -37,4 +37,6 @@ public interface IBillReceiveMasterService {
 	BillReceiveExpectVo queryExpect(Map<String, Object> condition);
 	
 	Double getAbnormalMoney(String billNo);
+	
+	int insertReportMaster(Map<String, Object> condition);
 }

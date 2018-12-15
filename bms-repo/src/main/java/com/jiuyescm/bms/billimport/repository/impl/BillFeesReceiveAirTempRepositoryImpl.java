@@ -107,6 +107,13 @@ public class BillFeesReceiveAirTempRepositoryImpl extends MyBatisDao<BillFeesRec
 	}
 
 	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper.delete", billNo);
+		return d;
+	}
+	
+	@Override
 	public int saveDataFromTemp(String billNo) {
 		// TODO Auto-generated method stub
 		 SqlSession session = getSqlSessionTemplate();
@@ -114,7 +121,7 @@ public class BillFeesReceiveAirTempRepositoryImpl extends MyBatisDao<BillFeesRec
 		 map.put("billNo", billNo);
 		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveAirTempMapper.saveDataFromTemp", map);
 	}
-
+	
 	@Override
 	public Double getImportAirAmount(String billNo) {
 		// TODO Auto-generated method stub
@@ -125,5 +132,7 @@ public class BillFeesReceiveAirTempRepositoryImpl extends MyBatisDao<BillFeesRec
 		}
 		return money;
 	}
+
+
 	
 }

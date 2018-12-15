@@ -292,13 +292,13 @@ bill_no, subject_code, subject_name, customer_id, customer_name, waybill_no, ord
     </update>
 
 	<!-- 删除 -->
-    <delete id="delete" parameterType="java.lang.Long">
-        delete from bill_fees_receive_transport_temp 
-        where id = #{id}
+    <delete id="delete" parameterType="String">
+        delete from bill_fees_receive_transport 
+        where bill_no = #{billNo}
     </delete>
     
     <!-- 批量删除 -->
-    <delete id="deleteBatch" parameterType="java.util.Map">
+    <delete id="deleteBatch" parameterType="String">
         delete from bill_fees_receive_transport_temp 
         where 1=1 and bill_no = #{billNo}
     </delete>

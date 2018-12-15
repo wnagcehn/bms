@@ -276,6 +276,8 @@ public class ReceiveBillImportListener implements MessageListener {
 				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.SUCCESS.getCode());
 				billReceiveMasterVo.setRemark("导入完成");
 				billReceiveMasterVo.setTaskRate(100);
+				//导入成功后汇总各个总金额
+				
 			}else{
 				//无论保存成功与否删除所有临时表的数据
 				logger.info(billNo+"删除临时表数据");

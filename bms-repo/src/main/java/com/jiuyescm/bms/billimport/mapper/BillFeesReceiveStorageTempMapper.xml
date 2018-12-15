@@ -276,9 +276,9 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
     </update>
 
 	<!-- 删除 -->
-    <delete id="delete" parameterType="java.lang.Long">
-        delete from bill_fees_receive_storage_temp 
-        where id = #{id}
+    <delete id="delete" parameterType="String">
+        delete from bill_fees_receive_storage
+        where bill_no = #{billNo}
     </delete>
     
     <!-- 批量删除 -->

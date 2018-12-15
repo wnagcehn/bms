@@ -85,6 +85,13 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
         delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.delete", id);
     }
     
+	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.delete", billNo);
+		return d;
+	}
+    
     /**
      * 批量写入
      */

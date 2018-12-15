@@ -115,5 +115,11 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao implements IBill
 		}
 		return money;
 	}
+
+	@Override
+	public int insertReportMaster(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return insert("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.insertReportMaster", condition);
+	}
 	
 }

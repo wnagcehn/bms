@@ -303,4 +303,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 		UNION ALL
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo} and subject_code='at_abnormal_pay') a
     </select>
+    
+    <insert id="insertReportMaster"  parameterType="java.util.Map">
+    
+    
+    </select>
 </mapper>

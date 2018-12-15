@@ -62,6 +62,13 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
     public void delete(Long id) {
         delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.delete", id);
     }
+    
+	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.delete", billNo);
+		return d;
+	}
 
 	@Override
 	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list)throws Exception {

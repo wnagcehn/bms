@@ -260,4 +260,11 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		BillCheckInfoEntity entity=(BillCheckInfoEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.getLatestBill", condition);
 		return entity;
 	}
+
+	@Override
+	public int deleteByBillNo(String billNo) {
+		// TODO Auto-generated method stub
+		return delete("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.deleteByBillNo", billNo);
+	}
+	
 }

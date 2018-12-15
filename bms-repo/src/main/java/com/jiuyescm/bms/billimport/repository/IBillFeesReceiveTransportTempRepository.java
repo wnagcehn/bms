@@ -40,6 +40,13 @@ public interface IBillFeesReceiveTransportTempRepository {
 	 * @return
 	 */
 	int deleteBatchTemp(String billNo);
+	
+	/**
+	 * 批量删除正式表的费用
+	 * @param condition
+	 * @return
+	 */
+	int delete(String billNo);
 
 	/**
 	 * 从临时表保存数据到正式表

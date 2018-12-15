@@ -171,4 +171,11 @@ public interface IBillCheckInfoRepository {
 	 */
 	int saveNew(BillCheckInfoEntity entity);
 	
+	/**
+	 * 根据条件更新账单跟踪
+	 * @param condition
+	 * @return
+	 */
+	int deleteByBillNo(String billNo);
+	
 	}

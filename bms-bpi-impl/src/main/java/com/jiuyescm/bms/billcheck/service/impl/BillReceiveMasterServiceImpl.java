@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +11,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
@@ -22,6 +23,10 @@ import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveAirTempRepository;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveDispatchTempRepository;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveStorageTempRepository;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveTransportTempRepository;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -38,6 +43,14 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     private IBillReceiveMasterRepository billReceiveMasterRepository;
 	
 	@Resource private IBillCheckInfoRepository billCheckInfoRepository;
+	@Resource
+	private IBillFeesReceiveStorageTempRepository billFeesReceiveStorageTempRepository;
+	@Resource
+	private IBillFeesReceiveDispatchTempRepository billFeesReceiveDispatchTempRepository;
+	@Resource
+	private IBillFeesReceiveTransportTempRepository billFeesReceiveTransportTempRepository;
+	@Resource
+	private IBillFeesReceiveAirTempRepository billFeesReceiveAirTempRepository;
 
 	/**
 	 * 根据id查询
@@ -161,6 +174,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * 删除
 	 * @param entity
 	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
     @Override
     public void delete(String billNo,String status) {
     	if("SUCCESS".equals(status)){
@@ -174,10 +188,26 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     		if("CONFIRMED".equals(entity.getBillCheckStatus())){
     			throw new BizException("CONFIRMED_NULL","已确认状态的账单无法删除!");
     		}else {
+    			//删除导入记录
     			billReceiveMasterRepository.delete(billNo);
+    			//删除对应得费用
+    			billFeesReceiveStorageTempRepository.delete(billNo);
+    			billFeesReceiveTransportTempRepository.delete(billNo);
+    			billFeesReceiveDispatchTempRepository.delete(billNo);
+    			billFeesReceiveAirTempRepository.delete(billNo);
+    			//删除账单跟踪记录
+    			billCheckInfoRepository.deleteByBillNo(billNo);
 			}
     	}else{
-            billReceiveMasterRepository.delete(billNo);
+    		//删除导入记录
+			billReceiveMasterRepository.delete(billNo);
+			//删除对应得费用
+			billFeesReceiveStorageTempRepository.delete(billNo);
+			billFeesReceiveTransportTempRepository.delete(billNo);
+			billFeesReceiveDispatchTempRepository.delete(billNo);
+			billFeesReceiveAirTempRepository.delete(billNo);
+			//删除账单跟踪记录
+			billCheckInfoRepository.deleteByBillNo(billNo);
     	}  	
     }
 
@@ -199,6 +229,12 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	public Double getAbnormalMoney(String billNo) {
 		// TODO Auto-generated method stub
 		return billReceiveMasterRepository.getAbnormalMoney(billNo);
+	}
+
+	@Override
+	public int insertReportMaster(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.insertReportMaster(condition);
 	}
 
 

@@ -316,9 +316,9 @@
         where id=#{id}
     </update>
 
-    <delete id="delete" parameterType="java.lang.Integer">
-        delete from bill_fees_receive_dispatch_temp where
-        id=#{id}
+    <delete id="delete" parameterType="String">
+        delete from bill_fees_receive_dispatch where
+        bill_no=#{billNo}
     </delete>
     
     <delete id="deleteBatch" parameterType="String">

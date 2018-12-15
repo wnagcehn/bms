@@ -196,9 +196,9 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
     </update>
 
 	<!-- 删除 -->
-    <delete id="delete" parameterType="java.lang.Long">
-        delete from bill_fees_receive_air_temp 
-        where id = #{id}
+    <delete id="delete" parameterType="String">
+        delete from bill_fees_receive_air 
+        where 1=1 and bill_no = #{billNo}
     </delete>
     
         <!-- 批量删除 -->

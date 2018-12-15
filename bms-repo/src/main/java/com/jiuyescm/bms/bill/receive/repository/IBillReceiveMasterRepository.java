@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.bill.receive.repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +35,6 @@ public interface IBillReceiveMasterRepository {
 	BillReceiveExpectEntity queryExpect(Map<String, Object> condition);
 	
 	Double getAbnormalMoney(String billNo);
+	
+	int insertReportMaster(Map<String, Object> condition);
 }
