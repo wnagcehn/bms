@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.bill.receive.repository.impl;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
+import com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
@@ -116,10 +116,12 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao implements IBill
 		return money;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public int insertReportMaster(Map<String, Object> condition) {
+	public int insertReportMaster(ReportBillImportMasterEntity vo) {
 		// TODO Auto-generated method stub
-		return insert("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.insertReportMaster", condition);
+	    int k = insert("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.insertReportMaster", vo);
+	    return k;
 	}
 	
 }

@@ -28,6 +28,7 @@ import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billcheck.vo.ReportBillImportMasterVo;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveHandService;
@@ -277,6 +278,27 @@ public class ReceiveBillImportListener implements MessageListener {
 				billReceiveMasterVo.setRemark("导入完成");
 				billReceiveMasterVo.setTaskRate(100);
 				//导入成功后汇总各个总金额
+				ReportBillImportMasterVo vo=new ReportBillImportMasterVo();
+				//总金额
+				vo.setTotalMoney(money);234
+				//仓储费用
+				Double storageMoney=billFeesReceiveStorageTempService.getImportStorageAmount(billNo);
+				vo.setTotalStorageMoney(new BigDecimal(storageMoney));
+				//配送费用
+				Double dispatchMoney=billFeesReceiveDispatchTempService.getImportDispatchAmount(billNo);
+				vo.setTotalDispatchMoney(new BigDecimal(dispatchMoney));
+				//干线费用
+				Double transportMoney=billFeesReceiveTransportTempService.getImportTransportAmount(billNo);
+				vo.setTotalTransportMoney(new BigDecimal(transportMoney));
+				//航空费用
+				Double airMoney=billFeesReceiveAirTempService.getImportAirAmount(billNo);
+				vo.setTotalAirMoney(new BigDecimal(airMoney));
+				//获取所有的理赔金额
+				Double abnormalMoney=billReceiveMasterService.getAbnormalMoney(entity.getBillNo());
+				vo.setTotalAbnormalMoney(new BigDecimal(abnormalMoney));
+				vo.setCreator(param.get("creator").toString());
+				vo.setCreateTime(JAppContext.currentTimestamp());
+				
 				
 			}else{
 				//无论保存成功与否删除所有临时表的数据

@@ -19,10 +19,12 @@ import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
+import com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billcheck.vo.ReportBillImportMasterVo;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveAirTempRepository;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveDispatchTempRepository;
 import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveStorageTempRepository;
@@ -140,6 +142,22 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     }
     
     
+
+	@Override
+	public int insertReportMaster(ReportBillImportMasterVo vo) {
+
+		ReportBillImportMasterEntity entity=new ReportBillImportMasterEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);          
+            int k = billReceiveMasterRepository.insertReportMaster(entity);
+            return k;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return 0;
+	}
+
+    
 	@Override
 	public int saveExpect(BillReceiveExpectVo vo) {
 		// TODO Auto-generated method stub
@@ -231,11 +249,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 		return billReceiveMasterRepository.getAbnormalMoney(billNo);
 	}
 
-	@Override
-	public int insertReportMaster(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
-		return billReceiveMasterRepository.insertReportMaster(condition);
-	}
+
 
 
 	

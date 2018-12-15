@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billcheck.vo.ReportBillImportMasterVo;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -38,5 +39,5 @@ public interface IBillReceiveMasterService {
 	
 	Double getAbnormalMoney(String billNo);
 	
-	int insertReportMaster(Map<String, Object> condition);
+	int insertReportMaster(ReportBillImportMasterVo vo);
 }

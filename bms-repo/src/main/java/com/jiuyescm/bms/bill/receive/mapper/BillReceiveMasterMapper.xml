@@ -304,8 +304,23 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo} and subject_code='at_abnormal_pay') a
     </select>
     
-    <insert id="insertReportMaster"  parameterType="java.util.Map">
+    <insert id="insertReportMaster"  parameterType="com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity">
+    	insert into report_bill_import_master(
+			bill_no, total_money, total_storage_money, total_dispatch_money, total_transport_money, total_air_money, total_abnormal_money, creator, create_time, del_flag
+    	)
+        values (
+
+			#{billNo,jdbcType=VARCHAR}, 
+			#{totalMoney,jdbcType=DECIMAL}, 
+			#{totalStorageMoney,jdbcType=DECIMAL}, 
+			#{totalDispatchMoney,jdbcType=DECIMAL}, 
+			#{totalTransportMoney,jdbcType=DECIMAL}, 
+			#{totalAirMoney,jdbcType=DECIMAL}, 
+			#{totalAbnormalMoney,jdbcType=DECIMAL}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
     
-    
-    </select>
+    </insert>
 </mapper>

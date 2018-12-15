@@ -6,6 +6,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
+import com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity;
 
 /**
  * ..Repository
@@ -36,5 +37,5 @@ public interface IBillReceiveMasterRepository {
 	
 	Double getAbnormalMoney(String billNo);
 	
-	int insertReportMaster(Map<String, Object> condition);
+	int insertReportMaster(ReportBillImportMasterEntity vo);
 }
