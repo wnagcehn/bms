@@ -86,12 +86,20 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				sheetName = "仓储";
 			}
 
-			if(sheetName.equals("仓储")){
-				sheetName = sheet.getSheetName();
-				readExcel(xlsxReader,sheet,3,5);
-			}else {
-				readExcel(xlsxReader,sheet,1,2);
+			try {
+				if(sheetName.equals("仓储")){
+					sheetName = sheet.getSheetName();
+					readExcel(xlsxReader,sheet,3,5);
+				}else {
+					readExcel(xlsxReader,sheet,1,2);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				param.put("result", "fail");
+				param.put("detail","解析【"+sheetName+"】异常");
+				return;
 			}
+			
 			logger.info(billNo+sheet+"读取完成");
 			taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
 			updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	

@@ -242,9 +242,9 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			if(curRow>titleRowNo){
 				isTitle = false;
 			}
-			if(curRow <=titleRowNo){
+			/*if(curRow <=titleRowNo){
 				headAMap.put(ref,"");
-			}
+			}*/
 			curCol++;
 		}
 		// t元素也包含字符串
