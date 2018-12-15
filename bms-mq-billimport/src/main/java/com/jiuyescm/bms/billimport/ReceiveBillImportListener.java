@@ -280,7 +280,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				//导入成功后汇总各个总金额
 				ReportBillImportMasterVo vo=new ReportBillImportMasterVo();
 				//总金额
-				vo.setTotalMoney(money);234
+				vo.setTotalMoney(money);
 				//仓储费用
 				Double storageMoney=billFeesReceiveStorageTempService.getImportStorageAmount(billNo);
 				vo.setTotalStorageMoney(new BigDecimal(storageMoney));
