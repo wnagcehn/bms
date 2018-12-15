@@ -5,7 +5,7 @@ import java.security.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;
 
-public class ReportBillReceiptDetail implements IEntity{
+public class ReportBillReceiptDetailEntity implements IEntity{
 	
 	/**
 	 * 

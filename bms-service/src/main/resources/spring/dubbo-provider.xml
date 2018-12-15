@@ -64,5 +64,5 @@
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IDeliverDictService" ref="deliverDictService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IWarehouseDictService" ref="warehouseDictService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService" ref="materialDictService"/>
-
+	<dubbo:service interface="com.jiuyescm.bms.report.bill.IReportBillImportDetailService" ref="reportBillImportDetailService"/>
 </beans>

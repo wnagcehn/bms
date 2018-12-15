@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper" >
+	  
+    <select id="queryReceipt" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.bill.ReportBillReceiptDetailEntity">
+			SELECT 
+				a.create_month as createMonth,
+				a.invoice_name as invoiceName,
+				a.bill_name as billName,
+				CONCAT(a.create_month,a.bill_name) as bill,
+				a.bill_start_time as billStartTime,
+		    	YEAR(a.bill_start_time) as billStartYear,
+				Month(a.bill_start_time) as billStartMonth,
+				a.first_class_name as firstClassName,
+				a.biz_type_name as bizTypeName,
+				a.project_name as projectName,
+				a.seller_name as sellerName,
+				a.dept_name as deptName,
+				a.project_manager_name as projectManagerName,
+		   		a.balance_name as balanceName,
+		   		b.different_remark as instruction,
+		    	c.count as dispatchCount,
+		    	ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
+				Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
+		    	a.confirm_amount as confirmAmount,
+		    	d.total_storage_money as actualStorage,
+		    	d.total_transport_money as actualTransport,
+		    	d.total_dispatch_money as actualDispatch,
+				d.total_air_money as actualAir,
+			    d.total_abnormal_money as claim,
+			    e.expect_money as preTotal,
+			    e.expect_storage_money as preStorage,
+			    e.expect_transport_money as preTransport,
+			    e.expect_dispatch_money as preDispatch,
+			    e.expect_air_money as preAir,
+			    a.remark as remark,
+				a.bill_status as billStatus,
+			    a.bill_confirm_date as billConfirmDate,
+			    year(a.bill_confirm_date) as billConfirmMonth,
+			    a.invoice_status as invoiceStatus,
+			    IFNULL(a.confirm_amount,0)-IFNULL(a.invoice_amount,0) as unInvoiceAmount,
+			    a.un_receipt_amount as unReceiptAmount,
+			    a.invoice_amount as invoiceAmount,
+			    g.invoiceNo as invoiceNo,
+			    a.invoice_date as invoiceDate,
+			    a.receipt_amount as receiptAmount,
+			    a.receipt_date as receiptDate,
+			    f.adjust_amount as otherAmount,
+			    a.invoice_un_receipt_amount as invoiceUnReceiptAmount
+			 from bill_check_info a
+			 LEFT JOIN bill_receive_master b on a.bill_no=b.bill_no and b.del_flag='0'
+			 LEFT JOIN (select bill_no,COUNT(0) as count from bill_fees_receive_dispatch where subject_code='de_delivery_amount' GROUP BY bill_no) c on a.bill_no=c.bill_no
+			 LEFT JOIN report_bill_import_master d on a.bill_no=d.bill_no and d.del_flag='0'
+			 LEFT JOIN bill_receive_expect e on a.create_month=e.create_month and a.bill_name=e.bill_name
+			 LEFT JOIN bill_check_adjust_info f on a.id=f.bill_check_id
+			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
+			 where a.del_flag='0'
+    </select>
+    
+    <select id="queryReceiptExport"  parameterType="java.util.Map" 
+    	resultType="java.util.Map">
+    	SELECT 
+			a.create_month as createMonth,
+			a.invoice_name as invoiceName,
+			a.bill_name as billName,
+			CONCAT(a.create_month,a.bill_name) as bill,
+			a.bill_start_time as billStartTime,
+	    	YEAR(a.bill_start_time) as billStartYear,
+			Month(a.bill_start_time) as billStartMonth,
+			a.first_class_name as firstClassName,
+			a.biz_type_name as bizTypeName,
+			a.project_name as projectName,
+			a.seller_name as sellerName,
+			a.dept_name as deptName,
+			a.project_manager_name as projectManagerName,
+	   		a.balance_name as balanceName,
+	   		b.different_remark as instruction,
+	    	c.count as dispatchCount,
+	    	ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
+			Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
+	    	a.confirm_amount as confirmAmount,
+	    	d.total_storage_money as actualStorage,
+	    	d.total_transport_money as actualTransport,
+	    	d.total_dispatch_money as actualDispatch,
+			d.total_air_money as actualAir,
+		    d.total_abnormal_money as claim,
+		    e.expect_money as preTotal,
+		    e.expect_storage_money as preStorage,
+		    e.expect_transport_money as preTransport,
+		    e.expect_dispatch_money as preDispatch,
+		    e.expect_air_money as preAir,
+		    a.remark as remark,
+			a.bill_status as billStatus,
+		    a.bill_confirm_date as billConfirmDate,
+		    year(a.bill_confirm_date) as billConfirmMonth,
+		    a.invoice_status as invoiceStatus,
+		    IFNULL(a.confirm_amount,0)-IFNULL(a.invoice_amount,0) as unInvoiceAmount,
+		    a.un_receipt_amount as unReceiptAmount,
+		    a.invoice_amount as invoiceAmount,
+		    g.invoiceNo as invoiceNo,
+		    a.invoice_date as invoiceDate,
+		    a.receipt_amount as receiptAmount,
+		    a.receipt_date as receiptDate,
+		    f.adjust_amount as otherAmount,
+		    a.invoice_un_receipt_amount as invoiceUnReceiptAmount
+		 from bill_check_info a
+		 LEFT JOIN bill_receive_master b on a.bill_no=b.bill_no and b.del_flag='0'
+		 LEFT JOIN (select bill_no,COUNT(0) as count from bill_fees_receive_dispatch where subject_code='de_delivery_amount' GROUP BY bill_no) c on a.bill_no=c.bill_no
+		 LEFT JOIN report_bill_import_master d on a.bill_no=d.bill_no and d.del_flag='0'
+		 LEFT JOIN bill_receive_expect e on a.create_month=e.create_month and a.bill_name=e.bill_name
+		 LEFT JOIN bill_check_adjust_info f on a.id=f.bill_check_id
+		 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
+		 where a.del_flag='0'	
+    </select>
+    
+</mapper>

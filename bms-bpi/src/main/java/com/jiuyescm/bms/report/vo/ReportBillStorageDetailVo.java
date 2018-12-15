@@ -1,11 +1,11 @@
-package com.jiuyescm.bms.report.bill;
+package com.jiuyescm.bms.report.vo;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;
 
-public class ReportBillStorageDetail implements IEntity{
+public class ReportBillStorageDetailVo implements IEntity{
 	
 	/**
 	 * 

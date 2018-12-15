@@ -3,23 +3,8 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="dtCondition">
-      <PropertyDef name="year">
-        <Property></Property>
-        <Property name="label">年份</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getYear&quot;).getResult()}</Property>
-        </Property>
-      </PropertyDef>
-      <PropertyDef name="month">
-        <Property name="label">月份</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getAllMonth&quot;).getResult()}</Property>
-        </Property>
-      </PropertyDef>
-    </DataType>
     <DataType name="dtBillReceiptDetail">
-      <Property name="creationType">com.jiuyescm.bms.report.bill.ReportBillReceiptDetail</Property>
+      <Property name="creationType">com.jiuyescm.bms.report.bill.ReportBillReceiptDetailEntity</Property>
       <PropertyDef name="createMonth">
         <Property></Property>
         <Property name="label">业务月份</Property>
@@ -190,7 +175,7 @@
       </PropertyDef>
       <PropertyDef name="invoiceDate">
         <Property name="dataType">DateTime</Property>
-        <Property name="label">invoiceDate</Property>
+        <Property name="label">开票日期</Property>
       </PropertyDef>
       <PropertyDef name="receiptAmount">
         <Property name="dataType">BigDecimal</Property>
@@ -210,7 +195,7 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtBillReceiptStorageDetail">
-      <Property name="creationType">com.jiuyescm.bms.report.bill.ReportBillStorageDetail</Property>
+      <Property name="creationType">com.jiuyescm.bms.report.bill.ReportBillStorageDetailEntity</Property>
       <PropertyDef name="area">
         <Property></Property>
         <Property name="label">组别</Property>
@@ -362,7 +347,7 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtBillReceiptBizDetail">
-      <Property name="creationType">com.jiuyescm.bms.report.bill.ReportBillBizDetail</Property>
+      <Property name="creationType">com.jiuyescm.bms.report.bill.ReportBillBizDetailEntity</Property>
       <PropertyDef name="area">
         <Property></Property>
         <Property name="label">组别</Property>
@@ -520,15 +505,11 @@
     </DataType>
   </Model>
   <View>
-    <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();&#xD;
-</ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
-    </DataSet>
     <DataSet id="dsBillReceiptDetail">
-      <Property name="loadMode">manual</Property>
+      <Property name="loadMode">lazy</Property>
       <Property name="pageSize">20</Property>
       <Property name="dataType">[dtBillReceiptDetail]</Property>
+      <Property name="dataProvider">reportBillImportDetailController#queryReceiptDetail</Property>
     </DataSet>
     <DataSet id="dsBillReceiptStorageDetail">
       <Property name="loadMode">manual</Property>
@@ -544,37 +525,26 @@
         <Property name="caption">查询</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
-        <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
-&#xD;
-var year=condition.get(&quot;year&quot;);&#xD;
-var month=condition.get(&quot;month&quot;);&#xD;
-&#xD;
-if(isNullOrEmpty(year)){&#xD;
-	dorado.MessageBox.alert(&quot;年份不能为空！&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-if(isNullOrEmpty(month)){&#xD;
-	dorado.MessageBox.alert(&quot;月份不能为空！&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-&#xD;
-if(!isNullOrEmpty(month)){&#xD;
-	if(month.length==1){&#xD;
-		month='0'+month;&#xD;
-	}&#xD;
-}&#xD;
-condition.set(&quot;importDate&quot;, year + &quot;-&quot; +month);&#xD;
-&#xD;
-view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
+        <ClientEvent name="onClick">&#xD;
+view.get(&quot;#downloadAction&quot;).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
         <Property name="visible">true</Property>
+        <Property name="action">downloadAction</Property>
       </ToolBarButton>
     </ToolBar>
     <Container>
       <TabControl>
         <ControlTab>
           <Property name="caption">收入明细</Property>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsBillReceiptDetail</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <Property name="caption">查询</Property>
+            </ToolBarButton>
+          </ToolBar>
           <DataGrid>
             <Property name="dataSet">dsBillReceiptDetail</Property>
             <Property name="dataType">dtBillReceiptDetail</Property>
@@ -770,6 +740,11 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
         </ControlTab>
         <ControlTab>
           <Property name="caption">仓储明细</Property>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsBillReceiptStorageDetail</Property>
+            </DataPilot>
+          </ToolBar>
           <DataGrid>
             <Property name="dataSet">dsBillReceiptStorageDetail</Property>
             <Property name="width">2500</Property>
@@ -986,6 +961,11 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
         </ControlTab>
         <ControlTab>
           <Property name="caption">业务明细</Property>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsBillReceiptBizDetail</Property>
+            </DataPilot>
+          </ToolBar>
           <DataGrid>
             <Property name="dataSet">dsBillReceiptBizDetail</Property>
             <Property name="width">120</Property>
@@ -1258,7 +1238,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
       </TabControl>
     </Container>
     <DownloadAction id="downloadAction">
-      <Property name="fileProvider">bizWarehouseImportReportController#export</Property>
+      <Property name="fileProvider">reportBillImportDetailController#getFile</Property>
       <Property name="caption">导出</Property>
       <Property name="parameter"></Property>
     </DownloadAction>
