@@ -185,4 +185,90 @@
     <update id="updateEtlTime" parameterType="java.util.Map">
     	update etl_condition set last_time=#{lastTime} where pull_type='reportBillImport'
     </update>
+    
+    <select id="queryList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
+    	select bill_no as billNo,create_time as createTime from bill_receive_master where del_flag='0' and task_status='SUCCESS' and is_calculated='0'
+    </select>
+    
+    <update id="updateBillList" parameterType="">
+    	 update bill_receive_master
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" createMonth != null and createMonth !='' ">
+				create_month = #{createMonth,jdbcType=INTEGER},
+			</if>
+			<if test=" invoiceName != null and invoiceName !='' ">
+				invoice_name = #{invoiceName,jdbcType=VARCHAR},
+			</if>
+			<if test=" invoiceId != null and invoiceId !='' ">
+				invoice_id = #{invoiceId,jdbcType=VARCHAR},
+			</if>
+			<if test=" billName != null and billName !='' ">
+				bill_name = #{billName,jdbcType=VARCHAR},
+			</if>
+			<if test=" taskRate != null and taskRate !='' ">
+				task_rate = #{taskRate,jdbcType=INTEGER},
+			</if>
+			<if test=" taskStatus != null and taskStatus !='' ">
+				task_status = #{taskStatus,jdbcType=VARCHAR},
+			</if>
+			<if test=" amount != null and amount !='' ">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test=" adjustAmount != null and adjustAmount !='' ">
+				adjust_amount = #{adjustAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" creatorId != null and creatorId !='' ">
+				creator_id = #{creatorId,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" finishTime != null and finishTime !='' ">
+				finish_time = #{finishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifierId != null and lastModifierId !='' ">
+				last_modifier_id = #{lastModifierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+			<if test=" billNo != null and billNo !='' ">
+				bill_no = #{billNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" originFileName != null and originFileName !='' ">
+				origin_file_name = #{originFileName,jdbcType=VARCHAR},
+			</if>
+			<if test=" originFilePath != null and originFilePath !='' ">
+				origin_file_path = #{originFilePath,jdbcType=VARCHAR},
+			</if>
+			<if test=" resultFileName != null and resultFileName !='' ">
+				result_file_name = #{resultFileName,jdbcType=VARCHAR},
+			</if>
+			<if test=" resultFilePath != null and resultFilePath !='' ">
+				result_file_path = #{resultFilePath,jdbcType=VARCHAR},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" expectStatus != null and expectStatus !='' ">
+				expect_status = #{expectStatus,jdbcType=VARCHAR},
+			</if>
+			<if test=" differentRemark != null and differentRemark !='' ">
+				different_remark = #{differentRemark,jdbcType=VARCHAR},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where bill_no = #{billNo}
+    </update>
 </mapper>

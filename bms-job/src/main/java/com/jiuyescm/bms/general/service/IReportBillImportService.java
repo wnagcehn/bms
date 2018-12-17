@@ -26,6 +26,14 @@ public interface IReportBillImportService {
 	 */
 	BillReceiveMasterEntity queryBill(Map<String,Object> map);
 	
+	List<BillReceiveMasterEntity> queryList(Map<String,Object> map);
+	
+	/**
+	 * 更新账单跟踪
+	 * 
+	 */
+	int updateBill(List<BillReceiveMasterEntity> list);
+	
 	/**
 	 * 统计出所有的仓库
 	 */

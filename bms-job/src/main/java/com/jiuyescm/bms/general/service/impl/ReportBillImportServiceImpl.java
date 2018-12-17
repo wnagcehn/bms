@@ -117,6 +117,22 @@ public class ReportBillImportServiceImpl extends MyBatisDao implements IReportBi
 		// TODO Auto-generated method stub
 		return update("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.updateEtlTime", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BillReceiveMasterEntity> queryList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<BillReceiveMasterEntity> list=selectList("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.queryList", map);
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateBill(List<BillReceiveMasterEntity> list) {
+		// TODO Auto-generated method stub
+		
+		return updateBatch("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.updateBillList", list);
+	}
 	
 	
 }
