@@ -575,10 +575,10 @@ public class BillReceiveMasterController {
 		}
 		// 保存导入文件到fastDFS，获取文件路径
 		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
-		StorePath resultStorePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
+		//StorePath resultStorePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
 		String fullPath = storePath.getFullPath();
-		String resultFullPath = resultStorePath.getFullPath();
-		if (StringUtils.isBlank(fullPath) || StringUtils.isBlank(resultFullPath)) {
+		//String resultFullPath = resultStorePath.getFullPath();
+		if (StringUtils.isBlank(fullPath)) {
 			setProgress(2);
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 500);
 			infoList.add(new ErrorMessageVo(1, "Excel 导入数据上传文件系统失败，请稍后重试"));
@@ -598,7 +598,7 @@ public class BillReceiveMasterController {
 		parameter.put("createTime", currentTime);
 		
 		// 生成任务，写入主表
-		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "B", "0000000000");
 		parameter.put("billNo", billNo);
 		//组装数据
 		try {
@@ -625,7 +625,7 @@ public class BillReceiveMasterController {
 			taskEntity.setOriginFileName(fileName);
 			taskEntity.setOriginFilePath(fullPath);
 			taskEntity.setResultFileName(fileName);
-			taskEntity.setResultFilePath(resultFullPath);
+			//taskEntity.setResultFilePath(resultFullPath);
 			taskEntity.setDelFlag("0");
 			taskEntity.setIsCalculated("0");
 			int saveNum = billReceiveMasterService.save(taskEntity);
