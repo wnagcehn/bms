@@ -187,11 +187,14 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 * @throws Exception
 	 */
 	public void saveTo(){
-		logger.info("错误信息: {}", errMap);
-		logger.info("errMap.size: {}", errMap.size());
+		
 		if(errMap.size()==0){
 			save();
+		}else{
+			logger.info("错误信息: {}", errMap);
+			logger.info("errMap.size: {}", errMap.size());
 		}
+		
 		list.clear();
 	}
 	

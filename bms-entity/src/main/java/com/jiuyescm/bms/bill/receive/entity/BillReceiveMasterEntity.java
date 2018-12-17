@@ -115,7 +115,8 @@ public class BillReceiveMasterEntity implements IEntity {
 	private BigDecimal differentRate;
 	//差异说明
 	private String differentRemark;
-	
+	// 是否已计算费用 0-未结算 1-已结算
+	private String isCalculated;
 	public String getRemark() {
 		return remark;
 	}
@@ -514,6 +515,14 @@ public class BillReceiveMasterEntity implements IEntity {
 
 	public void setDifferentRate(BigDecimal differentRate) {
 		this.differentRate = differentRate;
+	}
+
+	public String getIsCalculated() {
+		return isCalculated;
+	}
+
+	public void setIsCalculated(String isCalculated) {
+		this.isCalculated = isCalculated;
 	}
     
 }

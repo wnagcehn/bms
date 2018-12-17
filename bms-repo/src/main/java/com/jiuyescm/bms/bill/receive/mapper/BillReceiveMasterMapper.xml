@@ -30,11 +30,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark, is_calculated
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark
+create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark, is_calculated
     </sql>
 
 	<!-- 根据id查询 -->
@@ -53,7 +53,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         IFNULL(a.amount,0) as amount, IFNULL(a.adjust_amount,0) as adjustAmount, SUM(IFNULL(a.amount,0)+IFNULL(a.adjust_amount,0)) as totalAmount, 
         a.creator, a.creator_id, a.create_time, a.finish_time, 
         a.last_modifier, a.last_modifier_id, a.last_modify_time, a.del_flag, a.bill_no, 
-        a.origin_file_name, a.origin_file_path, a.result_file_name, a.result_file_path, a.remark,a.different_remark,b.expect_money,
+        a.origin_file_name, a.origin_file_path, a.result_file_name, a.result_file_path, a.remark,a.different_remark,b.expect_money,a.is_calculated,
         IF(b.expect_money is null,0,1) as expect_status
         from bill_receive_master a
 		LEFT JOIN bill_receive_expect b on a.create_month=b.create_month and a.bill_name=b.bill_name and b.del_flag='0'
@@ -145,7 +145,8 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			#{resultFilePath,jdbcType=VARCHAR}, 
 			#{remark,jdbcType=VARCHAR},
 			#{expectStatus,jdbcType=VARCHAR},
-			#{differentRemark,jdbcType=VARCHAR}
+			#{differentRemark,jdbcType=VARCHAR},
+			#{isCalculated,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -224,6 +225,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			</if>
 			<if test=" differentRemark != null and differentRemark !='' ">
 				different_remark = #{differentRemark,jdbcType=VARCHAR},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
 			</if>
         </trim>
         where bill_no = #{billNo}
