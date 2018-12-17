@@ -331,6 +331,9 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			formatIndex = style.getDataFormat();
 			formatString = style.getDataFormatString();
 
+			if(formatString == null){
+				return;
+			}
 			if (formatString.contains("m/d/yy")) {
 				nextDataType = CellDataType.DATE;
 				formatString = "yyyy-MM-dd hh:mm:ss";
