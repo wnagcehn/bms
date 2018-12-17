@@ -113,7 +113,6 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		fee.setUnitPrice(entity.getUnitPrice());
 		fee.setSubjectCode("wh_value_add_subject");
 		fee.setOtherSubjectCode(entity.getFeesType());
-		fee.setOtherSubjectCode(entity.getFeesType());
 		fee.setCustomerId(entity.getCustomerid());
 		fee.setCustomerName(entity.getCustomerName());
 		fee.setWarehouseCode(entity.getWarehouseCode());
@@ -136,7 +135,8 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	
 	@Override
 	protected String[] initSubjects() {
-		Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_add_fee");
+		
+		/*Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_add_fee");
 		if (maps.size() == 0) {
 			String[] str = {"wh_product_refreeze", "wh_overtime_instock", "wh_full_check",
 							"wh_paste_label", "wh_fruit_devanning", "wh_prepackaging",
@@ -151,7 +151,8 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 				strs[i] = val;
 				i++;
 			}
-		}
+		}*/
+		String[] strs = {"wh_value_add_subject"};
 		return strs;
 	}
 
@@ -224,7 +225,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	            //费用 = 商品数量*模板单价
 				Map<String, Object> param = new HashMap<>();
 				param.put("templateId", generalEntity.getId().toString());
-				param.put("subjectId", SubjectId);
+				param.put("subjectId", entity.getFeesType());
 				List<PriceExtraQuotationEntity> extraList= priceExtraQuotationRepository.queryPriceByParam(param);
 				if (extraList == null || extraList.size() <= 0) {
 					entity.setIsCalculated(CalculateState.Other.getCode());
