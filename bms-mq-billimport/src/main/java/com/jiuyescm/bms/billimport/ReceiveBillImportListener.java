@@ -17,6 +17,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveHandService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
+import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
@@ -238,7 +240,17 @@ public class ReceiveBillImportListener implements MessageListener {
 				checkInfoVo.setBalanceId(param.get("balanceId").toString());
 				checkInfoVo.setBalanceName(param.get("balanceName").toString());
 				checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
+				
 				checkInfoVo.setIsneedInvoice(BmsEnums.isInvoice.getCode(param.get("isneedInvoice").toString()));
+				//是否需要发票
+				if(StringUtils.isNotBlank(checkInfoVo.getIsneedInvoice())){
+					if("1".equals(checkInfoVo.getIsneedInvoice())){
+						checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.NO_INVOICE.getCode());//未开票 
+					}else if("0".equals(checkInfoVo.getIsneedInvoice())){
+						checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票 
+					}
+				}
+				
 				if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
 					checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
 					checkInfoVo.setConfirmManId(param.get("confirmManId").toString());

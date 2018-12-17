@@ -627,6 +627,7 @@ public class BillReceiveMasterController {
 			taskEntity.setResultFileName(fileName);
 			taskEntity.setResultFilePath(resultFullPath);
 			taskEntity.setDelFlag("0");
+			taskEntity.setIsCalculated("0");
 			int saveNum = billReceiveMasterService.save(taskEntity);
 			if (saveNum <= 0) {
 				setProgress(6);
