@@ -6,8 +6,12 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+
 
 import com.jiuyescm.bms.base.dict.api.ICarrierDictService;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
@@ -30,6 +34,8 @@ import com.jiuyescm.exception.BizException;
 @Component("宅配")
 public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEntity> {
 
+	private static final Logger logger = LoggerFactory.getLogger(DispatchHandler.class);
+	
 	@Autowired
 	private IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired
@@ -243,15 +249,21 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 
 	@Override
 	public void save() {
+		long start = System.currentTimeMillis();// 系统开始时间
+		long end=0l;
 		// TODO Auto-generated method stub		
 		if(null != list && list.size()>0){
 			billFeesReceiveDispatchTempService.insertBatch(list);
+			end=System.currentTimeMillis();// 系统结束时间
+			logger.info("保存到宅配临时表耗时"+(end-start));
 		}
 		if(null != storageList && storageList.size()>0){
 			int result=billFeesReceiveStorageTempService.insertBatchTemp(storageList);
 			if(result>0){
 				storageList.clear();
 			}
+			end=System.currentTimeMillis();// 系统结束时间
+			logger.info("保存到宅配临时表耗时"+(end-start));
 		}
 		
 	}

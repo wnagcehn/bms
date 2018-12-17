@@ -130,7 +130,10 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			@Override
 			public void read(DataRow dr) {
 				try {
+					long start=System.currentTimeMillis();
 					List<T> entityList = transRowToObj(dr);
+					logger.info("读取一行验证耗时"+(System.currentTimeMillis()-start));
+					
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
@@ -187,7 +190,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 * @throws Exception
 	 */
 	public void saveTo(){
-		
+		logger.info("批量保存到临时表时间"+System.currentTimeMillis());
 		if(errMap.size()==0){
 			save();
 		}else{
