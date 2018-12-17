@@ -537,427 +537,428 @@ view.get(&quot;#downloadAction&quot;).execute();</ClientEvent>
       <TabControl>
         <ControlTab>
           <Property name="caption">收入明细</Property>
-          <ToolBar>
-            <DataPilot>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsBillReceiptDetail</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid>
               <Property name="dataSet">dsBillReceiptDetail</Property>
-            </DataPilot>
-            <ToolBarButton>
-              <Property name="caption">查询</Property>
-            </ToolBarButton>
-          </ToolBar>
-          <DataGrid>
-            <Property name="dataSet">dsBillReceiptDetail</Property>
-            <Property name="dataType">dtBillReceiptDetail</Property>
-            <DataColumn name="createMonth">
-              <Property name="property">createMonth</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceName">
-              <Property name="property">invoiceName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billName">
-              <Property name="property">billName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="bill">
-              <Property name="property">bill</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billStartYear">
-              <Property name="property">billStartYear</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billStartMonth">
-              <Property name="property">billStartMonth</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="firstClassName">
-              <Property name="property">firstClassName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="bizTypeName">
-              <Property name="property">bizTypeName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="projectName">
-              <Property name="property">projectName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="sellerName">
-              <Property name="property">sellerName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="deptName">
-              <Property name="property">deptName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="receiptGroup">
-              <Property name="property">receiptGroup</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="projectManagerName">
-              <Property name="property">projectManagerName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="balanceName">
-              <Property name="property">balanceName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="waybillNo">
-              <Property name="property">waybillNo</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="instruction">
-              <Property name="property">instruction</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="dispatchCount">
-              <Property name="property">dispatchCount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="unitPrice">
-              <Property name="property">unitPrice</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="differentRate">
-              <Property name="property">differentRate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="correctRate">
-              <Property name="property">correctRate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="different">
-              <Property name="property">different</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="confirmAmount">
-              <Property name="property">confirmAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="actualStorage">
-              <Property name="property">actualStorage</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="actualTransport">
-              <Property name="property">actualTransport</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="actualDispatch">
-              <Property name="property">actualDispatch</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="actualAir">
-              <Property name="property">actualAir</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="claim">
-              <Property name="property">claim</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="preTotal">
-              <Property name="property">preTotal</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="preStorage">
-              <Property name="property">preStorage</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="preTransport">
-              <Property name="property">preTransport</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="preDispatch">
-              <Property name="property">preDispatch</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="preAir">
-              <Property name="property">preAir</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="remark">
-              <Property name="property">remark</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billStatus">
-              <Property name="property">billStatus</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billConfirmDate">
-              <Property name="property">billConfirmDate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billConfirmMonth">
-              <Property name="property">billConfirmMonth</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceStatus">
-              <Property name="property">invoiceStatus</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="unInvoiceAmount">
-              <Property name="property">unInvoiceAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="unReceiptAmount">
-              <Property name="property">unReceiptAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceAmount">
-              <Property name="property">invoiceAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceNo">
-              <Property name="property">invoiceNo</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceDate">
-              <Property name="property">invoiceDate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="receiptAmount">
-              <Property name="property">receiptAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="receiptDate">
-              <Property name="property">receiptDate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="otherAmount">
-              <Property name="property">otherAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceUnReceiptAmount">
-              <Property name="property">invoiceUnReceiptAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billStartTime">
-              <Property name="property">billStartTime</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-          </DataGrid>
+              <Property name="dataType">dtBillReceiptDetail</Property>
+              <DataColumn name="createMonth">
+                <Property name="property">createMonth</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceName">
+                <Property name="property">invoiceName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billName">
+                <Property name="property">billName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="bill">
+                <Property name="property">bill</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billStartYear">
+                <Property name="property">billStartYear</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billStartMonth">
+                <Property name="property">billStartMonth</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="firstClassName">
+                <Property name="property">firstClassName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="bizTypeName">
+                <Property name="property">bizTypeName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="projectName">
+                <Property name="property">projectName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="sellerName">
+                <Property name="property">sellerName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="deptName">
+                <Property name="property">deptName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="receiptGroup">
+                <Property name="property">receiptGroup</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="projectManagerName">
+                <Property name="property">projectManagerName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="balanceName">
+                <Property name="property">balanceName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="waybillNo">
+                <Property name="property">waybillNo</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="instruction">
+                <Property name="property">instruction</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="dispatchCount">
+                <Property name="property">dispatchCount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="unitPrice">
+                <Property name="property">unitPrice</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="differentRate">
+                <Property name="property">differentRate</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="correctRate">
+                <Property name="property">correctRate</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="different">
+                <Property name="property">different</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="confirmAmount">
+                <Property name="property">confirmAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="actualStorage">
+                <Property name="property">actualStorage</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="actualTransport">
+                <Property name="property">actualTransport</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="actualDispatch">
+                <Property name="property">actualDispatch</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="actualAir">
+                <Property name="property">actualAir</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="claim">
+                <Property name="property">claim</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="preTotal">
+                <Property name="property">preTotal</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="preStorage">
+                <Property name="property">preStorage</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="preTransport">
+                <Property name="property">preTransport</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="preDispatch">
+                <Property name="property">preDispatch</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="preAir">
+                <Property name="property">preAir</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billStatus">
+                <Property name="property">billStatus</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billConfirmDate">
+                <Property name="property">billConfirmDate</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billConfirmMonth">
+                <Property name="property">billConfirmMonth</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceStatus">
+                <Property name="property">invoiceStatus</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="unInvoiceAmount">
+                <Property name="property">unInvoiceAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="unReceiptAmount">
+                <Property name="property">unReceiptAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceAmount">
+                <Property name="property">invoiceAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceNo">
+                <Property name="property">invoiceNo</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceDate">
+                <Property name="property">invoiceDate</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="receiptAmount">
+                <Property name="property">receiptAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="receiptDate">
+                <Property name="property">receiptDate</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="otherAmount">
+                <Property name="property">otherAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceUnReceiptAmount">
+                <Property name="property">invoiceUnReceiptAmount</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billStartTime">
+                <Property name="property">billStartTime</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
         </ControlTab>
         <ControlTab>
           <Property name="caption">仓储明细</Property>
-          <ToolBar>
-            <DataPilot>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsBillReceiptStorageDetail</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid>
               <Property name="dataSet">dsBillReceiptStorageDetail</Property>
-            </DataPilot>
-          </ToolBar>
-          <DataGrid>
-            <Property name="dataSet">dsBillReceiptStorageDetail</Property>
-            <Property name="width">2500</Property>
-            <DataColumn name="area">
-              <Property name="property">area</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="createMonth">
-              <Property name="property">createMonth</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceName">
-              <Property name="property">invoiceName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billName">
-              <Property name="property">billName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="bill">
-              <Property name="property">bill</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="firstClassName">
-              <Property name="property">firstClassName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="bizTypeName">
-              <Property name="property">bizTypeName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="projectName">
-              <Property name="property">projectName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="sellerName">
-              <Property name="property">sellerName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="projectManagerName">
-              <Property name="property">projectManagerName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="balanceName">
-              <Property name="property">balanceName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billStatus">
-              <Property name="property">billStatus</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billConfirmDate">
-              <Property name="property">billConfirmDate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceStatus">
-              <Property name="property">invoiceStatus</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="remark">
-              <Property name="property">remark</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="instruction">
-              <Property name="property">instruction</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="waybillNo">
-              <Property name="property">waybillNo</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceAmount">
-              <Property name="property">invoiceAmount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceDate">
-              <Property name="property">invoiceDate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <ColumnGroup>
-              <Property name="caption">开票明细</Property>
-              <DataColumn name="invoiceStorage">
-                <Property name="property">invoiceStorage</Property>
-                <Property name="caption">仓储</Property>
+              <Property name="width">2500</Property>
+              <DataColumn name="area">
+                <Property name="property">area</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="invoiceTransport">
-                <Property name="property">invoiceTransport</Property>
-                <Property name="caption">干线</Property>
+              <DataColumn name="createMonth">
+                <Property name="property">createMonth</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="invoiceDispatch">
-                <Property name="property">invoiceDispatch</Property>
-                <Property name="caption">宅配费用</Property>
+              <DataColumn name="invoiceName">
+                <Property name="property">invoiceName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="invoiceAir">
-                <Property name="property">invoiceAir</Property>
-                <Property name="caption">航空</Property>
+              <DataColumn name="billName">
+                <Property name="property">billName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="invoiceAbnormal">
-                <Property name="property">invoiceAbnormal</Property>
-                <Property name="caption">索赔</Property>
+              <DataColumn name="bill">
+                <Property name="property">bill</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-            </ColumnGroup>
-            <ColumnGroup>
-              <Property name="caption">理赔</Property>
-              <DataColumn name="abnormalStorage">
-                <Property name="property">abnormalStorage</Property>
-                <Property name="caption">仓储</Property>
+              <DataColumn name="firstClassName">
+                <Property name="property">firstClassName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="abnormalTransport">
-                <Property name="property">abnormalTransport</Property>
-                <Property name="caption">干线</Property>
+              <DataColumn name="bizTypeName">
+                <Property name="property">bizTypeName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="abnormalDispatch">
-                <Property name="property">abnormalDispatch</Property>
-                <Property name="caption">宅配费用</Property>
+              <DataColumn name="projectName">
+                <Property name="property">projectName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="abnormalAir">
-                <Property name="property">abnormalAir</Property>
-                <Property name="caption">航空</Property>
+              <DataColumn name="sellerName">
+                <Property name="property">sellerName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-            </ColumnGroup>
-            <ColumnGroup>
-              <Property name="caption">运输费用</Property>
-              <DataColumn>
-                <Property name="property">dispatchAmount</Property>
-                <Property name="caption">九曳自送（元）</Property>
-                <Property name="name">jiuyeAmount</Property>
+              <DataColumn name="projectManagerName">
+                <Property name="property">projectManagerName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn>
-                <Property name="property">dispatchCount</Property>
-                <Property name="name">jiuyeCount</Property>
-                <Property name="caption">单量</Property>
+              <DataColumn name="balanceName">
+                <Property name="property">balanceName</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="shunfengAmount">
-                <Property name="property">shunfengAmount</Property>
-                <Property name="caption">顺丰（元）</Property>
+              <DataColumn name="billStatus">
+                <Property name="property">billStatus</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="shunfengCount">
-                <Property name="property">shunfengCount</Property>
-                <Property name="caption">单量</Property>
+              <DataColumn name="billConfirmDate">
+                <Property name="property">billConfirmDate</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="yuantongAmount">
-                <Property name="property">yuantongAmount</Property>
-                <Property name="caption">圆通（元）</Property>
+              <DataColumn name="invoiceStatus">
+                <Property name="property">invoiceStatus</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="yuantongCount">
-                <Property name="property">yuantongCount</Property>
-                <Property name="caption">单量</Property>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="zhongtongAmount">
-                <Property name="property">zhongtongAmount</Property>
-                <Property name="caption">中通（元）</Property>
+              <DataColumn name="instruction">
+                <Property name="property">instruction</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="zhongtongCount">
-                <Property name="property">zhongtongCount</Property>
-                <Property name="caption">单量</Property>
+              <DataColumn name="waybillNo">
+                <Property name="property">waybillNo</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-            </ColumnGroup>
-            <DataColumn name="totalCount">
-              <Property name="property">totalCount</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <ColumnGroup>
-              <Property name="caption">仓储费</Property>
-              <DataColumn name="storagePallet">
-                <Property name="property">storagePallet</Property>
-                <Property name="caption">存储托盘数</Property>
+              <DataColumn name="invoiceAmount">
+                <Property name="property">invoiceAmount</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="outstockPallet">
-                <Property name="property">outstockPallet</Property>
-                <Property name="caption">出库托盘数</Property>
+              <DataColumn name="invoiceDate">
+                <Property name="property">invoiceDate</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="rentFee">
-                <Property name="property">rentFee</Property>
-                <Property name="caption">仓租费</Property>
+              <ColumnGroup>
+                <Property name="caption">开票明细</Property>
+                <DataColumn name="invoiceStorage">
+                  <Property name="property">invoiceStorage</Property>
+                  <Property name="caption">仓储</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="invoiceTransport">
+                  <Property name="property">invoiceTransport</Property>
+                  <Property name="caption">干线</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="invoiceDispatch">
+                  <Property name="property">invoiceDispatch</Property>
+                  <Property name="caption">宅配费用</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="invoiceAir">
+                  <Property name="property">invoiceAir</Property>
+                  <Property name="caption">航空</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="invoiceAbnormal">
+                  <Property name="property">invoiceAbnormal</Property>
+                  <Property name="caption">索赔</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+              </ColumnGroup>
+              <ColumnGroup>
+                <Property name="caption">理赔</Property>
+                <DataColumn name="abnormalStorage">
+                  <Property name="property">abnormalStorage</Property>
+                  <Property name="caption">仓储</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="abnormalTransport">
+                  <Property name="property">abnormalTransport</Property>
+                  <Property name="caption">干线</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="abnormalDispatch">
+                  <Property name="property">abnormalDispatch</Property>
+                  <Property name="caption">宅配费用</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="abnormalAir">
+                  <Property name="property">abnormalAir</Property>
+                  <Property name="caption">航空</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+              </ColumnGroup>
+              <ColumnGroup>
+                <Property name="caption">运输费用</Property>
+                <DataColumn>
+                  <Property name="property">dispatchAmount</Property>
+                  <Property name="caption">九曳自送（元）</Property>
+                  <Property name="name">jiuyeAmount</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn>
+                  <Property name="property">dispatchCount</Property>
+                  <Property name="name">jiuyeCount</Property>
+                  <Property name="caption">单量</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="shunfengAmount">
+                  <Property name="property">shunfengAmount</Property>
+                  <Property name="caption">顺丰（元）</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="shunfengCount">
+                  <Property name="property">shunfengCount</Property>
+                  <Property name="caption">单量</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="yuantongAmount">
+                  <Property name="property">yuantongAmount</Property>
+                  <Property name="caption">圆通（元）</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="yuantongCount">
+                  <Property name="property">yuantongCount</Property>
+                  <Property name="caption">单量</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="zhongtongAmount">
+                  <Property name="property">zhongtongAmount</Property>
+                  <Property name="caption">中通（元）</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="zhongtongCount">
+                  <Property name="property">zhongtongCount</Property>
+                  <Property name="caption">单量</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+              </ColumnGroup>
+              <DataColumn name="totalCount">
+                <Property name="property">totalCount</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="outstockFee">
-                <Property name="property">outstockFee</Property>
-                <Property name="caption">操作费</Property>
-                <Property name="width">120</Property>
-              </DataColumn>
-              <DataColumn name="materialFee">
-                <Property name="property">materialFee</Property>
-                <Property name="caption">包材费</Property>
-                <Property name="width">120</Property>
-              </DataColumn>
-              <DataColumn name="addFee">
-                <Property name="property">addFee</Property>
-                <Property name="caption">增值</Property>
-                <Property name="width">120</Property>
-              </DataColumn>
-            </ColumnGroup>
-          </DataGrid>
+              <ColumnGroup>
+                <Property name="caption">仓储费</Property>
+                <DataColumn name="storagePallet">
+                  <Property name="property">storagePallet</Property>
+                  <Property name="caption">存储托盘数</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="outstockPallet">
+                  <Property name="property">outstockPallet</Property>
+                  <Property name="caption">出库托盘数</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="rentFee">
+                  <Property name="property">rentFee</Property>
+                  <Property name="caption">仓租费</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="outstockFee">
+                  <Property name="property">outstockFee</Property>
+                  <Property name="caption">操作费</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="materialFee">
+                  <Property name="property">materialFee</Property>
+                  <Property name="caption">包材费</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="addFee">
+                  <Property name="property">addFee</Property>
+                  <Property name="caption">增值</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+              </ColumnGroup>
+            </DataGrid>
+          </Container>
         </ControlTab>
         <ControlTab>
           <Property name="caption">业务明细</Property>
