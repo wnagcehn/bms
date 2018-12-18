@@ -132,12 +132,12 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try {
 					long start=System.currentTimeMillis();
 					List<T> entityList = transRowToObj(dr);
-					logger.info("读取一行验证耗时"+(System.currentTimeMillis()-start));
 					
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
 					if(list.size()==batchNum){
+						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
 				} catch (Exception e) {
