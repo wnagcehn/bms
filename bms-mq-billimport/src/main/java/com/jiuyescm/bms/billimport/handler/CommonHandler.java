@@ -55,7 +55,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	@Autowired private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
 	@Autowired private IBillFeesReceiveHandService billFeesReceiveHandService;
 	
-	private int batchNum = 500;
+	private int batchNum = 1000;
 	protected String sheetName;
 	List<T> list = new ArrayList<T>();
 	List<DataRow> errMap = new ArrayList<DataRow>();
@@ -137,7 +137,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
-					if(list.size()==batchNum){
+					if(list.size()>=batchNum){
 						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
