@@ -624,7 +624,7 @@ public class BillReceiveMasterController {
 			taskEntity.setCreateTime(JAppContext.currentTimestamp());
 			taskEntity.setOriginFileName(fileName);
 			taskEntity.setOriginFilePath(fullPath);
-			taskEntity.setResultFileName(fileName);
+			//taskEntity.setResultFileName(fileName);
 			//taskEntity.setResultFilePath(resultFullPath);
 			taskEntity.setDelFlag("0");
 			taskEntity.setIsCalculated("0");

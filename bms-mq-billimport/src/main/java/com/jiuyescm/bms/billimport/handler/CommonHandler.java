@@ -95,7 +95,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
-				logger.error("sheet解析异常：", e.getMessage());
+				logger.error("sheet解析异常：", e);
 				param.put("result", "fail");
 				param.put("detail","解析【"+sheetName+"】异常-"+e.getMessage());
 				return;
@@ -246,7 +246,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 	    String resultFullPath = resultStorePath.getFullPath();
-	    System.out.println(resultFullPath);
+	   // System.out.println(resultFullPath);
 	    
 	    errMap.clear();
 	    return resultFullPath;

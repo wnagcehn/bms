@@ -564,48 +564,28 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
           <Property name="labelWidth">90</Property>
           <Editor/>
         </AutoFormElement>
-        <AutoFormElement layoutConstraint="colSpan:2">
+        <AutoFormElement>
+          <Property name="name">billNo</Property>
+          <Property name="property">billNo</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
           <Property name="name">invoiceName</Property>
           <Property name="property">invoiceName</Property>
           <Property name="showHint">true</Property>
-          <Property name="labelWidth">90</Property>
-          <Property name="editorWidth">250</Property>
           <Property name="trigger">triggerQueryInvoice</Property>
+          <Property name="labelWidth">100</Property>
           <Editor/>
         </AutoFormElement>
-        <AutoFormElement layoutConstraint="colSpan:2">
+        <AutoFormElement>
           <Property name="name">billName</Property>
           <Property name="property">billName</Property>
           <Property name="showHint">true</Property>
-          <Property name="labelWidth">90</Property>
-          <Property name="editorWidth">280</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
           <Property name="name">taskStatus</Property>
           <Property name="property">taskStatus</Property>
-          <Property name="showHint">false</Property>
-          <Property name="labelWidth">90</Property>
-          <Property name="editorWidth">105</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">invoiceId</Property>
-          <Property name="property">invoiceId</Property>
-          <Property name="labelWidth">90</Property>
-          <Property name="showHint">false</Property>
-          <Property name="visible">false</Property>
-          <Property name="hideMode">display</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">expectStatus</Property>
-          <Property name="property">expectStatus</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">differentRate</Property>
-          <Property name="property">differentRate</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -725,7 +705,7 @@ jQuery(arg.dom).xCreate({&#xD;
 });&#xD;
 </ClientEvent>
           <Property name="property">originFileName</Property>
-          <Property name="width">100</Property>
+          <Property name="width">140</Property>
           <Property name="name">originFileName</Property>
         </DataColumn>
         <DataColumn>
@@ -753,7 +733,7 @@ jQuery(arg.dom).xCreate({&#xD;
 });&#xD;
 </ClientEvent>
           <Property name="property">resultFileName</Property>
-          <Property name="width">100</Property>
+          <Property name="width">140</Property>
           <Property name="name">resultFileName</Property>
         </DataColumn>
         <DataColumn>
@@ -780,24 +760,28 @@ jQuery(arg.dom).xCreate({&#xD;
         </DataColumn>
         <DataColumn>
           <Property name="property">remark</Property>
-          <Property name="width">160</Property>
+          <Property name="width">200</Property>
           <Property name="name">remark</Property>
         </DataColumn>
         <DataColumn name="expectMoney">
           <Property name="property">expectMoney</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="expectStatus">
           <Property name="property">expectStatus</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="differentRate">
           <Property name="property">differentRate</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="differentRemark">
           <Property name="property">differentRemark</Property>
           <Property name="width">120</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>
