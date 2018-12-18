@@ -91,6 +91,7 @@ public class DispatchBillResetJob extends IJobHandler{
 			entity.setDispatchTypeCode(updateEntity.getDispatchTypeCode());
 			entity.setDutyType(null);
 			entity.setExpresstype(updateEntity.getExpresstype());
+			entity.setServiceTypeCode(updateEntity.getExpresstype());
 			entity.setExtattr1(updateEntity.getExtattr1());
 			entity.setExtattr2(updateEntity.getExtattr2());
 			entity.setExtattr3(updateEntity.getExtattr3());
