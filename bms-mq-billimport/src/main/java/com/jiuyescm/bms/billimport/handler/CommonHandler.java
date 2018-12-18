@@ -160,7 +160,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try{
 					String ret = validate(columns);
 					if("SUCC".equals(ret)){
-						logger.info("表头校验通过");
+						logger.info("表头行：{}",columns);
 					}
 					else{
 						throw new BizException("title_error",ret);
@@ -169,6 +169,11 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				catch(Exception ex){
 					throw new BizException("title_error","excel处理异常："+ex.getMessage());
 				}
+			}
+
+			@Override
+			public void error(Exception ex) {
+				throw new BizException("read_error","excel读取异常："+ex.getMessage());
 			}
 			
 		},titleRowNo,contentRowNo);
