@@ -72,57 +72,42 @@
     </select>
 
     <insert id="upsertPalletStorage" parameterType="java.util.Map" >
-        insert into report_warehouse_biz_import(import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag)
-        SELECT importDate, warehouseCode, biz_type, importType, customerId, 
-        	#{createTime,jdbcType=TIMESTAMP}, #{delFlag}
+        insert into report_warehouse_biz_import
+		(import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag)
+    	SELECT 
+		import_date, warehouse_code, biz_type, import_type, customer_id, CURRENT_TIMESTAMP, #{delFlag}
 		FROM 
-		(SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
-			customerid as customerId, 'THEORY' as importType, 'PALLET' as biz_type
+		(SELECT distinct warehouse_code,customerid as customer_id, DATE_FORMAT(create_time, '%Y-%m') as import_date, 'THEORY' as import_type, 'PALLET' as biz_type
 		FROM biz_product_storage
-		WHERE del_flag = '0'
-			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
-		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'), customerid
-		
+		WHERE del_flag = '0' AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
 		UNION ALL
-		
-		SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
-			customer_id as customerId, 'ACTUAL' as importType, 'PALLET' as biz_type
+		SELECT warehouse_code,customer_id, DATE_FORMAT(create_time, '%Y-%m') as import_date, 'ACTUAL' as import_type, 'PALLET' as biz_type
 		FROM biz_pallet_info
-		WHERE del_flag = '0' and biz_type='product'
-			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
-		GROUP BY warehouse_code,DATE_FORMAT(create_time, '%Y-%m'),customer_id) a
-		
+		WHERE del_flag = '0' and biz_type='product' 
+		AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}) a
         on DUPLICATE KEY update
-        create_time=#{createTime,jdbcType=TIMESTAMP},del_flag=#{delFlag};
+        create_time=CURRENT_TIMESTAMP , del_flag=#{delFlag};
     </insert>
     
     <insert id="upsertPackMaterial" parameterType="java.util.Map" >
-        insert into report_warehouse_biz_import(import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag)
-        SELECT importDate, warehouseCode, biz_type, importType, customerId, 
-        	#{createTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}
+        insert into report_warehouse_biz_import
+        (import_date, warehouse_code, biz_type, import_type, customer_id, create_time, del_flag)
+        select 
+        import_date, warehouse_code, biz_type, import_type, customer_id,CURRENT_TIMESTAMP,#{delFlag}
 		FROM 
-		(SELECT warehouse_code as warehouseCode, DATE_FORMAT(create_time, '%Y-%m') as importDate, 
-			customerid as customerId, 'THEORY' as importType, 'MATERIAL' as biz_type
-		FROM biz_outstock_master
-		WHERE del_flag = '0'
+		(SELECT distinct warehouse_code ,customerid as customer_id, DATE_FORMAT(create_time, '%Y-%m') as import_date, 'THEORY' as import_type, 'MATERIAL' as biz_type
+			FROM biz_outstock_master
+			WHERE del_flag = '0'
 			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
-			AND b2b_flag = '0'
-		GROUP BY warehouse_code, DATE_FORMAT(create_time, '%Y-%m'), customerid
-		
+			AND b2b_flag = '0' 
 		UNION ALL
-		
-		SELECT bop.warehouse_code as warehouseCode, DATE_FORMAT(bop.create_time, '%Y-%m') as importDate, 
-			bop.customer_id as customerId, 'ACTUAL' as importType, 'MATERIAL' as biz_type
-		FROM biz_outstock_packmaterial bop
-		LEFT JOIN biz_outstock_master bom
-			ON bop.waybill_no = bom.waybill_no
-		WHERE bop.del_flag = '0'
-			AND bop.create_time <![CDATA[>=]]> #{startTime} AND bop.create_time <![CDATA[<]]> #{endTime}
-			AND bom.b2b_flag = '0'
-		GROUP BY bop.warehouse_code, DATE_FORMAT(bop.create_time, '%Y-%m'), bop.customer_id) a
-		
+		SELECT distinct a.warehouse_code,a.customer_id,DATE_FORMAT(a.create_time, '%Y-%m') as import_date,'ACTUAL' as import_type, 'MATERIAL' as biz_type
+		FROM biz_outstock_packmaterial a 
+		left join biz_outstock_master b on a.waybill_no = b.waybill_no
+		where a.del_flag = 0 AND a.b2b_flag = '0'
+		AND a.create_time <![CDATA[>=]]> #{startTime} AND a.create_time <![CDATA[<]]> #{endTime}
         on DUPLICATE KEY update
-        create_time=#{createTime,jdbcType=TIMESTAMP},del_flag=#{delFlag};
+        create_time=CURRENT_TIMESTAMP , del_flag=#{delFlag};
     </insert>
 
     <update id="update" parameterType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
