@@ -95,8 +95,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				logger.error("sheet解析异常：", e);
 				param.put("result", "fail");
-				param.put("detail","解析【"+sheetName+"】异常");
+				param.put("detail","解析【"+sheetName+"】异常-"+e.getMessage());
 				return;
 			}
 			
