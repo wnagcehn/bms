@@ -196,7 +196,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 * @throws Exception
 	 */
 	public void saveTo(){
-		logger.info("批量保存到临时表时间"+System.currentTimeMillis());
 		if(errMap.size()==0){
 			save();
 		}else{

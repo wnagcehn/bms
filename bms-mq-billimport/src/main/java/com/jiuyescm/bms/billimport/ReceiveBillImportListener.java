@@ -82,10 +82,10 @@ public class ReceiveBillImportListener implements MessageListener {
 				readExcel(json);
 			} catch (Throwable e) {
 				e.printStackTrace();
-				logger.info("获取消息失败-{}", e);
+				logger.error("获取消息失败-{}", e);
 			}
 		} catch (JMSException e1) {
-			logger.info("获取消息失败-{}", e1);
+			logger.error("获取消息失败-{}", e1);
 			return;
 		}
 	}
@@ -141,7 +141,7 @@ public class ReceiveBillImportListener implements MessageListener {
 						break;
 					}					
 				} catch (Exception ex) {
-					logger.info("异常"+ex.getMessage());
+					logger.error("处理异常 {}",ex);
 					break;
 				}
 				finally {
@@ -326,7 +326,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			}
 			
 		}catch (Exception e) {
-			logger.info("异常信息"+e.getMessage());
+			logger.error("保存异常信息 {}",e);
 			billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
 			billReceiveMasterVo.setTaskRate(99);
 			billReceiveMasterVo.setRemark(e.getMessage());
@@ -378,7 +378,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			 return utilDate;
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("转换异常",e.getMessage());
+			logger.error("转换异常 {}",e);
 		}
 		return null;
 	}

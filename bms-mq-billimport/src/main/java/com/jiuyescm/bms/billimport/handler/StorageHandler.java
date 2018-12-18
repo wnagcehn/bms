@@ -293,7 +293,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 				}
 			
 			} catch (Exception e) {
-				System.out.println("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
