@@ -50,7 +50,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<version>1.2.42</version>
 		</dependency>
 		
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-warehouse-api</artifactId>
 			<version>${mdm.version}</version>
@@ -60,7 +60,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<artifactId>mdm-customer-api</artifactId>
 			<version>${mdm.version}</version>
 		</dependency>
-		
+		 -->
 		<dependency>
 		  <groupId>com.jiuyescm.framework</groupId>
 		  <artifactId>redis-client</artifactId>
