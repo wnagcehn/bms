@@ -55,7 +55,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	@Autowired private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
 	@Autowired private IBillFeesReceiveHandService billFeesReceiveHandService;
 	
-	private int batchNum = 1000;
+	private int batchNum = 500;
 	protected String sheetName;
 	List<T> list = new ArrayList<T>();
 	List<DataRow> errMap = new ArrayList<DataRow>();
