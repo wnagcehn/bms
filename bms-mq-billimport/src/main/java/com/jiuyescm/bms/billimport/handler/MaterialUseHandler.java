@@ -102,11 +102,12 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 		
 		//起始列
-		int index=1;;
+		int index=0;
 		for (DataColumn dc:dr.getColumns()) {
-			if("收件人地址".equals(dc.getColName())){
-				index+=dc.getColNo();
-			}		
+			if("编码".equals(dc.getColName())){
+				index=dc.getColNo()-1;
+				break;
+			}
 		}
 		int count=1;
 		BillFeesReceiveStorageTempEntity feeEntity=new BillFeesReceiveStorageTempEntity();
@@ -124,7 +125,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 						if(vo!=null){
 							feeEntity.setMaterialCode(dc.getColValue());
 						}else{
-							errorMessage+="列"+dc.getColNo()+"编码不存在;";
+							errorMessage+="列【"+dc.getColValue()+"】编码不存在;";
 						}
 					}
 					break;
@@ -148,13 +149,8 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				case "单价":
 					break;
 				default:
-					if(StringUtils.isNotBlank(dc.getColValue())){
-						PubMaterialInfoVo pubvo=materialDictService.getMaterialByName(dc.getColValue());
-						if(pubvo!=null){
-							feeEntity.setMaterialName(dc.getColValue());
-						}else{
-							errorMessage+="列"+dc.getColNo()+"耗材名称不存在;";
-						}
+					if(StringUtils.isNotBlank(dc.getColValue())){						
+						feeEntity.setMaterialName(dc.getColValue());						
 					}			
 					break;
 				}

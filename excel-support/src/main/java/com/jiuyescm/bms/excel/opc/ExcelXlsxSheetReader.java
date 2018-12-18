@@ -2,7 +2,6 @@ package com.jiuyescm.bms.excel.opc;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -132,12 +131,11 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 				columns.add(entry.getValue());
 				colnos.add(entry.getKey());
 			}
-			Collections.sort(colnos);
+			//Collections.sort(colnos);
 			//System.out.println("排序后"+colnos);
-			int i = 1;
 			for (String string : colnos) {
-				headMap.put(string, i);
-				i++;
+				headMap.put(string, titleToNumber(string));
+
 			}
 			callback.readTitle(columns);
 		}
@@ -466,4 +464,28 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		titleRef = titleRef.replaceAll("\\d+","");
 		return titleRef;
 	}
+	
+	/**
+	 * 给定excel表中的列标题，返回相应的列号  A -> 1  AA -> 27
+	 * @param s
+	 * @return
+	 */
+	public static int titleToNumber(String s) {
+        if(s.length()==1){
+            return s.charAt(0)-'A'+1;
+        }else{
+            int a = s.length();
+            int sum = 0;
+            for(int i=0;i<a;i++){
+                if(i==a-1){
+                    sum = sum+(s.charAt(i)-'A')+1;
+                }else{
+                    sum = sum+(int)Math.pow(26,a-i-1)*(s.charAt(i)-'A'+1);
+                }
+
+            }
+            return sum;
+        }
+
+    }
 }
