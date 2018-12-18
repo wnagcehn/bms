@@ -16,6 +16,8 @@ import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -37,6 +39,8 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		BOOL, ERROR, FORMULA, INLINESTR, SSTINDEX, NUMBER, DATE, NULL
 	}
 
+	private Logger logger = LoggerFactory.getLogger(ExcelXlsxSheetReader.class);
+	
 	Map<Integer, List<String>> list = new LinkedHashMap<Integer, List<String>>();
 
 	public SheetReadCallBack callback;
@@ -304,44 +308,52 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	 * @param attributes
 	 */
 	public void setNextDataType(Attributes attributes) {
-		nextDataType = CellDataType.NUMBER; // cellType为空，则表示该单元格类型为数字
-		formatIndex = -1;
-		formatString = null;
-		String cellType = attributes.getValue("t"); // 单元格类型
-		String cellStyleStr = attributes.getValue("s"); //
-		String columnData = attributes.getValue("r"); // 获取单元格的位置，如A1,B1
+		try{
+			nextDataType = CellDataType.NUMBER; // cellType为空，则表示该单元格类型为数字
+			formatIndex = -1;
+			formatString = null;
+			String cellType = attributes.getValue("t"); // 单元格类型
+			String cellStyleStr = attributes.getValue("s"); //
+			String columnData = attributes.getValue("r"); // 获取单元格的位置，如A1,B1
 
-		if ("b".equals(cellType)) { // 处理布尔值
-			nextDataType = CellDataType.BOOL;
-		} else if ("e".equals(cellType)) { // 处理错误
-			nextDataType = CellDataType.ERROR;
-		} else if ("inlineStr".equals(cellType)) {
-			nextDataType = CellDataType.INLINESTR;
-		} else if ("s".equals(cellType)) { // 处理字符串
-			nextDataType = CellDataType.SSTINDEX;
-		} else if ("str".equals(cellType)) {
-			nextDataType = CellDataType.FORMULA;
+			if ("b".equals(cellType)) { // 处理布尔值
+				nextDataType = CellDataType.BOOL;
+			} else if ("e".equals(cellType)) { // 处理错误
+				nextDataType = CellDataType.ERROR;
+			} else if ("inlineStr".equals(cellType)) {
+				nextDataType = CellDataType.INLINESTR;
+			} else if ("s".equals(cellType)) { // 处理字符串
+				nextDataType = CellDataType.SSTINDEX;
+			} else if ("str".equals(cellType)) {
+				nextDataType = CellDataType.FORMULA;
+			}
+
+			if (cellStyleStr != null) { // 处理日期
+				int styleIndex = Integer.parseInt(cellStyleStr);
+				XSSFCellStyle style = stylesTable.getStyleAt(styleIndex);
+				formatIndex = style.getDataFormat();
+				formatString = style.getDataFormatString();
+
+				if(formatString == null){
+					return;
+				}
+				if (formatString.contains("m/d/yy")) {
+					nextDataType = CellDataType.DATE;
+					formatString = "yyyy-MM-dd hh:mm:ss";
+				}
+
+				if (formatString == null) {
+					nextDataType = CellDataType.NULL;
+					formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
+				}
+			}
 		}
-
-		if (cellStyleStr != null) { // 处理日期
-			int styleIndex = Integer.parseInt(cellStyleStr);
-			XSSFCellStyle style = stylesTable.getStyleAt(styleIndex);
-			formatIndex = style.getDataFormat();
-			formatString = style.getDataFormatString();
-
-			if(formatString == null){
-				return;
-			}
-			if (formatString.contains("m/d/yy")) {
-				nextDataType = CellDataType.DATE;
-				formatString = "yyyy-MM-dd hh:mm:ss";
-			}
-
-			if (formatString == null) {
-				nextDataType = CellDataType.NULL;
-				formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
-			}
+		catch(Exception ex){
+			String errMsg = "读取单元格格式异常  行【"+curRow+"】 列【"+ref+"】 "+ex.getMessage();
+			logger.error("setNextDataType 读取单元格格式异常 行【{}】列【{}】{}",curRow,ref,ex);
+			callback.error(new Exception(errMsg));
 		}
+		
 	}
 
 	/**
@@ -357,67 +369,74 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 	 */
 	@SuppressWarnings("deprecation")
 	public String getDataValue(String value, String thisStr) {
-		//如果是表格头行
-		if(isTitle){
-			String sstIndex = value.toString();
-			try {
-				int idx = Integer.parseInt(sstIndex);
-				XSSFRichTextString rtss = new XSSFRichTextString(sst.getEntryAt(idx));// 根据idx索引值获取内容值
-				thisStr = rtss.toString();
-				rtss = null;
-			} catch (NumberFormatException ex) {
-				thisStr = value.toString();
+		try{
+			//如果是表格头行
+			if(isTitle){
+				String sstIndex = value.toString();
+				try {
+					int idx = Integer.parseInt(sstIndex);
+					XSSFRichTextString rtss = new XSSFRichTextString(sst.getEntryAt(idx));// 根据idx索引值获取内容值
+					thisStr = rtss.toString();
+					rtss = null;
+				} catch (NumberFormatException ex) {
+					thisStr = value.toString();
+				}
+				return thisStr;
 			}
-			return thisStr;
-		}
-		switch (nextDataType) {
-		// 这几个的顺序不能随便交换，交换了很可能会导致数据错误
-		case BOOL: // 布尔值
-			char first = value.charAt(0);
-			thisStr = first == '0' ? "FALSE" : "TRUE";
-			break;
-		case ERROR: // 错误
-			thisStr = "\"ERROR:" + value.toString() + '"';
-			break;
-		case FORMULA: // 公式
-			thisStr = '"' + value.toString() + '"';
-			break;
-		case INLINESTR:
-			XSSFRichTextString rtsi = new XSSFRichTextString(value.toString());
-			thisStr = rtsi.toString();
-			rtsi = null;
-			break;
-		case SSTINDEX: // 字符串
-			String sstIndex = value.toString();
-			try {
-				int idx = Integer.parseInt(sstIndex);
-				XSSFRichTextString rtss = new XSSFRichTextString(
-						sst.getEntryAt(idx));// 根据idx索引值获取内容值
-				thisStr = rtss.toString();
-				rtss = null;
-			} catch (NumberFormatException ex) {
-				thisStr = value.toString();
-			}
-			break;
-		case NUMBER: // 数字
-			if (formatString != null) {
+			switch (nextDataType) {
+			// 这几个的顺序不能随便交换，交换了很可能会导致数据错误
+			case BOOL: // 布尔值
+				char first = value.charAt(0);
+				thisStr = first == '0' ? "FALSE" : "TRUE";
+				break;
+			case ERROR: // 错误
+				thisStr = "\"ERROR:" + value.toString() + '"';
+				break;
+			case FORMULA: // 公式
+				thisStr = '"' + value.toString() + '"';
+				break;
+			case INLINESTR:
+				XSSFRichTextString rtsi = new XSSFRichTextString(value.toString());
+				thisStr = rtsi.toString();
+				rtsi = null;
+				break;
+			case SSTINDEX: // 字符串
+				String sstIndex = value.toString();
+				try {
+					int idx = Integer.parseInt(sstIndex);
+					XSSFRichTextString rtss = new XSSFRichTextString(
+							sst.getEntryAt(idx));// 根据idx索引值获取内容值
+					thisStr = rtss.toString();
+					rtss = null;
+				} catch (NumberFormatException ex) {
+					thisStr = value.toString();
+				}
+				break;
+			case NUMBER: // 数字
+				if (formatString != null) {
+					thisStr = formatter.formatRawCellContents(
+							Double.parseDouble(value), formatIndex, formatString)
+							.trim();
+				} else {
+					thisStr = value;
+				}
+				thisStr = thisStr.replace("_", "").trim();
+				break;
+			case DATE: // 日期
 				thisStr = formatter.formatRawCellContents(
-						Double.parseDouble(value), formatIndex, formatString)
-						.trim();
-			} else {
-				thisStr = value;
+						Double.parseDouble(value), formatIndex, formatString);
+				// 对日期字符串作特殊处理，去掉T
+				thisStr = thisStr.replace("T", " ");
+				break;
+			default:
+				thisStr = " ";
+				break;
 			}
-			thisStr = thisStr.replace("_", "").trim();
-			break;
-		case DATE: // 日期
-			thisStr = formatter.formatRawCellContents(
-					Double.parseDouble(value), formatIndex, formatString);
-			// 对日期字符串作特殊处理，去掉T
-			thisStr = thisStr.replace("T", " ");
-			break;
-		default:
-			thisStr = " ";
-			break;
+		}
+		catch(Exception ex){
+			String errMsg = "获取单元格内容异常  行【"+curRow+"】 列【"+ref+"】 "+ex.getMessage();
+			logger.error("getDataValue 获取单元格内容异常 行【{}】列【{}】{}",curRow,ref,ex);
+			callback.error(new Exception(errMsg));
 		}
 		return thisStr;
 	}

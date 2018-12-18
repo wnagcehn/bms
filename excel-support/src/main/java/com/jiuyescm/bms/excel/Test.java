@@ -7,6 +7,7 @@ import java.util.List;
 
 
 
+
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
@@ -27,7 +28,7 @@ public class Test {
 
 	
     public static void test2() throws FileNotFoundException {
-        String path = "E:\\user\\desktop\\caojianwei\\Desktop\\excel\\456.xlsx";
+        String path = "E:\\user\\desktop\\caojianwei\\Desktop\\excel\\1.xlsx";
         File file = new File(path);
         FileInputStream inputStream = new FileInputStream(file);
         ExcelXlsxReader er;
@@ -70,12 +71,17 @@ public class Test {
                     }
                     @Override
                     public void finish() {
-                        //System.out.println("读取完毕");
+                        System.out.println("读取完毕");
                     }
                     @Override
                     public void readTitle(List<String> columns) {
                         System.out.println("readTitle:"+columns);
                     }
+					@Override
+					public void error(Exception ex) {
+						// TODO Auto-generated method stub
+						
+					}
                 },startRow,contentRow);
 			}
             

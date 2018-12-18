@@ -132,12 +132,12 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try {
 					long start=System.currentTimeMillis();
 					List<T> entityList = transRowToObj(dr);
-					logger.info("读取一行验证耗时"+(System.currentTimeMillis()-start));
 					
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
 					if(list.size()==batchNum){
+						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
 				} catch (Exception e) {
@@ -160,7 +160,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try{
 					String ret = validate(columns);
 					if("SUCC".equals(ret)){
-						logger.info("表头校验通过");
+						logger.info("表头行：{}",columns);
 					}
 					else{
 						throw new BizException("title_error",ret);
@@ -169,6 +169,11 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				catch(Exception ex){
 					throw new BizException("title_error","excel处理异常："+ex.getMessage());
 				}
+			}
+
+			@Override
+			public void error(Exception ex) {
+				throw new BizException("read_error","excel读取异常："+ex.getMessage());
 			}
 			
 		},titleRowNo,contentRowNo);
