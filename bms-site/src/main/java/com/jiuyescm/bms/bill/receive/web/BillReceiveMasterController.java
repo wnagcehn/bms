@@ -373,14 +373,25 @@ public class BillReceiveMasterController {
 		
 		//重复性校验
 		Map<String, Object> param = new HashMap<String, Object>();
-		//param.put("delFlag", "0");
+		param.put("createMonth", parameter.get("createMonth"));
+		param.put("billName", parameter.get("billName"));
+
 		List<BillReceiveMasterVo> checkList = billReceiveMasterService.query(param);
 		for (BillReceiveMasterVo billReceiveMasterEntity : checkList) {
-			if ((parameter.get("createMonth").toString()+parameter.get("billName").toString()+"SUCCESS").equals(billReceiveMasterEntity.getCreateMonth().toString()+billReceiveMasterEntity.getBillName()+billReceiveMasterEntity.getTaskStatus())) {
+			if (("SUCCESS").equals(billReceiveMasterEntity.getTaskStatus())) {
 				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
 				errorVo.setMsg("同一月份存在相同账单名称，请删除后重试！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			if (("WAIT").equals(billReceiveMasterEntity.getTaskStatus()) || ("PROCESS").equals(billReceiveMasterEntity.getTaskStatus())) {
+				setProgress(6);
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("同一月份存在正在处理中的账单，请勿重复提交！");
 				infoList.add(errorVo);
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;

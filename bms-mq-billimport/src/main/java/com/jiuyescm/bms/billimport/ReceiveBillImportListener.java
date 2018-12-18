@@ -113,7 +113,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
 			logger.info("解析Excel, 获取Sheet：{}", sheets.size());
-			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 20);
+			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
 				logger.info("--------------准备读取sheet - {}", sheetName);
@@ -132,7 +132,6 @@ public class ReceiveBillImportListener implements MessageListener {
 					continue;
 				}
 				logger.info("匹配Handler为: {}", handler);
-				updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
 				//handler.getRows();
 
 				try {

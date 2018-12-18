@@ -256,10 +256,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			logger.info(billNo+"保存宅配到宅配临时表耗时"+(System.currentTimeMillis()-start));
 		}
 		if(null != storageList && storageList.size()>0){
-			int result=billFeesReceiveStorageTempService.insertBatchTemp(storageList);
-			if(result>0){
-				storageList.clear();
-			}
+			billFeesReceiveStorageTempService.insertBatchTemp(storageList);		
+			storageList.clear();		
 			logger.info(billNo+"保存操作费和包材费到仓储临时表耗时"+(System.currentTimeMillis()-start));
 		}
 		

@@ -67,7 +67,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	//商家id
 	protected String customerId;
 	//进度
-	protected Integer taskRate = 30;
+	//protected Integer taskRate = 30;
 
 	
 	@Override
@@ -102,7 +102,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			}
 			
 			logger.info(billNo+sheet+"读取完成");
-			taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
+			int taskRate = (int) (30+((90-30)/xlsxReader.getSheets().size())*(sheet.getSheetId()));
+			//taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
 			updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	
 			repeatMap.clear();
 			//Excel校验未通过
@@ -138,7 +139,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 						list.add(entityList.get(i));
 					}
 					if(list.size()==batchNum){
-						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
+						logger.info(sheetName+"读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
 				} catch (Exception e) {
