@@ -2,8 +2,6 @@ package com.jiuyescm.bms.trial.storage.web;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,14 +14,11 @@ import com.jiuyescm.bms.biz.storage.entity.BizInStockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
 import com.jiuyescm.bms.common.entity.CalculateVo;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 
 @Controller("tryStorageDroolsController")
 public class TryStorageDroolsController {
 	
 	private static final String msg = "无匹配价格";
-    @Resource
-	private IFeesCalculateService calculateService;
 	
 	@DataResolver
 	public  @ResponseBody  Object  tryOrderOperate(BizOutstockMasterEntity data){// 订单操作费   业务数据是 商品出库单 （主表）
@@ -156,7 +151,7 @@ public class TryStorageDroolsController {
 		
 		parent.setSubjectId(subjectId);//费用科目
 		
-		parent = calculateService.calculate(parent);
+		//parent = calculateService.calculate(parent);
 		
 		return parent;
 		

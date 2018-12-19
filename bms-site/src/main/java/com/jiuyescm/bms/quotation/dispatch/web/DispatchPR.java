@@ -51,7 +51,6 @@ import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.common.web.CommonComparePR;
 import com.jiuyescm.bms.common.web.SelectFromTablePR;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.pub.IPubRecordLogService;
 import com.jiuyescm.bms.pub.PubRecordLogEntity;
 import com.jiuyescm.bms.quotation.dispatch.entity.PriceDispatchTemplateEntity;
@@ -109,12 +108,6 @@ public class DispatchPR extends CommonComparePR<PriceMainDispatchEntity>{
 		
 	@Resource
 	private Lock lock;
-	
-	@Resource
-	private IFeesCalculateService feesCalculateService;
-	
-	//@Resource private IFeesCalcuService feesCalcuService;
-	
 	@Resource private IReceiveRuleService receiveRuleService;
 	
 	private static final Logger logger = Logger.getLogger(DispatchPR.class);

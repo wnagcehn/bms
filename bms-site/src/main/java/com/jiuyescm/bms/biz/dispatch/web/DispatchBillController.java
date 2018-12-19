@@ -54,13 +54,11 @@ import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.common.tool.Tools;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
 import com.jiuyescm.bms.fees.dispatch.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
 import com.jiuyescm.bms.quotation.dispatch.service.IPriceDispatchService;
 import com.jiuyescm.bms.quotation.dispatch.service.IPriceDispatchTemplateService;
-import com.jiuyescm.bms.trial.storage.service.IStorageDroolsService;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
@@ -94,10 +92,6 @@ import com.thoughtworks.xstream.mapper.Mapper.Null;
 public class DispatchBillController{
 	
 	private static final Logger logger = Logger.getLogger(DispatchBillController.class.getName());
-
-	
-	@Resource
-	private IStorageDroolsService orderService;
 	
 	@Resource
 	private IBizDispatchBillService bizDispatchBillService;
@@ -122,9 +116,6 @@ public class DispatchBillController{
 	
 	@Autowired
 	private IFeesReceiveDispatchService service;
-	
-	@Autowired
-	private IFeesCalculateService feesCalculateService;
 	
 	@Resource
 	private IAddressService addressService;
