@@ -10,7 +10,7 @@
 	<artifactId>bms</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<!-- <modules>
+	<modules>
 		<module>bms-entity</module>
 		<module>bms-repo</module>
 		<module>bms-api</module>
@@ -30,7 +30,7 @@
 		<module>bms-mq-billimport</module>
 		<module>excel-support</module>
 		<module>drools-support</module>
-  </modules> -->
+  </modules>
 
 	<properties>
 		<scm.version>1.0.1-SNAPSHOT</scm.version>
