@@ -33,8 +33,6 @@
 		<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialSupplierService"
 				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/>
 		
-		<dubbo:reference interface="com.jiuyescm.bms.calculate.base.IFeesCalcuService" 
-		  	 version="1.0.0" id="feesCalcuService" registry="bms"/>
 		<dubbo:reference interface="com.jiuyescm.bms.systemCode.service.api.ISystemCodeService" 
 			 version="1.0.0" id="sysValueAddService"  registry="bms"/>
 		<dubbo:reference interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService" 

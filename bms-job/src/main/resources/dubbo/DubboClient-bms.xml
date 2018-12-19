@@ -18,4 +18,22 @@
 	<dubbo:reference interface="com.jiuyescm.mdm.warehouse.api.IWarehouseService" version="1.0.0" id="warehouseService" timeout="1200000" check="false"/>
 	<dubbo:reference interface="com.jiuyescm.contract.quote.api.IContractQuoteInfoService" version="1.0.0" id="contractQuoteInfoService" timeout="1200000" check="false" />
 	<dubbo:reference interface="com.jiuyescm.mdm.deliver.api.IDeliverService" version="1.0.0" id="deliverService" timeout="1200000" check="false"/>
+	
+	
+	<dubbo:reference id="bmsGroupService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupService" 
+		 version="1.0.0"/>
+		<dubbo:reference id="bmsGroupUserService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupUserService" 
+		 version="1.0.0"/>
+	    <dubbo:reference id="reportCustomerDailyIncomeService" interface="com.jiuyescm.bms.report.service.IReportCustomerDailyIncomeService" 
+		 version="1.0.0"/>
+	    <dubbo:reference id="bmsGroupSubjectService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService" 
+		 version="1.0.0"/>
+		<dubbo:reference id="bmsGroupCustomerService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService" 
+		 version="1.0.0"/>
+		<dubbo:reference id="bmsGroupChargeunitService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService" 
+		 version="1.0.0"/>
+		<dubbo:reference id="bmsWarehouseConfigService" interface="com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService" 
+		 version="1.0.0"/>
+		<dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" 
+		 version="1.0.0"/>
 </beans>							

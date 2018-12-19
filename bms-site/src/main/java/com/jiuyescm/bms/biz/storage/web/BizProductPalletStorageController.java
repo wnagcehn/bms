@@ -75,7 +75,6 @@ import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
@@ -139,9 +138,6 @@ public class BizProductPalletStorageController{
 	
 	@Resource
 	private IPriceContractService contractService;
-	
-	@Resource
-	private IFeesCalculateService calculateService;
 	
 	@Resource
 	private IFeesReceiveStorageService feesReceiveService;
@@ -721,7 +717,6 @@ public class BizProductPalletStorageController{
 				calcuVo.setBizTypeCode("STORAGE");
 				calcuVo.setSubjectId("wh_product_pallet_storage");
 				calcuVo.setObj(entity);
-				calcuVo = calculateService.calculate(calcuVo);
 				if(calcuVo.getSuccess()&& calcuVo.getPrice()!=null){
 					//仓储费用表
 					try {

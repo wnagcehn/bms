@@ -39,7 +39,6 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
@@ -61,7 +60,6 @@ public class BizInStockController extends BaseController{
 	@Autowired private IBizInStockService service;
 	@Resource  private IFeesReceiveStorageService feesReceiveStorageService;
 	@Resource  private IPriceContractService contractService;
-	@Resource private IFeesCalculateService calculateService;
 	@Resource private SequenceService sequenceService;
 	@Resource private IFileExportTaskService fileExportTaskService;
 	@Resource
@@ -203,7 +201,7 @@ public class BizInStockController extends BaseController{
 			calcuVo.setBizTypeCode("STORAGE");
 			calcuVo.setSubjectId(subjectID);
 			calcuVo.setObj(instock);
-			calcuVo = calculateService.calculate(calcuVo);
+			//calcuVo = calculateService.calculate(calcuVo);
 			if(calcuVo.getSuccess() && calcuVo.getPrice()!=null){
 				//仓储费用表
 				try {

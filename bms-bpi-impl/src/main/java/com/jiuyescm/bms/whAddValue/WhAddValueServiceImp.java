@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.common.sequence.repository.SequenceDao;
-import com.jiuyescm.bms.fees.INormalReqVoService;
+//import com.jiuyescm.bms.fees.INormalReqVoService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
 import com.jiuyescm.bms.whAddValue.service.IWhAddValueService;
@@ -38,8 +38,7 @@ public class WhAddValueServiceImp implements IWhAddValueService{
 	@Autowired 
 	private SequenceDao sequenceDao;
 	
-	@Resource
-	private INormalReqVoService  service;
+	//@Resource private INormalReqVoService  service;
 
 	private static final Logger logger = Logger.getLogger(WhAddValueServiceImp.class.getName());
 
@@ -127,7 +126,7 @@ public class WhAddValueServiceImp implements IWhAddValueService{
 	 * @param list
 	 */
 	public void calculate(List<BizAddFeeEntity> list){
-		List<BizAddFeeEntity> reList = service.getStorageExtraReqVo(list);
+		/*List<BizAddFeeEntity> reList = service.getStorageExtraReqVo(list);
     	 	
     	List<FeesReceiveStorageEntity> feeList = new  ArrayList<FeesReceiveStorageEntity>();
     	
@@ -150,7 +149,7 @@ public class WhAddValueServiceImp implements IWhAddValueService{
 			}
     	}
     	
-    	bizAddFeeRepository.updateList(reList);
+    	bizAddFeeRepository.updateList(reList);*/
 	}
 	
      public FeesReceiveStorageEntity init(BizAddFeeEntity entity){

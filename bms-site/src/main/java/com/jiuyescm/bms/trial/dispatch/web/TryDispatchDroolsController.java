@@ -11,11 +11,9 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.common.entity.CalculateVo;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
 import com.jiuyescm.bms.quotation.dispatch.service.IPriceDispatchService;
 import com.jiuyescm.bms.quotation.dispatch.service.IPriceDispatchTemplateService;
-import com.jiuyescm.bms.trial.storage.service.IStorageDroolsService;
 
 @Controller("tryDispatchDroolsController")
 public class TryDispatchDroolsController {
@@ -32,14 +30,9 @@ public class TryDispatchDroolsController {
 	@Resource
 	private IReceiveRuleService receiveRuleService;
 	
-	@Resource
-	private IStorageDroolsService orderService;
 	
 	@Resource
 	private IPriceContractService priceContractService;
-	
-	@Resource
-	private IFeesCalculateService feesCalculateService;
 	
 	@DataResolver
 	public Object tryOrderOperate(BizDispatchBillEntity data){
@@ -75,8 +68,8 @@ public class TryDispatchDroolsController {
 		calculateVo.setContractCode(data.getMobanId());
 		calculateVo.setObj(data);
 		
-		CalculateVo vo=feesCalculateService.calculate(calculateVo);
-				
+		//CalculateVo vo=feesCalculateService.calculate(calculateVo);
+		CalculateVo vo = new CalculateVo();
 		if(vo.getSuccess()){
 			if(vo.getPrice()!=null){
 				data.setCollectMoney(vo.getPrice().doubleValue());

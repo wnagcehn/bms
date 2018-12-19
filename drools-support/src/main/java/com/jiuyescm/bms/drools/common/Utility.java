@@ -1,4 +1,4 @@
-package com.jiuyescm.common.utils.drools;
+package com.jiuyescm.bms.drools.common;
 
 import org.apache.log4j.Logger;
 import org.drools.core.spi.KnowledgeHelper;

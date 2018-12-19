@@ -28,7 +28,7 @@ public class Test {
 
 	
     public static void test2() throws FileNotFoundException {
-        String path = "E:\\user\\desktop\\caojianwei\\Desktop\\excel\\1.xlsx";
+        String path = "E:\\user\\desktop\\caojianwei\\Desktop\\excel\\2.xlsx";
         File file = new File(path);
         FileInputStream inputStream = new FileInputStream(file);
         ExcelXlsxReader er;

@@ -1,19 +1,23 @@
-package com.jiuyescm.bms.calculate.base;
+package com.jiuyescm.bms.drools.impl;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.jiuyescm.bms.drools.IDroolsCalcuService;
+import com.jiuyescm.bms.drools.common.KnowledgeBaseUtil;
 import com.thoughtworks.xstream.core.util.Base64Encoder;
-import com.jiuyescm.common.utils.drools.KnowledgeBaseUtil;
 
 @Service("droolsCalcuServiceImpl")
 public class DroolsCalcuServiceImpl implements IDroolsCalcuService {
 
-	private static final Logger logger = Logger.getLogger(DroolsCalcuServiceImpl.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(DroolsCalcuServiceImpl.class.getName());
 	private static Map<String,KnowledgeBase> kbaseMap = new HashMap<String,KnowledgeBase>();
 	private static Map<String,String> keyValue = new HashMap<String,String>();
 	
@@ -36,6 +40,7 @@ public class DroolsCalcuServiceImpl implements IDroolsCalcuService {
 	               kSession.dispose();  
 		}
 	}
+	
 	
 	private KnowledgeBase initKBase(String ruleNo,String ruleMd5,String rule){
 		synchronized(this){
@@ -70,7 +75,7 @@ public class DroolsCalcuServiceImpl implements IDroolsCalcuService {
 			Base64Encoder base64en = new Base64Encoder();
 			return base64en.encode(md5.digest(str.getBytes("utf-8")));
 		} catch (Exception e) {
-			 logger.error(e);
+			 logger.error("drools exception {}",e);
 			return null;
 		}
 	}

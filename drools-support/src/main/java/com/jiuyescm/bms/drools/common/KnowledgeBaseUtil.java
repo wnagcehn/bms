@@ -1,4 +1,4 @@
-package com.jiuyescm.common.utils.drools;
+package com.jiuyescm.bms.drools.common;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;

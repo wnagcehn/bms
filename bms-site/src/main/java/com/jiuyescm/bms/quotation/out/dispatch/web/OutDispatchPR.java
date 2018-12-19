@@ -39,7 +39,7 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+//import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity;
 import com.jiuyescm.bms.chargerule.payrule.service.IPayRuleService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -103,8 +103,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 	@Resource
 	private IPayRuleService payRuleService;
 	
-	@Resource 
-	private IFeesCalcuService feesCalcuService;
+	//@Resource private IFeesCalcuService feesCalcuService;
 	
 	@Resource
 	private Lock lock;
@@ -790,7 +789,8 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 		reqVo.setRuleNo(ruleEntity.getQuotationNo());
 		reqVo.setRuleStr(ruleEntity.getRule());
 		
-		CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);				
+		//CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);	
+		CalcuResultVo vo=new CalcuResultVo();
 		if("succ".equals(vo.getSuccess())){
 			data.setCollectMoney(vo.getPrice().doubleValue());				
 		}	

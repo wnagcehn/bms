@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.calculate.base;
+package com.jiuyescm.bms.drools;
 
 public interface IDroolsCalcuService {
 	/**

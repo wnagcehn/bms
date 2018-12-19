@@ -54,7 +54,6 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
@@ -85,9 +84,6 @@ public class BizOutstockMasterController extends BaseController{
 	
 	@Resource
 	private IFeesReceiveStorageService feesReceiveStorageService;
-	
-	@Resource
-	private IFeesCalculateService calculateService;
 	
 	@Resource
 	private IFeesReceiveStorageService feesReceiveService;
@@ -280,7 +276,6 @@ public class BizOutstockMasterController extends BaseController{
 		     calcuVo.setObj(entity);//业务数据
 		     calcuVo.setContractCode(contractEntity.get(0).getContractCode());//合同编号
 		     calcuVo.setSubjectId(subjectID);//费用科目
-		     calcuVo = calculateService.calculate(calcuVo);
 		     
 		     if(calcuVo.getSuccess() && calcuVo.getPrice()!=null)
 		     {

@@ -27,8 +27,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<import resource="classpath:spring/spring-config.xml" />
 	<import resource="classpath:spring/spring-dubbo.xml" />
-	<import resource="classpath:spring/spring-datasource.xml" />
-	<import resource="classpath*:spring-redis.xml" /> 
+	<import resource="classpath:spring/spring-datasource.xml" /> 
 
 	<bean id="threadPoolTaskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
