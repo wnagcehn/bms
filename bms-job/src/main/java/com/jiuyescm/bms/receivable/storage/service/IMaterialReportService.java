@@ -3,8 +3,6 @@ package com.jiuyescm.bms.receivable.storage.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
-
 import com.jiuyescm.bms.report.month.entity.BmsMaterialReportEntity;
 
 public interface IMaterialReportService {

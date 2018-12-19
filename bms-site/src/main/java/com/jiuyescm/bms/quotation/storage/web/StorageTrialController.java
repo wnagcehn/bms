@@ -20,7 +20,7 @@ import com.jiuyescm.bms.biz.storage.entity.BizPackStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+//import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
@@ -37,7 +37,7 @@ public class StorageTrialController {
 	
 	@Resource private IReceiveRuleService receiveRuleService;
 	
-	@Resource private IFeesCalcuService feesCalcuService;
+	//@Resource private IFeesCalcuService feesCalcuService;
 	
 	@Resource
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
@@ -130,7 +130,8 @@ public class StorageTrialController {
 		reqVo.setRuleNo(ruleEntity.getQuotationNo());
 		reqVo.setRuleStr(ruleEntity.getRule());
 		
-		CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);
+		//CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);
+		CalcuResultVo vo=new CalcuResultVo();
 		if("succ".equals(vo.getSuccess())){
 			result.setCode("SUCCESS");
 			result.setData(vo.getPrice());
@@ -186,8 +187,8 @@ public class StorageTrialController {
 		reqVo.setRuleNo(ruleEntity.getQuotationNo());
 		reqVo.setRuleStr(ruleEntity.getRule());
 		
-		CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);		
-		
+		//CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);		
+		CalcuResultVo vo=new CalcuResultVo();
 		if("succ".equals(vo.getSuccess())){
 			result.setCode("SUCCESS");
 			result.setData(vo.getPrice());
