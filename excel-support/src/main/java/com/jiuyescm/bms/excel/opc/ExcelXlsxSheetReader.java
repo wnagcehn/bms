@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -122,9 +123,15 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		while (columnIterator.hasNext()) {
 			Map.Entry<String, String> entry = columnIterator.next();
 			String name = entry.getValue();//列名
+			if(StringUtils.isNotBlank(name)){
+				name=name.trim();
+				if(name.contains("\n")){
+					name=name.replace("\n", "");
+				}
+			}
 			String titleA = entry.getKey();//列的索引
 			if(name.length()>0){
-				headAMap.put(titleA, entry.getValue());
+				headAMap.put(titleA, name);
 			}
 		}
 		
