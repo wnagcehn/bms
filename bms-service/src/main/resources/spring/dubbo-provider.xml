@@ -21,8 +21,6 @@
     <dubbo:provider protocol="dubbo" port="20825" version="1.0.0" timeout="1200000" 
 		retries="0" cluster="failfast" accesslog="true" /> 
     
-    <dubbo:service interface="com.jiuyescm.bms.calculate.base.IFeesCalcuService" ref="feesCalcuService" />
-    
     <dubbo:service interface="com.jiuyescm.bms.systemCode.service.api.ISystemCodeService" ref="sysValueAddService" />
     <dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService" ref="billCustomerInfoService" />
     <dubbo:service interface="com.jiuyescm.bms.bill.check.service.IBillCheckFollowService" ref="billCheckFollowService" />
