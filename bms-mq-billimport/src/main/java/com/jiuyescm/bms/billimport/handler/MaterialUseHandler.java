@@ -205,7 +205,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		long start = System.currentTimeMillis();// 系统开始时间
 		if(null != list && list.size()>0){
 			billFeesReceiveStorageTempService.insertBatchTemp(list);
-			logger.info(billNo+"保存耗材使用费到仓储临时表耗时"+(System.currentTimeMillis()-start));
+			logger.info("账单【{}】 保存行数【{}】耗材使用费到仓储临时表耗时【{}】",billNo,list.size(),(System.currentTimeMillis()-start));
 		}
 	}
 

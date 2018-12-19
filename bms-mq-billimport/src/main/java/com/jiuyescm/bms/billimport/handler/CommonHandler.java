@@ -68,6 +68,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	protected String customerId;
 	//进度
 	//protected Integer taskRate = 30;
+	
+	private long _start = System.currentTimeMillis();
 
 	
 	@Override
@@ -131,11 +133,11 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	}
 	
 	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{
+		_start = System.currentTimeMillis();
 		xlsxReader.readRow(sheet.getSheetId(), new SheetReadCallBack() {
 			@Override
 			public void read(DataRow dr) {
 				try {
-					long start=System.currentTimeMillis();
 					List<T> entityList = transRowToObj(dr);
 					
 					for( int i = 0 ; i < entityList.size() ; i++){
@@ -143,7 +145,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 					}
 
 					if(list.size()>=batchNum){
-						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
 				} catch (Exception e) {
@@ -202,7 +203,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 */
 	public void saveTo(){
 		if(errMap.size()==0){
+			logger.info("读取【{}】行验证耗时{}",list.size(),(System.currentTimeMillis()-_start));
 			save();
+			_start =  System.currentTimeMillis();
 		}else{
 			logger.info("错误信息: {}", errMap);
 			logger.info("errMap.size: {}", errMap.size());
