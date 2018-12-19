@@ -599,6 +599,7 @@ public class BillReceiveMasterController {
 		
 		//原始地址放入map中
 		parameter.put("fullPath", fullPath);
+		parameter.put("fileName", fileName);
 		
 		setProgress(4);
 		String username = JAppContext.currentUserName();

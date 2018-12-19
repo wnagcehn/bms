@@ -113,6 +113,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 				billReceiveMasterVo.setBillNo(billNo);
 				billReceiveMasterVo.setResultFilePath(resultPath);
+				String file=param.get("fileName").toString();
+				file=file.substring(0, file.indexOf('.'))+"(异常)"+file.substring(file.indexOf('.'));
+				billReceiveMasterVo.setResultFileName(file);
 				billReceiveMasterService.update(billReceiveMasterVo);
 				param.put("result", "fail");
 				param.put("detail", sheetName+"校验不通过");
@@ -138,8 +141,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
-					if(list.size()==batchNum){
-						logger.info(sheetName+"读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
+
+					if(list.size()>=batchNum){
+						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
 				} catch (Exception e) {
