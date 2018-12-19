@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
-import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
@@ -30,10 +28,9 @@ import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
 import com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity;
-import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceExtraQuotationRepository;
-import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
+//import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
@@ -57,7 +54,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IPriceContractInfoService jobPriceContractInfoService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
-	@Autowired private IPriceGeneralQuotationRepository priceGeneralQuotationRepository;
+	//@Autowired private IPriceGeneralQuotationRepository priceGeneralQuotationRepository;
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
@@ -113,7 +110,6 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		fee.setUnitPrice(entity.getUnitPrice());
 		fee.setSubjectCode("wh_value_add_subject");
 		fee.setOtherSubjectCode(entity.getFeesType());
-		fee.setOtherSubjectCode(entity.getFeesType());
 		fee.setCustomerId(entity.getCustomerid());
 		fee.setCustomerName(entity.getCustomerName());
 		fee.setWarehouseCode(entity.getWarehouseCode());
@@ -136,7 +132,8 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	
 	@Override
 	protected String[] initSubjects() {
-		Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_add_fee");
+		
+		/*Map<String, String> maps = bmsGroupSubjectService.getSubject("job_subject_add_fee");
 		if (maps.size() == 0) {
 			String[] str = {"wh_product_refreeze", "wh_overtime_instock", "wh_full_check",
 							"wh_paste_label", "wh_fruit_devanning", "wh_prepackaging",
@@ -151,7 +148,8 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 				strs[i] = val;
 				i++;
 			}
-		}
+		}*/
+		String[] strs = {"wh_value_add_subject"};
 		return strs;
 	}
 
@@ -224,7 +222,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	            //费用 = 商品数量*模板单价
 				Map<String, Object> param = new HashMap<>();
 				param.put("templateId", generalEntity.getId().toString());
-				param.put("subjectId", SubjectId);
+				param.put("subjectId", entity.getFeesType());
 				List<PriceExtraQuotationEntity> extraList= priceExtraQuotationRepository.queryPriceByParam(param);
 				if (extraList == null || extraList.size() <= 0) {
 					entity.setIsCalculated(CalculateState.Other.getCode());

@@ -22,7 +22,6 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.system.BaseController;
@@ -38,7 +37,6 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.quotation.contract.service.IPriceContractService;
@@ -59,7 +57,6 @@ public class BizInStockHandWorkController extends BaseController{
 	@Autowired private IBizInStockHandWorkService service;
 	@Resource  private IFeesReceiveStorageService feesReceiveStorageService;
 	@Resource  private IPriceContractService contractService;
-	@Resource private IFeesCalculateService calculateService;
 	@Resource private SequenceService sequenceService;
 	@Resource private IFileExportTaskService fileExportTaskService;
 	@Resource

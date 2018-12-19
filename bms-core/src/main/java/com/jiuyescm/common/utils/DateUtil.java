@@ -76,6 +76,30 @@ public class DateUtil {
 	}
 	
 	/**
+	 * 获取当前年月日
+	 * @param format yyyy-MM-dd,yyyyMMdd,yyyy/MM/dd
+	 * @return
+	 */
+	public static String getCurrentDate(String format){
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		Date date = getCurrentDateTime();
+        return sdf.format(date);
+	}
+	
+	/**
+	 * 对当前年月日进行 加天数/减天数
+	 * @param format
+	 * @param days
+	 * @return
+	 */
+	public static String getCurrentDateForAddDay(String format,int days){
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		Calendar c = Calendar.getInstance();  //得到当前日期和时间
+		c.add(Calendar.DAY_OF_MONTH, days);
+        return sdf.format(c.getTime());
+	}
+	
+	/**
 	 * @Title: getCurrentDateTime
 	 * @Description: 
 	 * @param minute
@@ -379,6 +403,28 @@ public class DateUtil {
 		cl.set(Calendar.DAY_OF_MONTH, firstDay);
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMART_YYYY_MM_DD);
 		return sdf.format(cl.getTime()); 
+	}
+	
+	/**
+	 * 获取每月的1号
+	 * @param quantity 1-上个月1号  0-当月1号  -1-下月1号
+	 * @param format
+	 * @return
+	 */
+	public static String getFirstDayOfMonth(int quantity,String format) {
+		FastDateFormat fdf = FastDateFormat.getInstance(format);
+		Calendar cal = Calendar.getInstance();
+		
+		int month = 1;
+		if (0 == quantity) {
+			month = cal.get(Calendar.MONTH);
+		}else {
+			month = cal.get(Calendar.MONTH) - quantity;
+		}
+		
+		cal.set(cal.get(Calendar.YEAR), month, 1);
+		
+		return fdf.format(cal.getTime());
 	}
 	
 	/**

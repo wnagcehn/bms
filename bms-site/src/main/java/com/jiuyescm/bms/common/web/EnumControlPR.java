@@ -1023,7 +1023,7 @@ public class EnumControlPR {
 	public Map<String, String> getReportMonthForYear(){		
 		Map<String, String> map =new LinkedHashMap<String,String>();
 		int endYear = DateUtil.getCurrentYYYY();
-		for(int i=5;i>0;i--){
+		for(int i=5;i>=0;i--){
 			map.put(String.valueOf(endYear-i), String.valueOf(endYear-i));
 		}
 		return map;

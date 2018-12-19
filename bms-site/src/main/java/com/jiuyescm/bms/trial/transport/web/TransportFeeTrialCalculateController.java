@@ -10,12 +10,10 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
 import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
 import com.jiuyescm.bms.common.entity.CalculateVo;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 
 @Controller("transportFeeTrialCalculator")
 public class TransportFeeTrialCalculateController {
 
-	@Resource private IFeesCalculateService feesCalculateServiceImpl;
 	
 	@DataResolver
 	public  @ResponseBody Object tryCalculateTransportFee(BizGanxianWayBillEntity data){
@@ -34,7 +32,7 @@ public class TransportFeeTrialCalculateController {
 		}
 		calculateVo.setObj(data);
 		
-		calculateVo = feesCalculateServiceImpl.calculate(calculateVo);
+		//calculateVo = feesCalculateServiceImpl.calculate(calculateVo);
 		if(calculateVo != null){
 			data.setCalResult(calculateVo.getPrice());
 		}

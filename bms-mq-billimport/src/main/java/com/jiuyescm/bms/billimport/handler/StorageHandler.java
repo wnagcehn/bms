@@ -33,10 +33,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 	@Override
 	public List<BillFeesReceiveStorageTempEntity> transRowToObj(DataRow dr)
 			throws Exception {
-		
+		List<BillFeesReceiveStorageTempEntity> lists = new ArrayList<BillFeesReceiveStorageTempEntity>();
+
 		//异常信息 
 		String errorMessage="";
-		List<BillFeesReceiveStorageTempEntity> lists = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
 		DataColumn createTime=dr.getColumn("日期");
 		if(createTime!=null &&StringUtils.isBlank(createTime.getColValue())){
@@ -97,8 +97,15 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "冷冻费小计/元":
+					
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity1){
+						errorMessage+="冷冻费有金额没有板数";
+					}
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity1) {
 						entity1.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity1){
+						entity1.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "冷藏":
@@ -121,8 +128,17 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "冷藏费小计/元":
+					
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity2){
+						errorMessage+="冷藏费有金额没有板数";
+					}
+					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity2) {
 						entity2.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity2){
+						entity2.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "恒温":
@@ -145,8 +161,17 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "恒温费小计/元":
+				
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity3){
+						errorMessage+="恒温费有金额没有板数";
+					}
+					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity3) {
 						entity3.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity3){
+						entity3.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "常温":
@@ -168,9 +193,17 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4.setCustomerName(customerName);
 					}
 					break;
-				case "常温费小计/元":
+				case "常温费小计/元":					
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity4){
+						errorMessage+="常温费有金额没有板数";
+					}
+					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity4) {
 						entity4.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity4){
+						entity4.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "常温包材":
@@ -193,8 +226,16 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "常温包材费小计/元":
+					
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity5){
+						errorMessage+="常温包材费有金额没有板数";
+					}
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity5) {
 						entity5.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity5){
+						entity5.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "冷冻包材":
@@ -218,8 +259,17 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "冷冻包材费小计/元":
+					
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity6){
+						errorMessage+="冷冻包材费有金额没有板数";
+					}
+					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity6) {
 						entity6.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity6){
+						entity6.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "库存件数":
@@ -242,8 +292,17 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "存储费按件小计/元":
+					
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity7){
+						errorMessage+="存储费按件有金额没有库存件数";
+					}
+					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity7) {
 						entity7.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity7){
+						entity7.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "入库板数":
@@ -266,8 +325,16 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					break;
 				case "处置费小计/元":
+					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity8){
+						errorMessage+="处置费有金额没有入库板数";
+					}
+					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null != entity8) {
 						entity8.setAmount(new BigDecimal(dc.getColValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+					
+					if (StringUtils.isBlank(dc.getColValue()) && null !=entity8){
+						entity8.setAmount(new BigDecimal(0d));
 					}
 					break;
 				case "出库板数":
@@ -293,7 +360,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 				}
 			
 			} catch (Exception e) {
-				System.out.println("行【"+dr.getRowNo()+"】，列【"+dc.getColName()+"】格式不正确");
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
@@ -345,6 +411,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		}
 		
 		return lists;
+
 	}
 
 	@Override

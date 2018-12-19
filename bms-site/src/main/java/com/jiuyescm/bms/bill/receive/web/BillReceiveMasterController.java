@@ -2,6 +2,7 @@ package com.jiuyescm.bms.bill.receive.web;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,16 +40,22 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterRecordVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
+import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
-import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
@@ -91,6 +98,15 @@ public class BillReceiveMasterController {
 	private JmsTemplate jmsQueueTemplate;
 	@Autowired
 	private IUserService userService;
+	@Resource
+	private IBillFeesReceiveStorageTempService feesReceiveStorageTempService;
+	@Resource
+	private IBillFeesReceiveDispatchTempService feesReceiveDispatchTempService;
+	@Resource
+	private IBillFeesReceiveTransportTempService feesReceiveTransportTempService;
+	@Resource
+	private IBillFeesReceiveAirTempService feesReceiveAirTempService;
+	
 	
 	String sessionId=JAppContext.currentUserID()+"_import_Receive_Bill";
 	final String nameSpace="com.jiuyescm.bms.bill.receive.web.BillReceiveMasterController";
@@ -131,6 +147,22 @@ public class BillReceiveMasterController {
 					totalImportCost = totalImportCost + entity.getAmount();
 					totalAdjustCost = totalAdjustCost + entity.getAdjustAmount();
 					totalCost = totalCost + entity.getTotalAmount();
+					if(entity.getExpectMoney()!=null){
+						//获取所有的理赔金额
+						Double abnormalMoney=billReceiveMasterService.getAbnormalMoney(entity.getBillNo());
+						BigDecimal abnormal=new BigDecimal(abnormalMoney);
+						//差异率 = (预估金额-( 总金额 - 理赔金额 ) ) / (总金额 - 理赔金额)
+						//总金额
+						BigDecimal amount=new BigDecimal(entity.getAmount());
+						
+						BigDecimal cha=amount.subtract(abnormal);
+						if(cha.compareTo(BigDecimal.ZERO)!=0){
+							BigDecimal rate=(entity.getExpectMoney().subtract(amount.subtract(abnormal)).divide(amount.subtract(abnormal),2, RoundingMode.HALF_UP));
+							//差异率
+							entity.setDifferentRate(rate);
+						}		
+					}
+					
 				}
 				if (pageInfo.getList().size() > 0 && null != pageInfo.getList().get(0)) {
 					pageInfo.getList().get(0).setTotalImportCost(totalImportCost);
@@ -171,6 +203,63 @@ public class BillReceiveMasterController {
 				throw new BizException(e.toString());
 			}
 		}
+	}
+
+	/**
+	 * 保存预计金额
+	 * @param entity
+	 * @return
+	 */
+	@DataResolver
+	public String updateMaster(BillReceiveMasterVo entity) {
+		String result="";
+		entity.setLastModifier(JAppContext.currentUserName());
+		entity.setLastModifyTime(JAppContext.currentTimestamp());
+		billReceiveMasterService.update(entity);
+		return result;
+	}
+	
+	/**
+	 * 保存预计金额
+	 * @param entity
+	 * @return
+	 */
+	@DataResolver
+	public String saveExpect(BillReceiveMasterVo entity) {
+		String billNo=entity.getBillNo();
+		String result="";
+		BillReceiveExpectVo billExpect=new BillReceiveExpectVo();
+		billExpect.setBillNo(billNo);
+		billExpect.setBillName(entity.getBillName());
+		billExpect.setCreateMonth(entity.getCreateMonth());
+		//仓储费用
+		Double storageMoney=feesReceiveStorageTempService.getImportStorageAmount(billNo);
+		//配送费用
+		Double dispatchMoney=feesReceiveDispatchTempService.getImportDispatchAmount(billNo);
+		//干线费用
+		Double transportMoney=feesReceiveTransportTempService.getImportTransportAmount(billNo);
+		//航空费用
+		Double airMoney=feesReceiveAirTempService.getImportAirAmount(billNo);
+		
+		Double totalMoney=storageMoney+dispatchMoney+transportMoney+airMoney;
+		billExpect.setExpectStorageMoney(new BigDecimal(storageMoney));
+		billExpect.setExpectDispatchMoney(new BigDecimal(dispatchMoney));
+		billExpect.setExpectTransportMoney(new BigDecimal(transportMoney));
+		billExpect.setExpectAirMoney(new BigDecimal(airMoney));
+		billExpect.setExpectMoney(new BigDecimal(totalMoney));
+		billExpect.setCreator(JAppContext.currentUserName());
+		billExpect.setCreateTime(JAppContext.currentTimestamp());
+		billExpect.setDelFlag("0");
+		//更新预估金额
+		int update=billReceiveMasterService.saveExpect(billExpect);
+		if(update>0){
+			//已确认
+			entity.setExpectStatus("1");
+			entity.setLastModifier(JAppContext.currentUserName());
+			entity.setLastModifyTime(JAppContext.currentTimestamp());
+			billReceiveMasterService.update(entity);
+		}
+		return result;
 	}
 
 	
@@ -284,10 +373,12 @@ public class BillReceiveMasterController {
 		
 		//重复性校验
 		Map<String, Object> param = new HashMap<String, Object>();
-		//param.put("delFlag", "0");
+		param.put("createMonth", parameter.get("createMonth"));
+		param.put("billName", parameter.get("billName"));
+
 		List<BillReceiveMasterVo> checkList = billReceiveMasterService.query(param);
 		for (BillReceiveMasterVo billReceiveMasterEntity : checkList) {
-			if ((parameter.get("createMonth").toString()+parameter.get("billName").toString()+"SUCCESS").equals(billReceiveMasterEntity.getCreateMonth().toString()+billReceiveMasterEntity.getBillName()+billReceiveMasterEntity.getTaskStatus())) {
+			if (("SUCCESS").equals(billReceiveMasterEntity.getTaskStatus())) {
 				setProgress(6);
 				Map<String, Object> map = Maps.newHashMap();
 				ErrorMessageVo errorVo = new ErrorMessageVo();
@@ -296,7 +387,33 @@ public class BillReceiveMasterController {
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
 			}
+			if (("WAIT").equals(billReceiveMasterEntity.getTaskStatus()) || ("PROCESS").equals(billReceiveMasterEntity.getTaskStatus())) {
+				setProgress(6);
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("同一月份存在正在处理中的账单，请勿重复提交！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
 		}
+		
+		//账单跟踪判断是否校验
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("createMonth", parameter.get("createMonth"));
+		condition.put("invoiceName", parameter.get("invoiceName"));
+		condition.put("billName", parameter.get("billName"));
+		BillCheckInfoVo billVo=billCheckInfoService.queryBillCheck(condition);
+		if (billVo!=null) {
+			setProgress(6);
+			Map<String, Object> map = Maps.newHashMap();
+			ErrorMessageVo errorVo = new ErrorMessageVo();
+			errorVo.setMsg("账单跟踪已存在，无法继续导入！");
+			infoList.add(errorVo);
+			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			return map;
+		}
+		
 		
 		String userId=ContextHolder.getLoginUserName();
 		String lockString=Tools.getMd5(userId + "BMS_QUE_RECEIVE_BILL_IMPORT");
@@ -469,10 +586,10 @@ public class BillReceiveMasterController {
 		}
 		// 保存导入文件到fastDFS，获取文件路径
 		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
-		StorePath resultStorePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
+		//StorePath resultStorePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
 		String fullPath = storePath.getFullPath();
-		String resultFullPath = resultStorePath.getFullPath();
-		if (StringUtils.isBlank(fullPath) || StringUtils.isBlank(resultFullPath)) {
+		//String resultFullPath = resultStorePath.getFullPath();
+		if (StringUtils.isBlank(fullPath)) {
 			setProgress(2);
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 500);
 			infoList.add(new ErrorMessageVo(1, "Excel 导入数据上传文件系统失败，请稍后重试"));
@@ -482,6 +599,7 @@ public class BillReceiveMasterController {
 		
 		//原始地址放入map中
 		parameter.put("fullPath", fullPath);
+		parameter.put("fileName", fileName);
 		
 		setProgress(4);
 		String username = JAppContext.currentUserName();
@@ -492,7 +610,7 @@ public class BillReceiveMasterController {
 		parameter.put("createTime", currentTime);
 		
 		// 生成任务，写入主表
-		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		String billNo =sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "B", "0000000000");
 		parameter.put("billNo", billNo);
 		//组装数据
 		try {
@@ -512,15 +630,16 @@ public class BillReceiveMasterController {
 			taskEntity.setInvoiceName(parameter.get("invoiceName").toString());
 			taskEntity.setInvoiceId(parameter.get("invoiceId").toString());
 			taskEntity.setTaskRate(0);
-			taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
+			taskEntity.setTaskStatus(BmsEnums.taskStatus.WAIT.getCode());
 			taskEntity.setCreator(JAppContext.currentUserName());
 			taskEntity.setCreatorId(JAppContext.currentUserID());
 			taskEntity.setCreateTime(JAppContext.currentTimestamp());
 			taskEntity.setOriginFileName(fileName);
 			taskEntity.setOriginFilePath(fullPath);
-			taskEntity.setResultFileName(fileName);
-			taskEntity.setResultFilePath(resultFullPath);
+			//taskEntity.setResultFileName(fileName);
+			//taskEntity.setResultFilePath(resultFullPath);
 			taskEntity.setDelFlag("0");
+			taskEntity.setIsCalculated("0");
 			int saveNum = billReceiveMasterService.save(taskEntity);
 			if (saveNum <= 0) {
 				setProgress(6);
@@ -783,5 +902,21 @@ public class BillReceiveMasterController {
 		return true;
 	}
 
+	@DataProvider
+	public Map<String,String> getStatus(){
+		Map<String,String> map=Maps.newLinkedHashMap();
+		map.put("", "全部");
+		map.put("0", "未确认");
+		map.put("1", "已确认");
+		return map;
+	}
 	
+	@DataProvider
+	public Map<String,String> getRate(){
+		Map<String,String> map=Maps.newLinkedHashMap();
+		map.put("", "全部");
+		map.put("0", "小于5%");
+		map.put("1", "大于等于5%");
+		return map;
+	}
 }

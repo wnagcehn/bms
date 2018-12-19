@@ -62,6 +62,13 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
     public void delete(Long id) {
         delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.delete", id);
     }
+    
+	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.delete", billNo);
+		return d;
+	}
 
 	@Override
 	public int insertBatch(List<BillFeesReceiveDispatchTempEntity> list)throws Exception {
@@ -84,6 +91,18 @@ public class BillFeesReceiveDispatchTempRepositoryImpl extends MyBatisDao<BillFe
 		 Map<String,String> map=Maps.newHashMap();
 		 map.put("billNo", billNo);
 		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.saveDataFromTemp", map);
+	}
+
+	@Override
+	public Double getImportDispatchAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveDispatchTempMapper.getImportDispatchAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+		
 	}
 	
 }

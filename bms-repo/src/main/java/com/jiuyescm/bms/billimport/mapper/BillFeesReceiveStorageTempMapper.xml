@@ -276,9 +276,9 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
     </update>
 
 	<!-- 删除 -->
-    <delete id="delete" parameterType="java.lang.Long">
-        delete from bill_fees_receive_storage_temp 
-        where id = #{id}
+    <delete id="delete" parameterType="String">
+        delete from bill_fees_receive_storage
+        where bill_no = #{billNo}
     </delete>
     
     <!-- 批量删除 -->
@@ -340,12 +340,18 @@ bill_no, subject_code, order_no, waybill_no, customer_id, customer_name, warehou
 	 
 	 <select id="getImportTotalAmount" parameterType="String" resultType="java.lang.Double">
 	    select SUM(IFNULL(a.amount,0)) from (
-		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
+		select SUM(IFNULL(amount,0)-IFNULL(derate_amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo}
 		UNION ALL
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no=#{billNo}
 		UNION ALL
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_transport where bill_no=#{billNo}
 		UNION ALL
-		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo}) a;
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo}) a
 	 </select>
+	 
+	  <select id="getImportStorageAmount" parameterType="String" resultType="java.lang.Double">
+	  	select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no=#{billNo}
+	  </select>
+	  
+	 
 </mapper>

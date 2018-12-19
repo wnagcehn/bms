@@ -40,7 +40,6 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.chargerule.receiverule.service.IReceiveRuleService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -52,7 +51,6 @@ import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.common.web.CommonComparePR;
 import com.jiuyescm.bms.common.web.SelectFromTablePR;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.pub.IPubRecordLogService;
 import com.jiuyescm.bms.pub.PubRecordLogEntity;
 import com.jiuyescm.bms.quotation.dispatch.entity.PriceDispatchTemplateEntity;
@@ -110,12 +108,6 @@ public class DispatchPR extends CommonComparePR<PriceMainDispatchEntity>{
 		
 	@Resource
 	private Lock lock;
-	
-	@Resource
-	private IFeesCalculateService feesCalculateService;
-	
-	@Resource private IFeesCalcuService feesCalcuService;
-	
 	@Resource private IReceiveRuleService receiveRuleService;
 	
 	private static final Logger logger = Logger.getLogger(DispatchPR.class);
@@ -837,7 +829,8 @@ public class DispatchPR extends CommonComparePR<PriceMainDispatchEntity>{
 		reqVo.setRuleNo(ruleEntity.getQuotationNo());
 		reqVo.setRuleStr(ruleEntity.getRule());
 		
-		CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);				
+		//CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);	
+		CalcuResultVo vo = new CalcuResultVo();
 		if("succ".equals(vo.getSuccess())){
 			data.setCollectMoney(vo.getPrice().doubleValue());				
 		}	

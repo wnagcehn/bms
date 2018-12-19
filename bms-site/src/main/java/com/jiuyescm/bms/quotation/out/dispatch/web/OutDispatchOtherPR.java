@@ -31,7 +31,7 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+//import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity;
 import com.jiuyescm.bms.chargerule.payrule.service.IPayRuleService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -80,8 +80,7 @@ public class OutDispatchOtherPR {
 	@Resource
 	private IPayRuleService payRuleService;
 	
-	@Resource 
-	private IFeesCalcuService feesCalcuService;
+	//@Resource private IFeesCalcuService feesCalcuService;
 	@Resource
 	private IPubRecordLogService pubRecordLogService;
 	
@@ -345,7 +344,8 @@ public class OutDispatchOtherPR {
 		reqVo.setRuleNo(ruleEntity.getQuotationNo());
 		reqVo.setRuleStr(ruleEntity.getRule());
 		
-		CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);				
+		//CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);	
+		CalcuResultVo vo=new CalcuResultVo();
 		if("succ".equals(vo.getSuccess())){
 			data.setAmount(vo.getPrice().doubleValue());				
 		}	

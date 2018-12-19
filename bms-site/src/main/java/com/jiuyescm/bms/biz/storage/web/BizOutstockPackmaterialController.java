@@ -64,7 +64,6 @@ import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.correct.service.IBmsProductsMaterialService;
-import com.jiuyescm.bms.fees.calculate.service.IFeesCalculateService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
@@ -99,8 +98,6 @@ public class BizOutstockPackmaterialController {
 	private IFeesReceiveStorageService feesReceiveStorageService;
 	@Resource
 	private IPriceContractService contractService;
-	@Resource
-	private IFeesCalculateService calculateService;
 	@Autowired 
 	private ICustomerService customerService;
 	@Autowired 
@@ -212,7 +209,6 @@ public class BizOutstockPackmaterialController {
 			calcuVo.setSubjectId("wh_material_use");
 			calcuVo.setContractCode(contractEntity.get(0).getContractCode());
 			calcuVo.setObj(entity);
-			calcuVo = calculateService.calculate(calcuVo);
 			if(calcuVo.getSuccess() && calcuVo.getPrice()!=null){
 				
 				try {

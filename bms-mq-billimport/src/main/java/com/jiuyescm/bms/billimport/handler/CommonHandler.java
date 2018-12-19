@@ -67,7 +67,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	//商家id
 	protected String customerId;
 	//进度
-	protected Integer taskRate = 30;
+	//protected Integer taskRate = 30;
 
 	
 	@Override
@@ -86,14 +86,24 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				sheetName = "仓储";
 			}
 
-			if(sheetName.equals("仓储")){
-				sheetName = sheet.getSheetName();
-				readExcel(xlsxReader,sheet,3,5);
-			}else {
-				readExcel(xlsxReader,sheet,1,2);
+			try {
+				if(sheetName.equals("仓储")){
+					sheetName = sheet.getSheetName();
+					readExcel(xlsxReader,sheet,3,5);
+				}else {
+					readExcel(xlsxReader,sheet,1,2);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error("sheet解析异常：", e);
+				param.put("result", "fail");
+				param.put("detail","解析【"+sheetName+"】异常-"+e.getMessage());
+				return;
 			}
+			
 			logger.info(billNo+sheet+"读取完成");
-			taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
+			int taskRate = (int) (30+((90-30)/xlsxReader.getSheets().size())*(sheet.getSheetId()));
+			//taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
 			updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	
 			repeatMap.clear();
 			//Excel校验未通过
@@ -103,6 +113,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 				billReceiveMasterVo.setBillNo(billNo);
 				billReceiveMasterVo.setResultFilePath(resultPath);
+				String file=param.get("fileName").toString();
+				file=file.substring(0, file.indexOf('.'))+"(异常)"+file.substring(file.indexOf('.'));
+				billReceiveMasterVo.setResultFileName(file);
 				billReceiveMasterService.update(billReceiveMasterVo);
 				param.put("result", "fail");
 				param.put("detail", sheetName+"校验不通过");
@@ -122,11 +135,15 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			@Override
 			public void read(DataRow dr) {
 				try {
+					long start=System.currentTimeMillis();
 					List<T> entityList = transRowToObj(dr);
+					
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
-					if(list.size()==batchNum){
+
+					if(list.size()>=batchNum){
+						logger.info("读取【{}】行验证耗时{}",batchNum,(System.currentTimeMillis()-start));
 						saveTo();
 					}
 				} catch (Exception e) {
@@ -149,7 +166,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try{
 					String ret = validate(columns);
 					if("SUCC".equals(ret)){
-						logger.info("表头校验通过");
+						logger.info("表头行：{}",columns);
 					}
 					else{
 						throw new BizException("title_error",ret);
@@ -158,6 +175,11 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				catch(Exception ex){
 					throw new BizException("title_error","excel处理异常："+ex.getMessage());
 				}
+			}
+
+			@Override
+			public void error(Exception ex) {
+				throw new BizException("read_error","excel读取异常："+ex.getMessage());
 			}
 			
 		},titleRowNo,contentRowNo);
@@ -179,11 +201,13 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 * @throws Exception
 	 */
 	public void saveTo(){
-		logger.info("错误信息: {}", errMap);
-		logger.info("errMap.size: {}", errMap.size());
 		if(errMap.size()==0){
 			save();
+		}else{
+			logger.info("错误信息: {}", errMap);
+			logger.info("errMap.size: {}", errMap.size());
 		}
+		
 		list.clear();
 	}
 	
@@ -226,7 +250,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 	    String resultFullPath = resultStorePath.getFullPath();
-	    System.out.println(resultFullPath);
+	   // System.out.println(resultFullPath);
 	    
 	    errMap.clear();
 	    return resultFullPath;

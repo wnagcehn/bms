@@ -215,7 +215,7 @@ public class BuinessDataExportController extends BaseController {
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM");
 			String path = getPath();
 			String filePath = path + FileConstant.SEPARATOR + param.get("customerName").toString() + "-"
-					+ sdf.format(startDate) + "-预账单" + FileConstant.SUFFIX_XLSX;
+					+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
 			FileExportTaskEntity entity = new FileExportTaskEntity();
 
 			entity.setTaskName(param.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
@@ -1900,7 +1900,7 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("subjectCode",
 					entity.getOtherSubjectCode() == null ? "" : dictcodeMap.get(entity.getOtherSubjectCode()));
 			dataItem.put("serviceContent", entity.getServiceContent());
-			dataItem.put("quality", entity.getQuantity());
+			dataItem.put("quality", entity.getExactQuantity());
 			dataItem.put("unit", entity.getUnit());
 			dataItem.put("unitPrice", entity.getUnitPrice());
 			if (null != entity.getCost()) {
@@ -2022,11 +2022,11 @@ public class BuinessDataExportController extends BaseController {
 		itemMap.put("dataKey", "productAmountJ2c");
 		headInfoList.add(itemMap);
 
-		itemMap = new HashMap<String, Object>();
-		itemMap.put("title", "赔付运费");
-		itemMap.put("columnWidth", 25);
-		itemMap.put("dataKey", "deliveryCost");
-		headInfoList.add(itemMap);
+//		itemMap = new HashMap<String, Object>();
+//		itemMap.put("title", "赔付运费");
+//		itemMap.put("columnWidth", 25);
+//		itemMap.put("dataKey", "deliveryCost");
+//		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "是否免运费");
@@ -2063,15 +2063,19 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("expressnum", entity.getExpressnum());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("dutyType", entity.getDutyType());
-			dataItem.put("payType", entity.getPayType());
+			dataItem.put("dutyType", entity.getReason());
+			dataItem.put("payType", entity.getReasonDetail());
 			double productAmount=entity.getProductAmountJ2c()==null?0d:entity.getProductAmountJ2c();
 			t_productAmount+=productAmount;
 			dataItem.put("productAmountJ2c", productAmount);
 			double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
 			t_deliveryCost+=deliveryCost;
-			dataItem.put("deliveryCost", deliveryCost);
-			dataItem.put("isDeliveryFreeJ2c", entity.getIsDeliveryFreeJ2c());
+//			dataItem.put("deliveryCost", deliveryCost);
+			if(entity.getIsDeliveryFreeJ2c().equals("0")){
+				dataItem.put("isDeliveryFreeJ2c", "否");	
+			}else if(entity.getIsDeliveryFreeJ2c().equals("1")){
+				dataItem.put("isDeliveryFreeJ2c", "是");
+			}
 			dataItem.put("createPersonName", entity.getCreatePersonName());
 			dataItem.put("remark", entity.getRemark());
 			dataList.add(dataItem);
@@ -2220,8 +2224,8 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("expressnum", entity.getExpressnum());
 			dataItem.put("customerName", entity.getCustomerName());
-			dataItem.put("dutyType", entity.getDutyType());
-			dataItem.put("payType", entity.getPayType());
+			dataItem.put("dutyType", entity.getReason());
+			dataItem.put("payType", entity.getReasonDetail());
 			double amount = (entity.getReturnedAmountC2j() == null ? 0 : entity.getReturnedAmountC2j());
 			t_amount += amount;
 			dataItem.put("returnedAmountC2j", amount);

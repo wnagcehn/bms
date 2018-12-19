@@ -1,17 +1,11 @@
 package com.jiuyescm.common.tool;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.drools.compiler.lang.DRL5Expressions.literal_return;
-
-import com.google.common.collect.Lists;
-import com.jiuyescm.common.utils.BeanToMapUtil;
 import com.jiuyescm.common.utils.MD5Util;
 
 public class MapTool {

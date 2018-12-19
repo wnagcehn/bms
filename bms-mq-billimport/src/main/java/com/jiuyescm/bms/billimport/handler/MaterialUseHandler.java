@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +31,10 @@ import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
  */
 @Component("耗材使用费")
 public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTempEntity> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MaterialUseHandler.class);
+
+	
 	@Autowired
 	private IWarehouseDictService warehouseDictService;
 	@Autowired
@@ -102,11 +108,12 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 		
 		//起始列
-		int index=1;;
+		int index=0;
 		for (DataColumn dc:dr.getColumns()) {
-			if("收件人地址".equals(dc.getColName())){
-				index+=dc.getColNo();
-			}		
+			if("编码".equals(dc.getColName())){
+				index=dc.getColNo()-1;
+				break;
+			}
 		}
 		int count=1;
 		BillFeesReceiveStorageTempEntity feeEntity=new BillFeesReceiveStorageTempEntity();
@@ -124,7 +131,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 						if(vo!=null){
 							feeEntity.setMaterialCode(dc.getColValue());
 						}else{
-							errorMessage+="列"+dc.getColNo()+"编码不存在;";
+							errorMessage+="列【"+dc.getColValue()+"】编码不存在;";
 						}
 					}
 					break;
@@ -148,13 +155,8 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				case "单价":
 					break;
 				default:
-					if(StringUtils.isNotBlank(dc.getColValue())){
-						PubMaterialInfoVo pubvo=materialDictService.getMaterialByName(dc.getColValue());
-						if(pubvo!=null){
-							feeEntity.setMaterialName(dc.getColValue());
-						}else{
-							errorMessage+="列"+dc.getColNo()+"耗材名称不存在;";
-						}
+					if(StringUtils.isNotBlank(dc.getColValue())){						
+						feeEntity.setMaterialName(dc.getColValue());						
 					}			
 					break;
 				}
@@ -200,8 +202,10 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
+		long start = System.currentTimeMillis();// 系统开始时间
 		if(null != list && list.size()>0){
 			billFeesReceiveStorageTempService.insertBatchTemp(list);
+			logger.info(billNo+"保存耗材使用费到仓储临时表耗时"+(System.currentTimeMillis()-start));
 		}
 	}
 

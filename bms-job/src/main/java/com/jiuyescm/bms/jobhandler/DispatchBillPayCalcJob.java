@@ -15,7 +15,7 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
@@ -162,7 +162,8 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			reqVo.setQuoEntites(priceOutList);
 			reqVo.setRuleNo(ruleEntity.getQuotationNo());
 			reqVo.setRuleStr(ruleEntity.getRule());
-			CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
+			//CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
+			CalcuResultVo resultVo = new CalcuResultVo();
 			current = System.currentTimeMillis();
 			if("succ".equals(resultVo.getSuccess())){
 				XxlJobLogger.log("调用规则引擎   耗时【{0}】毫秒  费用【{1}】 ",(current - current),resultVo.getPrice());	

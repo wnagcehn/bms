@@ -37,7 +37,6 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizTihuoBillEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchTihuoBillService;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity;
 import com.jiuyescm.bms.chargerule.payrule.service.IPayRuleService;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
@@ -86,7 +85,7 @@ public class FeesPayBillController {
 	@Resource
 	private IPriceContractService priceContractService;
 	
-	@Resource private IFeesCalcuService feesCalcuService;
+	//@Resource private IFeesCalcuService feesCalcuService;
 /*	@Autowired
 	private IFeesCalculateRpcService feesCalculateRpcServiceImpl;*/
 	
@@ -1299,10 +1298,12 @@ public class FeesPayBillController {
 				reqVo.setRuleNo(ruleEntity.getQuotationNo());
 				reqVo.setRuleStr(ruleEntity.getRule());
 				
-				CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);
+				//CalcuResultVo vo=feesCalcuService.FeesCalcuService(reqVo);
+				CalcuResultVo vo= new CalcuResultVo();
 				
 				try{	
-					CalcuResultVo calcuVo=feesCalcuService.FeesCalcuService(reqVo);
+					//CalcuResultVo calcuVo=feesCalcuService.FeesCalcuService(reqVo);
+					CalcuResultVo calcuVo= new CalcuResultVo();
 					FeesPayDispatchEntity feePayEntity = initfeeEntity(bizEntity,calcuVo,contract);
 					//将费用插入费用表
 					if("succ".equals(vo.getSuccess())){

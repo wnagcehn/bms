@@ -17,6 +17,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billcheck.vo.ReportBillImportMasterVo;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveAirTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveHandService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveTransportTempService;
+import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
@@ -79,10 +82,10 @@ public class ReceiveBillImportListener implements MessageListener {
 				readExcel(json);
 			} catch (Throwable e) {
 				e.printStackTrace();
-				logger.info("获取消息失败-{}", e);
+				logger.error("获取消息失败-{}", e);
 			}
 		} catch (JMSException e1) {
-			logger.info("获取消息失败-{}", e1);
+			logger.error("获取消息失败-{}", e1);
 			return;
 		}
 	}
@@ -110,7 +113,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			xlsxReader = new ExcelXlsxReader(inputStream);
 			List<OpcSheet> sheets = xlsxReader.getSheets();
 			logger.info("解析Excel, 获取Sheet：{}", sheets.size());
-			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 20);
+			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
 			for (OpcSheet opcSheet : sheets) {
 				String sheetName = opcSheet.getSheetName();
 				logger.info("--------------准备读取sheet - {}", sheetName);
@@ -129,13 +132,15 @@ public class ReceiveBillImportListener implements MessageListener {
 					continue;
 				}
 				logger.info("匹配Handler为: {}", handler);
-				updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
 				//handler.getRows();
 
 				try {
 					handler.process(xlsxReader, opcSheet, map);
+					if("fail".equals(map.get("result"))){
+						break;
+					}					
 				} catch (Exception ex) {
-					logger.info("异常"+ex.getMessage());
+					logger.error("处理异常 {}",ex);
 					break;
 				}
 				finally {
@@ -234,7 +239,17 @@ public class ReceiveBillImportListener implements MessageListener {
 				checkInfoVo.setBalanceId(param.get("balanceId").toString());
 				checkInfoVo.setBalanceName(param.get("balanceName").toString());
 				checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
+				
 				checkInfoVo.setIsneedInvoice(BmsEnums.isInvoice.getCode(param.get("isneedInvoice").toString()));
+				//是否需要发票
+				if(StringUtils.isNotBlank(checkInfoVo.getIsneedInvoice())){
+					if("1".equals(checkInfoVo.getIsneedInvoice())){
+						checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.NO_INVOICE.getCode());//未开票 
+					}else if("0".equals(checkInfoVo.getIsneedInvoice())){
+						checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票 
+					}
+				}
+				
 				if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
 					checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
 					checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
@@ -273,6 +288,29 @@ public class ReceiveBillImportListener implements MessageListener {
 				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.SUCCESS.getCode());
 				billReceiveMasterVo.setRemark("导入完成");
 				billReceiveMasterVo.setTaskRate(100);
+				//导入成功后汇总各个总金额
+				ReportBillImportMasterVo vo=new ReportBillImportMasterVo();
+				//总金额
+				vo.setTotalMoney(money);
+				//仓储费用
+				Double storageMoney=billFeesReceiveStorageTempService.getImportStorageAmount(billNo);
+				vo.setTotalStorageMoney(new BigDecimal(storageMoney));
+				//配送费用
+				Double dispatchMoney=billFeesReceiveDispatchTempService.getImportDispatchAmount(billNo);
+				vo.setTotalDispatchMoney(new BigDecimal(dispatchMoney));
+				//干线费用
+				Double transportMoney=billFeesReceiveTransportTempService.getImportTransportAmount(billNo);
+				vo.setTotalTransportMoney(new BigDecimal(transportMoney));
+				//航空费用
+				Double airMoney=billFeesReceiveAirTempService.getImportAirAmount(billNo);
+				vo.setTotalAirMoney(new BigDecimal(airMoney));
+				//获取所有的理赔金额
+				Double abnormalMoney=billReceiveMasterService.getAbnormalMoney(entity.getBillNo());
+				vo.setTotalAbnormalMoney(new BigDecimal(abnormalMoney));
+				vo.setCreator(param.get("creator").toString());
+				vo.setCreateTime(JAppContext.currentTimestamp());
+				
+				
 			}else{
 				//无论保存成功与否删除所有临时表的数据
 				logger.info(billNo+"删除临时表数据");
@@ -287,7 +325,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			}
 			
 		}catch (Exception e) {
-			logger.info("异常信息{}",e.getMessage());
+			logger.error("保存异常信息 {}",e);
 			billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
 			billReceiveMasterVo.setTaskRate(99);
 			billReceiveMasterVo.setRemark(e.getMessage());
@@ -339,7 +377,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			 return utilDate;
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("转换异常",e.getMessage());
+			logger.error("转换异常 {}",e);
 		}
 		return null;
 	}

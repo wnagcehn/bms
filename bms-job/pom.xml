@@ -11,20 +11,27 @@
 	<dependencies>
 		<dependency>
 		  <groupId>com.jiuyescm.bms</groupId>
-		  <artifactId>bms-bpi-impl</artifactId>
+		  <artifactId>bms-bpi</artifactId>
 		  <version>1.0.1-SNAPSHOT</version>
-		  <exclusions>
-		  		<exclusion>
-				    <groupId>com.jiuyescm.bms</groupId>
-					<artifactId>bms-api</artifactId>
-				</exclusion>
-				<exclusion>
-				    <groupId>com.jiuyescm.bms</groupId>
-					<artifactId>bms-api-impl</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
-
+		
+		<dependency>
+		  <groupId>com.jiuyescm.bms</groupId>
+		  <artifactId>bms-core</artifactId>
+		  <version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.bms</groupId>
+		  <artifactId>bms-repo</artifactId>
+		  <version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.bms</groupId>
+		  <artifactId>drools-support</artifactId>
+		  <version>1.0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- mdm jar包 -->
 		<dependency>
 			<groupId>com.jiuyescm.mdm</groupId>

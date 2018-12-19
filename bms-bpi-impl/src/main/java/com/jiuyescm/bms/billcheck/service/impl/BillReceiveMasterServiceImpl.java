@@ -11,14 +11,24 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
+import com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveExpectVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
+import com.jiuyescm.bms.billcheck.vo.ReportBillImportMasterVo;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveAirTempRepository;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveDispatchTempRepository;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveStorageTempRepository;
+import com.jiuyescm.bms.billimport.repository.IBillFeesReceiveTransportTempRepository;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -35,6 +45,14 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     private IBillReceiveMasterRepository billReceiveMasterRepository;
 	
 	@Resource private IBillCheckInfoRepository billCheckInfoRepository;
+	@Resource
+	private IBillFeesReceiveStorageTempRepository billFeesReceiveStorageTempRepository;
+	@Resource
+	private IBillFeesReceiveDispatchTempRepository billFeesReceiveDispatchTempRepository;
+	@Resource
+	private IBillFeesReceiveTransportTempRepository billFeesReceiveTransportTempRepository;
+	@Resource
+	private IBillFeesReceiveAirTempRepository billFeesReceiveAirTempRepository;
 
 	/**
 	 * 根据id查询
@@ -122,6 +140,37 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
         }
 		return 0;
     }
+    
+    
+
+	@Override
+	public int insertReportMaster(ReportBillImportMasterVo vo) {
+
+		ReportBillImportMasterEntity entity=new ReportBillImportMasterEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);          
+            int k = billReceiveMasterRepository.insertReportMaster(entity);
+            return k;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return 0;
+	}
+
+    
+	@Override
+	public int saveExpect(BillReceiveExpectVo vo) {
+		// TODO Auto-generated method stub
+		BillReceiveExpectEntity entity=new BillReceiveExpectEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);          
+            int k = billReceiveMasterRepository.saveExpect(entity);
+            return k;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+		return 0;
+	}
 
 	/**
 	 * 更新
@@ -143,6 +192,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	 * 删除
 	 * @param entity
 	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
     @Override
     public void delete(String billNo,String status) {
     	if("SUCCESS".equals(status)){
@@ -156,11 +206,51 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     		if("CONFIRMED".equals(entity.getBillCheckStatus())){
     			throw new BizException("CONFIRMED_NULL","已确认状态的账单无法删除!");
     		}else {
+    			//删除导入记录
     			billReceiveMasterRepository.delete(billNo);
+    			//删除对应得费用
+    			billFeesReceiveStorageTempRepository.delete(billNo);
+    			billFeesReceiveTransportTempRepository.delete(billNo);
+    			billFeesReceiveDispatchTempRepository.delete(billNo);
+    			billFeesReceiveAirTempRepository.delete(billNo);
+    			//删除账单跟踪记录
+    			billCheckInfoRepository.deleteByBillNo(billNo);
 			}
     	}else{
-            billReceiveMasterRepository.delete(billNo);
+    		//删除导入记录
+			billReceiveMasterRepository.delete(billNo);
+			//删除对应得费用
+			billFeesReceiveStorageTempRepository.delete(billNo);
+			billFeesReceiveTransportTempRepository.delete(billNo);
+			billFeesReceiveDispatchTempRepository.delete(billNo);
+			billFeesReceiveAirTempRepository.delete(billNo);
+			//删除账单跟踪记录
+			billCheckInfoRepository.deleteByBillNo(billNo);
     	}  	
     }
+
+	@Override
+	public BillReceiveExpectVo queryExpect(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillReceiveExpectVo vo=new BillReceiveExpectVo();
+		BillReceiveExpectEntity entity=billReceiveMasterRepository.queryExpect(condition);
+		try {
+            PropertyUtils.copyProperties(vo, entity);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		
+		return vo;
+	}
+
+	@Override
+	public Double getAbnormalMoney(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.getAbnormalMoney(billNo);
+	}
+
+
+
+
 	
 }

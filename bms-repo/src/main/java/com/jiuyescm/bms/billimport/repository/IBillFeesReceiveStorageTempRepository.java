@@ -40,6 +40,13 @@ public interface IBillFeesReceiveStorageTempRepository {
 	 * @return
 	 */
 	int deleteBatch(String billNo);
+	
+	/**
+	 * 批量删除正式表的费用
+	 * @param condition
+	 * @return
+	 */
+	int delete(String billNo);
 
 	/**
 	 * 从临时表保存数据到正式表
@@ -54,6 +61,13 @@ public interface IBillFeesReceiveStorageTempRepository {
 	 * @return
 	 */
 	Double getImportTotalAmount(String billNo);
+	
+	/**
+	 * 导入金额汇总
+	 * @param billNo
+	 * @return
+	 */
+	Double getImportStorageAmount(String billNo);
 
 }
 

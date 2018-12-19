@@ -29,6 +29,7 @@ import com.jiuyescm.bms.common.enumtype.ImpState;
 import com.jiuyescm.bms.common.enumtype.IsState;
 import com.jiuyescm.bms.common.enumtype.OrderStatus;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.mdm.carrier.api.ICarrierService;
 import com.jiuyescm.mdm.carrier.vo.CarrierVo;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
@@ -86,6 +87,12 @@ public class BmsDictionaryEnum {
 	public Map<String, String> getOrderStatusEnum() {  
 		//return CalculateState.
 		return OrderStatus.getMap();
+	}
+	
+	@DataProvider
+	public Map<String, String> getFileAsynType() {  
+		//return CalculateState.
+		return BmsEnums.taskStatus.getMap();
 	}
 	
 	/**

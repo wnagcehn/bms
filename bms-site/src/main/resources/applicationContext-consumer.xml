@@ -44,8 +44,7 @@
 		version="1.0.0" check="false" registry="message"/>
 		
 		
-		<dubbo:reference interface="com.jiuyescm.bms.calculate.base.IFeesCalcuService" 
-		  	 version="1.0.0" id="feesCalcuService" registry="bms"/>
+		
 		<dubbo:reference interface="com.jiuyescm.bms.systemCode.service.api.ISystemCodeService" 
 			 version="1.0.0" id="sysValueAddService"  registry="bms"/>
 		<dubbo:reference interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService" 
@@ -105,5 +104,6 @@
 		 <dubbo:reference id="reportWarehouseCustomerService" interface="com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="reportCustomerService" interface="com.jiuyescm.bms.report.biz.service.IReportCustomerService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="reportBillImportDetailService" interface="com.jiuyescm.bms.report.bill.IReportBillImportDetailService" version="1.0.0" registry="bms"/>
-		
+		 <dubbo:reference interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService"
+				version="1.0.0" id="customerDictService" timeout="1200000" check="false"/> 
 </beans> 

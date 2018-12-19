@@ -16,4 +16,6 @@ public interface SheetReadCallBack {
 	
 	public void finish();
 	
+	public void error(Exception ex);
+	
 }

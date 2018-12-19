@@ -86,6 +86,13 @@ public class BillFeesReceiveStorageTempRepositoryImpl extends MyBatisDao<BillFee
     }
     
 	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.delete", billNo);
+		return d;
+	}
+    
+	@Override
 	public int insertBatch(List<BillFeesReceiveStorageTempEntity> list)throws Exception {
 		SqlSession session = getSqlSessionTemplate();
 		int result = session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.saveBatch", list);
@@ -112,6 +119,17 @@ public class BillFeesReceiveStorageTempRepositoryImpl extends MyBatisDao<BillFee
 	public Double getImportTotalAmount(String billNo) {
 		// TODO Auto-generated method stub
 		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.getImportTotalAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
+
+	@Override
+	public Double getImportStorageAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveStorageTempMapper.getImportStorageAmount", billNo);
 		Double money=0d;
 		if(object!=null){
 			money=Double.valueOf(object.toString());

@@ -33,9 +33,22 @@ public interface IBillFeesReceiveDispatchTempRepository {
     int deleteBatch(String billNo);
 
 	/**
+	 * 批量删除正式表的费用
+	 * @param condition
+	 * @return
+	 */
+	int delete(String billNo);
+	/**
 	 * 从临时表保存数据到正式表
 	 * @param billNo
 	 * @return
 	 */
 	int saveDataFromTemp(String billNo);
+	
+	/**
+	 * 导入金额汇总
+	 * @param billNo
+	 * @return
+	 */
+	Double getImportDispatchAmount(String billNo);
 }

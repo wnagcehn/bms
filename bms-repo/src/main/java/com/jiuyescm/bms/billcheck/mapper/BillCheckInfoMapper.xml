@@ -509,7 +509,10 @@
         where id=#{id}
     </update>
 
-
+	<update id="deleteByBillNo" parameterType="String">
+		update bill_check_info set del_flag='1' where bill_no=#{billNo}
+	</update>
+	
 	<select id="queryByInvoiceNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
 		select
 		<include refid="baseColumns" />

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
-import com.jiuyescm.bms.calculate.base.IFeesCalcuService;
+import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.fees.storage.entity.FeesSaleReceiveStorageEntity;
@@ -109,7 +109,8 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 		
 			long start = System.currentTimeMillis();// 系统开始时间
 			long current = 0l;// 当前系统时间
-			CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
+			//CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
+			CalcuResultVo resultVo = new CalcuResultVo();
 			current = System.currentTimeMillis();
 			if("succ".equals(resultVo.getSuccess())){
 				XxlJobLogger.log("调用规则引擎   耗时【{0}】毫秒  费用【{1}】 ",(current - current),resultVo.getPrice());	

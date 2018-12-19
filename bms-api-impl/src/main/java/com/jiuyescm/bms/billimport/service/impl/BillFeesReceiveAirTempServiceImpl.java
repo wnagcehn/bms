@@ -130,5 +130,11 @@ public class BillFeesReceiveAirTempServiceImpl implements IBillFeesReceiveAirTem
 		// TODO Auto-generated method stub
 		return billFeesReceiveAirTempRepository.saveDataFromTemp(billNo);
 	}
+
+	@Override
+	public Double getImportAirAmount(String billNo) {
+		// TODO Auto-generated method stub
+		return billFeesReceiveAirTempRepository.getImportAirAmount(billNo);
+	}
 	
 }

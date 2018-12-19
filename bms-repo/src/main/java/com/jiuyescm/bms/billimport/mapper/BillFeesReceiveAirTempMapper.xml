@@ -196,9 +196,9 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
     </update>
 
 	<!-- 删除 -->
-    <delete id="delete" parameterType="java.lang.Long">
-        delete from bill_fees_receive_air_temp 
-        where id = #{id}
+    <delete id="delete" parameterType="String">
+        delete from bill_fees_receive_air 
+        where 1=1 and bill_no = #{billNo}
     </delete>
     
         <!-- 批量删除 -->
@@ -243,4 +243,8 @@ bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, wareho
 		 select bill_no, fees_type, subject_code, waybill_no, customer_id, customer_name, warehouse_code, warehouse_name, send_site, receive_site, total_weight, create_time, create_month, amount, derate_amount
 		 from bill_fees_receive_air_temp where bill_no=#{billNo}
     </insert>
+    
+    <select id="getImportAirAmount" parameterType="String" resultType="java.lang.Double">
+		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_air where bill_no=#{billNo}
+	</select>
 </mapper>

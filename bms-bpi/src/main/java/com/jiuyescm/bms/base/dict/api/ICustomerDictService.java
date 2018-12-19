@@ -2,9 +2,12 @@ package com.jiuyescm.bms.base.dict.api;
 
 import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
+
 /**
  * 商家管理与查询服务
- * @author caojianwei
+ * @author caojianwei&liuzhicheng
  *
  */
 public interface ICustomerDictService {
@@ -56,4 +59,9 @@ public interface ICustomerDictService {
 	 */
 	String getMkInvoiceNameByMkId(String mkId);
 	
+	/**
+	 * 分页查询合同商家
+	 * @return
+	 */
+	PageInfo<PubCustomerBaseVo> queryPubCustomerBase(Map<String, Object> condition,int pageNo,int pageSize);
 }

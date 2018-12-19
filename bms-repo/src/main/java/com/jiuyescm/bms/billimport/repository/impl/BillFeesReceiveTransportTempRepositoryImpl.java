@@ -85,6 +85,13 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
         delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.delete", id);
     }
     
+	@Override
+	public int delete(String billNo) {
+		// TODO Auto-generated method stub
+		int d = delete("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.delete", billNo);
+		return d;
+	}
+    
     /**
      * 批量写入
      */
@@ -111,6 +118,17 @@ public class BillFeesReceiveTransportTempRepositoryImpl extends MyBatisDao<BillF
 		 Map<String,String> map=Maps.newHashMap();
 		 map.put("billNo", billNo);
 		return session.insert("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.saveDataFromTemp", map);
+	}
+
+	@Override
+	public Double getImportTransportAmount(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.billimport.BillFeesReceiveTransportTempMapper.getImportTransportAmount", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
 	}
 	
 }
