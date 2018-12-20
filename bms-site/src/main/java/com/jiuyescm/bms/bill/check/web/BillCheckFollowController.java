@@ -66,9 +66,7 @@ public class BillCheckFollowController {
 			BmsGroupUserVo groupUser=bmsGroupUserService.queryEntityByUserId(userId);		
 			if(groupUser!=null){//加入權限組
 				//判断是否是管理员
-				if(groupUser.getAdministrator().equals("0")){//管理员
-					
-				}else{
+				if(!"0".equals(groupUser.getAdministrator())){//非管理员
 					userIds=bmsGroupUserService.queryContainUserIds(userId);
 					parameter.put("userIds", userIds);
 				}

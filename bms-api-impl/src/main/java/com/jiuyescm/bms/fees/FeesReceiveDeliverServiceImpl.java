@@ -133,7 +133,7 @@ public class FeesReceiveDeliverServiceImpl implements IFeesReceiverDeliverServic
 	public void deleteBatchFees(List<FeesReceiveDeliverEntity> list) {
 		if(list!=null&&list.size()>0){
 			FeesReceiveDeliverEntity entity=list.get(0);
-			if(entity.getSubjectCode().equals("ts_abnormal_pay")){
+			if("ts_abnormal_pay".equals(entity.getSubjectCode())){
 				feesReceiveDeliverDao.deleteBatchAbnormalFees(list);
 			}else{
 				feesReceiveDeliverDao.deleteBatchFees(list);

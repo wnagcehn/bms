@@ -642,39 +642,6 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 	 */
 	public double getTeshu(double weightTeshu){
 		double weight=weightTeshu;
-		
-		/*double isweight;
-		
-		String a=weight+"";
-	    
-		if(a.indexOf(".00")!=-1){
-		
-			int b=a.indexOf(".");
-		    
-			String index=a.substring(b+1,b+3);
-		    
-			String e=a.substring(0,b);
-		    String c=a.substring(b+1);
-		    double d=Double.valueOf(c);
-		    double m=Double.valueOf(e);
-			
-			if(index.equals("00")){
-				
-			    if(d<5){
-			    	m=m+0;
-			    }else{
-			    	m=m+1;
-			    }
-			    
-	
-			}else{
-				m=Math.ceil(weight);
-			}
-			isweight=m;
-		}else{
-			isweight=Math.ceil(weight);	
-		}
-		*/
 		return weight;
 	}
 		

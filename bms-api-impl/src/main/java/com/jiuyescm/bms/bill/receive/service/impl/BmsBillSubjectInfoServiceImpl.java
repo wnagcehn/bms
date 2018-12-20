@@ -347,8 +347,7 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 		param.put("endTime", billInfoEntity.getEndTime());
 
 		BmsBillSubjectInfoEntity subjectInfoEntity=null;
-		if(StringUtils.isNotBlank(bill.getSubjectCode())&&
-				bill.getSubjectCode().equals("Abnormal_Transport")){
+		if("Abnormal_Transport".equals(bill.getSubjectCode())){
 			subjectInfoEntity=feesReceiveDeliverDao.sumAbnormalSubjectMoney(param);	
 		}else{
 			subjectInfoEntity=feesReceiveDeliverDao.sumSubjectMoney(param);	
@@ -394,8 +393,7 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
 		Map<String, Object> param=new HashMap<String, Object>();
 		param.put("billNo", bill.getBillNo());
 		BmsBillSubjectInfoEntity subjectInfoEntity=null;
-		if(StringUtils.isNotBlank(bill.getSubjectCode())&&
-				bill.getSubjectCode().equals("Abnormal_Transport")){
+		if("Abnormal_Transport".equals(bill.getSubjectCode())){
 			subjectInfoEntity=feesReceiveDeliverDao.sumAbnormalSubjectMoney(param);	
 		}else{
 			subjectInfoEntity=feesReceiveDeliverDao.sumSubjectMoney(param);	
@@ -1926,7 +1924,7 @@ public class BmsBillSubjectInfoServiceImpl implements IBmsBillSubjectInfoService
               headMapList.add(itemMap);
               
               itemMap = new HashMap<String, Object>();
-              if(str.equals("GB")){
+              if("GB".equals(str)){
             	  itemMap.put("title", "重量");
               }else{
             	  itemMap.put("title", "数量");

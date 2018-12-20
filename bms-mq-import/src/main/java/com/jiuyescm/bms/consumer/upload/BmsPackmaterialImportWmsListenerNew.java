@@ -455,7 +455,7 @@ public class BmsPackmaterialImportWmsListenerNew implements MessageListener{
 				String numName = "";
 				String numType = "";
 				for (Map.Entry<String, String> colgroup : map.entrySet()) {
-					if(colgroup.getValue().equals("code")){
+					if("code".equals(colgroup.getValue())){
 						codeName = colgroup.getKey();
 					}
 					else{
@@ -503,7 +503,7 @@ public class BmsPackmaterialImportWmsListenerNew implements MessageListener{
 						}
 						
 						BigDecimal num = new BigDecimal(num0);
-						if(numType.equals("num")){
+						if("num".equals(numType)){
 							tempChild.setNum(num);
 						}
 						else{

@@ -208,7 +208,7 @@ public class DispatchBillController{
 					if (null != feesReceiveDispatchEntity) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesReceiveDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整重量";
 						}
 					}
@@ -263,7 +263,7 @@ public class DispatchBillController{
 					if (null != feesReceiveDispatchEntity) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesReceiveDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整重量";
 						}
 					}
@@ -325,7 +325,7 @@ public class DispatchBillController{
 					if (null != feesReceiveDispatchEntity) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesReceiveDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整省市区";
 						}
 					}
@@ -398,7 +398,7 @@ public class DispatchBillController{
 						FeesReceiveDispatchEntity feesReceiveDispatchEntity=pageInfo.getList().get(0);
 						//获取此时的费用状态
 						String status=String.valueOf(feesReceiveDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							//return "运单号为"+feesReceiveDispatchEntity.getWaybillNo()+"的业务数据该已过账，无法重新计算!";
 							error="运单号为"+feesReceiveDispatchEntity.getWaybillNo()+"的业务数据该已过账，无法重新计算!";
 							errorList.add(error);

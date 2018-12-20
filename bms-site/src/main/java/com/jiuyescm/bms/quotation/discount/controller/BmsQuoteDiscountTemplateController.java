@@ -451,9 +451,9 @@ public class BmsQuoteDiscountTemplateController {
 			if (count > 1) {
 				sb.append("折扣首价、首价折扣率、折扣续价、续价折扣率、折扣一口价、一口价折扣率只能有一个有值！ ");
 			}
-			if (!sb.toString().equals("")) {
+			if (StringUtils.isNotBlank(sb.toString())) {
 				String newsb = sb.toString().substring(0, sb.toString().length()-2);
-				setMessage(infoList, lineNo, newsb);		
+				setMessage(infoList, lineNo, newsb);
 			}	
 		}
 

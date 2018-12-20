@@ -2070,10 +2070,9 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("productAmountJ2c", productAmount);
 			double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
 			t_deliveryCost+=deliveryCost;
-//			dataItem.put("deliveryCost", deliveryCost);
-			if(entity.getIsDeliveryFreeJ2c().equals("0")){
+			if("0".equals(entity.getIsDeliveryFreeJ2c())){
 				dataItem.put("isDeliveryFreeJ2c", "否");	
-			}else if(entity.getIsDeliveryFreeJ2c().equals("1")){
+			}else if("1".equals(entity.getIsDeliveryFreeJ2c())){
 				dataItem.put("isDeliveryFreeJ2c", "是");
 			}
 			dataItem.put("createPersonName", entity.getCreatePersonName());

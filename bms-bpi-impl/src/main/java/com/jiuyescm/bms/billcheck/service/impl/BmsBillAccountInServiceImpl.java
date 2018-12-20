@@ -137,7 +137,7 @@ public class BmsBillAccountInServiceImpl implements IBmsBillAccountInService {
     	BillAccountInEntity entity=billAccountInRepository.findById(vo.getId());
     	logger.info("confirm {}",entity.getConfirmStatus());
     	//0-未确认（可以删除） 1-已确认
-		if(entity.getConfirmStatus().equals("1")){
+		if("1".equals(entity.getConfirmStatus())){
     		throw new BizException("已确认状态不能再次确认");
 		}else{
 			accountInEntity.setConfirmStatus("1");

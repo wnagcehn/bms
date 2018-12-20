@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -133,7 +134,7 @@ public class EnumControlPR {
 	@DataProvider
 	public Map<Integer,String> getPriority(String all){
 		Map<Integer,String> mapValue = new LinkedHashMap<Integer,String>();
-		if(all==null || all.equals("")){
+		if(!StringUtils.isNotBlank(all)){
 			mapValue.put(999, "全部");
 		}
 		mapValue.put(1, "1");
@@ -696,7 +697,7 @@ public class EnumControlPR {
 		Map<String,String> mapValue = new LinkedHashMap<String,String>();
 		List<SystemCodeEntity> flowTypeList = systemCodeRepository.findEnumList("FLOW_TYPE");
 		for (SystemCodeEntity obj : flowTypeList) {
-			if(obj.getExtattr3().equals("990"))
+			if("990".equals(obj.getExtattr3()))
 			{
 				mapValue.put(obj.getExtattr1(), obj.getExtattr2());
 			}
@@ -920,7 +921,7 @@ public class EnumControlPR {
 			for (PropertyDescriptor property : propertyDescriptors) {
 				String key = property.getName();
 				// 过滤class属性
-				if (!key.equals("class")) {
+				if (!"class".equals(key)) {
 					// 得到property对应的getter方法
 					Method getter = property.getReadMethod();
 					Object value = getter.invoke(obj);

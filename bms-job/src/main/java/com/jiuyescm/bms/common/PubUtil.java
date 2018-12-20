@@ -35,7 +35,7 @@ public class PubUtil {
 	 * @return
 	 */
 	public static String trim(String strValue) {
-		if ((strValue != null) && (!strValue.equals(""))) {
+		if (strValue != null && !"".equals(strValue)) {
 			StringBuffer sb = new StringBuffer();
 			StringBuffer sb1 = new StringBuffer();
 			String strRet = "";
@@ -79,7 +79,7 @@ public class PubUtil {
 	 */
 	public static String rTrim(String strValue) {
 
-		if ((strValue != null) && (!strValue.equals(""))) {
+		if (strValue != null && !"".equals(strValue)) {
 			char[] cValue = strValue.toCharArray();
 			int nCur = 0;
 

@@ -442,7 +442,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		priceType=priceGeneral.getPriceType();
 		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
 		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
-		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
+		if("PRICE_TYPE_STEP".equals(priceType)){//阶梯价格
 			//寻找阶梯报价
 			map.clear();
 			map.put("quotationId", priceGeneral.getId());
@@ -479,7 +479,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
 				mapCusStepPrice.put(customerId+SubjectId,price);
 			}
-		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
+		}else if("PRICE_TYPE_NORMAL".equals(priceType)){//一口价
 			
 		}else{//报价类型缺失
 			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");

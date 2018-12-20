@@ -100,7 +100,7 @@ public class BillAccountInController {
 		BillAccountInVo accountIn = billAccountInService.findById(vo.getId());
 		//能否修改 取决于状态 已确认不可再次确认
 		logger.info("confirm确认状态{}",accountIn.getConfirmStatus());
-		if(!accountIn.getConfirmStatus().equals("1")){
+		if(!"1".equals(accountIn.getConfirmStatus())){
 			vo.setLastModifier(JAppContext.currentUserName());
 			vo.setLastModifierId(JAppContext.currentUserID());
 			vo.setLastModifyTime(JAppContext.currentTimestamp());
@@ -181,7 +181,7 @@ public class BillAccountInController {
 			BillAccountInVo accountIn = billAccountInService.findById(entity.getId());
 			//能否修改 取决于状态 已确认不可修改
 			logger.info("save账户信息{}",accountIn.getConfirmStatus());
-			if(!accountIn.getConfirmStatus().equals("1")){
+			if(!"1".equals(accountIn.getConfirmStatus())){
 				entity.setLastModifier(user);
 				entity.setLastModifierId(userId);
 				entity.setLastModifyTime(time);

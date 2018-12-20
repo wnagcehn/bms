@@ -84,23 +84,6 @@ public class BizGanxianRoadBillController {
 		if (entity.getId() == null) {
 			bizGanxianRoadBillService.save(entity);
 		} else {
-			if(entity != null && StringUtils.isNotBlank(entity.getFeesNo())){
-				/*
-				此处要改成应付费用查询
-				FeesReceiveDeliverQueryEntity paramEntity = new FeesReceiveDeliverQueryEntity();
-				paramEntity.setFeesNo(feeId);
-				PageInfo<FeesReceiveDeliverEntity> pageInfo = deliverService.query(paramEntity, 0, Integer.MAX_VALUE);
-				
-				if (null != pageInfo && null!=pageInfo.getList() && pageInfo.getList().size()>0) {
-					FeesReceiveDeliverEntity feesReceiveDeliverEntity=pageInfo.getList().get(0);
-					//获取此时的费用状态
-					String status = String.valueOf(feesReceiveDeliverEntity.getState());
-					if(status.equals("1")){
-						return "该费用已过账,无法调整重量!";
-					}
-				}
-				*/
-			}
 			bizGanxianRoadBillService.update(entity);
 		}
 	}
@@ -140,23 +123,6 @@ public class BizGanxianRoadBillController {
 					
 					//判断是否生成费用，判断费用的状态是否为未过账
 					String feeId = bizData.getFeesNo();
-					if(StringUtils.isNotBlank(feeId)){
-						/*
-						此处要改成应付费用查询
-						FeesReceiveDeliverQueryEntity paramEntity = new FeesReceiveDeliverQueryEntity();
-						paramEntity.setFeesNo(feeId);
-						PageInfo<FeesReceiveDeliverEntity> pageInfo = deliverService.query(paramEntity, 0, Integer.MAX_VALUE);
-						
-						if (null != pageInfo && null!=pageInfo.getList() && pageInfo.getList().size()>0) {
-							FeesReceiveDeliverEntity feesReceiveDeliverEntity=pageInfo.getList().get(0);
-							//获取此时的费用状态
-							String status = String.valueOf(feesReceiveDeliverEntity.getState());
-							if(status.equals("1")){
-								return "该费用已过账,无法调整重量!";
-							}
-						}
-						*/
-					}
 					//如果没有过账的话,就允许调整重量,且调整完后,状态重置为未计算,定时任务重新扫描到并重新生成应收费用.
 					bizData.setIsCalculated("0");
 						

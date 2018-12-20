@@ -201,7 +201,6 @@ public class FeesPayTransportImportController extends HttpCommonImport<FeesPayTr
 		entity.setOrgaddress(importEntity.getOrgaddress());
 		entity.setTargetaddress(importEntity.getTargetadress());
 		entity.setProductdetails(importEntity.getProductdetails());
-		/*entity.setBoxnum(importEntity.getBoxnum());*/
 		entity.setWeight(importEntity.getWeight());
 		entity.setVolume(importEntity.getVolume());
 		entity.setCarmodel(importEntity.getCarmodel());
@@ -211,19 +210,9 @@ public class FeesPayTransportImportController extends HttpCommonImport<FeesPayTr
 		entity.setCretime(importEntity.getSigntime());
 		entity.setCrepersonname(JAppContext.currentUserName());
 		entity.setCreperson(JAppContext.currentUserID());
-		/*entity.setBacknum(importEntity.getBacknum());
-		entity.setReceivenum(importEntity.getReceivenum());
-		entity.setOrdernum(importEntity.getOrdernum());*/
 		entity.setForwarderName(importEntity.getForwardername());
 		entity.setDistributiontype(importEntity.getDistributiontype());
 		entity.setOperationtime(JAppContext.currentTimestamp());
-		/*entity.setBacknum(importEntity.getBacknum());
-		entity.setState("0");
-		if(importEntity.getHasreceipt().equals("有")){
-			entity.setHasreceipt(1);
-		}else{
-			entity.setHasreceipt(0);
-		}*/
 		if(!StringUtils.isBlank(importEntity.getCarmodel())){
 			for(SystemCodeEntity code:systemCodelist){
 				if(code.getCodeName().equals(entity.getCarmodel())){

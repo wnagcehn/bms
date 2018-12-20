@@ -7,10 +7,10 @@ public class ProvinceConvert {
 	 * @return
 	 */
 	public static String replaceProvince(String province){ 
-		if (province.equals("北京市")) return "北京";
-		if (province.equals("上海市")) return "上海";
-		if (province.equals("天津市")) return "天津";
-		if (province.equals("重庆市")) return "重庆";
+		if ("北京市".equals(province)) return "北京";
+		if ("上海市".equals(province)) return "上海";
+		if ("天津市".equals(province)) return "天津";
+		if ("重庆市".equals(province)) return "重庆";
 		if (province.startsWith("广西") || province.startsWith("广西省")) return "广西壮族自治区";
 		if (province.startsWith("湖北")) return "湖北省";
 		if (province.startsWith("湖南")) return "湖南省";

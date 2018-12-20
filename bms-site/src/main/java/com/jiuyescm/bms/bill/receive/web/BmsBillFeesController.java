@@ -321,9 +321,9 @@ public class BmsBillFeesController {
 					List<String> reasonIds=null;
 					switch(feesType){
 					case "DISPATCH":
-						if(subjectCode.equals("Abnormal_Dispatch")){
+						if("Abnormal_Dispatch".equals(subjectCode)){
 							reasonIds=getDispatchReasonId();
-						}else if(subjectCode.equals("Abnormal_DisChange")){
+						}else if("Abnormal_DisChange".equals(subjectCode)){
 							reasonIds=getDispatchChangeReasonId();
 						}else{
 							return;
@@ -340,7 +340,7 @@ public class BmsBillFeesController {
 			if (pageInfo != null) {
 				List<FeesAbnormalEntity> list=pageInfo.getList();
 				for(FeesAbnormalEntity entity:list){
-					if(StringUtils.isNotBlank(entity.getIsDeliveryFree())&&entity.getIsDeliveryFree().equals("0")){
+					if("0".equals(entity.getIsDeliveryFree())){
 						entity.setReceiptAmount(entity.getPayMoney()-entity.getDerateAmount()-entity.getDeliveryCost());
 					}else{
 						entity.setReceiptAmount(entity.getPayMoney()-entity.getDerateAmount());
@@ -426,7 +426,7 @@ public class BmsBillFeesController {
 		conditionMap.put("feesType", "TRANSPORT");
 		//conditionMap.put("subjectCode", value)
 		conditionMap.put("status", BillFeesSubjectStatusEnum.UPDATE);
-		if(fee.getSubjectCode().equals("ts_abnormal_pay")){
+		if("ts_abnormal_pay".equals(fee.getSubjectCode())){
 			conditionMap.put("subjectCode", "Abnormal_Transport");
 			bmsBillSubjectInfoService.updateAbnormalTransportBillSubject(conditionMap);
 		}else{
@@ -456,7 +456,7 @@ public class BmsBillFeesController {
 			conditionMap.put("billNo", fee.getBillno());
 			conditionMap.put("feesType", "TRANSPORT");
 			conditionMap.put("status", BillFeesSubjectStatusEnum.UPDATE);
-			if(fee.getSubjectCode().equals("ts_abnormal_pay")){
+			if("ts_abnormal_pay".equals(fee.getSubjectCode())){
 				conditionMap.put("subjectCode", "Abnormal_Transport");
 				bmsBillSubjectInfoService.updateAbnormalTransportBillSubject(conditionMap);
 			}else{
@@ -832,7 +832,7 @@ public class BmsBillFeesController {
 			subjectCode=parameter.get("subjectCode")==null?"":parameter.get("subjectCode").toString();
 		}
 		PageInfo<FeesReceiveDeliverEntity> pageInfo=null;
-		if(subjectCode.equals("Abnormal_Transport")){//理赔
+		if("Abnormal_Transport".equals(subjectCode)){//理赔
 			pageInfo =feesReceiverDeliverService.queryAbnormalFeeByGroup(parameter,page.getPageNo(), page.getPageSize());
 		}else{
 			pageInfo =feesReceiverDeliverService.queryFeeByGroup(parameter,page.getPageNo(), page.getPageSize());
@@ -857,7 +857,7 @@ public class BmsBillFeesController {
 			subjectCode=parameter.get("subjectCode")==null?"":parameter.get("subjectCode").toString();
 		}
 		List<FeesReceiveDeliverEntity> list=null;
-		if(subjectCode.equals("ts_abnormal_pay")){
+		if("ts_abnormal_pay".equals(subjectCode)){
 			list =feesReceiverDeliverService.queryAbnormalFeeDetail(parameter);
 		}else{
 			list =feesReceiverDeliverService.queryFeeDetail(parameter);

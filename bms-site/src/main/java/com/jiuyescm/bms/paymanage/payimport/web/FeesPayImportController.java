@@ -432,7 +432,7 @@ public class FeesPayImportController{
 	@Expose
 	public String queryIsLimit(){
 		SystemCodeTypeEntity systemCodeTypeEntity=systemCodeTypeService.findByTypeCode("PAY_IMPORT_LIMIT");
-		if(systemCodeTypeEntity!=null && systemCodeTypeEntity.getTypeStatus().equals("0")){
+		if(systemCodeTypeEntity!=null &&"0" .equals(systemCodeTypeEntity.getTypeStatus())){
 			return "yes";
 		}
 		return "no";

@@ -111,10 +111,10 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
         	String code = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectCode();
             String name = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectName();
             logger.info("code:{} | name:{}", code,name);
-            if(resultVo!=null||resultVo.getDelFlag().equals("0")){
+            if("0".equals(resultVo.getDelFlag())){
                 redisClient.set(code, RedisCache.SUBJECTCODE_SPACE, resultVo, RedisCache.expiredTime);//按code缓存
                 redisClient.set(name, RedisCache.SUBJECTNAME_SPACE, resultVo, RedisCache.expiredTime);//按name缓存
-            }else if (resultVo!=null||resultVo.getDelFlag().equals("1")) {            	
+            }else if ("1".equals(resultVo.getDelFlag())) {            	
                 redisClient.del(code, RedisCache.SUBJECTCODE_SPACE);
                 redisClient.del(name, RedisCache.SUBJECTNAME_SPACE);
 			}

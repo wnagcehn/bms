@@ -190,7 +190,7 @@ public class BizOutstockMasterController extends BaseController{
 				feesReceiveStorageEntity=pageInfo.getList().get(0);
 				//获取此时的费用状态
 				String status = String.valueOf(feesReceiveStorageEntity.getStatus());
-				if(status.equals("1")){
+				if("1".equals(status)){
 					result.setCode("fail");
 					result.setData("该费用已过账，无法调整托数");
 					return result;
