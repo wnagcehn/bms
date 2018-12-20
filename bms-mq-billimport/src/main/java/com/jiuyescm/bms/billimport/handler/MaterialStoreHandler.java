@@ -119,10 +119,9 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 	}
 
 	@Override
-	public void save() {
-		if (null != list && list.size() > 0) {
-			billFeesReceiveStorageTempService.insertBatchTemp(list);
-		}
+	public int save() {
+		int result=	billFeesReceiveStorageTempService.insertBatchTemp(list);
+		return result;
 	}
 
 	@Override

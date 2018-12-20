@@ -398,9 +398,9 @@ public class TransportHandler extends
 	}
 
 	@Override
-	public void save() {
-		billFeesReceiveTransportTempService.insertBatchTemp(list);
-
+	public int save() {
+		int	result=billFeesReceiveTransportTempService.insertBatchTemp(list);
+		return result;
 	}
 
 	@Override

@@ -200,13 +200,13 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 	}
 
 	@Override
-	public void save() {
+	public int save() {
 		// TODO Auto-generated method stub
 		long start = System.currentTimeMillis();// 系统开始时间
-		if(null != list && list.size()>0){
-			billFeesReceiveStorageTempService.insertBatchTemp(list);
-			logger.info("账单【{}】 保存行数【{}】耗材使用费到仓储临时表耗时【{}】",billNo,list.size(),(System.currentTimeMillis()-start));
-		}
+		int result=billFeesReceiveStorageTempService.insertBatchTemp(list);
+		logger.info("账单【{}】 保存行数【{}】耗材使用费到仓储临时表耗时【{}】",billNo,list.size(),(System.currentTimeMillis()-start));
+		return result;
+
 	}
 
 	@Override

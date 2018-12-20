@@ -182,9 +182,9 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 	}
 
 	@Override
-	public void save() {
-		billFeesReceiveAirTempService.insertBatchTemp(list);
-
+	public int save() {
+		int result=billFeesReceiveAirTempService.insertBatchTemp(list);
+		return result;
 	}
 
 	@Override

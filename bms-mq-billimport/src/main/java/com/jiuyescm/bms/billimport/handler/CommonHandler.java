@@ -145,7 +145,10 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 					}
 
 					if(list.size()>=batchNum){
-						saveTo();
+						int result=saveTo();
+						if(result<=0){
+							throw new BizException("title_error","excel处理异常：批量插入"+sheetName+"费用异常");
+						}
 					}
 				} catch (Exception e) {
 					DataColumn dColumn = new DataColumn("异常描述","第"+dr.getRowNo()+"行："+e.getMessage());
@@ -157,7 +160,10 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			@Override
 			public void finish() {
 				if(list.size()>0){
-					saveTo();
+					int result=saveTo();
+					if(result<=0){
+						throw new BizException("title_error","excel处理异常：批量插入"+sheetName+"费用异常");
+					}
 				}
 				logger.info("读取完毕");
 			}
@@ -201,10 +207,11 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	 * 分批保存数据到临时表
 	 * @throws Exception
 	 */
-	public void saveTo(){
+	public int saveTo(){
+		int result=0;
 		if(errMap.size()==0){
 			logger.info("读取【{}】行验证耗时{}",list.size(),(System.currentTimeMillis()-_start));
-			save();
+			result=save();
 			_start =  System.currentTimeMillis();
 		}else{
 			logger.info("错误信息: {}", errMap);
@@ -212,9 +219,10 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		}
 		
 		list.clear();
+		return result;
 	}
 	
-	public abstract void save();
+	public abstract int save();
 	
 	public String exportErr() throws Exception{
 		
