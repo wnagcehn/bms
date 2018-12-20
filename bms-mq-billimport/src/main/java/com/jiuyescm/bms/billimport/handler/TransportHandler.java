@@ -89,15 +89,11 @@ public class TransportHandler extends
 				case "温控":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTemperatureType(dc.getColValue());
-					} else {
-						errorMessage += "温控不能为空;";
 					}
 					break;
 				case "派车单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendNo(dc.getColValue());
-					} else {
-						errorMessage += "派车单号不能为空;";
 					}
 					break;
 				case "运单号":
@@ -117,85 +113,61 @@ public class TransportHandler extends
 				case "始发站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendSite(dc.getColValue());
-					} else {
-						errorMessage += "始发站不能为空;";
 					}
 					break;
 				case "始发省份":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendProvince(dc.getColValue());
-					} else {
-						errorMessage += "始发省份不能为空;";
 					}
 					break;
 				case "始发城市":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendCity(dc.getColValue());
-					} else {
-						errorMessage += "始发城市不能为空;";
 					}
 					break;
 				case "始发区":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendDistinct(dc.getColValue());
-					} else {
-						errorMessage += "始发区不能为空;";
 					}
 					break;
 				case "目的站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveSite(dc.getColValue());
-					} else {
-						errorMessage += "目的站不能为空;";
 					}
 					break;
 				case "目的省份":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveProvince(dc.getColValue());
-					} else {
-						errorMessage += "目的省份不能为空;";
 					}
 					break;
 				case "目的城市":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveCity(dc.getColValue());
-					} else {
-						errorMessage += "目的城市不能为空;";
 					}
 					break;
 				case "目的区":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveDistinct(dc.getColValue());
-					} else {
-						errorMessage += "目的区不能为空;";
 					}
 					break;
 				case "体积":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalVolumn(new BigDecimal(dc.getColValue()));
-					} else {
-						errorMessage += "体积不能为空;";
 					}
 					break;
 				case "重量":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
-					} else {
-						errorMessage += "重量不能为空;";
 					}
 					break;
 				case "是否泡货":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setIsLight(dc.getColValue());
-					} else {
-						errorMessage += "是否泡货不能为空;";
 					}
 					break;
 				case "车型":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCarModel(dc.getColValue());
-					} else {
-						errorMessage += "车型不能为空;";
 					}
 					break;
 				default:

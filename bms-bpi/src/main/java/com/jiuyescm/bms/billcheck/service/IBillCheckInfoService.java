@@ -178,7 +178,7 @@ public interface IBillCheckInfoService {
 	 * 调整金额
 	 * @param condition
 	 */
-	public void adjustMoney(String billNo, Double adjustMoney, String username, String userId);
+	public void adjustMoney(String billNo, Double adjustMoney,String adjustReason, String username, String userId);
 	
 	/**
 	 * 新保存 vo新增billNo字段
