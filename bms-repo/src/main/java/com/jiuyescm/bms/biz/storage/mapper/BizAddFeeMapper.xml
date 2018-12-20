@@ -199,7 +199,12 @@
         where 1=1
 		<include refid="reCountSelectColumns" />
     </select>
-
+    
+    <update id="updateByMap"  parameterType="java.util.Map">
+    	update biz_add_fee set is_calculated='99' where 1=1
+    	<include refid="reCountSelectColumns" />
+    </update>
+    
     <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
         select
         <include refid="baseColumns" />

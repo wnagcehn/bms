@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
-import com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity;
 
 /**
  * 
@@ -54,4 +53,6 @@ public interface IBizAddFeeRepository {
 	 * @return
 	 */
 	PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	int updateByMap(Map<String, Object> condition);
 }

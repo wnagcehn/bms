@@ -17,12 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
-import com.jiuyescm.bms.fees.storage.repository.impl.FeesReceiveStorageRepositoryImpl;
 
 /**
  * 
@@ -145,5 +143,13 @@ public class BizAddFeeServiceImpl implements IBizAddFeeService {
             int pageNo, int pageSize){
 		return bizAddFeeRepository.groupCount(condition, pageNo, pageSize);
 	}
+
+	@Override
+	public int updateByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bizAddFeeRepository.updateByMap(condition);
+	}
+
+
 	
 }
