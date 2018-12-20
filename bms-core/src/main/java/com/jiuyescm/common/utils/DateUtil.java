@@ -538,4 +538,56 @@ public class DateUtil {
         return map; 
         
 	}
+	
+	/**
+	 * 验证字符串是否为指定格式的日期格式
+	 * @param str
+	 * @param format
+	 * @return true-日期格式  false-非日期格式
+	 */
+	public static boolean isValidDate(String str,String format) {
+        boolean convertSuccess = true;
+        SimpleDateFormat dateformat = new SimpleDateFormat(format);
+        try {
+        	dateformat.setLenient(false);
+        	dateformat.parse(str);
+        } catch (ParseException e) {
+            convertSuccess = false;
+        }
+        return convertSuccess;
+    }
+	
+	public static Date transStringToDate(String dateString,String format){
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat(format);
+		try {
+            Date date=simpleDateFormat.parse(dateString);
+            return date;
+        } catch(ParseException px) {
+            logger.error("transStringToDate 日期转换异常");
+            return null;
+        }
+	}
+	
+	/**
+	 * 获取指定日期的 上月第一天，下月第一天等
+	 * @param dateStr  时间字符串 2018-11-02
+	 * @param Month -1-获取上月第一天,0-获取当月第一天 1-获取下月第一天
+	 * @param format 
+	 * @return
+	 */
+	public static String getFirstDayOfGivenMonth(String dateStr,int Month,String format){
+		SimpleDateFormat sdf=new SimpleDateFormat(format);
+		try {
+			Date date = sdf.parse(dateStr);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.set(Calendar.DAY_OF_MONTH,1);
+			calendar.add(Calendar.MONTH, 0);
+			return sdf.format(calendar.getTime());
+		} 
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

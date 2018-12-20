@@ -36,8 +36,7 @@ mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifi
     </select>
 	
 	<!-- 分页查询 -->
-    <select id="query" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.base.customer.entity.PubCustomerEntity">
+    <select id="query" parameterType="java.util.Map" resultMap = "BaseResultMap">
         select
         <include refid="BASE_COLUMNS_ALL" />
         from pub_customer
