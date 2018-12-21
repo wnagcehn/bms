@@ -248,11 +248,12 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 	}
 
 	@Override
-	public void save() {
+	public int save() {
 		long start = System.currentTimeMillis();// 系统开始时间
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
+		int result=0;
 		if(null != list && list.size()>0){
-			billFeesReceiveDispatchTempService.insertBatch(list);
+			result=billFeesReceiveDispatchTempService.insertBatch(list);
 			logger.info(billNo+"保存宅配到宅配临时表耗时"+(System.currentTimeMillis()-start));
 		}
 		if(null != storageList && storageList.size()>0){
@@ -260,7 +261,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			storageList.clear();		
 			logger.info(billNo+"保存操作费和包材费到仓储临时表耗时"+(System.currentTimeMillis()-start));
 		}
-		
+		return result;
 	}
 
 	@Override

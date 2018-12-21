@@ -118,10 +118,9 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 	}
 
 	@Override
-	public void save() {
-		if (null != list && list.size() > 0) {
-			billFeesReceiveDispatchTempService.insertBatch(list);
-		}
+	public int save() {
+		int result=billFeesReceiveDispatchTempService.insertBatch(list);
+		return result;
 	}
 
 	@Override

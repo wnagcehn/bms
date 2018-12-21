@@ -358,41 +358,13 @@
 		</dependency>
 		
 		<!-- mdm -->
-		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-warehouse-api</artifactId>
-			<version>${mdm.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-customer-api</artifactId>
-			<version>${mdm.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-carrier-api</artifactId>
-			<version>${mdm.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-deliver-api</artifactId>
-			<version>${mdm.version}</version>
-		</dependency>
-		
+				
 		<dependency>
 			<groupId>com.jiuyescm.mdm</groupId>
 			<artifactId>mdm-forwarder-api</artifactId>
 			<version>${mdm.version}</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>com.jiuyescm.contract</groupId>
-			<artifactId>contract-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 		
 		<dependency>
 		  <groupId>com.jiuyescm.framework</groupId>

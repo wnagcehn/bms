@@ -33,12 +33,10 @@ import com.jiuyescm.bms.billcheck.BillReceiptFollowEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
-import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
-import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
@@ -747,7 +745,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
-	public void adjustMoney(String billNo,Double adjustMoney,String username,String userId) {
+	public void adjustMoney(String billNo,Double adjustMoney,String adjustReason,String username,String userId) {
 		// TODO Auto-generated method stub
 		Map<String, Object> condition=new HashMap<>();
 		condition.put("billNo", billNo);
@@ -845,6 +843,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		brmVo.setLastModifierId(userId);
 		brmVo.setLastModifyTime(currentTime);
 		brmVo.setAdjustAmount(adjustMoney);
+		brmVo.setAdjustReason(adjustReason);
 		try {
 			billReceiveMasterRepository.update(brmVo);
 		} catch (Exception e) {

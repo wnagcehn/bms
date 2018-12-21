@@ -188,7 +188,7 @@ public class BillReceiveMasterController {
 	@DataResolver
 	public void update(BillReceiveMasterVo entity) {
 		try {
-			billCheckInfoService.adjustMoney(entity.getBillNo(), entity.getAdjustAmount(), JAppContext.currentUserName(), JAppContext.currentUserID());
+			billCheckInfoService.adjustMoney(entity.getBillNo(), entity.getAdjustAmount(),entity.getAdjustReason(), JAppContext.currentUserName(), JAppContext.currentUserID());
 		} catch (Exception e) {
 			logger.error("BillReceiveMfdasterController.update", e);
 			if (e.toString().contains("账单不存在")) {

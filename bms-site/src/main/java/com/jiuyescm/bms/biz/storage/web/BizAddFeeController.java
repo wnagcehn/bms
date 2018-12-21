@@ -610,9 +610,14 @@ public class BizAddFeeController {
 	@Expose
 	public String reCalculate(Map<String, Object> param){
 		
-         final List<BizAddFeeEntity>  list  =  bizAddFeeService.queryList(param);
+         int result=bizAddFeeService.updateByMap(param);
+         if(result>0){
+        	 return "操作成功! 正在重算...";
+		 }else{
+			 return "未查询到要重算的数据...";
+		 }	
 		 
-		 if(null!=list&&list.size()>0){
+		/* if(null!=list&&list.size()>0){
 			 new Thread(){
 					public void run() {
 						try {
@@ -630,7 +635,7 @@ public class BizAddFeeController {
 				return "操作成功! 正在重算...";
 		 }else{
 			 return "未查询到要重算的数据...";
-		 }	 
+		 }	 */
 	}
 	
 	/**

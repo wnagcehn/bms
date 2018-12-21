@@ -11,6 +11,7 @@
 		   	<result column="task_status" property="taskStatus" jdbcType="VARCHAR" />
 		   	<result column="amount" property="amount" jdbcType="DECIMAL" />
 		   	<result column="adjust_amount" property="adjustAmount" jdbcType="DECIMAL" />
+		   	<result column="adjust_reason" property="adjustReason" jdbcType="VARCHAR" />
 		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
 		   	<result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
 		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -30,11 +31,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark, is_calculated
+        id, create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount,adjust_reason, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark, is_calculated
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark, is_calculated
+			create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amount, adjust_amount,adjust_reason, creator, creator_id, create_time, finish_time, last_modifier, last_modifier_id, last_modify_time, del_flag, bill_no, origin_file_name, origin_file_path, result_file_name, result_file_path, remark,expect_status,different_remark, is_calculated
     </sql>
 
 	<!-- 根据id查询 -->
@@ -50,7 +51,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
        select
         a.id, a.create_month, a.invoice_name, a.invoice_id, a.bill_name, a.task_rate, a.task_status, 
-        IFNULL(a.amount,0) as amount, IFNULL(a.adjust_amount,0) as adjustAmount, SUM(IFNULL(a.amount,0)+IFNULL(a.adjust_amount,0)) as totalAmount, 
+        IFNULL(a.amount,0) as amount, IFNULL(a.adjust_amount,0) as adjustAmount, a.adjust_reason ,SUM(IFNULL(a.amount,0)+IFNULL(a.adjust_amount,0)) as totalAmount, 
         a.creator, a.creator_id, a.create_time, a.finish_time, 
         a.last_modifier, a.last_modifier_id, a.last_modify_time, a.del_flag, a.bill_no, 
         a.origin_file_name, a.origin_file_path, a.result_file_name, a.result_file_path, a.remark,a.different_remark,b.expect_money,a.is_calculated,
@@ -131,6 +132,7 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
 			#{taskStatus,jdbcType=VARCHAR}, 
 			#{amount,jdbcType=DECIMAL}, 
 			#{adjustAmount,jdbcType=DECIMAL}, 
+			#{adjustReason,jdbcType=VARCHAR}, 
 			#{creator,jdbcType=VARCHAR}, 
 			#{creatorId,jdbcType=VARCHAR}, 
 			#{createTime,jdbcType=TIMESTAMP}, 
@@ -157,6 +159,9 @@ create_month, invoice_name, invoice_id, bill_name, task_rate, task_status, amoun
         <trim prefix="set" suffixOverrides=",">
         	<if test=" adjustAmount != null and adjustAmount !='' ">
         	    adjust_amount = #{adjustAmount,jdbcType=DECIMAL},        	
+        	</if>
+        	<if test=" adjustReason != null and adjustReason !='' ">
+        	    adjust_reason = #{adjustReason,jdbcType=VARCHAR},        	
         	</if>
 			<if test=" createMonth != null and createMonth !='' ">
 				create_month = #{createMonth,jdbcType=INTEGER},

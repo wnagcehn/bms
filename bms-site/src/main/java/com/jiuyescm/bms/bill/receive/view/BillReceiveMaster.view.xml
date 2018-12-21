@@ -132,6 +132,58 @@
         <Property></Property>
         <Property name="label">差异说明</Property>
       </PropertyDef>
+      <PropertyDef name="billStartTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="firstClassName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="bizTypeName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="projectName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="deptCode">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="projectManagerName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="balanceId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="balanceName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="isCalculated">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="adjustReason">
+        <Property></Property>
+        <Property name="label">调整原因</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillReceiveMasterEntityQuery">
       <PropertyDef name="invoiceName">
@@ -479,11 +531,13 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
 		});&#xD;
 	});</ClientEvent>
         <Property name="caption">预估确认</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="btnRemark">
         <ClientEvent name="onClick">view.get(&quot;#dialogRemarkEdit&quot;).show();&#xD;
 </ClientEvent>
         <Property name="caption">差异说明</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBillCheckStatusEntity">
@@ -656,6 +710,10 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
           <Property name="width">100</Property>
           <Property name="align">right</Property>
         </DataColumn>
+        <DataColumn name="adjustReason">
+          <Property name="property">adjustReason</Property>
+          <Property name="width">140</Property>
+        </DataColumn>
         <DataColumn>
           <ClientEvent name="onRenderCell">arg.dom.style.color = &quot;red&quot;;&#xD;
 arg.processDefault = true;</ClientEvent>
@@ -796,8 +854,8 @@ view.id(&quot;formEdit&quot;).getElement(&quot;totalAmount&quot;).set(&quot;styl
 </ClientEvent>
       <Property name="caption">调整金额</Property>
       <Property name="center">true</Property>
-      <Property name="height">180</Property>
-      <Property name="width">300</Property>
+      <Property name="height">260</Property>
+      <Property name="width">320</Property>
       <Buttons>
         <Button id="btnSave">
           <ClientEvent name="onClick">var entity = view.id(&quot;formEdit&quot;).get(&quot;entity&quot;);&#xD;
@@ -866,6 +924,16 @@ function isNullOrEmpty(e) {&#xD;
             <Property name="visible">true</Property>
             <Property name="editorType">Label</Property>
             <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">adjustReason</Property>
+            <Property name="property">adjustReason</Property>
+            <Editor>
+              <TextArea>
+                <Property name="width">170</Property>
+                <Property name="height">70</Property>
+              </TextArea>
+            </Editor>
           </AutoFormElement>
         </AutoForm>
       </Children>

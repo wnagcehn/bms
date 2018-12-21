@@ -63,16 +63,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 				switch (dc.getColName()) {
 				case "区域仓":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
-						//如果没找到，报错
-						String warehouseCode = warehouseDictService.getWarehouseCodeByName(dc.getColValue());	
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity.setWarehouseName(dc.getColValue());
-							entity.setWarehouseCode(warehouseCode);
-						}else{
-							errorMessage+="仓库不存在;";
-						}
-					} else {
-						errorMessage += "区域仓不能为空;";
+						entity.setWarehouseName(dc.getColValue());					
 					}
 					break;
 				case "发货日期":
@@ -82,22 +73,16 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 						entity.setCreateTime(createTime);
 						entity.setCreateMonth(DateUtil
 								.timeStamp2YYMM(createTime));
-					} else {
-						errorMessage += "发货日期不能为空;";
 					}
 					break;
 				case "始发站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setSendSite(dc.getColValue());
-					} else {
-						errorMessage += "始发站不能为空;";
 					}
 					break;
 				case "目的站":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setReceiveSite(dc.getColValue());
-					} else {
-						errorMessage += "目的站不能为空;";
 					}
 					break;
 				case "计费重量":
@@ -197,9 +182,9 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 	}
 
 	@Override
-	public void save() {
-		billFeesReceiveAirTempService.insertBatchTemp(list);
-
+	public int save() {
+		int result=billFeesReceiveAirTempService.insertBatchTemp(list);
+		return result;
 	}
 
 	@Override

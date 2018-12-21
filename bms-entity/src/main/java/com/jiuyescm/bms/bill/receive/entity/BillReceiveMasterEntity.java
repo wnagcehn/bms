@@ -37,6 +37,8 @@ public class BillReceiveMasterEntity implements IEntity {
 	private Double amount;
 	// 调整金额
 	private Double adjustAmount;
+	// 调整原因
+	private String adjustReason;
 	// 创建人
 	private String creator;
 	// 创建人ID
@@ -524,5 +526,15 @@ public class BillReceiveMasterEntity implements IEntity {
 	public void setIsCalculated(String isCalculated) {
 		this.isCalculated = isCalculated;
 	}
+
+	public String getAdjustReason() {
+		return adjustReason;
+	}
+
+	public void setAdjustReason(String adjustReason) {
+		this.adjustReason = adjustReason;
+	}
+
+
     
 }

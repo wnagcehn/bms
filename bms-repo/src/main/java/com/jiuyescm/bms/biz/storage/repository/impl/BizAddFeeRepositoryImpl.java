@@ -24,7 +24,7 @@ import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
  * 
  */
 @Repository("bizAddFeeRepository")
-public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> implements IBizAddFeeRepository {
+public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRepository {
 
 	private static final Logger logger = Logger.getLogger(BizAddFeeRepositoryImpl.class.getName());
 
@@ -32,6 +32,7 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 		super();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
     public PageInfo<BizAddFeeEntity> query(Map<String, Object> condition, int pageNo, int pageSize) {
         List<BizAddFeeEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.query", condition, new RowBounds(
@@ -42,32 +43,37 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 
     @Override
     public BizAddFeeEntity findById(Long id) {
-        BizAddFeeEntity entity = selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.findById", id);
+        BizAddFeeEntity entity = (BizAddFeeEntity) selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.findById", id);
         return entity;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public BizAddFeeEntity save(BizAddFeeEntity entity) {
         insert("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.save", entity);
         return entity;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public BizAddFeeEntity update(BizAddFeeEntity entity) {
         update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update", entity);
         return entity;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void delete(BizAddFeeEntity entity) {
     	update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.update", entity);
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int saveList(List<BizAddFeeEntity> addList) {
 		return insertBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.save",addList);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int updateList(List<BizAddFeeEntity> updateList) {
 		try {
@@ -78,22 +84,38 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		try {
+			return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.updateByMap",condition);
+		} catch (Exception ex) {
+			logger.error("批量更新主表异常"+ex.getMessage());
+		}	
+		return 0;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public BizAddFeeEntity selectOne(Map<String, Object> param) {
 		return (BizAddFeeEntity)selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.selectOne",param);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<BizAddFeeEntity> queryList(Map<String, Object> condition) {
 		return selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.queryRecount",condition);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public BizAddFeeEntity queryWms(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		return (BizAddFeeEntity) selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.queryWms", param);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<BizAddFeeEntity> querybizAddFee(Map<String, Object> condition) {
 		return selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.querybizAddFee",condition);
@@ -104,11 +126,13 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao<BizAddFeeEntity> impleme
 	 * @param page
 	 * @param param
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
     public PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize){
 		List<BizAddFeeEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.groupCount", condition, new RowBounds(
                 pageNo, pageSize));
 		return new PageInfo<BizAddFeeEntity>(list);
 	}
-	
+
+
 }
