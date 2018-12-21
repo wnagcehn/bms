@@ -62,10 +62,10 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		
 		Map<String, Object> paramMonthMap = new HashMap<String, Object>();
 		XxlJobLogger.log("处理上月商家免导配置");
-		paramMonthMap.put("createTime", lastMonthFirstDay);
+		paramMonthMap.put("startTime", lastMonthFirstDay);
 		wh_cust(paramMonthMap);
 		XxlJobLogger.log("处理当月商家免导配置");
-		paramMonthMap.put("createTime", tomorrow);
+		paramMonthMap.put("startTime", tomorrow);
 		wh_cust(paramMonthMap);
 		
         XxlJobLogger.log("各仓业务数据导入统计,总耗时："+ (System.currentTimeMillis() - starttime) + "毫秒");
