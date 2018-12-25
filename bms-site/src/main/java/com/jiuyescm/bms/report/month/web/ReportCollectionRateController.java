@@ -109,6 +109,7 @@ public class ReportCollectionRateController {
 		try {
 			//createMonthTran(param);
 			receiptDateTran(param);
+			reeciptTarget(param);
 		} catch (Exception e) {
 			logger.error("日期转换异常", e);
 		}
@@ -195,8 +196,24 @@ public class ReportCollectionRateController {
 			param.put("receiptEndDate", param.get("year").toString() + "-0" + month.toString());
 		}else {
 			param.put("receiptEndDate", param.get("year").toString() + "-" + month.toString());
+		}	
+	}
+	
+	private void reeciptTarget(Map<String, Object> param) {
+		Integer month = Integer.parseInt(param.get("month").toString())-1;
+		if (month <= 0) {
+			Integer year = Integer.parseInt(param.get("year").toString())-1;
+			Integer newmonth=month+12;
+			param.put("createMonth", String.valueOf(year).substring(2,4) +  newmonth);
+		}else if (month >= 10) {
+			param.put("createMonth", param.get("year").toString().substring(2, 4) + month.toString());
+		}else {
+			param.put("createMonth", param.get("year").toString().substring(2, 4) + "0" + month.toString());
 		}
 	}
+	
+
+	
 	
 	/**
 	 * 收款达成率导出
