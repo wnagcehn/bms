@@ -17,6 +17,12 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getAllMonth&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyWarehouse&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtWarehouseImport">
       <Property name="creationType">com.jiuyescm.bms.report.vo.BizWarehouseImportReportVo</Property>
@@ -103,6 +109,7 @@ if(!isNullOrEmpty(month)){&#xD;
 	}&#xD;
 }&#xD;
 condition.set(&quot;importDate&quot;, year + &quot;-&quot; +month);&#xD;
+condition.set(&quot;warehouseCode&quot;, condition.get(&quot;warehouseCode&quot;));&#xD;
 &#xD;
 var tmpDataSet=view.get(&quot;#dsWarehouseImport&quot;);&#xD;
 tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
@@ -152,6 +159,12 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
         <Property name="property">month</Property>
         <Editor/>
       </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">warehouseCode</Property>
+        <Property name="property">warehouseCode</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
     </AutoForm>
     <Container>
       <DataGrid id="warehouseImportGrid">
@@ -182,6 +195,36 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
           <Property name="property">minusNum</Property>
           <Property name="name">minusNum</Property>
         </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;查看未导入商家&quot;,&#xD;
+			style:&quot;margin-right:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+				var warehouseImport=view.get(&quot;#dsWarehouseImport.data&quot;).current;&#xD;
+				var importDate = warehouseImport.get(&quot;importDate&quot;);&#xD;
+				var warehouseCode = warehouseImport.get(&quot;warehouseCode&quot;);&#xD;
+				var bizType = warehouseImport.get(&quot;bizType&quot;);&#xD;
+				var parameter={&#xD;
+					importDate:importDate,&#xD;
+					warehouseCode:warehouseCode,&#xD;
+					bizType:bizType,&#xD;
+				};&#xD;
+				var iframe=view.get(&quot;#WarehouseNotImportFrame&quot;);&#xD;
+				iframe.reload();&#xD;
+				iframe.set(&quot;userData&quot;,parameter);&#xD;
+				view.get(&quot;#dialogWarehouseNotImport&quot;).show();;&#xD;
+	    	}&#xD;
+		}&#xD;
+			&#xD;
+]);</ClientEvent>
+          <Property name="visible">true</Property>
+          <Property name="name">操作</Property>
+          <Editor/>
+        </DataColumn>
       </DataGrid>
     </Container>
     <DownloadAction id="downloadAction">
@@ -189,5 +232,17 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
       <Property name="caption">导出</Property>
       <Property name="parameter"></Property>
     </DownloadAction>
+    <Dialog id="dialogWarehouseNotImport">
+      <Property name="width">1000</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">未导入商家明细</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="WarehouseNotImportFrame">
+          <Property name="path">com.jiuyescm.bms.report.biz.view.WarehouseNotImport.d</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

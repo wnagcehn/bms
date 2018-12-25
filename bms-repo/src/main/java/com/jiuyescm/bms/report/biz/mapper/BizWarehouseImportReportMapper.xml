@@ -15,9 +15,56 @@
 			FROM report_warehouse_biz_import
 			WHERE del_flag = '0'
 				AND import_date = #{importDate}
+			<if test=" warehouseCode != null and warehouseCode !=''">
+				and warehouse_code = #{warehouseCode}
+			</if>
 			GROUP BY warehouse_code, import_date, biz_type, import_type, customer_id) a
 		GROUP BY warehouse_code, importDate,biz_type
 		ORDER BY warehouse_code, biz_type DESC
+    </select>
+    
+        <select id="queryByCondition" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseImportReportEntity">
+	SELECT warehouse_code, import_date as importDate,
+	    		biz_type, import_type, customer_id
+			FROM report_warehouse_biz_import
+			 WHERE del_flag = '0' 
+			 <if test=" warehouseCode != null and warehouseCode !=''">
+				 and warehouse_code = #{warehouseCode}
+			</if>
+			 <if test=" importDate != null and importDate !=''">
+				 AND import_date = #{importDate}
+			</if>
+			 <if test=" customerId != null and customerId !=''">
+				 AND customer_id = #{customerId} 
+			</if>
+			 <if test=" importType != null and importType !=''">
+				 and import_type = #{importType}
+			</if>
+			<if test=" bizType != null and bizType !=''">
+				 and biz_type = #{bizType}
+			</if>
+			<if test=" id != null and id !=''">
+				 and id = #{id}
+			</if>
+    </select>
+    
+<!--             <select id="queryNotImport" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity">
+    			 	SELECT a.import_type as importType, a.customer_id as customerId,b.customer_name as customerName,b.short_name as shortName 
+			FROM report_warehouse_biz_import a 
+			LEFT JOIN pub_customer b ON a.customer_id=b.customer_id
+			 WHERE a.del_flag = '0' and a.warehouse_code = #{warehouseCode}  AND a.import_date = #{importDate} AND a.biz_type = #{bizType}
+    </select> -->
+    
+      <select id="queryNotImport" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity">
+    select a.import_type as importType, a.customer_id as customerId,b.customer_name as customerName,b.short_name as shortName from report_warehouse_biz_import a
+ LEFT JOIN pub_customer b ON a.customer_id=b.customer_id 
+where import_date = #{importDate} and biz_type = #{bizType} and warehouse_code = #{warehouseCode} AND import_type =  'THEORY'
+and a.customer_id not in 
+(select customer_id from report_warehouse_biz_import 
+where import_date = #{importDate} and biz_type = #{bizType} and warehouse_code = #{warehouseCode} AND del_flag = '0' AND import_type = 'ACTUAL')
     </select>
     
 </mapper>

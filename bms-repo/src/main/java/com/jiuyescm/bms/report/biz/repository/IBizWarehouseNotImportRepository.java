@@ -11,12 +11,10 @@ import com.jiuyescm.bms.report.biz.entity.BizWarehouseImportReportEntity;
 import com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity;
 
 /**
- * @author yangss
+ * @author liuzhicheng
  */
-public interface IBizWarehouseImportReportRepository {
-
-	PageInfo<BizWarehouseImportReportEntity> query(Map<String, Object> condition, int pageNo, int pageSize);
+public interface IBizWarehouseNotImportRepository {
 	
-	List<BizWarehouseImportReportEntity> queryAll(Map<String, Object> condition);
+	PageInfo<BizWarehouseNotImportEntity> queryNotImport(Map<String, Object> condition,int pageNo, int pageSize);
 	
 }
