@@ -44,5 +44,23 @@ public interface IReportBillImportDetailRepository {
 	 * @return
 	 */
 	List<Map<String,Object>> queryReceiptExport(Map<String, Object> condition);
+	
+	/**
+	 * 导出仓储明细报表
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	List<Map<String,Object>> queryStorageExport(Map<String, Object> condition);
+	
+	/**
+	 * 导出业务明细报表
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	List<Map<String,Object>> queryBizExport(Map<String, Object> condition);
 
 }

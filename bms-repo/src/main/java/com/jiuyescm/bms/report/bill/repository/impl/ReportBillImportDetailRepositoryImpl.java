@@ -42,7 +42,7 @@ public class ReportBillImportDetailRepositoryImpl extends MyBatisDao implements 
 	public PageInfo<ReportBillBizDetailEntity> queryBiz(
 			Map<String, Object> condition, int pageNo, int pageSize) {
 		// TODO Auto-generated method stub
-		List<ReportBillBizDetailEntity> list = selectList("com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper.queryStorage", condition, new RowBounds(pageNo, pageSize));
+		List<ReportBillBizDetailEntity> list = selectList("com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper.queryBiz", condition, new RowBounds(pageNo, pageSize));
 		PageInfo<ReportBillBizDetailEntity> pageInfo=new PageInfo<>(list);
 		return pageInfo;
 	}
@@ -53,6 +53,24 @@ public class ReportBillImportDetailRepositoryImpl extends MyBatisDao implements 
 			Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> list = selectList("com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper.queryReceiptExport", condition);
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> queryStorageExport(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> list = selectList("com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper.queryStorageExport", condition);
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> queryBizExport(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> list = selectList("com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper.queryBizExport", condition);
 		return list;
 	}
 	

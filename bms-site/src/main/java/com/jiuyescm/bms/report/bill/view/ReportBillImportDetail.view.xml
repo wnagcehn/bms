@@ -512,24 +512,20 @@
       <Property name="dataProvider">reportBillImportDetailController#queryReceiptDetail</Property>
     </DataSet>
     <DataSet id="dsBillReceiptStorageDetail">
-      <Property name="loadMode">manual</Property>
       <Property name="pageSize">20</Property>
       <Property name="dataType">[dtBillReceiptStorageDetail]</Property>
+      <Property name="dataProvider">reportBillImportDetailController#queryStorageDetail</Property>
     </DataSet>
     <DataSet id="dsBillReceiptBizDetail">
       <Property name="dataType">[dtBillReceiptBizDetail]</Property>
+      <Property name="dataProvider">reportBillImportDetailController#queryBizDetail</Property>
+      <Property name="pageSize">20</Property>
     </DataSet>
     <ToolBar>
-      <ToolBarButton id="btnQuery">
-        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-        <Property name="caption">查询</Property>
-      </ToolBarButton>
       <ToolBarButton id="btnExport">
-        <ClientEvent name="onClick">&#xD;
-view.get(&quot;#downloadAction&quot;).execute();</ClientEvent>
+        <ClientEvent name="onClick">view.get(&quot;#downloadAction&quot;).execute();&#xD;
+</ClientEvent>
         <Property name="caption">导出</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
-        <Property name="visible">true</Property>
         <Property name="action">downloadAction</Property>
       </ToolBarButton>
     </ToolBar>
@@ -747,7 +743,6 @@ view.get(&quot;#downloadAction&quot;).execute();</ClientEvent>
             </ToolBar>
             <DataGrid>
               <Property name="dataSet">dsBillReceiptStorageDetail</Property>
-              <Property name="width">2500</Property>
               <DataColumn name="area">
                 <Property name="property">area</Property>
                 <Property name="width">120</Property>
@@ -878,13 +873,13 @@ view.get(&quot;#downloadAction&quot;).execute();</ClientEvent>
               <ColumnGroup>
                 <Property name="caption">运输费用</Property>
                 <DataColumn>
-                  <Property name="property">dispatchAmount</Property>
+                  <Property name="property">jiuyeAmount</Property>
                   <Property name="caption">九曳自送（元）</Property>
                   <Property name="name">jiuyeAmount</Property>
                   <Property name="width">120</Property>
                 </DataColumn>
                 <DataColumn>
-                  <Property name="property">dispatchCount</Property>
+                  <Property name="property">jiuyeCount</Property>
                   <Property name="name">jiuyeCount</Property>
                   <Property name="caption">单量</Property>
                   <Property name="width">120</Property>
@@ -962,279 +957,298 @@ view.get(&quot;#downloadAction&quot;).execute();</ClientEvent>
         </ControlTab>
         <ControlTab>
           <Property name="caption">业务明细</Property>
-          <ToolBar>
-            <DataPilot>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsBillReceiptBizDetail</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid>
               <Property name="dataSet">dsBillReceiptBizDetail</Property>
-            </DataPilot>
-          </ToolBar>
-          <DataGrid>
-            <Property name="dataSet">dsBillReceiptBizDetail</Property>
-            <Property name="width">120</Property>
-            <DataColumn name="area">
-              <Property name="property">area</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="createMonth">
-              <Property name="property">createMonth</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="billName">
-              <Property name="property">billName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="bill">
-              <Property name="property">bill</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="invoiceDate">
-              <Property name="property">invoiceDate</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="balanceName">
-              <Property name="property">balanceName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="warehouseName">
-              <Property name="property">warehouseName</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <ColumnGroup>
-              <Property name="caption">收入小计</Property>
-              <DataColumn name="receiveStorage">
-                <Property name="property">receiveStorage</Property>
+              <DataColumn name="area">
+                <Property name="property">area</Property>
                 <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="createMonth">
+                <Property name="property">createMonth</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="billName">
+                <Property name="property">billName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="bill">
+                <Property name="property">bill</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="invoiceDate">
+                <Property name="property">invoiceDate</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="balanceName">
+                <Property name="property">balanceName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="warehouseName">
+                <Property name="property">warehouseName</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <ColumnGroup>
+                <Property name="caption">收入小计</Property>
+                <DataColumn name="receiveStorage">
+                  <Property name="property">receiveStorage</Property>
+                  <Property name="width">120</Property>
+                  <Property name="caption">仓储</Property>
+                </DataColumn>
+                <DataColumn name="receiveDispatch">
+                  <Property name="property">receiveDispatch</Property>
+                  <Property name="width">120</Property>
+                  <Property name="caption">宅配</Property>
+                </DataColumn>
+              </ColumnGroup>
+              <ColumnGroup>
+                <Property name="caption">理赔小计</Property>
+                <DataColumn name="abnormalStorage">
+                  <Property name="property">abnormalStorage</Property>
+                  <Property name="width">120</Property>
+                  <Property name="caption">仓储</Property>
+                </DataColumn>
+                <DataColumn name="abnormalDispatch">
+                  <Property name="property">abnormalDispatch</Property>
+                  <Property name="width">120</Property>
+                  <Property name="caption">宅配</Property>
+                </DataColumn>
+              </ColumnGroup>
+              <ColumnGroup>
                 <Property name="caption">仓储</Property>
-              </DataColumn>
-              <DataColumn name="receiveDispatch">
-                <Property name="property">receiveDispatch</Property>
-                <Property name="width">120</Property>
+                <ColumnGroup>
+                  <Property name="caption">存储托盘数</Property>
+                  <DataColumn name="cwPallet">
+                    <Property name="property">cwPallet</Property>
+                    <Property name="caption">常温</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="hwPallet">
+                    <Property name="property">hwPallet</Property>
+                    <Property name="caption">恒温</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="ldPallet">
+                    <Property name="property">ldPallet</Property>
+                    <Property name="caption">冷冻</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="lcPallet">
+                    <Property name="property">lcPallet</Property>
+                    <Property name="caption">冷藏</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="totalPallet">
+                    <Property name="property">totalPallet</Property>
+                    <Property name="caption">小计</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <DataColumn name="outstockPallet">
+                  <Property name="property">outstockPallet</Property>
+                  <Property name="width">120</Property>
+                  <Property name="caption">出库托盘数</Property>
+                </DataColumn>
+                <ColumnGroup>
+                  <Property name="caption">仓租费</Property>
+                  <DataColumn name="cwRent">
+                    <Property name="property">cwRent</Property>
+                    <Property name="caption">常温</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="hwRent">
+                    <Property name="property">hwRent</Property>
+                    <Property name="caption">恒温</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="ldRent">
+                    <Property name="property">ldRent</Property>
+                    <Property name="caption">冷冻</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="lcRent">
+                    <Property name="property">lcRent</Property>
+                    <Property name="caption">冷藏</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                  <DataColumn name="totalRent">
+                    <Property name="property">totalRent</Property>
+                    <Property name="caption">小计</Property>
+                    <Property name="width">120</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <DataColumn name="outstockFee">
+                  <Property name="property">outstockFee</Property>
+                  <Property name="caption">操作费</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="materialFee">
+                  <Property name="property">materialFee</Property>
+                  <Property name="caption">耗材费</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="addFee">
+                  <Property name="property">addFee</Property>
+                  <Property name="caption">增值费</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="abnormalFee">
+                  <Property name="property">abnormalFee</Property>
+                  <Property name="caption">理赔</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+              </ColumnGroup>
+              <ColumnGroup>
                 <Property name="caption">宅配</Property>
-              </DataColumn>
-            </ColumnGroup>
-            <ColumnGroup>
-              <Property name="caption">理赔小计</Property>
-              <DataColumn name="abnormalStorage">
-                <Property name="property">abnormalStorage</Property>
-                <Property name="width">120</Property>
-                <Property name="caption">仓储</Property>
-              </DataColumn>
-              <DataColumn name="abnormalDispatch">
-                <Property name="property">abnormalDispatch</Property>
-                <Property name="width">120</Property>
-                <Property name="caption">宅配</Property>
-              </DataColumn>
-            </ColumnGroup>
-            <ColumnGroup>
-              <Property name="caption">仓储</Property>
-              <ColumnGroup>
-                <Property name="caption">存储托盘数</Property>
-                <DataColumn name="cwPallet">
-                  <Property name="property">cwPallet</Property>
-                  <Property name="caption">常温</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="hwPallet">
-                  <Property name="property">hwPallet</Property>
-                  <Property name="caption">恒温</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="ldPallet">
-                  <Property name="property">ldPallet</Property>
-                  <Property name="caption">冷冻</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="lcPallet">
-                  <Property name="property">lcPallet</Property>
-                  <Property name="caption">冷藏</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="totalPallet">
-                  <Property name="property">totalPallet</Property>
+                <ColumnGroup>
+                  <Property name="caption">九曳自送</Property>
+                  <DataColumn name="jiuyeAmount">
+                    <Property name="property">jiuyeAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="jiuyeCount">
+                    <Property name="property">jiuyeCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">顺丰</Property>
+                  <DataColumn name="shunfengAmount">
+                    <Property name="property">shunfengAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="shunfengCount">
+                    <Property name="property">shunfengCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">跨越</Property>
+                  <DataColumn name="kuayueAmount">
+                    <Property name="property">kuayueAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="kuayueCount">
+                    <Property name="property">kuayueCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">圆通</Property>
+                  <DataColumn name="yuantongAmount">
+                    <Property name="property">yuantongAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="yuantongCount">
+                    <Property name="property">yuantongCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">中通</Property>
+                  <DataColumn name="zhongtongAmount">
+                    <Property name="property">zhongtongAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="zhongtongCount">
+                    <Property name="property">zhongtongCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">申通</Property>
+                  <DataColumn name="shentongAmount">
+                    <Property name="property">shentongAmount</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="shentongCount">
+                    <Property name="property">shentongCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">韵达</Property>
+                  <DataColumn name="yundaAmount">
+                    <Property name="property">yundaAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="yundaCount">
+                    <Property name="property">yundaCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
                   <Property name="caption">小计</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
+                  <DataColumn name="totalAmount">
+                    <Property name="property">totalAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="totalCount">
+                    <Property name="property">totalCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
+                <ColumnGroup>
+                  <Property name="caption">理赔</Property>
+                  <DataColumn name="abnormalAmount">
+                    <Property name="property">abnormalAmount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">金额</Property>
+                  </DataColumn>
+                  <DataColumn name="abnormalCount">
+                    <Property name="property">abnormalCount</Property>
+                    <Property name="width">120</Property>
+                    <Property name="caption">单量</Property>
+                  </DataColumn>
+                </ColumnGroup>
               </ColumnGroup>
-              <DataColumn name="outstockPallet">
-                <Property name="property">outstockPallet</Property>
-                <Property name="width">120</Property>
-                <Property name="caption">出库托盘数</Property>
-              </DataColumn>
-              <ColumnGroup>
-                <Property name="caption">仓租费</Property>
-                <DataColumn name="cwRent">
-                  <Property name="property">cwRent</Property>
-                  <Property name="caption">常温</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="hwRent">
-                  <Property name="property">hwRent</Property>
-                  <Property name="caption">恒温</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="ldRent">
-                  <Property name="property">ldRent</Property>
-                  <Property name="caption">冷冻</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="lcRent">
-                  <Property name="property">lcRent</Property>
-                  <Property name="caption">冷藏</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="totalRent">
-                  <Property name="property">totalRent</Property>
-                  <Property name="caption">小计</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <DataColumn name="outstockFee">
-                <Property name="property">outstockFee</Property>
-                <Property name="caption">操作费</Property>
+              <DataColumn name="tbOutstockBox">
+                <Property name="property">tbOutstockBox</Property>
+                <Property name="caption">TB出库箱数</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="materialFee">
-                <Property name="property">materialFee</Property>
-                <Property name="caption">耗材费</Property>
+              <DataColumn name="cwPrice">
+                <Property name="property">cwPrice</Property>
+                <Property name="caption">常温库单价</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="addFee">
-                <Property name="property">addFee</Property>
-                <Property name="caption">增值费</Property>
+              <DataColumn name="hwPrice">
+                <Property name="property">hwPrice</Property>
+                <Property name="caption">恒温库单价</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-              <DataColumn name="abnormalFee">
-                <Property name="property">abnormalFee</Property>
-                <Property name="caption">理赔</Property>
+              <DataColumn name="ldPrice">
+                <Property name="property">ldPrice</Property>
+                <Property name="caption">冷冻库单价</Property>
                 <Property name="width">120</Property>
               </DataColumn>
-            </ColumnGroup>
-            <ColumnGroup>
-              <Property name="caption">宅配</Property>
-              <ColumnGroup>
-                <Property name="caption">九曳自送</Property>
-                <DataColumn name="jiuyeAmount">
-                  <Property name="property">jiuyeAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="jiuyeCount">
-                  <Property name="property">jiuyeCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">顺丰</Property>
-                <DataColumn name="shunfengAmount">
-                  <Property name="property">shunfengAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="shunfengCount">
-                  <Property name="property">shunfengCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">跨越</Property>
-                <DataColumn name="kuayueAmount">
-                  <Property name="property">kuayueAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="kuayueCount">
-                  <Property name="property">kuayueCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">圆通</Property>
-                <DataColumn name="yuantongAmount">
-                  <Property name="property">yuantongAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="yuantongCount">
-                  <Property name="property">yuantongCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">中通</Property>
-                <DataColumn name="zhongtongAmount">
-                  <Property name="property">zhongtongAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="zhongtongCount">
-                  <Property name="property">zhongtongCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">申通</Property>
-                <DataColumn name="shentongAmount">
-                  <Property name="property">shentongAmount</Property>
-                </DataColumn>
-                <DataColumn name="shentongCount">
-                  <Property name="property">shentongCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">韵达</Property>
-                <DataColumn name="yundaAmount">
-                  <Property name="property">yundaAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="yundaCount">
-                  <Property name="property">yundaCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">小计</Property>
-                <DataColumn name="totalAmount">
-                  <Property name="property">totalAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="totalCount">
-                  <Property name="property">totalCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-              <ColumnGroup>
-                <Property name="caption">理赔</Property>
-                <DataColumn name="abnormalAmount">
-                  <Property name="property">abnormalAmount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-                <DataColumn name="abnormalCount">
-                  <Property name="property">abnormalCount</Property>
-                  <Property name="width">120</Property>
-                </DataColumn>
-              </ColumnGroup>
-            </ColumnGroup>
-            <DataColumn name="tbOutstockBox">
-              <Property name="property">tbOutstockBox</Property>
-              <Property name="caption">TB出库箱数</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="cwPrice">
-              <Property name="property">cwPrice</Property>
-              <Property name="caption">常温库单价</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="hwPrice">
-              <Property name="property">hwPrice</Property>
-              <Property name="caption">恒温库单价</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="ldPrice">
-              <Property name="property">ldPrice</Property>
-              <Property name="caption">冷冻库单价</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-            <DataColumn name="lcPrice">
-              <Property name="property">lcPrice</Property>
-              <Property name="caption">冷藏库单价</Property>
-              <Property name="width">120</Property>
-            </DataColumn>
-          </DataGrid>
+              <DataColumn name="lcPrice">
+                <Property name="property">lcPrice</Property>
+                <Property name="caption">冷藏库单价</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
         </ControlTab>
       </TabControl>
     </Container>

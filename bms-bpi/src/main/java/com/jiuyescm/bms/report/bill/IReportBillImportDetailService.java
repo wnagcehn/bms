@@ -42,6 +42,15 @@ public interface IReportBillImportDetailService {
 	 * @return
 	 */
 	PageInfo<ReportBillStorageDetailVo> queryStorage(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 导出仓储明细报表
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	List<Map<String,Object>> queryStorageExport(Map<String, Object> condition);
 
 	/**
 	 * 业务明细报表
@@ -51,5 +60,13 @@ public interface IReportBillImportDetailService {
 	 * @return
 	 */
 	PageInfo<ReportBillBizDetailVo> queryBiz(Map<String, Object> condition, int pageNo, int pageSize);
-
+	
+	/**
+	 * 导出业务明细报表
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	List<Map<String,Object>> queryBizExport(Map<String, Object> condition);
 }
