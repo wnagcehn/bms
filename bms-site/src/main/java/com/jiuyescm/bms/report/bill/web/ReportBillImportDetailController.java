@@ -24,8 +24,12 @@ import com.bstek.dorado.data.provider.Page;
 import com.bstek.dorado.uploader.DownloadFile;
 import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.file.templet.BmsTempletInfoEntity;
+import com.jiuyescm.bms.file.templet.IBmsTempletInfoService;
 import com.jiuyescm.bms.report.bill.IReportBillImportDetailService;
+import com.jiuyescm.bms.report.vo.ReportBillBizDetailVo;
 import com.jiuyescm.bms.report.vo.ReportBillReceiptDetailVo;
+import com.jiuyescm.bms.report.vo.ReportBillStorageDetailVo;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
 
@@ -41,6 +45,8 @@ public class ReportBillImportDetailController {
 	@Resource
 	private IReportBillImportDetailService reportBillImportDetailService;
 	@Autowired private StorageClient storageClient;
+	@Autowired private IBmsTempletInfoService bmsTempletInfoService;
+
 	/**
 	 * 查询收入明细
 	 * @param page
@@ -55,18 +61,43 @@ public class ReportBillImportDetailController {
 		}
 	}
 	
+	/**
+	 * 查询仓储明细
+	 * @param page
+	 * @param parameter
+	 */
+	@DataProvider
+	public void queryStorageDetail(Page<ReportBillStorageDetailVo> page, Map<String, Object> parameter) {
+		PageInfo<ReportBillStorageDetailVo> tmpPageInfo = reportBillImportDetailService.queryStorage(parameter, page.getPageNo(), page.getPageSize());
+		if (tmpPageInfo != null) {
+			page.setEntities(tmpPageInfo.getList());
+			page.setEntityCount((int) tmpPageInfo.getTotal());
+		}
+	}
+	
+	/**
+	 * 查询业务明细
+	 * @param page
+	 * @param parameter
+	 */
+	@DataProvider
+	public void queryBizDetail(Page<ReportBillBizDetailVo> page, Map<String, Object> parameter) {
+		PageInfo<ReportBillBizDetailVo> tmpPageInfo = reportBillImportDetailService.queryBiz(parameter, page.getPageNo(), page.getPageSize());
+		if (tmpPageInfo != null) {
+			page.setEntities(tmpPageInfo.getList());
+			page.setEntityCount((int) tmpPageInfo.getTotal());
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
 	@FileProvider
 	public DownloadFile getFile(Map<String, String> parameter) throws IOException{
-		parameter.put("url", "group1/M00/03/70/wKgAMFwIvQOAbnKnAABABDxsRQg70.xlsx");
-		parameter.put("excelName", "账单报表导出模板.xlsx");
 		
-		// TODO Auto-generated method stub
-/*		*/
 		
-		final String fileName=parameter.get("excelName");
-		byte[] bytes=storageClient.downloadFile(parameter.get("url"),new DownloadByteArray());
+		BmsTempletInfoEntity template=bmsTempletInfoService.findByCode("bill_report_export");
+
+		final String fileName=template.getExcelName();
+		byte[] bytes=storageClient.downloadFile(template.getUrl(),new DownloadByteArray());
 		try{
 			XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new ByteArrayInputStream(bytes));
 			
@@ -88,8 +119,46 @@ public class ReportBillImportDetailController {
 		    		}
 		    	}
 		    }		    
-		    sheet1.shiftRows(firstRow1.getRowNum()+1, firstRow1.getRowNum()+1+list1.size(), -1);//删除第一行，然后使下方单元格上移
+		    sheet1.shiftRows(firstRow1.getRowNum()+1, firstRow1.getRowNum()+1+list1.size(), -1);//删除第一行，然后使下方单元格上移		    
 		    
+		    
+			//=================================第二个sheet写数据===========================
+			List<Map<String,Object>> list2=reportBillImportDetailService.queryStorageExport(condition);
+			
+		    XSSFSheet sheet2=xssfWorkbook.getSheetAt(1);
+		    XSSFRow firstRow2=sheet2.getRow(2);
+		    Iterator<Cell> cellList2=firstRow2.iterator();	
+		    //第一行对应得字段
+		    List<Cell> myList2=IteratorUtils.toList(cellList2);		    		    
+		    for(int i=0;i<list2.size();i++){
+		    	Map<String,Object> map=list2.get(i);
+		    	XSSFRow newrow =sheet2.createRow(i+3);
+		    	for(Cell cell:myList2){
+		    		if(map.containsKey(cell.getStringCellValue())){
+		    			newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+		    		}
+		    	}
+		    }		    
+		    sheet2.shiftRows(firstRow2.getRowNum()+1, firstRow2.getRowNum()+1+list2.size(), -1);//删除第一行，然后使下方单元格上移
+		    
+			//=================================第三个sheet写数据===========================
+			List<Map<String,Object>> list3=reportBillImportDetailService.queryBizExport(condition);
+			
+		    XSSFSheet sheet3=xssfWorkbook.getSheetAt(2);
+		    XSSFRow firstRow3=sheet3.getRow(3);
+		    Iterator<Cell> cellList3=firstRow3.iterator();	
+		    //第一行对应得字段
+		    List<Cell> myList3=IteratorUtils.toList(cellList3);		    		    
+		    for(int i=0;i<list3.size();i++){
+		    	Map<String,Object> map=list3.get(i);
+		    	XSSFRow newrow =sheet3.createRow(i+4);
+		    	for(Cell cell:myList3){
+		    		if(map.containsKey(cell.getStringCellValue())){
+		    			newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+		    		}
+		    	}
+		    }		    
+		    sheet3.shiftRows(firstRow3.getRowNum()+1, firstRow3.getRowNum()+1+list3.size(), -1);//删除第一行，然后使下方单元格上移
 		    
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			xssfWorkbook.write(os);

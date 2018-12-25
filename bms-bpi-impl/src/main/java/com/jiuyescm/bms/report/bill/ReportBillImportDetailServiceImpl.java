@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
+import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.bms.report.bill.repository.IReportBillImportDetailRepository;
 import com.jiuyescm.bms.report.vo.ReportBillBizDetailVo;
 import com.jiuyescm.bms.report.vo.ReportBillReceiptDetailVo;
@@ -99,10 +101,47 @@ public class ReportBillImportDetailServiceImpl implements IReportBillImportDetai
 	public List<Map<String, Object>> queryReceiptExport(
 			Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		return billImportDetailRepository.queryReceiptExport(condition);
+		List<Map<String, Object>> list=billImportDetailRepository.queryReceiptExport(condition);
+		for(Map<String,Object> map:list){
+			if(map.containsKey("billStatus")){
+				if(map.get("billStatus")!=null){
+					map.put("billStatus", CheckBillStatusEnum.getDesc(map.get("billStatus").toString()));
+				}
+			}
+			if(map.containsKey("invoiceStatus")){
+				if(map.get("invoiceStatus")!=null){
+					map.put("invoiceStatus", BillCheckInvoiceStateEnum.getDesc(map.get("invoiceStatus").toString()));
+				}
+			}
+		}
+		return list;
 	}
 
-	
-	
+	@Override
+	public List<Map<String, Object>> queryStorageExport(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> list=billImportDetailRepository.queryStorageExport(condition);
 
+		for(Map<String,Object> map:list){
+			if(map.containsKey("billStatus")){
+				if(map.get("billStatus")!=null){
+					map.put("billStatus", CheckBillStatusEnum.getDesc(map.get("billStatus").toString()));
+				}
+			}
+			if(map.containsKey("invoiceStatus")){
+				if(map.get("invoiceStatus")!=null){
+					map.put("invoiceStatus", BillCheckInvoiceStateEnum.getDesc(map.get("invoiceStatus").toString()));
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> queryBizExport(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return billImportDetailRepository.queryBizExport(condition);
+	}
 }
