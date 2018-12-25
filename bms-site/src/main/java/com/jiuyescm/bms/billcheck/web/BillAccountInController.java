@@ -106,6 +106,21 @@ public class BillAccountInController {
 			vo.setLastModifyTime(JAppContext.currentTimestamp());
 			vo.setConfirmTime(JAppContext.currentTimestamp());
 			billAccountInService.confirm(vo);
+			
+			//查询账户
+			Map<String, Object> condition = new HashMap<String, Object>();
+			condition.put("customerName", vo.getCustomerName());
+			List<BillAccountInfoVo> accountList =  billAccountInfoService.query(condition, 1, 20).getList();
+			//修改账户表金额
+			BillAccountInfoVo account = accountList.get(0);
+			BigDecimal amount = vo.getAmount();
+			BigDecimal accountAmount = account.getAmount();
+			BigDecimal accountAmountAdd = accountAmount.add(amount);
+			account.setAmount(accountAmountAdd);
+			account.setLastModifier(JAppContext.currentUserName());
+			account.setLastModifierId(JAppContext.currentUserID());
+			account.setLastModifyTime(JAppContext.currentTimestamp());
+			billAccountInfoService.update(account);
 		}else{
 			throw new BizException("未确认状态才能确认");
 		}
@@ -139,15 +154,15 @@ public class BillAccountInController {
 				entity.setConfirmStatus("0");
 				billAccountInService.save(entity);
 				//修改账户表金额
-				BillAccountInfoVo account = accountList.get(0);
-				BigDecimal amount = entity.getAmount();
-				BigDecimal accountAmount = account.getAmount();
-				BigDecimal accountAmountAdd = accountAmount.add(amount);
-				account.setAmount(accountAmountAdd);
-				account.setLastModifier(user);
-				account.setLastModifierId(userId);
-				account.setLastModifyTime(time);
-				billAccountInfoService.update(account);
+//				BillAccountInfoVo account = accountList.get(0);
+//				BigDecimal amount = entity.getAmount();
+//				BigDecimal accountAmount = account.getAmount();
+//				BigDecimal accountAmountAdd = accountAmount.add(amount);
+//				account.setAmount(accountAmountAdd);
+//				account.setLastModifier(user);
+//				account.setLastModifierId(userId);
+//				account.setLastModifyTime(time);
+//				billAccountInfoService.update(account);
 			}else{
 				//创建新账户
 				BillAccountInfoVo accountVo = new BillAccountInfoVo();
@@ -159,7 +174,7 @@ public class BillAccountInController {
 				accountVo.setCreatorId(userId);
 				accountVo.setCreateTime(time);
 				accountVo.setDelFlag("0");
-				accountVo.setAmount(entity.getAmount());
+				accountVo.setAmount(new BigDecimal(0));
 				billAccountInfoService.save(accountVo);
 				//写入录入表
 				entity.setCreator(user);
