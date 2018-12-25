@@ -288,7 +288,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.SUCCESS.getCode());
 				billReceiveMasterVo.setRemark("导入完成");
 				billReceiveMasterVo.setTaskRate(100);
-				//导入成功后汇总各个总金额
+				//==================导入成功后汇总各个总金额=====================
 				ReportBillImportMasterVo vo=new ReportBillImportMasterVo();
 				//总金额
 				vo.setTotalMoney(money);
@@ -306,10 +306,22 @@ public class ReceiveBillImportListener implements MessageListener {
 				vo.setTotalAirMoney(new BigDecimal(airMoney));
 				//获取所有的理赔金额
 				Double abnormalMoney=billReceiveMasterService.getAbnormalMoney(entity.getBillNo());
+				//耗材托数
+				Map<String,BigDecimal> material=billReceiveMasterService.queryMaterial(billNo);
+				vo.setTotalMaterialStorage(material.get("num"));
+				vo.setTotalMaterialStorageMoney(material.get("amount"));
+				//商品托数
+				Map<String,BigDecimal> product=billReceiveMasterService.queryProduct(billNo);
+				vo.setTotalProductStorage(product.get("num"));
+				vo.setTotalProductStorageMoney(product.get("amount"));
+				//仓租费
+				Double rentMoney=billReceiveMasterService.queryStorageRent(billNo);
+				vo.setTotalRentMoney(new BigDecimal(rentMoney));
 				vo.setTotalAbnormalMoney(new BigDecimal(abnormalMoney));
 				vo.setCreator(param.get("creator").toString());
 				vo.setCreateTime(JAppContext.currentTimestamp());
-				
+				vo.setDelFlag("0");
+				billReceiveMasterService.insertReportMaster(vo);
 				
 			}else{
 				//无论保存成功与否删除所有临时表的数据

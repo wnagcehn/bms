@@ -12,7 +12,7 @@ import com.jiuyescm.bms.report.vo.ReportBillReceiptDetailVo;
 import com.jiuyescm.bms.report.vo.ReportBillStorageDetailVo;
 
 /**
- * @author yangss
+ * @author zhaofeng
  */
 public interface IReportBillImportDetailService {
 	

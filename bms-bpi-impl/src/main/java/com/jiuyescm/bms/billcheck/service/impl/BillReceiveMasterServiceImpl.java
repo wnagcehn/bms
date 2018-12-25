@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billcheck.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -249,8 +250,21 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 		return billReceiveMasterRepository.getAbnormalMoney(billNo);
 	}
 
+	@Override
+	public Map<String, BigDecimal> queryMaterial(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryMaterial(billNo);
+	}
 
+	@Override
+	public Map<String, BigDecimal> queryProduct(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryProduct(billNo);
+	}
 
-
-	
+	@Override
+	public Double queryStorageRent(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryStorageRent(billNo);
+	}	
 }

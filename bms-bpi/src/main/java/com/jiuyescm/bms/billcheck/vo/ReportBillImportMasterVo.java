@@ -37,6 +37,18 @@ public class ReportBillImportMasterVo implements IEntity {
 	private Timestamp createTime;
 	// 作废标识
 	private String delFlag;
+	// 耗材托数
+	private BigDecimal totalMaterialStorage;
+	// 耗材存储费
+	private BigDecimal totalMaterialStorageMoney;
+	// 商品存储费
+	private BigDecimal totalProductStorage;
+	// 商品存储费
+	private BigDecimal totalProductStorageMoney;
+	// 仓租费
+	private BigDecimal totalRentMoney;
+	// 增值费 入库操作费+入库卸货费+出库装车费 +所有的增值费+改地址退件费+金额调整费
+	private Double totalAddMoney;
 
 	public ReportBillImportMasterVo() {
 		super();
@@ -128,6 +140,54 @@ public class ReportBillImportMasterVo implements IEntity {
 
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public BigDecimal getTotalMaterialStorage() {
+		return totalMaterialStorage;
+	}
+
+	public void setTotalMaterialStorage(BigDecimal totalMaterialStorage) {
+		this.totalMaterialStorage = totalMaterialStorage;
+	}
+
+	public BigDecimal getTotalMaterialStorageMoney() {
+		return totalMaterialStorageMoney;
+	}
+
+	public void setTotalMaterialStorageMoney(BigDecimal totalMaterialStorageMoney) {
+		this.totalMaterialStorageMoney = totalMaterialStorageMoney;
+	}
+
+	public BigDecimal getTotalProductStorage() {
+		return totalProductStorage;
+	}
+
+	public void setTotalProductStorage(BigDecimal totalProductStorage) {
+		this.totalProductStorage = totalProductStorage;
+	}
+
+	public BigDecimal getTotalProductStorageMoney() {
+		return totalProductStorageMoney;
+	}
+
+	public void setTotalProductStorageMoney(BigDecimal totalProductStorageMoney) {
+		this.totalProductStorageMoney = totalProductStorageMoney;
+	}
+
+	public BigDecimal getTotalRentMoney() {
+		return totalRentMoney;
+	}
+
+	public void setTotalRentMoney(BigDecimal totalRentMoney) {
+		this.totalRentMoney = totalRentMoney;
+	}
+
+	public Double getTotalAddMoney() {
+		return totalAddMoney;
+	}
+
+	public void setTotalAddMoney(Double totalAddMoney) {
+		this.totalAddMoney = totalAddMoney;
 	}
     
 }

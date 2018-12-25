@@ -39,5 +39,24 @@ public interface IBillReceiveMasterService {
 	
 	Double getAbnormalMoney(String billNo);
 	
+	/**
+	 * 获取耗材托数、耗材存储费
+	 * @return
+	 */
+	Map<String,BigDecimal> queryMaterial(String billNo);
+	
+	/**
+	 * 获取商品托数、商品存储数
+	 * @return
+	 */
+	Map<String,BigDecimal> queryProduct(String billNo);
+	
+	/**
+	 * 获取仓租费
+	 * @param map
+	 * @return
+	 */
+	Double queryStorageRent(String billNo);
+	
 	int insertReportMaster(ReportBillImportMasterVo vo);
 }
