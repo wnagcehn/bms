@@ -223,6 +223,7 @@ jQuery(arg.dom).xCreate([&#xD;
 ]);</ClientEvent>
           <Property name="visible">true</Property>
           <Property name="name">操作</Property>
+          <Property name="align">center</Property>
           <Editor/>
         </DataColumn>
       </DataGrid>
