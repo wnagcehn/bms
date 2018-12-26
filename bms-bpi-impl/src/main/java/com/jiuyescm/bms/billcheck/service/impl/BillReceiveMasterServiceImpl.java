@@ -266,5 +266,29 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	public Double queryStorageRent(String billNo) {
 		// TODO Auto-generated method stub
 		return billReceiveMasterRepository.queryStorageRent(billNo);
+	}
+
+	@Override
+	public Double queryTransportAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryTransportAbnormalFee(billNo);
+	}
+
+	@Override
+	public Double queryAirAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryAirAbnormalFee(billNo);
+	}
+
+	@Override
+	public Double queryStorageAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryStorageAbnormalFee(billNo);
+	}
+
+	@Override
+	public Double queryDispatchAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		return billReceiveMasterRepository.queryDispatchAbnormalFee(billNo);
 	}	
 }

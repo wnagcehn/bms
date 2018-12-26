@@ -91,4 +91,21 @@ public interface IReportBillImportService {
 	 * @return
 	 */
 	int updateEtlTime(Map<String,Object> map);
+	
+	/**
+	 * 干线费用
+	 * @param map
+	 * @return
+	 */
+	BigDecimal queryTransportFee(Map<String,Object> map);
+	
+	/**
+	 * 仓储收入小计
+	 */
+	BigDecimal queryStorageReceipt(Map<String,Object> map);
+	
+	/**
+	 * 配送收入小计
+	 */
+	BigDecimal queryDispatchReceipt(Map<String,Object> map);
 }

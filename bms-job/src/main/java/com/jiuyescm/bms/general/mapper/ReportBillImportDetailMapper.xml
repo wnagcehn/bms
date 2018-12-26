@@ -2,13 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper" >
     <resultMap id="BaseResultMap" type="com.jiuyescm.bms.general.entity.ReportBillImportDetailEntity" >
-       		<id column="id" property="id" jdbcType="INTEGER" />
+       	    <id column="id" property="id" jdbcType="INTEGER" />
 		   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
 		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
 		   	<result column="pallet_cw_num" property="palletCwNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_cw_amount" property="palletCwAmount" jdbcType="DECIMAL" />
 		   	<result column="pallet_hw_num" property="palletHwNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_hw_amount" property="palletHwAmount" jdbcType="DECIMAL" />
 		   	<result column="pallet_ld_num" property="palletLdNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_ld_amount" property="palletLdAmount" jdbcType="DECIMAL" />
 		   	<result column="pallet_lc_num" property="palletLcNum" jdbcType="DECIMAL" />
+		   	<result column="pallet_lc_amount" property="palletLcAmount" jdbcType="DECIMAL" />
 		   	<result column="pallet_out_num" property="palletOutNum" jdbcType="DECIMAL" />
 		   	<result column="pallet_trans_num" property="palletTransNum" jdbcType="DECIMAL" />
 		   	<result column="rent_cw_amount" property="rentCwAmount" jdbcType="DECIMAL" />
@@ -19,6 +24,8 @@
 		   	<result column="material_amount" property="materialAmount" jdbcType="DECIMAL" />
 		   	<result column="st_add_amount" property="stAddAmount" jdbcType="DECIMAL" />
 		   	<result column="st_abnormal_amount" property="stAbnormalAmount" jdbcType="DECIMAL" />
+		   	<result column="de_abnormal_amount" property="deAbnormalAmount" jdbcType="DECIMAL" />
+		   	<result column="de_abnormal_orders" property="deAbnormalOrders" jdbcType="DECIMAL" />
 		   	<result column="st_tbout_num" property="stTboutNum" jdbcType="DECIMAL" />
 		   	<result column="de_jy_amount" property="deJyAmount" jdbcType="DECIMAL" />
 		   	<result column="de_jy_orders" property="deJyOrders" jdbcType="DECIMAL" />
@@ -28,6 +35,8 @@
 		   	<result column="de_yto_orders" property="deYtoOrders" jdbcType="DECIMAL" />
 		   	<result column="de_zto_amount" property="deZtoAmount" jdbcType="DECIMAL" />
 		   	<result column="de_zto_orders" property="deZtoOrders" jdbcType="DECIMAL" />
+		   	<result column="de_sto_amount" property="deStoAmount" jdbcType="DECIMAL" />
+		   	<result column="de_sto_orders" property="deStoOrders" jdbcType="DECIMAL" />
 		   	<result column="de_uc_amount" property="deUcAmount" jdbcType="DECIMAL" />
 		   	<result column="de_uc_orders" property="deUcOrders" jdbcType="DECIMAL" />
 		   	<result column="de_dbang_amount" property="deDbangAmount" jdbcType="DECIMAL" />
@@ -44,14 +53,20 @@
 		   	<result column="de_opt_orders" property="deOptOrders" jdbcType="DECIMAL" />
 		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
 		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		   	<result column="storage_receipt_amount" property="storageReceiptAmount" jdbcType="DECIMAL" />
+		   	<result column="dispatch_receipt_amount" property="dispatchReceiptAmount" jdbcType="DECIMAL" />
+		   	<result column="st_instock_work_amount" property="stInstockWorkAmount" jdbcType="DECIMAL" />
+		   	<result column="st_b2c_handwork_amount" property="stB2cHandworkAmount" jdbcType="DECIMAL" />
+		   	<result column="st_b2b_handwork_amount" property="stB2bHandworkAmount" jdbcType="DECIMAL" />
+		   	<result column="de_change_amount" property="deChangeAmount" jdbcType="DECIMAL" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, bill_no, warehouse_code, pallet_cw_num, pallet_hw_num, pallet_ld_num, pallet_lc_num, pallet_out_num, pallet_trans_num, rent_cw_amount, rent_hw_amount, rent_ld_amount, rent_lc_amount, operate_amount, material_amount, st_add_amount, st_abnormal_amount, st_tbout_num, de_jy_amount, de_jy_orders, de_sf_amount, de_sf_orders, de_yto_amount, de_yto_orders, de_zto_amount, de_zto_orders, de_uc_amount, de_uc_orders, de_dbang_amount, de_dbang_orders, de_kye_amount, de_kye_orders, de_yunda_amount, de_yunda_orders, de_htky_amount, de_htky_orders, de_ems_amount, de_ems_orders, de_opt_amount, de_opt_orders, write_time, last_modify_time
+        id, bill_no, warehouse_code, warehouse_name, pallet_cw_num, pallet_cw_amount, pallet_hw_num, pallet_hw_amount, pallet_ld_num, pallet_ld_amount, pallet_lc_num, pallet_lc_amount, pallet_out_num, pallet_trans_num, rent_cw_amount, rent_hw_amount, rent_ld_amount, rent_lc_amount, operate_amount, material_amount, st_add_amount, st_abnormal_amount, de_abnormal_amount, de_abnormal_orders, st_tbout_num, de_jy_amount, de_jy_orders, de_sf_amount, de_sf_orders, de_yto_amount, de_yto_orders, de_zto_amount, de_zto_orders, de_sto_amount, de_sto_orders, de_uc_amount, de_uc_orders, de_dbang_amount, de_dbang_orders, de_kye_amount, de_kye_orders, de_yunda_amount, de_yunda_orders, de_htky_amount, de_htky_orders, de_ems_amount, de_ems_orders, de_opt_amount, de_opt_orders, write_time, last_modify_time, storage_receipt_amount, dispatch_receipt_amount, st_instock_work_amount, st_b2c_handwork_amount, st_b2b_handwork_amount, de_change_amount
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-		bill_no, warehouse_code, pallet_cw_num, pallet_hw_num, pallet_ld_num, pallet_lc_num, pallet_out_num, pallet_trans_num, rent_cw_amount, rent_hw_amount, rent_ld_amount, rent_lc_amount, operate_amount, material_amount, st_add_amount, st_abnormal_amount, st_tbout_num, de_jy_amount, de_jy_orders, de_sf_amount, de_sf_orders, de_yto_amount, de_yto_orders, de_zto_amount, de_zto_orders, de_uc_amount, de_uc_orders, de_dbang_amount, de_dbang_orders, de_kye_amount, de_kye_orders, de_yunda_amount, de_yunda_orders, de_htky_amount, de_htky_orders, de_ems_amount, de_ems_orders, de_opt_amount, de_opt_orders, write_time, last_modify_time
+		bill_no, warehouse_code, warehouse_name, pallet_cw_num, pallet_cw_amount, pallet_hw_num, pallet_hw_amount, pallet_ld_num, pallet_ld_amount, pallet_lc_num, pallet_lc_amount, pallet_out_num, pallet_trans_num, rent_cw_amount, rent_hw_amount, rent_ld_amount, rent_lc_amount, operate_amount, material_amount, st_add_amount, st_abnormal_amount, de_abnormal_amount, de_abnormal_orders, st_tbout_num, de_jy_amount, de_jy_orders, de_sf_amount, de_sf_orders, de_yto_amount, de_yto_orders, de_zto_amount, de_zto_orders, de_sto_amount, de_sto_orders, de_uc_amount, de_uc_orders, de_dbang_amount, de_dbang_orders, de_kye_amount, de_kye_orders, de_yunda_amount, de_yunda_orders, de_htky_amount, de_htky_orders, de_ems_amount, de_ems_orders, de_opt_amount, de_opt_orders, write_time, last_modify_time, storage_receipt_amount, dispatch_receipt_amount, st_instock_work_amount, st_b2c_handwork_amount, st_b2b_handwork_amount, de_change_amount
     </sql>
 	
 	<select id="queryBill" resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity"  parameterType="java.util.Map">
@@ -125,7 +140,19 @@
 	
 	<select id="queryDispatch" parameterType="java.util.Map" resultType="java.util.Map">
 		select COUNT(0) as count,IFNULL(SUM(amount),0) as amount from bill_fees_receive_dispatch
-		where subject_code=#{subjectCode} and bill_no= #{billNo} and warehouse_code=#{warehouseCode} and carrierid=#{carrierid}
+		where 1=1
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and subject_code=#{subjectCode} 
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+			and bill_no=#{billNo} 
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code=#{warehouseCode} 
+		</if>
+		<if test="(carrierid != null and carrierid !='')" >
+			and carrierid=#{carrierid} 
+		</if>
 	</select>
 	
 	<select id="getTime" parameterType="java.util.Map" resultType="java.sql.Timestamp">
@@ -139,10 +166,15 @@
     	select
 			#{billNo,jdbcType=VARCHAR}, 
 			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
 			#{palletCwNum,jdbcType=DECIMAL}, 
+			#{palletCwAmount,jdbcType=DECIMAL}, 
 			#{palletHwNum,jdbcType=DECIMAL}, 
+			#{palletHwAmount,jdbcType=DECIMAL}, 
 			#{palletLdNum,jdbcType=DECIMAL}, 
+			#{palletLdAmount,jdbcType=DECIMAL}, 
 			#{palletLcNum,jdbcType=DECIMAL}, 
+			#{palletLcAmount,jdbcType=DECIMAL}, 
 			#{palletOutNum,jdbcType=DECIMAL}, 
 			#{palletTransNum,jdbcType=DECIMAL}, 
 			#{rentCwAmount,jdbcType=DECIMAL}, 
@@ -153,6 +185,8 @@
 			#{materialAmount,jdbcType=DECIMAL}, 
 			#{stAddAmount,jdbcType=DECIMAL}, 
 			#{stAbnormalAmount,jdbcType=DECIMAL}, 
+			#{deAbnormalAmount,jdbcType=DECIMAL}, 
+			#{deAbnormalOrders,jdbcType=DECIMAL}, 
 			#{stTboutNum,jdbcType=DECIMAL}, 
 			#{deJyAmount,jdbcType=DECIMAL}, 
 			#{deJyOrders,jdbcType=DECIMAL}, 
@@ -162,6 +196,8 @@
 			#{deYtoOrders,jdbcType=DECIMAL}, 
 			#{deZtoAmount,jdbcType=DECIMAL}, 
 			#{deZtoOrders,jdbcType=DECIMAL}, 
+			#{deStoAmount,jdbcType=DECIMAL}, 
+			#{deStoOrders,jdbcType=DECIMAL}, 
 			#{deUcAmount,jdbcType=DECIMAL}, 
 			#{deUcOrders,jdbcType=DECIMAL}, 
 			#{deDbangAmount,jdbcType=DECIMAL}, 
@@ -177,7 +213,13 @@
 			#{deOptAmount,jdbcType=DECIMAL}, 
 			#{deOptOrders,jdbcType=DECIMAL}, 
 			#{writeTime,jdbcType=TIMESTAMP}, 
-			#{lastModifyTime,jdbcType=TIMESTAMP}
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{storageReceiptAmount,jdbcType=DECIMAL}, 
+			#{dispatchReceiptAmount,jdbcType=DECIMAL}, 
+			#{stInstockWorkAmount,jdbcType=DECIMAL}, 
+			#{stB2cHandworkAmount,jdbcType=DECIMAL}, 
+			#{stB2bHandworkAmount,jdbcType=DECIMAL}, 
+			#{deChangeAmount,jdbcType=DECIMAL}
 		from dual
 		where not exists (select id from report_bill_import_detail where bill_no= #{billNo} and warehouse_code=#{warehouseCode}) 
     </insert>
@@ -188,9 +230,12 @@
     
     <select id="queryList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
     	select bill_no as billNo,create_time as createTime from bill_receive_master where del_flag='0' and task_status='SUCCESS' and is_calculated='0'
+    	<if test=" num != null and num !='' ">
+    		LIMIT #{num}
+    	</if>  	
     </select>
     
-    <update id="updateBillList" parameterType="">
+    <update id="updateBillList" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
     	 update bill_receive_master
         <trim prefix="set" suffixOverrides=",">
 			<if test=" createMonth != null and createMonth !='' ">
@@ -271,4 +316,12 @@
         </trim>
         where bill_no = #{billNo}
     </update>
+    
+    <select id="queryStorageReceipt" parameterType="java.util.Map" resultType="java.math.BigDecimal">   
+    	select IFNULL(SUM(amount),0) as amount from bill_fees_receive_storage where bill_no= #{billNo} and warehouse_code=#{warehouseCode} and subject_code not in ('wh_abnormal_pay')
+    </select>
+    
+    <select id="queryDispatchReceipt" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+   		select IFNULL(SUM(amount),0) as amount from bill_fees_receive_dispatch where bill_no= #{billNo} and warehouse_code=#{warehouseCode} and subject_code not in ('de_abnormal_pay')   
+    </select>
 </mapper>

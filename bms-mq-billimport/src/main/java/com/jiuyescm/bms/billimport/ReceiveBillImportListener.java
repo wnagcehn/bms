@@ -306,6 +306,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				vo.setTotalAirMoney(new BigDecimal(airMoney));
 				//获取所有的理赔金额
 				Double abnormalMoney=billReceiveMasterService.getAbnormalMoney(entity.getBillNo());
+				vo.setTotalAbnormalMoney(new BigDecimal(abnormalMoney));
 				//耗材托数
 				Map<String,BigDecimal> material=billReceiveMasterService.queryMaterial(billNo);
 				vo.setTotalMaterialStorage(material.get("num"));
@@ -317,10 +318,23 @@ public class ReceiveBillImportListener implements MessageListener {
 				//仓租费
 				Double rentMoney=billReceiveMasterService.queryStorageRent(billNo);
 				vo.setTotalRentMoney(new BigDecimal(rentMoney));
-				vo.setTotalAbnormalMoney(new BigDecimal(abnormalMoney));
+				//仓储理赔费用
+				Double storageAbnormal=billReceiveMasterService.queryStorageAbnormalFee(billNo);
+				vo.setTotalStorageAbnormalMoney(new BigDecimal(storageAbnormal));
+				//宅配理赔费用
+				Double dispatchAbnormal=billReceiveMasterService.queryDispatchAbnormalFee(billNo);
+				vo.setTotalDispatchAbnormalMoney(new BigDecimal(dispatchAbnormal));
+				//运输理赔费用
+				Double transportAbnormal=billReceiveMasterService.queryTransportAbnormalFee(billNo);
+				vo.setTotalTransportAbnormlMoney(new BigDecimal(transportAbnormal));
+				//航空理赔费用
+				Double airAbnormal=billReceiveMasterService.queryAirAbnormalFee(billNo);
+				vo.setTotalAirAbnormlMoney(new BigDecimal(airAbnormal));
+				
 				vo.setCreator(param.get("creator").toString());
 				vo.setCreateTime(JAppContext.currentTimestamp());
 				vo.setDelFlag("0");
+				vo.setBillNo(billNo);
 				billReceiveMasterService.insertReportMaster(vo);
 				
 			}else{

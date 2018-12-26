@@ -47,9 +47,15 @@ public class ReportBillImportMasterVo implements IEntity {
 	private BigDecimal totalProductStorageMoney;
 	// 仓租费
 	private BigDecimal totalRentMoney;
-	// 增值费 入库操作费+入库卸货费+出库装车费 +所有的增值费+改地址退件费+金额调整费
-	private Double totalAddMoney;
 
+	// 干线理赔费用
+	private BigDecimal totalTransportAbnormlMoney;
+	// 航空理赔费用
+	private BigDecimal totalAirAbnormlMoney;
+	// 仓储理赔费用
+	private BigDecimal totalStorageAbnormalMoney;
+	// 配送理赔费用
+	private BigDecimal totalDispatchAbnormalMoney;
 	public ReportBillImportMasterVo() {
 		super();
 	}
@@ -182,12 +188,37 @@ public class ReportBillImportMasterVo implements IEntity {
 		this.totalRentMoney = totalRentMoney;
 	}
 
-	public Double getTotalAddMoney() {
-		return totalAddMoney;
+	public BigDecimal getTotalTransportAbnormlMoney() {
+		return totalTransportAbnormlMoney;
 	}
 
-	public void setTotalAddMoney(Double totalAddMoney) {
-		this.totalAddMoney = totalAddMoney;
+	public void setTotalTransportAbnormlMoney(BigDecimal totalTransportAbnormlMoney) {
+		this.totalTransportAbnormlMoney = totalTransportAbnormlMoney;
 	}
+
+	public BigDecimal getTotalAirAbnormlMoney() {
+		return totalAirAbnormlMoney;
+	}
+
+	public void setTotalAirAbnormlMoney(BigDecimal totalAirAbnormlMoney) {
+		this.totalAirAbnormlMoney = totalAirAbnormlMoney;
+	}
+
+	public BigDecimal getTotalStorageAbnormalMoney() {
+		return totalStorageAbnormalMoney;
+	}
+
+	public void setTotalStorageAbnormalMoney(BigDecimal totalStorageAbnormalMoney) {
+		this.totalStorageAbnormalMoney = totalStorageAbnormalMoney;
+	}
+
+	public BigDecimal getTotalDispatchAbnormalMoney() {
+		return totalDispatchAbnormalMoney;
+	}
+
+	public void setTotalDispatchAbnormalMoney(BigDecimal totalDispatchAbnormalMoney) {
+		this.totalDispatchAbnormalMoney = totalDispatchAbnormalMoney;
+	}
+
     
 }

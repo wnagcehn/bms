@@ -23,14 +23,24 @@ public class ReportBillImportDetailEntity implements IEntity {
 	private String billNo;
 	// 仓库编码
 	private String warehouseCode;
+	// 仓库编码
+	private String warehouseName;
 	// 常温托数
 	private BigDecimal palletCwNum;
+	// 商品存储常温金额
+	private BigDecimal palletCwAmount;
 	// 恒温托数
 	private BigDecimal palletHwNum;
+	// 商品存储恒温金额
+	private BigDecimal palletHwAmount;
 	// 冷冻托收
 	private BigDecimal palletLdNum;
+	// 商品存储冷冻金额
+	private BigDecimal palletLdAmount;
 	// 冷藏托收
 	private BigDecimal palletLcNum;
+	// 商品存储冷藏金额
+	private BigDecimal palletLcAmount;
 	// 出库托盘数
 	private BigDecimal palletOutNum;
 	// 转仓托盘数
@@ -51,6 +61,10 @@ public class ReportBillImportDetailEntity implements IEntity {
 	private BigDecimal stAddAmount;
 	// 仓储理赔费
 	private BigDecimal stAbnormalAmount;
+	// 宅配理赔费
+	private BigDecimal deAbnormalAmount;
+	// 宅配理赔单量
+	private BigDecimal deAbnormalOrders;
 	// tb出库箱数
 	private BigDecimal stTboutNum;
 	// 九曳配送金额
@@ -69,6 +83,10 @@ public class ReportBillImportDetailEntity implements IEntity {
 	private BigDecimal deZtoAmount;
 	// 中通配送单量
 	private BigDecimal deZtoOrders;
+	// 申通配送金额
+	private BigDecimal deStoAmount;
+	// 申通通配送单量
+	private BigDecimal deStoOrders;
 	// 优速配送金额
 	private BigDecimal deUcAmount;
 	// 优速配送单量
@@ -101,6 +119,18 @@ public class ReportBillImportDetailEntity implements IEntity {
 	private Timestamp writeTime;
 	// 最后一次修改时间
 	private Timestamp lastModifyTime;
+	// 仓储收入小计
+	private BigDecimal storageReceiptAmount;
+	// 宅配收入小计
+	private BigDecimal dispatchReceiptAmount;
+	// 入库操作费
+	private BigDecimal stInstockWorkAmount;
+	// 入库卸货费
+	private BigDecimal stB2cHandworkAmount;
+	// 出库装车费
+	private BigDecimal stB2bHandworkAmount;
+	// 改地址退件费
+	private BigDecimal deChangeAmount;
 
 	public ReportBillImportDetailEntity() {
 		super();
@@ -440,6 +470,126 @@ public class ReportBillImportDetailEntity implements IEntity {
 
 	public void setLastModifyTime(Timestamp lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
+	}
+
+	public BigDecimal getStorageReceiptAmount() {
+		return storageReceiptAmount;
+	}
+
+	public void setStorageReceiptAmount(BigDecimal storageReceiptAmount) {
+		this.storageReceiptAmount = storageReceiptAmount;
+	}
+
+	public BigDecimal getDispatchReceiptAmount() {
+		return dispatchReceiptAmount;
+	}
+
+	public void setDispatchReceiptAmount(BigDecimal dispatchReceiptAmount) {
+		this.dispatchReceiptAmount = dispatchReceiptAmount;
+	}
+
+	public BigDecimal getStInstockWorkAmount() {
+		return stInstockWorkAmount;
+	}
+
+	public void setStInstockWorkAmount(BigDecimal stInstockWorkAmount) {
+		this.stInstockWorkAmount = stInstockWorkAmount;
+	}
+
+	public BigDecimal getStB2cHandworkAmount() {
+		return stB2cHandworkAmount;
+	}
+
+	public void setStB2cHandworkAmount(BigDecimal stB2cHandworkAmount) {
+		this.stB2cHandworkAmount = stB2cHandworkAmount;
+	}
+
+	public BigDecimal getStB2bHandworkAmount() {
+		return stB2bHandworkAmount;
+	}
+
+	public void setStB2bHandworkAmount(BigDecimal stB2bHandworkAmount) {
+		this.stB2bHandworkAmount = stB2bHandworkAmount;
+	}
+
+	public BigDecimal getDeChangeAmount() {
+		return deChangeAmount;
+	}
+
+	public void setDeChangeAmount(BigDecimal deChangeAmount) {
+		this.deChangeAmount = deChangeAmount;
+	}
+
+	public BigDecimal getPalletCwAmount() {
+		return palletCwAmount;
+	}
+
+	public void setPalletCwAmount(BigDecimal palletCwAmount) {
+		this.palletCwAmount = palletCwAmount;
+	}
+
+	public BigDecimal getPalletHwAmount() {
+		return palletHwAmount;
+	}
+
+	public void setPalletHwAmount(BigDecimal palletHwAmount) {
+		this.palletHwAmount = palletHwAmount;
+	}
+
+	public BigDecimal getPalletLdAmount() {
+		return palletLdAmount;
+	}
+
+	public void setPalletLdAmount(BigDecimal palletLdAmount) {
+		this.palletLdAmount = palletLdAmount;
+	}
+
+	public BigDecimal getPalletLcAmount() {
+		return palletLcAmount;
+	}
+
+	public void setPalletLcAmount(BigDecimal palletLcAmount) {
+		this.palletLcAmount = palletLcAmount;
+	}
+
+	public BigDecimal getDeAbnormalAmount() {
+		return deAbnormalAmount;
+	}
+
+	public void setDeAbnormalAmount(BigDecimal deAbnormalAmount) {
+		this.deAbnormalAmount = deAbnormalAmount;
+	}
+
+	public BigDecimal getDeAbnormalOrders() {
+		return deAbnormalOrders;
+	}
+
+	public void setDeAbnormalOrders(BigDecimal deAbnormalOrders) {
+		this.deAbnormalOrders = deAbnormalOrders;
+	}
+
+	public BigDecimal getDeStoAmount() {
+		return deStoAmount;
+	}
+
+	public void setDeStoAmount(BigDecimal deStoAmount) {
+		this.deStoAmount = deStoAmount;
+	}
+
+	public BigDecimal getDeStoOrders() {
+		return deStoOrders;
+	}
+
+	public void setDeStoOrders(BigDecimal deStoOrders) {
+		this.deStoOrders = deStoOrders;
+	}
+
+	public String getWarehouseName() {
+		return warehouseName;
+	}
+
+	public void setWarehouseName(String warehouseName) {
+		this.warehouseName = warehouseName;
 	}
     
 }

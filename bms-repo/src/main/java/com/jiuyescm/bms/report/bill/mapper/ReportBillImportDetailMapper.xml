@@ -4,31 +4,32 @@
 	<!-- 查询收入明细--> 
     <select id="queryReceipt" parameterType="java.util.Map" 
     	resultType="com.jiuyescm.bms.report.bill.ReportBillReceiptDetailEntity">
-			SELECT 
+		SELECT 
 				a.create_month as createMonth,
 				a.invoice_name as invoiceName,
 				a.bill_name as billName,
 				CONCAT(a.create_month,a.bill_name) as bill,
 				a.bill_start_time as billStartTime,
-		    	YEAR(a.bill_start_time) as billStartYear,
+		   		YEAR(a.bill_start_time) as billStartYear,
 				Month(a.bill_start_time) as billStartMonth,
 				a.first_class_name as firstClassName,
 				a.biz_type_name as bizTypeName,
 				a.project_name as projectName,
 				a.seller_name as sellerName,
 				a.dept_name as deptName,
+				h.extattr1 as receiptGroup,
 				a.project_manager_name as projectManagerName,
-		   		a.balance_name as balanceName,
-		   		b.different_remark as instruction,
-		    	c.count as dispatchCount,
-		    	ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
+				a.balance_name as balanceName,
+				b.different_remark as instruction,
+				c.count as dispatchCount,
+				ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
 				Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
 				IF(ABS(Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2))>0.05,1,0) as correctRate,
 				a.confirm_amount-e.expect_money as different,
-		    	a.confirm_amount as confirmAmount,
-		    	d.total_storage_money as actualStorage,
-		    	d.total_transport_money as actualTransport,
-		    	d.total_dispatch_money as actualDispatch,
+				a.confirm_amount as confirmAmount,
+				d.total_storage_money as actualStorage,
+				d.total_transport_money as actualTransport,
+				d.total_dispatch_money as actualDispatch,
 				d.total_air_money as actualAir,
 			  	d.total_abnormal_money as claim,
 				e.expect_money as preTotal,
@@ -57,6 +58,7 @@
 			 LEFT JOIN bill_receive_expect e on a.create_month=e.create_month and a.bill_name=e.bill_name
 			 LEFT JOIN bill_check_adjust_info f on a.id=f.bill_check_id
 			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
+			 LEFT JOIN system_code h on a.balance_name=h.code_name and h.type_code='BANLANCE_GROUP' and h.`status`='0'
 			 where a.del_flag='0'
     </select>
     
@@ -69,25 +71,26 @@
 				a.bill_name as billName,
 				CONCAT(a.create_month,a.bill_name) as bill,
 				a.bill_start_time as billStartTime,
-		    	YEAR(a.bill_start_time) as billStartYear,
+		   		YEAR(a.bill_start_time) as billStartYear,
 				Month(a.bill_start_time) as billStartMonth,
 				a.first_class_name as firstClassName,
 				a.biz_type_name as bizTypeName,
 				a.project_name as projectName,
 				a.seller_name as sellerName,
 				a.dept_name as deptName,
+				h.extattr1 as receiptGroup,
 				a.project_manager_name as projectManagerName,
-		   		a.balance_name as balanceName,
-		   		b.different_remark as instruction,
-		    	c.count as dispatchCount,
-		    	ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
+				a.balance_name as balanceName,
+				b.different_remark as instruction,
+				c.count as dispatchCount,
+				ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
 				Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
 				IF(ABS(Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2))>0.05,1,0) as correctRate,
 				a.confirm_amount-e.expect_money as different,
-		    	a.confirm_amount as confirmAmount,
-		    	d.total_storage_money as actualStorage,
-		    	d.total_transport_money as actualTransport,
-		    	d.total_dispatch_money as actualDispatch,
+				a.confirm_amount as confirmAmount,
+				d.total_storage_money as actualStorage,
+				d.total_transport_money as actualTransport,
+				d.total_dispatch_money as actualDispatch,
 				d.total_air_money as actualAir,
 			  	d.total_abnormal_money as claim,
 				e.expect_money as preTotal,
@@ -116,6 +119,7 @@
 			 LEFT JOIN bill_receive_expect e on a.create_month=e.create_month and a.bill_name=e.bill_name
 			 LEFT JOIN bill_check_adjust_info f on a.id=f.bill_check_id
 			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
+			 LEFT JOIN system_code h on a.balance_name=h.code_name and h.type_code='BANLANCE_GROUP' and h.`status`='0'
 			 where a.del_flag='0'
     </select>
     
@@ -123,6 +127,7 @@
     <select id="queryStorage" parameterType="java.util.Map" 
     	resultType="com.jiuyescm.bms.report.bill.ReportBillStorageDetailEntity">  	
     	SELECT 
+			e.extattr1 as area,
 			a.create_month as createMonth,
 			a.invoice_name as invoiceName,
 			a.bill_name as billName,
@@ -145,10 +150,10 @@
 		    c.total_dispatch_money as invoiceDispatch,
 			c.total_air_money as invoiceAir,
 		    c.total_abnormal_money as invoiceAbnormal,
-		    IFNULL(d.abnormalStorage,0) as abnormalStorage,
-			IFNULL(d.abnormalTransport,0) as abnormalTransport,
-			IFNULL(d.abnormalDispatch,0) as abnormalDispatch,
-		    IFNULL(d.abnormalAir,0) as abnormalAir,
+		    IFNULL(c.total_storage_abnormal_money,0) as abnormalStorage,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalTransport,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalDispatch,
+		    IFNULL(c.total_air_abnorml_money,0) as abnormalAir,
 		    IFNULL(d.jiuyeAmount,0) as jiuyeAmount,
 		    IFNULL(d.jiuyeCount,0) as jiuyeCount,
 		    IFNULL(d.shunfengAmount,0) as shunfengAmount,
@@ -169,7 +174,7 @@
 		 LEFT JOIN report_bill_import_master c on a.bill_no=c.bill_no and c.del_flag='0'
 		 LEFT JOIN (
 			select 
-				bill_no,SUM(st_abnormal_amount) as abnormalStorage,SUM(ts_abnormal_amount) as abnormalTransport,SUM(de_abnormal_amount) as abnormalDispatch,SUM(air_abnormal_amount) as abnormalAir,
+				bill_no,
 				sum(de_jy_amount) as jiuyeAmount,sum(de_jy_orders) as jiuyeCount,
 				sum(de_sf_amount) as shunfengAmount,sum(de_sf_orders) as shunfengCount,
 				sum(de_yto_amount) as yuantongAmount,sum(de_yto_orders) as yuantongCount,
@@ -180,6 +185,7 @@
 				sum(IFNULL(st_instock_work_amount,0)+IFNULL(st_b2c_handwork_amount,0)+IFNULL(st_b2b_handwork_amount,0)+IFNULL(st_add_amount,0)+IFNULL(de_change_amount,0)) as addFee
 			from report_bill_import_detail group BY bill_no
 	    ) d on a.bill_no=d.bill_no
+    	LEFT JOIN system_code e on a.balance_name=e.code_name and e.type_code='BANLANCE_GROUP' and e.`status`='0'
 		where a.del_flag='0'
     </select>
     
@@ -187,7 +193,8 @@
     <!--导出仓储明细 --> 
     <select id="queryStorageExport" parameterType="java.util.Map" 
     	resultType="java.util.Map">  	
-    	SELECT 
+    	  SELECT 
+			e.extattr1 as area,
 			a.create_month as createMonth,
 			a.invoice_name as invoiceName,
 			a.bill_name as billName,
@@ -210,10 +217,10 @@
 		    c.total_dispatch_money as invoiceDispatch,
 			c.total_air_money as invoiceAir,
 		    c.total_abnormal_money as invoiceAbnormal,
-		    IFNULL(d.abnormalStorage,0) as abnormalStorage,
-			IFNULL(d.abnormalTransport,0) as abnormalTransport,
-			IFNULL(d.abnormalDispatch,0) as abnormalDispatch,
-		    IFNULL(d.abnormalAir,0) as abnormalAir,
+		    IFNULL(c.total_storage_abnormal_money,0) as abnormalStorage,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalTransport,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalDispatch,
+		    IFNULL(c.total_air_abnorml_money,0) as abnormalAir,
 		    IFNULL(d.jiuyeAmount,0) as jiuyeAmount,
 		    IFNULL(d.jiuyeCount,0) as jiuyeCount,
 		    IFNULL(d.shunfengAmount,0) as shunfengAmount,
@@ -234,7 +241,7 @@
 		 LEFT JOIN report_bill_import_master c on a.bill_no=c.bill_no and c.del_flag='0'
 		 LEFT JOIN (
 			select 
-				bill_no,SUM(st_abnormal_amount) as abnormalStorage,SUM(ts_abnormal_amount) as abnormalTransport,SUM(de_abnormal_amount) as abnormalDispatch,SUM(air_abnormal_amount) as abnormalAir,
+				bill_no,
 				sum(de_jy_amount) as jiuyeAmount,sum(de_jy_orders) as jiuyeCount,
 				sum(de_sf_amount) as shunfengAmount,sum(de_sf_orders) as shunfengCount,
 				sum(de_yto_amount) as yuantongAmount,sum(de_yto_orders) as yuantongCount,
@@ -245,13 +252,15 @@
 				sum(IFNULL(st_instock_work_amount,0)+IFNULL(st_b2c_handwork_amount,0)+IFNULL(st_b2b_handwork_amount,0)+IFNULL(st_add_amount,0)+IFNULL(de_change_amount,0)) as addFee
 			from report_bill_import_detail group BY bill_no
 	    ) d on a.bill_no=d.bill_no
+    	LEFT JOIN system_code e on a.balance_name=e.code_name and e.type_code='BANLANCE_GROUP' and e.`status`='0'
 		where a.del_flag='0'
     </select>
     
      <!--查询业务明细 --> 
     <select id="queryBiz" parameterType="java.util.Map" 
     	resultType="com.jiuyescm.bms.report.bill.ReportBillBizDetailEntity">
-    	select 
+   		 select 
+			c.extattr1 as area,
 			b.create_month as createMonth,
 	   	    b.bill_name as billName,
 			CONCAT(b.create_month,b.bill_name) as bill,
@@ -301,13 +310,15 @@
 			ROUND(a.pallet_ld_amount/a.pallet_ld_num,2) as ldPrice,
 			ROUND(a.pallet_lc_amount/a.pallet_lc_num,2) as lcPrice
 		from report_bill_import_detail a
-		LEFT JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
+		INNER JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
+   		LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
     </select>
     
      <!--导出业务明细--> 
     <select id="queryBizExport" parameterType="java.util.Map" 
     	resultType="java.util.Map">
     	select 
+			c.extattr1 as area,
 			b.create_month as createMonth,
 	   	    b.bill_name as billName,
 			CONCAT(b.create_month,b.bill_name) as bill,
@@ -357,6 +368,7 @@
 			ROUND(a.pallet_ld_amount/a.pallet_ld_num,2) as ldPrice,
 			ROUND(a.pallet_lc_amount/a.pallet_lc_num,2) as lcPrice
 		from report_bill_import_detail a
-		LEFT JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
+		INNER JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
+    LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
     </select>
 </mapper>
