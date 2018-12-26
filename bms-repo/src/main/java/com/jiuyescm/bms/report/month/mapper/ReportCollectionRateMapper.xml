@@ -44,7 +44,7 @@
 			and u.area_code=#{areaCode}
 		</if>
 		) t
-		LEFT JOIN report_seller_receipt_target t1 on t1.seller_name=t.seller_name and t1.del_flag='0' and t1.create_month = t.create_month
+		LEFT JOIN report_seller_receipt_target t1 on t1.seller_name=t.seller_name and t1.del_flag='0' and t1.create_month =#{createMonth}
 		group by t.seller_name
     </select>
 

@@ -324,6 +324,7 @@ public class BmsGroupController {
 			if(EntityState.NEW.equals(EntityUtils.getState(voEntity))){
 				voEntity.setCreator(JAppContext.currentUserName());
 				voEntity.setCreateTime(JAppContext.currentTimestamp());
+				voEntity.setDelFlag("0");
 				String groupName=bmsGroupUserService.checkExistGroupName(voEntity.getUserId());
 				if(StringUtils.isBlank(groupName)){
 					int k=bmsGroupUserService.addGroupUser(voEntity);

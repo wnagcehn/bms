@@ -1,4 +1,4 @@
-
+﻿
 package com.jiuyescm.bms.biz.dispatch.web;
 
 import java.io.IOException;
@@ -87,7 +87,6 @@ import com.jiuyescm.mdm.deliver.api.IDeliverService;
 import com.jiuyescm.mdm.deliver.vo.DeliverVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 @Controller("dispatchBillController")
 public class DispatchBillController{
@@ -1071,39 +1070,42 @@ public class DispatchBillController{
 				}
 				
 				// 检验物流产品类型名称
-				Map<String, String> param = new HashMap<>();
-				List<CarrierProductVo> servicetypeList = null;
-				param.put("waybillNo", waybillNo);
-				BizDispatchBillEntity entity = bizDispatchBillService.queryByWayNo(param);
-				if (null == entity) {
-					setMessage(infoList, rowNum+1,"没有该运单:"+waybillNo);
-					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;	
-				}
-				if (StringUtils.isEmpty(adjustCarrier)) {
-					//为空，查业务数据优先调整物流商
-					if (StringUtils.isEmpty(entity.getAdjustCarrierId())) {
-						carrier = entity.getCarrierId();
-						servicetypeList = carrierProductService.queryByCarrierid(carrier);
-					}else {
-						servicetypeList = carrierProductService.queryByCarrierid(entity.getAdjustCarrierId());
-					}		
-				}else {
-					//Excel中调整物流商
-					servicetypeList = carrierProductService.queryByCarrierid(adjustcarrierid);
-				}
-				boolean exe = false;
-				for (CarrierProductVo pubCarrierServicetypeEntity : servicetypeList) {
-					if (serviceTypeName.equals(pubCarrierServicetypeEntity.getServicename())) {
-						map0.put("adjustServiceTypeCode", pubCarrierServicetypeEntity.getServicecode());
-						exe = true;
-						break;
+
+				if(StringUtils.isNotBlank(serviceTypeName)){
+					Map<String, String> param = new HashMap<>();
+					List<PubCarrierServicetypeEntity> servicetypeList = null;
+					param.put("waybillNo", waybillNo);
+					BizDispatchBillEntity entity = bizDispatchBillService.queryByWayNo(param);
+					if (null == entity) {
+						setMessage(infoList, rowNum+1,"没有该运单:"+waybillNo);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						return map;	
 					}
-				}
-				if (!exe) {
-					setMessage(infoList, rowNum+1,"物流商没有物流产品类型:"+serviceTypeName);
-					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					return map;
+					if (StringUtils.isEmpty(adjustCarrier)) {
+						//为空，查业务数据优先调整物流商
+						if (StringUtils.isEmpty(entity.getAdjustCarrierId())) {
+							carrier = entity.getCarrierId();
+							servicetypeList = pubCarrierServicetypeService.queryByCarrierid(carrier);
+						}else {
+							servicetypeList = pubCarrierServicetypeService.queryByCarrierid(entity.getAdjustCarrierId());
+						}		
+					}else {
+						//Excel中调整物流商
+						servicetypeList = pubCarrierServicetypeService.queryByCarrierid(adjustcarrierid);
+					}
+					boolean exe = false;
+					for (PubCarrierServicetypeEntity pubCarrierServicetypeEntity : servicetypeList) {
+						if (serviceTypeName.equals(pubCarrierServicetypeEntity.getServicename())) {
+							map0.put("adjustServiceTypeCode", pubCarrierServicetypeEntity.getServicecode());
+							exe = true;
+							break;
+						}
+					}
+					if (!exe) {
+						setMessage(infoList, rowNum+1,"物流商没有物流产品类型:"+serviceTypeName);
+						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+						return map;
+					}
 				}
 			}
 			
