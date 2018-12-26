@@ -1,4 +1,4 @@
-﻿
+
 package com.jiuyescm.bms.biz.dispatch.web;
 
 import java.io.IOException;
@@ -1073,7 +1073,7 @@ public class DispatchBillController{
 
 				if(StringUtils.isNotBlank(serviceTypeName)){
 					Map<String, String> param = new HashMap<>();
-					List<PubCarrierServicetypeEntity> servicetypeList = null;
+					List<CarrierProductVo> servicetypeList = null;
 					param.put("waybillNo", waybillNo);
 					BizDispatchBillEntity entity = bizDispatchBillService.queryByWayNo(param);
 					if (null == entity) {
@@ -1085,16 +1085,16 @@ public class DispatchBillController{
 						//为空，查业务数据优先调整物流商
 						if (StringUtils.isEmpty(entity.getAdjustCarrierId())) {
 							carrier = entity.getCarrierId();
-							servicetypeList = pubCarrierServicetypeService.queryByCarrierid(carrier);
+							servicetypeList = carrierProductService.queryByCarrierid(carrier);
 						}else {
-							servicetypeList = pubCarrierServicetypeService.queryByCarrierid(entity.getAdjustCarrierId());
+							servicetypeList = carrierProductService.queryByCarrierid(entity.getAdjustCarrierId());
 						}		
 					}else {
 						//Excel中调整物流商
-						servicetypeList = pubCarrierServicetypeService.queryByCarrierid(adjustcarrierid);
+						servicetypeList = carrierProductService.queryByCarrierid(adjustcarrierid);
 					}
 					boolean exe = false;
-					for (PubCarrierServicetypeEntity pubCarrierServicetypeEntity : servicetypeList) {
+					for (CarrierProductVo pubCarrierServicetypeEntity : servicetypeList) {
 						if (serviceTypeName.equals(pubCarrierServicetypeEntity.getServicename())) {
 							map0.put("adjustServiceTypeCode", pubCarrierServicetypeEntity.getServicecode());
 							exe = true;
