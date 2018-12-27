@@ -53,7 +53,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, fee_no,outstock_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, is_calculated, operate_time,is_delivery_free,delivery_cost, product_amount_j2c, product_amount_d2j, is_delivery_free_d2j, returned_amount_c2j, returned_amount_j2d, order_status, duty_type, pay_type, kesu_confirm_time, is_delivery_free_j2c, confirm_pay_amount, confirm_is_delivery_free, confirm_year, confirm_month, import_confirm_time, close_time
+        id, fee_no,outstock_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, is_calculated, operate_time,is_delivery_free,delivery_cost, product_amount_j2c, product_amount_d2j, is_delivery_free_d2j, returned_amount_c2j, returned_amount_j2d, order_status, duty_type, pay_type, kesu_confirm_time, is_delivery_free_j2c, confirm_pay_amount, confirm_is_delivery_free, confirm_year, confirm_month, import_confirm_time, close_time,is_pay,is_pay2,return_orderno
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -220,7 +220,7 @@
                select
         <include refid="baseColumns" />
         from fees_abnormal
-        where 1=1
+        where is_pay = 1 
 		<include refid="baseSelectColumns" />
     </select>
     
@@ -229,9 +229,9 @@
          select
                 id, fee_no,outstock_no, reference, expressnum, order_no, reason_id, reason, reason_detail, customer_id, customer_name, carrier_id, carrier_name, deliver_id, deliver_name, warehouse_id, warehouse_name, create_person, create_person_name, remark, ispay, create_time, pay_money, is_conflict, bill_no, 
                 is_calculated, operate_time,is_delivery_free,delivery_cost, product_amount_j2c, product_amount_d2j, is_delivery_free_d2j, returned_amount_c2j, returned_amount_j2d, order_status, duty_type, pay_type, kesu_confirm_time, is_delivery_free_j2c, confirm_pay_amount, confirm_is_delivery_free, confirm_year, 
-                confirm_month, import_confirm_time, close_time,IFNULL(product_amount_d2j,0)-IFNULL(returned_amount_j2d,0)+IFNULL(amerce_amount,0) totalPay
+                confirm_month, import_confirm_time, close_time,IFNULL(product_amount_d2j,0)-IFNULL(returned_amount_j2d,0)+IFNULL(amerce_amount,0) totalPay,is_pay,is_pay2,return_orderno,confirm_product_amount_d2j,confirm_amerce_amount,confirm_returned_amount_j2d 
         from fees_abnormal
-        where 1=1
+        where is_pay2 = 1 
 		<include refid="baseSelectColumns" />
     </select>
     
@@ -307,6 +307,9 @@
 			<if test="confirmMonth != null" >confirm_month=#{confirmMonth,jdbcType=VARCHAR},</if>
 			<if test="importConfirmTime != null" >import_confirm_time=#{importConfirmTime,jdbcType=TIMESTAMP},</if>
 			<if test="closeTime != null" >close_time=#{closeTime,jdbcType=TIMESTAMP},</if>
+			<if test="confirmProductAmountD2j != null" >confirm_product_amount_d2j=#{confirmProductAmountD2j,jdbcType=DECIMAL},</if>
+			<if test="confirmAmerceAmount != null" >confirm_amerce_amount=#{confirmAmerceAmount,jdbcType=DECIMAL},</if>
+			<if test="confirmReturnedAmountJ2d != null" >confirm_returned_amount_j2d=#{confirmReturnedAmountJ2d,jdbcType=DECIMAL},</if>
 		</set>
         where id=#{id}
     </update>

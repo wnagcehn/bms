@@ -88,15 +88,15 @@
       </PropertyDef>
       <PropertyDef name="orderNo">
         <Property></Property>
-        <Property name="label">出库单号</Property>
+        <Property name="label">内部订单号</Property>
       </PropertyDef>
       <PropertyDef name="reason">
         <Property></Property>
-        <Property name="label">原因归属</Property>
+        <Property name="label">责任方</Property>
       </PropertyDef>
       <PropertyDef name="reasonDetail">
         <Property></Property>
-        <Property name="label">原因详情</Property>
+        <Property name="label">赔付类型</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
         <Property></Property>
@@ -281,6 +281,25 @@
         <Property name="dataType">DateTime</Property>
         <Property name="label">关账时间</Property>
       </PropertyDef>
+      <PropertyDef name="returnOrderno">
+        <Property name="label">退货单号</Property>
+      </PropertyDef>
+      <PropertyDef name="isPay1"/>
+      <PropertyDef name="isPay2">
+        <Property name="label">应付是否赔付</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmProductAmountD2j">
+        <Property name="dataType">Double</Property>
+        <Property name="label">确认理赔金额</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmAmerceAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">确认处罚金额</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmReturnedAmountJ2d">
+        <Property name="dataType">Double</Property>
+        <Property name="label">确认改地址退件费</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
       <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
@@ -401,6 +420,12 @@ dorado.MessageBox.confirm(&quot;确认是否反关账?&quot;,function(){&#xD;
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnDownload">
+        <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;fees_abnormalpay_import&quot;&#xD;
+};&#xD;
+&#xD;
+view.get(&quot;#downloadMoBanAction&quot;).set(&quot;parameter&quot;,parameter).execute();&#xD;
+</ClientEvent>
         <Property name="caption">模板下载</Property>
         <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
         <Property name="action">downloadMoBanAction</Property>
@@ -533,17 +558,20 @@ var nowdays = new Date();&#xD;
         <Property name="property">reference</Property>
         <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="orderNo">
-        <Property name="property">orderNo</Property>
+      <DataColumn>
+        <Property name="property">returnOrderno</Property>
         <Property name="width">100</Property>
+        <Property name="name">returnOrderno</Property>
       </DataColumn>
-      <DataColumn name="dutyType">
-        <Property name="property">dutyType</Property>
+      <DataColumn>
+        <Property name="property">reason</Property>
         <Property name="width">80</Property>
+        <Property name="name">reason</Property>
       </DataColumn>
-      <DataColumn name="payType">
-        <Property name="property">payType</Property>
+      <DataColumn>
+        <Property name="property">reasonDetail</Property>
         <Property name="width">80</Property>
+        <Property name="name">reasonDetail</Property>
       </DataColumn>
       <DataColumn name="remark">
         <Property name="property">remark</Property>
@@ -577,6 +605,21 @@ var nowdays = new Date();&#xD;
         <Property name="property">confirmPayAmount</Property>
         <Property name="width">100</Property>
         <Property name="summaryType">sum</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">confirmProductAmountD2j</Property>
+        <Property name="width">100</Property>
+        <Property name="name">confirmProductAmountD2j</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">confirmAmerceAmount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">confirmAmerceAmount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">confirmReturnedAmountJ2d</Property>
+        <Property name="width">100</Property>
+        <Property name="name">confirmReturnedAmountJ2d</Property>
       </DataColumn>
       <DataColumn name="confirmIsDeliveryFree">
         <Property name="property">confirmIsDeliveryFree</Property>
@@ -882,7 +925,7 @@ $(&quot;#d_ufileName input&quot;).val(fname);&#xD;
       <Property name="dataResolver">feesAbnormalController#close</Property>
     </UpdateAction>
     <DownloadAction id="downloadMoBanAction">
-      <Property name="fileProvider">feesAbnormalController#downloadTemplate</Property>
+      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
       <Property name="target">workspace</Property>
     </DownloadAction>
     <UpdateAction id="unCloseAction">

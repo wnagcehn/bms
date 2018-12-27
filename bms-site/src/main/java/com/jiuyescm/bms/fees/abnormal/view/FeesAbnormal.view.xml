@@ -73,11 +73,11 @@
       </PropertyDef>
       <PropertyDef name="reason">
         <Property></Property>
-        <Property name="label">客诉原因</Property>
+        <Property name="label">责任方</Property>
       </PropertyDef>
       <PropertyDef name="reasonDetail">
         <Property></Property>
-        <Property name="label">原因详情</Property>
+        <Property name="label">赔付类型</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
         <Property></Property>
@@ -231,6 +231,13 @@
         <Property></Property>
         <Property name="label">出库单号</Property>
       </PropertyDef>
+      <PropertyDef name="returnOrderno">
+        <Property name="label">退货单号</Property>
+      </PropertyDef>
+      <PropertyDef name="isPay1"/>
+      <PropertyDef name="isPay2">
+        <Property name="label">应付是否赔付</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -380,13 +387,20 @@ var nowdays = new Date();&#xD;
         <Property name="property">reference</Property>
         <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="dutyType">
-        <Property name="property">dutyType</Property>
-        <Property name="width">80</Property>
+      <DataColumn>
+        <Property name="property">returnOrderno</Property>
+        <Property name="width">100</Property>
+        <Property name="name">returnOrderno</Property>
       </DataColumn>
-      <DataColumn name="payType">
-        <Property name="property">payType</Property>
+      <DataColumn>
+        <Property name="property">reason</Property>
         <Property name="width">80</Property>
+        <Property name="name">reason</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">reasonDetail</Property>
+        <Property name="width">80</Property>
+        <Property name="name">reasonDetail</Property>
       </DataColumn>
       <DataColumn name="remark">
         <Property name="property">remark</Property>

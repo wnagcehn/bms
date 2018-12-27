@@ -214,7 +214,7 @@ public class BuinessDataExportController extends BaseController {
 			}
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM");
 			String path = getPath();
-			String filePath = path + FileConstant.SEPARATOR + param.get("customerName").toString() + "-"
+			String filePath = path + "/" + param.get("customerName").toString() + "-"
 					+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
 			FileExportTaskEntity entity = new FileExportTaskEntity();
 
@@ -237,31 +237,26 @@ public class BuinessDataExportController extends BaseController {
 			param.put("path2", path);
 			param.put("filepath", filePath);
 			final Map<String, Object> condition = param;
-//			final String taskId = entity.getTaskId();
-//			final String path2 = path;
-//			final String filepath = filePath;
-//			new Thread() {
-//				public void run() {
-//					try {
-//						export(condition, taskId, path2, filepath);
-//					} catch (Exception e) {
-//						fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-//						logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-//						// 写入日志
-//						BmsErrorLogInfoEntity bmsErrorLogInfoEntity = new BmsErrorLogInfoEntity(
-//								this.getClass().getSimpleName(),
-//								Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-//						bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
-//					}
-//				};
-//			}.start();
-			jmsQueueTemplate.send(MQConstants.BUINESSDATA_EXPORT, new MessageCreator() {
+			final String taskId = entity.getTaskId();
+			final String path2 = path;
+			final String filepath = filePath;
+			new Thread() {
+				public void run() {
+				try {
+						export(condition, taskId, path2, filepath);
+				} catch (Exception e) {
+						fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+						logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+					}
+				};
+			}.start();
+			/*jmsQueueTemplate.send(MQConstants.BUINESSDATA_EXPORT, new MessageCreator() {
     			@Override
     			public Message createMessage(Session session) throws JMSException {
     				String json = JsonUtils.toJson(condition);
     				return session.createTextMessage(json);
     			}
-    		});
+    		});*/
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -2169,6 +2164,12 @@ public class BuinessDataExportController extends BaseController {
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "expressnum");
 		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "退货单号");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "returnOrderno");
+		headInfoList.add(itemMap);
 
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "客户");
@@ -2222,6 +2223,7 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("warehouseName", entity.getWarehouseName());
 			dataItem.put("createTime", sdf.format(entity.getCreateTime()));
 			dataItem.put("expressnum", entity.getExpressnum());
+			dataItem.put("returnOrderno", entity.getReturnOrderno());
 			dataItem.put("customerName", entity.getCustomerName());
 			dataItem.put("dutyType", entity.getReason());
 			dataItem.put("payType", entity.getReasonDetail());
