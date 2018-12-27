@@ -133,6 +133,30 @@ public class ReportBillImportServiceImpl extends MyBatisDao implements IReportBi
 		
 		return updateBatch("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.updateBillList", list);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public BigDecimal queryTransportFee(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		BigDecimal money=(BigDecimal) selectOne("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.queryTransportFee", map);
+		return money;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public BigDecimal queryStorageReceipt(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		BigDecimal money=(BigDecimal) selectOne("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.queryStorageReceipt", map);
+		return money;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public BigDecimal queryDispatchReceipt(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		BigDecimal money=(BigDecimal) selectOne("com.jiuyescm.bms.general.mapper.ReportBillImportDetailMapper.queryDispatchReceipt", map);
+		return money;
+	}
 	
 	
 }

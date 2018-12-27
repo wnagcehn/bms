@@ -58,5 +58,34 @@ public interface IBillReceiveMasterService {
 	 */
 	Double queryStorageRent(String billNo);
 	
+	/**
+	 * 干线理赔费用
+	 * @param billNo
+	 * @return
+	 */
+	Double queryTransportAbnormalFee(String billNo);
+	
+	/**
+	 * 航空理赔费用
+	 * @param billNo
+	 * @return
+	 */
+	Double queryAirAbnormalFee(String billNo);
+	
+	/**
+	 * 仓储理赔费用
+	 * @param billNo
+	 * @return
+	 */
+	Double queryStorageAbnormalFee(String billNo);
+	
+	/**
+	 * 配送理赔费用
+	 * @param billNo
+	 * @return
+	 */
+	Double queryDispatchAbnormalFee(String billNo);
+	
 	int insertReportMaster(ReportBillImportMasterVo vo);
+	
 }

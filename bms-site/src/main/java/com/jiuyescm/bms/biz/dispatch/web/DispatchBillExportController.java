@@ -9,16 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -45,8 +41,6 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
-import com.jiuyescm.constants.MQConstants;
-import com.jiuyescm.utils.JsonUtils;
 
 /**
  * 应收运单导出
@@ -112,28 +106,28 @@ public class DispatchBillExportController extends BaseController{
         	entity = fileExportTaskService.save(entity);
         	
         	//生成费用文件
-//    		final Map<String, Object> condition = param;
-//    		final String taskId = entity.getTaskId();
-//    		final String filePath=filepath;
-//    		new Thread(){
-//    			public void run() {
-//    				try {
-//    					export(condition, taskId,filePath);
-//    				} catch (Exception e) {
-//    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-//    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-//    					//写入日志
-//    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-//    					bmsErrorLogInfoEntity.setClassName("DispatchBillExportController");
-//    					bmsErrorLogInfoEntity.setMethodName("asynExport");
-//    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-//    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-//    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
-//    				}
-//    			};
-//    		}.start();
+    		final Map<String, Object> condition = param;
+    		final String taskId = entity.getTaskId();
+    		final String filePath=filepath;
+    		new Thread(){
+    			public void run() {
+    				try {
+    					export(condition, taskId,filePath);
+    				} catch (Exception e) {
+    					fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+    					logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+    					//写入日志
+    					BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
+    					bmsErrorLogInfoEntity.setClassName("DispatchBillExportController");
+    					bmsErrorLogInfoEntity.setMethodName("asynExport");
+    					bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+    					bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+    					bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+    				}
+    			};
+    		}.start();
         	
-    		// 写入MQ
+    		/*// 写入MQ
         	param.put("taskId", entity.getTaskId());
         	param.put("filePath", filepath);
         	final Map<String, Object> condition = param;
@@ -143,7 +137,7 @@ public class DispatchBillExportController extends BaseController{
     				String json = JsonUtils.toJson(condition);
     				return session.createTextMessage(json);
     			}
-    		});
+    		});*/
     		
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
@@ -151,7 +145,7 @@ public class DispatchBillExportController extends BaseController{
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
 			bmsErrorLogInfoEntity.setClassName("DispatchBillExportController");
 			bmsErrorLogInfoEntity.setMethodName("asynExport");
-			bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
+			//bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
 			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
 			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	

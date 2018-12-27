@@ -133,8 +133,7 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao implements IBill
 		Map<String,BigDecimal> resultMap=new HashMap<>();
 		Map<String,Object> result=(Map<String, Object>) selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryMaterial", billNo);
 		BigDecimal amount = (BigDecimal)result.get("amount");
-		Long num1 = (Long)result.get("num");
-		BigDecimal num = new BigDecimal(num1);
+		BigDecimal num = (BigDecimal)result.get("num");
 		resultMap.put("amount", amount);
 		resultMap.put("num", num);
 		return resultMap;
@@ -147,8 +146,7 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao implements IBill
 		Map<String,BigDecimal> resultMap=new HashMap<>();
 		Map<String,Object> result=(Map<String, Object>) selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryProduct", billNo);
 		BigDecimal amount = (BigDecimal)result.get("amount");
-		Long num1 = (Long)result.get("num");
-		BigDecimal num = new BigDecimal(num1);
+		BigDecimal num = (BigDecimal)result.get("num");
 		resultMap.put("amount", amount);
 		resultMap.put("num", num);
 		return resultMap;
@@ -158,6 +156,50 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao implements IBill
 	public Double queryStorageRent(String billNo) {
 		// TODO Auto-generated method stub
 		Object object=selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryStorageRent", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
+
+	@Override
+	public Double queryTransportAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryTransportAbnormalFee", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
+
+	@Override
+	public Double queryAirAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryAirAbnormalFee", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
+
+	@Override
+	public Double queryStorageAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryStorageAbnormalFee", billNo);
+		Double money=0d;
+		if(object!=null){
+			money=Double.valueOf(object.toString());
+		}
+		return money;
+	}
+
+	@Override
+	public Double queryDispatchAbnormalFee(String billNo) {
+		// TODO Auto-generated method stub
+		Object object=selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryDispatchAbnormalFee", billNo);
 		Double money=0d;
 		if(object!=null){
 			money=Double.valueOf(object.toString());
