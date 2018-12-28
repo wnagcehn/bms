@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+a<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper" >
     <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.group.BmsGroupUserEntity" >
@@ -34,7 +34,7 @@
 	<select id="checkSaleUser" parameterType="java.util.Map" resultType="java.lang.String">
 		select a.area_code from bms_group_user a
 		INNER JOIN bms_group b on a.group_id=b.id
-		where a.del_flag='0 and a.user_id=#{userId}
+		where a.del_flag='0' and a.user_id=#{userId}
 		and b.biz_type='sale_area'
 		limit 1
 	</select>
