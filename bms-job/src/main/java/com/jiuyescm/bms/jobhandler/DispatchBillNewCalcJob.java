@@ -726,7 +726,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				}
 				
 				if(priceList.size()>1){ //			
-					XxlJobLogger.log("-->"+entity.getId()+"商家【{0}】,仓库【{1}】,省份【{2}】报价未配置",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
+					XxlJobLogger.log("-->"+entity.getId()+"商家【{0}】,仓库【{1}】,省份【{2}】报价存在多条",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId());
 					entity.setRemark(String.format("商家【%s】,仓库【%s】,省份【%s】报价存在多条",entity.getCustomerid(),entity.getWarehouseName(),entity.getReceiveProvinceId()));				
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -863,6 +863,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		if(price==null || price.size() ==0){
 			XxlJobLogger.log("-->"+entity.getId()+"数据库未查询到报价 查询条件{0}",map);
 		}
+		else{
+			XxlJobLogger.log("-->"+entity.getId()+"报价条数【{0}】 查询条件{1}",price.size(),map);
+		}
 		return price;
 	}
 	
@@ -902,43 +905,24 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		//标准商家id
 		
 		List<BmsQuoteDispatchDetailVo> list=new ArrayList<>();
-		/*String standCustomerId="";
-		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			standCustomerId=queryShunfengCustomer();
-			if(StringUtils.isNotBlank(standCustomerId)){
-				list=queryShunfengPrice(entity,subjectId,standCustomerId);
-			}
-		}else{*/
-			list=queryPriceByCustomer(entity,subjectId);
-		/*}*/
-
+		list=queryPriceByCustomer(entity,subjectId);
+		
 		//如果有多条,走筛选规则
 		if(list.size()>0){
 			//走地址筛选
+			XxlJobLogger.log("-->"+entity.getId()+"走地址筛选 筛选前报价条数【{0}】",list.size());
 			list=handNewBizDispatch(list, entity);
 			if(list.size()==0){
 				return list;
 			}
+			XxlJobLogger.log("-->"+entity.getId()+"地址筛选后报价条数【{0}】",list.size());
+			for (BmsQuoteDispatchDetailVo bmsQuoteDispatchDetailVo : list) {
+				XxlJobLogger.log("-->"+entity.getId()+"地址筛选后报价明细【{0}】",JSONObject.fromObject(bmsQuoteDispatchDetailVo));
+			}
 			
 			//根据报价形式查询到对应的筛选规则
 			Map<String,Object> map=new HashMap<String,Object>();
-			/*String priceType="";
-			//判断报价形式
-			if("SHUNFENG_DISPATCH".equals(subjectId)){
-				if(StringUtils.isNotBlank(standCustomerId)){
-					map.put("customerId",standCustomerId);
-					map.put("subjectId",subjectId);
-					priceType=jobPriceContractInfoService.queryShunfengPriceType(map);
-				}
-			}else{
-				PriceContractInfoEntity contractEntity=mapContact.get(entity.getCustomerid());
-				if(contractEntity!=null && StringUtils.isNotBlank(contractEntity.getContractCode())){
-					map.put("contractCode",contractEntity.getContractCode());
-					map.put("subjectId",subjectId);
-					priceType=jobPriceContractInfoService.queryPriceType(map);
-				}		
-			}*/
-			
+						
 			String quote_id = QuoteFilter(entity, list, null);
 			if(quote_id == null){
 				return null;
