@@ -799,6 +799,12 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			
 			ContractQuoteInfoVo rtnQuoteInfoVo=null;
 			try {
+			    if(cond == null || cond.size() == 0){
+					XxlJobLogger.log("-->"+entity.getId()+"规则引擎拼接条件异常");
+					feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+					entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+					return;
+				}
 				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
 			} catch (BizException e) {
 				// TODO: handle exception
@@ -854,6 +860,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		map.put("province", entity.getReceiveProvinceId());
 		map.put("weight", entity.getWeight());
 		List<BmsQuoteDispatchDetailVo> price = jobPriceContractInfoService.queryAllByTemplateId(map);
+		if(price==null || price.size() ==0){
+			XxlJobLogger.log("-->"+entity.getId()+"数据库未查询到报价 查询条件{0}",map);
+		}
 		return price;
 	}
 	
