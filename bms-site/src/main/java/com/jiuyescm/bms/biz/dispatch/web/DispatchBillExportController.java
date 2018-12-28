@@ -254,6 +254,12 @@ public class DispatchBillExportController extends BaseController{
 		headInfoList.add(itemMap);
 		
 		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "店铺名称");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "shopName");
+		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "九曳订单号");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "outstockNo");
@@ -575,6 +581,7 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem = new HashMap<String, Object>();
 	        	dataItem.put("warehouseName", entity.getWarehouseName());
 	        	dataItem.put("customerName", entity.getCustomerName());
+	        	dataItem.put("shopName", entity.getShopName());
 	        	dataItem.put("outstockNo", entity.getOutstockNo());
 	        	dataItem.put("externalNo", entity.getExternalNo());
 	        	dataItem.put("waybillNo", entity.getWaybillNo());
