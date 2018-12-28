@@ -952,6 +952,7 @@ public class BuinessDataExportController extends BaseController {
 		headMapDict.clear();
 		headMapDict.put("warehouseCode", "仓库");
 		headMapDict.put("customerName", "商家名称");
+		headMapDict.put("shopName", "店铺名称");
 		headMapDict.put("orderNo", "九曳订单号");
 		headMapDict.put("externalNo", "商家订单号");
 		headMapDict.put("waybillNo", "运单号");
@@ -1002,6 +1003,7 @@ public class BuinessDataExportController extends BaseController {
 			Map<String, Object> map = Maps.newHashMap();
 			map.put("warehouseCode", entity.getWarehouseName());
 			map.put("customerName", entity.getCustomerName());
+			map.put("shopName", entity.getShopName());
 			map.put("orderNo", entity.getOutstockNo());
 			map.put("externalNo", entity.getExternalNo());
 			map.put("waybillNo", entity.getWaybillNo());

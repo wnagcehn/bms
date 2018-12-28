@@ -454,6 +454,7 @@
     	select 
 	a.warehouse_name,
 	a.customer_name,
+	a.shop_name,
 	a.outstock_no,
 	a.external_no,
 	a.waybill_no,
