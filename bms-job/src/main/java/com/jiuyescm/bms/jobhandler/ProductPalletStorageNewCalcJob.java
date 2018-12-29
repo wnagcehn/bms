@@ -198,7 +198,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"商家已经按件收取存储费,按托存储不计费");
 			entity.setIsCalculated(CalculateState.No_Exe.getCode());
 			feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
-			entity.setRemark("商家已经按件收取存储费,按托存储不计费");
+			entity.setRemark(entity.getRemark()+"商家已经按件收取存储费,按托存储不计费;");
 			return true;
 		}
 		return false;
@@ -220,7 +220,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		}
 		catch(BizException ex){
 			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
-			entity.setRemark("合同在线"+ex.getMessage()+";");
+			entity.setRemark(entity.getRemark()+"合同在线"+ex.getMessage()+";");
 		}
 		return modelEntity;
 	}
@@ -267,7 +267,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
 							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-							entity.setRemark("阶梯报价未配置");
+							entity.setRemark(entity.getRemark()+"阶梯报价未配置;");
 							return;
 						}
 						
@@ -280,7 +280,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
 							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-							entity.setRemark("阶梯报价未配置");
+							entity.setRemark(entity.getRemark()+"阶梯报价未配置;");
 							return;
 						}
 						
@@ -305,7 +305,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 					feeEntity.setCost(BigDecimal.valueOf(amount));
 					feeEntity.setParam4(priceType);
 					feeEntity.setBizType(entity.getextattr1());//判断是否是遗漏数据
-					entity.setRemark("计算成功");
+					entity.setRemark(entity.getRemark()+"计算成功;");
 					entity.setIsCalculated(CalculateState.Finish.getCode());
 					feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				}
@@ -328,7 +328,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			if (null == ruleEntity) {
-				biz.setRemark("合同在线规则未绑定");
+				biz.setRemark(biz.getRemark()+"合同在线规则未绑定;");
 				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				biz.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				XxlJobLogger.log("-->"+biz.getId()+"计算不成功，合同在线规则未绑定");
@@ -339,13 +339,21 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+biz.getId()+"获取报价参数"+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = null;		
 			try {
+			    if(cond == null || cond.size() == 0){
+					XxlJobLogger.log("-->"+biz.getId()+"规则引擎拼接条件异常");
+					fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+					biz.setIsCalculated(CalculateState.Sys_Error.getCode());
+					biz.setRemark(biz.getRemark()+"系统规则引擎异常;");
+					return;
+				}
+				
 				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
 			} catch (BizException e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				biz.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				XxlJobLogger.log("-->"+biz.getId()+"获取合同在线报价异常:"+e.getMessage());
-				biz.setRemark("获取合同在线报价异常:"+e.getMessage());
+				biz.setRemark(biz.getRemark()+"获取合同在线报价异常:"+e.getMessage()+";");
 				fee.setCalcuMsg("获取合同在线报价异常:"+e.getMessage());
 				return;
 			}
@@ -371,7 +379,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			biz.setIsCalculated(CalculateState.Sys_Error.getCode());
 			XxlJobLogger.log("-->"+biz.getId()+"计算不成功，费用0{0}",ex.getMessage());
-			biz.setRemark("计算不成功:"+ex.getMessage());
+			biz.setRemark(biz.getRemark()+"计算不成功:"+ex.getMessage()+";");
 			fee.setCalcuMsg("计算不成功:"+ex.getMessage());
 		}
 		
@@ -409,7 +417,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到有效合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(entity.getRemark()+"bms未查询到有效合同");
+			entity.setRemark(entity.getRemark()+"bms未查询到有效合同;");
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -425,7 +433,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"未签约服务  订单号【{0}】--商家【{1}】", entity.getId(),entity.getCustomerId());
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(entity.getRemark()+"bms未签约服务");
+			entity.setRemark(entity.getRemark()+"bms未签约服务；");
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -451,7 +459,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark(entity.getRemark()+"bms报价未配置");
+			entity.setRemark(entity.getRemark()+"bms报价未配置;");
 			return false;
 		}
 		//报价模板
@@ -465,7 +473,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark(entity.getRemark()+"bms报价【"+priceGeneral.getQuotationNo()+"】类型未知");
+			entity.setRemark(entity.getRemark()+"bms报价【"+priceGeneral.getQuotationNo()+"】类型未知;");
 			return  false;
 		}
 		current = System.currentTimeMillis();

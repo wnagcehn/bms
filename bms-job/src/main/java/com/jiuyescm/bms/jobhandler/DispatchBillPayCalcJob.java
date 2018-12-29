@@ -136,7 +136,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 				XxlJobLogger.log("宅配商【{0}】,仓库【{1}】，省份【{2}】报价未配置",deliverId,entity.getWarehouseName(),entity.getReceiveProvinceId());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feePayEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(String.format("宅配商【{0}】,仓库【{1}】，省份【{2}】报价未配置", deliverId,entity.getWarehouseName(),entity.getReceiveProvinceId()));
+				entity.setRemark(entity.getRemark()+String.format("宅配商【{0}】,仓库【{1}】，省份【{2}】报价未配置;", deliverId,entity.getWarehouseName(),entity.getReceiveProvinceId()));
 				feesList.add(feePayEntity);
 				return;
 			}
@@ -150,7 +150,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 				XxlJobLogger.log("规则未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feePayEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("规则未配置");
+				entity.setRemark(entity.getRemark()+"规则未配置;");
 				feesList.add(feePayEntity);
 				return ;
 			}
@@ -211,7 +211,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 				feePayEntity.setBizType(entity.getExtattr1());//判断是否是遗漏数据
 				entity.setIsCalculated(CalculateState.Finish.getCode());
 				feePayEntity.setIsCalculated(CalculateState.Finish.getCode());
-				entity.setRemark("计算成功");
+				entity.setRemark(entity.getRemark()+"计算成功;");
 				feesList.add(feePayEntity);
 			}
 			else{
@@ -220,7 +220,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 				feePayEntity.setAmount(0.0d);
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feePayEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("费用计算失败:"+resultVo.getMsg());
+				entity.setRemark(entity.getRemark()+"费用计算失败:"+resultVo.getMsg()+";");
 				feesList.add(feePayEntity);
 			}
 		}catch(Exception ex){
@@ -228,7 +228,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			feePayEntity.setAmount(0.0d);
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feePayEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark("费用计算异常:"+ex.getMessage());
+			entity.setRemark(entity.getRemark()+"费用计算异常:"+ex.getMessage()+";");
 			feesList.add(feePayEntity);
 		}
 	}
@@ -296,7 +296,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			XxlJobLogger.log(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getCarrierId()));
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feePayEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getCarrierId()));
+			entity.setRemark(entity.getRemark()+String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置;", entity.getWaybillNo(),entity.getCarrierId()));
 			feesList.add(feePayEntity);
 			return false;
 		}
@@ -374,7 +374,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 					XxlJobLogger.log("--------顺丰发件人省或市为空 计算失败--------");
 					entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 					feePayEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-					entity.setRemark("顺丰发件人省或市为空 计算失败");
+					entity.setRemark(entity.getRemark()+"顺丰发件人省或市为空 计算失败;");
 					feesList.add(feePayEntity);
 					return false;
 				}
@@ -426,7 +426,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			XxlJobLogger.log("--------未获取到重量 计算失败--------");
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			feePayEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark("未获取到重量 计算失败");
+			entity.setRemark(entity.getRemark()+"未获取到重量 计算失败;");
 			feesList.add(feePayEntity);
 			return false;
 		}
@@ -466,7 +466,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 				}
 			}
 			if(!isjyMouth){
-				entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");						
+				entity.setRemark(entity.getRemark()+"该顺丰运单不是九曳的月结账号，金额置0;");						
 				feePayEntity.setAmount(0.0d);
 				entity.setIsCalculated(CalculateState.No_Exe.getCode());
 				feePayEntity.setIsCalculated(CalculateState.No_Exe.getCode());
@@ -477,7 +477,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		
 		//如果不是妥投的则不计算
 		if(!"终结".equals(entity.getBigstatus()) || !"已签收".equals(entity.getSmallstatus())){
-			entity.setRemark("该运单不是签收状态，金额置0");						
+			entity.setRemark(entity.getRemark()+"该运单不是签收状态，金额置0;");						
 			feePayEntity.setAmount(0.0d);
 			entity.setIsCalculated(CalculateState.No_Exe.getCode());
 			feePayEntity.setIsCalculated(CalculateState.No_Exe.getCode());
@@ -502,7 +502,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 			XxlJobLogger.log(String.format("未查询到合同  运单号【%s】--宅配商【%s】", entity.getWaybillNo(),entity.getDeliverName()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feePayEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("未查询到合同  运单号【%s】--宅配商【%s】", entity.getWaybillNo(),entity.getDeliverName()));
+			entity.setRemark(entity.getRemark()+String.format("未查询到合同  运单号【%s】--宅配商【%s】;", entity.getWaybillNo(),entity.getDeliverName()));
 			feesList.add(feePayEntity);
 			return false;
 		}

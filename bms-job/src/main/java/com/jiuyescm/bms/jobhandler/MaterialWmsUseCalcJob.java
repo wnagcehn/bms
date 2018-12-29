@@ -117,7 +117,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 				PriceMaterialQuotationEntity matchEntity=queryMatchEntityById(mapCusPrice.get(customerId),resultVo.getQuoId());
 				saleStorageFeeEntity.setUnitPrice(BigDecimal.valueOf(matchEntity.getUnitPrice()));
 				saleStorageFeeEntity.setCost(resultVo.getPrice());
-				entity.setRemark("计算成功");
+				entity.setRemark(entity.getRemark()+"计算成功;");
 				saleStorageFeeEntity.setParam2(resultVo.getMethod());
 				saleStorageFeeEntity.setParam3(resultVo.getQuoId());
 				saleStorageFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
@@ -129,7 +129,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 				saleStorageFeeEntity.setParam2(resultVo.getMethod());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				saleStorageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("费用计算失败:"+resultVo.getMsg());
+				entity.setRemark(entity.getRemark()+"费用计算失败:"+resultVo.getMsg()+";");
 				feesList.add(saleStorageFeeEntity);
 			}
 			XxlJobLogger.log(String.format("====================================[%s]计算完毕============================================",entity.getId()));
@@ -137,7 +137,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 		}catch(Exception ex){
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			saleStorageFeeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark("费用计算异常:"+ex.getMessage());
+			entity.setRemark(entity.getRemark()+"费用计算异常:"+ex.getMessage()+";");
 			feesList.add(saleStorageFeeEntity);
 		}
 		
@@ -193,7 +193,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 			XxlJobLogger.log(String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			saleStorageFeeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
+			entity.setRemark(entity.getRemark()+String.format("未查询到合同  订单号【%s】--商家【%s】;", entity.getId(),customerId));
 			feesList.add(saleStorageFeeEntity);
 			return false;
 		}
@@ -210,7 +210,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 			XxlJobLogger.log(String.format("未签约服务  主键【%s】--商家【%s】", entity.getId(),entity.getCustomerId()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			saleStorageFeeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("未签约服务"));
+			entity.setRemark(entity.getRemark()+String.format("未签约服务")+";");
 			feesList.add(saleStorageFeeEntity);
 			return false;
 		}
@@ -229,7 +229,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 			XxlJobLogger.log("报价未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			saleStorageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("报价未配置");
+			entity.setRemark(entity.getRemark()+"报价未配置;");
 			feesList.add(saleStorageFeeEntity);
 			return false;
 		}
@@ -252,7 +252,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 			XxlJobLogger.log("规则未配置");
 			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			saleStorageFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			entity.setRemark("规则未配置");
+			entity.setRemark(entity.getRemark()+"规则未配置;");
 			feesList.add(saleStorageFeeEntity);
 			return  false;
 		}

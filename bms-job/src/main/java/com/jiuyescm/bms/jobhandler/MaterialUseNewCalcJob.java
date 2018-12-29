@@ -192,7 +192,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				XxlJobLogger.log("-->"+entity.getId()+String.format("顺丰防水袋，不收钱", entity.getId()));
 				entity.setIsCalculated(CalculateState.No_Exe.getCode());
 				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
-				entity.setRemark(String.format("顺丰防水袋，不收钱", entity.getId()));
+				entity.setRemark(entity.getRemark()+String.format("顺丰防水袋，不收钱", entity.getId())+";");
 				return true;
 			}
 		}
@@ -228,8 +228,8 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 
 		}
 		catch(BizException ex){
-			XxlJobLogger.log("-->"+entity.getId()+"合同在线无此合同:"+ex.getMessage());
-			entity.setRemark("合同在线"+ex.getMessage()+";");
+			XxlJobLogger.log("-->{0}合同在线无此合同 {1}" , entity.getId() , ex.getMessage());
+			entity.setRemark(entity.getRemark()+"合同在线"+ex.getMessage()+";");
 		}
 		return modelEntity;
 	}
@@ -253,7 +253,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 					XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					entity.setRemark("报价未配置");
+					entity.setRemark(entity.getRemark()+"报价未配置;");
 					return;
 				}
 				
@@ -266,7 +266,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 					XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-					entity.setRemark("报价未配置");
+					entity.setRemark(entity.getRemark()+"报价未配置;");
 					feeEntity.setCalcuMsg("报价未配置");
 					return;
 				}
@@ -279,7 +279,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
 					feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 					entity.setIsCalculated(CalculateState.Finish.getCode());
-					entity.setRemark(CalculateState.Finish.getDesc());
+					entity.setRemark(entity.getRemark()+CalculateState.Finish.getDesc()+";");
 					XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getCost());
 				}else{
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -291,7 +291,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		catch(Exception ex){
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark(CalculateState.Sys_Error.getDesc());
+			entity.setRemark(entity.getRemark()+CalculateState.Sys_Error.getDesc()+";");
 			XxlJobLogger.log("-->"+entity.getId()+"系统异常，费用【0】");
 		}
 	}
@@ -304,7 +304,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			if (null == ruleEntity) {
-				entity.setRemark("合同在线规则未绑定");
+				entity.setRemark(entity.getRemark()+"合同在线规则未绑定;");
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				XxlJobLogger.log("-->"+entity.getId()+"计算不成功，合同在线规则未绑定");
@@ -315,13 +315,21 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			XxlJobLogger.log("-->"+entity.getId()+"获取报价参数"+cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = null;
 			try {
+			    if(cond == null || cond.size() == 0){
+					XxlJobLogger.log("-->"+entity.getId()+"规则引擎拼接条件异常");
+					feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+					entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+					entity.setRemark(entity.getRemark()+"系统规则引擎异常;");
+					return;
+				}
+				
 				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(contractQuoteInfoVo, cond);
 			} catch (BizException e) {
 				// TODO: handle exception
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价异常:"+e.getMessage());
-				entity.setRemark("获取合同在线报价异常:"+e.getMessage());
+				entity.setRemark(entity.getRemark()+"获取合同在线报价异常:"+e.getMessage()+";");
 				feeEntity.setCalcuMsg("获取合同在线报价异常:"+e.getMessage());
 				return;
 			}
@@ -348,7 +356,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用0{0}",ex.getMessage());
-			entity.setRemark("计算不成功:"+ex.getMessage());
+			entity.setRemark(entity.getRemark()+"计算不成功:"+ex.getMessage()+";");
 			feeEntity.setCalcuMsg("计算不成功:"+ex.getMessage());
 		}
 		
@@ -380,7 +388,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(entity.getRemark()+String.format("bms未查询到合同  订单号【%s】--商家【%s】", entity.getId(),customerId));
+			entity.setRemark(entity.getRemark()+String.format("bms未查询到合同  订单号【%s】--商家【%s】;", entity.getId(),customerId));
 			return false;
 		}
 		current = System.currentTimeMillis();
@@ -397,7 +405,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			XxlJobLogger.log("-->"+entity.getId()+String.format("未签约服务  主键【%s】--商家【%s】", entity.getId(),entity.getCustomerId()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(entity.getRemark()+String.format("bms未签约服务"));
+			entity.setRemark(entity.getRemark()+String.format("bms未签约服务")+";");
 			return false;
 		}
 		current = System.currentTimeMillis();

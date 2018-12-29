@@ -118,7 +118,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 				XxlJobLogger.log("规则未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				transportFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("规则未配置");
+				entity.setRemark(entity.getRemark()+"规则未配置;");
 				feesList.add(transportFeeEntity);
 				return;
 			}
@@ -138,7 +138,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 				XxlJobLogger.log("{0}报价未配置",mes);
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				transportFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(String.format("{0}报价未配置", mes));
+				entity.setRemark(entity.getRemark()+String.format("{0}报价未配置;", mes));
 				feesList.add(transportFeeEntity);
 				return;	
 			}
@@ -165,7 +165,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 				transportFeeEntity.setExtarr2(resultVo.getMethod());//计算方式
 				entity.setIsCalculated(CalculateState.Finish.getCode());
 				transportFeeEntity.setIsCalculated(CalculateState.Finish.getCode());
-				entity.setRemark("计算成功");
+				entity.setRemark(entity.getRemark()+"计算成功;");
 				feesList.add(transportFeeEntity);
 			}
 			else{
@@ -175,14 +175,14 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 				transportFeeEntity.setExtarr1(TemplateTypeEnum.COMMON.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				transportFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark("运输费用计算失败:"+resultVo.getMsg());
+				entity.setRemark(entity.getRemark()+"运输费用计算失败:"+resultVo.getMsg()+";");
 				feesList.add(transportFeeEntity);
 			}
 		}catch(Exception ex){
 			XxlJobLogger.log("运输费用计算失败--{0}",ex.getMessage());
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			transportFeeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark("运输计算异常:"+ex.getMessage());
+			entity.setRemark(entity.getRemark()+"运输计算异常:"+ex.getMessage()+";");
 			feesList.add(transportFeeEntity);
 		}
 		
@@ -293,7 +293,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 				
 				bizData.setIsCalculated(CalculateState.Other.getCode());
 				transportFeeEntity.setIsCalculated(CalculateState.Other.getCode());
-				bizData.setRemark(String.format("【起始】省份:%s,城市:%s,区:%s 没有在地址库中维护!", bizData.getSendProvinceId(),bizData.getSendCityId(),bizData.getSendDistrictId()));
+				bizData.setRemark(bizData.getRemark()+String.format("【起始】省份:%s,城市:%s,区:%s 没有在地址库中维护!;", bizData.getSendProvinceId(),bizData.getSendCityId(),bizData.getSendDistrictId()));
 				return false;
 			}
 			bizData.setSendProvinceId(matchFromVo.getProvince());
@@ -309,7 +309,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 				XxlJobLogger.log(String.format("【目的】省份:%s,城市:%s,区:%s 没有在地址库中维护!", bizData.getReceiverProvinceId(),bizData.getReceiverCityId(),bizData.getReceiverDistrictId()));
 				bizData.setIsCalculated(CalculateState.Other.getCode());
 				transportFeeEntity.setIsCalculated(CalculateState.Other.getCode());
-				bizData.setRemark(String.format("【目的】省份:%s,城市:%s,区:%s 没有在地址库中维护!", bizData.getReceiverProvinceId(),bizData.getReceiverCityId(),bizData.getReceiverDistrictId()));
+				bizData.setRemark(bizData.getRemark()+String.format("【目的】省份:%s,城市:%s,区:%s 没有在地址库中维护!;", bizData.getReceiverProvinceId(),bizData.getReceiverCityId(),bizData.getReceiverDistrictId()));
 				return false;
 			}
 			bizData.setReceiverProvinceId(matchDestVo.getProvince());
@@ -337,7 +337,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 			XxlJobLogger.log(String.format("运输费计算未查询到合同  订单号【%s】--商家【%s】", entity.getOrderNo(),entity.getCustomerId()));
 			entity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			transportFeeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
-			entity.setRemark(String.format("运输费计算未查询到合同  订单号【%s】--商家【%s】", entity.getOrderNo(),entity.getCustomerId()));
+			entity.setRemark(entity.getRemark()+String.format("运输费计算未查询到合同  订单号【%s】--商家【%s】;", entity.getOrderNo(),entity.getCustomerId()));
 			return false;
 		}
 		return true;
@@ -366,7 +366,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 			XxlJobLogger.log(String.format("干线单号【%s】执行失败--原因：干线业务类型【%s】未在数据字典中配置", entity.getWaybillNo(),entity.getBizTypeCode()));
 			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 			transportFeeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
-			entity.setRemark(String.format("干线单号【%s】执行失败--原因：干线业务类型【%s】未在数据字典中配置", entity.getWaybillNo(),entity.getBizTypeCode()));
+			entity.setRemark(entity.getRemark()+String.format("干线单号【%s】执行失败--原因：干线业务类型【%s】未在数据字典中配置;", entity.getWaybillNo(),entity.getBizTypeCode()));
 			feesList.add(transportFeeEntity);
 			return false;
 		}
@@ -399,7 +399,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 	    	XxlJobLogger.log(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
 	    	entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 	    	transportFeeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-	    	entity.setRemark(String.format("合同【%s】未签约服务", contractEntity.getContractCode()));
+	    	entity.setRemark(entity.getRemark()+String.format("合同【%s】未签约服务;", contractEntity.getContractCode()));
 	    	feesList.add(transportFeeEntity);
 			return false;
 	    }
