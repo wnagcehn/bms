@@ -493,7 +493,7 @@ public class BmsPackmaterialImportWmsListenerNew implements MessageListener{
 						
 						BizOutstockPackmaterialTempEntity tempChild = new BizOutstockPackmaterialTempEntity();
 						tempChild.setConsumerMaterialName(materialMap.get(cells.get(codeName)).getMaterialName());
-						tempChild.setConsumerMaterialCode(cells.get(codeName));
+						tempChild.setConsumerMaterialCode(cells.get(codeName).trim());
 						
 						if(materialMap.containsKey(cells.get(codeName))){
 							PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(cells.get(codeName));

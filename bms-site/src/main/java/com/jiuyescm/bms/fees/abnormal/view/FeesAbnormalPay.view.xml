@@ -252,7 +252,7 @@
       </PropertyDef>
       <PropertyDef name="confirmPayAmount">
         <Property name="dataType">Double</Property>
-        <Property name="label">确认理赔金额</Property>
+        <Property name="label">确认理赔小计</Property>
       </PropertyDef>
       <PropertyDef name="confirmIsDeliveryFree">
         <Property></Property>
@@ -290,7 +290,7 @@
       </PropertyDef>
       <PropertyDef name="confirmProductAmountD2j">
         <Property name="dataType">Double</Property>
-        <Property name="label">确认理赔金额</Property>
+        <Property name="label">确认理赔商品金额</Property>
       </PropertyDef>
       <PropertyDef name="confirmAmerceAmount">
         <Property name="dataType">Double</Property>
@@ -601,29 +601,29 @@ var nowdays = new Date();&#xD;
         <Property name="width">100</Property>
         <Property name="summaryType">sum</Property>
       </DataColumn>
-      <DataColumn name="confirmPayAmount">
-        <Property name="property">confirmPayAmount</Property>
-        <Property name="width">100</Property>
-        <Property name="summaryType">sum</Property>
-      </DataColumn>
       <DataColumn>
         <Property name="property">confirmProductAmountD2j</Property>
         <Property name="width">100</Property>
         <Property name="name">confirmProductAmountD2j</Property>
       </DataColumn>
-      <DataColumn>
-        <Property name="property">confirmAmerceAmount</Property>
+      <DataColumn name="confirmIsDeliveryFree">
+        <Property name="property">confirmIsDeliveryFree</Property>
         <Property name="width">100</Property>
-        <Property name="name">confirmAmerceAmount</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">confirmReturnedAmountJ2d</Property>
         <Property name="width">100</Property>
         <Property name="name">confirmReturnedAmountJ2d</Property>
       </DataColumn>
-      <DataColumn name="confirmIsDeliveryFree">
-        <Property name="property">confirmIsDeliveryFree</Property>
+      <DataColumn>
+        <Property name="property">confirmAmerceAmount</Property>
         <Property name="width">100</Property>
+        <Property name="name">confirmAmerceAmount</Property>
+      </DataColumn>
+      <DataColumn name="confirmPayAmount">
+        <Property name="property">confirmPayAmount</Property>
+        <Property name="width">100</Property>
+        <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn name="orderStatus">
         <Property name="property">orderStatus</Property>

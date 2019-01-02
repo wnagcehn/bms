@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -455,6 +456,13 @@ public class FeesAbnormalController {
 			entity.setConfirmProductAmountD2j(confirmProductAmountD2j);
 			entity.setConfirmAmerceAmount(confirmAmerceAmount);
 			entity.setConfirmReturnedAmountJ2d(confirmReturnedAmountJ2d);
+		
+			//计算确认金额小计并导入
+	        BigDecimal b1 = new BigDecimal(Double.toString(confirmProductAmountD2j));
+	        BigDecimal b2 = new BigDecimal(Double.toString(confirmAmerceAmount));
+	        BigDecimal b3 = new BigDecimal(Double.toString(confirmReturnedAmountJ2d));
+			entity.setConfirmPayAmount((b1.add(b2)).add(b3).doubleValue());
+			
 			// 导入确认时间
 			entity.setImportConfirmTime(nowdate);
 			infoLists.add(entity);

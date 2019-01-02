@@ -427,7 +427,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						
 						BizOutstockPackmaterialTempEntity tempChild = new BizOutstockPackmaterialTempEntity();
 						tempChild.setConsumerMaterialName(materialMap.get(cells.get(codeName)).getMaterialName());
-						tempChild.setConsumerMaterialCode(cells.get(codeName));
+						
+						//去空
+						tempChild.setConsumerMaterialCode(cells.get(codeName).trim());
 						//耗材类型
 						String materialType=materialMap.get(cells.get(codeName)).getMaterialType();					
 						if(materialMap.containsKey(cells.get(codeName))){
