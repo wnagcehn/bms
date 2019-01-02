@@ -562,6 +562,8 @@ public class BillCheckInfoController{
 	public String updateBillStatus(BillCheckInfoVo billCheckInfoVo){
 		if(billCheckInfoVo!=null && billCheckInfoVo.getOperDesc()!=null){
 			if(billCheckInfoVo.getOperDesc().contains("作废账单")){
+				//将账单状态置为1
+				billCheckInfoVo.setDelFlag("1");
 				billCheckInfoVo.setBillStatus(CheckBillStatusEnum.INVALIDATE.getCode());
 			}else{
 				billCheckInfoVo.setBillStatus(CheckBillStatusEnum.TB_CONFIRMED.getCode());
