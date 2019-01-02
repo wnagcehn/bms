@@ -177,8 +177,19 @@ public class FeesReceiveDispatchEntity implements IEntity {
  	
 	private String serviceTypeCode;
 	private String serviceTypeName;
+	
+	//店铺名称
+	private String shopName;
  	
-    public String getDispatchCal() {
+    public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public String getDispatchCal() {
 		return dispatchCal;
 	}
 

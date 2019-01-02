@@ -289,7 +289,7 @@ public class BizProductPalletStorageController{
 						FeesReceiveStorageEntity feesReceiveStorageEntity = pageInfo.getList().get(0);
 						//获取此时的费用状态
 						String status = String.valueOf(feesReceiveStorageEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账,无法修改!";
 						}
 					}
@@ -337,7 +337,7 @@ public class BizProductPalletStorageController{
 					FeesReceiveStorageEntity feesReceiveStorageEntity = pageInfo.getList().get(0);
 					//获取此时的费用状态
 					String status = String.valueOf(feesReceiveStorageEntity.getStatus());
-					if(status.equals("1")){
+					if("1".equals(status)){
 						return "该费用已过账，无法删除";
 					}
 				}

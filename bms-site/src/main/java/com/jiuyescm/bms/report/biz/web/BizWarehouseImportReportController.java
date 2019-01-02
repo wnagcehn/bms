@@ -3,6 +3,7 @@ package com.jiuyescm.bms.report.biz.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,12 @@ import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.type.BizTypeEnum;
 import com.jiuyescm.bms.report.biz.service.IBizWarehouseImportReportService;
 import com.jiuyescm.bms.report.vo.BizWarehouseImportReportVo;
+import com.jiuyescm.bms.report.vo.BizWarehouseNotImportVo;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
@@ -191,6 +194,19 @@ public class BizWarehouseImportReportController {
 			throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_PRODUCT_PALLET_DIFF");
 		}
 		return systemCodeEntity.getExtattr1();
+	}
+	
+	//查询未导入商家
+	@DataProvider
+	public void queryNotImport(Page<BizWarehouseNotImportVo> page, Map<String, Object> param) {
+		if (param == null){
+			param = new HashMap<String, Object>();
+		}
+		PageInfo<BizWarehouseNotImportVo> pageInfo = bizWarehouseImportReportService.queryNotImport(param, page.getPageNo(), page.getPageSize());
+		if (pageInfo != null) {
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int) pageInfo.getTotal());
+		}
 	}
 
 }

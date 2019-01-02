@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.report.biz.entity.BizWarehouseImportReportEntity;
+import com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity;
 
 /**
  * @author yangss

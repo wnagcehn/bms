@@ -1699,7 +1699,7 @@ public class FeesBillExportController {
               headMapList.add(itemMap);
               
               itemMap = new HashMap<String, Object>();
-              if(str.equals("GB")){
+              if("GB".equals(str)){
             	  itemMap.put("title", "重量");
               }else{
             	  itemMap.put("title", "数量");

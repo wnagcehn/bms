@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataResolver;
@@ -27,8 +28,8 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
-import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
-import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
@@ -77,8 +78,11 @@ public class DispatchBillPayExportController extends BaseController{
 	private IBizOutstockPackmaterialService bizOutstockPackmaterialServiceImpl;
 	@Resource 
 	private SequenceService sequenceService;
+	@Autowired
+	private ICarrierProductService carrierProductService;
 	@Resource
-	private IPubCarrierServicetypeService pubCarrierServicetypeService;
+	private JmsTemplate jmsQueueTemplate;
+
 	
 	/**
 	 * 导出
@@ -145,6 +149,18 @@ public class DispatchBillPayExportController extends BaseController{
     				}
     			};
     		}.start();
+        	
+        	// 写入MQ
+        /*	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send(MQConstants.DISPATCH_BILL_PAY_EXPORT, new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});*/
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -548,6 +564,18 @@ public class DispatchBillPayExportController extends BaseController{
     				}
     			};
     		}.start();
+        	
+        	// 写入MQ
+        	/*param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send(MQConstants.OUTSTOCK_PACKMATERIAL_ORIGIN_EXPORT, new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});*/
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -835,12 +863,12 @@ public class DispatchBillPayExportController extends BaseController{
 	}
 	
 	
-	public Map<String,String> getServiceMap(){
+	public Map<String,String> getServiceMap() throws Exception{
 		Map<String,String> map=new HashMap<String,String>();
 		Map<String,Object> con=new HashMap<String,Object>();
 		con.put("delflag", "0");
-		List<PubCarrierServicetypeEntity> list=pubCarrierServicetypeService.query(con);
-		for(PubCarrierServicetypeEntity p:list){
+		List<CarrierProductVo> list=carrierProductService.query(con);
+		for(CarrierProductVo p:list){
 			map.put(p.getServicecode()+"&"+p.getCarrierid(), p.getServicename());
 		}
 		return map;

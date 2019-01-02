@@ -359,6 +359,10 @@
       <PropertyDef name="adjustServiceTypeName">
         <Property name="label">调整物流产品类型</Property>
       </PropertyDef>
+      <PropertyDef name="shopName">
+        <Property></Property>
+        <Property name="label">店铺名称</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1223,6 +1227,11 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
               <DataColumn name="customerName">
                 <Property name="property">customerName</Property>
                 <Property name="width">150</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">shopName</Property>
+                <Property name="width">150</Property>
+                <Property name="name">shopName</Property>
               </DataColumn>
               <DataColumn name="warehouseName">
                 <Property name="property">warehouseName</Property>

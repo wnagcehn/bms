@@ -316,7 +316,7 @@
     
     <insert id="insertReportMaster"  parameterType="com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity">
     	insert into report_bill_import_master(
-			bill_no, total_money, total_storage_money, total_dispatch_money, total_transport_money, total_air_money, total_abnormal_money, creator, create_time, del_flag
+			bill_no, total_money, total_storage_money, total_dispatch_money, total_transport_money, total_air_money, total_abnormal_money, creator, create_time, del_flag, total_material_storage, total_material_storage_money, total_product_storage, total_product_storage_money, total_rent_money, total_transport_abnorml_money, total_air_abnorml_money, total_storage_abnormal_money, total_dispatch_abnormal_money
     	)
         values (
 
@@ -329,8 +329,45 @@
 			#{totalAbnormalMoney,jdbcType=DECIMAL}, 
 			#{creator,jdbcType=VARCHAR}, 
 			#{createTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{totalMaterialStorage,jdbcType=DECIMAL}, 
+			#{totalMaterialStorageMoney,jdbcType=DECIMAL}, 
+			#{totalProductStorage,jdbcType=DECIMAL}, 
+			#{totalProductStorageMoney,jdbcType=DECIMAL}, 
+			#{totalRentMoney,jdbcType=DECIMAL},
+			#{totalTransportAbnormlMoney,jdbcType=DECIMAL}, 
+			#{totalAirAbnormlMoney,jdbcType=DECIMAL}, 
+			#{totalStorageAbnormalMoney,jdbcType=DECIMAL}, 
+			#{totalDispatchAbnormalMoney,jdbcType=DECIMAL}
         )
     
     </insert>
+        
+    <select id="queryMaterial" parameterType="String" resultType="java.util.Map">
+    	select IFNULL(SUM(total_qty),0) as num,IFNULL(SUM(amount),0) as amount from bill_fees_receive_storage where 1=1 and bill_no=#{billNo} and subject_code='wh_material_storage' and charge_unit='PALLETS'   
+    </select>
+    
+    <select id="queryProduct" parameterType="String" resultType="java.util.Map">
+		select IFNULL(SUM(total_qty),0) as num,IFNULL(SUM(amount),0) as amount from bill_fees_receive_storage where 1=1 and bill_no=#{billNo} and subject_code='wh_product_storage' and charge_unit='PALLETS'  
+    </select>
+    
+    <select id="queryStorageRent" parameterType="String" resultType="java.lang.Double">
+		select IFNULL(SUM(amount),0) from bill_fees_receive_storage where 1=1 and bill_no=#{billNo} and subject_code='wh_rent'   
+    </select>
+    
+    <select id="queryTransportAbnormalFee" parameterType="String" resultType="java.lang.Double">
+    	select IFNULL(SUM(amount),0) from bill_fees_receive_transport where bill_no=#{billNo} and subject_code='YS_PF'
+    </select>
+    
+    <select id="queryAirAbnormalFee" parameterType="String" resultType="java.lang.Double">
+    	select IFNULL(SUM(amount),0) from bill_fees_receive_air where bill_no=#{billNo} and subject_code='at_abnormal_pay'
+    </select>
+    
+     <select id="queryStorageAbnormalFee" parameterType="String" resultType="java.lang.Double">
+		select IFNULL(SUM(amount),0) from bill_fees_receive_storage where bill_no=#{billNo} and subject_code='wh_abnormal_pay'
+    </select>
+    
+    <select id="queryDispatchAbnormalFee" parameterType="String" resultType="java.lang.Double">
+		select IFNULL(SUM(amount),0) from bill_fees_receive_dispatch where bill_no=#{billNo} and subject_code='de_abnormal_pay'
+    </select>
 </mapper>

@@ -384,7 +384,7 @@ public class TransportHandler extends
 			}
 		}
 
-		if (!errorMessage.equals("")) {
+		if (StringUtils.isNotBlank(errorMessage)) {
 			throw new Exception(errorMessage);
 		}
 

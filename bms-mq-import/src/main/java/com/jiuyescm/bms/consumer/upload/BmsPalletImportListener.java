@@ -182,54 +182,56 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 						isAllEmpty=true;
 						pallet_entity.setPalletNum(Double.valueOf(cells.get(str)));//托数
 
-						if(str.equals("商品冷冻")){
+			            switch (str){
+		                case "商品冷冻":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷冻"));
 							pallet_entity.setBizType("product");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("商品冷藏")){
+		                    break;
+		                case "商品冷藏":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷藏"));
 							pallet_entity.setBizType("product");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("商品常温")){
+		                    break;
+		                case "商品常温":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("常温"));
 							pallet_entity.setBizType("product");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("商品恒温")){
+		                    break;
+		                case "商品恒温":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("恒温"));
 							pallet_entity.setBizType("product");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("耗材冷冻")){
+		                    break;
+		                case "耗材冷冻":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷冻"));
 							pallet_entity.setBizType("material");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("耗材冷藏")){
+		                    break;
+		                case "耗材冷藏":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("冷藏"));
 							pallet_entity.setBizType("material");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("耗材常温")){
+		                    break;
+		                case "耗材常温":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("常温"));
 							pallet_entity.setBizType("material");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("耗材恒温")){
+		                    break;
+		                case "耗材恒温":
 							pallet_entity.setTemperatureTypeCode(temperatureMap.get("恒温"));
 							pallet_entity.setBizType("material");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("入库托数")){
+		                    break;
+		                case "入库托数":
 							pallet_entity.setBizType("instock");
 							palletList.add(pallet_entity);
-						}
-						else if(str.equals("出库托数")) {
+		                    break;
+		                case "出库托数":
 							pallet_entity.setBizType("outstock");
 							palletList.add(pallet_entity);
-						}
+		                    break;
+		            }
 						
 					}else{
 						errorMsg+="列【"+str+"】为非数字;";

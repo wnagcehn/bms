@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.report.bill.mapper.ReportBillImportDetailMapper" >
+	<!-- 查询收入明细--> 
+    <select id="queryReceipt" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.bill.ReportBillReceiptDetailEntity">
+		SELECT 
+				a.create_month as createMonth,
+				a.invoice_name as invoiceName,
+				a.bill_name as billName,
+				CONCAT(a.create_month,a.bill_name) as bill,
+				a.bill_start_time as billStartTime,
+		   		YEAR(a.bill_start_time) as billStartYear,
+				Month(a.bill_start_time) as billStartMonth,
+				a.first_class_name as firstClassName,
+				a.biz_type_name as bizTypeName,
+				a.project_name as projectName,
+				a.seller_name as sellerName,
+				a.dept_name as deptName,
+				h.extattr1 as receiptGroup,
+				a.project_manager_name as projectManagerName,
+				a.balance_name as balanceName,
+				b.different_remark as instruction,
+				c.count as dispatchCount,
+				ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
+				Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
+				IF(ABS(Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2))>0.05,1,0) as correctRate,
+				a.confirm_amount-e.expect_money as different,
+				a.confirm_amount as confirmAmount,
+				d.total_storage_money as actualStorage,
+				d.total_transport_money as actualTransport,
+				d.total_dispatch_money as actualDispatch,
+				d.total_air_money as actualAir,
+			  	d.total_abnormal_money as claim,
+				e.expect_money as preTotal,
+				e.expect_storage_money as preStorage,
+				e.expect_transport_money as preTransport,
+				e.expect_dispatch_money as preDispatch,
+				e.expect_air_money as preAir,
+				a.remark as remark,
+				a.bill_status as billStatus,
+			  	a.bill_confirm_date as billConfirmDate,
+				year(a.bill_confirm_date) as billConfirmMonth,
+				a.invoice_status as invoiceStatus,
+				IFNULL(a.confirm_amount,0)-IFNULL(a.invoice_amount,0) as unInvoiceAmount,
+				a.un_receipt_amount as unReceiptAmount,
+				a.invoice_amount as invoiceAmount,
+				g.invoiceNo as invoiceNo,
+				a.invoice_date as invoiceDate,
+				a.receipt_amount as receiptAmount,
+				a.receipt_date as receiptDate,
+				f.adjust_amount as otherAmount,
+				a.invoice_un_receipt_amount as invoiceUnReceiptAmount
+			 from bill_check_info a
+			 LEFT JOIN bill_receive_master b on a.bill_no=b.bill_no and b.del_flag='0'
+			 LEFT JOIN (select bill_no,COUNT(0) as count from bill_fees_receive_dispatch where subject_code='de_delivery_amount' GROUP BY bill_no) c on a.bill_no=c.bill_no
+			 LEFT JOIN report_bill_import_master d on a.bill_no=d.bill_no and d.del_flag='0'
+			 LEFT JOIN bill_receive_expect e on a.create_month=e.create_month and a.bill_name=e.bill_name
+			 LEFT JOIN bill_check_adjust_info f on a.id=f.bill_check_id
+			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
+			 LEFT JOIN system_code h on a.balance_name=h.code_name and h.type_code='BANLANCE_GROUP' and h.`status`='0'
+			 where a.del_flag='0'
+    </select>
+    
+    <!-- 导出收入明细 --> 
+    <select id="queryReceiptExport"  parameterType="java.util.Map" 
+    	resultType="java.util.Map">
+	   		SELECT 
+				a.create_month as createMonth,
+				a.invoice_name as invoiceName,
+				a.bill_name as billName,
+				CONCAT(a.create_month,a.bill_name) as bill,
+				a.bill_start_time as billStartTime,
+		   		YEAR(a.bill_start_time) as billStartYear,
+				Month(a.bill_start_time) as billStartMonth,
+				a.first_class_name as firstClassName,
+				a.biz_type_name as bizTypeName,
+				a.project_name as projectName,
+				a.seller_name as sellerName,
+				a.dept_name as deptName,
+				h.extattr1 as receiptGroup,
+				a.project_manager_name as projectManagerName,
+				a.balance_name as balanceName,
+				b.different_remark as instruction,
+				c.count as dispatchCount,
+				ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
+				Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
+				IF(ABS(Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2))>0.05,1,0) as correctRate,
+				a.confirm_amount-e.expect_money as different,
+				a.confirm_amount as confirmAmount,
+				d.total_storage_money as actualStorage,
+				d.total_transport_money as actualTransport,
+				d.total_dispatch_money as actualDispatch,
+				d.total_air_money as actualAir,
+			  	d.total_abnormal_money as claim,
+				e.expect_money as preTotal,
+				e.expect_storage_money as preStorage,
+				e.expect_transport_money as preTransport,
+				e.expect_dispatch_money as preDispatch,
+				e.expect_air_money as preAir,
+				a.remark as remark,
+				a.bill_status as billStatus,
+			  	a.bill_confirm_date as billConfirmDate,
+				year(a.bill_confirm_date) as billConfirmMonth,
+				a.invoice_status as invoiceStatus,
+				IFNULL(a.confirm_amount,0)-IFNULL(a.invoice_amount,0) as unInvoiceAmount,
+				a.un_receipt_amount as unReceiptAmount,
+				a.invoice_amount as invoiceAmount,
+				g.invoiceNo as invoiceNo,
+				a.invoice_date as invoiceDate,
+				a.receipt_amount as receiptAmount,
+				a.receipt_date as receiptDate,
+				f.adjust_amount as otherAmount,
+				a.invoice_un_receipt_amount as invoiceUnReceiptAmount
+			 from bill_check_info a
+			 LEFT JOIN bill_receive_master b on a.bill_no=b.bill_no and b.del_flag='0'
+			 LEFT JOIN (select bill_no,COUNT(0) as count from bill_fees_receive_dispatch where subject_code='de_delivery_amount' GROUP BY bill_no) c on a.bill_no=c.bill_no
+			 LEFT JOIN report_bill_import_master d on a.bill_no=d.bill_no and d.del_flag='0'
+			 LEFT JOIN bill_receive_expect e on a.create_month=e.create_month and a.bill_name=e.bill_name
+			 LEFT JOIN bill_check_adjust_info f on a.id=f.bill_check_id
+			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
+			 LEFT JOIN system_code h on a.balance_name=h.code_name and h.type_code='BANLANCE_GROUP' and h.`status`='0'
+			 where a.del_flag='0'
+    </select>
+    
+    <!-- 查询仓储明细 --> 
+    <select id="queryStorage" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.bill.ReportBillStorageDetailEntity">  	
+    	SELECT 
+			e.extattr1 as area,
+			a.create_month as createMonth,
+			a.invoice_name as invoiceName,
+			a.bill_name as billName,
+			CONCAT(a.create_month,a.bill_name) as bill,
+			a.first_class_name as firstClassName,
+			a.biz_type_name as bizTypeName,
+			a.project_name as projectName,
+			a.seller_name as sellerName,
+			a.project_manager_name as projectManagerName,
+   	  		a.balance_name as balanceName,
+			a.bill_status as billStatus,
+		    a.bill_confirm_date as billConfirmDate,
+		    a.invoice_status as invoiceStatus,
+		    a.remark as remark,
+		    b.different_remark as instruction,
+		    a.invoice_amount as invoiceAmount,
+		    a.invoice_date as invoiceDate,
+		    c.total_storage_money as invoiceStorage,
+		    c.total_transport_money as invoiceTransport,
+		    c.total_dispatch_money as invoiceDispatch,
+			c.total_air_money as invoiceAir,
+		    c.total_abnormal_money as invoiceAbnormal,
+		    IFNULL(c.total_storage_abnormal_money,0) as abnormalStorage,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalTransport,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalDispatch,
+		    IFNULL(c.total_air_abnorml_money,0) as abnormalAir,
+		    IFNULL(d.jiuyeAmount,0) as jiuyeAmount,
+		    IFNULL(d.jiuyeCount,0) as jiuyeCount,
+		    IFNULL(d.shunfengAmount,0) as shunfengAmount,
+		    IFNULL(d.shunfengCount,0) as shunfengCount,
+		    IFNULL(d.yuantongAmount,0) as yuantongAmount,
+		    IFNULL(d.yuantongCount,0) as yuantongCount,
+			IFNULL(d.zhongtongAmount,0) as zhongtongAmount,
+			IFNULL(d.zhongtongCount,0) as zhongtongCount,
+			IFNULL(d.jiuyeCount,0)+IFNULL(d.shunfengCount,0)+IFNULL(d.yuantongCount,0)+IFNULL(d.zhongtongCount,0) as totalCount,
+			IFNULL(c.total_product_storage,0)+IFNULL(c.total_material_storage,0) as storagePallet,
+   			d.outstockPallet as outstockPallet,
+			IFNULL(c.total_product_storage_money,0)+IFNULL(c.total_material_storage,0)+IFNULL(c.total_rent_money,0) as rentFee,
+			d.outstockFee as outstockFee,
+			d.materialFee as materialFee,
+			IFNULL(d.addFee,0)+IFNULL(b.adjust_amount,0) as addFee
+		 from bill_check_info a
+		 LEFT JOIN bill_receive_master b on a.bill_no=b.bill_no and b.del_flag='0'
+		 LEFT JOIN report_bill_import_master c on a.bill_no=c.bill_no and c.del_flag='0'
+		 LEFT JOIN (
+			select 
+				bill_no,
+				sum(de_jy_amount) as jiuyeAmount,sum(de_jy_orders) as jiuyeCount,
+				sum(de_sf_amount) as shunfengAmount,sum(de_sf_orders) as shunfengCount,
+				sum(de_yto_amount) as yuantongAmount,sum(de_yto_orders) as yuantongCount,
+				sum(de_zto_amount) as zhongtongAmount,sum(de_zto_orders) as zhongtongCount,
+				sum(pallet_out_num) as outstockPallet,
+				sum(operate_amount) as outstockFee,
+				sum(material_amount) as materialFee,
+				sum(IFNULL(st_instock_work_amount,0)+IFNULL(st_b2c_handwork_amount,0)+IFNULL(st_b2b_handwork_amount,0)+IFNULL(st_add_amount,0)+IFNULL(de_change_amount,0)) as addFee
+			from report_bill_import_detail group BY bill_no
+	    ) d on a.bill_no=d.bill_no
+    	LEFT JOIN system_code e on a.balance_name=e.code_name and e.type_code='BANLANCE_GROUP' and e.`status`='0'
+		where a.del_flag='0'
+    </select>
+    
+    
+    <!--导出仓储明细 --> 
+    <select id="queryStorageExport" parameterType="java.util.Map" 
+    	resultType="java.util.Map">  	
+    	  SELECT 
+			e.extattr1 as area,
+			a.create_month as createMonth,
+			a.invoice_name as invoiceName,
+			a.bill_name as billName,
+			CONCAT(a.create_month,a.bill_name) as bill,
+			a.first_class_name as firstClassName,
+			a.biz_type_name as bizTypeName,
+			a.project_name as projectName,
+			a.seller_name as sellerName,
+			a.project_manager_name as projectManagerName,
+   	  		a.balance_name as balanceName,
+			a.bill_status as billStatus,
+		    a.bill_confirm_date as billConfirmDate,
+		    a.invoice_status as invoiceStatus,
+		    a.remark as remark,
+		    b.different_remark as instruction,
+		    a.invoice_amount as invoiceAmount,
+		    a.invoice_date as invoiceDate,
+		    c.total_storage_money as invoiceStorage,
+		    c.total_transport_money as invoiceTransport,
+		    c.total_dispatch_money as invoiceDispatch,
+			c.total_air_money as invoiceAir,
+		    c.total_abnormal_money as invoiceAbnormal,
+		    IFNULL(c.total_storage_abnormal_money,0) as abnormalStorage,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalTransport,
+			IFNULL(c.total_transport_abnorml_money,0) as abnormalDispatch,
+		    IFNULL(c.total_air_abnorml_money,0) as abnormalAir,
+		    IFNULL(d.jiuyeAmount,0) as jiuyeAmount,
+		    IFNULL(d.jiuyeCount,0) as jiuyeCount,
+		    IFNULL(d.shunfengAmount,0) as shunfengAmount,
+		    IFNULL(d.shunfengCount,0) as shunfengCount,
+		    IFNULL(d.yuantongAmount,0) as yuantongAmount,
+		    IFNULL(d.yuantongCount,0) as yuantongCount,
+			IFNULL(d.zhongtongAmount,0) as zhongtongAmount,
+			IFNULL(d.zhongtongCount,0) as zhongtongCount,
+			IFNULL(d.jiuyeCount,0)+IFNULL(d.shunfengCount,0)+IFNULL(d.yuantongCount,0)+IFNULL(d.zhongtongCount,0) as totalCount,
+			IFNULL(c.total_product_storage,0)+IFNULL(c.total_material_storage,0) as storagePallet,
+   			d.outstockPallet as outstockPallet,
+			IFNULL(c.total_product_storage_money,0)+IFNULL(c.total_material_storage,0)+IFNULL(c.total_rent_money,0) as rentFee,
+			d.outstockFee as outstockFee,
+			d.materialFee as materialFee,
+			IFNULL(d.addFee,0)+IFNULL(b.adjust_amount,0) as addFee
+		 from bill_check_info a
+		 LEFT JOIN bill_receive_master b on a.bill_no=b.bill_no and b.del_flag='0'
+		 LEFT JOIN report_bill_import_master c on a.bill_no=c.bill_no and c.del_flag='0'
+		 LEFT JOIN (
+			select 
+				bill_no,
+				sum(de_jy_amount) as jiuyeAmount,sum(de_jy_orders) as jiuyeCount,
+				sum(de_sf_amount) as shunfengAmount,sum(de_sf_orders) as shunfengCount,
+				sum(de_yto_amount) as yuantongAmount,sum(de_yto_orders) as yuantongCount,
+				sum(de_zto_amount) as zhongtongAmount,sum(de_zto_orders) as zhongtongCount,
+				sum(pallet_out_num) as outstockPallet,
+				sum(operate_amount) as outstockFee,
+				sum(material_amount) as materialFee,
+				sum(IFNULL(st_instock_work_amount,0)+IFNULL(st_b2c_handwork_amount,0)+IFNULL(st_b2b_handwork_amount,0)+IFNULL(st_add_amount,0)+IFNULL(de_change_amount,0)) as addFee
+			from report_bill_import_detail group BY bill_no
+	    ) d on a.bill_no=d.bill_no
+    	LEFT JOIN system_code e on a.balance_name=e.code_name and e.type_code='BANLANCE_GROUP' and e.`status`='0'
+		where a.del_flag='0'
+    </select>
+    
+     <!--查询业务明细 --> 
+    <select id="queryBiz" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.report.bill.ReportBillBizDetailEntity">
+   		 select 
+			c.extattr1 as area,
+			b.create_month as createMonth,
+	   	    b.bill_name as billName,
+			CONCAT(b.create_month,b.bill_name) as bill,
+			b.invoice_date as invoiceDate,
+		    b.balance_name as balanceName,
+	    	a.warehouse_name as warehouseName,
+	    	a.storage_receipt_amount as receiveStorage,
+			a.dispatch_receipt_amount as receiveDispatch,
+			a.st_abnormal_amount as abnormalStorage,
+			a.de_abnormal_amount as abnormalDispatch,
+	    	a.pallet_cw_num as cwPallet,
+			a.pallet_hw_num as hwPallet,
+			a.pallet_ld_num as ldPallet,
+			a.pallet_lc_num as lcPallet,
+	    	IFNULL(a.pallet_cw_num,0)+IFNULL(a.pallet_hw_num,0)+IFNULL(a.pallet_ld_num,0)+IFNULL(a.pallet_lc_num,0) as totalPallet,
+			a.pallet_out_num as outstockPallet,
+			a.rent_cw_amount as cwRent,
+			a.rent_hw_amount as hwRent,
+			a.rent_ld_amount as ldRent,
+			a.rent_lc_amount as lcRent,
+			IFNULL(a.rent_cw_amount,0)+IFNULL(a.rent_hw_amount,0)+IFNULL(a.rent_ld_amount,0)+IFNULL(a.rent_lc_amount,0) as totalRent,
+			a.operate_amount as outstockFee,
+			a.material_amount as materialFee,
+			IFNULL(a.st_instock_work_amount,0)+IFNULL(a.st_b2c_handwork_amount,0)+IFNULL(a.st_b2b_handwork_amount,0)+IFNULL(a.st_add_amount,0)+IFNULL(a.de_change_amount,0) as addFee,
+			a.st_abnormal_amount as abnormalFee,
+			a.de_jy_amount as jiuyeAmount,
+			a.de_jy_orders as jiuyeCount,
+			a.de_sf_amount as shunfengAmount,
+			a.de_sf_orders as shunfengCount,
+			a.de_kye_amount as kuayueAmount,
+			a.de_kye_orders as kuayueCount,
+			a.de_yto_amount as yuantongAmount,
+			a.de_yto_orders as yuantongCount,
+			a.de_zto_amount as zhongtongAmount,
+			a.de_zto_orders as zhongtongCount,
+			a.de_sto_amount as shentongAmount,
+			a.de_sto_orders as shentongCount,
+			a.de_yunda_amount as yundaAmount,
+			a.de_yunda_orders as yundaCount,
+			IFNULL(a.de_jy_amount,0)+IFNULL(a.de_sf_amount,0)+IFNULL(a.de_kye_amount,0)+IFNULL(a.de_yto_amount,0)+IFNULL(a.de_zto_amount,0)+IFNULL(a.de_sto_amount,0)+IFNULL(a.de_yunda_amount,0) as totalAmount,
+			IFNULL(a.de_jy_orders,0)+IFNULL(a.de_sf_orders,0)+IFNULL(a.de_kye_orders,0)+IFNULL(a.de_yto_orders,0)+IFNULL(a.de_zto_orders,0)+IFNULL(a.de_sto_orders,0)+IFNULL(a.de_yunda_orders,0) as totalCount,
+			a.de_abnormal_amount as abnormalAmount,
+			a.de_abnormal_orders as abnormalCount,
+			a.st_tbout_num as tbOutstockBox,
+			ROUND(a.pallet_cw_amount/a.pallet_cw_num,2) as cwPrice,
+			ROUND(a.pallet_hw_amount/a.pallet_hw_num,2) as hwPrice,
+			ROUND(a.pallet_ld_amount/a.pallet_ld_num,2) as ldPrice,
+			ROUND(a.pallet_lc_amount/a.pallet_lc_num,2) as lcPrice
+		from report_bill_import_detail a
+		INNER JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
+   		LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
+    </select>
+    
+     <!--导出业务明细--> 
+    <select id="queryBizExport" parameterType="java.util.Map" 
+    	resultType="java.util.Map">
+    	select 
+			c.extattr1 as area,
+			b.create_month as createMonth,
+	   	    b.bill_name as billName,
+			CONCAT(b.create_month,b.bill_name) as bill,
+			b.invoice_date as invoiceDate,
+		    b.balance_name as balanceName,
+	    	a.warehouse_name as warehouseName,
+	    	a.storage_receipt_amount as receiveStorage,
+			a.dispatch_receipt_amount as receiveDispatch,
+			a.st_abnormal_amount as abnormalStorage,
+			a.de_abnormal_amount as abnormalDispatch,
+	    	a.pallet_cw_num as cwPallet,
+			a.pallet_hw_num as hwPallet,
+			a.pallet_ld_num as ldPallet,
+			a.pallet_lc_num as lcPallet,
+	    	IFNULL(a.pallet_cw_num,0)+IFNULL(a.pallet_hw_num,0)+IFNULL(a.pallet_ld_num,0)+IFNULL(a.pallet_lc_num,0) as totalPallet,
+			a.pallet_out_num as outstockPallet,
+			a.rent_cw_amount as cwRent,
+			a.rent_hw_amount as hwRent,
+			a.rent_ld_amount as ldRent,
+			a.rent_lc_amount as lcRent,
+			IFNULL(a.rent_cw_amount,0)+IFNULL(a.rent_hw_amount,0)+IFNULL(a.rent_ld_amount,0)+IFNULL(a.rent_lc_amount,0) as totalRent,
+			a.operate_amount as outstockFee,
+			a.material_amount as materialFee,
+			IFNULL(a.st_instock_work_amount,0)+IFNULL(a.st_b2c_handwork_amount,0)+IFNULL(a.st_b2b_handwork_amount,0)+IFNULL(a.st_add_amount,0)+IFNULL(a.de_change_amount,0) as addFee,
+			a.st_abnormal_amount as abnormalFee,
+			a.de_jy_amount as jiuyeAmount,
+			a.de_jy_orders as jiuyeCount,
+			a.de_sf_amount as shunfengAmount,
+			a.de_sf_orders as shunfengCount,
+			a.de_kye_amount as kuayueAmount,
+			a.de_kye_orders as kuayueCount,
+			a.de_yto_amount as yuantongAmount,
+			a.de_yto_orders as yuantongCount,
+			a.de_zto_amount as zhongtongAmount,
+			a.de_zto_orders as zhongtongCount,
+			a.de_sto_amount as shentongAmount,
+			a.de_sto_orders as shentongCount,
+			a.de_yunda_amount as yundaAmount,
+			a.de_yunda_orders as yundaCount,
+			IFNULL(a.de_jy_amount,0)+IFNULL(a.de_sf_amount,0)+IFNULL(a.de_kye_amount,0)+IFNULL(a.de_yto_amount,0)+IFNULL(a.de_zto_amount,0)+IFNULL(a.de_sto_amount,0)+IFNULL(a.de_yunda_amount,0) as totalAmount,
+			IFNULL(a.de_jy_orders,0)+IFNULL(a.de_sf_orders,0)+IFNULL(a.de_kye_orders,0)+IFNULL(a.de_yto_orders,0)+IFNULL(a.de_zto_orders,0)+IFNULL(a.de_sto_orders,0)+IFNULL(a.de_yunda_orders,0) as totalCount,
+			a.de_abnormal_amount as abnormalAmount,
+			a.de_abnormal_orders as abnormalCount,
+			a.st_tbout_num as tbOutstockBox,
+			ROUND(a.pallet_cw_amount/a.pallet_cw_num,2) as cwPrice,
+			ROUND(a.pallet_hw_amount/a.pallet_hw_num,2) as hwPrice,
+			ROUND(a.pallet_ld_amount/a.pallet_ld_num,2) as ldPrice,
+			ROUND(a.pallet_lc_amount/a.pallet_lc_num,2) as lcPrice
+		from report_bill_import_detail a
+		INNER JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
+    LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
+    </select>
+</mapper>

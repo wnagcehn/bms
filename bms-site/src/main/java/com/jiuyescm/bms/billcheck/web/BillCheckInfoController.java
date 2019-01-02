@@ -507,7 +507,7 @@ public class BillCheckInfoController{
 			return "账单【"+billCheckInfoVo.getBillName()+"】有正在处理中的任务,不可确认";
 		}
 		
-		if(billCheckInfoVo.getIsneedInvoice().equals("0")){//不需要发票
+		if("0".equals(billCheckInfoVo.getIsneedInvoice())){//不需要发票
 			billCheckInfoVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());//待收款
 		}else{
 			billCheckInfoVo.setBillStatus(CheckBillStatusEnum.TB_INVOICE.getCode());//待开票
@@ -610,9 +610,7 @@ public class BillCheckInfoController{
 		BmsGroupUserVo groupUser=bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
 		if(groupUser!=null){//加入權限組
 			//判断是否是管理员
-			if(groupUser.getAdministrator().equals("0")){//管理员
-				
-			}else{//非管理员
+			if(!"0".equals(groupUser.getAdministrator())){//非管理员
 				userIds=bmsGroupUserService.queryContainUserIds(groupUser);
 				StringBuffer user=new StringBuffer();
 				for(int i=0;i<userIds.size();i++){
@@ -622,8 +620,8 @@ public class BillCheckInfoController{
 						user.append(userIds.get(i)+"|");
 					}
 				}
-				param.put("userIds", userIds);			
-			}			
+				param.put("userIds", userIds);
+			}
 			PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.query(param, 0, Integer.MAX_VALUE);
 			try {
 				if(pageInfo!=null && pageInfo.getList().size()>0){
@@ -796,7 +794,7 @@ public class BillCheckInfoController{
 		receiptVo.setLastModifyTime(creTime); 
 		receiptVo.setDelFlag("1");
 		
-		if(receiptVo.getReceiptType().equals("预收款")){
+		if("预收款".equals(receiptVo.getReceiptType())){
 			BigDecimal receiptAmount = receiptVo.getReceiptAmount();
 			Long id = receiptVo.getId();
 			//查询账单表

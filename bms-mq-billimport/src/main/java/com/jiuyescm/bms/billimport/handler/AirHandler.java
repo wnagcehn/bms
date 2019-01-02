@@ -168,7 +168,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 			}
 		}
 		
-		if (!errorMessage.equals("")) {
+		if (StringUtils.isNotBlank(errorMessage)) {
 			throw new Exception(errorMessage);
 		}
 		

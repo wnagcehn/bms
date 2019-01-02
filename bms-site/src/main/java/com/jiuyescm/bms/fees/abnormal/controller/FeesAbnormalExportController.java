@@ -141,12 +141,12 @@ public class FeesAbnormalExportController {
 				List<String> reasonIds=null;
 				switch(feesType){
 				case "DISPATCH":
-					if(subjectCode.equals("Abnormal_Dispatch")){
+					if("Abnormal_Dispatch".equals(subjectCode)){
 						reasonIds=getDispatchReasonId();
-					}else if(subjectCode.equals("Abnormal_DisChange")){
+					}else if("Abnormal_DisChange".equals(subjectCode)){
 						reasonIds=getDispatchChangeReasonId();
 					}else{
-						return "未知的费用类型【"+subjectCode.equals("Abnormal_Dispatch")+"】";
+						return "未知的费用类型【"+subjectCode+"】";
 					}
 					entity.setTaskType(FileTaskTypeEnum.BILL_ABNORMAL_DISPATCH.getCode());
 					break;
@@ -457,7 +457,7 @@ public class FeesAbnormalExportController {
         		double derateAmount=entity.getDerateAmount()==null?0:entity.getDerateAmount();
         		double deliveryCost=entity.getDeliveryCost()==null?0:entity.getDeliveryCost();
         		String isDeliveryFree="";
-	        	if(StringUtils.isNoneBlank(entity.getIsDeliveryFree())&&entity.getIsDeliveryFree().equals("0")){
+	        	if("0".equals(entity.getIsDeliveryFree())){
 	        		dataItem.put("receiptAmount", payMoney-derateAmount-deliveryCost);
 	        		isDeliveryFree="是";
 	        	}else{

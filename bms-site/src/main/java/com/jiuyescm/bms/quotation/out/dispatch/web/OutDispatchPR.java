@@ -848,7 +848,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 		    double d=Double.valueOf(c);
 		    double m=Double.valueOf(e);
 			
-			if(index.equals("00")){
+			if("00".equals(index)){
 				
 			    if(d<5){
 			    	m=m+0;
@@ -856,7 +856,6 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 			    	m=m+1;
 			    }
 			    
-	
 			}else{
 				m=Math.ceil(weight);
 			}

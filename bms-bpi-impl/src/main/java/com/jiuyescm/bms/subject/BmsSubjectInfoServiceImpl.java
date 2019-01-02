@@ -6,7 +6,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ import com.jiuyescm.framework.redis.client.IRedisClient;
 @Service("bmsSubjectService")
 public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
-	private static final Logger logger = Logger.getLogger(BmsSubjectInfoServiceImpl.class.getName());
+	
+	private static final Logger logger = LoggerFactory.getLogger(BmsSubjectInfoServiceImpl.class.getName()); 
 
 	@Autowired private IRedisClient redisClient;
 	@Resource private IBmsSubjectInfoRepository bmsSubjectInfoRepository;
@@ -82,7 +84,14 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 		try {
             PropertyUtils.copyProperties(entity, vo);       
             BmsSubjectInfoEntity resultEntity=bmsSubjectInfoRepository.save(entity);          
-            PropertyUtils.copyProperties(resultVo, resultEntity);         
+            PropertyUtils.copyProperties(resultVo, resultEntity);  
+            if(resultVo!=null){
+            	String code = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectCode();
+                String name = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectName();
+                logger.info("code:{} | name:{}", code,name);
+                redisClient.set(code, RedisCache.SUBJECTCODE_SPACE, resultVo, RedisCache.expiredTime);//按code缓存
+                redisClient.set(name, RedisCache.SUBJECTNAME_SPACE, resultVo, RedisCache.expiredTime);//按name缓存
+            }
             return resultVo;
         } catch (Exception ex) {
         	logger.error("转换失败:{0}",ex);
@@ -99,6 +108,16 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
             PropertyUtils.copyProperties(entity, vo);
             BmsSubjectInfoEntity resultEntity=bmsSubjectInfoRepository.update(entity);
             PropertyUtils.copyProperties(resultVo, resultEntity);
+        	String code = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectCode();
+            String name = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectName();
+            logger.info("code:{} | name:{}", code,name);
+            if("0".equals(resultVo.getDelFlag())){
+                redisClient.set(code, RedisCache.SUBJECTCODE_SPACE, resultVo, RedisCache.expiredTime);//按code缓存
+                redisClient.set(name, RedisCache.SUBJECTNAME_SPACE, resultVo, RedisCache.expiredTime);//按name缓存
+            }else if ("1".equals(resultVo.getDelFlag())) {            	
+                redisClient.del(code, RedisCache.SUBJECTCODE_SPACE);
+                redisClient.del(name, RedisCache.SUBJECTNAME_SPACE);
+			}
             return resultVo;
         } catch (Exception ex) {
         	logger.error("转换失败:{0}",ex);
@@ -113,6 +132,11 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 		try {
             BmsSubjectInfoEntity resultEntity=bmsSubjectInfoRepository.queryOne(id);
             PropertyUtils.copyProperties(resultVo, resultEntity);
+            	String code = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectCode();
+                String name = resultVo.getInOutTypecode()+resultVo.getBizTypecode()+resultVo.getSubjectName();
+                logger.info("code:{} | name:{}", code,name);
+                redisClient.set(code, RedisCache.SUBJECTCODE_SPACE, resultVo, RedisCache.expiredTime);//按code缓存
+                redisClient.set(name, RedisCache.SUBJECTNAME_SPACE, resultVo, RedisCache.expiredTime);//按name缓存
             return resultVo;
         } catch (Exception ex) {
         	logger.error("转换失败:{0}",ex);
@@ -122,8 +146,8 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
 	@Override
 	public BmsSubjectInfoVo querySubjectByCode(final String inOutTypecode,final String bizType, final String subjectCode) {
-		
-		BmsSubjectInfoVo vo = redisClient.get(subjectCode, RedisCache.SUBJECTCODE_SPACE,BmsSubjectInfoVo.class, new GetDataCallBack<BmsSubjectInfoVo>(){
+		String code = inOutTypecode + bizType + subjectCode;
+		BmsSubjectInfoVo vo = redisClient.get(code, RedisCache.SUBJECTCODE_SPACE,BmsSubjectInfoVo.class, new GetDataCallBack<BmsSubjectInfoVo>(){
 
 			@Override
 			public int getExpiredTime() {
@@ -148,7 +172,8 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 
 	@Override
 	public BmsSubjectInfoVo querySubjectByName(final String inOutTypecode,final String bizType, final String subjectName) {
-		BmsSubjectInfoVo vo = redisClient.get(subjectName, RedisCache.SUBJECTCODE_SPACE,BmsSubjectInfoVo.class, new GetDataCallBack<BmsSubjectInfoVo>(){
+		String name = inOutTypecode + bizType + subjectName;
+		BmsSubjectInfoVo vo = redisClient.get(name, RedisCache.SUBJECTCODE_SPACE,BmsSubjectInfoVo.class, new GetDataCallBack<BmsSubjectInfoVo>(){
 
 			@Override
 			public int getExpiredTime() {

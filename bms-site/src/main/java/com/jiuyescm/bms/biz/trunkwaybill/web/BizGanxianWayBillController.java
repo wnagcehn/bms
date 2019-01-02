@@ -170,7 +170,7 @@ public class BizGanxianWayBillController {
 						FeesReceiveDeliverEntity feesReceiveDeliverEntity=pageInfo.getList().get(0);
 						//获取此时的费用状态
 						String status = String.valueOf(feesReceiveDeliverEntity.getState());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账,无法调整重量!";
 						}
 					}
@@ -244,7 +244,7 @@ public class BizGanxianWayBillController {
 							FeesReceiveDeliverEntity feesReceiveDeliverEntity=pageInfo.getList().get(0);
 							//获取此时的费用状态
 							String status = String.valueOf(feesReceiveDeliverEntity.getState());
-							if(status.equals("1")){
+							if("1".equals(status)){
 								return "该费用已过账,无法调整重量!";
 							}
 						}

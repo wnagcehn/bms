@@ -188,7 +188,7 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		if(groupUser==null){//未加入權限組
 			list.add(userId);
 		}else{
-			if(groupUser.getAdministrator().equals("0")){//管理员
+			if("0".equals(groupUser.getAdministrator())){//管理员
 /*				List<BmsGroupEntity> groupList=bmsGroupRepository.queryAllGroup();*/
 				List<Integer> groupIds=bmsGroupRepository.queryAllGroupId(groupUser.getGroupId());
 				//List<Integer> groupIds=getAllGroupIds(groupList,groupUser.getGroupId());

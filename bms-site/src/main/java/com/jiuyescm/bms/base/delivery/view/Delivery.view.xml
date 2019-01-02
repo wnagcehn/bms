@@ -55,6 +55,11 @@ with (view.get(&quot;#dsDeliveryEntity&quot;)){&#xD;
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
         </ToolBarButton>
+        <ToolBarButton id="download">
+          <Property name="caption">下载文件</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -140px -240px</Property>
+          <Property name="action">downloadAction</Property>
+        </ToolBarButton>
       </ToolBar>
       <AutoForm id="queryConditionFrm">
         <Property name="cols">*,*,*,*,*,*</Property>
@@ -146,6 +151,9 @@ with (view.get(&quot;#dsDeliveryEntity&quot;)){&#xD;
           <Property name="property">modtime</Property>
         </DataColumn>
       </DataGrid>
+      <DownloadAction id="downloadAction">
+        <Property name="fileProvider">deliveryController#getFile</Property>
+      </DownloadAction>
     </Container>
   </View>
 </ViewConfig>

@@ -31,7 +31,7 @@ public class CellValue {
 		Map<Integer, String> colNames = new HashMap<Integer, String>();
 		for (int i = 0; i < cells.length; i++) {
 			String colName = getStringValue(cells[i], "");
-			if (colName != null && !colName.equals(""))
+			if (StringUtils.isNotBlank(colName))
 				colNames.put(i, colName.trim());
 		}
 		return colNames;

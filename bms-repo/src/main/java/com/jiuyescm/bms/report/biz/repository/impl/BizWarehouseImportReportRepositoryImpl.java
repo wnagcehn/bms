@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.report.biz.entity.BizWarehouseImportReportEntity;
+import com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity;
 import com.jiuyescm.bms.report.biz.repository.IBizWarehouseImportReportRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 

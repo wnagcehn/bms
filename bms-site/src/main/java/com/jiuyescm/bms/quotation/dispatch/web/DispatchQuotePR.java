@@ -38,8 +38,8 @@ import com.jiuyescm.bms.base.calcu.vo.CalcuReqVo;
 import com.jiuyescm.bms.base.calcu.vo.CalcuResultVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
-import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
-import com.jiuyescm.bms.base.servicetype.service.IPubCarrierServicetypeService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.ReturnData;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -123,8 +123,8 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 	private IPubRecordLogService pubRecordLogService;
 	@Resource 
 	private IDeliverService deliverService;
-	@Resource
-	private IPubCarrierServicetypeService pubCarrierServicetypeService;
+	@Autowired
+	private ICarrierProductService carrierProductService;
 	
 	/**
 	 * 分页查询主模板
@@ -447,12 +447,12 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 			// 获得初步校验后和转换后的数据
 			templateList = (List<BmsQuoteDispatchDetailVo>) map.get(ConstantInterface.ImportExcelStatus.IMP_SUCC);
 			
-			List<PubCarrierServicetypeEntity> servicetypeList = pubCarrierServicetypeService.queryByCarrierid(carrierid);
+			List<CarrierProductVo> servicetypeList = carrierProductService.queryByCarrierid(carrierid);
 			//设置属性
 			for(BmsQuoteDispatchDetailVo p : templateList){
 				boolean exe = false;
 				if (StringUtils.isNotBlank(p.getServicename())) {
-					for (PubCarrierServicetypeEntity pcsEntity : servicetypeList) {
+					for (CarrierProductVo pcsEntity : servicetypeList) {
 						if (p.getServicename().equals(pcsEntity.getServicename())) {
 							p.setServiceTypeCode(pcsEntity.getServicecode());
 							exe = true;

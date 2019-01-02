@@ -88,6 +88,8 @@
 		 version="1.0.0" registry="bms"/>
 		<dubbo:reference id="billReceiveMasterRecordService" interface="com.jiuyescm.bms.billcheck.service.IBillReceiveMasterRecordService" 
 		 version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="carrierProductService" interface="com.jiuyescm.bms.base.servicetype.service.ICarrierProductService" 
+		 version="1.0.0" registry="bms"/>
 		 
 		<dubbo:reference id="contractCustomBaseService" interface="com.jiuyescm.contract.custom.api.IContractCustomBaseService" registry="message"/>
 		 
@@ -101,6 +103,7 @@
 		 <dubbo:reference id="bmsQuoteDispatchDetailService" interface="com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="reportWarehouseCustomerService" interface="com.jiuyescm.bms.base.reportCustomer.service.IReportWarehouseCustomerService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="reportCustomerService" interface="com.jiuyescm.bms.report.biz.service.IReportCustomerService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="reportBillImportDetailService" interface="com.jiuyescm.bms.report.bill.IReportBillImportDetailService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService"
 				version="1.0.0" id="customerDictService" timeout="1200000" check="false"/> 
 </beans> 

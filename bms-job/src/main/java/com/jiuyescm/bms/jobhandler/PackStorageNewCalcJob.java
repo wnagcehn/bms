@@ -426,21 +426,8 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 			return false;
 		}
 		//报价模板
-		//PriceGeneralQuotationEntity priceGeneral=quoTemplete;
 		priceType=quoTemplete.getPriceType(); //获取报价类型  一口价（PRICE_TYPE_NORMAL）/阶梯价（PRICE_TYPE_STEP）
-		//List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
-		//PriceStepQuotationEntity price=new PriceStepQuotationEntity();
-//		if(priceType.equals("PRICE_TYPE_STEP")){//阶梯价格
-//
-//		}else if(priceType.equals("PRICE_TYPE_NORMAL")){//一口价
-//			XxlJobLogger.log("-->"+entity.getId()+"一口价计费");
-//		}else{//报价类型缺失
-//			XxlJobLogger.log("-->"+entity.getId()+"报价类型未知");
-//			entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-//			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-//			entity.setRemark("报价【"+quoTemplete.getQuotationNo()+"】类型未知");
-//			return  false;
-//		}
+
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("-->"+entity.getId()+"验证报价耗时：【{0}】毫秒  ",(current - start));
 		return true;

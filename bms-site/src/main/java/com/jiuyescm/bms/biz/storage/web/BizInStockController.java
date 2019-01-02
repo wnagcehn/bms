@@ -98,7 +98,7 @@ public class BizInStockController extends BaseController{
 				FeesReceiveStorageEntity feesReceiveStorageEntity = pageInfo.getList().get(0);
 				//获取此时的费用状态
 				String status = feesReceiveStorageEntity.getStatus();
-				if(status.equals("1")){
+				if("1".equals(status)){
 					result.setCode("fail");
 					result.setData("该费用已过账，无法调整数量");
 					return result;

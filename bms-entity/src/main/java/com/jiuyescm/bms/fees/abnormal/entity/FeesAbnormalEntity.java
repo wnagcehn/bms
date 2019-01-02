@@ -121,7 +121,68 @@ public class FeesAbnormalEntity implements IEntity {
 	private Timestamp importConfirmTime;
 	// 关账时间
 	private Timestamp closeTime;
+	
+	//退货单号
+	private String returnOrderno;
+	//应收是否赔付
+	private String isPay1;
+	//应付是否赔付
+	private String isPay2;
+	//承运商赔偿九曳 商品金额 最终确认额
+	private Double confirmProductAmountD2j;
+	//承运商赔偿九曳 处罚金额 最终确认额
+	private Double confirmAmerceAmount;
+	//九曳赔偿承运商 改地址退件费 最终确认额
+	private Double confirmReturnedAmountJ2d;
+	
+	public Double getConfirmProductAmountD2j() {
+		return confirmProductAmountD2j;
+	}
 
+	public void setConfirmProductAmountD2j(Double confirmProductAmountD2j) {
+		this.confirmProductAmountD2j = confirmProductAmountD2j;
+	}
+
+	public Double getConfirmAmerceAmount() {
+		return confirmAmerceAmount;
+	}
+
+	public void setConfirmAmerceAmount(Double confirmAmerceAmount) {
+		this.confirmAmerceAmount = confirmAmerceAmount;
+	}
+
+	public Double getConfirmReturnedAmountJ2d() {
+		return confirmReturnedAmountJ2d;
+	}
+
+	public void setConfirmReturnedAmountJ2d(Double confirmReturnedAmountJ2d) {
+		this.confirmReturnedAmountJ2d = confirmReturnedAmountJ2d;
+	}
+	
+	public String getReturnOrderno() {
+		return returnOrderno;
+	}
+
+	public void setReturnOrderno(String returnOrderno) {
+		this.returnOrderno = returnOrderno;
+	}
+
+	public String getIsPay1() {
+		return isPay1;
+	}
+
+	public void setIsPay1(String isPay1) {
+		this.isPay1 = isPay1;
+	}
+
+	public String getIsPay2() {
+		return isPay2;
+	}
+
+	public void setIsPay2(String isPay2) {
+		this.isPay2 = isPay2;
+	}
+	
 	public String getIsDeliveryFree() {
 		return isDeliveryFree;
 	}

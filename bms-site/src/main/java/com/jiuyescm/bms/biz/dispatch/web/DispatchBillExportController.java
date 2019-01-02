@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -63,6 +64,9 @@ public class DispatchBillExportController extends BaseController{
 	
 	@Autowired
 	private SequenceService sequenceService;
+	
+	@Resource
+	private JmsTemplate jmsQueueTemplate;
 	/**
 	 * 导出
 	 */
@@ -122,13 +126,26 @@ public class DispatchBillExportController extends BaseController{
     				}
     			};
     		}.start();
+        	
+    		/*// 写入MQ
+        	param.put("taskId", entity.getTaskId());
+        	param.put("filePath", filepath);
+        	final Map<String, Object> condition = param;
+    		jmsQueueTemplate.send(MQConstants.DISPATCH_BILL_EXPORT, new MessageCreator() {
+    			@Override
+    			public Message createMessage(Session session) throws JMSException {
+    				String json = JsonUtils.toJson(condition);
+    				return session.createTextMessage(json);
+    			}
+    		});*/
+    		
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
 			bmsErrorLogInfoEntity.setClassName("DispatchBillExportController");
 			bmsErrorLogInfoEntity.setMethodName("asynExport");
-			bmsErrorLogInfoEntity.setIdentify("线程启动失败");
+			//bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
 			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
 			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
@@ -234,6 +251,12 @@ public class DispatchBillExportController extends BaseController{
 		itemMap.put("title", "商家名称");
 		itemMap.put("columnWidth", 25);
 		itemMap.put("dataKey", "customerName");
+		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "店铺名称");
+		itemMap.put("columnWidth", 25);
+		itemMap.put("dataKey", "shopName");
 		headInfoList.add(itemMap);
 		
 		itemMap = new HashMap<String, Object>();
@@ -558,6 +581,7 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem = new HashMap<String, Object>();
 	        	dataItem.put("warehouseName", entity.getWarehouseName());
 	        	dataItem.put("customerName", entity.getCustomerName());
+	        	dataItem.put("shopName", entity.getShopName());
 	        	dataItem.put("outstockNo", entity.getOutstockNo());
 	        	dataItem.put("externalNo", entity.getExternalNo());
 	        	dataItem.put("waybillNo", entity.getWaybillNo());

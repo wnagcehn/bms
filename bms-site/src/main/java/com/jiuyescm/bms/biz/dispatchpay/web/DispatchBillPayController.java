@@ -194,7 +194,7 @@ public class DispatchBillPayController{
 					if (null != feesPayDispatchEntity ) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesPayDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整重量";
 						}
 					}
@@ -248,7 +248,7 @@ public class DispatchBillPayController{
 					if (null != feesPayDispatchEntity ) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesPayDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整重量";
 						}
 					}
@@ -310,7 +310,7 @@ public class DispatchBillPayController{
 					if (null != feesPayDispatchEntity) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesPayDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整省市区";
 						}
 					}

@@ -38,6 +38,25 @@ public class ReportBillImportMasterEntity implements IEntity {
 	private Timestamp createTime;
 	// 作废标识
 	private String delFlag;
+	
+	// 耗材托数
+	private BigDecimal totalMaterialStorage;
+	// 耗材存储费
+	private BigDecimal totalMaterialStorageMoney;
+	// 商品存储费
+	private BigDecimal totalProductStorage;
+	// 商品存储费
+	private BigDecimal totalProductStorageMoney;
+	// 仓租费
+	private BigDecimal totalRentMoney;
+	// 干线理赔费用
+	private BigDecimal totalTransportAbnormlMoney;
+	// 航空理赔费用
+	private BigDecimal totalAirAbnormlMoney;
+	// 仓储理赔费用
+	private BigDecimal totalStorageAbnormalMoney;
+	// 配送理赔费用
+	private BigDecimal totalDispatchAbnormalMoney;
 
 	public ReportBillImportMasterEntity() {
 		super();
@@ -130,5 +149,79 @@ public class ReportBillImportMasterEntity implements IEntity {
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
 	}
-    
+
+	public BigDecimal getTotalMaterialStorage() {
+		return totalMaterialStorage;
+	}
+
+	public void setTotalMaterialStorage(BigDecimal totalMaterialStorage) {
+		this.totalMaterialStorage = totalMaterialStorage;
+	}
+
+	public BigDecimal getTotalMaterialStorageMoney() {
+		return totalMaterialStorageMoney;
+	}
+
+	public void setTotalMaterialStorageMoney(BigDecimal totalMaterialStorageMoney) {
+		this.totalMaterialStorageMoney = totalMaterialStorageMoney;
+	}
+
+	public BigDecimal getTotalProductStorage() {
+		return totalProductStorage;
+	}
+
+	public void setTotalProductStorage(BigDecimal totalProductStorage) {
+		this.totalProductStorage = totalProductStorage;
+	}
+
+	public BigDecimal getTotalProductStorageMoney() {
+		return totalProductStorageMoney;
+	}
+
+	public void setTotalProductStorageMoney(BigDecimal totalProductStorageMoney) {
+		this.totalProductStorageMoney = totalProductStorageMoney;
+	}
+
+	public BigDecimal getTotalRentMoney() {
+		return totalRentMoney;
+	}
+
+	public void setTotalRentMoney(BigDecimal totalRentMoney) {
+		this.totalRentMoney = totalRentMoney;
+	}
+
+	public BigDecimal getTotalTransportAbnormlMoney() {
+		return totalTransportAbnormlMoney;
+	}
+
+	public void setTotalTransportAbnormlMoney(BigDecimal totalTransportAbnormlMoney) {
+		this.totalTransportAbnormlMoney = totalTransportAbnormlMoney;
+	}
+
+	public BigDecimal getTotalAirAbnormlMoney() {
+		return totalAirAbnormlMoney;
+	}
+
+	public void setTotalAirAbnormlMoney(BigDecimal totalAirAbnormlMoney) {
+		this.totalAirAbnormlMoney = totalAirAbnormlMoney;
+	}
+
+	public BigDecimal getTotalStorageAbnormalMoney() {
+		return totalStorageAbnormalMoney;
+	}
+
+	public void setTotalStorageAbnormalMoney(BigDecimal totalStorageAbnormalMoney) {
+		this.totalStorageAbnormalMoney = totalStorageAbnormalMoney;
+	}
+
+	public BigDecimal getTotalDispatchAbnormalMoney() {
+		return totalDispatchAbnormalMoney;
+	}
+
+	public void setTotalDispatchAbnormalMoney(BigDecimal totalDispatchAbnormalMoney) {
+		this.totalDispatchAbnormalMoney = totalDispatchAbnormalMoney;
+	}
+
+
+	
 }

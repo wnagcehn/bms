@@ -139,7 +139,7 @@ public class FeesReceiveStorageController {
 			if(map.get("otherSubjectCode")!=null){
 				otherSubjectCode=map.get("otherSubjectCode").toString();
 			}
-			if(subjectCode.equals("wh_value_add_subject")){
+			if("wh_value_add_subject".equals(subjectCode)){
 				if(StringUtils.isBlank(otherSubjectCode)){
 					map.put("subjectName", "");
 				}else{

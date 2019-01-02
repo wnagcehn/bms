@@ -135,8 +135,7 @@ public class Excel07ReadForAll extends DefaultHandler{
         if ("v".equals(name)) {
         	if(ifRead){
         		String value = lastContents.trim();
-                //value = value.equals("")?" ":value;
-        		if(value.equals("")){
+        		if("".equals(value)){
         			return;
         		}
         		if(curRow==0){
@@ -152,7 +151,7 @@ public class Excel07ReadForAll extends DefaultHandler{
         
         else {
             //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法 
-            if (name.equals("row")) {
+            if ("row".equals(name)) {
                 curRow++;
                 //System.out.println("第【"+curRow+"】行读取完毕！");
                 Map<String, String> colMapTemp = new HashMap<String, String>();

@@ -16,10 +16,23 @@ public interface IBmsGroupUserService {
 	List<BmsGroupUserVo> queryAllGroupUser() throws Exception;
 	PageInfo<BmsGroupUserVo> query(Map<String, Object> condition,
             int pageNo, int pageSize) throws Exception;
+	
+	/**
+	 * 账单跟踪权限控制
+	 * @param userId
+	 * @return
+	 */
 	String checkExistGroupName(String userId);
+	
 	int queryUserCountByGroupId(int groupId);
 	List<String> queryContainUserIds(
 			String userId);
+	
+	/**
+	 * 账单跟踪查询用户
+	 * @param userId
+	 * @return
+	 */
 	BmsGroupUserVo queryEntityByUserId(String userId);
 	
 	List<String> queryContainUserIds(BmsGroupUserVo voEntity);

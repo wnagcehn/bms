@@ -287,8 +287,7 @@ public class BmsBillSubjectInfoController {
 		bill.setNum(0.00);
 		bill.setRemark("清空账单");
 		bmsBillSubjectInfoService.deleteTransportBill(bill);
-		if(StringUtils.isNotBlank(bill.getSubjectCode())&&
-				bill.getSubjectCode().equals("Abnormal_Transport")){
+		if("Abnormal_Transport".equals(bill.getSubjectCode())){
 			feesReceiveDeliverDao.deleteAbnormalTransportBill(bill.getBillNo());
 		}else{
 			feesReceiveDeliverDao.deleteTransportBill(bill.getBillNo());

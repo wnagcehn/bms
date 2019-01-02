@@ -279,7 +279,7 @@ public class FeesAbnormalController {
 		
 		int cols = xssfSheet.getRow(0).getPhysicalNumberOfCells();
 		
-		if(cols>6){
+		if(cols>8){
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 			errorVo = new ErrorMessageVo();
 			errorVo.setMsg("Excel导入格式错误请参考标准模板检查!");
@@ -355,22 +355,53 @@ public class FeesAbnormalController {
 				}
 			}
 			
-			Double confirmPayAmount=0d;
-			// 确认理赔金额（必填）
-			if(xssfRow.getCell(5)==null) {			
-				setMessage(infoList, rowNum+1,"第"+lieshu+"列确认理赔金额不能为空！");
+//			Double confirmPayAmount=0d;
+//			// 确认理赔金额（必填）
+//			if(xssfRow.getCell(5)==null) {			
+//				setMessage(infoList, rowNum+1,"第"+lieshu+"列确认理赔金额不能为空！");
+//				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//				continue;
+//			}else{
+//				try {
+//					confirmPayAmount=xssfRow.getCell(5).getNumericCellValue();;
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					setMessage(infoList, rowNum+1,"第"+lieshu+"列确认理赔金额不能为非数字！");
+//					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+//					continue;
+//				}
+//			}
+			
+			Double confirmProductAmountD2j=0d;
+			try {
+				confirmProductAmountD2j=xssfRow.getCell(5).getNumericCellValue();;
+			} catch (Exception e) {
+				// TODO: handle exception
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列确认理赔金额不能为非数字！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				continue;
-			}else{
-				try {
-					confirmPayAmount=xssfRow.getCell(5).getNumericCellValue();;
-				} catch (Exception e) {
-					// TODO: handle exception
-					setMessage(infoList, rowNum+1,"第"+lieshu+"列确认理赔金额不能为非数字！");
-					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-					continue;
-				}
 			}
+			
+			Double confirmAmerceAmount=0d;
+			try {
+				confirmAmerceAmount=xssfRow.getCell(6).getNumericCellValue();;
+			} catch (Exception e) {
+				// TODO: handle exception
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列确认处罚金额不能为非数字！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			
+			Double confirmReturnedAmountJ2d=0d;
+			try {
+				confirmReturnedAmountJ2d=xssfRow.getCell(7).getNumericCellValue();;
+			} catch (Exception e) {
+				// TODO: handle exception
+				setMessage(infoList, rowNum+1,"第"+lieshu+"列确认改地址退件费不能为非数字！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				continue;
+			}
+			
 			
 			//Excel重复性校验
 			if(checkMap.containsKey(deliverName+"&"+expressnum)){				
@@ -421,7 +452,9 @@ public class FeesAbnormalController {
 			entity.setConfirmYear(confirmYear);
 			entity.setConfirmMonth(confirmMonth);
 			//entity.setConfirmIsDeliveryFree(confirmIsDeliveryFree);
-			entity.setConfirmPayAmount(confirmPayAmount);
+			entity.setConfirmProductAmountD2j(confirmProductAmountD2j);
+			entity.setConfirmAmerceAmount(confirmAmerceAmount);
+			entity.setConfirmReturnedAmountJ2d(confirmReturnedAmountJ2d);
 			// 导入确认时间
 			entity.setImportConfirmTime(nowdate);
 			infoLists.add(entity);
@@ -537,7 +570,7 @@ public class FeesAbnormalController {
 		sheet.setColumnWidth(4, 4000);
 		sheet.setColumnWidth(5, 4000);
 		sheet.setColumnWidth(6, 4000);
-		sheet.setColumnWidth(7, 4000);
+		sheet.setColumnWidth(8, 4000);
 		
 		Font font = workbook.createFont();
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
@@ -546,7 +579,6 @@ public class FeesAbnormalController {
 		style.setAlignment(CellStyle.ALIGN_CENTER);
 		style.setWrapText(true);
 		style.setFont(font);
-		
 		
 		Row row0 = sheet.createRow(0);	
 		Cell cell0 = row0.createCell(0);
@@ -570,33 +602,38 @@ public class FeesAbnormalController {
 		Cell cell6 = row0.createCell(6);
 		cell6.setCellValue("外部订单号");
 		cell6.setCellStyle(style);
+		
 		Cell cell7 = row0.createCell(7);
-		cell7.setCellValue("责任方");
+		cell7.setCellValue("退货单号");
 		cell7.setCellStyle(style);
+		
 		Cell cell8 = row0.createCell(8);
-		cell8.setCellValue("赔付类型");
-		cell8.setCellStyle(style);		
+		cell8.setCellValue("责任方");
+		cell8.setCellStyle(style);
 		Cell cell9 = row0.createCell(9);
-		cell9.setCellValue("备注");
+		cell9.setCellValue("赔付类型");
 		cell9.setCellStyle(style);		
 		Cell cell10 = row0.createCell(10);
-		cell10.setCellValue("理赔商品金额");
-		cell10.setCellStyle(style);
+		cell10.setCellValue("备注");
+		cell10.setCellStyle(style);		
 		Cell cell11 = row0.createCell(11);
-		cell11.setCellValue("是否免运费");
+		cell11.setCellValue("理赔商品金额");
 		cell11.setCellStyle(style);
 		Cell cell12 = row0.createCell(12);
-		cell12.setCellValue("改地址退件费");
+		cell12.setCellValue("是否免运费");
 		cell12.setCellStyle(style);
 		Cell cell13 = row0.createCell(13);
-		cell13.setCellValue("创建人");
+		cell13.setCellValue("改地址退件费");
 		cell13.setCellStyle(style);
 		Cell cell14 = row0.createCell(14);
-		cell14.setCellValue("客诉确认时间");
+		cell14.setCellValue("创建人");
 		cell14.setCellStyle(style);
 		Cell cell15 = row0.createCell(15);
-		cell15.setCellValue("运单创建时间");
+		cell15.setCellValue("客诉确认时间");
 		cell15.setCellStyle(style);
+		Cell cell16 = row0.createCell(16);
+		cell16.setCellValue("运单创建时间");
+		cell16.setCellStyle(style);
 	
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -626,29 +663,33 @@ public class FeesAbnormalController {
 				cel5.setCellValue(fee.getExpressnum());
 				Cell cel6 = row.createCell(6);
 				cel6.setCellValue(fee.getReference());
+				
 				Cell cel7 = row.createCell(7);
-				cel7.setCellValue(fee.getDutyType());
+				cel7.setCellValue(fee.getReturnOrderno());
+				
 				Cell cel8 = row.createCell(8);
-				cel8.setCellValue(fee.getPayType());
+				cel8.setCellValue(fee.getReason());
 				Cell cel9 = row.createCell(9);
-				cel9.setCellValue(fee.getRemark());
+				cel9.setCellValue(fee.getReasonDetail());
 				Cell cel10 = row.createCell(10);
-				cel10.setCellValue(fee.getProductAmountJ2c());
+				cel10.setCellValue(fee.getRemark());
 				Cell cel11 = row.createCell(11);
-				cel11.setCellValue(getIsDeliveryValue().get(fee.getIsDeliveryFreeJ2c()));
+				cel11.setCellValue(fee.getProductAmountJ2c());
 				Cell cel12 = row.createCell(12);
-				cel12.setCellValue(fee.getReturnedAmountC2j());
-				Cell cel13 = row.createCell(13);
-				cel13.setCellValue(fee.getCreatePersonName());
+				cel12.setCellValue(getIsDeliveryValue().get(fee.getIsDeliveryFreeJ2c()));
+				Cell cel13= row.createCell(13);
+				cel13.setCellValue(fee.getReturnedAmountC2j());
+				Cell cel14 = row.createCell(14);
+				cel14.setCellValue(fee.getCreatePersonName());
 				
 				if(fee.getCloseTime()!=null){
-					Cell cel14 = row.createCell(14);
-					cel14.setCellValue(sdf.format(fee.getKesuConfirmTime()));
+					Cell cel15 = row.createCell(15);
+					cel15.setCellValue(sdf.format(fee.getKesuConfirmTime()));
 				}
 				if(fee.getCreateTime()!=null){
-					Cell cel15 = row.createCell(15);
-					cel15.setCellValue(sdf.format(fee.getCreateTime()));
-				}	
+					Cell cel16 = row.createCell(16);
+					cel16.setCellValue(sdf.format(fee.getCreateTime()));
+				}
 				//理赔商品金额
 				totalProductAmount+=(fee.getProductAmountJ2c()==null?0d:fee.getProductAmountJ2c().doubleValue());
 				//改地址退件费
@@ -659,9 +700,9 @@ public class FeesAbnormalController {
 		Row lastRow = sheet.createRow(RowIndex);
 		Cell cellast1 = lastRow.createCell(0);
 		cellast1.setCellValue("合计：");
-		Cell cellast2 = lastRow.createCell(10);
+		Cell cellast2 = lastRow.createCell(11);
 		cellast2.setCellValue(totalProductAmount);
-		Cell cellast3 = lastRow.createCell(12);
+		Cell cellast3 = lastRow.createCell(13);
 		cellast3.setCellValue(totalReturnedAmount);
 	}
 	
@@ -747,10 +788,10 @@ public class FeesAbnormalController {
 		Font font = workbook.createFont();
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
 
-		sheet.setColumnWidth(21, 4000);
-		sheet.setColumnWidth(22, 4000);
-		sheet.setColumnWidth(23, 4000);
-		sheet.setColumnWidth(24, 4000);
+		sheet.setColumnWidth(25, 4000);
+		sheet.setColumnWidth(26, 4000);
+		sheet.setColumnWidth(27, 4000);
+		sheet.setColumnWidth(28, 4000);
 		
 		CellStyle style = workbook.createCellStyle();
 		style.setAlignment(CellStyle.ALIGN_CENTER);
@@ -779,60 +820,76 @@ public class FeesAbnormalController {
 		Cell cell6 = row0.createCell(6);
 		cell6.setCellValue("外部订单号");
 		cell6.setCellStyle(style);
+
 		Cell cell7 = row0.createCell(7);
-		cell7.setCellValue("责任方");
+		cell7.setCellValue("退货单号");
 		cell7.setCellStyle(style);
+	
 		Cell cell8 = row0.createCell(8);
-		cell8.setCellValue("赔付类型");
-		cell8.setCellStyle(style);		
+		cell8.setCellValue("责任方");
+		cell8.setCellStyle(style);
 		Cell cell9 = row0.createCell(9);
-		cell9.setCellValue("备注");
+		cell9.setCellValue("赔付类型");
 		cell9.setCellStyle(style);		
 		Cell cell10 = row0.createCell(10);
-		cell10.setCellValue("理赔商品金额");
-		cell10.setCellStyle(style);
+		cell10.setCellValue("备注");
+		cell10.setCellStyle(style);		
 		Cell cell11 = row0.createCell(11);
-		cell11.setCellValue("是否免运费");
+		cell11.setCellValue("理赔商品金额");
 		cell11.setCellStyle(style);
 		Cell cell12 = row0.createCell(12);
-		cell12.setCellValue("改地址退件费");
+		cell12.setCellValue("是否免运费");
 		cell12.setCellStyle(style);
 		Cell cell13 = row0.createCell(13);
-		cell13.setCellValue("处罚金额");
+		cell13.setCellValue("改地址退件费");
 		cell13.setCellStyle(style);
 		Cell cell14 = row0.createCell(14);
-		cell14.setCellValue("理赔小计");
+		cell14.setCellValue("处罚金额");
 		cell14.setCellStyle(style);
 		Cell cell15 = row0.createCell(15);
-		cell15.setCellValue("确认理赔金额");
+		cell15.setCellValue("理赔小计");
 		cell15.setCellStyle(style);
+		
 		Cell cell16 = row0.createCell(16);
-		cell16.setCellValue("确认是否免运费");
+		cell16.setCellValue("确认理赔商品金额");
 		cell16.setCellStyle(style);
 		Cell cell17 = row0.createCell(17);
-		cell17.setCellValue("单据状态");
+		cell17.setCellValue("确认处罚金额");
 		cell17.setCellStyle(style);
 		Cell cell18 = row0.createCell(18);
-		cell18.setCellValue("确认年份");
+		cell18.setCellValue("确认改地址推荐费");
 		cell18.setCellStyle(style);
+		
 		Cell cell19 = row0.createCell(19);
-		cell19.setCellValue("确认月份");
-		cell19.setCellStyle(style);		
+		cell19.setCellValue("确认理赔小计");
+		cell19.setCellStyle(style);
 		Cell cell20 = row0.createCell(20);
-		cell20.setCellValue("创建人");
+		cell20.setCellValue("确认是否免运费");
 		cell20.setCellStyle(style);
 		Cell cell21 = row0.createCell(21);
-		cell21.setCellValue("运单创建时间");
+		cell21.setCellValue("单据状态");
 		cell21.setCellStyle(style);
 		Cell cell22 = row0.createCell(22);
-		cell22.setCellValue("客诉确认时间");
+		cell22.setCellValue("确认年份");
 		cell22.setCellStyle(style);
 		Cell cell23 = row0.createCell(23);
-		cell23.setCellValue("导入确认时间");
-		cell23.setCellStyle(style);
+		cell23.setCellValue("确认月份");
+		cell23.setCellStyle(style);		
 		Cell cell24 = row0.createCell(24);
-		cell24.setCellValue("关账时间");
+		cell24.setCellValue("创建人");
 		cell24.setCellStyle(style);
+		Cell cell25 = row0.createCell(25);
+		cell25.setCellValue("运单创建时间");
+		cell25.setCellStyle(style);
+		Cell cell26 = row0.createCell(26);
+		cell26.setCellValue("客诉确认时间");
+		cell26.setCellStyle(style);
+		Cell cell27 = row0.createCell(27);
+		cell27.setCellValue("导入确认时间");
+		cell27.setCellStyle(style);
+		Cell cell28 = row0.createCell(28);
+		cell28.setCellValue("关账时间");
+		cell28.setCellStyle(style);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -846,7 +903,7 @@ public class FeesAbnormalController {
 		double totalAmerceAmount=0d;
 		//理赔小计
 		double totalTotalPay=0d;
-		//确认理赔金额
+		//确认理赔小计
 		double totalConfirmPayAmount=0d;
 		int RowIndex = 1;
 		if(list.size()>0){
@@ -867,51 +924,63 @@ public class FeesAbnormalController {
 				Cell cel5 = row.createCell(5);
 				cel5.setCellValue(fee.getExpressnum());
 				Cell cel6 = row.createCell(6);
-				cel6.setCellValue(fee.getReference());				
+				cel6.setCellValue(fee.getReference());
+
 				Cell cel7 = row.createCell(7);
-				cel7.setCellValue(fee.getDutyType());
+				cel7.setCellValue(fee.getReturnOrderno());				
+	
 				Cell cel8 = row.createCell(8);
-				cel8.setCellValue(fee.getPayType());
+				cel8.setCellValue(fee.getReason());
 				Cell cel9 = row.createCell(9);
-				cel9.setCellValue(fee.getRemark());
+				cel9.setCellValue(fee.getReasonDetail());
 				Cell cel10 = row.createCell(10);
-				cel10.setCellValue(fee.getProductAmountD2j()==null?0d:fee.getProductAmountD2j());
+				cel10.setCellValue(fee.getRemark());
 				Cell cel11 = row.createCell(11);
-				cel11.setCellValue(getIsDeliveryValue().get(fee.getIsDeliveryFreeD2j()));
+				cel11.setCellValue(fee.getProductAmountD2j()==null?0d:fee.getProductAmountD2j());
 				Cell cel12 = row.createCell(12);
-				cel12.setCellValue(fee.getReturnedAmountJ2d()==null?0d:fee.getReturnedAmountJ2d());
+				cel12.setCellValue(getIsDeliveryValue().get(fee.getIsDeliveryFreeD2j()));
 				Cell cel13 = row.createCell(13);
-				cel13.setCellValue(fee.getAmerceAmount()==null?0d:fee.getAmerceAmount());
+				cel13.setCellValue(fee.getReturnedAmountJ2d()==null?0d:fee.getReturnedAmountJ2d());
 				Cell cel14 = row.createCell(14);
-				cel14.setCellValue(fee.getTotalPay()==null?0d:fee.getTotalPay());
+				cel14.setCellValue(fee.getAmerceAmount()==null?0d:fee.getAmerceAmount());
 				Cell cel15 = row.createCell(15);
-				cel15.setCellValue(fee.getConfirmPayAmount()==null?0d:fee.getConfirmPayAmount());
+				cel15.setCellValue(fee.getTotalPay()==null?0d:fee.getTotalPay());
+				
 				Cell cel16 = row.createCell(16);
-				cel16.setCellValue(getIsDeliveryValue().get(fee.getConfirmIsDeliveryFree()));
+				cel16.setCellValue(fee.getConfirmProductAmountD2j()==null?0d:fee.getConfirmProductAmountD2j());
 				Cell cel17 = row.createCell(17);
-				cel17.setCellValue(statusMap.get(fee.getOrderStatus()));
+				cel17.setCellValue(fee.getConfirmAmerceAmount()==null?0d:fee.getConfirmAmerceAmount());
 				Cell cel18 = row.createCell(18);
-				cel18.setCellValue(fee.getConfirmYear());
+				cel18.setCellValue(fee.getConfirmReturnedAmountJ2d()==null?0d:fee.getConfirmReturnedAmountJ2d());
+				
 				Cell cel19 = row.createCell(19);
-				cel19.setCellValue(fee.getConfirmMonth());
+				cel19.setCellValue(fee.getConfirmPayAmount()==null?0d:fee.getConfirmPayAmount());
 				Cell cel20 = row.createCell(20);
-				cel20.setCellValue(fee.getCreatePersonName());
+				cel20.setCellValue(getIsDeliveryValue().get(fee.getConfirmIsDeliveryFree()));
+				Cell cel21 = row.createCell(21);
+				cel21.setCellValue(statusMap.get(fee.getOrderStatus()));
+				Cell cel22 = row.createCell(22);
+				cel22.setCellValue(fee.getConfirmYear());
+				Cell cel23 = row.createCell(23);
+				cel23.setCellValue(fee.getConfirmMonth());
+				Cell cel24 = row.createCell(24);
+				cel24.setCellValue(fee.getCreatePersonName());
 				
 				if(fee.getCreateTime()!=null){
-					Cell cel21 = row.createCell(21);
-					cel21.setCellValue(sdf.format(fee.getCreateTime()));
+					Cell cel25 = row.createCell(25);
+					cel25.setCellValue(sdf.format(fee.getCreateTime()));
 				}
 				if(fee.getKesuConfirmTime()!=null){
-					Cell cel22 = row.createCell(22);
-					cel22.setCellValue(sdf.format(fee.getKesuConfirmTime()));
+					Cell cel26 = row.createCell(26);
+					cel26.setCellValue(sdf.format(fee.getKesuConfirmTime()));
 				}
 				if(fee.getImportConfirmTime()!=null){
-					Cell cel23 = row.createCell(23);
-					cel23.setCellValue(sdf.format(fee.getImportConfirmTime()));
+					Cell cel27 = row.createCell(27);
+					cel27.setCellValue(sdf.format(fee.getImportConfirmTime()));
 				}
 				if(fee.getCloseTime()!=null){
-					Cell cel24 = row.createCell(24);
-					cel24.setCellValue(sdf.format(fee.getCloseTime()));
+					Cell cel28 = row.createCell(28);
+					cel28.setCellValue(sdf.format(fee.getCloseTime()));
 				}
 				
 				//理赔商品金额
@@ -930,15 +999,15 @@ public class FeesAbnormalController {
 		Row lastRow = sheet.createRow(RowIndex);
 		Cell cellast1 = lastRow.createCell(0);
 		cellast1.setCellValue("合计：");
-		Cell cellast2 = lastRow.createCell(10);
+		Cell cellast2 = lastRow.createCell(11);
 		cellast2.setCellValue(totalProductAmount);
-		Cell cellast3 = lastRow.createCell(12);
+		Cell cellast3 = lastRow.createCell(13);
 		cellast3.setCellValue(totalReturnedAmount);
-		Cell cellast4 = lastRow.createCell(13);
+		Cell cellast4 = lastRow.createCell(14);
 		cellast4.setCellValue(totalAmerceAmount);
-		Cell cellast5 = lastRow.createCell(14);
+		Cell cellast5 = lastRow.createCell(15);
 		cellast5.setCellValue(totalTotalPay);
-		Cell cellast6 = lastRow.createCell(15);
+		Cell cellast6 = lastRow.createCell(19);
 		cellast6.setCellValue(totalConfirmPayAmount);
 	}
 	

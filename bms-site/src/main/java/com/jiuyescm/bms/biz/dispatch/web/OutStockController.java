@@ -147,7 +147,7 @@ public class OutStockController {
 					if (null != feesReceiveDispatchEntity) {
 						//获取此时的费用状态
 						String status=String.valueOf(feesReceiveDispatchEntity.getStatus());
-						if(status.equals("1")){
+						if("1".equals(status)){
 							return "该费用已过账，无法调整重量";
 						}
 					}

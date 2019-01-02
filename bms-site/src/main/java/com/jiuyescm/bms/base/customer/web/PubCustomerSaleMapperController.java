@@ -386,9 +386,9 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 							model.setBizType(RecordLogBizTypeEnum.PRICE.getCode());
 							model.setNewData("");
 							model.setOldData("");
-							model.setOperateDesc("导入宅配报价对应关系,共计【"+updateNum+"】条");
+							model.setOperateDesc("导入原始销售,共计【"+updateNum+"】条");
 							model.setOperatePerson(JAppContext.currentUserName());
-							model.setOperateTable("price_dispatch_detail");
+							model.setOperateTable("pub_customer_sale_mapper");
 							model.setOperateTime(JAppContext.currentTimestamp());
 							model.setOperateType(RecordLogOperateType.IMPORT.getCode());
 							model.setRemark("");
@@ -421,9 +421,9 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 								model.setBizType(RecordLogBizTypeEnum.PRICE.getCode());
 								model.setNewData("");
 								model.setOldData("");
-								model.setOperateDesc("导入宅配报价对应关系,共计【"+insertNum+"】条");
+								model.setOperateDesc("导入原始销售,共计【"+insertNum+"】条");
 								model.setOperatePerson(JAppContext.currentUserName());
-								model.setOperateTable("price_dispatch_detail");
+								model.setOperateTable("pub_customer_sale_mapper");
 								model.setOperateTime(JAppContext.currentTimestamp());
 								model.setOperateType(RecordLogOperateType.IMPORT.getCode());
 								model.setRemark("");

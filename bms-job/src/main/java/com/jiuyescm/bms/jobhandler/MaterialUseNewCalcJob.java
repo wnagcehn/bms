@@ -13,7 +13,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
@@ -70,18 +73,21 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
+	@Autowired private ISystemCodeRepository systemCodeRepository;
 
 	
 	Map<String,PubMaterialInfoVo> materialMap = null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	Map<String,List<PriceMaterialQuotationEntity>> mapCusPrice=null;
+	Map<String,SystemCodeEntity> noFeesMap=null;
 	
 	protected void initConf(){
 		mapCusPrice=new ConcurrentHashMap<String,List<PriceMaterialQuotationEntity>>();
 		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
 		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
 		materialMap=queryAllMaterial();
+		noFeesMap=queryNoFees();
 	}
 	
 
@@ -184,17 +190,29 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	}
 
 	
+//	@Override
+//	public boolean isNoExe(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
+//		if(entity.getConsumerMaterialCode()!=null && entity.getConsumerMaterialCode().contains("FSD")){
+//			BizDispatchBillEntity biz=bizDispatchBillService.getDispatchEntityByWaybillNo(entity.getWaybillNo());
+//			if(biz!=null && "1500000015".equals(biz.getCarrierId())){
+//				XxlJobLogger.log("-->"+entity.getId()+String.format("顺丰防水袋，不收钱", entity.getId()));
+//				entity.setIsCalculated(CalculateState.No_Exe.getCode());
+//				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+//				entity.setRemark(String.format("顺丰防水袋，不收钱", entity.getId()));
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+	
 	@Override
 	public boolean isNoExe(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
-		if(entity.getConsumerMaterialCode()!=null && entity.getConsumerMaterialCode().contains("FSD")){
-			BizDispatchBillEntity biz=bizDispatchBillService.getDispatchEntityByWaybillNo(entity.getWaybillNo());
-			if(biz!=null && "1500000015".equals(biz.getCarrierId())){
-				XxlJobLogger.log("-->"+entity.getId()+String.format("顺丰防水袋，不收钱", entity.getId()));
+		if(entity.getConsumerMaterialCode()!=null && noFeesMap.containsKey(entity.getConsumerMaterialCode())){
+				XxlJobLogger.log("-->"+entity.getId()+String.format("不计算耗材使用费的耗材", entity.getId()));
 				entity.setIsCalculated(CalculateState.No_Exe.getCode());
 				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
 				entity.setRemark(entity.getRemark()+String.format("顺丰防水袋，不收钱", entity.getId())+";");
 				return true;
-			}
 		}
 		return false;
 	}
@@ -446,7 +464,23 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		return map;
 	}
 	
-	
+	/**
+	 * 查询不计算耗材
+	 * @return
+	 */
+	public Map<String,SystemCodeEntity> queryNoFees(){
+		Map<String,Object> condition=Maps.newHashMap();
+		condition.put("typeCode", "NO_FEES_MATERIAL");
+		PageInfo<SystemCodeEntity> page = systemCodeRepository.query(condition, 1, 999999);
+		Map<String,SystemCodeEntity> map=new HashMap<String, SystemCodeEntity>();
+		if(page.getList()!=null||page.getList().size()>0){
+			List<SystemCodeEntity> list = page.getList();
+			for(SystemCodeEntity entity:list){
+					map.put(entity.getCode(),entity);
+			}
+		}
+		return map;
+	}
 	
 
 }

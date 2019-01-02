@@ -221,6 +221,17 @@ public class BizDispatchBillVo implements IEntity {
 	private String adjustServiceTypeCode;
 	private String adjustServiceTypeName;
 	
+	//店铺名称
+	private String shopName;
+	
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+	
 	public BizDispatchBillVo() {
 
 	}
