@@ -642,6 +642,16 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
           <Property name="property">taskStatus</Property>
           <Editor/>
         </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">expectStatus</Property>
+          <Property name="property">expectStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">differentRate</Property>
+          <Property name="property">differentRate</Property>
+          <Editor/>
+        </AutoFormElement>
       </AutoForm>
     </Container>
     <Container>
@@ -824,22 +834,18 @@ jQuery(arg.dom).xCreate({&#xD;
         <DataColumn name="expectMoney">
           <Property name="property">expectMoney</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="expectStatus">
           <Property name="property">expectStatus</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="differentRate">
           <Property name="property">differentRate</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="differentRemark">
           <Property name="property">differentRemark</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>
