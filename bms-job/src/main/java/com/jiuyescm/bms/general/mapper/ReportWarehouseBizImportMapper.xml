@@ -104,8 +104,8 @@
 		SELECT distinct a.warehouse_code,a.customer_id,DATE_FORMAT(a.create_time, '%Y-%m') as import_date,'ACTUAL' as import_type, 'MATERIAL' as biz_type
 		FROM biz_outstock_packmaterial a 
 		left join biz_outstock_master b on a.waybill_no = b.waybill_no
-		where a.del_flag = 0 AND a.b2b_flag = '0'
-		AND a.create_time <![CDATA[>=]]> #{startTime} AND a.create_time <![CDATA[<]]> #{endTime}
+		where a.del_flag = 0 AND b.b2b_flag = '0'
+		AND a.create_time <![CDATA[>=]]> #{startTime} AND a.create_time <![CDATA[<]]> #{endTime} ) a
         on DUPLICATE KEY update
         create_time=CURRENT_TIMESTAMP , del_flag=#{delFlag};
     </insert>
@@ -140,7 +140,9 @@
     <insert id="insertReport" parameterType="java.util.Map">
     	INSERT into report_warehouse_biz_import 
     	       (import_date,warehouse_code,biz_type,import_type,customer_id,create_time,del_flag)
-		select create_month,warehouse_code,biz_type,'THEORY',customer_id,#{createTime,jdbcType=TIMESTAMP},#{delFlag} 
+		select create_month,warehouse_code,biz_type,'THEORY',customer_id,CURRENT_TIMESTAMP,0
 		from report_warehouse_customer where 1=1 and del_flag='0' and import_type='1' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+		on DUPLICATE KEY update
+        create_time=CURRENT_TIMESTAMP;	
     </insert>
 </mapper>

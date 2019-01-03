@@ -57,6 +57,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			param.put("startTime", entry.getKey());
 			param.put("endTime", entry.getValue());
 			int ret = reportWarehouseBizImportService.upsertPalletStorage(param);
+			ret = reportWarehouseBizImportService.upsertPackMaterial(param);
 			XxlJobLogger.log("影响行数【{0}】,耗时【{1}】毫秒",ret,(System.currentTimeMillis()-start));
 		}
 		
