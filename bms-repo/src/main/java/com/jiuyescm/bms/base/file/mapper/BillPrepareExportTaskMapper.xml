@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.file.mapper.BillPrepareExportTaskMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+	   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+	   	<result column="task_name" property="taskName" jdbcType="VARCHAR" />
+	   	<result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	   	<result column="mk_id" property="mkId" jdbcType="VARCHAR" />
+	   	<result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	   	<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+	   	<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	   	<result column="task_state" property="taskState" jdbcType="VARCHAR" />
+	   	<result column="storage_split" property="storageSplit" jdbcType="TINYINT" />
+	   	<result column="material_split" property="materialSplit" jdbcType="TINYINT" />
+	   	<result column="progress" property="progress" jdbcType="DECIMAL" />
+	   	<result column="file_path" property="filePath" jdbcType="VARCHAR" />
+	   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+	   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	  
+	<sql id="BASE_COLUMNS_WITHOUT_ID">
+		task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
+    </sql>
+	  
+    <select id="queryBillTask" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_prepare_export_task
+        where 1 = 1
+       	<if test=" taskId != null and taskId !='' ">
+			and task_id = #{taskId}
+		</if>
+       	<if test=" taskName != null and taskName !='' ">
+			and task_name = #{taskName}
+		</if>
+       	<if test=" billNo != null and billNo !='' ">
+			and bill_no = #{billNo}
+		</if>
+       	<if test=" mkId != null and mkId !='' ">
+			and mk_id = #{mkId}
+		</if>
+       	<if test=" customerid != null and customerid !='' ">
+			and customerid = #{customerid}
+		</if>
+       	<if test=" startTime != null and startTime !='' ">
+			and start_time = #{startTime}
+		</if>
+       	<if test=" endTime != null and endTime !='' ">
+			and end_time = #{endTime}
+		</if>
+       	<if test=" taskState != null and taskState !='' ">
+			and task_state = #{taskState}
+		</if>
+       	<if test=" storageSplit != null and storageSplit !='' ">
+			and storage_split = #{storageSplit}
+		</if>
+       	<if test=" materialSplit != null and materialSplit !='' ">
+			and material_split = #{materialSplit}
+		</if>
+       	<if test=" progress != null and progress !='' ">
+			and progress = #{progress}
+		</if>
+       	<if test=" filePath != null and filePath !='' ">
+			and file_path = #{filePath}
+		</if>
+       	<if test=" creator != null and creator !='' ">
+			and creator = #{creator}
+		</if>
+       	<if test=" createTime != null and createTime !='' ">
+			and create_time = #{createTime}
+		</if>
+       	<if test=" lastModifier != null and lastModifier !='' ">
+			and last_modifier = #{lastModifier}
+		</if>
+       	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+			and last_modify_time = #{lastModifyTime}
+		</if>
+       	and del_flag ='0'
+    </select>
+
+ 	<insert id="save" parameterType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
+        insert into bill_prepare_export_task(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+			#{taskId,jdbcType=VARCHAR}, 
+			#{taskName,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{mkId,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{startTime,jdbcType=TIMESTAMP}, 
+			#{endTime,jdbcType=TIMESTAMP}, 
+			#{taskState,jdbcType=VARCHAR}, 
+			#{storageSplit,jdbcType=TINYINT}, 
+			#{materialSplit,jdbcType=TINYINT}, 
+			#{progress,jdbcType=DECIMAL}, 
+			#{filePath,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
+        update bill_prepare_export_task
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" taskId != null and taskId !='' ">
+				task_id = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test=" taskName != null and taskName !='' ">
+				task_name = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test=" billNo != null and billNo !='' ">
+				bill_no = #{billNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" mkId != null and mkId !='' ">
+				mk_id = #{mkId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerid != null and customerid !='' ">
+				customerid = #{customerid,jdbcType=VARCHAR},
+			</if>
+			<if test=" startTime != null and startTime !='' ">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" endTime != null and endTime !='' ">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" taskState != null and taskState !='' ">
+				task_state = #{taskState,jdbcType=VARCHAR},
+			</if>
+			<if test=" storageSplit != null and storageSplit !='' ">
+				storage_split = #{storageSplit,jdbcType=TINYINT},
+			</if>
+			<if test=" materialSplit != null and materialSplit !='' ">
+				material_split = #{materialSplit,jdbcType=TINYINT},
+			</if>
+			<if test=" progress != null and progress !='' ">
+				progress = #{progress,jdbcType=DECIMAL},
+			</if>
+			<if test=" filePath != null and filePath !='' ">
+				file_path = #{filePath,jdbcType=VARCHAR},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" lastModifier != null and lastModifier !='' ">
+				last_modifier = #{lastModifier,jdbcType=VARCHAR},
+			</if>
+			<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+         where task_id = #{taskId,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="checkFileHasDownLoad" parameterType="Map" resultType="int">
+    	select count(*) from bill_prepare_export_task
+    	where customerid=#{customerId} and start_time=#{startTime} and end_time=#{endTime} and del_flag='0'
+    </select>
+</mapper>
