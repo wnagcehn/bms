@@ -158,7 +158,13 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 			//****************************************************************** 校验数量的类型
 			String[] strs = {"商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温","入库托数","出库托数"};
 			boolean isAllEmpty=false;
-			Date date = new Date(createTime.getTime());
+			Date date = null;
+			if(createTime == null){
+				errorMsg += "出库日期【"+outTimeExcel+"】格式不正确;";
+			}
+			else{
+				date = new Date(createTime.getTime());	
+			}
 			for (String str : strs) {
 				BizPalletInfoTempEntity pallet_entity = new BizPalletInfoTempEntity();
 				
