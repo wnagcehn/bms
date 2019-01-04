@@ -73,6 +73,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
@@ -88,6 +89,8 @@ public class NewBuinessDataExportController extends BaseController {
 
 	@Autowired
 	private IWarehouseService warehouseService;
+	@Autowired
+	private ICustomerService customerService;
 	@Resource
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	@Resource
@@ -188,6 +191,17 @@ public class NewBuinessDataExportController extends BaseController {
 			param.put("endDate", endDate);
 		}
 		String customerId = param.get("customerId").toString();
+		//区分是否按照子商家生成
+		if ((Boolean)param.get("isChildCusomer") == true) {
+			//需要按子商家
+			//通过主商家id查询子商家id
+		}else {			
+
+		}
+		
+		
+		
+		
 		Timestamp startDate = DateUtil.formatTimestamp(param.get("startDate"));
 		Timestamp endDate = DateUtil.formatTimestamp(param.get("endDate"));
 		try {
@@ -258,7 +272,7 @@ public class NewBuinessDataExportController extends BaseController {
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
 			bmsErrorLogInfoEntity.setClassName("BuinessDataExportController");
 			bmsErrorLogInfoEntity.setMethodName("asynExport");
-			bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
+			//bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
 			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
 			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
