@@ -531,13 +531,11 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
 		});&#xD;
 	});</ClientEvent>
         <Property name="caption">预估确认</Property>
-        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="btnRemark">
         <ClientEvent name="onClick">view.get(&quot;#dialogRemarkEdit&quot;).show();&#xD;
 </ClientEvent>
         <Property name="caption">差异说明</Property>
-        <Property name="visible">false</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBillCheckStatusEntity">
