@@ -42,14 +42,14 @@
       </PropertyDef>
       <PropertyDef name="isSepWarehouse">
         <Property name="dataType">boolean</Property>
-        <Property name="defaultValue">true</Property>
+        <Property name="defaultValue">false</Property>
         <Property name="label">耗材分仓显示</Property>
         <Property name="required">false</Property>
       </PropertyDef>
       <PropertyDef name="isChildCusomer">
         <Property name="label">按子商家生成</Property>
         <Property name="dataType">boolean</Property>
-        <Property name="defaultValue">true</Property>
+        <Property name="defaultValue">false</Property>
       </PropertyDef>
       <PropertyDef name="year">
         <Property name="label">年份</Property>
@@ -465,6 +465,8 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
           <AutoFormElement>
             <Property name="name">isChildCusomer</Property>
             <Property name="property">isChildCusomer</Property>
+            <Property name="trigger">triggerCus</Property>
+            <Property name="labelWidth">100</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -550,40 +552,11 @@ if (data != null) {&#xD;
     <FloatPanel id="panelInvoice">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoice.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceName&quot;, data.get(&quot;customName&quot;)), view.get(&quot;#AutoForma.entity&quot;).set(&quot;invoiceId&quot;, data.get(&quot;customNo&quot;)), view.get(&quot;#AutoForma.entity&quot;).set(&quot;billName&quot;, data.get(&quot;customName&quot;))&#xD;
-	&#xD;
-	/*&#xD;
-	 var datas = view.get(&quot;#dsBillReceiveMasterEntityQuery.data&quot;).current;&#xD;
-	 datas.set({&#xD;
-	 invoiceName:data.get(&quot;customName&quot;)&#xD;
-	 });&#xD;
-	 */&#xD;
-	view.id(&quot;getInportParamAction&quot;).set(&quot;parameter&quot;, {&#xD;
-		invoiceName: data.get(&quot;customName&quot;)&#xD;
-	}).execute(function(result){&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;billStartTime&quot;, result[&quot;billStartTime&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;firstClassName&quot;, result[&quot;firstClassName&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;bizTypeName&quot;, result[&quot;bizTypeName&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;projectName&quot;, result[&quot;projectName&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;sellerId&quot;, result[&quot;sellerId&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;sellerName&quot;, result[&quot;sellerName&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;deptName&quot;, result[&quot;deptName&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;deptCode&quot;, result[&quot;deptCode&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;projectManagerId&quot;, result[&quot;projectManagerId&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;projectManagerName&quot;, result[&quot;projectManagerName&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;balanceId&quot;, result[&quot;balanceId&quot;]);&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;balanceName&quot;, result[&quot;balanceName&quot;]);&#xD;
-		//view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmManId&quot;, result[&quot;confirmManId&quot;]);&#xD;
-		//view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmMan&quot;, result[&quot;confirmMan&quot;]);&#xD;
-		//view.get(&quot;#AutoForma.entity&quot;).set(&quot;confirmDate&quot;, result[&quot;confirmDate&quot;]);&#xD;
-		if (result[&quot;isneedInvoice&quot;] == '1') {&#xD;
-			result[&quot;isneedInvoice&quot;] = '是';&#xD;
-		}&#xD;
-		if (result[&quot;isneedInvoice&quot;] == '0') {&#xD;
-			result[&quot;isneedInvoice&quot;] = '否';&#xD;
-		}&#xD;
-		view.get(&quot;#AutoForma.entity&quot;).set(&quot;isneedInvoice&quot;, result[&quot;isneedInvoice&quot;]);&#xD;
-	});&#xD;
+	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId: data.get(&quot;customNo&quot;),&#xD;
+		customerName:data.get(&quot;customName&quot;)&#xD;
+    });&#xD;
 }</ClientEvent>
       <Property name="caption">合同商家选择</Property>
       <Property name="center">true</Property>
