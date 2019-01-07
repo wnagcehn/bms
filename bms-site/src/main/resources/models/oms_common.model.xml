@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Model>
-  <DataType name="dtStockPlaceEntity" meta="x:8;y:10">
+  <DataType name="dtStockPlaceEntity" meta="x:15;y:48">
     <Property name="matchType">com.jiuyescm.bms.pub.warehouse.entity.StockPlaceEntity</Property>
     <PropertyDef name="stockplaceid">
       <Property name="label">库存地ID</Property>
@@ -157,7 +157,7 @@
       <Property name="label">市</Property>
     </PropertyDef>
   </DataType>
-  <DataType name="dtWarehouseRegionRuleEntity" meta="x:313;y:10">
+  <DataType name="dtWarehouseRegionRuleEntity" meta="x:315;y:48">
     <Property name="matchType">com.jiuyescm.bms.pub.warehouse.entity.WarehouseRegionRuleEntity</Property>
     <PropertyDef name="id">
       <Property name="label">标识</Property>
@@ -206,7 +206,7 @@
       <Property name="label">修改时间</Property>
     </PropertyDef>
   </DataType>
-  <DataType name="dtDeliverEntity" meta="x:517;y:10">
+  <DataType name="dtDeliverEntity" meta="x:526;y:48">
     <Property name="matchType">com.jiuyescm.mdm.deliver.vo.DeliverVo</Property>
     <PropertyDef name="deliverid">
       <Property></Property>
@@ -382,6 +382,9 @@
     <PropertyDef name="delflag">
       <Property name="dataType">Integer</Property>
       <Property name="label">删除标记</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult()}</Property>
+      </Property>
     </PropertyDef>
     <PropertyDef name="creperson">
       <Property></Property>
