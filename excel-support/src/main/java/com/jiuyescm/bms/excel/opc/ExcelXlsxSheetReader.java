@@ -170,7 +170,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			}
 			DataColumn dColumn = new DataColumn(colName,colValue);
 			dColumn.setColNo(colNo);
-			drRow.addColumn(colNo,dColumn);
+			//drRow.addColumn(colNo,dColumn);
 		}
 		callback.read(drRow);
 	}
