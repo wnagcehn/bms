@@ -73,7 +73,7 @@ public class SheetReader extends DefaultHandler {
 		Iterator<Map.Entry<String, DataColumn>> columnIterator = cellMap.entrySet().iterator();
 		while (columnIterator.hasNext()) {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
-			row.addCell(entry.getValue());
+			row.addColumn(entry.getValue());
 		}
 		callback.read(row);
 	}

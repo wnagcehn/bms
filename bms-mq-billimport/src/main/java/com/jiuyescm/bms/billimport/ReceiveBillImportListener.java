@@ -40,6 +40,8 @@ import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.bms.excel.ExcelXlsxReader;
+import com.jiuyescm.bms.excel.data.Sheet;
+import com.jiuyescm.bms.excel.data.XlsxWorkBook;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.constants.BmsEnums;
@@ -69,7 +71,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	@Autowired private IBillFeesReceiveHandService billFeesReceiveHandService;
 	@Autowired private IBillCheckInfoService billCheckInfoService;	
 
-	private ExcelXlsxReader xlsxReader;
+	private XlsxWorkBook  book ;
 
 	@Override
 	public void onMessage(Message message) {
@@ -110,12 +112,12 @@ public class ReceiveBillImportListener implements MessageListener {
 		InputStream inputStream = new ByteArrayInputStream(bytes);
 
 		try {
-			xlsxReader = new ExcelXlsxReader(inputStream);
-			List<OpcSheet> sheets = xlsxReader.getSheets();
-			logger.info("解析Excel, 获取Sheet：{}", sheets.size());
+			book  = new XlsxWorkBook(inputStream);
+			//List<OpcSheet> sheets = book .getSheets();
+			//logger.info("解析Excel, 获取Sheet：{}", sheets.size());
 			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
-			for (OpcSheet opcSheet : sheets) {
-				String sheetName = opcSheet.getSheetName();
+			for (Sheet sheet : book.getSheets()) {
+				String sheetName = sheet.getSheetName();
 				logger.info("--------------准备读取sheet - {}", sheetName);
 				long startTime = System.currentTimeMillis();
 				// 仓储--上海01仓，北京01仓...............
@@ -135,7 +137,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				//handler.getRows();
 
 				try {
-					handler.process(xlsxReader, opcSheet, map);
+					handler.process(book, sheet, map);
 					if("fail".equals(map.get("result"))){
 						break;
 					}					

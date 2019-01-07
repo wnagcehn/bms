@@ -37,7 +37,7 @@ public class DataRow {
 		return columns;
 	}
 	
-	public void addCell(DataColumn dc){
+	public void addColumn(DataColumn dc){
 		columns.add(dc);
 	}
 	
