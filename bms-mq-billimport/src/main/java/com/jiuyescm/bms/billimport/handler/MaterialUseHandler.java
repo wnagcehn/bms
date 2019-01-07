@@ -52,11 +52,11 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		// TODO Auto-generated method stub
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn waybillCo=dr.getColumn("运单号");
+		/*DataColumn waybillCo=dr.getColumn("运单号");
 		DataColumn customerCo=dr.getColumn("商家名称");
 		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		Map<String,Integer> repeatMap=new HashMap<String, Integer>();
@@ -107,6 +107,11 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			}
 		}
 		
+		if(StringUtils.isEmpty(entity.getWaybillNo()) && StringUtils.isEmpty(entity.getCustomerName())){
+			return list;
+		}
+		
+		
 		//起始列
 		int index=0;
 		for (DataColumn dc:dr.getColumns()) {
@@ -117,8 +122,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		}
 		int count=1;
 		BillFeesReceiveStorageTempEntity feeEntity=new BillFeesReceiveStorageTempEntity();
-		for(int i=index;i<dr.getColumns().size();i++){
-			DataColumn dc=dr.getColumn(i);
+		for (DataColumn dc : dr.getColumns()) {
 			try {				
 				if(count==1){
 					feeEntity=new BillFeesReceiveStorageTempEntity();

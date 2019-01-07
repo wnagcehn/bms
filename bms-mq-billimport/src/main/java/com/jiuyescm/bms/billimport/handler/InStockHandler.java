@@ -38,11 +38,11 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
 		//判断空白行
-		DataColumn orderNo=dr.getColumn("入库单号");
+		/*DataColumn orderNo=dr.getColumn("入库单号");
 		DataColumn customerCo=dr.getColumn("商家名称");
 		if(orderNo!=null && customerCo!=null &&StringUtils.isBlank(orderNo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();

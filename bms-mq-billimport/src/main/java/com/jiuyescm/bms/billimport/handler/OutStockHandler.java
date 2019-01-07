@@ -39,11 +39,11 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
 		//判断空白行
-		DataColumn outStockCo=dr.getColumn("出库单号");
+		/*DataColumn outStockCo=dr.getColumn("出库单号");
 		DataColumn customerCo=dr.getColumn("商家名称");
 		if(outStockCo!=null && customerCo!=null &&StringUtils.isBlank(outStockCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();

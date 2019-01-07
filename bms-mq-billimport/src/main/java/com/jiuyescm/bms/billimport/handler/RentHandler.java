@@ -34,11 +34,11 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn warehouseCo=dr.getColumn("仓库名称");
+		/*DataColumn warehouseCo=dr.getColumn("仓库名称");
 		DataColumn customerCo=dr.getColumn("客户名称");
 		if(warehouseCo!=null && customerCo!=null &&StringUtils.isBlank(warehouseCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {

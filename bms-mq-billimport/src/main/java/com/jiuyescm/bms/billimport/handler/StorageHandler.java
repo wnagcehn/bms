@@ -38,10 +38,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		//异常信息 
 		String errorMessage="";
 		
-		DataColumn createTime=dr.getColumn("日期");
+		/*DataColumn createTime=dr.getColumn("日期");
 		if(createTime!=null &&StringUtils.isBlank(createTime.getColValue())){
 			return lists;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//商品按托存储--LD

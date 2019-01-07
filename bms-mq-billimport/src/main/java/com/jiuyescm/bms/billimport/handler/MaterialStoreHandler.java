@@ -35,11 +35,11 @@ public class MaterialStoreHandler extends CommonHandler<BillFeesReceiveStorageTe
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn orderCo=dr.getColumn("定货单号");
+		/*DataColumn orderCo=dr.getColumn("定货单号");
 		DataColumn customerCo=dr.getColumn("客户名称");
 		if(orderCo!=null && customerCo!=null &&StringUtils.isBlank(orderCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {

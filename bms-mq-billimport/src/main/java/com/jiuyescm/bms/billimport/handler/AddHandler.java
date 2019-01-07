@@ -37,11 +37,11 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn addCo=dr.getColumn("增值编号");
+		/*DataColumn addCo=dr.getColumn("增值编号");
 		DataColumn customerCo=dr.getColumn("客户名称");
 		if(addCo!=null && customerCo!=null &&StringUtils.isBlank(addCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
@@ -124,8 +124,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getOrderNo())){
 			if(repeatMap.containsKey(entity.getOrderNo())){
-				errorMessage += "与第"
-						+ repeatMap.get(entity.getOrderNo()) + "行单据编号重复;";
+				errorMessage += "与第"+ repeatMap.get(entity.getOrderNo()) + "行单据编号重复;";
 			}else{
 				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
 			}

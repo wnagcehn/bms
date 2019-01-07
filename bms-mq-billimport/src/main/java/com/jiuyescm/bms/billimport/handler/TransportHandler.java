@@ -35,11 +35,11 @@ public class TransportHandler extends
 		String errorMessage = "";
 		List<BillFeesReceiveTransportTempEntity> listEntity = new ArrayList<BillFeesReceiveTransportTempEntity>();
 		
-		DataColumn cre=dr.getColumn("订单创建日期");
+		/*DataColumn cre=dr.getColumn("订单创建日期");
 		DataColumn orderNo=dr.getColumn("订单号");
 		if(cre!=null && orderNo!=null &&StringUtils.isBlank(cre.getColValue()+orderNo.getColValue())){
 			return listEntity;
-		}
+		}*/
 		
 		
 		BillFeesReceiveTransportTempEntity entity = new BillFeesReceiveTransportTempEntity();

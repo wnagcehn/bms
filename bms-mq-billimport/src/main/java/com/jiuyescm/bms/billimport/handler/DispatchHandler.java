@@ -58,11 +58,12 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		//配送费
 		List<BillFeesReceiveDispatchTempEntity> dispatchList = new ArrayList<BillFeesReceiveDispatchTempEntity>();
 		
-		DataColumn waybillCo=dr.getColumn("运单号");
+		/*DataColumn waybillCo=dr.getColumn("运单号");
 		DataColumn customerCo=dr.getColumn("商家名称");
 		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
 			return dispatchList;
-		}
+		}*/
+		
 		BillFeesReceiveDispatchTempEntity dispatchEntity = new BillFeesReceiveDispatchTempEntity();
 		//仓储费
 		BillFeesReceiveStorageTempEntity storageEntity = new BillFeesReceiveStorageTempEntity();

@@ -34,11 +34,12 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 		//异常信息
 		String errorMessage="";
 		List<BillFeesReceiveDispatchTempEntity> list = new ArrayList<BillFeesReceiveDispatchTempEntity>();
-		DataColumn waybillCo=dr.getColumn("运单号");
+		
+		/*DataColumn waybillCo=dr.getColumn("运单号");
 		DataColumn customerCo=dr.getColumn("客户");
 		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveDispatchTempEntity entity = new BillFeesReceiveDispatchTempEntity();
 

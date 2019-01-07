@@ -40,11 +40,11 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		String errorMessage = "";
 		List<BillFeesReceiveAirTempEntity> listEntity = new ArrayList<BillFeesReceiveAirTempEntity>();
 		
-		DataColumn weight=dr.getColumn("计费重量");
+		/*DataColumn weight=dr.getColumn("计费重量");
 		DataColumn orderNo=dr.getColumn("运单号");
 		if(weight!=null && orderNo!=null &&StringUtils.isBlank(weight.getColValue()+orderNo.getColValue())){
 			return listEntity;
-		}
+		}*/
 		
 		BillFeesReceiveAirTempEntity entity = new BillFeesReceiveAirTempEntity();
 		entity.setRowExcelNo(dr.getRowNo());

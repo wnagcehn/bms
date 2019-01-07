@@ -34,11 +34,11 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn warehouseCo=dr.getColumn("仓库");
+		/*DataColumn warehouseCo=dr.getColumn("仓库");
 		DataColumn customerCo=dr.getColumn("客户名称");
 		if(warehouseCo!=null && customerCo!=null &&StringUtils.isBlank(warehouseCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
