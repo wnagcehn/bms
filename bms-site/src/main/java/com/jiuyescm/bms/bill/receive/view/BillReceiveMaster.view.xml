@@ -391,6 +391,11 @@
         <Property></Property>
         <Property name="label">创建人</Property>
       </PropertyDef>
+      <PropertyDef name="isCreateCheckInfo">
+        <Property name="label">生成账单跟踪</Property>
+        <Property name="dataType">boolean</Property>
+        <Property name="defaultValue">false</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -531,11 +536,13 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
 		});&#xD;
 	});</ClientEvent>
         <Property name="caption">预估确认</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -20px -0px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnRemark">
         <ClientEvent name="onClick">view.get(&quot;#dialogRemarkEdit&quot;).show();&#xD;
 </ClientEvent>
         <Property name="caption">差异说明</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -0px -300px</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBillCheckStatusEntity">
@@ -1040,11 +1047,9 @@ view.get(&quot;#importBtn2&quot;).set(&quot;disabled&quot;,false);&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">creator</Property>
-            <Property name="property">creator</Property>
-            <Property name="visible">false</Property>
-            <Property name="labelWidth">90</Property>
-            <Property name="showHint">false</Property>
+            <Property name="name">isCreateCheckInfo</Property>
+            <Property name="property">isCreateCheckInfo</Property>
+            <Property name="labelWidth">85</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement id="billStartTime">
@@ -1234,6 +1239,8 @@ var isneedInvoice = entity.get(&quot;isneedInvoice&quot;);&#xD;
 var billName = entity.get(&quot;billName&quot;);&#xD;
 var billCheckStatus = entity.get(&quot;billCheckStatus&quot;);&#xD;
 &#xD;
+var isCreateCheckInfo = entity.get(&quot;isCreateCheckInfo&quot;);&#xD;
+&#xD;
 var param = {&#xD;
 	&quot;invoiceName&quot;:invoiceName,&#xD;
 	&quot;invoiceId&quot;:invoiceId,&#xD;
@@ -1252,7 +1259,8 @@ var param = {&#xD;
 	&quot;projectManagerId&quot;:projectManagerId,&#xD;
 	&quot;projectManagerName&quot;:projectManagerName,&#xD;
 	&quot;balanceId&quot;:balanceId,&#xD;
-	&quot;balanceName&quot;:balanceName&#xD;
+	&quot;balanceName&quot;:balanceName,&#xD;
+	&quot;isCreateCheckInfo&quot;:isCreateCheckInfo&#xD;
 	/**&#xD;
 	 * &#xD;
 	&#xD;

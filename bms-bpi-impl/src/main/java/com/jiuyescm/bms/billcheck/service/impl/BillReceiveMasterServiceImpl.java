@@ -196,7 +196,14 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
     @Override
     public void delete(String billNo,String status) {
-    	if("SUCCESS".equals(status)){
+		//删除导入记录
+		billReceiveMasterRepository.delete(billNo);
+		//删除对应得费用
+		billFeesReceiveStorageTempRepository.delete(billNo);
+		billFeesReceiveTransportTempRepository.delete(billNo);
+		billFeesReceiveDispatchTempRepository.delete(billNo);
+		billFeesReceiveAirTempRepository.delete(billNo);
+    	/*if("SUCCESS".equals(status)){
     		Map<String, Object> condition=new HashMap<>();
     		condition.put("billNo", billNo);
     		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
@@ -227,7 +234,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 			billFeesReceiveAirTempRepository.delete(billNo);
 			//删除账单跟踪记录
 			billCheckInfoRepository.deleteByBillNo(billNo);
-    	}  	
+    	} */ 	
     }
 
 	@Override

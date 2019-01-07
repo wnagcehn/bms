@@ -71,6 +71,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 	
 	@Override
 	protected List<BizGanxianWayBillEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("ganXianWayBillCalcJob查询条件map:【{0}】  ",map);
 		return bizGanxianWayBillService.getGanxianWayBillList(map);
 	}
 

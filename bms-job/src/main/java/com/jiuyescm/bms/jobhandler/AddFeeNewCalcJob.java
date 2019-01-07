@@ -30,7 +30,6 @@ import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepo
 import com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceExtraQuotationRepository;
-//import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
@@ -81,7 +80,8 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 	
 	// 查询业务数据
 	@Override
-	protected List<BizAddFeeEntity> queryBillList(Map<String, Object> map) {	
+	protected List<BizAddFeeEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("addFeeNewCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BizAddFeeEntity> bizList = bizAddFeeService.querybizAddFee(map);
 		if(bizList!=null && bizList.size()>0){
