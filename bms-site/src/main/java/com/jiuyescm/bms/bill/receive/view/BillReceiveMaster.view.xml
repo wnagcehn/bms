@@ -531,13 +531,11 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
 		});&#xD;
 	});</ClientEvent>
         <Property name="caption">预估确认</Property>
-        <Property name="visible">false</Property>
       </ToolBarButton>
       <ToolBarButton id="btnRemark">
         <ClientEvent name="onClick">view.get(&quot;#dialogRemarkEdit&quot;).show();&#xD;
 </ClientEvent>
         <Property name="caption">差异说明</Property>
-        <Property name="visible">false</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBillCheckStatusEntity">
@@ -640,6 +638,16 @@ dorado.MessageBox.confirm(&quot;是否确认预估确认?&quot;,function(){&#xD;
         <AutoFormElement>
           <Property name="name">taskStatus</Property>
           <Property name="property">taskStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">expectStatus</Property>
+          <Property name="property">expectStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">differentRate</Property>
+          <Property name="property">differentRate</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -824,22 +832,18 @@ jQuery(arg.dom).xCreate({&#xD;
         <DataColumn name="expectMoney">
           <Property name="property">expectMoney</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="expectStatus">
           <Property name="property">expectStatus</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="differentRate">
           <Property name="property">differentRate</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="differentRemark">
           <Property name="property">differentRemark</Property>
           <Property name="width">120</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>
