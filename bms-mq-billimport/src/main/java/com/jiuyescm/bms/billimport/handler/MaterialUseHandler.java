@@ -58,11 +58,19 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			return list;
 		}*/
 		
+		boolean isWaybillNull = false;
+		boolean isCustomerNull = false;
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		Map<String,Integer> repeatMap=new HashMap<String, Integer>();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "商家名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "仓库":
 					if(StringUtils.isNotBlank(dc.getColValue())){
 						entity.setWarehouseName(dc.getColValue());
@@ -107,10 +115,9 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			}
 		}
 		
-		if(StringUtils.isEmpty(entity.getWaybillNo()) && StringUtils.isEmpty(entity.getCustomerName())){
+		if(isWaybillNull && isCustomerNull){
 			return list;
 		}
-		
 		
 		//起始列
 		int index=0;

@@ -152,9 +152,11 @@ public class ReceiveBillImportListener implements MessageListener {
 			
 			// saveAll 保存临时表数据到正式表
 			saveAll(map);
-			xlsxReader.close();
 		} catch (Exception ex) {
 			logger.error("readExcel 异常 {}", ex);
+		}
+		finally{
+			book.close();
 		}
 		
 		

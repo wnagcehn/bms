@@ -64,6 +64,9 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 			return dispatchList;
 		}*/
 		
+		boolean isWaybillNull = false;
+		boolean isCustomerNull = false;
+		
 		BillFeesReceiveDispatchTempEntity dispatchEntity = new BillFeesReceiveDispatchTempEntity();
 		//仓储费
 		BillFeesReceiveStorageTempEntity storageEntity = new BillFeesReceiveStorageTempEntity();
@@ -75,6 +78,11 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "商家名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "仓库":
 					if(StringUtils.isNotBlank(dc.getColName())){
 						dispatchEntity.setWarehouseName(dc.getColValue());
@@ -106,6 +114,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 						dispatchEntity.setWaybillNo(dc.getColValue());
 						storageEntity.setWaybillNo(dc.getColValue());
 					}else{
+						isWaybillNull = true;
 						errorMessage+="运单号不能为空;";
 					}	
 					break;
@@ -168,6 +177,10 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 				
 			}
+		}
+		
+		if(isWaybillNull && isCustomerNull){
+			return list;
 		}
 		
 		for(DataColumn dc : dr.getColumns()){

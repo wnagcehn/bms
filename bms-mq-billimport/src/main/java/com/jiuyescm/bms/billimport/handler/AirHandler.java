@@ -40,11 +40,8 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		String errorMessage = "";
 		List<BillFeesReceiveAirTempEntity> listEntity = new ArrayList<BillFeesReceiveAirTempEntity>();
 		
-		/*DataColumn weight=dr.getColumn("计费重量");
-		DataColumn orderNo=dr.getColumn("运单号");
-		if(weight!=null && orderNo!=null &&StringUtils.isBlank(weight.getColValue()+orderNo.getColValue())){
-			return listEntity;
-		}*/
+		boolean isWeightNull = false;
+		boolean isOrderNoNull = false;
 		
 		BillFeesReceiveAirTempEntity entity = new BillFeesReceiveAirTempEntity();
 		entity.setRowExcelNo(dr.getRowNo());
@@ -89,6 +86,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setTotalWeight(new BigDecimal(dc.getColValue()));
 					} else {
+						isWeightNull = true;
 						errorMessage += "计费重量不能为空;";
 					}
 					break;
@@ -96,6 +94,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWaybillNo(dc.getColValue());
 					} else {
+						isOrderNoNull = true;
 						errorMessage += "运单号不能为空;";
 					}
 					break;
@@ -107,6 +106,10 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 				errorMessage += "列名(" + dc.getColName() + ")值("
 						+ dc.getColValue() + ")" + "转换失败;";
 			}
+		}
+		
+		if(isWeightNull && isOrderNoNull){
+			return list;
 		}
 
 		entity.setBillNo(billNo);

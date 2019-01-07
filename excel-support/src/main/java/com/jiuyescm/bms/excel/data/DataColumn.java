@@ -4,7 +4,7 @@ public class DataColumn {
 	
 	private int colNo; 			//单元格索引值
 	private String colName;		//单元格列值
-	private String fieldName;	//单元格列名称
+	private String titleName;	//单元格列名称
 	private String colValue;	//单元格值
 	
 	public DataColumn(){
@@ -17,9 +17,9 @@ public class DataColumn {
 	 * @param fieldName 列名  姓名 年龄 ...
 	 * @param colValue 单元格内容  张三 29..
 	 */
-	public DataColumn(String colName,String fieldName,String colValue){
+	public DataColumn(String colName,String titleName,String colValue){
 		this.colName = colName;
-		this.fieldName = fieldName;
+		this.titleName = titleName;
 		this.colValue = colValue;
 		this.colNo = titleToNumber(colName);
 	}
@@ -69,12 +69,12 @@ public class DataColumn {
 		this.colName = colName;
 	}
 
-	public String getFieldName() {
-		return fieldName;
+	public String getTitleName() {
+		return titleName;
 	}
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public void setTitleName(String titleName) {
+		this.titleName = titleName;
 	}
 	
 	

@@ -43,14 +43,23 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			return list;
 		}*/
 		
+		boolean isAddCoNull = false;
+		boolean isCustomerNull = false;
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
+				case "客户名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "增值编号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setOrderNo(dc.getColValue());
 					}else {
+						isAddCoNull = true;
 						errorMessage+="增值编号必填";
 					}
 					break;
@@ -110,6 +119,10 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
+		}
+		
+		if(isAddCoNull && isCustomerNull){
+			return list;
 		}
 		
 		//增值费

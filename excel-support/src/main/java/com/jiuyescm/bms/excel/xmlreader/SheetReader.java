@@ -62,7 +62,7 @@ public class SheetReader extends DefaultHandler {
 		
 		while (columnIterator.hasNext()) {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
-			columns.add(entry.getValue().getFieldName());
+			columns.add(entry.getValue().getTitleName());
 		}
 		callback.readTitle(columns);
 	}
@@ -114,7 +114,7 @@ public class SheetReader extends DefaultHandler {
 			else{
 				if(titleMap.containsKey(curColNo)){
 					//读取行内容
-					DataColumn cell = new DataColumn(curColNo, titleMap.get(curColNo).getFieldName(), value);
+					DataColumn cell = new DataColumn(curColNo, titleMap.get(curColNo).getTitleName(), value);
 					cellMap.put(curColNo, cell);
 				}
 			}

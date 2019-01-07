@@ -40,10 +40,18 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 			return list;
 		}*/
 		
+		boolean isWarehouseNull = false;
+		boolean isCustomerNull = false;
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "客户名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "仓库名称":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
@@ -55,6 +63,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 							errorMessage+="仓库不存在;";
 						}
 					}else {
+						isWarehouseNull = true;
 						errorMessage+="仓库必填;";
 					}
 					break;
@@ -77,6 +86,10 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
+		}
+		
+		if(isWarehouseNull && isCustomerNull){
+			return list;
 		}
 		
 		if(StringUtils.isNotBlank(errorMessage)){

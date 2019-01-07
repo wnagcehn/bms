@@ -45,12 +45,20 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 			return list;
 		}*/
 		
+		boolean isStockNull = false;
+		boolean isCustomerNull = false;
+		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity2 = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "商家名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "仓库名称":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
@@ -80,6 +88,7 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setOrderNo(dc.getColValue());
 					}else {
+						isStockNull = true;
 						errorMessage+="出库单号必填;";
 					}
 					break;
@@ -148,6 +157,10 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}	
+		}
+		
+		if(isStockNull && isCustomerNull){
+			return list;
 		}
 		
 		//重复性校验

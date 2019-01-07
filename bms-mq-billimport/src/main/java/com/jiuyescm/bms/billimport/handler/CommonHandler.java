@@ -236,7 +236,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		//遍历表头
 		for(int i=0;errMap.get(0).getColumns().size()>i;i++){
 	        Map<String, Object> itemMap = new HashMap<String, Object>();
-	        itemMap.put("title", errMap.get(0).getColumns().get(i).getColName());
+	        itemMap.put("title", errMap.get(0).getColumns().get(i).getTitleName());
 	        if(errMap.get(0).getColumns().size()==i+1){
 		        itemMap.put("columnWidth", 100);
 	        }else{
