@@ -121,6 +121,8 @@ public class BillReceiveMasterVo implements IEntity {
 		private String differentRemark;
 		// 是否已计算费用 0-未结算 1-已结算
 		private String isCalculated;
+		private Boolean isCreateCheckInfo;
+		
 		public String getRemark() {
 			return remark;
 		}
@@ -539,6 +541,14 @@ public class BillReceiveMasterVo implements IEntity {
 
 		public void setAdjustReason(String adjustReason) {
 			this.adjustReason = adjustReason;
+		}
+
+		public Boolean getIsCreateCheckInfo() {
+			return isCreateCheckInfo;
+		}
+
+		public void setIsCreateCheckInfo(Boolean isCreateCheckInfo) {
+			this.isCreateCheckInfo = isCreateCheckInfo;
 		}
 
 
