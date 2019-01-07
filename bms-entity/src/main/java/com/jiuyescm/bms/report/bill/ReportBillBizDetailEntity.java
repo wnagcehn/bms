@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.report.bill;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import com.jiuyescm.cfm.domain.IEntity;
 
@@ -21,7 +21,7 @@ public class ReportBillBizDetailEntity implements IEntity{
 	//账单
 	private String bill;
 	//开票日期
-	private Timestamp invoiceDate;
+	private Date invoiceDate;
 	//结算员
 	private String balanceName;
 	//仓库名称
@@ -135,10 +135,11 @@ public class ReportBillBizDetailEntity implements IEntity{
 	public void setBill(String bill) {
 		this.bill = bill;
 	}
-	public Timestamp getInvoiceDate() {
+	
+	public Date getInvoiceDate() {
 		return invoiceDate;
 	}
-	public void setInvoiceDate(Timestamp invoiceDate) {
+	public void setInvoiceDate(Date invoiceDate) {
 		this.invoiceDate = invoiceDate;
 	}
 	public String getBalanceName() {

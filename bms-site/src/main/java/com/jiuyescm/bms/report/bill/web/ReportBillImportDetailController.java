@@ -3,6 +3,7 @@ package com.jiuyescm.bms.report.bill.web;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -115,7 +116,11 @@ public class ReportBillImportDetailController {
 		    	XSSFRow newrow =sheet1.createRow(i+2);
 		    	for(Cell cell:myList1){
 		    		if(map.containsKey(cell.getStringCellValue())){
-		    			newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+		    			if (null != map.get(cell.getStringCellValue()) && map.get(cell.getStringCellValue()) instanceof BigDecimal) {
+		    				newrow.createCell(cell.getColumnIndex()).setCellValue(new BigDecimal(map.get(cell.getStringCellValue()).toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+						}else {
+							newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+						}	
 		    		}
 		    	}
 		    }		    
@@ -132,10 +137,15 @@ public class ReportBillImportDetailController {
 		    List<Cell> myList2=IteratorUtils.toList(cellList2);		    		    
 		    for(int i=0;i<list2.size();i++){
 		    	Map<String,Object> map=list2.get(i);
+		    	
 		    	XSSFRow newrow =sheet2.createRow(i+3);
 		    	for(Cell cell:myList2){
 		    		if(map.containsKey(cell.getStringCellValue())){
-		    			newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+		    			if (null != map.get(cell.getStringCellValue()) && map.get(cell.getStringCellValue()) instanceof BigDecimal) {
+		    				newrow.createCell(cell.getColumnIndex()).setCellValue(new BigDecimal(map.get(cell.getStringCellValue()).toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+						}else {
+							newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+						}	
 		    		}
 		    	}
 		    }		    
@@ -154,7 +164,11 @@ public class ReportBillImportDetailController {
 		    	XSSFRow newrow =sheet3.createRow(i+4);
 		    	for(Cell cell:myList3){
 		    		if(map.containsKey(cell.getStringCellValue())){
-		    			newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+		    			if (null != map.get(cell.getStringCellValue()) && map.get(cell.getStringCellValue()) instanceof BigDecimal) {
+		    				newrow.createCell(cell.getColumnIndex()).setCellValue(new BigDecimal(map.get(cell.getStringCellValue()).toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+						}else {
+							newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
+						}	
 		    		}
 		    	}
 		    }		    

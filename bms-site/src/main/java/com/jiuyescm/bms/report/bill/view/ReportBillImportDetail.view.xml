@@ -144,6 +144,9 @@
       <PropertyDef name="billStatus">
         <Property></Property>
         <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="billConfirmDate">
         <Property></Property>
@@ -156,6 +159,9 @@
       <PropertyDef name="invoiceStatus">
         <Property></Property>
         <Property name="label">开票状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="unInvoiceAmount">
         <Property name="dataType">BigDecimal</Property>
@@ -174,7 +180,7 @@
         <Property name="label">发票号</Property>
       </PropertyDef>
       <PropertyDef name="invoiceDate">
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
         <Property name="label">开票日期</Property>
       </PropertyDef>
       <PropertyDef name="receiptAmount">
@@ -183,7 +189,7 @@
       </PropertyDef>
       <PropertyDef name="receiptDate">
         <Property name="label">收款日期</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="otherAmount">
         <Property name="dataType">BigDecimal</Property>
@@ -243,6 +249,9 @@
       <PropertyDef name="billStatus">
         <Property></Property>
         <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="billConfirmDate">
         <Property></Property>
@@ -251,6 +260,9 @@
       <PropertyDef name="invoiceStatus">
         <Property></Property>
         <Property name="label">开票状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="remark">
         <Property></Property>
@@ -527,6 +539,7 @@
 </ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="action">downloadAction</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -180px -120px</Property>
       </ToolBarButton>
     </ToolBar>
     <Container>
@@ -1175,6 +1188,7 @@
                   <DataColumn name="shentongAmount">
                     <Property name="property">shentongAmount</Property>
                     <Property name="caption">金额</Property>
+                    <Property name="width">120</Property>
                   </DataColumn>
                   <DataColumn name="shentongCount">
                     <Property name="property">shentongCount</Property>
