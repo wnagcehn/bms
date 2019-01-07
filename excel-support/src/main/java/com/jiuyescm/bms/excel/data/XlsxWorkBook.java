@@ -67,6 +67,15 @@ public class XlsxWorkBook {
 		new SheetReader().readSheet(sheetFileName, callback, sst, 1, 2);
 	}
 	
+	public void readSheet(Integer sheetId,SheetReadCallBack callback,int titleRowNo,int contentRowNo ) throws Exception{
+		if(status == 0){
+			throw new Exception("workbook is closed");
+		}
+		String sheetFileName = tempPath+sheetPath+"Sheet"+sheetId+".xml";
+		System.out.println(sheetFileName);
+		new SheetReader().readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);
+	}
+	
 	public void close(){
 		sst.clear();
 		deleteDir(new File(tempPath));
