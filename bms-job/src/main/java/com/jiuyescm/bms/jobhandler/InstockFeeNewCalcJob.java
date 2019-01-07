@@ -109,6 +109,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 	
 	@Override
 	protected List<BmsBizInstockInfoEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("instockFeeNewCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BmsBizInstockInfoEntity> bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
 		if (bizList!=null && bizList.size()>0) {

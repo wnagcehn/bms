@@ -117,6 +117,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	protected List<BizOutstockPackmaterialEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("materialUseNewCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
 		if(bizList!=null && bizList.size() > 0){
