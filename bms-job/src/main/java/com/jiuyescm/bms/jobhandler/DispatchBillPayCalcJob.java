@@ -66,6 +66,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 	@Override
 	protected List<BizDispatchBillPayEntity> queryBillList(
 			Map<String, Object> map) {
+		XxlJobLogger.log("dispatchBillPayCalcJob查询条件map:【{0}】  ",map);
 		return bizDispatchBillPayService.query(map);
 	}
 
