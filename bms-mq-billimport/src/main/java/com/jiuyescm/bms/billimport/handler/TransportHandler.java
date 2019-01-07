@@ -64,6 +64,7 @@ public class TransportHandler extends
 		BillFeesReceiveTransportTempEntity entity18 = new BillFeesReceiveTransportTempEntity();
 		BillFeesReceiveTransportTempEntity entity19 = new BillFeesReceiveTransportTempEntity();
 		BillFeesReceiveTransportTempEntity entity20 = new BillFeesReceiveTransportTempEntity();
+		BillFeesReceiveTransportTempEntity entity21 = new BillFeesReceiveTransportTempEntity();
 
 		for (DataColumn dc : dr.getColumns()) {
 			try {
@@ -355,13 +356,22 @@ public class TransportHandler extends
 						listEntity.add(entity19);
 					}
 					break;
-				case "其他":
+				case "垫付费":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						PropertyUtils.copyProperties(entity20, entity);
 						entity20.setAmount(new BigDecimal(dc.getColValue()));
-						entity20.setSubjectCode("YS_QT");
-						entity20.setSubjectName("其他");
+						entity20.setSubjectCode("YS_DF");
+						entity20.setSubjectName("垫付费");
 						listEntity.add(entity20);
+					}
+					break;
+				case "其他费用":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						PropertyUtils.copyProperties(entity21, entity);
+						entity21.setAmount(new BigDecimal(dc.getColValue()));
+						entity21.setSubjectCode("YS_QT");
+						entity21.setSubjectName("其他费用");
+						listEntity.add(entity21);
 					}
 					break;
 				default:
