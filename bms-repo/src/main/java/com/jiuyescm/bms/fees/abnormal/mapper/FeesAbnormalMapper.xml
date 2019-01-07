@@ -912,7 +912,7 @@
 		select warehouse_name,create_time,expressnum,customer_name,reason,
 		reason_detail,product_amount_j2c,returned_amount_c2j,is_delivery_free_j2c,create_person_name,remark,delivery_cost from fees_abnormal
 		where 1=1
-		and customer_id = #{customerId}
+		and customer_id = #{customerId} and product_amount_j2c>0
 		<if test="startTime!=null">
 			AND kesu_confirm_time <![CDATA[>=]]> #{startTime}
 		</if>
@@ -945,7 +945,7 @@
 	<select id="queryPreBillAbnormalChange" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
 		SELECT warehouse_name,create_time,expressnum,customer_name,reason,reason_detail,returned_amount_c2j,create_person_name,remark,return_orderno
 		FROM fees_abnormal
-		where customer_id = #{customerId}
+		where customer_id = #{customerId} AND returned_amount_c2j>0
 		<if test="startTime!=null">
 			AND kesu_confirm_time <![CDATA[>=]]> #{startTime}
 		</if>
