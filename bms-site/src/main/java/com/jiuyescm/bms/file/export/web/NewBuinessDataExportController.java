@@ -75,6 +75,7 @@ import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
+import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
@@ -191,14 +192,27 @@ public class NewBuinessDataExportController extends BaseController {
 			param.put("endDate", endDate);
 		}
 		String customerId = param.get("customerId").toString();
+		
+		List<Map<String,String>> cuList=new ArrayList<Map<String,String>>();
+		Map<String,String> cuMap=new HashMap<>();
 		//区分是否按照子商家生成
 		if ((Boolean)param.get("isChildCusomer") == true) {
 			//需要按子商家
 			//通过主商家id查询子商家id
-		}else {			
-
+			Map<String,Object> map=new HashMap<>();
+			List<CustomerVo> list=customerService.queryCustomer(map);
+			for(CustomerVo vo:list){
+				cuMap.put(vo.getCustomerid(), vo.getCustomername());
+				cuList.add(cuMap);
+			}
+		}else {		
+			cuMap.put(param.get("customerId").toString(), param.get("customerName").toString());
+			cuList.add(cuMap);
 		}
 		
+		for(Map<String, String> cu:cuList){
+			
+		}
 		
 		
 		
