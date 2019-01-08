@@ -38,11 +38,14 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
 		//判断空白行
-		DataColumn orderNo=dr.getColumn("入库单号");
+		/*DataColumn orderNo=dr.getColumn("入库单号");
 		DataColumn customerCo=dr.getColumn("商家名称");
 		if(orderNo!=null && customerCo!=null &&StringUtils.isBlank(orderNo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
+		
+		boolean isOrderNoNull = false;
+		boolean isCustomerNull = false;
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		BillFeesReceiveStorageTempEntity entity1 = new BillFeesReceiveStorageTempEntity();
@@ -50,6 +53,11 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "商家名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "仓库名称":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
@@ -79,6 +87,7 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setOrderNo(dc.getColValue());
 					}else {
+						isOrderNoNull = true;
 						errorMessage+="入库单号必填;";
 					}
 					break;
@@ -141,6 +150,10 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}	
+		}
+		
+		if(isOrderNoNull && isCustomerNull){
+			return list;
 		}
 		
 		//重复性校验

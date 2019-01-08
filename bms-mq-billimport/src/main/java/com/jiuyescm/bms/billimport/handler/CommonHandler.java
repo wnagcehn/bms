@@ -32,6 +32,8 @@ import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.bms.excel.data.Sheet;
+import com.jiuyescm.bms.excel.data.XlsxWorkBook;
 import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.constants.BmsEnums;
@@ -73,7 +75,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 
 	
 	@Override
-	public void process(ExcelXlsxReader xlsxReader, OpcSheet sheet, Map<String, Object> param) throws Exception{
+	public void process(XlsxWorkBook xlsxReader, Sheet sheet, Map<String, Object> param) throws Exception{
 		//this.billEntity = null;//根据param中的bill_no查询 ???
 		try {
 			billNo=param.get("billNo").toString();
@@ -132,9 +134,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		}	
 	}
 	
-	private void readExcel(ExcelXlsxReader xlsxReader, OpcSheet sheet,int titleRowNo,int contentRowNo) throws Exception{
+	private void readExcel(XlsxWorkBook xlsxReader, Sheet sheet,int titleRowNo,int contentRowNo) throws Exception{
 		_start = System.currentTimeMillis();
-		xlsxReader.readRow(sheet.getSheetId(), new SheetReadCallBack() {
+		xlsxReader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
 			@Override
 			public void read(DataRow dr) {
 				try {
@@ -234,7 +236,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		//遍历表头
 		for(int i=0;errMap.get(0).getColumns().size()>i;i++){
 	        Map<String, Object> itemMap = new HashMap<String, Object>();
-	        itemMap.put("title", errMap.get(0).getColumns().get(i).getColName());
+	        itemMap.put("title", errMap.get(0).getColumns().get(i).getTitleName());
 	        if(errMap.get(0).getColumns().size()==i+1){
 		        itemMap.put("columnWidth", 100);
 	        }else{

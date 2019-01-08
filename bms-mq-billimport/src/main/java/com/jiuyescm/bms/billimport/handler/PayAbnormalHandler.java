@@ -34,17 +34,25 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn warehouseCo=dr.getColumn("仓库");
+		/*DataColumn warehouseCo=dr.getColumn("仓库");
 		DataColumn customerCo=dr.getColumn("客户名称");
 		if(warehouseCo!=null && customerCo!=null &&StringUtils.isBlank(warehouseCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
+		
+		boolean isWarehouseNull = false;
+		boolean isCustomerNull = false;
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "客户名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "仓库":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
@@ -56,6 +64,7 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 							errorMessage+="仓库不存在;";
 						}
 					}else {
+						isWarehouseNull = true;
 						errorMessage+="仓库必填;";
 					}
 					break;
@@ -79,6 +88,11 @@ public class PayAbnormalHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
 		}
+		
+		if(isWarehouseNull && isCustomerNull){
+			return list;
+		}
+		
 		//仓库理赔费
 		if (null != entity) {
 			entity.setBillNo(billNo);

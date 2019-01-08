@@ -23,23 +23,24 @@ import com.jiuyescm.common.utils.DateUtil;
  * 
  */
 @Component("干线")
-public class TransportHandler extends
-		CommonHandler<BillFeesReceiveTransportTempEntity> {
+public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTempEntity> {
 
 	@Autowired
 	private IBillFeesReceiveTransportTempService billFeesReceiveTransportTempService;
 
 	@Override
-	public List<BillFeesReceiveTransportTempEntity> transRowToObj(DataRow dr)
-			throws Exception {
+	public List<BillFeesReceiveTransportTempEntity> transRowToObj(DataRow dr) throws Exception {
 		String errorMessage = "";
 		List<BillFeesReceiveTransportTempEntity> listEntity = new ArrayList<BillFeesReceiveTransportTempEntity>();
 		
-		DataColumn cre=dr.getColumn("订单创建日期");
+		/*DataColumn cre=dr.getColumn("订单创建日期");
 		DataColumn orderNo=dr.getColumn("订单号");
 		if(cre!=null && orderNo!=null &&StringUtils.isBlank(cre.getColValue()+orderNo.getColValue())){
 			return listEntity;
-		}
+		}*/
+		
+		boolean isDateNull = false;
+		boolean isOrderNull = false;
 		
 		
 		BillFeesReceiveTransportTempEntity entity = new BillFeesReceiveTransportTempEntity();
@@ -76,6 +77,7 @@ public class TransportHandler extends
 						entity.setCreateMonth(DateUtil
 								.timeStamp2YYMM(createTime));
 					} else {
+						isDateNull = true;
 						errorMessage += "订单创建日期不能为空;";
 					}
 					break;
@@ -83,6 +85,7 @@ public class TransportHandler extends
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setOrderNo(dc.getColValue());
 					} else {
+						isOrderNull = true;
 						errorMessage += "订单号不能为空;";
 					}
 					break;
@@ -178,6 +181,11 @@ public class TransportHandler extends
 						+ dc.getColValue() + ")" + "转换失败;";
 			}
 		}
+		
+		if(isDateNull && isOrderNull){
+			return listEntity;
+		}
+		
 		entity.setBillNo(billNo);
 		entity.setCustomerName(customerName);
 		entity.setCustomerId(customerId);

@@ -37,20 +37,29 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		String errorMessage="";
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		DataColumn addCo=dr.getColumn("增值编号");
+		/*DataColumn addCo=dr.getColumn("增值编号");
 		DataColumn customerCo=dr.getColumn("客户名称");
 		if(addCo!=null && customerCo!=null &&StringUtils.isBlank(addCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
+		
+		boolean isAddCoNull = false;
+		boolean isCustomerNull = false;
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
+				case "客户名称":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "增值编号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setOrderNo(dc.getColValue());
 					}else {
+						isAddCoNull = true;
 						errorMessage+="增值编号必填";
 					}
 					break;
@@ -112,6 +121,10 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			}
 		}
 		
+		if(isAddCoNull && isCustomerNull){
+			return list;
+		}
+		
 		//增值费
 		if (StringUtils.isNotBlank(entity.getOrderNo())) {
 			entity.setBillNo(billNo);
@@ -124,8 +137,7 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getOrderNo())){
 			if(repeatMap.containsKey(entity.getOrderNo())){
-				errorMessage += "与第"
-						+ repeatMap.get(entity.getOrderNo()) + "行单据编号重复;";
+				errorMessage += "与第"+ repeatMap.get(entity.getOrderNo()) + "行单据编号重复;";
 			}else{
 				repeatMap.put(entity.getOrderNo(), dr.getRowNo());
 			}

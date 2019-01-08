@@ -38,10 +38,12 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		//异常信息 
 		String errorMessage="";
 		
-		DataColumn createTime=dr.getColumn("日期");
+		/*DataColumn createTime=dr.getColumn("日期");
 		if(createTime!=null &&StringUtils.isBlank(createTime.getColValue())){
 			return lists;
-		}
+		}*/
+		
+		boolean isDateNull = false;
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		//商品按托存储--LD
@@ -75,7 +77,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 						entity.setCreateMonth(DateUtil.transStringToInteger(dc.getColValue()));
-					}		
+					}	
+					else{
+						isDateNull = true;
+					}
 					break;
 				case "冷冻":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -362,6 +367,10 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
+		}
+		
+		if(isDateNull){
+			return lists;
 		}
 		
 		//商品按托+耗材按托+商品按件+入库+出库

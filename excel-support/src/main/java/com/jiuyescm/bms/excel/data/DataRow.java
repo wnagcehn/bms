@@ -6,31 +6,28 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class DataRow {
 	
-	public DataRow(int rowNo){
-		this.rowNo = rowNo;
+	private int rowNo; //行号
+	private List<DataColumn> columns = new ArrayList<>(); //行包含的列
+
+	public DataRow(){
+		
 	}
-	
-	/**
-	 * 行索引
-	 */
-	private int rowNo;
-	
-	/**
-	 * 行包含的列
-	 */
-	private List<DataColumn> columns = new ArrayList<>();
-	
-	private Map<Integer, DataColumn> colsMap = new LinkedHashMap<>();
-	
-	private Map<String, Integer> colNameMap = new HashMap<>();
+	public DataRow(int curRow){
+		
+	}
 
 	/**
 	 * 行索引
 	 */
 	public int getRowNo() {
 		return rowNo;
+	}
+	
+	public void setRowNo(int rowNo){
+		this.rowNo = rowNo;
 	}
 
 	/**
@@ -40,38 +37,8 @@ public class DataRow {
 		return columns;
 	}
 	
-	public DataColumn getColumn(String colName){
-		Integer index = colNameMap.get(colName);
-		return colsMap.get(index);
-	}
-	
-	public DataColumn getColumn(Integer index){
-		return colsMap.get(index);
-	}
-	
-	public void addColumn(Integer index,DataColumn dc){
-		this.columns.add(dc);
-		this.colsMap.put(index, dc);
-		this.colNameMap.put(dc.getColName(), index);
-	}
-	
 	public void addColumn(DataColumn dc){
-		int site = colsMap.size()+1;
-		this.columns.add(dc);
-		this.colsMap.put(site, dc);
+		columns.add(dc);
 	}
 	
-	/*public <T> T transToObj(Class<T> clazz) throws Exception{
-		T obj;
-		try{
-			obj = clazz.newInstance();
-			for (DataColumn dc : this.getColumns()) {
-				Utils.copyProperty(obj, dc.getFieldName(), dc.getColValue());
-			}
-		}
-		catch (Exception ex) {
-            throw ex;
-        }
-		return obj;
-	}*/
 }

@@ -34,17 +34,26 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 		//异常信息
 		String errorMessage="";
 		List<BillFeesReceiveDispatchTempEntity> list = new ArrayList<BillFeesReceiveDispatchTempEntity>();
-		DataColumn waybillCo=dr.getColumn("运单号");
+		
+		/*DataColumn waybillCo=dr.getColumn("运单号");
 		DataColumn customerCo=dr.getColumn("客户");
 		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
 			return list;
-		}
+		}*/
+		
+		boolean isWaybillNull = false;
+		boolean isCustomerNull = false;
 		
 		BillFeesReceiveDispatchTempEntity entity = new BillFeesReceiveDispatchTempEntity();
 
 		for (DataColumn dc:dr.getColumns()) {
 			try {
 				switch (dc.getColName()) {
+				case "客户":
+					if (StringUtils.isBlank(dc.getColValue())) {
+						isCustomerNull = true;
+					}
+					break;
 				case "发货仓库":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());
@@ -71,6 +80,7 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWaybillNo(dc.getColValue());
 					}else{
+						isWaybillNull = true;
 						errorMessage+="运单号不能为空;";
 					}
 					break;
@@ -85,6 +95,10 @@ public class DispatchAbnormalHandler extends CommonHandler<BillFeesReceiveDispat
 			} catch (Exception e) {
 				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
 			}
+		}
+		
+		if(isWaybillNull && isCustomerNull){
+			return list;
 		}
 		
 		//重复性校验
