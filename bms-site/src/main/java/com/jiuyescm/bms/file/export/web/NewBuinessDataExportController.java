@@ -199,15 +199,14 @@ public class NewBuinessDataExportController extends BaseController {
 		if ((Boolean)param.get("isChildCusomer") == true) {
 			//需要按子商家
 			//通过主商家id查询子商家id
-			Map<String,Object> map=new HashMap<>();
-			List<CustomerVo> list=customerService.queryCustomer(map);
-			for(CustomerVo vo:list){
-				cuMap.put(vo.getCustomerid(), vo.getCustomername());
-				cuList.add(cuMap);
-			}
+			cuList=billPrepareExportTaskService.getChildCustomer(customerId);
 		}else {		
 			cuMap.put(param.get("customerId").toString(), param.get("customerName").toString());
 			cuList.add(cuMap);
+		}
+		
+		if(cuList.size()<=0){
+			return "未查询到需要导出的商家";
 		}
 		
 		for(Map<String, String> cu:cuList){

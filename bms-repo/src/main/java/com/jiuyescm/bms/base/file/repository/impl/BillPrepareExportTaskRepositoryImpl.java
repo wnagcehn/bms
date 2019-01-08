@@ -11,9 +11,11 @@ import com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity;
 import com.jiuyescm.bms.base.file.repository.IBillPrepareExportTaskRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
+@SuppressWarnings("rawtypes")
 @Repository("billPrepareExportTaskRepository")
-public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao<BillPrepareExportTaskEntity> implements IBillPrepareExportTaskRepository{
+public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao implements IBillPrepareExportTaskRepository{
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public PageInfo<BillPrepareExportTaskEntity> queryBillTask(
 			Map<String, Object> param, int pageNo, int pageSize) {
@@ -23,6 +25,7 @@ public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao<BillPrepareE
 	    return new PageInfo<BillPrepareExportTaskEntity>(list);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public BillPrepareExportTaskEntity save(BillPrepareExportTaskEntity entity)
 			throws Exception {
@@ -31,6 +34,7 @@ public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao<BillPrepareE
 	     return entity;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int update(BillPrepareExportTaskEntity entity) {
 		// TODO Auto-generated method stub
@@ -50,6 +54,14 @@ public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao<BillPrepareE
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, String>> getChildCustomer(String mkId) {
+		// TODO Auto-generated method stub
+		List<Map<String, String>> list=(List<Map<String, String>>)selectList("com.jiuyescm.bms.base.file.mapper.BillPrepareExportTaskMapper.getChildCustomer", mkId);
+		return list;
 	}
 
 }
