@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.base.file.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -17,4 +18,7 @@ public interface IBillPrepareExportTaskService {
 
     //更新进度
     int updateExportTask(String taskId, String taskState, double process);
+    
+    //通过主商家找到子商家
+    List<Map<String,String>> getChildCustomer(String mkId);
 }
