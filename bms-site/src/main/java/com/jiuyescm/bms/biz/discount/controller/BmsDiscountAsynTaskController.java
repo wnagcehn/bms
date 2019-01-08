@@ -150,6 +150,14 @@ public class BmsDiscountAsynTaskController {
 			logger.error("转换错误", e);
 		}
 		
+		if(StringUtils.isBlank(entity.getCreateMonth())){
+			if (month < 10) {
+				entity.setCreateMonth(entity.getYear() + "-0" + entity.getMonth().toString());
+			}else{
+				entity.setCreateMonth(entity.getYear() + "-"  + entity.getMonth().toString());
+			}			
+		}
+		
 		// 1.全填(一个费用科目)
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode()) && StringUtils.isNotEmpty(entity.getSubjectCode())) {
 			// 发送一条mq
@@ -257,6 +265,9 @@ public class BmsDiscountAsynTaskController {
 				//生成任务，写入任务表
 				saveToTask(entity, month, bdatList, cusList, taskId);
 			}
+			if (bdatList.size() > 0) {
+				sendMQ(result, bdatList);			
+			}
 		}		
 		// 4.发送所有
 		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
@@ -329,8 +340,8 @@ public class BmsDiscountAsynTaskController {
 			newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 			newEntity.setCreator(JAppContext.currentUserName());
 			newEntity.setCreateTime(JAppContext.currentTimestamp());
-			newEntity.setBizTypecode(entity.getBizTypecode());
-			newEntity.setCustomerId(entity.getCustomerId());
+			newEntity.setBizTypecode(bizEntity.getBizTypeCode());
+			newEntity.setCustomerId(bizEntity.getCustomerId());
 			newEntity.setSubjectCode(bizEntity.getSubjectId());
 			newEntity.setCustomerType("bms");
 			newList.add(newEntity);
