@@ -53,10 +53,10 @@
 		<if test="(isCalculated != null and isCalculated !='')" >
 			and is_calculated =concat(${isCalculated})
 		</if>
-				<if test="beginTime != null and beginTime !='')" >
+		<if test="(beginTime != null and beginTime !='')" >
 			 and  <![CDATA[create_time >= #{beginTime}]]>
 		</if>
-		<if test="endTime != null and endTime !=''))" >
+		<if test="(endTime != null and endTime !='')" >
 			 and  <![CDATA[create_time <= #{endTime}]]>
 		</if>
 		LIMIT #{num}
