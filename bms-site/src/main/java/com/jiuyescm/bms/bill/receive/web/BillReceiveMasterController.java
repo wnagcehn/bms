@@ -157,7 +157,7 @@ public class BillReceiveMasterController {
 						
 						BigDecimal cha=amount.subtract(abnormal);
 						if(cha.compareTo(BigDecimal.ZERO)!=0){
-							BigDecimal rate=(entity.getExpectMoney().subtract(amount.subtract(abnormal)).divide(amount.subtract(abnormal),2, RoundingMode.HALF_UP));
+							BigDecimal rate=(entity.getExpectMoney().subtract(amount.subtract(abnormal.abs())).divide(amount.subtract(abnormal.abs()),2, RoundingMode.HALF_UP));
 							//差异率
 							entity.setDifferentRate(rate);
 						}		

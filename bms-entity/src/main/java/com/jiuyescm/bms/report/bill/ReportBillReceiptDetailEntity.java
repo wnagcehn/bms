@@ -2,6 +2,7 @@ package com.jiuyescm.bms.report.bill;
 
 import java.math.BigDecimal;
 import java.security.Timestamp;
+import java.util.Date;
 
 import com.jiuyescm.cfm.domain.IEntity;
 
@@ -96,11 +97,11 @@ public class ReportBillReceiptDetailEntity implements IEntity{
 	//发票号
 	private String invoiceNo;
 	//开票日期
-	private Timestamp invoiceDate;
+	private Date invoiceDate;
 	//收款金额
 	private BigDecimal receiptAmount;
 	//收款日期
-	private Timestamp receiptDate;
+	private Date receiptDate;
 	//理赔及减免款、尾差
 	private BigDecimal otherAmount;
 	//开票未回款额
@@ -357,22 +358,24 @@ public class ReportBillReceiptDetailEntity implements IEntity{
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
-	public Timestamp getInvoiceDate() {
-		return invoiceDate;
-	}
-	public void setInvoiceDate(Timestamp invoiceDate) {
-		this.invoiceDate = invoiceDate;
-	}
+
 	public BigDecimal getReceiptAmount() {
 		return receiptAmount;
 	}
 	public void setReceiptAmount(BigDecimal receiptAmount) {
 		this.receiptAmount = receiptAmount;
 	}
-	public Timestamp getReceiptDate() {
+	
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+	public Date getReceiptDate() {
 		return receiptDate;
 	}
-	public void setReceiptDate(Timestamp receiptDate) {
+	public void setReceiptDate(Date receiptDate) {
 		this.receiptDate = receiptDate;
 	}
 	public BigDecimal getOtherAmount() {

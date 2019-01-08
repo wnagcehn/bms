@@ -23,7 +23,7 @@
 				b.different_remark as instruction,
 				c.count as dispatchCount,
 				ROUND(d.total_dispatch_money/c.count,2) as unitPrice,
-				Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2) as differentRate,
+				Round(((e.expect_money-(a.confirm_amount-ABS(d.total_abnormal_money)))/(a.confirm_amount-ABS(d.total_abnormal_money))),2) as differentRate,
 				IF(ABS(Round(((e.expect_money-(a.confirm_amount-d.total_abnormal_money))/(a.confirm_amount-d.total_abnormal_money)),2))>0.05,1,0) as correctRate,
 				a.confirm_amount-e.expect_money as different,
 				a.confirm_amount as confirmAmount,
