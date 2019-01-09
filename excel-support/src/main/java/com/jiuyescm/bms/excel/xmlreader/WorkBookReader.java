@@ -42,8 +42,10 @@ public class WorkBookReader {
 			for (Iterator i = sheetsRoot.elementIterator("sheet"); i.hasNext();) {
 				sheetElement = (Element) i.next();
 				String sheetName = sheetElement.attributeValue("name");
-				Integer sheetId = Integer.valueOf(sheetElement.attributeValue("sheetId"));
-				String sheetNo = "rId" + sheetId;
+			
+				String sheetNo =sheetElement.attributeValue("id");
+				Integer sheetId = Integer.valueOf(sheetNo.replace("rId", ""));
+				//String sheetNo = "rId" + sheetId;
 				Sheet sheet = new Sheet(sheetNo, sheetId, sheetName);
 				sheets.add(sheet);
 			}

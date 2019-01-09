@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.base.file.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -66,6 +67,12 @@ public class BillPrepareExportTaskServiceImpl implements IBillPrepareExportTaskS
 		entity.setTaskId(taskId);
 		entity.setProgress(process);
 		return billPrepareExportTaskRepository.update(entity);
+	}
+
+	@Override
+	public List<Map<String, String>> getChildCustomer(String mkId) {
+		// TODO Auto-generated method stub
+		return billPrepareExportTaskRepository.getChildCustomer(mkId);
 	}
 	
 

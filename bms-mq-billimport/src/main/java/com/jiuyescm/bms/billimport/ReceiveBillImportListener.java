@@ -1,6 +1,8 @@
 package com.jiuyescm.bms.billimport;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -107,7 +109,6 @@ public class ReceiveBillImportListener implements MessageListener {
 //		InputStream inputStream = new FileInputStream(file);
 		
 		String filePath = map.get("fullPath").toString();
-		
 		byte[] bytes = storageClient.downloadFile(filePath, new DownloadByteArray());
 		InputStream inputStream = new ByteArrayInputStream(bytes);
 

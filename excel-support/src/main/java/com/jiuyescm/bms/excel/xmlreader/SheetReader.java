@@ -33,7 +33,7 @@ public class SheetReader extends DefaultHandler {
 	private int titleRowNo = 1;			// 将第一行到titleRowNo行作为标题行
 	private int contentRowNo = 2;		// content开始的行号
 	
-	private Map<String,DataColumn> cellMap = Maps.newLinkedHashMap();
+	private Map<String,DataColumn> cellMap = Maps.newLinkedHashMap(); //(A,dc)
 	private Map<String,DataColumn> titleMap = Maps.newLinkedHashMap();
 	
 	public SheetReadCallBack callback;//回调接口
@@ -70,10 +70,22 @@ public class SheetReader extends DefaultHandler {
 	private void rowHander(){
 		DataRow row = new DataRow();
 		row.setRowNo(curRow);
-		Iterator<Map.Entry<String, DataColumn>> columnIterator = cellMap.entrySet().iterator();
+		/*Iterator<Map.Entry<String, DataColumn>> columnIterator = cellMap.entrySet().iterator();
 		while (columnIterator.hasNext()) {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
 			row.addColumn(entry.getValue());
+		}*/
+		
+		Iterator<Map.Entry<String, DataColumn>> columnIterator = titleMap.entrySet().iterator();
+		while (columnIterator.hasNext()) {
+			Map.Entry<String, DataColumn> entry = columnIterator.next();
+			if(cellMap.containsKey(entry.getKey())){
+				row.addColumn(cellMap.get(entry.getKey()));
+			}
+			else{
+				DataColumn cell = new DataColumn(entry.getKey(), entry.getValue().getTitleName(), null);
+				row.addColumn(cell);
+			}
 		}
 		callback.read(row);
 	}
