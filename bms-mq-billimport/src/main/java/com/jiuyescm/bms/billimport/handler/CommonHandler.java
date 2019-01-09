@@ -257,7 +257,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	        int a = i+1;
 	        itemMap.put("dataKey", "XH"+a);
 	        headDetailMapList.add(itemMap);
-		}	
+		}
+		System.out.println(headDetailMapList.toString());
 		//遍历内容
 		for(int i =0;errMap.size()>i;i++){
 	        Map<String, Object> dataItem = new HashMap<String, Object>();
@@ -267,7 +268,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			}
 	        dataDetailList.add(dataItem);
 		}
-		
+		System.out.println(dataDetailList.toString());
 		poiUtil.exportExcel2FilePath(poiUtil, workbook, sheetName,1, headDetailMapList, dataDetailList);
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
