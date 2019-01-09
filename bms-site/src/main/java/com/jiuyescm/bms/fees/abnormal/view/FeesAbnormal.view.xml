@@ -39,7 +39,7 @@
       </PropertyDef>
       <PropertyDef name="kesuStartTime">
         <Property name="dataType">DateTime</Property>
-        <Property name="label">客诉时间</Property>
+        <Property name="label">客诉确认时间</Property>
       </PropertyDef>
       <PropertyDef name="kesuEndTime">
         <Property name="dataType">DateTime</Property>
