@@ -44,11 +44,13 @@ public class ShareStringsReader extends DefaultHandler  {
 	}
 	
 	private String _shareString = null;
+	private String str = "";
 	
 	@Override
 	public void startElement(String uri, String localName, String name,Attributes attrs) throws SAXException {
 		if ("si".equals(name)) {
 			_shareString = null;
+			str = "";
 		}
 	}
 	
@@ -60,8 +62,13 @@ public class ShareStringsReader extends DefaultHandler  {
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
 		if ("t".equals(name)) {
-			shareStrings.add(_shareString);
+			str += _shareString;
 		}
+		if("si".equals(name)){
+			shareStrings.add(str);
+		}
+		
+		
 	}
 	
 }
