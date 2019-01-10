@@ -236,11 +236,19 @@
     <select id="queryPreBillWarehouse" parameterType="java.util.Map" resultType="java.lang.String">
 	    select warehouse_code 
 	    from fees_receive_storage
-	    WHERE del_flag = '0'
-		    and customer_id = #{customerId}
+	    WHERE del_flag = '0'	    
 			and create_time <![CDATA[>=]]> #{startTime}
 			and create_time <![CDATA[<]]> #{endTime}
 			and (warehouse_code is not null or warehouse_code != '')
+			<if test="(customerId != null and customerId !='')" >
+				and customer_id = #{customerId}
+			</if>
+		  	<if test="(customerIds != null and customerIds !='')" >
+		  		and customer_id in
+			 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+			 	</foreach>
+		  	</if>
 	    group by warehouse_code
     </select>
     
@@ -551,9 +559,18 @@
 			b.cost
 	    from biz_outstock_master a inner JOIN fees_receive_storage b on a.fees_no=b.fees_no
 	     where a.del_flag='0' and b.del_flag='0'
-	     and a.customerid=#{customerId} 
 	     and a.create_time>=#{startTime} and <![CDATA[a.create_time<#{endTime}]]>
-         and b.subject_code in ('wh_b2b_work','wh_b2b_handwork')
+         and b.subject_code in ('wh_b2b_work','wh_b2b_handwork')        
+          <if test="(customerId != null and customerId !='')" >
+			and a.customerid=#{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and a.customerid in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by a.customerid
+	  	</if>
 	</select>
 
     <select id="queryStoragePage" parameterType="Map" resultMap="baseResultMap">
@@ -660,14 +677,23 @@
 		left join fees_receive_storage a 
 			on b.fees_no = a.fees_no and a.del_flag = '0'
 		WHERE b.del_flag = '0' 
-		AND b.customerid = #{customerId}
 		<if test="startTime!=null">
 			AND b.create_time <![CDATA[>=]]> #{startTime}
 		</if>
 		<if test="endTime!=null">
 			AND b.create_time <![CDATA[<]]> #{endTime}
+		</if>	
+	    <if test="(customerId != null and customerId !='')" >
+			AND b.customerid = #{customerId}
 		</if>
-		order by b.fees_no desc
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and b.customerid in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by b.customerid desc
+	  	</if>
+		
 	</select>
    
     <select id="queryAllByBillSubject" parameterType="Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
@@ -819,22 +845,30 @@
     <select id="queryPreBillStorageByItems" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
         select bp.create_time as createTime, bp.customerid as customerId, bp.customer_name as customerName,
-		bp.warehouse_code as warehouseCode, bp.temperature as tempretureType,
+		bp.warehouse_code as warehouseCode, bp.temperature as tempretureType,bp.warehouse_name as warehouseName,
 		bp.aqty as quantity, frs.unit, frs.unit_price as unitPrice,
 		ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
 		ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount
 		from biz_product_storage bp
 		LEFT JOIN fees_receive_storage frs on bp.fees_no = frs.fees_no AND frs.del_flag = '0'
 		WHERE bp.del_flag = '0'
-		AND bp.customerid = #{customerId}
-		AND bp.create_time <![CDATA[>=]]> #{startTime}
+		AND bp.create_time <![CDATA[>=]]>date_add(#{startTime}, interval -1 day)
 		AND bp.create_time <![CDATA[<]]> #{endTime}
 		AND frs.unit='ITEMS'
 		AND frs.subject_code = 'wh_product_storage'
 		<if test="(warehouseCode != null and warehouseCode !='')" >
 			AND bp.warehouse_code = #{warehouseCode}
 		</if>
-		order by bp.fees_no
+		 <if test="(customerId != null and customerId !='')" >
+		 	AND bp.customerid = #{customerId}
+		 </if>
+		 <if test="(customerIds != null and customerIds !='')" >
+		  	AND bp.customerid in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by bp.customerid,bp.warehouse_code,bp.create_time
+		 </if>				
     </select>
     
     <!-- 预账单耗材存储费 -->
@@ -863,22 +897,30 @@
     <select id="queryPreBillPallet" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
         select pi.create_time as createTime, pi.biz_type as bizType, pi.customer_id as customerId, pi.customer_name as customerName, 
-		pi.warehouse_code as warehouseCode, pi.temperature_type_code as tempretureType,
+		pi.warehouse_code as warehouseCode, pi.temperature_type_code as tempretureType,pi.warehouse_name as warehouseName,
 		pi.pallet_num as quantity, pi.adjust_pallet_num as adjustNum, frs.unit, frs.unit_price as unitPrice,
 		ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
 		ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount
 		FROM biz_pallet_info pi
 		LEFT JOIN fees_receive_storage frs ON pi.fees_no = frs.fees_no AND frs.del_flag = '0'
 		WHERE pi.del_flag = '0'
-		AND pi.customer_id = #{customerId}
-		AND pi.create_time <![CDATA[>=]]> #{startTime}
+		AND pi.create_time <![CDATA[>=]]>date_add(#{startTime}, interval -1 day)
 		AND pi.create_time <![CDATA[<]]> #{endTime}
 		AND frs.unit = 'PALLETS'
 		AND frs.subject_code in ('wh_disposal','wh_product_storage','wh_material_storage','outstock_pallet_vm')
         <if test="(warehouseCode != null and warehouseCode !='')" >
 			AND pi.warehouse_code = #{warehouseCode}
 		</if>
-		order by pi.fees_no
+		<if test="(customerId != null and customerId !='')" >
+		 	AND pi.customer_id = #{customerId}
+		</if>
+		<if test="(customerIds != null and customerIds !='')" >
+		  	AND pi.customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by pi.customer_id,pi.warehouse_code,pi.create_time
+		 </if>				
     </select>
     
     <select id="queryBizFeesData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">

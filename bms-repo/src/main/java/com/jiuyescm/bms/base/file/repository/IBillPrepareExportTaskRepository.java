@@ -18,4 +18,7 @@ public interface IBillPrepareExportTaskRepository {
 	
     //通过主商家找到子商家
     List<Map<String,String>> getChildCustomer(String mkId);
+    
+    //通过主商家找到子商家id
+    List<String> getChildCustomerId(String mkId);
 }

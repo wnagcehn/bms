@@ -421,17 +421,23 @@
 			and cost_fees_no=#{costFeesNo}
 		</if>
     </update>
-    
+
     <select id="getMaterialCodeFromBizData" parameterType="Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	select consumer_material_code,consumer_material_name 
     	from biz_outstock_packmaterial where 1=1 and <![CDATA[create_time>=#{startTime}]]>
     	and <![CDATA[create_time<#{endTime}]]> and del_flag=0
-    	<if test="customerId !=null and customerId !='' ">
-    		and customer_id=#{customerId}
-    	</if>
     	<if test="warehouseCode!=null and warehouseCode!=''">
     		and warehouse_code=#{warehouseCode}
     	</if>
+    	<if test="customerId !=null and customerId !='' ">
+    		and customer_id=#{customerId}
+    	</if>
+    	<if test="(customerIds != null and customerIds !='')" >
+	  		and customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+	  	</if>
     	group by consumer_material_code,consumer_material_name
     </select>
     
@@ -499,17 +505,36 @@
         from  biz_dispatch_bill a 
   		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no
   		LEFT JOIN  fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no
-		where b.create_time>=#{startTime} and <![CDATA[b.create_time<#{endTime}]]> and b.customer_id=#{customerId} and b.del_flag=0
+		where b.create_time>=#{startTime} and <![CDATA[b.create_time<#{endTime}]]> and b.del_flag=0
     	<if test="warehouseCode!=null and warehouseCode!=''">
     		and b.warehouse_code=#{warehouseCode}
     	</if>
 		and a.del_flag=0
+		<if test="(customerId != null and customerId !='')" >
+			and b.customer_id=#{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and b.customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by b.customer_id
+	  	</if>
     </select>
     
     <select id="queryAllWarehouseFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	select warehouse_code,warehouse_name 
-    	from biz_outstock_packmaterial where customer_id=#{customerId} and <![CDATA[create_time>=#{startTime}]]>
-    	and <![CDATA[create_time<#{endTime}]]> and del_flag=0
+    	from biz_outstock_packmaterial where 1=1 and <![CDATA[create_time>=#{startTime}]]>
+    	and <![CDATA[create_time<#{endTime}]]> and del_flag=0   	
+    	<if test="(customerId != null and customerId !='')" >
+			and customer_id=#{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+	  	</if>
     	group by warehouse_code,warehouse_name
     </select>
     

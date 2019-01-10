@@ -13,6 +13,7 @@
 	   	<result column="task_state" property="taskState" jdbcType="VARCHAR" />
 	   	<result column="storage_split" property="storageSplit" jdbcType="TINYINT" />
 	   	<result column="material_split" property="materialSplit" jdbcType="TINYINT" />
+	   	<result column="isChildCustomer" property="isChildCustomer" jdbcType="VARCHAR" />
 	   	<result column="progress" property="progress" jdbcType="DECIMAL" />
 	   	<result column="file_path" property="filePath" jdbcType="VARCHAR" />
 	   	<result column="creator" property="creator" jdbcType="VARCHAR" />
@@ -23,11 +24,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
+        id,task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, isChildCustomer,progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
     </sql>
 	  
 	<sql id="BASE_COLUMNS_WITHOUT_ID">
-		task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
+		task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, isChildCustomer, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
     </sql>
 	  
     <select id="queryBillTask" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
@@ -47,8 +48,8 @@
        	<if test=" mkId != null and mkId !='' ">
 			and mk_id = #{mkId}
 		</if>
-       	<if test=" customerid != null and customerid !='' ">
-			and customerid = #{customerid}
+       	<if test=" customerId != null and customerId !='' ">
+			and mk_id = #{customerId}
 		</if>
        	<if test=" startTime != null and startTime !='' ">
 			and start_time = #{startTime}
@@ -64,6 +65,9 @@
 		</if>
        	<if test=" materialSplit != null and materialSplit !='' ">
 			and material_split = #{materialSplit}
+		</if>
+		<if test=" isChild != null and isChild !='' ">
+			and isChildCustomer = #{isChild}
 		</if>
        	<if test=" progress != null and progress !='' ">
 			and progress = #{progress}
@@ -83,7 +87,13 @@
        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
 			and last_modify_time = #{lastModifyTime}
 		</if>
-       	and del_flag ='0'
+		<if test="(startDate != null and startDate !='')" >
+			and start_time>=#{startDate}
+		</if>
+		<if test="(endDate != null and endDate !='')" >
+			and <![CDATA[end_time <=#{endDate}]]>
+		</if>
+       	and del_flag ='0'  order by create_time desc
     </select>
 
  	<insert id="save" parameterType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
@@ -101,6 +111,7 @@
 			#{taskState,jdbcType=VARCHAR}, 
 			#{storageSplit,jdbcType=TINYINT}, 
 			#{materialSplit,jdbcType=TINYINT}, 
+			#{isChildCustomer,jdbcType=VARCHAR}, 
 			#{progress,jdbcType=DECIMAL}, 
 			#{filePath,jdbcType=VARCHAR}, 
 			#{creator,jdbcType=VARCHAR}, 
@@ -177,5 +188,9 @@
     
     <select id="getChildCustomer" parameterType="String"  resultType="java.util.Map">
     	select customer_id as customerId,customer_name as customerName from pub_customer where mk_id=#{mkId}
+    </select>
+    
+    <select id="getChildCustomerId" parameterType="String" resultType="String">
+        select customer_id as customerId from pub_customer where mk_id=#{mkId}
     </select>
 </mapper>

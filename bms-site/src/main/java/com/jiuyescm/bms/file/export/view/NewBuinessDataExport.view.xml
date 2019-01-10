@@ -19,7 +19,7 @@
         <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property name="label">商家名称</Property>
+        <Property name="label">主商家名称</Property>
       </PropertyDef>
       <PropertyDef name="isOutstockData">
         <Property name="label">出库数据</Property>
@@ -46,7 +46,7 @@
         <Property name="label">耗材分仓显示</Property>
         <Property name="required">false</Property>
       </PropertyDef>
-      <PropertyDef name="isChildCusomer">
+      <PropertyDef name="isChildCustomer">
         <Property name="label">按子商家生成</Property>
         <Property name="dataType">boolean</Property>
         <Property name="defaultValue">false</Property>
@@ -169,12 +169,25 @@
       </PropertyDef>
       <PropertyDef name="storageSplit">
         <Property name="dataType">Long</Property>
+        <Property name="label">子商家</Property>
       </PropertyDef>
       <PropertyDef name="materialSplit">
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
         <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="isChildCustomer">
+        <Property/>
+        <Property name="label">子商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">是</Property>
+              <Property name="1">否</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskCondition">
@@ -185,9 +198,18 @@
       <PropertyDef name="taskType">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property name="label">主商家名称</Property>
+      </PropertyDef>
       <PropertyDef name="customerId">
         <Property></Property>
         <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="isChild">
+        <Property name="label">子商家</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;newBuinessDataExportController#getIsChildCustomer&quot;).getResult(&quot;&quot;)}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="creator">
         <Property></Property>
@@ -303,9 +325,9 @@ function isNullOrEmpty(e) {&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="property">customerId</Property>
-        <Property name="name">customerId</Property>
-        <Property name="trigger">triggerCus</Property>
+        <Property name="name">customerName</Property>
+        <Property name="property">customerName</Property>
+        <Property name="trigger">triggerInvoiceQuery</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -319,6 +341,11 @@ function isNullOrEmpty(e) {&#xD;
         <Property name="editable">true</Property>
         <Editor/>
       </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">isChild</Property>
+        <Property name="property">isChild</Property>
+        <Editor/>
+      </AutoFormElement>
     </AutoForm>
     <Container>
       <DataGrid id="fileExportTaskDetailGrid">
@@ -330,7 +357,6 @@ function isNullOrEmpty(e) {&#xD;
           <Property name="property">taskId</Property>
           <Property name="width">150</Property>
           <Property name="name">taskId</Property>
-          <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">taskName</Property>
@@ -351,6 +377,9 @@ function isNullOrEmpty(e) {&#xD;
           <Property name="property">endTime</Property>
           <Property name="name">endTime</Property>
           <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn name="isChildCustomer">
+          <Property name="property">isChildCustomer</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">filePath</Property>
@@ -401,7 +430,7 @@ view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
       <Property name="caption">生成预账单</Property>
       <Property name="width">400</Property>
-      <Property name="height">200</Property>
+      <Property name="height">300</Property>
       <Buttons>
         <Button>
           <ClientEvent name="onClick">var action=view.get(&quot;#fileExportAction&quot;);&#xD;
@@ -463,8 +492,8 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">isChildCusomer</Property>
-            <Property name="property">isChildCusomer</Property>
+            <Property name="name">isChildCustomer</Property>
+            <Property name="property">isChildCustomer</Property>
             <Property name="trigger">triggerCus</Property>
             <Property name="labelWidth">100</Property>
             <Editor/>
@@ -568,6 +597,33 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectInvoice">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerInvoiceQuery">
+      <ClientEvent name="onExecute">view.get(&quot;#panelInvoiceQuery&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelInvoiceQuery">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoiceQuery.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsFileExportTaskCondition&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        customerId: data.get(&quot;customNo&quot;),&#xD;
+		customerName:data.get(&quot;customName&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">合同商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">500</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectInvoiceQuery">
           <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
         </SubViewHolder>
       </Children>

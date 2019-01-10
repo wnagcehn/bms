@@ -912,13 +912,22 @@
 		select warehouse_name,create_time,expressnum,customer_name,reason,
 		reason_detail,product_amount_j2c,returned_amount_c2j,is_delivery_free_j2c,create_person_name,remark,delivery_cost from fees_abnormal
 		where 1=1
-		and customer_id = #{customerId}
 		<if test="startTime!=null">
 			AND kesu_confirm_time <![CDATA[>=]]> #{startTime}
 		</if>
 		<if test="endTime!=null">
 			AND kesu_confirm_time <![CDATA[<]]> #{endTime}
 		</if>
+		 <if test="(customerId != null and customerId !='')" >
+			AND customer_id = #{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by customer_id
+	  	</if>
 	</select>
 	
 	<select id="queryAbnormalChangeByBillNo" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
@@ -945,13 +954,24 @@
 	<select id="queryPreBillAbnormalChange" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity">
 		SELECT warehouse_name,create_time,expressnum,customer_name,reason,reason_detail,returned_amount_c2j,create_person_name,remark,return_orderno
 		FROM fees_abnormal
-		where customer_id = #{customerId}
+		where 1=1
 		<if test="startTime!=null">
 			AND kesu_confirm_time <![CDATA[>=]]> #{startTime}
 		</if>
 		<if test="endTime!=null">
 			AND kesu_confirm_time <![CDATA[<]]> #{endTime}
 		</if>
+		<if test="(customerId != null and customerId !='')" >
+			AND customer_id = #{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		AND customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by customer_id
+	  	</if>
+		
 	</select>
 	
 	<select id="sumSubjectMoney" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.receive.entity.BmsBillSubjectInfoEntity">

@@ -74,6 +74,12 @@ public class BillPrepareExportTaskServiceImpl implements IBillPrepareExportTaskS
 		// TODO Auto-generated method stub
 		return billPrepareExportTaskRepository.getChildCustomer(mkId);
 	}
+
+	@Override
+	public List<String> getChildCustomerId(String mkId) {
+		// TODO Auto-generated method stub
+		return billPrepareExportTaskRepository.getChildCustomerId(mkId);
+	}
 	
 
 }
