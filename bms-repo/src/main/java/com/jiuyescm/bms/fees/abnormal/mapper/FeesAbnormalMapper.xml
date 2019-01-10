@@ -912,7 +912,7 @@
 		select warehouse_name,create_time,expressnum,customer_name,reason,
 		reason_detail,product_amount_j2c,returned_amount_c2j,is_delivery_free_j2c,create_person_name,remark,delivery_cost from fees_abnormal
 		where 1=1
-		and customer_id = #{customerId} and product_amount_j2c>0
+		and customer_id = #{customerId} and (product_amount_j2c>0 or  is_delivery_free_j2c = 1)
 		<if test="startTime!=null">
 			AND kesu_confirm_time <![CDATA[>=]]> #{startTime}
 		</if>
