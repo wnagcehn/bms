@@ -62,18 +62,26 @@ public class XlsxWorkBook {
 		if(status == 0){
 			throw new Exception("workbook is closed");
 		}
-		String sheetFileName = tempPath+sheetPath+"Sheet"+sheetId+".xml";
-		System.out.println(sheetFileName);
-		new SheetReader().readSheet(sheetFileName, callback, sst, 1, 2);
+		read(sheetId,callback,1,2);
 	}
 	
 	public void readSheet(Integer sheetId,SheetReadCallBack callback,int titleRowNo,int contentRowNo ) throws Exception{
 		if(status == 0){
 			throw new Exception("workbook is closed");
 		}
+		read(sheetId,callback,titleRowNo,contentRowNo);
+	}
+	
+	private void read(Integer sheetId,SheetReadCallBack callback,int titleRowNo,int contentRowNo){
+		SheetReader sr = new SheetReader();
 		String sheetFileName = tempPath+sheetPath+"Sheet"+sheetId+".xml";
-		System.out.println(sheetFileName);
-		new SheetReader().readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);
+		sr.readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);
+		//为当前sheet设置总行数
+		for (Sheet sheet : sheets) {
+			if(sheet.getSheetId()==sheetId){
+				sheet.setRowCount(sr.getRowCount());
+			}
+		}
 	}
 	
 	public void close(){

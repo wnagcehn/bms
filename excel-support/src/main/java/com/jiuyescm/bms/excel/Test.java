@@ -73,7 +73,10 @@ public class Test {
     					
     				}
     			});
-    		}
+            
+            
+                System.out.println("总行数："+sheet.getRowCount());
+            }
     		book.close();
     		/*while(true){
     			Thread.sleep(1000);

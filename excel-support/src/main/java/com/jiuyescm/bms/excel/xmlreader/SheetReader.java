@@ -149,6 +149,10 @@ public class SheetReader extends DefaultHandler {
 		titleRef = titleRef.replaceAll("\\d+","");
 		return titleRef;
 	}
+
+	public int getRowCount() {
+		return curRow-titleRowNo;
+	}
 	
 	
 }
