@@ -72,6 +72,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	//protected Integer taskRate = 30;
 	
 	private long _start = System.currentTimeMillis();
+	//判断errMap是否包含错误信息
+	private boolean isErrorMap = false;
 
 	@Override
 	public void process(XlsxWorkBook xlsxReader, Sheet sheet, Map<String, Object> param) throws Exception{
@@ -84,6 +86,9 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			customerId=param.get("invoiceId").toString();
 			sheetName = sheet.getSheetName();
 			logger.info("任务ID：{}，正在处理sheet:{}", taskId,sheetName);
+			
+			//isErrorMap初始化
+			isErrorMap = false;
 			
 			// 仓储--上海01仓，北京01仓...............
 			WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
@@ -146,6 +151,11 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try {
 					//使用list接收，因为可能出现一行数据对应多个entity
 					List<T> entityList = transRowToObj(dr);
+					//将正确的行放入errMap
+					DataColumn dColumn = new DataColumn("异常描述","");
+					dColumn.setTitleName("错误描述");
+					dr.addColumn(dColumn);
+					errMap.add(dr);
 					//将行转换的实体转换到全局list中
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
@@ -163,11 +173,15 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 					dr.addColumn(dColumn);
 					//将此列错误的数据加入到errMap里
 					errMap.add(dr);
+					isErrorMap = true;
 				}
 			}
 
 			@Override
 			public void finish() {
+				if(!isErrorMap){
+					errMap.clear();
+				}
 				if(list.size()>0){
 					int result=saveTo();
 					if(result<=0){
