@@ -16,6 +16,8 @@ public class BillPrepareExportTaskEntity implements IEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = -1098534385096747928L;
+	// id
+	private Integer id;
 	// 任务id
 	private String taskId;
 	// 任务名称
@@ -36,6 +38,8 @@ public class BillPrepareExportTaskEntity implements IEntity {
 	private Long storageSplit;
 	// 耗材分仓标识 0-不分仓 1-分仓
 	private Long materialSplit;
+	// 是否是子商家
+	private String isChildCustomer;
 	// 进度
 	private Double progress;
 	// 文件路径
@@ -191,6 +195,22 @@ public class BillPrepareExportTaskEntity implements IEntity {
 
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getIsChildCustomer() {
+		return isChildCustomer;
+	}
+
+	public void setIsChildCustomer(String isChildCustomer) {
+		this.isChildCustomer = isChildCustomer;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
     
 }

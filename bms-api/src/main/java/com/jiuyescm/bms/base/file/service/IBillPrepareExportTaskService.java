@@ -19,6 +19,10 @@ public interface IBillPrepareExportTaskService {
     //更新进度
     int updateExportTask(String taskId, String taskState, double process);
     
-    //通过主商家找到子商家
+    //通过主商家找到子商家（包含id,name）
     List<Map<String,String>> getChildCustomer(String mkId);
+    
+    //通过主商家找到子商家id
+    List<String> getChildCustomerId(String mkId);
+    
 }

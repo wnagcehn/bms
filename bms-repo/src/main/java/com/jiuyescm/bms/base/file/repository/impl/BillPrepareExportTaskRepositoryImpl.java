@@ -64,4 +64,12 @@ public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao implements I
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getChildCustomerId(String mkId) {
+		// TODO Auto-generated method stub
+		List<String> list=(List<String>)selectList("com.jiuyescm.bms.base.file.mapper.BillPrepareExportTaskMapper.getChildCustomerId", mkId);
+		return list;
+	}
+
 }

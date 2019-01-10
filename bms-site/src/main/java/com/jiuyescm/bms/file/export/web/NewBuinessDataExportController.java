@@ -59,7 +59,6 @@ import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
-import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
@@ -75,7 +74,6 @@ import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
-import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
@@ -149,7 +147,6 @@ public class NewBuinessDataExportController extends BaseController {
 			year = param.get("year").toString();
 			month = param.get("month").toString();
 		}
-		param.put("taskType", "bill_re_down");
 		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
 			String startDateStr = year + "-" + month + "-01 00:00:00";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -158,6 +155,8 @@ public class NewBuinessDataExportController extends BaseController {
 			param.put("startDate", startDate);
 			param.put("endDate", endDate);
 		}
+		
+		
 		PageInfo<BillPrepareExportTaskEntity> pageInfo = billPrepareExportTaskService.queryBillTask(param, page.getPageNo(),
 				page.getPageSize());
 		if (pageInfo != null) {
@@ -196,12 +195,13 @@ public class NewBuinessDataExportController extends BaseController {
 		List<Map<String,String>> cuList=new ArrayList<Map<String,String>>();
 		Map<String,String> cuMap=new HashMap<>();
 		//区分是否按照子商家生成
-		if ((Boolean)param.get("isChildCusomer") == true) {
+		if ((Boolean)param.get("isChildCustomer") == true) {
 			//需要按子商家
 			//通过主商家id查询子商家id
 			cuList=billPrepareExportTaskService.getChildCustomer(customerId);
 		}else {		
-			cuMap.put(param.get("customerId").toString(), param.get("customerName").toString());
+			cuMap.put("customerId", param.get("customerId").toString());
+			cuMap.put("customerName", param.get("customerName").toString());
 			cuList.add(cuMap);
 		}
 		
@@ -209,76 +209,75 @@ public class NewBuinessDataExportController extends BaseController {
 			return "未查询到需要导出的商家";
 		}
 		
-		for(Map<String, String> cu:cuList){
-			
-		}
 		
-		
-		
-		Timestamp startDate = DateUtil.formatTimestamp(param.get("startDate"));
-		Timestamp endDate = DateUtil.formatTimestamp(param.get("endDate"));
 		try {
-			Map<String, Object> queryEntity = new HashMap<String, Object>();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			for(Map<String, String> cu:cuList){
+				Timestamp startDate = DateUtil.formatTimestamp(param.get("startDate"));
+				Timestamp endDate = DateUtil.formatTimestamp(param.get("endDate"));
+		
+				//Map<String, Object> queryEntity = new HashMap<String, Object>();
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-			Date date = format.parse(endDate.toString());
-			String endTime = format.format(addDay(1, date));
-			String startTime = format.format(startDate);
-			queryEntity.put("customerId", customerId);
+				Date date = format.parse(endDate.toString());
+				String endTime = format.format(addDay(1, date));
+				String startTime = format.format(startDate);
+				//queryEntity.put("customerId", customerId);
 
-			queryEntity.put("startTime", startTime);
-			queryEntity.put("endTime", endTime);
-			param.put("startTime", startTime);
-			param.put("endTime", endTime);
-			queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
-			if (checkFileHasDownLoad(queryEntity)) {
-				return MessageConstant.BILL_FILE_ISEXIST_MSG;
+				//queryEntity.put("startTime", startTime);
+				//queryEntity.put("endTime", endTime);
+				param.put("startTime", startTime);
+				param.put("endTime", endTime);
+				//queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
+				//if (checkFileHasDownLoad(queryEntity)) {
+				//	return MessageConstant.BILL_FILE_ISEXIST_MSG;
+				//}
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM");
+				String path = getPath();
+				String filePath = path + "/" + cu.get("customerName").toString() + "-"
+						+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
+				BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
+
+				entity.setTaskName(cu.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
+				entity.setBillNo("");
+				entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
+				entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
+				//entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
+				entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
+				entity.setProgress(0d);
+				entity.setFilePath(filePath);
+				entity.setCreator(JAppContext.currentUserName());
+				entity.setCreateTime(JAppContext.currentTimestamp());
+				entity.setDelFlag("0");
+				entity.setCustomerid(cu.get("customerId").toString());
+				entity.setMkId(param.get("customerId").toString());
+				//区分是否按照子商家生成
+				if ((Boolean)param.get("isChildCustomer") == true) {
+					entity.setIsChildCustomer("0");
+				}else{
+					entity.setIsChildCustomer("1");
+				}
+				entity = billPrepareExportTaskService.save(entity);
+
+				// 生成账单文件
+				param.put("taskId", entity.getTaskId());
+				param.put("path2", path);
+				param.put("filepath", filePath);
+				final Map<String, Object> condition = param;
+				final Map<String, String> customerMap=cu;
+				final String taskId = entity.getTaskId();
+				final String path2 = path;
+				final String filepath = filePath;
+				new Thread() {
+					public void run() {
+					try {
+							export(condition, taskId, path2, filepath,customerMap);
+					} catch (Exception e) {
+						billPrepareExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
+							logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+						}
+					};
+				}.start();
 			}
-			DateFormat sdf = new SimpleDateFormat("yyyy-MM");
-			String path = getPath();
-			String filePath = path + "/" + param.get("customerName").toString() + "-"
-					+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
-			BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
-
-			entity.setTaskName(param.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
-			entity.setBillNo("");
-			entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
-			entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
-			//entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
-			entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
-			entity.setProgress(0d);
-			entity.setFilePath(filePath);
-			entity.setCustomerid(customerId);
-			entity.setCreator(JAppContext.currentUserName());
-			entity.setCreateTime(JAppContext.currentTimestamp());
-			entity.setDelFlag("0");
-			entity = billPrepareExportTaskService.save(entity);
-
-			// 生成账单文件
-			param.put("taskId", entity.getTaskId());
-			param.put("path2", path);
-			param.put("filepath", filePath);
-			final Map<String, Object> condition = param;
-			final String taskId = entity.getTaskId();
-			final String path2 = path;
-			final String filepath = filePath;
-			new Thread() {
-				public void run() {
-				try {
-						export(condition, taskId, path2, filepath);
-				} catch (Exception e) {
-					billPrepareExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-						logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
-					}
-				};
-			}.start();
-			/*jmsQueueTemplate.send(MQConstants.BUINESSDATA_EXPORT, new MessageCreator() {
-    			@Override
-    			public Message createMessage(Session session) throws JMSException {
-    				String json = JsonUtils.toJson(condition);
-    				return session.createTextMessage(json);
-    			}
-    		});*/
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -303,7 +302,7 @@ public class NewBuinessDataExportController extends BaseController {
 	 * @param filePath
 	 * @throws Exception
 	 */
-	protected void export(Map<String, Object> condition, String taskId, String path, String filePath) throws Exception {
+	protected void export(Map<String, Object> condition, String taskId, String path, String filePath,Map<String, String> customerMap) throws Exception {
 		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 10);
 
 		// 初始化参数
@@ -318,8 +317,19 @@ public class NewBuinessDataExportController extends BaseController {
 		POISXSSUtil poiUtil = new POISXSSUtil();
 		SXSSFWorkbook xssfWorkbook = poiUtil.getXSSFWorkbook();
 		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 20);
-		logger.info("====预账单导出：" + "[" + condition.get("customerName").toString() + "]" + "写入Excel begin.");
-
+		logger.info("====预账单导出：" + "[" + customerMap.get("customerName").toString() + "]" + "写入Excel begin.");
+		
+		//判断是否是按子商家导出		
+		if ((Boolean)condition.get("isChildCustomer") == true) {
+			condition.put("customerId", customerMap.get("customerId"));
+			condition.put("customerName", customerMap.get("customerName"));
+		}else {		
+			List<String> customerIdList=billPrepareExportTaskService.getChildCustomerId(condition.get("customerId").toString());
+			condition.put("customerId", "");
+			condition.put("customerIds", customerIdList);
+		}
+		
+		
 		// 配送费
 		handDispatch(xssfWorkbook, poiUtil, condition, filePath);
 				
@@ -351,7 +361,7 @@ public class NewBuinessDataExportController extends BaseController {
 
 		poiUtil.write2FilePath(xssfWorkbook, filePath);
 		updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), 100);
-		logger.info("====预账单导出：" + "[" + condition.get("customerName").toString() + "]" + "写入Excel end.==总耗时："
+		logger.info("====预账单导出：" + "[" + customerMap.get("customerName").toString() + "]" + "写入Excel end.==总耗时："
 				+ (System.currentTimeMillis() - beginTime));
 	}
 	
@@ -1288,13 +1298,17 @@ public class NewBuinessDataExportController extends BaseController {
 	 * @param poiUtil
 	 * @param warehouseList
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "unchecked" })
 	private void handStorage(SXSSFWorkbook workbook, Map<String, Object> parameter, POISXSSUtil poiUtil,
 			List<String> warehouseList) {
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+
+    	//Timestamp startTime=Timestamp.valueOf(parameter.get("startTime").toString());
+		Timestamp startTime = DateUtil.formatTimestamp(parameter.get("startDate"));
+
 		for (String warehouseCode : warehouseList) {
 			int conIndex = 0;
 			int newIndex = 0;
-			int move1 = 0;
 			int move2 = 0;
 			parameter.put("warehouseCode", warehouseCode);
 			
@@ -1312,23 +1326,6 @@ public class NewBuinessDataExportController extends BaseController {
 //				}
 //			}
 			
-			// 商品按件存储
-			List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
-			for (FeesReceiveStorageEntity entity : itemsList) {
-				conIndex++;
-				if (!set.contains(sdf.format(entity.getCreateTime()))) {
-					set.add(sdf.format(entity.getCreateTime()));
-				}
-			}
-			
-			// 处置费
-			List<FeesReceiveStorageEntity> disposalList = feesReceiveStorageService.queryPreBillPallet(parameter);
-			for (FeesReceiveStorageEntity entity : disposalList) {
-				conIndex++;
-				if (!set.contains(sdf.format(entity.getCreateTime()))) {
-					set.add(sdf.format(entity.getCreateTime()));
-				}
-			}
 			
 			//判断是否是按件商家
 			Map<String,Object> map= new HashMap<String, Object>();
@@ -1339,11 +1336,45 @@ public class NewBuinessDataExportController extends BaseController {
 			if(bmsGroup!=null){
 				cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 			}
-			for (String cus : cusList) {
-				if (parameter.get("customerId").equals(cus)) {
-					newIndex++;
+			
+			//判断是否是按子商家导出		
+			if ((Boolean)parameter.get("isChildCustomer") == true) {				
+				for (String cus : cusList) {
+					if (parameter.get("customerId").equals(cus)) {
+						newIndex++;
+					}
+				}
+			}else {			
+				List<String> customerList=(List<String>) parameter.get("customerIds");
+				for (String cus : cusList) {
+					if (customerList.contains(cus)) {
+						newIndex++;
+					}
 				}
 			}
+			
+			// 商品按件存储
+			List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
+			for (FeesReceiveStorageEntity entity : itemsList) {
+				conIndex++;
+				if (!set.contains(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId())) {
+				/*	if(cusList.contains(entity.getCustomerId())){*/
+						set.add(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId());
+					/*}*/
+				}
+			}
+			
+			// 处置费
+			List<FeesReceiveStorageEntity> disposalList = feesReceiveStorageService.queryPreBillPallet(parameter);
+			for (FeesReceiveStorageEntity entity : disposalList) {
+				conIndex++;
+				if (!set.contains(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId())) {
+					set.add(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId());
+				}
+			}
+			
+
+		
 
 			if (conIndex == 0) {
 				continue;
@@ -1363,146 +1394,148 @@ public class NewBuinessDataExportController extends BaseController {
 			Row row0 = sheet.createRow(0);
 			row0.setHeight((short) (20 * 20));
 			Cell cell0 = row0.createCell(0);
-			cell0.setCellValue("序号");
+			cell0.setCellValue("商家名称");
 			cell0.setCellStyle(style);
 			Cell cell1 = row0.createCell(1);
-			cell1.setCellValue("日期");
+			cell1.setCellValue("仓库名称");
 			cell1.setCellStyle(style);
 			Cell cell2 = row0.createCell(2);
-			cell2.setCellValue("库存板数");
+			cell2.setCellValue("日期");
 			cell2.setCellStyle(style);
+			Cell cell3 = row0.createCell(3);
+			cell3.setCellValue("库存板数");
+			cell3.setCellStyle(style);
 			
+			Cell cell4 = row0.createCell(9);
+			cell4.setCellStyle(style);
+			cell4.setCellValue("库存件数");
 			//如果商品按件存储有数据，展示入库件数/存储费小计列
 			if (newIndex > 0) {
 				
-				Cell cell3 = row0.createCell(8);
-				cell3.setCellStyle(style);
-				cell3.setCellValue("库存件数");
-				
-				Cell cell7 = row0.createCell(17);
-				cell7.setCellValue("存储费按件小计/元");
-				cell7.setCellStyle(style);
+				Cell cell8 = row0.createCell(18);
+				cell8.setCellValue("存储费按件小计/元");
+				cell8.setCellStyle(style);
 				
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
-				sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 7));
-				sheet.addMergedRegion(new CellRangeAddress(0, 2, 8, 8));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 3, 8));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
-				sheet.addMergedRegion(new CellRangeAddress(0, 0, 11, 16));
-				sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 12, 17));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 20, 20));
 				
-				sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17));
 				
 			}else {
-				move1 = 1;
-				move2 = 2;
+				move2 = 1;
 				
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
-				sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 7));
-				sheet.addMergedRegion(new CellRangeAddress(0, 2, 8, 8));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));				
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 3, 8));
 				sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
-				sheet.addMergedRegion(new CellRangeAddress(0, 0, 10, 15));
-				sheet.addMergedRegion(new CellRangeAddress(0, 2, 16, 16));
-				sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
+					
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 12, 17));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+				sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
 				
-				sheet.addMergedRegion(new CellRangeAddress(1, 2, 10, 10));
-				sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
 				sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+				sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17));
 			}
 			
-			Cell cell4 = row0.createCell(9-move1);
-			cell4.setCellStyle(style);
-			cell4.setCellValue("入库板数");
-			Cell cell5 = row0.createCell(10-move1);
-			cell5.setCellValue("出库板数");
+			Cell cell5 = row0.createCell(10);
 			cell5.setCellStyle(style);
-			Cell cell6 = row0.createCell(11-move1);
-			cell6.setCellValue("仓储费/托/元");
+			cell5.setCellValue("入库板数");
+			Cell cell6 = row0.createCell(11);
+			cell6.setCellValue("出库板数");
 			cell6.setCellStyle(style);
+			Cell cell7 = row0.createCell(12);
+			cell7.setCellValue("仓储费/托/元");
+			cell7.setCellStyle(style);
 
-			Cell cell8 = row0.createCell(18-move2);
-			cell8.setCellValue("处置费小计/元");
-			cell8.setCellStyle(style);
 			Cell cell9 = row0.createCell(19-move2);
-			cell9.setCellValue("收入合计");
+			cell9.setCellValue("处置费小计/元");
 			cell9.setCellStyle(style);
+			Cell cell10 = row0.createCell(20-move2);
+			cell10.setCellValue("收入合计");
+			cell10.setCellStyle(style);
 
 			Row row1 = sheet.createRow(1);
 			row1.setHeight((short) (25 * 20));
 
-			Cell cell22 = row1.createCell(2);
-			cell22.setCellValue("冷冻");
-			cell22.setCellStyle(style);
-
 			Cell cell23 = row1.createCell(3);
-			cell23.setCellValue("冷藏");
+			cell23.setCellValue("冷冻");
 			cell23.setCellStyle(style);
 
 			Cell cell24 = row1.createCell(4);
-			cell24.setCellValue("恒温");
+			cell24.setCellValue("冷藏");
 			cell24.setCellStyle(style);
 
 			Cell cell25 = row1.createCell(5);
-			cell25.setCellValue("常温");
+			cell25.setCellValue("恒温");
 			cell25.setCellStyle(style);
 
 			Cell cell26 = row1.createCell(6);
-			cell26.setCellValue("常温包材");
+			cell26.setCellValue("常温");
 			cell26.setCellStyle(style);
+
+			Cell cell27 = row1.createCell(7);
+			cell27.setCellValue("常温包材");
+			cell27.setCellStyle(style);
 			
-			Cell cell28 = row1.createCell(7);
+			Cell cell28 = row1.createCell(8);
 			cell28.setCellValue("冷冻包材");
 			cell28.setCellStyle(style);
 
-			Cell cellk29 = row1.createCell(11-move1);
+			Cell cellk29 = row1.createCell(12);
 			cellk29.setCellValue("冷冻费小计/元");
 			cellk29.setCellStyle(style);
 
-			Cell cellk30 = row1.createCell(12-move1);
+			Cell cellk30 = row1.createCell(13);
 			cellk30.setCellValue("冷藏费小计/元");
 			cellk30.setCellStyle(style);
 
-			Cell cellk31 = row1.createCell(13-move1);
+			Cell cellk31 = row1.createCell(14);
 			cellk31.setCellValue("恒温费小计/元");
 			cellk31.setCellStyle(style);
 
-			Cell cellk32 = row1.createCell(14-move1);
+			Cell cellk32 = row1.createCell(15);
 			cellk32.setCellValue("常温费小计/元");
 			cellk32.setCellStyle(style);
 
-			Cell cellk33 = row1.createCell(15-move1);
+			Cell cellk33 = row1.createCell(16);
 			cellk33.setCellValue("常温包材费小计/元");
 			cellk33.setCellStyle(style);
 			
-			Cell cellk34 = row1.createCell(16-move1);
+			Cell cellk34 = row1.createCell(17);
 			cellk34.setCellValue("冷冻包材费小计/元");
 			cellk34.setCellStyle(style);
 
-			sheet.addMergedRegion(new CellRangeAddress(1, 2, 2, 2));
+	
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 3, 3));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 4, 4));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 5, 5));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));
 
-			Row row3 = sheet.createRow(3);
+		/*	Row row3 = sheet.createRow(3);
 			row3.setHeight((short) (20 * 20));
-
-			Cell cell30 = row3.createCell(0);
-			cell30.setCellValue("上月结余");
-			cell30.setCellStyle(style);
 
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 1));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 2, 2));
@@ -1529,13 +1562,13 @@ public class NewBuinessDataExportController extends BaseController {
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 23, 23));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 24, 24));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 25, 25));
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 26, 26));
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 26, 26));*/
 			// end
 
 
 			List<String> dateList = new ArrayList<String>(set);
 
-			int rowIndex = 4;
+			int rowIndex = 3;
 			double totalcost = 0.0;
 			double ldcost = 0.0;
 			double lccost = 0.0;
@@ -1555,22 +1588,16 @@ public class NewBuinessDataExportController extends BaseController {
 			double rowProCost = 0.0;
 
 
-
-			
 			for (int i = 0; i < dateList.size(); i++) {
 				double rowCost = 0.0;
-				String timestamp = dateList.get(i);
+				String timestampKey = dateList.get(i);
 				//String createTime = sdf.format(timestamp);
 				//String createTime = timestamp;
-				Row row = sheet.createRow(rowIndex);
-				rowIndex++;
+				
 
-				// 序号
-				Cell cell40 = row.createCell(0);
-				cell40.setCellValue(i + 1);
-				// 日期
-				Cell cell41 = row.createCell(1);
-				cell41.setCellValue(timestamp);
+				
+				Row row = sheet.createRow(rowIndex); 
+				rowIndex++;
 
 				Integer index = new Integer(0);
 				double rowcolCost = 0.0;
@@ -1580,74 +1607,91 @@ public class NewBuinessDataExportController extends BaseController {
 				
 				// 库存板数
 				for (FeesReceiveStorageEntity entity : disposalList) {
-					if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
+					if ((sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId()).equals(timestampKey)) {
+						//商家名称
+						Cell cell40=row.createCell(0);
+						cell40.setCellValue(entity.getCustomerName());		
+						//仓库名称
+						Cell cell41=row.createCell(1);
+						cell41.setCellValue(entity.getWarehouseName());
+						//时间
+						Cell cell42=row.createCell(2);
+						cell42.setCellValue(timestampKey.substring(0, timestampKey.indexOf("&")));
 						//商品
 						if ("product".equals(entity.getBizType())) {
-							
 							String tempretureType = entity.getTempretureType();
 							Integer quantity = entity.getQuantity();
 							// 托数（冷冻、冷藏、恒温、常温）
 							if ("LD".equals(tempretureType)) {
-								Cell cell42 = row.createCell(2);
-								cell42.setCellValue(quantity);
+								Cell cell43 = row.createCell(3);
+								cell43.setCellValue(quantity);
 							} else if ("LC".equals(tempretureType)) {
-								Cell cell42 = row.createCell(3);
-								cell42.setCellValue(quantity);
+								Cell cell43 = row.createCell(4);
+								cell43.setCellValue(quantity);
 							} else if ("HW".equals(tempretureType)) {
-								Cell cell42 = row.createCell(4);
-								cell42.setCellValue(quantity);
+								Cell cell43 = row.createCell(5);
+								cell43.setCellValue(quantity);
 							} else if ("CW".equals(tempretureType)) {
-								Cell cell42 = row.createCell(5);
-								cell42.setCellValue(quantity);
+								Cell cell43 = row.createCell(6);
+								cell43.setCellValue(quantity);
 							}
-
-							// 列小计
-							double cost = entity.getCost().doubleValue();
-							if ("LD".equals(tempretureType)) {
-								Cell cell49 = row.createCell(11-move1);
-								cell49.setCellValue(cost);
-								ldcost = ldcost + cost;
-							} else if ("LC".equals(tempretureType)) {
-								Cell cell49 = row.createCell(12-move1);
-								cell49.setCellValue(cost);
-								lccost = lccost + cost;
-							} else if ("HW".equals(tempretureType)) {
-								Cell cell49 = row.createCell(13-move1);
-								cell49.setCellValue(cost);
-								hwcost = hwcost + cost;
-							} else if ("CW".equals(tempretureType)) {
-								Cell cell49 = row.createCell(14-move1);
-								cell49.setCellValue(cost);
-								cwcost = cwcost + cost;
-							}
-							// 行小计
-							rowCost = rowCost + cost;
+							
+							//不是当月的时间，则是上月结余，上月结余的不显示金额
+							if(startTime.before(entity.getCreateTime())){
+								// 列小计
+								double cost = entity.getCost().doubleValue();
+								if ("LD".equals(tempretureType)) {
+									Cell cell49 = row.createCell(12);
+									cell49.setCellValue(cost);
+									ldcost = ldcost + cost;
+								} else if ("LC".equals(tempretureType)) {
+									Cell cell49 = row.createCell(13);
+									cell49.setCellValue(cost);
+									lccost = lccost + cost;
+								} else if ("HW".equals(tempretureType)) {
+									Cell cell49 = row.createCell(14);
+									cell49.setCellValue(cost);
+									hwcost = hwcost + cost;
+								} else if ("CW".equals(tempretureType)) {
+									Cell cell49 = row.createCell(15);
+									cell49.setCellValue(cost);
+									cwcost = cwcost + cost;
+								}
+								// 行小计
+								rowCost = rowCost + cost;
+							}						
 						}else if ("material".equals(entity.getBizType())) {
 							//耗材
 							double materialCost = entity.getCost().doubleValue();
 							//1.常温--常温
 							//2.冷冻--冷冻、冷藏、恒温
 							if ("CW".equals(entity.getTempretureType())) {
-								Cell cell46 = row.createCell(6);
+								Cell cell46 = row.createCell(7);
 								cell46.setCellValue(entity.getQuantity());
 								
-								Cell cell49 = row.createCell(15-move1);
-								cell49.setCellValue(materialCost);
-								//累加行
-								cwCost = cwCost+materialCost;
-								//累加列
-								cwpackcost = cwpackcost+materialCost;
+								//不是当月的时间，则是上月结余，上月结余的不显示金额
+								if(startTime.before(entity.getCreateTime())){
+									Cell cell49 = row.createCell(16);
+									cell49.setCellValue(materialCost);
+									//累加行
+									cwCost = cwCost+materialCost;
+									//累加列
+									cwpackcost = cwpackcost+materialCost;
+								}
 							}else {
-								Cell cell47 = row.createCell(7);
+								Cell cell47 = row.createCell(8);
 								cell47.setCellValue(entity.getQuantity()+index);
 								index = entity.getQuantity()+index;
 								
-								Cell cell50 = row.createCell(16-move1);
-								cell50.setCellValue(materialCost+ldCost);
-								//累加行
-								ldCost = materialCost+ldCost;
-								//累加列
-								colcost = colcost + materialCost;
+								//不是当月的时间，则是上月结余，上月结余的不显示金额
+								if(startTime.before(entity.getCreateTime())){
+									Cell cell50 = row.createCell(17);
+									cell50.setCellValue(materialCost+ldCost);
+									//累加行
+									ldCost = materialCost+ldCost;
+									//累加列
+									colcost = colcost + materialCost;
+								}	
 							}
 							rowcolCost = cwCost+ldCost;	
 						}else if ("instock".equals(entity.getBizType()) || "outstock".equals(entity.getBizType())) {
@@ -1655,24 +1699,28 @@ public class NewBuinessDataExportController extends BaseController {
 							double palletCost = entity.getCost().doubleValue();
 							if ("instock".equals(entity.getBizType())) {
 								//入库托数
-								Cell cell70 = row.createCell(9-move1);
+								Cell cell70 = row.createCell(10);
 								cell70.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
 							}else if ("outstock".equals(entity.getBizType())) {
 								//出库托数
-								Cell cell71 = row.createCell(10-move1);
+								Cell cell71 = row.createCell(11);
 								cell71.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
 							}else {
 								continue;
-							}		
-							//处置费小计
-							Cell cell72 = row.createCell(18-move2);
-							cell72.setCellValue(palletCost+incost);
-							//累加行
-							incost = rowcolCost+palletCost;
-							//累加列
-							czfcost = czfcost+palletCost;
+							}	
 							
-							rowcolCost = incost;
+							//不是当月的时间，则是上月结余，上月结余的不显示金额
+							if(startTime.before(entity.getCreateTime())){
+								//处置费小计
+								Cell cell72 = row.createCell(19-move2);
+								cell72.setCellValue(palletCost+incost);
+								//累加行
+								incost = rowcolCost+palletCost;
+								//累加列
+								czfcost = czfcost+palletCost;
+								
+								rowcolCost = incost;
+							}							
 						}
 						
 					}else {
@@ -1680,34 +1728,6 @@ public class NewBuinessDataExportController extends BaseController {
 						incost = 0.0;
 					}
 				}
-				//处置费
-//				for (FeesReceiveStorageEntity entity : disposalList) {
-//					if (entity.getCreateTime().equals(timestamp)) {
-//						double palletCost = entity.getCost().doubleValue();
-//						if ("instock".equals(entity.getBizType())) {
-//							//入库托数
-//							Cell cell70 = row.createCell(9-move1);
-//							cell70.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
-//						}else if ("outstock".equals(entity.getBizType())) {
-//							//出库托数
-//							Cell cell71 = row.createCell(10-move1);
-//							cell71.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
-//						}else {
-//							continue;
-//						}		
-//						//处置费小计
-//						Cell cell72 = row.createCell(18-move2);
-//						cell72.setCellValue(palletCost+incost);
-//						//累加行
-//						incost = rowcolCost+palletCost;
-//						//累加列
-//						czfcost = czfcost+palletCost;
-//						
-//						rowcolCost = incost;
-//					}else {
-//						incost = 0.0;
-//					}
-//				}
 				
 				Integer qty = new Integer(0);
 				double cCost = 0.0;
@@ -1717,24 +1737,41 @@ public class NewBuinessDataExportController extends BaseController {
 				if (newIndex > 0) {
 					//商品存储费（按件）
 					for (FeesReceiveStorageEntity entity : itemsList) {
-						if (sdf.format(entity.getCreateTime()).equals(timestamp)) {
+						if ((sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId()).equals(timestampKey)) {
+							//商家名称
+							Cell cell40=row.createCell(0);
+							cell40.setCellValue(entity.getCustomerName());		
+							//仓库名称
+							Cell cell41=row.createCell(1);
+							cell41.setCellValue(entity.getWarehouseName());	
+							//时间
+							Cell cell42=row.createCell(2);
+							cell42.setCellValue(timestampKey.substring(0, timestampKey.indexOf("&")));
 							//库存件数
-							double productCost = entity.getCost().doubleValue();
-							Cell cell60 = row.createCell(8);
+							double productCost=0d;
+							if(cusList.contains(entity.getCustomerId())){
+								productCost = entity.getCost().doubleValue();
+							}
+							
+							Cell cell60 = row.createCell(9);
 							cell60.setCellValue(entity.getQuantity()+qty);
 							//件数累加
 							qty = qty+entity.getQuantity();
-							//存储费按件小计
-							Cell cell61 = row.createCell(17);
-							cell61.setCellValue(productCost+cCost);
-							//累加行
-							cCost = cCost + productCost;
-							rowProCost = rowProCost + productCost;
-							//累加列
-							ccfcost = ccfcost+productCost;
+							
+							//不是当月的时间，则是上月结余，上月结余的不显示金额
+							if(startTime.before(entity.getCreateTime())){
+								//存储费按件小计
+								Cell cell61 = row.createCell(18);
+								cell61.setCellValue(productCost+cCost);
+								//累加行
+								cCost = cCost + productCost;
+								rowProCost = rowProCost + productCost;
+								//累加列
+								ccfcost = ccfcost+productCost;
+							}
 						}else {
 							rowProCost = 0.0;
-						}
+						}		
 					}	
 				}		
 				
@@ -1745,38 +1782,38 @@ public class NewBuinessDataExportController extends BaseController {
 				// 总计
 				totalcost = rowCost + totalcost;
 				// 行小计
-				Cell cell49 = row.createCell(19-move2);
+				Cell cell49 = row.createCell(20-move2);
 				cell49.setCellValue(rowCost);
 			}
 
 			Row row = sheet.createRow(rowIndex);
-			Cell cellLast0 = row.createCell(11-move1);
+			Cell cellLast0 = row.createCell(12);
 			cellLast0.setCellValue(ldcost);
 
-			Cell cellLast1 = row.createCell(12-move1);
+			Cell cellLast1 = row.createCell(13);
 			cellLast1.setCellValue(lccost);
 
-			Cell cellLast6 = row.createCell(13-move1);
+			Cell cellLast6 = row.createCell(14);
 			cellLast6.setCellValue(hwcost);
 
-			Cell cellLast2 = row.createCell(14-move1);
+			Cell cellLast2 = row.createCell(15);
 			cellLast2.setCellValue(cwcost);
 
-			Cell cellLast3 = row.createCell(15-move1);
+			Cell cellLast3 = row.createCell(16);
 			cellLast3.setCellValue(cwpackcost);
 			
-			Cell cellLast4 = row.createCell(16-move1);
+			Cell cellLast4 = row.createCell(17);
 			cellLast4.setCellValue(colcost);
 			
 			if (newIndex > 0) {
-				Cell cellLast5 = row.createCell(17);
+				Cell cellLast5 = row.createCell(18);
 				cellLast5.setCellValue(ccfcost);
 			}
 			
-			Cell cellLast7 = row.createCell(18-move2);
+			Cell cellLast7 = row.createCell(19-move2);
 			cellLast7.setCellValue(czfcost);
 
-			Cell cellLast = row.createCell(19-move2);
+			Cell cellLast = row.createCell(20-move2);
 			cellLast.setCellValue(totalcost);
 		}
 	}
@@ -2374,5 +2411,14 @@ public class NewBuinessDataExportController extends BaseController {
 			logger.error("删除导出任务异常：", e);
 		}
 		return null;
+	}
+	
+	@DataProvider
+	public Map<String,String> getIsChildCustomer(){
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("", "全部");
+		mapValue.put("0", "是");
+		mapValue.put("1", "否");
+		return mapValue;
 	}
 }
