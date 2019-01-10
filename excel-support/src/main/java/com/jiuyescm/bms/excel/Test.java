@@ -33,12 +33,11 @@ public class Test {
 	
     public static void test2() throws FileNotFoundException {
         try{
-        	String path = "E:/深圳山海味道农贸科技有限公司-2018-11-预账单 (1).xlsx";
+        	String path = "E:/user/desktop/liuzhicheng/Desktop/1.xlsx";
     		File file = new File(path);
             FileInputStream inputStream = new FileInputStream(file);
+    		
             XlsxWorkBook book = new XlsxWorkBook(inputStream);
-            List<Sheet> list = book.getSheets();
-            
             for (Sheet sheet : book.getSheets()) {
     			System.out.println("sheet名称【"+sheet.getSheetName()+"】 id【"+sheet.getSheetId()+"】");
     			book.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
@@ -46,9 +45,9 @@ public class Test {
     				@Override
     				public void readTitle(List<String> columns) {
     					StringBuilder sb  = new StringBuilder();
-    					sb.append("行号     ");
+    					sb.append("\t行号\t");
     					for (String string : columns) {
-    						sb.append("  "+string+"  ");
+    						sb.append("\t"+string+"\t");
     					}
     					System.out.println(sb.toString());
     				}
@@ -56,9 +55,9 @@ public class Test {
     				@Override
     				public void read(DataRow dr) {
     					StringBuilder sb  = new StringBuilder();
-    					sb.append("  "+dr.getRowNo()+"  ");
+    					sb.append("\t"+dr.getRowNo()+"\t");
                 		for (DataColumn dc : dr.getColumns()) {
-                         	sb.append("  "+dc.getColValue()+"  ");
+                         	sb.append("\t"+dc.getColValue()+"\t");
                         }
                 		System.out.println(sb.toString());
     				}
@@ -75,8 +74,10 @@ public class Test {
     				}
     			});
     		}
-    		//System.out.println("读取行数： "+rows);
     		book.close();
+    		/*while(true){
+    			Thread.sleep(1000);
+    		}*/
         }catch (Exception e) {
             e.printStackTrace();
         }

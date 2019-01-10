@@ -52,7 +52,7 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		BillFeesReceiveStorageTempEntity entity2 = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "商家名称":
 					if (StringUtils.isBlank(dc.getColValue())) {
 						isCustomerNull = true;

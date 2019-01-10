@@ -349,6 +349,11 @@
 			<artifactId>bms-bpi</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>excel-support</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- mdm -->
 		

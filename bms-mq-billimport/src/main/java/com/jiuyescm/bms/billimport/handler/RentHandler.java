@@ -46,7 +46,7 @@ public class RentHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "客户名称":
 					if (StringUtils.isBlank(dc.getColValue())) {
 						isCustomerNull = true;

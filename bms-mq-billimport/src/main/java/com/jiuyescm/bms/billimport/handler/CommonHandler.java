@@ -72,17 +72,23 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	//protected Integer taskRate = 30;
 	
 	private long _start = System.currentTimeMillis();
+	//判断errMap是否包含错误信息
+	private boolean isErrorMap = false;
 
-	
 	@Override
 	public void process(XlsxWorkBook xlsxReader, Sheet sheet, Map<String, Object> param) throws Exception{
 		//this.billEntity = null;//根据param中的bill_no查询 ???
 		try {
+			//获取任务ID
+			String taskId = param.get("billNo").toString();
 			billNo=param.get("billNo").toString();
 			customerName=param.get("invoiceName").toString();
 			customerId=param.get("invoiceId").toString();
 			sheetName = sheet.getSheetName();
-			logger.info("正在处理sheet:{}", sheetName);
+			logger.info("任务ID：{}，正在处理sheet:{}", taskId,sheetName);
+			
+			//isErrorMap初始化
+			isErrorMap = false;
 			
 			// 仓储--上海01仓，北京01仓...............
 			WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
@@ -99,21 +105,24 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
-				logger.error("sheet解析异常：", e);
+				logger.error("任务ID：{}，readExcel方法内错误导致sheet解析异常：{}",taskId);
 				param.put("result", "fail");
 				param.put("detail","解析【"+sheetName+"】异常-"+e.getMessage());
-				return;
 			}
 			
-			logger.info(billNo+sheet+"读取完成");
+			logger.info("任务ID：{}，SheetName：{}读取完成",taskId,sheetName);
 			int taskRate = (int) (30+((90-30)/xlsxReader.getSheets().size())*(sheet.getSheetId()));
-			//taskRate = (int) (taskRate+(90-30)*(1/(float)xlsxReader.getSheets().size()));
 			updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), taskRate);	
+			logger.info("任务ID：{}，更新任务进度为{}%", taskId,taskRate);
 			repeatMap.clear();
 			//Excel校验未通过
+			logger.info("任务ID：{}，errMap.size()：{}", taskId,errMap.size());
 			if(errMap.size()>0){
-				updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);	
-				String resultPath = exportErr();
+				updateStatus(billNo, BmsEnums.taskStatus.FAIL.getCode(), 99);
+				logger.info("任务ID：{}，更新任务状态为失败，进度为99%", taskId);
+				//将异常结果文件上传至FastDFS
+				String resultPath = exportErr(sheet);
+				logger.info("任务ID：{}，异常结果文件上传至FastDFS的路径resultPath：{}", taskId,resultPath);
 				BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 				billReceiveMasterVo.setBillNo(billNo);
 				billReceiveMasterVo.setResultFilePath(resultPath);
@@ -140,34 +149,46 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			@Override
 			public void read(DataRow dr) {
 				try {
+					//使用list接收，因为可能出现一行数据对应多个entity
 					List<T> entityList = transRowToObj(dr);
-					
+					//将正确的行放入errMap
+					DataColumn dColumn = new DataColumn("异常描述","");
+					dColumn.setTitleName("错误描述");
+					dr.addColumn(dColumn);
+					errMap.add(dr);
+					//将行转换的实体转换到全局list中
 					for( int i = 0 ; i < entityList.size() ; i++){
 						list.add(entityList.get(i));
 					}
-
+					//如果list大于一定的数量（batchNum），则批量写入临时表，分批执行，降低内存消耗
 					if(list.size()>=batchNum){
 						int result=saveTo();
 						if(result<=0){
-							throw new BizException("title_error","excel处理异常：批量插入"+sheetName+"费用异常");
+							logger.error("任务ID：{}，{}批量插入临时表异常：{}",billNo,sheetName);
 						}
 					}
 				} catch (Exception e) {
 					DataColumn dColumn = new DataColumn("异常描述","第"+dr.getRowNo()+"行："+e.getMessage());
+					dColumn.setTitleName("错误描述");
 					dr.addColumn(dColumn);
+					//将此列错误的数据加入到errMap里
 					errMap.add(dr);
+					isErrorMap = true;
 				}
 			}
 
 			@Override
 			public void finish() {
+				if(!isErrorMap){
+					errMap.clear();
+				}
 				if(list.size()>0){
 					int result=saveTo();
 					if(result<=0){
-						throw new BizException("title_error","excel处理异常：批量插入"+sheetName+"费用异常");
+						logger.error("任务ID：{}，{}批量插入临时表异常",billNo,sheetName);
 					}
 				}
-				logger.info("读取完毕");
+				logger.info("任务ID：{}，读取完毕",billNo);
 			}
 			
 			@Override
@@ -175,7 +196,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				try{
 					String ret = validate(columns);
 					if("SUCC".equals(ret)){
-						logger.info("表头行：{}",columns);
+						logger.info("任务ID：{}，表头行：{}",billNo,columns);
 					}
 					else{
 						throw new BizException("title_error",ret);
@@ -212,12 +233,16 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	public int saveTo(){
 		int result=0;
 		if(errMap.size()==0){
-			logger.info("读取【{}】行验证耗时{}",list.size(),(System.currentTimeMillis()-_start));
+			logger.info("任务ID：{}，读取【{}】行验证耗时{}",billNo,list.size(),(System.currentTimeMillis()-_start));
 			result=save();
 			_start =  System.currentTimeMillis();
 		}else{
-			logger.info("错误信息: {}", errMap);
-			logger.info("errMap.size: {}", errMap.size());
+			//将错误信息打印出来
+			List<String> listError = new ArrayList<String>();
+			for (DataRow row : errMap) {
+				listError.add(row.getColumns().get(row.getColumns().size()-1).getColValue());
+			}
+			logger.info("任务ID：{}，错误信息: {}，errMap.size: {}",billNo,listError,errMap.size());
 		}
 		
 		list.clear();
@@ -226,7 +251,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	
 	public abstract int save();
 	
-	public String exportErr() throws Exception{
+	public String exportErr(Sheet sheet) throws Exception{
 		
 		POISXSSUtil poiUtil = new POISXSSUtil();
 		SXSSFWorkbook workbook = new SXSSFWorkbook(10000);		
@@ -237,6 +262,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		for(int i=0;errMap.get(0).getColumns().size()>i;i++){
 	        Map<String, Object> itemMap = new HashMap<String, Object>();
 	        itemMap.put("title", errMap.get(0).getColumns().get(i).getTitleName());
+	        //设置单元格大小
 	        if(errMap.get(0).getColumns().size()==i+1){
 		        itemMap.put("columnWidth", 100);
 	        }else{
@@ -246,7 +272,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	        itemMap.put("dataKey", "XH"+a);
 	        headDetailMapList.add(itemMap);
 		}
-		
+		System.out.println(headDetailMapList.toString());
 		//遍历内容
 		for(int i =0;errMap.size()>i;i++){
 	        Map<String, Object> dataItem = new HashMap<String, Object>();
@@ -256,7 +282,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 			}
 	        dataDetailList.add(dataItem);
 		}
-
+		System.out.println(dataDetailList.toString());
 		poiUtil.exportExcel2FilePath(poiUtil, workbook, sheetName,1, headDetailMapList, dataDetailList);
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
@@ -264,7 +290,6 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 	    String resultFullPath = resultStorePath.getFullPath();
 	   // System.out.println(resultFullPath);
-	    
 	    errMap.clear();
 	    return resultFullPath;
 	}

@@ -66,4 +66,5 @@
 		 <dubbo:reference id="bizWarehouseImportReportService" interface="com.jiuyescm.bms.report.biz.service.IBizWarehouseImportReportService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsFileAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsProductsMaterialService" interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="carrierProductService" interface="com.jiuyescm.bms.base.servicetype.service.ICarrierProductService" version="1.0.0" registry="bms"/>
 </beans> 

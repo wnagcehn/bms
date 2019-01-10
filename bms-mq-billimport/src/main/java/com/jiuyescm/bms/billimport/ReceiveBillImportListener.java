@@ -74,6 +74,8 @@ public class ReceiveBillImportListener implements MessageListener {
 	@Autowired private IBillCheckInfoService billCheckInfoService;	
 
 	private XlsxWorkBook  book ;
+	
+	protected String  taskId = "" ;
 
 	@Override
 	public void onMessage(Message message) {
@@ -96,15 +98,21 @@ public class ReceiveBillImportListener implements MessageListener {
 
 
 	public void readExcel(String json) throws Throwable {
+		
 		logger.info("JSON开始解析……");
 		Map<String, Object> map = resolveJsonToMap(json);
 		if (null == map) {
 			return;
 		}
+		
+		//获取任务ID
+		taskId += map.get("billNo").toString();
+		logger.info("任务ID：{}",taskId);
+		
 		//MQ拿到消息，更新状态
 		updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 1);
-		
-		logger.info("获取文件路径：{}",map.get("fullPath").toString());
+		logger.info("任务ID：{}，获取文件路径：{}",taskId,map.get("fullPath").toString());
+
 //		File file = new File(map.get("fullPath").toString());
 //		InputStream inputStream = new FileInputStream(file);
 		
@@ -116,10 +124,13 @@ public class ReceiveBillImportListener implements MessageListener {
 			book  = new XlsxWorkBook(inputStream);
 			//List<OpcSheet> sheets = book .getSheets();
 			//logger.info("解析Excel, 获取Sheet：{}", sheets.size());
-			updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 30);
+			
+			//更新任务状态
+			updateStatus(taskId, BmsEnums.taskStatus.PROCESS.getCode(), 30);
+			logger.info("任务ID：{}，更新任务进度为30%", taskId);
 			for (Sheet sheet : book.getSheets()) {
 				String sheetName = sheet.getSheetName();
-				logger.info("--------------准备读取sheet - {}", sheetName);
+				logger.info("任务ID：{}，--------------准备读取sheet - {}", taskId,sheetName);
 				long startTime = System.currentTimeMillis();
 				// 仓储--上海01仓，北京01仓...............
 				WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
@@ -134,7 +145,9 @@ public class ReceiveBillImportListener implements MessageListener {
 				if (null == handler) {
 					continue;
 				}
-				logger.info("匹配Handler为: {}", handler);
+				//handler打印出来为com.jiuyescm.bms.billimport.handler.TransportHandler@38746b97格式，所以需要进行截取
+				String str = handler.toString();
+				logger.info("任务ID：{}，匹配Handler为: {}", taskId,str.substring(36,str.indexOf("@")));
 				//handler.getRows();
 
 				try {
@@ -143,18 +156,18 @@ public class ReceiveBillImportListener implements MessageListener {
 						break;
 					}					
 				} catch (Exception ex) {
-					logger.error("处理异常 {}",ex);
+					logger.error("任务ID：{}，处理异常 {}",taskId,ex);
 					break;
 				}
 				finally {
-					logger.info("------------读取耗时：【"+(System.currentTimeMillis()-startTime)+"】毫秒");
+					logger.info("任务ID：{}，------------读取耗时：【"+(System.currentTimeMillis()-startTime)+"】毫秒",taskId);
 				}
 			}
 			
-			// saveAll 保存临时表数据到正式表
+			//保存临时表数据到正式表
 			saveAll(map);
 		} catch (Exception ex) {
-			logger.error("readExcel 异常 {}", ex);
+			logger.error("任务ID：{}，readExcel 异常 {}",taskId,ex);
 		}
 		finally{
 			book.close();
@@ -200,25 +213,26 @@ public class ReceiveBillImportListener implements MessageListener {
 		BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 		try{
 			if("sucess".equals(param.get("result").toString())){
-				logger.info(billNo+"临时表数据开始写入正式表");
 				updateStatus(billNo, BmsEnums.taskStatus.PROCESS.getCode(), 90);
+				logger.info("任务ID：{}，更新任务进度：90%，临时表数据开始写入正式表",taskId);
+				long startTime = System.currentTimeMillis();
 				//将临时表的数据写入正式表（仓储、配送、干线、航空）
 				billFeesReceiveHandService.saveDataFromTemp(billNo);
 				//无论保存成功与否删除所有临时表的数据
-				logger.info(billNo+"删除临时表数据");
+				logger.info("任务ID：{}，删除临时表数据",taskId);
 				billFeesReceiveStorageTempService.deleteBatchTemp(billNo);
 				billFeesReceiveDispatchTempService.deleteBatchTemp(billNo);
 				billFeesReceiveTransportTempService.deleteBatchTemp(billNo);
 				billFeesReceiveAirTempService.deleteBatchTemp(billNo);
 				//统计金额
-				logger.info(billNo+"更新总金额至主表数据");
+				logger.info("任务ID：{}，更新总金额至主表数据",taskId);
 				Double totalMoney=billFeesReceiveStorageTempService.getImportTotalAmount(billNo);
 				BillReceiveMasterVo entity=new BillReceiveMasterVo();
 				entity.setAmount(totalMoney);
 				entity.setBillNo(billNo);
 				//更新导入主表
 				billReceiveMasterService.update(entity);
-				logger.info(billNo+"写入账单主表");
+				logger.info("任务ID：{}，写入账单主表",taskId);
 				//账单跟踪 组装数据
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
@@ -342,9 +356,10 @@ public class ReceiveBillImportListener implements MessageListener {
 				vo.setBillNo(billNo);
 				billReceiveMasterService.insertReportMaster(vo);
 				
+				logger.info("任务ID：{}，------------保存临时表数据到正式表耗时：【"+(System.currentTimeMillis()-startTime)+"】毫秒",taskId);
 			}else{
 				//无论保存成功与否删除所有临时表的数据
-				logger.info(billNo+"删除临时表数据");
+				logger.info("任务ID：{}，删除临时表数据",taskId);
 				billFeesReceiveStorageTempService.deleteBatchTemp(billNo);
 				billFeesReceiveDispatchTempService.deleteBatchTemp(billNo);
 				billFeesReceiveTransportTempService.deleteBatchTemp(billNo);
@@ -356,7 +371,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			}
 			
 		}catch (Exception e) {
-			logger.error("保存异常信息 {}",e);
+			logger.error("任务ID：{}，保存异常信息 {}",taskId,e);
 			billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.FAIL.getCode());
 			billReceiveMasterVo.setTaskRate(99);
 			billReceiveMasterVo.setRemark(e.getMessage());
@@ -365,6 +380,7 @@ public class ReceiveBillImportListener implements MessageListener {
 		billReceiveMasterVo.setBillNo(billNo);
 		billReceiveMasterVo.setFinishTime(JAppContext.currentTimestamp());
 		billReceiveMasterService.update(billReceiveMasterVo);
+		logger.info("任务ID：{}，更新任务状态：{}，任务进度：{}",taskId,billReceiveMasterVo.getTaskStatus(),billReceiveMasterVo.getTaskRate());
 	}
 
 	public Date getDate(int createMonth){
@@ -408,7 +424,7 @@ public class ReceiveBillImportListener implements MessageListener {
 			 return utilDate;
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.error("转换异常 {}",e);
+			logger.error("任务ID：{}，getNewDate方法转换异常 {}",taskId,e);
 		}
 		return null;
 	}
