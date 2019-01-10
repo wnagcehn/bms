@@ -211,6 +211,17 @@ public class BizDispatchBillEntity implements IEntity {
 	
 	//店铺名称
 	private String shopName;
+	
+	//物流商重量
+	private Double carrierWeight;
+
+	public Double getCarrierWeight() {
+		return carrierWeight;
+	}
+
+	public void setCarrierWeight(Double carrierWeight) {
+		this.carrierWeight = carrierWeight;
+	}
 
 	public String getShopName() {
 		return shopName;

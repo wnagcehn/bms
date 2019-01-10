@@ -363,6 +363,10 @@
         <Property></Property>
         <Property name="label">店铺名称</Property>
       </PropertyDef>
+      <PropertyDef name="carrierWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">物流商重量</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -835,9 +839,6 @@ validRetryAction.execute(function(retMap){&#xD;
         <Property name="visible">true</Property>
       </ToolBarButton>
       <ToolBarButton id="btnTemplateDownload">
-        <ClientEvent name="onClick">view.get(&quot;#downloadTemplateAction&quot;).execute();	&#xD;
-&#xD;
-</ClientEvent>
         <Property name="caption">模板下载</Property>
         <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
         <Property name="visible">false</Property>
@@ -902,11 +903,14 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
         <Property name="tags">批量更新重量、物流商、宅配商</Property>
       </ToolBarButton>
       <ToolBarButton id="btnTemplateUpdate">
-        <ClientEvent name="onClick">view.get(&quot;#updateTemplateAction&quot;).execute();	&#xD;
+        <ClientEvent name="onClick">var parameter={&#xD;
+	templetCode:&quot;biz_dispatch_bill_import&quot;&#xD;
+};&#xD;
 &#xD;
-</ClientEvent>
+view.get(&quot;#downloadTemplateAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
         <Property name="caption">更新模板下载</Property>
         <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+        <Property name="action">downloadTemplateAction</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="queyConditionForm">
@@ -1414,6 +1418,12 @@ arg.processDefault = true;&#xD;
                 <Property name="align">right</Property>
                 <Editor/>
               </DataColumn>
+              <DataColumn>
+                <Property name="name">carrierWeight</Property>
+                <Property name="property">carrierWeight</Property>
+                <Property name="width">78</Property>
+                <Editor/>
+              </DataColumn>
             </DataGrid>
           </ControlTab>
           <ControlTab>
@@ -1695,7 +1705,8 @@ view.id(&quot;updateAddressAction&quot;).execute(&#xD;
       <Property name="service">dispatchBillController#reCalculate</Property>
     </AjaxAction>
     <DownloadAction id="downloadTemplateAction">
-      <Property name="fileProvider">dispatchBillController#downloadTemplate</Property>
+      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
+      <Property name="target">workspace</Property>
     </DownloadAction>
     <Dialog id="importWayBillDialog">
       <ClientEvent name="onShow">$(&quot;#d_progressLabel&quot;).hide();&#xD;

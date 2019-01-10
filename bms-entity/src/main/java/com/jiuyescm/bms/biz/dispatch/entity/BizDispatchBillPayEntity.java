@@ -190,7 +190,19 @@ public class BizDispatchBillPayEntity implements IEntity {
 	private String servicename;
 	
 	//报价list
-	private List<PriceOutMainDispatchEntity> priceList;	
+	private List<PriceOutMainDispatchEntity> priceList;
+	
+	//物流商重量
+	private Double carrierWeight;
+
+	public Double getCarrierWeight() {
+		return carrierWeight;
+	}
+
+	public void setCarrierWeight(Double carrierWeight) {
+		this.carrierWeight = carrierWeight;
+	}
+
 	public String getAdjustDeliverid() {
 		return adjustDeliverid;
 	}

@@ -277,6 +277,10 @@
         <Property name="dataType">Double</Property>
         <Property name="label">泡重</Property>
       </PropertyDef>
+      <PropertyDef name="carrierWeight">
+        <Property name="dataType">Double</Property>
+        <Property name="label">物流商重量</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1206,6 +1210,11 @@ arg.processDefault = true;</ClientEvent>
         <DataColumn name="extattr1">
           <Property name="property">extattr1</Property>
           <Property name="width">90</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">carrierWeight</Property>
+          <Property name="name">carrierWeight</Property>
+          <Property name="width">130</Property>
         </DataColumn>
       </DataGrid>
     </Container>

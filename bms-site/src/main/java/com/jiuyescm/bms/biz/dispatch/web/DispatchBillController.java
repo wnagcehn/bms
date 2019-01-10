@@ -940,7 +940,8 @@ public class DispatchBillController{
 		
 		int cols = xssfSheet.getRow(0).getPhysicalNumberOfCells();
 		
-		if(cols>8){
+		//校验导入Excel列的数量
+		if(cols>9){
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 			errorVo = new ErrorMessageVo();
 			errorVo.setMsg("Excel导入格式错误请参考标准模板检查!");
@@ -956,6 +957,8 @@ public class DispatchBillController{
 		String userid=JAppContext.currentUserName();
 		
 		String carrier = "";
+
+		//根据Excel行数遍历
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
         	Map<String,Object> map0 = new HashMap<String,Object>();
         	
@@ -967,6 +970,7 @@ public class DispatchBillController{
 				return map;
 			}
 			
+			//获得每列的值
 			String waybillNo = getCellValue(xssfRow.getCell(0));
 			String adjustProvince=getCellValue(xssfRow.getCell(1));
 			String adjustCity=getCellValue(xssfRow.getCell(2));
@@ -975,6 +979,8 @@ public class DispatchBillController{
 			String adjustCarrier = getCellValue(xssfRow.getCell(5));
 			String adjustDeliver = getCellValue(xssfRow.getCell(6));
 			String serviceTypeName = getCellValue(xssfRow.getCell(7));
+			String carrierWeight = getCellValue(xssfRow.getCell(8));
+			
 			String adjustcarrierid = "";
 			for (CarrierVo carriervo : carrierList) {
 				if (!StringUtils.isEmpty(adjustCarrier) && adjustCarrier.equals(carriervo.getName())) {
@@ -1109,6 +1115,19 @@ public class DispatchBillController{
 				}
 			}
 			
+			//物流商重量
+			if(!StringUtils.isEmpty(carrierWeight)){
+				boolean isNumber = ExportUtil.isNumber(adjustWeight);
+				if(!isNumber) {
+					int lieshu = rowNum + 1;
+					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}else{
+					map0.put("carrierWeight", carrierWeight);
+				}
+			}
+			
 			//是否过账
 			boolean isGz = validateWillNo(ExportUtil.replaceBlank(waybillNo));
 			if(isGz){
@@ -1123,6 +1142,7 @@ public class DispatchBillController{
 				map0.put("lastModifyTime", nowdate);
 				list.add(map0);
 			}
+			
         }
         DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
         
