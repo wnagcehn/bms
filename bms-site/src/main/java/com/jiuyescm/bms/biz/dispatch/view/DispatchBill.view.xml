@@ -838,11 +838,6 @@ validRetryAction.execute(function(retMap){&#xD;
         <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
         <Property name="visible">true</Property>
       </ToolBarButton>
-      <ToolBarButton id="btnTemplateDownload">
-        <Property name="caption">模板下载</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
-        <Property name="visible">false</Property>
-      </ToolBarButton>
       <ToolBarButton id="btnTemplateImport">
         <ClientEvent name="onClick">view.get(&quot;#importWayBillDialog&quot;).show();&#xD;
 </ClientEvent>
