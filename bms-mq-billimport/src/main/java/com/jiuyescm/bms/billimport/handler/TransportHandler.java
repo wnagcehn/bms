@@ -68,7 +68,7 @@ public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTemp
 
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "订单创建日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						Timestamp createTime = DateUtil

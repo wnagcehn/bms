@@ -57,7 +57,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "区域仓":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setWarehouseName(dc.getColValue());					

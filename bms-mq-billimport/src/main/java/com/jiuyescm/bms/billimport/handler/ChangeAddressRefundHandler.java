@@ -47,7 +47,7 @@ public class ChangeAddressRefundHandler extends CommonHandler<BillFeesReceiveDis
 		BillFeesReceiveDispatchTempEntity entity = new BillFeesReceiveDispatchTempEntity();
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "客户":
 					if (StringUtils.isBlank(dc.getColValue())) {
 						isCustomerNull = true;

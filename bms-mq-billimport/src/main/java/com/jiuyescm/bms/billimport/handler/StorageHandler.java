@@ -72,7 +72,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "日期":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
