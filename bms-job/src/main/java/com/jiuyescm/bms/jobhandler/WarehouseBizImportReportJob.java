@@ -78,12 +78,15 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		XxlJobLogger.log("免导商家处理  {0}",paramMonthMap);
 		List<ReportWarehouseCustomerEntity> list=reportWarehouseBizImportService.queryWareList(paramMonthMap);
 		XxlJobLogger.log("免导商家配置数量【{0}】",list.size());
-		if(list.size()>0){
-			reportWarehouseBizImportService.updateReport(list);
-		}
+
 		//插入应导入仓库
 		XxlJobLogger.log("插入应导入仓库");
 		reportWarehouseBizImportService.insertReport(paramMonthMap);
+		
+		//将表中存在免导商家配置的数据的删除标记置为1，包括理论导入和实际导入
+		if(list.size()>0){
+			reportWarehouseBizImportService.updateReport(list);
+		}
 		XxlJobLogger.log("免导配置处理耗时【{0}】毫秒",(System.currentTimeMillis()-start));
 	}
 }
