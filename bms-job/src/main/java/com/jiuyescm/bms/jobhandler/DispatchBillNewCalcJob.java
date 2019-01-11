@@ -855,6 +855,12 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		map.put("province", entity.getReceiveProvinceId());
 		map.put("weight", entity.getWeight());
 		List<BmsQuoteDispatchDetailVo> price = jobPriceContractInfoService.queryAllByTemplateId(map);
+		if(price==null || price.size() ==0){
+			XxlJobLogger.log("-->"+entity.getId()+"数据库未查询到报价 查询条件{0}",map);
+		}
+		else{
+			XxlJobLogger.log("-->"+entity.getId()+"报价条数【{0}】 查询条件{1}",price.size(),map);
+		}
 		return price;
 	}
 	
@@ -891,58 +897,23 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	 * @return
 	 */
 	private List<BmsQuoteDispatchDetailVo> getQuoEntites(BizDispatchBillEntity entity,String subjectId){
-		//标准商家id
-		
-		List<BmsQuoteDispatchDetailVo> list=new ArrayList<>();
-		/*String standCustomerId="";
-		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			standCustomerId=queryShunfengCustomer();
-			if(StringUtils.isNotBlank(standCustomerId)){
-				list=queryShunfengPrice(entity,subjectId,standCustomerId);
-			}
-		}else{*/
-			list=queryPriceByCustomer(entity,subjectId);
-		/*}*/
+		//查询报价
+		List<BmsQuoteDispatchDetailVo> list=queryPriceByCustomer(entity,subjectId);
 
 		//如果有多条,走筛选规则
 		if(list.size()>0){
-			//走地址筛选
+			//1.走物流产品类型筛选  2.走温度筛选 3.走地址筛选
+			XxlJobLogger.log("-->"+entity.getId()+"走筛选 筛选前报价条数【{0}】",list.size());
 			list=handNewBizDispatch(list, entity);
+			XxlJobLogger.log("-->"+entity.getId()+"筛选后报价条数【{0}】",list.size());
 			if(list.size()==0){
 				return list;
 			}
-			
-			//根据报价形式查询到对应的筛选规则
-			Map<String,Object> map=new HashMap<String,Object>();
-			/*String priceType="";
-			//判断报价形式
-			if("SHUNFENG_DISPATCH".equals(subjectId)){
-				if(StringUtils.isNotBlank(standCustomerId)){
-					map.put("customerId",standCustomerId);
-					map.put("subjectId",subjectId);
-					priceType=jobPriceContractInfoService.queryShunfengPriceType(map);
-				}
-			}else{
-				PriceContractInfoEntity contractEntity=mapContact.get(entity.getCustomerid());
-				if(contractEntity!=null && StringUtils.isNotBlank(contractEntity.getContractCode())){
-					map.put("contractCode",contractEntity.getContractCode());
-					map.put("subjectId",subjectId);
-					priceType=jobPriceContractInfoService.queryPriceType(map);
-				}		
-			}*/
-			
-			String quote_id = QuoteFilter(entity, list, null);
-			if(quote_id == null){
-				return null;
-			}
-			List<BmsQuoteDispatchDetailVo> list1 = new ArrayList<BmsQuoteDispatchDetailVo>();
-			map.clear();
-			map.put("id",quote_id);		
-			BmsQuoteDispatchDetailVo bmsQuote=jobPriceContractInfoService.queryNewOne(map);	
-			list1.add(bmsQuote);
-			return list1;
-		}
-		
+			for (BmsQuoteDispatchDetailVo bmsQuoteDispatchDetailVo : list) {
+				XxlJobLogger.log("-->"+entity.getId()+"筛选后报价明细【{0}】",JSONObject.fromObject(bmsQuoteDispatchDetailVo));
+			}		
+			return list;
+		}	
 		return list;
 	}
 	
@@ -1292,6 +1263,13 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		String bizCity=bizEntity.getReceiveCityId();
 		String bizArea=bizEntity.getReceiveDistrictId();
 		
+		//物流产品类型
+		String bizServiceCode=StringUtils.isNotBlank(bizEntity.getAdjustServiceTypeCode())?bizEntity.getAdjustServiceTypeCode():bizEntity.getServiceTypeCode();
+		bizServiceCode=StringUtils.isNotBlank(bizServiceCode)?bizServiceCode:"";
+		
+		//温度
+		String bizTemperatureCode = StringUtil.isEmpty(bizEntity.getTemperatureTypeCode())?"":bizEntity.getTemperatureTypeCode();
+		
 		Map<Long,BmsQuoteDispatchDetailVo> map=new HashMap<>();
 		
 		Map<Integer,String> newPrice=new HashMap<Integer,String>();
@@ -1302,13 +1280,28 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		//匹配不上      3
 		for(BmsQuoteDispatchDetailVo mainDispatchEntity : priceList){				
 			map.put(mainDispatchEntity.getId(), mainDispatchEntity);
-			String biaoshi="1";
+			String biaoshi="";
 			
+			//物流产品类型
+			String dispatchServiceCode=mainDispatchEntity.getServiceTypeCode();
+			//温度类型
+			String dispatchTemetureCode=mainDispatchEntity.getTemperatureTypeCode();
 			//获取报价此时的市ID
 			String dispatchCityId=mainDispatchEntity.getCityId();
 			//获取报价此时的区ID
 			String dispatchAreaId=mainDispatchEntity.getAreaId();
-						
+					
+			//判断物流产品类型
+			if(StringUtils.isNotBlank(dispatchServiceCode)){
+				if(dispatchServiceCode.equals(bizServiceCode)){
+					biaoshi+="1";
+				}else{
+					biaoshi+="3";
+				}
+			}else{
+				biaoshi+="2";
+			}
+			
 			//判断区
 			if(StringUtils.isNotBlank(dispatchAreaId)){
 				if(dispatchAreaId.equals(bizArea)){
@@ -1332,12 +1325,25 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				biaoshi+="2";
 			}
 			
-			int b=Integer.parseInt(biaoshi);
-			if(newPrice.containsKey(b)){
-				newPrice.put(b, newPrice.get(b)+","+mainDispatchEntity.getId());
+			//判断温度
+			if(StringUtils.isNotBlank(dispatchTemetureCode)){
+				if(dispatchTemetureCode.equals(bizTemperatureCode)){
+					biaoshi+="1";
+				}else{
+					biaoshi+="3"; 
+				}
 			}else{
-				newPrice.put(b, mainDispatchEntity.getId().toString());
-			}			
+				biaoshi+="2";
+			}
+			
+			if(!biaoshi.contains("3")){
+				int b=Integer.parseInt(biaoshi);
+				if(newPrice.containsKey(b)){
+					newPrice.put(b, newPrice.get(b)+","+mainDispatchEntity.getId());
+				}else{
+					newPrice.put(b, mainDispatchEntity.getId().toString());
+				}	
+			}
 		}
 		
 		
