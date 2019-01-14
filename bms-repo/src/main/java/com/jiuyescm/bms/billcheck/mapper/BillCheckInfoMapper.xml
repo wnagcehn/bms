@@ -454,7 +454,7 @@
     <update id="update" parameterType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
         update bill_check_info 
 		<set >
-
+<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
 <if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>
 <if test="invoiceName != null" >invoice_name=#{invoiceName,jdbcType=VARCHAR},</if>
 <if test="billName != null" >bill_name=#{billName,jdbcType=VARCHAR},</if>
@@ -506,7 +506,19 @@
 <if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 <if test="billExcelUrl != null" >bill_excel_url=#{billExcelUrl,jdbcType=VARCHAR}</if>
 		</set>
-        where id=#{id}
+        where 1=1 and del_flag='0'
+		<if test="(id != null and id !='')" >
+				and id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and create_month = #{createMonth}
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and invoice_name=#{invoiceName}
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and bill_name=#{billName}
+		</if>
     </update>
 
 	<update id="deleteByBillNo" parameterType="String">

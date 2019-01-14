@@ -220,7 +220,6 @@ public class ReceiveBillImportListener implements MessageListener {
 				if (checkInfoFlag) {
 					logger.info(billNo+"写入账单主表");
 					//账单跟踪 组装数据
-					DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 					BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
 					checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
 					checkInfoVo.setBillNo(billNo);
@@ -290,6 +289,15 @@ public class ReceiveBillImportListener implements MessageListener {
 					//存储金额
 					billCheckInfoService.saveNew(checkInfoVo);
 					
+				}else{
+					//不生成账单跟踪记录，判断账单跟踪记录表中是否有历史记录，有则更新账单编号
+					//账单跟踪 组装数据
+					BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
+					checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
+					checkInfoVo.setBillNo(billNo);
+					checkInfoVo.setBillName(param.get("billName").toString());
+					checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
+					billCheckInfoService.update(checkInfoVo);
 				}
 				
 				//更新导入主表		
