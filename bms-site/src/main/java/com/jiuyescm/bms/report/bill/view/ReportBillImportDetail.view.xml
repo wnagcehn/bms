@@ -515,6 +515,36 @@
         <Property name="dataType">BigDecimal</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtBillReceiptDetailCondition">
+      <PropertyDef name="createMonth">
+        <Property></Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillReceiptStorageDetailCondition">
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">对账月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">客户名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillReceiptBizDetailCondition">
+      <PropertyDef name="createMonth">
+        <Property></Property>
+        <Property name="label">对账月份</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <DataSet id="dsBillReceiptDetail">
@@ -533,9 +563,35 @@
       <Property name="dataProvider">reportBillImportDetailController#queryBizDetail</Property>
       <Property name="pageSize">20</Property>
     </DataSet>
+    <DataSet id="dsBillReceiptDetailCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBillReceiptDetailCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="loadMode">lazy</Property>
+      <Property name="dataType">[dtBillReceiptDetailCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillReceiptStorageDetailCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBillReceiptStorageDetailCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBillReceiptStorageDetailCondition]</Property>
+    </DataSet>
+    <DataSet id="dsBillReceiptBizDetailCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBillReceiptBizDetailCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBillReceiptBizDetailCondition]</Property>
+    </DataSet>
     <ToolBar>
       <ToolBarButton id="btnExport">
-        <ClientEvent name="onClick">view.get(&quot;#downloadAction&quot;).execute();&#xD;
+        <ClientEvent name="onClick">var receiptCondition = view.get(&quot;#dsBillReceiptDetailCondition.data&quot;).current;&#xD;
+var storageCondition = view.get(&quot;#dsBillReceiptStorageDetailCondition.data&quot;).current;&#xD;
+var bizCondition = view.get(&quot;#dsBillReceiptBizDetailCondition.data&quot;).current;&#xD;
+&#xD;
+var param={&#xD;
+	receiptCreateMonth:receiptCondition.get(&quot;createMonth&quot;),&#xD;
+	receiptInvoiceName:receiptCondition.get(&quot;invoiceName&quot;),&#xD;
+	storageCreateMonth:storageCondition.get(&quot;createMonth&quot;),&#xD;
+	storageInvoiceName:storageCondition.get(&quot;invoiceName&quot;),&#xD;
+	bizCreateMonth:bizCondition.get(&quot;createMonth&quot;),&#xD;
+	bizBillName:bizCondition.get(&quot;billName&quot;)&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,param).execute();&#xD;
 </ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="action">downloadAction</Property>
@@ -550,11 +606,35 @@
             <ToolBar>
               <DataPilot>
                 <Property name="dataSet">dsBillReceiptDetail</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
               </DataPilot>
+              <ToolBarButton id="btnQuery1">
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsBillReceiptDetailCondition.data&quot;).current;&#xD;
+&#xD;
+var tmpDataSet=view.get(&quot;#dsBillReceiptDetail&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                <Property name="caption">查询</Property>
+              </ToolBarButton>
             </ToolBar>
+            <AutoForm id="receiptForm">
+              <Property name="dataSet">dsBillReceiptDetailCondition</Property>
+              <Property name="cols">250,250</Property>
+              <AutoFormElement>
+                <Property name="name">createMonth</Property>
+                <Property name="property">createMonth</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">invoiceName</Property>
+                <Property name="property">invoiceName</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
             <DataGrid>
               <Property name="dataSet">dsBillReceiptDetail</Property>
               <Property name="dataType">dtBillReceiptDetail</Property>
+              <Property name="readOnly">true</Property>
               <DataColumn name="createMonth">
                 <Property name="property">createMonth</Property>
                 <Property name="width">120</Property>
@@ -752,10 +832,34 @@
             <ToolBar>
               <DataPilot>
                 <Property name="dataSet">dsBillReceiptStorageDetail</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
               </DataPilot>
+              <ToolBarButton id="btnQuery2">
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsBillReceiptStorageDetailCondition.data&quot;).current;&#xD;
+&#xD;
+var tmpDataSet=view.get(&quot;#dsBillReceiptStorageDetail&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                <Property name="caption">查询</Property>
+              </ToolBarButton>
             </ToolBar>
+            <AutoForm id="storageForm">
+              <Property name="dataSet">dsBillReceiptStorageDetailCondition</Property>
+              <Property name="cols">250,250</Property>
+              <AutoFormElement>
+                <Property name="name">createMonth</Property>
+                <Property name="property">createMonth</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">invoiceName</Property>
+                <Property name="property">invoiceName</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
             <DataGrid>
               <Property name="dataSet">dsBillReceiptStorageDetail</Property>
+              <Property name="readOnly">true</Property>
               <DataColumn name="area">
                 <Property name="property">area</Property>
                 <Property name="width">120</Property>
@@ -974,10 +1078,34 @@
             <ToolBar>
               <DataPilot>
                 <Property name="dataSet">dsBillReceiptBizDetail</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
               </DataPilot>
+              <ToolBarButton id="btnQuery3">
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsBillReceiptBizDetailCondition.data&quot;).current;&#xD;
+&#xD;
+var tmpDataSet=view.get(&quot;#dsBillReceiptBizDetail&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, condition).flushAsync();</ClientEvent>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                <Property name="caption">查询</Property>
+              </ToolBarButton>
             </ToolBar>
+            <AutoForm id="bizForm">
+              <Property name="dataSet">dsBillReceiptBizDetailCondition</Property>
+              <Property name="cols">250,250</Property>
+              <AutoFormElement>
+                <Property name="name">createMonth</Property>
+                <Property name="property">createMonth</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">billName</Property>
+                <Property name="property">billName</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
             <DataGrid>
               <Property name="dataSet">dsBillReceiptBizDetail</Property>
+              <Property name="readOnly">true</Property>
               <DataColumn name="area">
                 <Property name="property">area</Property>
                 <Property name="width">120</Property>

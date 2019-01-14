@@ -116,6 +116,93 @@
 			GROUP BY a.bill_no
 			ORDER BY a.create_time desc
     </select>
+    
+    <select id="queryOne" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_receive_master
+        where 1 = 1 and del_flag='0'
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and create_month = #{createMonth}
+			</if>
+        	<if test=" invoiceName != null and invoiceName !='' ">
+				and invoice_name = #{invoiceName}
+			</if>
+        	<if test=" invoiceId != null and invoiceId !='' ">
+				and invoice_id = #{invoiceId}
+			</if>
+        	<if test=" billName != null and billName !='' ">
+				and bill_name = #{billName}
+			</if>
+        	<if test=" taskRate != null and taskRate !='' ">
+				and task_rate = #{taskRate}
+			</if>
+        	<if test=" taskStatus != null and taskStatus !='' ">
+				and task_status = #{taskStatus}
+			</if>
+        	<if test=" amount != null and amount !='' ">
+				and amount = #{amount}
+			</if>
+        	<if test=" adjustAmount != null and adjustAmount !='' ">
+				and adjust_amount = #{adjustAmount}
+			</if>
+        	<if test=" adjustReason != null and adjustReason !='' ">
+				and adjust_reason = #{adjustReason}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" creatorId != null and creatorId !='' ">
+				and creator_id = #{creatorId}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" finishTime != null and finishTime !='' ">
+				and finish_time = #{finishTime}
+			</if>
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				and last_modifier = #{lastModifier}
+			</if>
+        	<if test=" lastModifierId != null and lastModifierId !='' ">
+				and last_modifier_id = #{lastModifierId}
+			</if>
+        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				and last_modify_time = #{lastModifyTime}
+			</if>
+        	<if test=" billNo != null and billNo !='' ">
+				and bill_no = #{billNo}
+			</if>
+        	<if test=" originFileName != null and originFileName !='' ">
+				and origin_file_name = #{originFileName}
+			</if>
+        	<if test=" originFilePath != null and originFilePath !='' ">
+				and origin_file_path = #{originFilePath}
+			</if>
+        	<if test=" resultFileName != null and resultFileName !='' ">
+				and result_file_name = #{resultFileName}
+			</if>
+        	<if test=" resultFilePath != null and resultFilePath !='' ">
+				and result_file_path = #{resultFilePath}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+        	<if test=" expectStatus != null and expectStatus !='' ">
+				and expect_status = #{expectStatus}
+			</if>
+        	<if test=" differentRemark != null and differentRemark !='' ">
+				and different_remark = #{differentRemark}
+			</if>
+        	<if test=" isCalculated != null and isCalculated !='' ">
+				and is_calculated = #{isCalculated}
+			</if> 
+			limit 1
+    </select>
 
 	<!-- 保存 -->
     <insert id="save" parameterType="com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity">

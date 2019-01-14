@@ -60,6 +60,13 @@
 			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
 			 LEFT JOIN system_code h on a.balance_name=h.code_name and h.type_code='BANLANCE_GROUP' and h.`status`='0'
 			 where a.del_flag='0'
+			<if test=" createMonth != null and createMonth !=''">
+				 and a.create_month = #{createMonth}
+			</if>
+			<if test=" invoiceName != null and invoiceName !=''">
+				 and a.invoice_name = #{invoiceName}
+			</if>
+			 
     </select>
     
     <!-- 导出收入明细 --> 
@@ -121,6 +128,12 @@
 			 LEFT JOIN (select bill_check_id,GROUP_CONCAT(invoice_no) invoiceNo from bill_check_invoice where del_flag='0' GROUP BY bill_check_id) g on a.id=g.bill_check_id
 			 LEFT JOIN system_code h on a.balance_name=h.code_name and h.type_code='BANLANCE_GROUP' and h.`status`='0'
 			 where a.del_flag='0'
+			 <if test=" createMonth != null and createMonth !=''">
+				 and a.create_month = #{createMonth}
+			 </if>
+			 <if test=" invoiceName != null and invoiceName !=''">
+				 and a.invoice_name = #{invoiceName}
+			 </if>
     </select>
     
     <!-- 查询仓储明细 --> 
@@ -187,6 +200,12 @@
 	    ) d on a.bill_no=d.bill_no
     	LEFT JOIN system_code e on a.balance_name=e.code_name and e.type_code='BANLANCE_GROUP' and e.`status`='0'
 		where a.del_flag='0'
+		 <if test=" createMonth != null and createMonth !=''">
+			 and a.create_month = #{createMonth}
+		 </if>
+		 <if test=" invoiceName != null and invoiceName !=''">
+			 and a.invoice_name = #{invoiceName}
+		 </if>
     </select>
     
     
@@ -254,6 +273,12 @@
 	    ) d on a.bill_no=d.bill_no
     	LEFT JOIN system_code e on a.balance_name=e.code_name and e.type_code='BANLANCE_GROUP' and e.`status`='0'
 		where a.del_flag='0'
+		 <if test=" createMonth != null and createMonth !=''">
+			 and a.create_month = #{createMonth}
+		 </if>
+		 <if test=" invoiceName != null and invoiceName !=''">
+			 and a.invoice_name = #{invoiceName}
+		 </if>
     </select>
     
      <!--查询业务明细 --> 
@@ -312,6 +337,13 @@
 		from report_bill_import_detail a
 		INNER JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
    		LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
+   		where 1=1
+   		 <if test=" createMonth != null and createMonth !=''">
+			 and b.create_month = #{createMonth}
+		 </if>
+		 <if test=" billName != null and billName !=''">
+			 and b.bill_name = #{billName}
+		 </if>
     </select>
     
      <!--导出业务明细--> 
@@ -369,6 +401,13 @@
 			ROUND(a.pallet_lc_amount/a.pallet_lc_num,2) as lcPrice
 		from report_bill_import_detail a
 		INNER JOIN bill_check_info b on a.bill_no=b.bill_no and b.del_flag='0'
-    LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
+   		 LEFT JOIN system_code c on b.balance_name=c.code_name and c.type_code='BANLANCE_GROUP' and c.`status`='0'
+   		 where 1=1
+    	<if test=" createMonth != null and createMonth !=''">
+			 and b.create_month = #{createMonth}
+		 </if>
+		 <if test=" billName != null and billName !=''">
+			 and b.bill_name = #{billName}
+		 </if>
     </select>
 </mapper>

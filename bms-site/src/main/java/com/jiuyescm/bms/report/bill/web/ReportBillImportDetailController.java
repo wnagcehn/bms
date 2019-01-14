@@ -92,7 +92,7 @@ public class ReportBillImportDetailController {
 	
 	@SuppressWarnings("unchecked")
 	@FileProvider
-	public DownloadFile getFile(Map<String, String> parameter) throws IOException{
+	public DownloadFile getFile(Map<String, Object> parameter) throws IOException{
 		
 		
 		BmsTempletInfoEntity template=bmsTempletInfoService.findByCode("bill_report_export");
@@ -104,6 +104,8 @@ public class ReportBillImportDetailController {
 			
 			//=================================第一个sheet写数据===========================
 			Map<String, Object> condition=new HashMap<String, Object>();
+			condition.put("createMonth", parameter.get("receiptCreateMonth"));
+			condition.put("invoiceName", parameter.get("receiptInvoiceName"));
 			List<Map<String,Object>> list1=reportBillImportDetailService.queryReceiptExport(condition);
 			
 		    XSSFSheet sheet1=xssfWorkbook.getSheetAt(0);
@@ -128,6 +130,9 @@ public class ReportBillImportDetailController {
 		    
 		    
 			//=================================第二个sheet写数据===========================
+		    condition.clear();			
+		    condition.put("createMonth", parameter.get("storageCreateMonth"));
+			condition.put("invoiceName", parameter.get("storageInvoiceName"));
 			List<Map<String,Object>> list2=reportBillImportDetailService.queryStorageExport(condition);
 			
 		    XSSFSheet sheet2=xssfWorkbook.getSheetAt(1);
@@ -152,6 +157,9 @@ public class ReportBillImportDetailController {
 		    sheet2.shiftRows(firstRow2.getRowNum()+1, firstRow2.getRowNum()+1+list2.size(), -1);//删除第一行，然后使下方单元格上移
 		    
 			//=================================第三个sheet写数据===========================
+		    condition.clear();			
+		    condition.put("createMonth", parameter.get("bizCreateMonth"));
+			condition.put("billName", parameter.get("bizBillName"));
 			List<Map<String,Object>> list3=reportBillImportDetailService.queryBizExport(condition);
 			
 		    XSSFSheet sheet3=xssfWorkbook.getSheetAt(2);

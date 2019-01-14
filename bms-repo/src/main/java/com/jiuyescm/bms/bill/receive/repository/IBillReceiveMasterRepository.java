@@ -22,7 +22,9 @@ public interface IBillReceiveMasterRepository {
 		int pageNo, int pageSize);
 
 	List<BillReceiveMasterEntity> query(Map<String, Object> condition);
-
+	
+	BillReceiveMasterEntity queryOne(Map<String, Object> condition);
+	
     int save(BillReceiveMasterEntity entity);
 
     int update(BillReceiveMasterEntity entity);

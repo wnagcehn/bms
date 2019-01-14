@@ -206,5 +206,13 @@ public class BillReceiveMasterRepositoryImpl extends MyBatisDao implements IBill
 		}
 		return money;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public BillReceiveMasterEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillReceiveMasterEntity entity=(BillReceiveMasterEntity) selectOne("com.jiuyescm.bms.bill.receive.BillReceiveMasterMapper.queryOne", condition);
+		return entity;
+	}
 	
 }
