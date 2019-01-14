@@ -209,6 +209,9 @@ public class ReceiveBillImportListener implements MessageListener {
 	}
 	
 	public void saveAll(Map<String, Object> param){
+		//生成账单跟踪标识
+		boolean checkInfoFlag = Boolean.valueOf(param.get("isCreateCheckInfo").toString());
+		
 		String billNo=param.get("billNo").toString();
 		BillReceiveMasterVo billReceiveMasterVo = new BillReceiveMasterVo();
 		try{
@@ -231,78 +234,90 @@ public class ReceiveBillImportListener implements MessageListener {
 				entity.setAmount(totalMoney);
 				entity.setBillNo(billNo);
 				//更新导入主表
-				billReceiveMasterService.update(entity);
-				logger.info("任务ID：{}，写入账单主表",taskId);
-				//账单跟踪 组装数据
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
-				checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
-				checkInfoVo.setBillNo(billNo);
-				checkInfoVo.setBillName(param.get("billName").toString());
-				checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
-				checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
-				
-				Date d=getNewDate(param.get("billStartTime").toString());
-				if(d!=null){
-					checkInfoVo.setBillStartTime(d);
-				}
-				checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
-				checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
-				checkInfoVo.setProjectName(param.get("projectName").toString());
-				checkInfoVo.setSellerId(param.get("sellerId").toString());
-				checkInfoVo.setSellerName(param.get("sellerName").toString());
-				checkInfoVo.setDeptName(param.get("deptName").toString());
-				checkInfoVo.setDeptCode(param.get("deptCode").toString());
-				checkInfoVo.setProjectManagerId(param.get("projectManagerId").toString());
-				checkInfoVo.setProjectManagerName(param.get("projectManagerName").toString());
-				checkInfoVo.setBalanceId(param.get("balanceId").toString());
-				checkInfoVo.setBalanceName(param.get("balanceName").toString());
-				checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
-				
-				checkInfoVo.setIsneedInvoice(BmsEnums.isInvoice.getCode(param.get("isneedInvoice").toString()));
-				//是否需要发票
-				if(StringUtils.isNotBlank(checkInfoVo.getIsneedInvoice())){
-					if("1".equals(checkInfoVo.getIsneedInvoice())){
-						checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.NO_INVOICE.getCode());//未开票 
-					}else if("0".equals(checkInfoVo.getIsneedInvoice())){
-						checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票 
+				billReceiveMasterService.update(entity);	
+				if (checkInfoFlag) {
+					logger.info(billNo+"写入账单主表");
+					//账单跟踪 组装数据
+					BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
+					checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
+					checkInfoVo.setBillNo(billNo);
+					checkInfoVo.setBillName(param.get("billName").toString());
+					checkInfoVo.setInvoiceId(param.get("invoiceId").toString());
+					checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
+					
+					Date d=getNewDate(param.get("billStartTime").toString());
+					if(d!=null){
+						checkInfoVo.setBillStartTime(d);
 					}
+					checkInfoVo.setFirstClassName(param.get("firstClassName").toString());
+					checkInfoVo.setBizTypeName(param.get("bizTypeName").toString());
+					checkInfoVo.setProjectName(param.get("projectName").toString());
+					checkInfoVo.setSellerId(param.get("sellerId").toString());
+					checkInfoVo.setSellerName(param.get("sellerName").toString());
+					checkInfoVo.setDeptName(param.get("deptName").toString());
+					checkInfoVo.setDeptCode(param.get("deptCode").toString());
+					checkInfoVo.setProjectManagerId(param.get("projectManagerId").toString());
+					checkInfoVo.setProjectManagerName(param.get("projectManagerName").toString());
+					checkInfoVo.setBalanceId(param.get("balanceId").toString());
+					checkInfoVo.setBalanceName(param.get("balanceName").toString());
+					checkInfoVo.setBillCheckStatus(BmsEnums.BillCheckStateEnum.getCode(param.get("billCheckStatus").toString()));
+					
+					checkInfoVo.setIsneedInvoice(BmsEnums.isInvoice.getCode(param.get("isneedInvoice").toString()));
+					//是否需要发票
+					if(StringUtils.isNotBlank(checkInfoVo.getIsneedInvoice())){
+						if("1".equals(checkInfoVo.getIsneedInvoice())){
+							checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.NO_INVOICE.getCode());//未开票 
+						}else if("0".equals(checkInfoVo.getIsneedInvoice())){
+							checkInfoVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票 
+						}
+					}
+					
+					if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
+						checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
+						checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
+						Date date=getNewDate(param.get("confirmDate").toString());
+						if (null != date) {
+							checkInfoVo.setConfirmDate(date);
+						}	
+					}
+					//新增账单状态判断
+					//1）如果对账状态为“已确认”and是否需要开票为“是”，将账单状态置为“待开票”；
+					//2）如果对账状态为“已确认”and是否需要开票为“否”，将账单状态置为“待收款”；
+					//3）如果对账状态不为“已确认”，将账单状态置为“待确认”；
+					if(BillCheckStateEnum.CONFIRMED.getCode().equals(checkInfoVo.getBillCheckStatus()) && "1".equals(checkInfoVo.getIsneedInvoice())){
+						checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_INVOICE.getCode());
+					}else if(BillCheckStateEnum.CONFIRMED.getCode().equals(checkInfoVo.getBillCheckStatus()) && "0".equals(checkInfoVo.getIsneedInvoice())){
+						checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+					}else{
+						checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_CONFIRMED.getCode());
+					}
+					BigDecimal money=BigDecimal.valueOf(totalMoney);
+					checkInfoVo.setConfirmAmount(money);
+					checkInfoVo.setConfirmUnInvoiceAmount(money);
+					checkInfoVo.setUnReceiptAmount(money);
+					checkInfoVo.setDelFlag("0");
+					checkInfoVo.setCreator(param.get("creator").toString());
+					checkInfoVo.setCreatorId(param.get("creatorId").toString());
+					checkInfoVo.setIsapplyBad("0");
+					checkInfoVo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());//未收款
+					//账单逾期时间
+					Date overdueDate=getDate(checkInfoVo.getCreateMonth());
+					checkInfoVo.setOverdueDate(overdueDate);
+					checkInfoVo.setCreateTime(JAppContext.currentTimestamp());
+					//存储金额
+					billCheckInfoService.saveNew(checkInfoVo);
+					
+				}else{
+					//不生成账单跟踪记录，判断账单跟踪记录表中是否有历史记录，有则更新账单编号
+					//账单跟踪 组装数据
+					BillCheckInfoVo checkInfoVo = new BillCheckInfoVo();
+					checkInfoVo.setCreateMonth(Integer.valueOf(param.get("createMonth").toString()));
+					checkInfoVo.setBillNo(billNo);
+					checkInfoVo.setBillName(param.get("billName").toString());
+					checkInfoVo.setInvoiceName(param.get("invoiceName").toString());
+					billCheckInfoService.update(checkInfoVo);
 				}
 				
-				if (BmsEnums.BillCheckStateEnum.CONFIRMED.getDesc().equals(param.get("billCheckStatus").toString())) {
-					checkInfoVo.setConfirmMan(param.get("confirmMan").toString());
-					checkInfoVo.setConfirmManId(param.get("confirmManId").toString());
-					Date date=getNewDate(param.get("confirmDate").toString());
-					if (null != date) {
-						checkInfoVo.setConfirmDate(date);
-					}	
-				}
-				//新增账单状态判断
-				//1）如果对账状态为“已确认”and是否需要开票为“是”，将账单状态置为“待开票”；
-				//2）如果对账状态为“已确认”and是否需要开票为“否”，将账单状态置为“待收款”；
-				//3）如果对账状态不为“已确认”，将账单状态置为“待确认”；
-				if(BillCheckStateEnum.CONFIRMED.getCode().equals(checkInfoVo.getBillCheckStatus()) && "1".equals(checkInfoVo.getIsneedInvoice())){
-					checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_INVOICE.getCode());
-				}else if(BillCheckStateEnum.CONFIRMED.getCode().equals(checkInfoVo.getBillCheckStatus()) && "0".equals(checkInfoVo.getIsneedInvoice())){
-					checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
-				}else{
-					checkInfoVo.setBillStatus(CheckBillStatusEnum.TB_CONFIRMED.getCode());
-				}
-				BigDecimal money=BigDecimal.valueOf(totalMoney);
-				checkInfoVo.setConfirmAmount(money);
-				checkInfoVo.setConfirmUnInvoiceAmount(money);
-				checkInfoVo.setUnReceiptAmount(money);
-				checkInfoVo.setDelFlag("0");
-				checkInfoVo.setCreator(param.get("creator").toString());
-				checkInfoVo.setCreatorId(param.get("creatorId").toString());
-				checkInfoVo.setIsapplyBad("0");
-				checkInfoVo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());//未收款
-				//账单逾期时间
-				Date overdueDate=getDate(checkInfoVo.getCreateMonth());
-				checkInfoVo.setOverdueDate(overdueDate);
-				checkInfoVo.setCreateTime(JAppContext.currentTimestamp());
-				//存储金额
-				billCheckInfoService.saveNew(checkInfoVo);				
 				//更新导入主表		
 				billReceiveMasterVo.setTaskStatus(BmsEnums.taskStatus.SUCCESS.getCode());
 				billReceiveMasterVo.setRemark("导入完成");
@@ -310,7 +325,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				//==================导入成功后汇总各个总金额=====================
 				ReportBillImportMasterVo vo=new ReportBillImportMasterVo();
 				//总金额
-				vo.setTotalMoney(money);
+				vo.setTotalMoney(BigDecimal.valueOf(totalMoney));
 				//仓储费用
 				Double storageMoney=billFeesReceiveStorageTempService.getImportStorageAmount(billNo);
 				vo.setTotalStorageMoney(new BigDecimal(storageMoney));

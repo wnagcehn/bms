@@ -142,10 +142,10 @@
 				and is_calculated = #{isCalculated}
 		</if>
 		<if test="(operateTime != null and operateTime !='')" >
-			    and operate_time >= #{operateTime} add <![CDATA[operate_time <= #{operateTime}]]>
+			    and operate_time >= #{operateTime} and <![CDATA[operate_time <= #{operateTime}]]>
 		</if>
 		<if test="(writeTime != null and writeTime !='')" >
-			    and write_time >= #{writeTime} add <![CDATA[write_time <= #{writeTime}]]>
+			    and write_time >= #{writeTime} and <![CDATA[write_time <= #{writeTime}]]>
 		</if>
 		<if test="(isDeliveryFree != null and isDeliveryFree !='')" >
 				and is_delivery_free = #{isDeliveryFree}
@@ -181,7 +181,7 @@
 				and pay_type = #{payType}
 		</if>
 		<if test="(kesuConfirmTime != null and kesuConfirmTime !='')" >
-			    and kesu_confirm_time >= #{kesuConfirmTime} add <![CDATA[kesu_confirm_time <= #{kesuConfirmTime}]]>
+			    and kesu_confirm_time >= #{kesuConfirmTime} and <![CDATA[kesu_confirm_time <= #{kesuConfirmTime}]]>
 		</if>
 		<if test="(isDeliveryFreeJ2c != null and isDeliveryFreeJ2c !='')" >
 				and is_delivery_free_j2c = #{isDeliveryFreeJ2c}
@@ -199,10 +199,10 @@
 				and confirm_month = #{confirmMonth}
 		</if>
 		<if test="(importConfirmTime != null and importConfirmTime !='')" >
-			    and import_confirm_time >= #{importConfirmTime} add <![CDATA[import_confirm_time <= #{importConfirmTime}]]>
+			    and import_confirm_time >= #{importConfirmTime} and <![CDATA[import_confirm_time <= #{importConfirmTime}]]>
 		</if>
 		<if test="(closeTime != null and closeTime !='')" >
-			    and close_time >= #{closeTime} add <![CDATA[close_time <= #{closeTime}]]>
+			    and close_time >= #{closeTime} and <![CDATA[close_time <= #{closeTime}]]>
 		</if>
 		<if test="(startTime != null and startTime !='') and (endTime != null and endTime !='')" >
 			    and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>

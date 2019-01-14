@@ -153,11 +153,11 @@ public class BillReceiveMasterController {
 						BigDecimal abnormal=new BigDecimal(abnormalMoney);
 						//差异率 = (预估金额-( 总金额 - 理赔金额 ) ) / (总金额 - 理赔金额)
 						//总金额
-						BigDecimal amount=new BigDecimal(entity.getAmount());
+						BigDecimal amount=new BigDecimal(entity.getTotalAmount());
 						
 						BigDecimal cha=amount.subtract(abnormal);
 						if(cha.compareTo(BigDecimal.ZERO)!=0){
-							BigDecimal rate=(entity.getExpectMoney().subtract(amount.subtract(abnormal)).divide(amount.subtract(abnormal),2, RoundingMode.HALF_UP));
+							BigDecimal rate=(entity.getExpectMoney().subtract(amount.subtract(abnormal.abs())).divide(amount.subtract(abnormal.abs()),2, RoundingMode.HALF_UP));
 							//差异率
 							entity.setDifferentRate(rate);
 						}		
@@ -273,95 +273,124 @@ public class BillReceiveMasterController {
 		final List<ErrorMessageVo> infoList = new ArrayList<ErrorMessageVo>();
 		List<UserVO> userList = userService.findAllUsers();
 		
-		//空校验(确认人和确认日期)
+		//空校验(商家合同名称+业务月份+账单名称)
 		Map<String, Object> maps = Maps.newHashMap();
-		checkNull(parameter, infoList, maps);
+		if ("null".equals(parameter.get("invoiceName").toString()) || "".equals(parameter.get("invoiceName").toString()) || "undefined".equals(parameter.get("invoiceName").toString())) {
+			ErrorMessageVo errorVo = new ErrorMessageVo();
+			errorVo.setMsg("商家合同名称不能为空！");
+			infoList.add(errorVo);
+			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+		}
+		if ("null".equals(parameter.get("createMonth").toString()) || "".equals(parameter.get("createMonth").toString()) || "undefined".equals(parameter.get("createMonth").toString())) {
+			ErrorMessageVo errorVo = new ErrorMessageVo();
+			errorVo.setMsg("业务月份不能为空！");
+			infoList.add(errorVo);
+			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+		}
+		if ("null".equals(parameter.get("billName").toString()) || "".equals(parameter.get("billName").toString()) || "undefined".equals(parameter.get("billName").toString())) {
+			ErrorMessageVo errorVo = new ErrorMessageVo();
+			errorVo.setMsg("账单名称不能为空！");
+			infoList.add(errorVo);
+			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+		}
 		if (!maps.isEmpty()) {
 			setProgress(6);
 			return maps;
 		}
 		
+		//生成账单跟踪标识
+		boolean checkInfoFlag = Boolean.valueOf(parameter.get("isCreateCheckInfo").toString());
 		
-		//"CONFIRMED".equals(parameter.get("billCheckStatus"))
-		if (parameter.get("confirmMan") != null && StringUtils.isNotBlank(parameter.get("confirmMan").toString())) {
-			//确认人
-			boolean exe1 = false;
-			for (UserVO userVO : userList) {
-				if (userVO.getCname().equals(parameter.get("confirmMan"))) {
-					parameter.put("confirmManId", userVO.getUsername());
-					exe1 = true;
-					break;
-				}
-			}
-			if (!exe1) {
+		if (checkInfoFlag) {
+			//账单跟踪字段的空校验
+			checkNull(parameter, infoList, maps);
+			if (!maps.isEmpty()) {
 				setProgress(6);
-				Map<String, Object> map = Maps.newHashMap();
-				ErrorMessageVo errorVo = new ErrorMessageVo();
-				errorVo.setMsg("未找到确认人，请重新输入！");
-				infoList.add(errorVo);
-				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
+				return maps;
 			}
-		}
-		
-		//人员变更，ID修改
-		if (null != userList && userList.size() > 0) {
 			
-			//销售员
-			boolean exe2 = false;
-			for (UserVO userVO : userList) {
-				if (userVO.getCname().equals(parameter.get("sellerName"))) {
-					parameter.put("sellerId", userVO.getUsername());
-					exe2 = true;
-					break;
+			if (parameter.get("confirmMan") != null && StringUtils.isNotBlank(parameter.get("confirmMan").toString())) {
+				//确认人
+				boolean exe1 = false;
+				for (UserVO userVO : userList) {
+					if (userVO.getCname().equals(parameter.get("confirmMan"))) {
+						parameter.put("confirmManId", userVO.getUsername());
+						exe1 = true;
+						break;
+					}
+				}
+				if (!exe1) {
+					setProgress(6);
+					Map<String, Object> map = Maps.newHashMap();
+					ErrorMessageVo errorVo = new ErrorMessageVo();
+					errorVo.setMsg("未找到确认人，请重新输入！");
+					infoList.add(errorVo);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
 				}
 			}
-			if (!exe2) {
-				setProgress(6);
-				Map<String, Object> map = Maps.newHashMap();
-				ErrorMessageVo errorVo = new ErrorMessageVo();
-				errorVo.setMsg("未找到销售员，请重新输入！");
-				infoList.add(errorVo);
-				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
-			}
-			//项目管理员
-			boolean exe3 = false;
-			for (UserVO userVO : userList) {
-				if (userVO.getCname().equals(parameter.get("projectManagerName"))) {
-					parameter.put("projectManagerId", userVO.getUsername());
-					exe3 = true;
-					break;
+			
+			//人员变更，ID修改
+			if (null != userList && userList.size() > 0) {
+				
+				//销售员
+				boolean exe2 = false;
+				for (UserVO userVO : userList) {
+					if (userVO.getCname().equals(parameter.get("sellerName"))) {
+						parameter.put("sellerId", userVO.getUsername());
+						exe2 = true;
+						break;
+					}
+				}
+				if (!exe2) {
+					setProgress(6);
+					Map<String, Object> map = Maps.newHashMap();
+					ErrorMessageVo errorVo = new ErrorMessageVo();
+					errorVo.setMsg("未找到销售员，请重新输入！");
+					infoList.add(errorVo);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}
+				//项目管理员
+				boolean exe3 = false;
+				for (UserVO userVO : userList) {
+					if (userVO.getCname().equals(parameter.get("projectManagerName"))) {
+						parameter.put("projectManagerId", userVO.getUsername());
+						exe3 = true;
+						break;
+					}
+				}
+				if (!exe3) {
+					setProgress(6);
+					Map<String, Object> map = Maps.newHashMap();
+					ErrorMessageVo errorVo = new ErrorMessageVo();
+					errorVo.setMsg("未找到项目管理员，请重新输入！");
+					infoList.add(errorVo);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
+				}
+				//结算员
+				boolean exe4 = false;
+				for (UserVO userVO : userList) {
+					if (userVO.getCname().equals(parameter.get("balanceName"))) {
+						parameter.put("balanceId", userVO.getUsername());
+						exe4 = true;
+						break;
+					}
+				}
+				if (!exe4) {
+					setProgress(6);
+					Map<String, Object> map = Maps.newHashMap();
+					ErrorMessageVo errorVo = new ErrorMessageVo();
+					errorVo.setMsg("未找到结算员，请重新输入！");
+					infoList.add(errorVo);
+					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+					return map;
 				}
 			}
-			if (!exe3) {
-				setProgress(6);
-				Map<String, Object> map = Maps.newHashMap();
-				ErrorMessageVo errorVo = new ErrorMessageVo();
-				errorVo.setMsg("未找到项目管理员，请重新输入！");
-				infoList.add(errorVo);
-				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
-			}
-			//结算员
-			boolean exe4 = false;
-			for (UserVO userVO : userList) {
-				if (userVO.getCname().equals(parameter.get("balanceName"))) {
-					parameter.put("balanceId", userVO.getUsername());
-					exe4 = true;
-					break;
-				}
-			}
-			if (!exe4) {
-				setProgress(6);
-				Map<String, Object> map = Maps.newHashMap();
-				ErrorMessageVo errorVo = new ErrorMessageVo();
-				errorVo.setMsg("未找到结算员，请重新输入！");
-				infoList.add(errorVo);
-				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-				return map;
-			}
-		}
+		}		
+		
+		
 		
 		//导入校验，已确认账单不能导入
 //		try {
@@ -399,21 +428,22 @@ public class BillReceiveMasterController {
 		}
 		
 		//账单跟踪判断是否校验
-		Map<String, Object> condition=new HashMap<>();
-		condition.put("createMonth", parameter.get("createMonth"));
-		condition.put("invoiceName", parameter.get("invoiceName"));
-		condition.put("billName", parameter.get("billName"));
-		BillCheckInfoVo billVo=billCheckInfoService.queryBillCheck(condition);
-		if (billVo!=null) {
-			setProgress(6);
-			Map<String, Object> map = Maps.newHashMap();
-			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("账单跟踪已存在，无法继续导入！");
-			infoList.add(errorVo);
-			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-			return map;
-		}
-		
+		if (checkInfoFlag) {
+			Map<String, Object> condition=new HashMap<>();
+			condition.put("createMonth", parameter.get("createMonth"));
+			condition.put("invoiceName", parameter.get("invoiceName"));
+			condition.put("billName", parameter.get("billName"));
+			BillCheckInfoVo billVo=billCheckInfoService.queryBillCheck(condition);
+			if (billVo!=null) {
+				setProgress(6);
+				Map<String, Object> map = Maps.newHashMap();
+				ErrorMessageVo errorVo = new ErrorMessageVo();
+				errorVo.setMsg("账单跟踪已存在，无法继续导入！");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+		}		
 		
 		String userId=ContextHolder.getLoginUserName();
 		String lockString=Tools.getMd5(userId + "BMS_QUE_RECEIVE_BILL_IMPORT");
@@ -468,24 +498,6 @@ public class BillReceiveMasterController {
 		if ("已确认".equals(parameter.get("billCheckStatus")) && ("null".equals(parameter.get("confirmDate").toString()) || "".equals(parameter.get("confirmDate").toString()) || "undefined".equals(parameter.get("confirmDate").toString()))) {
 			ErrorMessageVo errorVo = new ErrorMessageVo();
 			errorVo.setMsg("对账状态为已确认，确认日期必填！");
-			infoList.add(errorVo);
-			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		}
-		if ("null".equals(parameter.get("invoiceName").toString()) || "".equals(parameter.get("invoiceName").toString()) || "undefined".equals(parameter.get("invoiceName").toString())) {
-			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("商家合同名称不能为空！");
-			infoList.add(errorVo);
-			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		}
-		if ("null".equals(parameter.get("createMonth").toString()) || "".equals(parameter.get("createMonth").toString()) || "undefined".equals(parameter.get("createMonth").toString())) {
-			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("业务月份不能为空！");
-			infoList.add(errorVo);
-			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		}
-		if ("null".equals(parameter.get("billName").toString()) || "".equals(parameter.get("billName").toString()) || "undefined".equals(parameter.get("billName").toString())) {
-			ErrorMessageVo errorVo = new ErrorMessageVo();
-			errorVo.setMsg("账单名称不能为空！");
 			infoList.add(errorVo);
 			maps.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		}

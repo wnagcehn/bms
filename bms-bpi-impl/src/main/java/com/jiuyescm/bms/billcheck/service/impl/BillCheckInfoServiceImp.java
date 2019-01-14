@@ -746,7 +746,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
 	public void adjustMoney(String billNo,Double adjustMoney,String adjustReason,String username,String userId) {
-		// TODO Auto-generated method stub
+		/*
 		Map<String, Object> condition=new HashMap<>();
 		condition.put("billNo", billNo);
 		BillCheckInfoEntity entity=billCheckInfoRepository.queryBillCheck(condition);
@@ -760,6 +760,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		BigDecimal masterAdjustMoney=BigDecimal.valueOf(adjustMoney);
 		
 		//调整的金额
+		
 		BigDecimal adjustAmount=new BigDecimal(0);
 		Map<String, Object> param=new HashMap<String, Object>();
 		param.put("billCheckId", entity.getId());
@@ -835,6 +836,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		if(result<=0){
 			throw new BizException("UPDATE_NULL","账单跟踪更新确认金额失败!");
 		}
+		*/
 		//账单导入主表更新调整金额
 		BillReceiveMasterEntity brmVo = new BillReceiveMasterEntity();
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -852,6 +854,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		
 		//账单导入记录表写入
 		BillReceiveMasterRecordEntity recordEntity = new BillReceiveMasterRecordEntity();
+		BigDecimal masterAdjustMoney=BigDecimal.valueOf(adjustMoney);
 		recordEntity.setBillNo(billNo);
 		recordEntity.setCreateTime(currentTime);
 		recordEntity.setCreator(username);

@@ -54,6 +54,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 	
 	@Override
 	protected List<BizOutstockPackmaterialEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("materialWmsUseCalcJob查询条件map:【{0}】  ",map);
 		long operateTime = System.currentTimeMillis();
 		List<BizOutstockPackmaterialEntity> bizList=bizWmsOutstockPackmaterialService.query(map);
 		if(bizList!=null&&bizList.size()>0){

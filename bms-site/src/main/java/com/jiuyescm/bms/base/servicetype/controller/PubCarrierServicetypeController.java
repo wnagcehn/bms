@@ -55,11 +55,6 @@ public class PubCarrierServicetypeController {
 			page.setEntityCount((int) pageInfo.getTotal());
 			
 		}
-		
-		String carrierid = "1999999999999999";
-		String servicecode = "2";
-		CarrierProductVo vo = carrierProductService.findByCode(carrierid,servicecode);
-		System.out.println(vo.toString()+"---"+vo.getCarriercode()+"---"+vo.getCarriername());
 	}
 	
 	/**
