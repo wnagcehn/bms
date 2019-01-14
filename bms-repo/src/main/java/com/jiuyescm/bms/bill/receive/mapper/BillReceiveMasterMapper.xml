@@ -305,8 +305,6 @@
 		select SUM(IFNULL(a.amount,0)) as amount from (
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo} and subject_code='de_abnormal_pay'
 		UNION ALL
-		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_dispatch where bill_no=#{billNo} and subject_code='de_change'
-		UNION ALL
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no=#{billNo} and subject_code='wh_abnormal_pay'
 		UNION ALL
 		select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_transport where bill_no=#{billNo} and subject_code='YS_PF'

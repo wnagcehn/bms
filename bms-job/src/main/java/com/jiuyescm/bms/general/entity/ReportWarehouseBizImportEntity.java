@@ -34,6 +34,16 @@ public class ReportWarehouseBizImportEntity implements IEntity {
 	private Timestamp createTime;
 	// 删除标识
 	private String delFlag;
+	// 日期
+	private String importDateStr;
+
+	public String getImportDateStr() {
+		return importDateStr;
+	}
+
+	public void setImportDateStr(String importDateStr) {
+		this.importDateStr = importDateStr;
+	}
 
 	public ReportWarehouseBizImportEntity() {
 

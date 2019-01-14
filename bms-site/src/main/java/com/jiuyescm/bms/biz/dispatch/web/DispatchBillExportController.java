@@ -24,6 +24,8 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
@@ -61,6 +63,9 @@ public class DispatchBillExportController extends BaseController{
 	
 	@Resource
 	private ISystemCodeService systemCodeService; //业务类型
+	
+	@Resource
+	private ICarrierProductService carrierProductService;
 	
 	@Autowired
 	private SequenceService sequenceService;
@@ -207,7 +212,7 @@ public class DispatchBillExportController extends BaseController{
 		Map<String, String> temMap=getTemperatureTypeList();
 		Map<String,String> b2bMap=getIstB();
 		Map<String,String> orderStatusMap=getOrderStatus();
-		
+		Map<String,String> serviceMap=getServiceMap();
 		int pageNo = 1;
 		int lineNo = 1;
 		boolean doLoop = true;
@@ -226,7 +231,7 @@ public class DispatchBillExportController extends BaseController{
 			
 			//头、内容信息
 			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap);
+			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap,serviceMap);
 			
 			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
 					lineNo, headDetailMapList, dataDetailList);
@@ -580,7 +585,7 @@ public class DispatchBillExportController extends BaseController{
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap,Map<String,String> serviceMap){
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
 	        for (BizDispatchBillVo entity : list) {
@@ -615,8 +620,10 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("adjustBoxnum", entity.getAdjustBoxnum());
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
-	        	dataItem.put("servicename", entity.getServicename());
-	        	dataItem.put("adjustServiceTypeName", entity.getAdjustServiceTypeName());
+	   
+	        	String carrierId=StringUtils.isNotBlank(entity.getAdjustCarrierId())?entity.getAdjustCarrierId():entity.getCarrierId();        	
+		        dataItem.put("servicename", serviceMap.get(entity.getCarrierId()+"&"+entity.getServiceTypeCode()));					
+		        dataItem.put("adjustServiceTypeName", serviceMap.get(carrierId+"&"+entity.getAdjustServiceTypeCode()));				
 	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
 	        	dataItem.put("sendCityId", entity.getSendCityId());        	
 	        	dataItem.put("receiveName", entity.getReceiveName());
@@ -701,5 +708,16 @@ public class DispatchBillExportController extends BaseController{
 	@DataProvider
 	public Map<String,String> getOrderStatus(){	
 		return OrderStatus.getMap();
+	}
+	
+	public Map<String,String> getServiceMap() throws Exception{
+		Map<String,String> map=new HashMap<String,String>();
+		Map<String,Object> con=new HashMap<String,Object>();
+		con.put("delflag", "0");
+		List<CarrierProductVo> list=carrierProductService.query(con);
+		for(CarrierProductVo p:list){
+			map.put(p.getCarrierid()+"&"+p.getServicecode(), p.getServicename());
+		}
+		return map;
 	}
 }

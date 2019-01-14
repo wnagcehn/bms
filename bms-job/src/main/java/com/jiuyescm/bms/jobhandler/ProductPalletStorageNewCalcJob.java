@@ -83,6 +83,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	
 	@Override
 	protected List<BizProductPalletStorageEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("productPalletStorageNewCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BizProductPalletStorageEntity> bizList = bizProductPalletStorageService.query(map);
 		if(bizList!=null && bizList.size() > 0){

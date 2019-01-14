@@ -47,17 +47,7 @@ public class MaterialCostCalcJob extends CommonCalcJob<BizOutstockPackmaterialEn
 	@Override
 	protected List<BizOutstockPackmaterialEntity> queryBillList(
 			Map<String, Object> map) {
-		/*SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
-	    Calendar  calStart=Calendar.getInstance();//获取当前日期 
-		calStart.add(Calendar.MONTH, -1);
-		calStart.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
-	    String firstDay = format.format(calStart.getTime());
-	    Calendar calEnd=Calendar.getInstance();//获取当前日期 
-	    calEnd.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
-	    String lastDay = format.format(calEnd.getTime());
-	    map.put("startTime", firstDay);
-	    map.put("endTime", lastDay);*/
-		
+		XxlJobLogger.log("materialCostCalcJob查询条件map:【{0}】  ",map);
 		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.queryCost(map);
 		if(bizList!=null && bizList.size()>0){
 			List<String> feesNos = new ArrayList<String>();

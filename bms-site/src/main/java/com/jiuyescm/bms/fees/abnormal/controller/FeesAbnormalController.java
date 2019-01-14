@@ -689,11 +689,8 @@ public class FeesAbnormalController {
 				cel13.setCellValue(fee.getReturnedAmountC2j());
 				Cell cel14 = row.createCell(14);
 				cel14.setCellValue(fee.getCreatePersonName());
-				
-				if(fee.getCloseTime()!=null){
-					Cell cel15 = row.createCell(15);
-					cel15.setCellValue(sdf.format(fee.getKesuConfirmTime()));
-				}
+				Cell cel15 = row.createCell(15);
+				cel15.setCellValue(sdf.format(fee.getKesuConfirmTime()));
 				if(fee.getCreateTime()!=null){
 					Cell cel16 = row.createCell(16);
 					cel16.setCellValue(sdf.format(fee.getCreateTime()));

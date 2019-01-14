@@ -145,4 +145,25 @@
 		on DUPLICATE KEY update
         create_time=CURRENT_TIMESTAMP;	
     </insert>
+    
+        <update id="deletetReport" parameterType="java.util.Map">
+update report_warehouse_biz_import set del_flag='1' where import_type = "ACTUAL"
+		<if test="ids != null and ids != '' and ids.size>0">
+		and id in
+		<foreach collection="ids" index="index" item="item" open="("
+				 separator="," close=")">
+			 #{item}
+		</foreach>
+		</if>
+    </update>
+    
+        <select id="queryImport" resultType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+    	select id, import_date as importDateStr, warehouse_code as warehouseCode, biz_type as bizType, import_type as importType, customer_id as customerId
+        from report_warehouse_biz_import
+		where del_flag='0' and create_time  <![CDATA[>=]]> #{startTime}
+		<if test="importType!=null and importType !=''">
+			and import_type=#{importType}
+		</if>
+    </select>
+    
 </mapper>

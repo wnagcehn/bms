@@ -2019,12 +2019,6 @@ public class BuinessDataExportController extends BaseController {
 		itemMap.put("dataKey", "productAmountJ2c");
 		headInfoList.add(itemMap);
 
-//		itemMap = new HashMap<String, Object>();
-//		itemMap.put("title", "赔付运费");
-//		itemMap.put("columnWidth", 25);
-//		itemMap.put("dataKey", "deliveryCost");
-//		headInfoList.add(itemMap);
-
 		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "是否免运费");
 		itemMap.put("columnWidth", 25);
@@ -2062,7 +2056,7 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("customerName", entity.getCustomerName());
 			dataItem.put("dutyType", entity.getReason());
 			dataItem.put("payType", entity.getReasonDetail());
-			double productAmount=entity.getProductAmountJ2c()==null?0d:entity.getProductAmountJ2c();
+			double productAmount=entity.getProductAmountJ2c();
 			t_productAmount+=productAmount;
 			dataItem.put("productAmountJ2c", productAmount);
 			double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
@@ -2229,7 +2223,7 @@ public class BuinessDataExportController extends BaseController {
 			dataItem.put("customerName", entity.getCustomerName());
 			dataItem.put("dutyType", entity.getReason());
 			dataItem.put("payType", entity.getReasonDetail());
-			double amount = (entity.getReturnedAmountC2j() == null ? 0 : entity.getReturnedAmountC2j());
+			double amount = entity.getReturnedAmountC2j();
 			t_amount += amount;
 			dataItem.put("returnedAmountC2j", amount);
 			dataItem.put("createPersonName", entity.getCreatePersonName());

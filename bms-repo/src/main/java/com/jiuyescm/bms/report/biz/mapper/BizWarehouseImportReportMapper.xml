@@ -61,7 +61,7 @@
     	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity">
     select a.import_type as importType, a.customer_id as customerId,b.customer_name as customerName,b.short_name as shortName from report_warehouse_biz_import a
  LEFT JOIN pub_customer b ON a.customer_id=b.customer_id 
-where import_date = #{importDate} and biz_type = #{bizType} and warehouse_code = #{warehouseCode} AND import_type =  'THEORY'
+where import_date = #{importDate} and biz_type = #{bizType} and warehouse_code = #{warehouseCode} AND import_type =  'THEORY' AND a.del_flag = '0'
 and a.customer_id not in 
 (select customer_id from report_warehouse_biz_import 
 where import_date = #{importDate} and biz_type = #{bizType} and warehouse_code = #{warehouseCode} AND del_flag = '0' AND import_type = 'ACTUAL')

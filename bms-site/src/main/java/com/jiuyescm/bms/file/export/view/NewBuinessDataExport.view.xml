@@ -3,7 +3,7 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="dtCondition">
+    <DataType name="dBtCondition">
       <PropertyDef name="startDate">
         <Property name="dataType">Date</Property>
         <Property name="label">开始时间</Property>
@@ -70,6 +70,7 @@
       <Property name="creationType">com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity</Property>
       <PropertyDef name="taskId">
         <Property></Property>
+        <Property name="label">任务ID</Property>
       </PropertyDef>
       <PropertyDef name="taskName">
         <Property></Property>
@@ -178,8 +179,8 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="isChildCustomer">
-        <Property/>
-        <Property name="label">子商家</Property>
+        <Property></Property>
+        <Property name="label">是否是子商家</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Entity>
@@ -206,7 +207,7 @@
         <Property name="label">商家ID</Property>
       </PropertyDef>
       <PropertyDef name="isChild">
-        <Property name="label">子商家</Property>
+        <Property name="label">是否是子商家</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;newBuinessDataExportController#getIsChildCustomer&quot;).getResult(&quot;&quot;)}</Property>
         </Property>
@@ -250,7 +251,7 @@ view.get(&quot;#exportTaskForm.entity&quot;).set(&quot;month&quot;,month);</Clie
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition.data&quot;).insert();&#xD;
 </ClientEvent>
-      <Property name="dataType">[dtCondition]</Property>
+      <Property name="dataType">[dBtCondition]</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -360,7 +361,7 @@ function isNullOrEmpty(e) {&#xD;
         </DataColumn>
         <DataColumn>
           <Property name="property">taskName</Property>
-          <Property name="width">150</Property>
+          <Property name="width">200</Property>
           <Property name="name">taskName</Property>
         </DataColumn>
         <DataColumn>
@@ -473,8 +474,8 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
       </Buttons>
       <Children>
         <AutoForm id="AutoForm">
-          <Property name="dataSet">dsCondition</Property>
           <Property name="cols">*</Property>
+          <Property name="dataSet">dsCondition</Property>
           <AutoFormElement>
             <Property name="name">year</Property>
             <Property name="property">year</Property>

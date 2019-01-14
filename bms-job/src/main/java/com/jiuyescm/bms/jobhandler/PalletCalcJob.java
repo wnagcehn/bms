@@ -84,6 +84,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 	
 	@Override
 	protected List<BizPalletInfoEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("palletCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BizPalletInfoEntity> bizList = bizPalletInfoService.querybizPallet(map);
 		if(bizList!=null && bizList.size() > 0){

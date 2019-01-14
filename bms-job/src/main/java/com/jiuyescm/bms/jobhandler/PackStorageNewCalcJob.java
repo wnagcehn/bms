@@ -76,6 +76,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	
 	@Override
 	protected List<BizPackStorageEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("packStorageNewCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BizPackStorageEntity> bizList = bizPackStorageService.query(map);		
 		if(bizList!=null && bizList.size() > 0){

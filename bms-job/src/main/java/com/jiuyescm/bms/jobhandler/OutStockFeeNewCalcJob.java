@@ -77,6 +77,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	// 查询业务数据	
 	@Override
 	protected List<BizOutstockMasterEntity> queryBillList(Map<String, Object> map) {
+		XxlJobLogger.log("outStockFeeNewCalcJob查询条件map:【{0}】  ",map);
 		Long current = System.currentTimeMillis();
 		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
 		if(bizList!=null && bizList.size() > 0){
