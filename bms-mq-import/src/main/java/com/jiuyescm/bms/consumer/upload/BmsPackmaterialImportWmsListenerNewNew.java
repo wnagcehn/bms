@@ -330,6 +330,10 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 				bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskId+"】,任务编号【"+taskId+"】");
 				bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
 			}
+			errList.clear();
+			mapData.clear();
+			allList.clear();
+			newList.clear();
 		}catch(Exception e){
 			logger.error("任务ID【{}】 -> 异步导入异常{}",taskId,e);
 			bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.EXCEPTION.getCode(),"从临时表中保存数据到业务表异常");
@@ -494,7 +498,7 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 						if (customerMap.containsKey(dc.getColValue())) {
 							tempEntity.setCustomerId(customerMap.get(dc.getColValue()).getCustomerid());
 						}else {
-							errorMsg+="商家不存在";
+							errorMsg+="商家不存在;";
 						}
 					}else {
 						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
@@ -540,30 +544,55 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 					numType = colgroup.getValue();
 				}
 			}
-			
-			//耗材与数量同时存在
-			if(originColumn.containsValue(codeName) && originColumn.containsValue(numName)){
-				isHaveMaterial = true;
 
-				BizOutstockPackmaterialTempEntity newTempEntity = new BizOutstockPackmaterialTempEntity();
-				PropertyUtils.copyProperties(newTempEntity, tempEntity);
-				BigDecimal num = null;
-				String num0 = "";
-				for (DataColumn dc : dr.getColumns()) {
-					try {
-						if (dc.getTitleName().equals(codeName)) {
-							//耗材Code，耗材Name
-							if(!materialMap.containsKey(dc.getColValue())){
-								errorMsg += "耗材【"+dc.getTitleName()+"】不存在;";
+			BizOutstockPackmaterialTempEntity newTempEntity = new BizOutstockPackmaterialTempEntity();
+			PropertyUtils.copyProperties(newTempEntity, tempEntity);
+			BigDecimal num = null;
+			String num0 = "";
+			String materialName = "";
+			for (DataColumn dc : dr.getColumns()) {
+				try {
+					if (dc.getTitleName().equals(codeName)) {
+						materialName = dc.getTitleName();
+						if (StringUtils.isNotBlank(dc.getColValue())) {
+							newTempEntity.setConsumerMaterialCode(dc.getColValue().trim());
+						}
+						
+					}else if (dc.getTitleName().equals(numName) && numType.equals("num")) {
+						//数量
+						num0 = dc.getColValue();
+						if (StringUtils.isBlank(dc.getColValue()) && StringUtils.isBlank(newTempEntity.getConsumerMaterialCode())) {
+							break;
+						}else if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isBlank(newTempEntity.getConsumerMaterialCode())) {
+							errorMsg += "【"+dc.getTitleName()+"】和【"+materialName+"】不能只存在一个有值;";
+							break;
+						}else if (StringUtils.isBlank(dc.getColValue()) && StringUtils.isNotBlank(newTempEntity.getConsumerMaterialCode())) {
+							errorMsg += "【"+dc.getTitleName()+"】和【"+materialName+"】不能只存在一个有值;";
+							break;
+						}else {
+							isHaveMaterial = true;
+							//校验数量
+							num0 = dc.getColValue();
+							if(!StringUtil.isNumeric(dc.getColValue())){
+								errorMsg += "【"+num0+"】不是数字;";
+							}
+							else{
+								if(num0.contains("-")){
+									errorMsg += "【"+num0+"】必须>0";
+								}
+							}
+							
+							//校验耗材Code
+							if(!materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
+								errorMsg += "耗材【"+newTempEntity.getConsumerMaterialName()+"】不存在;";
 							}
 							if(errorMsg.length()>0){
-								continue;
+								break;
 							}
-							newTempEntity.setConsumerMaterialName(materialMap.get(dc.getColValue()).getMaterialName());
-							newTempEntity.setConsumerMaterialCode(dc.getColValue().trim());
-
-							if(materialMap.containsKey(dc.getColValue())){
-								PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(dc.getColValue());
+							
+							newTempEntity.setConsumerMaterialName(materialMap.get(newTempEntity.getConsumerMaterialCode()).getMaterialName());
+							if(materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
+								PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(newTempEntity.getConsumerMaterialCode());
 								newTempEntity.setSpecDesc("外径规格【"+pubMaterialInfoVo.getOutLength().doubleValue()+"*"+pubMaterialInfoVo.getOutWidth().doubleValue()+"*"+pubMaterialInfoVo.getOutHeight().doubleValue()+"】,"
 					  			+"内径规格【"+pubMaterialInfoVo.getInLength().doubleValue()+"*"+pubMaterialInfoVo.getInWidth().doubleValue()+"*"+pubMaterialInfoVo.getInHeight().doubleValue()+"】");
 							}
@@ -575,26 +604,27 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 								repeatMap.put(key, dr.getRowNo());
 							}
 							
-						}else if (dc.getTitleName().equals(numName) && numType.equals("num")) {
-							//数量
-							num0 = dc.getColValue();
-							if(!StringUtil.isNumeric(dc.getColValue())){
-								errorMsg += "【"+num0+"】不是数字;";
-							}
-							else{
-								if(num0.contains("-")){
-									errorMsg += "【"+num0+"】必须>0";
-								}
-							}
 							if(errorMsg.length()>0){
-								continue;
+								break;
 							}else {
 								num = new BigDecimal(num0);
 								newTempEntity.setNum(num);
 								newTempEntity.setAdjustNum(num);
-							}	
-						}else if (dc.getTitleName().equals(numName) && numType.equals("weight")) {
-							//干冰 存重量
+							}
+						}	
+					}else if (dc.getTitleName().equals(numName) && numType.equals("weight")) {
+						num0 = dc.getColValue();
+						if (StringUtils.isBlank(dc.getColValue()) && StringUtils.isBlank(newTempEntity.getConsumerMaterialCode())) {
+							break;
+						}else if (StringUtils.isNotBlank(dc.getColValue()) && StringUtils.isBlank(newTempEntity.getConsumerMaterialCode())) {
+							errorMsg += "【"+dc.getTitleName()+"】和【"+materialName+"】不能只存在一个有值;";
+							break;
+						}else if (StringUtils.isBlank(dc.getColValue()) && StringUtils.isNotBlank(newTempEntity.getConsumerMaterialCode())) {
+							errorMsg += "【"+dc.getTitleName()+"】和【"+materialName+"】不能只存在一个有值;";
+							break;
+						}else {
+							isHaveMaterial = true;
+							//校验重量
 							num0 = dc.getColValue();
 							if(!StringUtil.isNumeric(dc.getColValue())){
 								errorMsg += "【"+num0+"】不是数字;";
@@ -604,39 +634,55 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 									errorMsg += "【"+num0+"】必须>0";
 								}
 							}
+							
+							//校验耗材Code
+							if(!materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
+								errorMsg += "耗材【"+newTempEntity.getConsumerMaterialName()+"】不存在;";
+							}
 							if(errorMsg.length()>0){
-								continue;
+								break;
+							}
+							
+							newTempEntity.setConsumerMaterialName(materialMap.get(newTempEntity.getConsumerMaterialCode()).getMaterialName());
+							if(materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
+								PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(newTempEntity.getConsumerMaterialCode());
+								newTempEntity.setSpecDesc("外径规格【"+pubMaterialInfoVo.getOutLength().doubleValue()+"*"+pubMaterialInfoVo.getOutWidth().doubleValue()+"*"+pubMaterialInfoVo.getOutHeight().doubleValue()+"】,"
+					  			+"内径规格【"+pubMaterialInfoVo.getInLength().doubleValue()+"*"+pubMaterialInfoVo.getInWidth().doubleValue()+"*"+pubMaterialInfoVo.getInHeight().doubleValue()+"】");
+							}
+							String key = newTempEntity.getWaybillNo() + newTempEntity.getConsumerMaterialCode();
+							if(repeatMap.containsKey(key)){
+								errorMsg += "数据重复--第【"+repeatMap.get(key)+"】行已存在运单【"+newTempEntity.getWaybillNo()+"】和耗材【"+newTempEntity.getConsumerMaterialCode()+"】的组合;";
+							}
+							else{
+								repeatMap.put(key, dr.getRowNo());
+							}
+							
+							if(errorMsg.length()>0){
+								break;
 							}else {
 								num = new BigDecimal(num0);
 								newTempEntity.setWeight(num);
-							}	
-						}					
-					} catch (Exception e) {
-						errorMsg+="列【"+ dc.getTitleName() + "】格式不正确;";
-					}		
-				}
-				
-				if (errorMsg.length() == 0) {
-					newTempEntity.setRowExcelName(codeName);
-					newTempEntity.setCreator(taskEntity.getCreator());
-					newTempEntity.setDelFlag("0");
-					newTempEntity.setExtattr5("origin");
-					newTempEntity.setWriteTime(JAppContext.currentTimestamp());
-					newTempEntity.setIsCalculated(String.valueOf(ConstantInterface.Calculate.CALCULATE_NO));
-					newTempEntity.setBatchNum(taskEntity.getTaskId());
-					tempList.add(newTempEntity);
-				}
-				
+							}
+						}		
+					}					
+				} catch (Exception e) {
+					errorMsg+="列【"+ dc.getTitleName() + "】格式不正确;";
+				}		
 			}
-			//耗材与数量均为空,合理数据,但不处理
-			else if(!originColumn.containsValue(codeName) && !originColumn.containsValue(numName)){
-				continue;
+			
+			if (errorMsg.length() == 0 && StringUtils.isNotBlank(newTempEntity.getConsumerMaterialCode())) {
+				newTempEntity.setRowExcelName(codeName);
+				newTempEntity.setCreator(taskEntity.getCreator());
+				newTempEntity.setDelFlag("0");
+				newTempEntity.setExtattr5("origin");
+				newTempEntity.setWriteTime(JAppContext.currentTimestamp());
+				newTempEntity.setIsCalculated(String.valueOf(ConstantInterface.Calculate.CALCULATE_NO));
+				newTempEntity.setBatchNum(taskEntity.getTaskId());
+				tempList.add(newTempEntity);
 			}
-			//耗材与数量有一个为空
-			else{
-				errorMsg += "【"+numName+"】和【"+codeName+"】不能只存在一个;";
-			}	
+			
 		}
+		
 		
 		int rowNo = dr.getRowNo();
 		if(!StringUtil.isEmpty(errorMsg)){
