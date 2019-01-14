@@ -51,5 +51,14 @@ public interface IReportWarehouseBizImportService {
      * @return
      */
     int insertReport(Map<String, Object> param);
+    
+    /**
+     * 删除各仓导入的数据
+     * @param param	
+     * @return
+     */
+    int deletetReport(Map<String, Object> param);
+    
+    List<ReportWarehouseBizImportEntity> queryImport(Map<String, Object> param);
 
 }

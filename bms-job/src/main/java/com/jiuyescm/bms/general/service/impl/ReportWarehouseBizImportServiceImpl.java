@@ -64,5 +64,18 @@ public class ReportWarehouseBizImportServiceImpl  extends MyBatisDao implements 
 		return insert("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.insertReport", param);
 	}
 
+	@Override
+	public int deletetReport(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return update("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.deletetReport", param);
+	}
+
+	@Override
+	public List<ReportWarehouseBizImportEntity> queryImport(
+			Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryImport", param);
+	}
+
 	
 }
