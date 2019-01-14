@@ -356,6 +356,9 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
 			}
+			errList.clear();
+			mapData.clear();
+			allList.clear();
 			newList.clear();
 		}catch(Exception e){
 			logger.error("异步导入异常", e);
@@ -637,7 +640,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						if (customerMap.containsKey(dc.getColValue())) {
 							tempEntity.setCustomerId(customerMap.get(dc.getColValue()));
 						}else {
-							errorMsg+="商家不存在";
+							errorMsg+="商家不存在;";
 						}
 					}else {
 						errorMsg+="商家必填;";
