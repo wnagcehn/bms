@@ -44,6 +44,7 @@ public class InvoiceController {
 		}
 		vo.setPageNo(page.getPageNo());
 		vo.setPageSize(page.getPageSize());
+		vo.setStatus(1);
 		PageInfo<ContractCustomBaseVo> pageInfo = contractCustomBaseService.queryAll(vo);
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
