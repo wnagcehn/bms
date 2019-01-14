@@ -1384,6 +1384,12 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
                 <Property name="property">totalWeight</Property>
                 <Property name="width">78</Property>
               </DataColumn>
+              <DataColumn>
+                <Property name="name">carrierWeight</Property>
+                <Property name="property">carrierWeight</Property>
+                <Property name="width">78</Property>
+                <Editor/>
+              </DataColumn>
               <DataColumn name="adjustWeight">
                 <ClientEvent name="onRenderCell">var adjustWeight=arg.data.get(&quot;adjustWeight&quot;);&#xD;
 var totalWeight=arg.data.get(&quot;totalWeight&quot;);&#xD;
@@ -1411,12 +1417,6 @@ arg.processDefault = true;&#xD;
                 <Property name="property">correctThrowWeight</Property>
                 <Property name="width">78</Property>
                 <Property name="align">right</Property>
-                <Editor/>
-              </DataColumn>
-              <DataColumn>
-                <Property name="name">carrierWeight</Property>
-                <Property name="property">carrierWeight</Property>
-                <Property name="width">78</Property>
                 <Editor/>
               </DataColumn>
             </DataGrid>

@@ -332,6 +332,12 @@ public class DispatchBillExportController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "物流商重量");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "carrierWeight");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
         itemMap.put("title", "调整重量");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "adjustWeight");
@@ -596,6 +602,7 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("temperatureTypeCode", temMap.get(entity.getTemperatureTypeCode()));
 	        	dataItem.put("systemWeight", entity.getSystemWeight());
 	        	dataItem.put("totalWeight", entity.getTotalWeight());
+	        	dataItem.put("carrierWeight", entity.getCarrierWeight());
 	        	dataItem.put("adjustWeight", entity.getAdjustWeight());
 	        	dataItem.put("throwWeight", entity.getThrowWeight());
 	        	dataItem.put("correctThrowWeight", entity.getCorrectThrowWeight());
@@ -608,7 +615,6 @@ public class DispatchBillExportController extends BaseController{
 	        	dataItem.put("adjustBoxnum", entity.getAdjustBoxnum());
 	        	dataItem.put("productDetail", entity.getProductDetail());
 	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
-	        	//dataItem.put("expresstype", entity.getExpresstype());
 	        	dataItem.put("servicename", entity.getServicename());
 	        	dataItem.put("adjustServiceTypeName", entity.getAdjustServiceTypeName());
 	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
