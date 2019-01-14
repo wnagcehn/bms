@@ -4,12 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +21,6 @@ import javax.jms.TextMessage;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,10 +54,10 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
-@Service("bmsPackmaterialImportTaskListenerNewNew")
-public class BmsPackmaterialImportTaskListenerNewNew implements MessageListener{
+@Service("bmsPackmaterialImportWmsListenerNewNew")
+public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 
-private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImportTaskListenerNewNew.class);
+	private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImportWmsListenerNewNew.class);
 	
 	@Autowired private IBmsFileAsynTaskService bmsFileAsynTaskService;
 	@Autowired private StorageClient storageClient;
@@ -76,12 +72,12 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	private Map<String,CustomerVo> customerMap = null;
 	private Map<String,PubMaterialInfoVo> materialMap = null;
 	
+	private List<String> readColumnNames = null;
+	private List<Map<String,String>> materialGroup = null;
+	private List<String> materialCommonList = null;
+	
 	private Map<Integer, String> errMap = null;
 	private Map<String,Integer> repeatMap = null;
-	
-	List<BizOutstockPackmaterialTempEntity> newList = new ArrayList<BizOutstockPackmaterialTempEntity>();
-	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
-	private List<String> materialCommonList = null;
 	
 	BmsFileAsynTaskVo taskEntity = new BmsFileAsynTaskVo();
 	
@@ -91,24 +87,25 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	List<DataRow> errList = new ArrayList<DataRow>();
 	List<DataRow> allList = new ArrayList<DataRow>();
 	Map<Integer, DataRow> mapData = new HashMap<>();
-	
+	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
+	List<BizOutstockPackmaterialTempEntity> newList = new ArrayList<BizOutstockPackmaterialTempEntity>();
 	
 	@Override
 	public void onMessage(Message message) {
 		
 		logger.info("--------------------MQ处理操作日志开始---------------------------");
 		long start = System.currentTimeMillis();
-		
 		try {
 			taskId = ((TextMessage)message).getText();
 		} catch (JMSException e1) {
-			logger.error("任务ID【{}】 -> 读取消息->更新任务表失败",taskId, e1);
+			logger.error("任务ID【{}】 -> 读取消息异常",taskId, e1);
 			return;
 		}
+		
 		try {
 			handImportFile();		// 处理导入文件
 		} catch (Exception e1) {
-			logger.error("任务ID【{}】 -> 异步文件处理异常{}",taskId,e1);
+			logger.error("任务ID【{}】 -> 异步文件处理异常",taskId, e1);
 			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 0, FileAsynTaskStatusEnum.EXCEPTION.getCode());
 			return;
 		}
@@ -117,8 +114,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		try {
 			message.acknowledge();
 		} catch (JMSException e) {
-			logger.info("任务ID【{}】 -> 消息应答异常{}",taskId,e);
+			logger.error("任务ID【{}】 -> 消息应答异常",taskId, e);
 		}
+		reader = null;
 		errMap = null;
 		logger.info("任务ID【{}】 -> MQ处理操作日志结束,耗时【{}】",taskId,end-start);
 	}
@@ -134,31 +132,34 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		
 		bmsMaterialImportTaskCommon.setTaskStatus(taskId, 0, FileAsynTaskStatusEnum.PROCESS.getCode());
 		
-		//----------查询任务----------
+		//----------查询任务
 		taskEntity = bmsFileAsynTaskService.findByTaskId(taskId);
-		logger.info("任务ID【{}】 -> 领取任务",taskId );
+		logger.info("任务ID【{}】 -> 领取任务",taskId);
 		if (null == taskEntity) {
-			logger.info("任务ID【{}】 -> 任务不存在",taskId);
+			logger.error("任务ID【{}】 -> 任务不存在",taskId);
 			return;
 		}
 		bmsMaterialImportTaskCommon.setTaskProcess(taskId, 5);
 		
+		//初始化哪些需要读取的列
 		initColumnNames();
+		logger.info(readColumnNames.size()+"");
 		
 		//----------读取excel
-		logger.info("任务ID【{}】 -> 准备读取excel...",taskId);
+		logger.info("任务ID【{}】 -> 准备读取excel",taskId);
 		
 		long start = System.currentTimeMillis();
 		byte[] bytes = storageClient.downloadFile(taskEntity.getOriginFilePath(), new DownloadByteArray());
 		logger.info("任务ID【{}】 -> byte长度【{}】",taskId,bytes.length);
-		InputStream inputStream = new ByteArrayInputStream(bytes);	
-		try{
-			reader = new XlsxWorkBook(inputStream);		
+		InputStream inputStream = new ByteArrayInputStream(bytes);
+		try{	
+			reader = new XlsxWorkBook(inputStream);
 			for (final Sheet sheet : reader.getSheets()) {
 				//更新文件总行数
 				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 30,null, sheet.getRowCount(), null, null, null, null);
 				bmsFileAsynTaskService.update(updateEntity);
 				reader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
+
 					@Override
 					public void readTitle(List<String> columns) {
 						//源生表头
@@ -168,39 +169,22 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							a++;
 						}
 						
-						//----------校验表头----------
-						logger.info("任务ID【{}】 -> 校验表头...",taskId); 
+						//----------校验表头
+						logger.info("任务ID【{}】 -> 校验表头...",taskId);
 						String[] str = {"出库日期", "仓库", "商家", "出库单号", "运单号"}; //必填列
 						if(!checkTitle(columns,str)){
 							logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号",taskId);
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 36, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
-							return;
-						}
-						// 表格列数
-						int cols = columns.size();
-						if((cols-5)%2 != 0){ // 如果列数不对则 返回
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 37, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列数不对");
+							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 38, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
 							return;
 						}
 						
-						//判断列头是否重复
-						List<String> mMap=new ArrayList<String>();
-						int col = (columns.size() - 5) / 2; //有多少种耗材
-						for(int i = 0; i < col; i++){
-							String codeName = originColumn.get(i * 2 + 6);//耗材编码对应的列名			
-							if(!mMap.contains(codeName)){
-								mMap.add(codeName);
-							}else{
-								bmsMaterialImportTaskCommon.setTaskStatus(taskId, 38, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列名不对,存在重复列名，请检查");
-								return;
-							}
-						}
 					}
 
 					@Override
 					public void read(DataRow dr) {
+						
 						//行错误信息
-						String errorMsg="";			
+						String errorMsg="";
 						//----------初始化基础数据
 						try{
 							wareHouseMap = bmsMaterialImportTaskCommon.queryAllWarehouse();
@@ -208,16 +192,13 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							materialMap  = bmsMaterialImportTaskCommon.queryAllMaterial();
 						}
 						catch(Exception ex){
-							logger.info("任务ID【{}】 -> 初始化仓库,商家,耗材数据异常",taskId);
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 39, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+							logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,ex);
+							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
 							return;
 						}
-						logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息",taskId);
-						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);
+						logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
+						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
 						logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
-						
-						//有多少种耗材
-						//int col = (dr.getColumns().size() - 5) / 2; 
 						
 						//组装往临时表存的数据，校验出错捕获加入errList
 						List<BizOutstockPackmaterialTempEntity> tempList = null;
@@ -228,7 +209,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						}
 
 						//组装好的数据存入全局List中
-						if (tempList == null) {
+						if (null == tempList) {
 							tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
 						}
 						for( int i = 0 ; i < tempList.size() ; i++){
@@ -240,223 +221,20 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							if(errMap.size()==0){
 								int result = saveTo();
 								if(result<=0){
-									logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
+									throw new BizException("excel批量写入异常");
 								}
 							}
 						}
 						
 						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
-						//存入所有行的DataRow的Map<rowNo,DataRow>
+						//存入所有行的DataRow的Map<rowNo,DataRow>和List
 						mapData.put(dr.getRowNo(), dr);
 						allList.add(dr);
 						return;
 					}
-					
-					//-------------组装数据------------
-					private List<BizOutstockPackmaterialTempEntity> loadTemp(DataRow dr, String errorMsg) {
-						BizOutstockPackmaterialTempEntity tempEntity = null;
-						List<BizOutstockPackmaterialTempEntity> tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
-						//本行是否拥有耗材
-						boolean isHaveMaterial = false; 
-						
-//						String codeName = originColumn.get(i * 2 + 6);//耗材编码对应的列名
-//						String numName =  originColumn.get(i * 2 + 7);//耗材数量对应的列名
-						tempEntity = new BizOutstockPackmaterialTempEntity();
-						tempEntity.setRowExcelNo(dr.getRowNo());
-						try {
-							for (DataColumn dc : dr.getColumns()) {
-								switch (dc.getTitleName()) {
-								case "出库日期":
-									if (StringUtils.isNotBlank(dc.getColValue())) {
-										tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
-									}else {
-										errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-										errorMsg += "出库日期必填;";
-									}
-									break;
-								case "仓库":
-									if (StringUtils.isNotBlank(dc.getColValue())) {
-										tempEntity.setWarehouseName(dc.getColValue());
-										//如果没找到，报错
-										if (wareHouseMap.containsKey(dc.getColValue())) {
-											tempEntity.setWarehouseCode(wareHouseMap.get(dc.getColValue()).getWarehouseid());
-										}else {
-											errorMsg+="仓库不存在;";
-										}
-									}else {
-										errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-										errorMsg+="仓库必填;";
-									}
-									break;
-								case "商家":
-									if (StringUtils.isNotBlank(dc.getColValue())) {
-										tempEntity.setCustomerName(dc.getColValue());
-										//如果没找到，报错
-										if (customerMap.containsKey(dc.getColValue())) {
-											tempEntity.setCustomerId(customerMap.get(dc.getColValue()).getCustomerid());
-										}else {
-											errorMsg+="商家不存在";
-										}
-									}else {
-										errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-										errorMsg+="商家必填;";
-									}
-									break;
-								case "出库单号":
-									if (StringUtils.isNotBlank(dc.getColValue())) {
-										tempEntity.setOutstockNo(dc.getColValue());
-									}else {
-										errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-										errorMsg+="出库单号必填;";
-									}
-									break;
-								case "运单号":
-									if (StringUtils.isNotBlank(dc.getColValue())) {
-										tempEntity.setWaybillNo(dc.getColValue());
-									}else {
-										errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-										errorMsg+="运单号必填;";
-									}
-									break;
-								default:
-									break;
-								}
-							}
-							
-						} catch (Exception e) {
-							errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
-						}		
-						
-						//起始列
-						int index=0;
-						for (DataColumn dc:dr.getColumns()) {
-							if(dc.getTitleName().contains("数量")){
-								index=dc.getColNo()-1;
-								break;
-							}
-						}
-						
-						int count=1;
-						String num0 = "";
-						BigDecimal num = null;
-						BizOutstockPackmaterialTempEntity newTempEntity = null;
-						String materialType = "";
-						for (DataColumn dc : dr.getColumns()) {
-							if (dc.getColNo() >= index) {
-								try {
-									if(count==1){
-										newTempEntity=new BizOutstockPackmaterialTempEntity();
-										PropertyUtils.copyProperties(newTempEntity, tempEntity);
-									}
-									if ("干冰重量".equals(dc.getTitleName())) {
-										num0 = dc.getColValue();
-										if(!StringUtil.isNumeric(dc.getColValue())){
-											errorMsg += "【"+num0+"】不是数字;";
-										}
-										else{
-											if(num0.contains("-")){
-												errorMsg += "【"+num0+"】必须>0";
-											}
-										}
-										if(errorMsg.length()>0){
-											continue;
-										}else {
-											num = new BigDecimal(num0);
-											newTempEntity.setWeight(num);
-										}		
-									}else if (dc.getTitleName().contains("数量")) {
-										num0 = dc.getColValue();
-										if(!StringUtil.isNumeric(dc.getColValue())){
-											errorMsg += "【"+num0+"】不是数字;";
-										}
-										else{
-											if(num0.contains("-")){
-												errorMsg += "【"+num0+"】必须>0";
-											}
-										}
-										if(errorMsg.length()>0){
-											continue;
-										}else {
-											num = new BigDecimal(num0);
-											newTempEntity.setNum(num);
-											newTempEntity.setAdjustNum(num);
-										}						
-									}else {
-										//耗材Code+Name
-										if(!materialMap.containsKey(dc.getColValue())){
-											errorMsg += "耗材【"+dc.getTitleName()+"】不存在;";
-										}
-										if(errorMsg.length()>0){
-											continue;
-										}
-										newTempEntity.setConsumerMaterialCode(dc.getColValue().trim());
-										newTempEntity.setConsumerMaterialName(materialMap.get(dc.getColValue()).getMaterialName());
-										//耗材类型
-										materialType=materialMap.get(dc.getColValue()).getMaterialType();	
-										if(materialMap.containsKey(dc.getColValue())){
-											PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(dc.getColValue());
-											newTempEntity.setSpecDesc("外径规格【"+pubMaterialInfoVo.getOutLength().doubleValue()+"*"+pubMaterialInfoVo.getOutWidth().doubleValue()+"*"+pubMaterialInfoVo.getOutHeight().doubleValue()+"】,"
-								  			+"内径规格【"+pubMaterialInfoVo.getInLength().doubleValue()+"*"+pubMaterialInfoVo.getInWidth().doubleValue()+"*"+pubMaterialInfoVo.getInHeight().doubleValue()+"】");
-										}
-										String key = newTempEntity.getWaybillNo() + newTempEntity.getConsumerMaterialCode();
-										if(repeatMap.containsKey(key)){
-											errorMsg += "数据重复--第【"+repeatMap.get(key)+"】行已存在运单【"+newTempEntity.getWaybillNo()+"】和耗材【"+newTempEntity.getConsumerMaterialCode()+"】的组合;";
-										}
-										else{
-											repeatMap.put(key, dr.getRowNo());
-										}
-									}
-
-									count++;
-									if(count>2){
-										if(StringUtils.isNotBlank(newTempEntity.getConsumerMaterialCode())){
-											newTempEntity.setRowExcelName(materialType);
-											newTempEntity.setCreator(taskEntity.getCreator());
-											newTempEntity.setDelFlag("0");
-											newTempEntity.setExtattr5("origin");
-											newTempEntity.setWriteTime(JAppContext.currentTimestamp());
-											newTempEntity.setIsCalculated(String.valueOf(ConstantInterface.Calculate.CALCULATE_NO));
-											newTempEntity.setBatchNum(taskEntity.getTaskId());
-											if (StringUtils.isNotBlank(newTempEntity.getConsumerMaterialCode()) && (newTempEntity.getNum()!=null || newTempEntity.getWeight()!=null)) {
-												isHaveMaterial = true;
-											}
-											tempList.add(newTempEntity);
-										}
-										count=1;
-									}
-								} catch (Exception e) {
-									errorMsg+="列【"+ dc.getTitleName() + "】格式不正确;";
-								}
-							}
-						}
-								
-						
-						int rowNo = dr.getRowNo();
-						if(!StringUtil.isEmpty(errorMsg)){
-							if(errMap.containsKey(rowNo)){
-								errMap.put(rowNo, errMap.get(rowNo)+errorMsg);
-							}
-							else{
-								errMap.put(rowNo, errorMsg);
-							}
-						}
-						if(!isHaveMaterial){
-							if(errMap.containsKey(rowNo)){
-								errMap.put(rowNo, errMap.get(rowNo)+"本行未录入任何耗材");
-							}
-							else{
-								errMap.put(rowNo, "本行未录入任何耗材");
-							}
-						}
-						
-						if (errMap.size() > 0) {
-							throw new BizException(errMap.get(dr.getRowNo()));
-						}
-						return tempList;
-					}
 
 					@Override
-					public void finish() {
+					public void finish() {		
 						//保存数据到临时表
 						if (errMap.size() == 0) {
 							int result = saveTo();
@@ -471,7 +249,6 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						// TODO Auto-generated method stub
 						
 					}
-					
 				});
 				
 				//更新文件读取行数
@@ -484,9 +261,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 				BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 72,null, sheet.getRowCount(), null, null, null, null);
 				bmsFileAsynTaskService.update(updateEntity2);
 			}
-
 			long end = System.currentTimeMillis();
-			logger.info("任务ID【{}】 -> *****读取excel,耗时【{}】毫秒",taskId,(end-start));
+			logger.info("任务ID【{}】 -> excel读取完成，读取excel,耗时【{}】",taskId,end-start);
 		}
 		catch(Exception ex){
 			logger.error("任务ID【{}】 -> excel解析异常{}",taskId,ex);
@@ -516,9 +292,22 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			}
 			return;
 		}
+		
+		//如果excel数据本身存在问题，直接生产结果文件返回给用户
+		if(errMap.size()>0){
+			logger.info("任务ID【{}】 -> 数据不合法,产生结果文件",taskId);
+			try {
+				createResultFile();
+			} catch (Exception e) {
+				logger.error("文件创建失败！", e);
+			}
+			return;
+		}
+		
 		bmsMaterialImportTaskCommon.setTaskProcess(taskId, 80);	
 		logger.info("************ OK **********");
 		
+		//保存数据到正式表
 		try{
 			logger.info("任务ID【{}】 -> 保存数据到正式表",taskId);
 			int k=bizOutstockPackmaterialService.saveDataFromTemp(taskId);
@@ -546,6 +335,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.EXCEPTION.getCode(),"从临时表中保存数据到业务表异常");
 			bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
 		}
+		return;	
 	}
 
 	
@@ -554,12 +344,322 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	 */
 	private void initColumnNames(){
 		
+		readColumnNames = new ArrayList<String>();
 		materialCommonList = new ArrayList<String>();
+		materialGroup = new ArrayList<Map<String,String>>();
+		
 		materialCommonList.add("出库日期");
 		materialCommonList.add("仓库");
 		materialCommonList.add("商家");
 		materialCommonList.add("出库单号");
 		materialCommonList.add("运单号");
+		
+		Map<String,String> groupList1 = Maps.newLinkedHashMap();
+		groupList1.put("冰袋","code");
+		groupList1.put("冰袋数量","num");
+		materialGroup.add(groupList1);
+		
+		Map<String,String> groupList2 = Maps.newLinkedHashMap();
+		groupList2.put("纸箱","code");
+		groupList2.put("纸箱数量","num");
+		materialGroup.add(groupList2);
+		
+		Map<String,String> groupList3 = Maps.newLinkedHashMap();
+		groupList3.put("泡沫箱","code");
+		groupList3.put("泡沫箱数量","num");
+		materialGroup.add(groupList3);
+		
+		Map<String,String> groupList4 = Maps.newLinkedHashMap();
+		groupList4.put("干冰","code");
+		groupList4.put("干冰重量","weight");
+		materialGroup.add(groupList4);
+		
+		Map<String,String> groupList5 = Maps.newLinkedHashMap();
+		groupList5.put("快递袋","code");
+		groupList5.put("快递袋数量","num");
+		materialGroup.add(groupList5);
+		
+		Map<String,String> groupList6 = Maps.newLinkedHashMap();
+		groupList6.put("面单","code");
+		groupList6.put("面单数量","num");
+		materialGroup.add(groupList6);
+
+		Map<String,String> groupList7 = Maps.newLinkedHashMap();
+		groupList7.put("标签纸","code");
+		groupList7.put("标签纸数量","num");
+		materialGroup.add(groupList7);
+
+		Map<String,String> groupList8 = Maps.newLinkedHashMap();
+		groupList8.put("防水袋","code");
+		groupList8.put("防水袋数量","num");
+		materialGroup.add(groupList8);
+
+		Map<String,String> groupList9 = Maps.newLinkedHashMap();
+		groupList9.put("缓冲材料","code");
+		groupList9.put("缓冲材料数量","num");
+		materialGroup.add(groupList9);
+
+		Map<String,String> groupList10 = Maps.newLinkedHashMap();
+		groupList10.put("胶带","code");
+		groupList10.put("胶带数量","num");
+		materialGroup.add(groupList10);
+		
+		Map<String,String> groupList11 = Maps.newLinkedHashMap();
+		groupList11.put("问候卡","code");
+		groupList11.put("问候卡数量","num");
+		materialGroup.add(groupList11);
+		
+		Map<String,String> groupList12 = Maps.newLinkedHashMap();
+		groupList12.put("好字贴","code");
+		groupList12.put("好字贴数量","num");
+		materialGroup.add(groupList12);
+		
+		Map<String,String> groupList13 = Maps.newLinkedHashMap();
+		groupList13.put("其他","code");
+		groupList13.put("其他数量","num");
+		materialGroup.add(groupList13);
+		
+		Map<String,String> groupList14 = Maps.newLinkedHashMap();
+		groupList14.put("塑封袋","code");
+		groupList14.put("塑封袋数量","num");
+		materialGroup.add(groupList14);
+		
+		Map<String,String> groupList15 = Maps.newLinkedHashMap();
+		groupList15.put("保温袋","code");
+		groupList15.put("保温袋数量","num");
+		materialGroup.add(groupList15);
+		
+		Map<String,String> groupList16 = Maps.newLinkedHashMap();
+		groupList16.put("保鲜袋","code");
+		groupList16.put("保鲜袋数量","num");
+		materialGroup.add(groupList16);
+		
+		for (String str : materialCommonList) {
+			readColumnNames.add(str);
+		}
+		for (Map<String,String> map : materialGroup) {
+			for (Map.Entry<String, String> entry : map.entrySet()) { 
+				readColumnNames.add(entry.getKey());
+			}
+		}
+		
+	}
+	
+
+	/**
+	 * 产生临时表数据
+	 * @param contents 数据集
+	 * @return
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 */
+	private List<BizOutstockPackmaterialTempEntity> loadTemp(DataRow dr, String errorMsg) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
+		logger.info("数据校验并初始化临时表数据");
+		BizOutstockPackmaterialTempEntity tempEntity = null;
+		List<BizOutstockPackmaterialTempEntity> tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
+		//本行是否拥有耗材
+		boolean isHaveMaterial = false;
+		tempEntity = new BizOutstockPackmaterialTempEntity();
+		tempEntity.setRowExcelNo(dr.getRowNo());
+		try {
+			for (DataColumn dc : dr.getColumns()) {
+				switch (dc.getTitleName()) {
+				case "出库日期":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
+					}else {
+						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg += "出库日期必填;";
+					}
+					break;
+				case "仓库":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						tempEntity.setWarehouseName(dc.getColValue());
+						//如果没找到，报错
+						if (wareHouseMap.containsKey(dc.getColValue())) {
+							tempEntity.setWarehouseCode(wareHouseMap.get(dc.getColValue()).getWarehouseid());
+						}else {
+							errorMsg+="仓库不存在;";
+						}
+					}else {
+						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="仓库必填;";
+					}
+					break;
+				case "商家":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						tempEntity.setCustomerName(dc.getColValue());
+						//如果没找到，报错
+						if (customerMap.containsKey(dc.getColValue())) {
+							tempEntity.setCustomerId(customerMap.get(dc.getColValue()).getCustomerid());
+						}else {
+							errorMsg+="商家不存在";
+						}
+					}else {
+						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="商家必填;";
+					}
+					break;
+				case "出库单号":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						tempEntity.setOutstockNo(dc.getColValue());
+					}else {
+						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="出库单号必填;";
+					}
+					break;
+				case "运单号":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						tempEntity.setWaybillNo(dc.getColValue());
+					}else {
+						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="运单号必填;";
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		} catch (Exception e) {
+			errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
+		}
+
+			
+		//****************************************************************** 遍历耗材
+		for (Map<String,String> map : materialGroup) {
+			String codeName = "";
+			String numName = "";
+			String numType = "";
+			for (Map.Entry<String, String> colgroup : map.entrySet()) {
+				if("code".equals(colgroup.getValue())){
+					codeName = colgroup.getKey();
+				}
+				else{
+					numName = colgroup.getKey();
+					numType = colgroup.getValue();
+				}
+			}
+			
+			//耗材与数量同时存在
+			if(originColumn.containsValue(codeName) && originColumn.containsValue(numName)){
+				isHaveMaterial = true;
+
+				BizOutstockPackmaterialTempEntity newTempEntity = new BizOutstockPackmaterialTempEntity();
+				PropertyUtils.copyProperties(newTempEntity, tempEntity);
+				BigDecimal num = null;
+				String num0 = "";
+				for (DataColumn dc : dr.getColumns()) {
+					try {
+						if (dc.getTitleName().equals(codeName)) {
+							//耗材Code，耗材Name
+							if(!materialMap.containsKey(dc.getColValue())){
+								errorMsg += "耗材【"+dc.getTitleName()+"】不存在;";
+							}
+							if(errorMsg.length()>0){
+								continue;
+							}
+							newTempEntity.setConsumerMaterialName(materialMap.get(dc.getColValue()).getMaterialName());
+							newTempEntity.setConsumerMaterialCode(dc.getColValue().trim());
+
+							if(materialMap.containsKey(dc.getColValue())){
+								PubMaterialInfoVo pubMaterialInfoVo=materialMap.get(dc.getColValue());
+								newTempEntity.setSpecDesc("外径规格【"+pubMaterialInfoVo.getOutLength().doubleValue()+"*"+pubMaterialInfoVo.getOutWidth().doubleValue()+"*"+pubMaterialInfoVo.getOutHeight().doubleValue()+"】,"
+					  			+"内径规格【"+pubMaterialInfoVo.getInLength().doubleValue()+"*"+pubMaterialInfoVo.getInWidth().doubleValue()+"*"+pubMaterialInfoVo.getInHeight().doubleValue()+"】");
+							}
+							String key = newTempEntity.getWaybillNo() + newTempEntity.getConsumerMaterialCode();
+							if(repeatMap.containsKey(key)){
+								errorMsg += "数据重复--第【"+repeatMap.get(key)+"】行已存在运单【"+newTempEntity.getWaybillNo()+"】和耗材【"+newTempEntity.getConsumerMaterialCode()+"】的组合;";
+							}
+							else{
+								repeatMap.put(key, dr.getRowNo());
+							}
+							
+						}else if (dc.getTitleName().equals(numName) && numType.equals("num")) {
+							//数量
+							num0 = dc.getColValue();
+							if(!StringUtil.isNumeric(dc.getColValue())){
+								errorMsg += "【"+num0+"】不是数字;";
+							}
+							else{
+								if(num0.contains("-")){
+									errorMsg += "【"+num0+"】必须>0";
+								}
+							}
+							if(errorMsg.length()>0){
+								continue;
+							}else {
+								num = new BigDecimal(num0);
+								newTempEntity.setNum(num);
+								newTempEntity.setAdjustNum(num);
+							}	
+						}else if (dc.getTitleName().equals(numName) && numType.equals("weight")) {
+							//干冰 存重量
+							num0 = dc.getColValue();
+							if(!StringUtil.isNumeric(dc.getColValue())){
+								errorMsg += "【"+num0+"】不是数字;";
+							}
+							else{
+								if(num0.contains("-")){
+									errorMsg += "【"+num0+"】必须>0";
+								}
+							}
+							if(errorMsg.length()>0){
+								continue;
+							}else {
+								num = new BigDecimal(num0);
+								newTempEntity.setWeight(num);
+							}	
+						}					
+					} catch (Exception e) {
+						errorMsg+="列【"+ dc.getTitleName() + "】格式不正确;";
+					}		
+				}
+				
+				if (errorMsg.length() == 0) {
+					newTempEntity.setRowExcelName(codeName);
+					newTempEntity.setCreator(taskEntity.getCreator());
+					newTempEntity.setDelFlag("0");
+					newTempEntity.setExtattr5("origin");
+					newTempEntity.setWriteTime(JAppContext.currentTimestamp());
+					newTempEntity.setIsCalculated(String.valueOf(ConstantInterface.Calculate.CALCULATE_NO));
+					newTempEntity.setBatchNum(taskEntity.getTaskId());
+					tempList.add(newTempEntity);
+				}
+				
+			}
+			//耗材与数量均为空,合理数据,但不处理
+			else if(!originColumn.containsValue(codeName) && !originColumn.containsValue(numName)){
+				continue;
+			}
+			//耗材与数量有一个为空
+			else{
+				errorMsg += "【"+numName+"】和【"+codeName+"】不能只存在一个;";
+			}	
+		}
+		
+		int rowNo = dr.getRowNo();
+		if(!StringUtil.isEmpty(errorMsg)){
+			if(errMap.containsKey(rowNo)){
+				errMap.put(rowNo, errMap.get(rowNo)+errorMsg);
+			}
+			else{
+				errMap.put(rowNo, errorMsg);
+			}
+		}
+		if(!isHaveMaterial){
+			if(errMap.containsKey(rowNo)){
+				errMap.put(rowNo, errMap.get(rowNo)+"本行未录入任何耗材");
+			}
+			else{
+				errMap.put(rowNo, "本行未录入任何耗材");
+			}
+		}
+				
+		if (errMap.size() > 0) {
+			throw new BizException(errMap.get(dr.getRowNo()));
+		}
+		return tempList;
 	}
 	
 	/**
@@ -569,6 +669,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	 */
 	private void createResultFile() throws IOException, ParseException{
 		
+		bizOutstockPackmaterialTempService.deleteBybatchNum(taskEntity.getTaskId());
 		if(!StringUtil.isEmpty(taskEntity.getResultFilePath())){
 			logger.info("删除历史结果文件");
 			boolean resultF = storageClient.deleteFile(taskEntity.getResultFilePath());
@@ -586,17 +687,20 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			exportColumns.add(map.getValue());
 		}
 		
+		
 		POISXSSUtil poiUtil = new POISXSSUtil();
-		SXSSFWorkbook workbook = new SXSSFWorkbook(10000);		
+    	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
     	List<Map<String, Object>> headDetailMapList = getBizHead(exportColumns); 
 		List<Map<String, Object>> dataDetailList = getBizHeadItem();
-
-		poiUtil.exportExcel2FilePath(poiUtil, workbook, "耗材出库结果文件",1, headDetailMapList, dataDetailList);
-    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+		poiUtil.exportExcel2FilePath(poiUtil, workbook, "Sheet1",1, headDetailMapList, dataDetailList);
+		
+		String resultFullPath="";	
+		logger.info("上传结果文件到fastDfs");
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
-	    String resultFullPath = resultStorePath.getFullPath();
+	    resultFullPath = resultStorePath.getFullPath();
 	    logger.info("上传结果文件到FastDfs - 成功");
 	    BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), taskEntity.getOriginFileName(), resultFullPath, REMARK);
 		bmsFileAsynTaskService.update(updateEntity);
@@ -624,14 +728,13 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	}
 	
 	private List<Map<String, Object>> getBizHeadItem() throws ParseException{
-		SimpleDateFormat format =  new SimpleDateFormat("yyyy/MM/dd");
 		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
         Map<String, Object> dataItem = null;
         for (DataRow row : allList) {
         	dataItem = new HashMap<String, Object>();
         	for (DataColumn dc : row.getColumns()) {
         		if ("出库日期".equals(dc.getTitleName())) {
-        			dataItem.put(dc.getTitleName(), format.format(DateUtil.transStringToTimeStamp(dc.getColValue())));
+        			dataItem.put(dc.getTitleName(), DateUtil.transStringToTimeStamp(dc.getColValue()).toString());
 				}else {
 					dataItem.put(dc.getTitleName(), dc.getColValue());
 				}		
@@ -649,7 +752,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	 * @return
 	 */
 	private boolean dbCheck(){
-
+		
+		
 		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId());
 			if(null == list || list.size() <= 0){
 				return true;
@@ -670,7 +774,6 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			//存在重复记录
 			for(BizOutstockPackmaterialTempEntity entity:list){
 				String row=String.valueOf(entity.getRowExcelNo());
-				
 				String mes="";
 				if(map.containsKey(row)){
 					mes=map.get(row);
@@ -708,25 +811,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		return true;
 	}
 	
-    /**
-     * 将excel中的内容转换为timestamp类型
-     * @param value
-     * @return
-     * @throws ParseException 
-     */
-    public Timestamp changeValueToTimestamp(String value) throws ParseException{
-    	if(StringUtil.isNumeric(value)){
-    		Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            value = dateFormat.format(date);
-    	}
-    	String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy","yyyy/MM/dd","yyyy/MM/dd HH:mm:ss","yyyy年MM月dd日" };
-		Date date = DateUtils.parseDate(value, dataPatterns);
-		Timestamp ts=new Timestamp(date.getTime());
-		return ts;
-    }
-	
-    private int saveTo(){
+	private int saveTo(){
 		logger.info("任务ID【{}】 -> 保存数据到临时表 行数【{}】",taskId,newList.size());
 		int k = bizOutstockPackmaterialTempService.saveBatch(newList); //保存到临时表
 		if (k > 0) {
@@ -736,5 +821,5 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		newList.clear();
 		return k;
     }
-    
+	
 }
