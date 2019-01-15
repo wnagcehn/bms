@@ -489,6 +489,7 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
           <AutoFormElement>
             <Property name="name">customerName</Property>
             <Property name="property">customerName</Property>
+            <Property name="trigger">triggerInvoice</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
