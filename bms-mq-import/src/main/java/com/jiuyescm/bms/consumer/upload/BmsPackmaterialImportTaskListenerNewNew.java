@@ -375,7 +375,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 											
 											//校验耗材Code
 											if(!materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
-												errorMsg += "耗材【"+newTempEntity.getConsumerMaterialName()+"】不存在;";
+												errorMsg += "耗材【"+newTempEntity.getConsumerMaterialCode()+"】不存在;";
 											}
 											if(errorMsg.length()>0){
 												count = 1;
