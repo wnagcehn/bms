@@ -79,7 +79,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		List<ReportWarehouseBizImportEntity> theoryList = reportWarehouseBizImportService.queryImport(importCondition);
 		List<String> theory = new ArrayList<String>();
 		for (ReportWarehouseBizImportEntity entity : theoryList) {
-			theory.add(entity.getCustomerId()+entity.getWarehouseCode()+entity.getImportDate()+entity.getBizType());
+			theory.add(entity.getCustomerId()+entity.getWarehouseCode()+entity.getImportDateStr()+entity.getBizType());
 		}
 		//2.找出所有实际导入
 		importCondition.put("importType", "ACTUAL");
@@ -87,7 +87,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		List<Long> deleteIds = new ArrayList<Long>();
 		//3.对比实际导入和理论导入
 		for (ReportWarehouseBizImportEntity entity : actualList) {
-			String string = entity.getCustomerId()+entity.getWarehouseCode()+entity.getImportDate()+entity.getBizType();
+			String string = entity.getCustomerId()+entity.getWarehouseCode()+entity.getImportDateStr()+entity.getBizType();
 			if(!theory.contains(string)){
 				deleteIds.add(entity.getId());
 			}
