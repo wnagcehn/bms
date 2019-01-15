@@ -2,7 +2,6 @@ package com.jiuyescm.bms.billcheck.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
-import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillReceiveExpectEntity;
 import com.jiuyescm.bms.billcheck.ReportBillImportMasterEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
@@ -252,6 +250,19 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	}
 
 	@Override
+	public BillReceiveMasterVo queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BillReceiveMasterVo vo=new BillReceiveMasterVo();
+		BillReceiveMasterEntity entity=billReceiveMasterRepository.queryOne(condition);
+		try {
+            PropertyUtils.copyProperties(vo, entity);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return vo;
+	}	
+	
+	@Override
 	public Double getAbnormalMoney(String billNo) {
 		// TODO Auto-generated method stub
 		return billReceiveMasterRepository.getAbnormalMoney(billNo);
@@ -297,5 +308,5 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 	public Double queryDispatchAbnormalFee(String billNo) {
 		// TODO Auto-generated method stub
 		return billReceiveMasterRepository.queryDispatchAbnormalFee(billNo);
-	}	
+	}
 }

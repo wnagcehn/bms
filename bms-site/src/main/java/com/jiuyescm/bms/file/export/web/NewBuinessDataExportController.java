@@ -1357,9 +1357,9 @@ public class NewBuinessDataExportController extends BaseController {
 			List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
 			for (FeesReceiveStorageEntity entity : itemsList) {
 				conIndex++;
-				if (!set.contains(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId())) {
+				if (!set.contains(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()))) {
 				/*	if(cusList.contains(entity.getCustomerId())){*/
-						set.add(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId());
+						set.add(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()));
 					/*}*/
 				}
 			}
@@ -1368,8 +1368,8 @@ public class NewBuinessDataExportController extends BaseController {
 			List<FeesReceiveStorageEntity> disposalList = feesReceiveStorageService.queryPreBillPallet(parameter);
 			for (FeesReceiveStorageEntity entity : disposalList) {
 				conIndex++;
-				if (!set.contains(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId())) {
-					set.add(sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId());
+				if (!set.contains(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()))) {
+					set.add(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()));
 				}
 			}
 			
@@ -1607,7 +1607,7 @@ public class NewBuinessDataExportController extends BaseController {
 				
 				// 库存板数
 				for (FeesReceiveStorageEntity entity : disposalList) {
-					if ((sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId()).equals(timestampKey)) {
+					if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {
 						//商家名称
 						Cell cell40=row.createCell(0);
 						cell40.setCellValue(entity.getCustomerName());		
@@ -1616,7 +1616,7 @@ public class NewBuinessDataExportController extends BaseController {
 						cell41.setCellValue(entity.getWarehouseName());
 						//时间
 						Cell cell42=row.createCell(2);
-						cell42.setCellValue(timestampKey.substring(0, timestampKey.indexOf("&")));
+						cell42.setCellValue(timestampKey.substring(timestampKey.indexOf("&")+1));
 						//商品
 						if ("product".equals(entity.getBizType())) {
 							String tempretureType = entity.getTempretureType();
@@ -1637,7 +1637,7 @@ public class NewBuinessDataExportController extends BaseController {
 							}
 							
 							//不是当月的时间，则是上月结余，上月结余的不显示金额
-							if(startTime.before(entity.getCreateTime())){
+							if(!entity.getCreateTime().before(startTime)){
 								// 列小计
 								double cost = entity.getCost().doubleValue();
 								if ("LD".equals(tempretureType)) {
@@ -1670,7 +1670,7 @@ public class NewBuinessDataExportController extends BaseController {
 								cell46.setCellValue(entity.getQuantity());
 								
 								//不是当月的时间，则是上月结余，上月结余的不显示金额
-								if(startTime.before(entity.getCreateTime())){
+								if(!entity.getCreateTime().before(startTime)){
 									Cell cell49 = row.createCell(16);
 									cell49.setCellValue(materialCost);
 									//累加行
@@ -1684,7 +1684,7 @@ public class NewBuinessDataExportController extends BaseController {
 								index = entity.getQuantity()+index;
 								
 								//不是当月的时间，则是上月结余，上月结余的不显示金额
-								if(startTime.before(entity.getCreateTime())){
+								if(!entity.getCreateTime().before(startTime)){
 									Cell cell50 = row.createCell(17);
 									cell50.setCellValue(materialCost+ldCost);
 									//累加行
@@ -1693,7 +1693,7 @@ public class NewBuinessDataExportController extends BaseController {
 									colcost = colcost + materialCost;
 								}	
 							}
-							rowcolCost = cwCost+ldCost;	
+							rowcolCost+= cwCost+ldCost;	
 						}else if ("instock".equals(entity.getBizType()) || "outstock".equals(entity.getBizType())) {
 							//入库/出库
 							double palletCost = entity.getCost().doubleValue();
@@ -1710,7 +1710,7 @@ public class NewBuinessDataExportController extends BaseController {
 							}	
 							
 							//不是当月的时间，则是上月结余，上月结余的不显示金额
-							if(startTime.before(entity.getCreateTime())){
+							if(!entity.getCreateTime().before(startTime)){
 								//处置费小计
 								Cell cell72 = row.createCell(19-move2);
 								cell72.setCellValue(palletCost+incost);
@@ -1719,7 +1719,7 @@ public class NewBuinessDataExportController extends BaseController {
 								//累加列
 								czfcost = czfcost+palletCost;
 								
-								rowcolCost = incost;
+								rowcolCost= incost;
 							}							
 						}
 						
@@ -1737,7 +1737,7 @@ public class NewBuinessDataExportController extends BaseController {
 				if (newIndex > 0) {
 					//商品存储费（按件）
 					for (FeesReceiveStorageEntity entity : itemsList) {
-						if ((sdf.format(entity.getCreateTime())+"&"+entity.getCustomerId()).equals(timestampKey)) {
+						if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {
 							//商家名称
 							Cell cell40=row.createCell(0);
 							cell40.setCellValue(entity.getCustomerName());		
@@ -1759,7 +1759,7 @@ public class NewBuinessDataExportController extends BaseController {
 							qty = qty+entity.getQuantity();
 							
 							//不是当月的时间，则是上月结余，上月结余的不显示金额
-							if(startTime.before(entity.getCreateTime())){
+							if(!entity.getCreateTime().before(startTime)){
 								//存储费按件小计
 								Cell cell61 = row.createCell(18);
 								cell61.setCellValue(productCost+cCost);

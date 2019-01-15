@@ -23,6 +23,8 @@ public interface IBillReceiveMasterService {
             int pageSize);
 
 	List<BillReceiveMasterVo> query(Map<String, Object> condition);
+	
+	BillReceiveMasterVo queryOne(Map<String, Object> condition);
 
     int save(BillReceiveMasterVo entity);
 

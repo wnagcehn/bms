@@ -22,8 +22,10 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckLogService;
+import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
+import com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
@@ -68,6 +70,9 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IBillReceiveMasterService billReceiveMasterService;
 
 	@FileResolver
 	public Map<String,Object> importExcel(UploadFile file,Map<String, Object> parameter){		
@@ -264,6 +269,12 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 			Date overdueDate=getDate(vo.getCreateMonth());
 			vo.setOverdueDate(overdueDate);
 			
+			//判断账单导入主表是否有导入记录
+			BillReceiveMasterVo master=billReceiveMasterService.queryOne(condition);
+			if(master!=null){
+				vo.setBillNo(master.getBillNo());
+			}
+	
 			vo.setIsapplyBad("0");
 			vo.setCreator(JAppContext.currentUserName());
 			vo.setCreatorId(JAppContext.currentUserID());
