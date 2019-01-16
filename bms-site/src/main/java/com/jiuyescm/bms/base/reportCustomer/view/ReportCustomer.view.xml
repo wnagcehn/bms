@@ -142,6 +142,10 @@
     <ClientEvent name="onReady">var date=new Date;  &#xD;
 var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	month=12;&#xD;
+	year=year-1;&#xD;
+}&#xD;
 view.get(&quot;#queryForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
     <DataSet id="dsEntity">

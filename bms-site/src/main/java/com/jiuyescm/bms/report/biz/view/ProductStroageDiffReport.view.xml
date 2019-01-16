@@ -247,7 +247,7 @@ function getDays(strDateStart,strDateEnd){&#xD;
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="queryForm">
-      <ClientEvent name="onReady">var date = new Date();&#xD;
+      <ClientEvent name="onReady">/*var date = new Date();&#xD;
 var seperator1 = &quot;-&quot;;&#xD;
 var premonth = date.getMonth();&#xD;
 var month = date.getMonth() + 1;&#xD;
@@ -264,8 +264,30 @@ var startdate = date.getFullYear() + seperator1 + premonth + seperator1 + day;&#
 &#xD;
 var enddate = date.getFullYear() + seperator1 + month + seperator1 + day;&#xD;
 &#xD;
-view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;startTime&quot;,startdate)&#xD;
-view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,enddate)</ClientEvent>
+view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;startTime&quot;,startdate);&#xD;
+view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,enddate);&#xD;
+&#xD;
+*/&#xD;
+&#xD;
+&#xD;
+&#xD;
+var nowdays = new Date();&#xD;
+var year = nowdays.getFullYear();&#xD;
+var month = nowdays.getMonth();&#xD;
+if(month==0)&#xD;
+{&#xD;
+    month=12;&#xD;
+    year=year-1;&#xD;
+}&#xD;
+if (month &lt; 10) {&#xD;
+    month = &quot;0&quot; + month;&#xD;
+}&#xD;
+var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01&quot;;//上个月的第一天&#xD;
+var myDate = new Date(year, month, 0);&#xD;
+var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate();//上个月的最后一天&#xD;
+view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;startTime&quot;,firstDay);&#xD;
+view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,lastDay);&#xD;
+</ClientEvent>
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
       <Property name="cols">*,*,*,*</Property>
