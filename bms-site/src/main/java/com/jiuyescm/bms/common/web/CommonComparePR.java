@@ -83,6 +83,7 @@ public class CommonComparePR <T>{
 				}
 			}
 		}
+		
 		if (infoList != null && infoList.size() > 0) { // 有错误信息
 			map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 		} else {

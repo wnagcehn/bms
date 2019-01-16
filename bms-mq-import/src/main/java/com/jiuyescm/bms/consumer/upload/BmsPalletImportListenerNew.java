@@ -647,7 +647,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "商品冷冻":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity1 = new BizPalletInfoTempEntity();
@@ -662,7 +662,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "商品冷藏":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity2 = new BizPalletInfoTempEntity();
@@ -677,7 +677,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "商品常温":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity3 = new BizPalletInfoTempEntity();
@@ -692,7 +692,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "商品恒温":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity4 = new BizPalletInfoTempEntity();
@@ -707,7 +707,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "耗材冷冻":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity5 = new BizPalletInfoTempEntity();
@@ -722,7 +722,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "耗材冷藏":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity6 = new BizPalletInfoTempEntity();
@@ -737,7 +737,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "耗材常温":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity7 = new BizPalletInfoTempEntity();
@@ -752,7 +752,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "耗材恒温":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity8 = new BizPalletInfoTempEntity();
@@ -767,7 +767,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "入库托数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity9 = new BizPalletInfoTempEntity();
@@ -781,7 +781,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					break;
 				case "出库托数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
+					if (StringUtils.isNotBlank(dc.getColValue()) && !"0".equals(dc.getColValue())) {
 						isAllEmpty = true;
 						if (ExportUtil.isNumber(dc.getColValue())) {
 							tempEntity10 = new BizPalletInfoTempEntity();

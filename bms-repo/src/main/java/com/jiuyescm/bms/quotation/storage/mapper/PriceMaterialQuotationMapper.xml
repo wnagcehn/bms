@@ -313,5 +313,6 @@
 		<if test="(materialCode != null and materialCode !='')">
 			and c.material_code=#{materialCode}
 		</if>
+		ORDER BY c.unit_price ASC
 	</select>
 </mapper>

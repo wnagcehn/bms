@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
@@ -135,16 +136,18 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}else if(entity == null){
 				return "页面传递参数有误！";
 			}
-			if (StringUtils.isEmpty(entity.getWarehouseId())) {
+			//重复性校验
+			if (!"PLATIC_BOX".equals(entity.getMaterialType())) {
 				Map<String, Object> parameter = new HashMap<>();
 				parameter.put("templateId", entity.getTemplateId());
 				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
 				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
-					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode()) && StringUtils.isBlank(priceMaterialQuotationEntity.getWarehouseId())) {
-						return " 未填写仓库的耗材不允许重复录入!";
+					if ((priceMaterialQuotationEntity.getMaterialCode()+priceMaterialQuotationEntity.getWarehouseId()).equals(entity.getMaterialCode()+entity.getWarehouseId())) {
+						return "非泡沫箱的耗材不允许重复录入!";
 					}
 				}
 			}
+			
 			entity.setCreateTime(JAppContext.currentTimestamp());
 			entity.setCreator(JAppContext.currentUserName());
 			entity.setLastModifier(JAppContext.currentUserName());
@@ -181,9 +184,9 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
 
-			if((ex.getMessage().indexOf("Duplicate entry"))>0){
-				return "违反唯一性校验";
-			}
+//			if((ex.getMessage().indexOf("Duplicate entry"))>0){
+//				return "违反唯一性校验";
+//			}
 			return "数据库操作失败";
 		}
 	}
@@ -196,14 +199,14 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}else if(entity == null){
 				return "页面传递参数有误！";
 			}
-			if (StringUtils.isEmpty(entity.getWarehouseId())) {
+			if (!"PLATIC_BOX".equals(entity.getMaterialType())) {
 				Map<String, Object> parameter = new HashMap<>();
 				parameter.put("templateId", entity.getTemplateId());
 				parameter.put("id", entity.getId());
 				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
 				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
-					if (priceMaterialQuotationEntity.getMaterialCode().equals(entity.getMaterialCode()) && StringUtils.isBlank(priceMaterialQuotationEntity.getWarehouseId())) {
-						return "未填写仓库的耗材不允许重复录入!";
+					if ((priceMaterialQuotationEntity.getMaterialCode()+priceMaterialQuotationEntity.getWarehouseId()).equals(entity.getMaterialCode()+entity.getWarehouseId())) {
+						return "非泡沫箱的耗材不允许重复录入!";
 					}
 				}
 			}
@@ -240,9 +243,9 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			if((ex.getMessage().indexOf("Duplicate entry"))>0){
-				return "违反唯一性校验";
-			}
+//			if((ex.getMessage().indexOf("Duplicate entry"))>0){
+//				return "违反唯一性校验";
+//			}
 			return "数据库操作失败";
 		}
 	}
@@ -487,10 +490,24 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			parame.put("templateId", id);
 			List<PriceMaterialQuotationEntity> orgList=getOrgList(parame);
 			List<PriceMaterialQuotationEntity> teList=templateList;
-			Map<String,Object> mapCheck=super.compareWithImportLineData(orgList, teList, infoList,getKeyDataProperty(), map);
+			
+			//非泡沫箱
+			List<PriceMaterialQuotationEntity> noPmxList = new ArrayList<PriceMaterialQuotationEntity>();
+			for (PriceMaterialQuotationEntity teEntity : teList) {
+				if (!"PLATIC_BOX".equals(teEntity.getMaterialType())) {
+					noPmxList.add(teEntity);
+				}
+			}
+			//非泡沫箱走这面这段代码(校验Excel和DB是否重复)，泡沫箱不需要校验
+			Map<String,Object> mapCheck=null;
+			if (noPmxList.size() > 0) {
+				mapCheck=super.compareWithImportLineData(orgList, noPmxList, infoList,getKeyDataProperty(), map);
+			}else {
+				mapCheck = new HashMap<String,Object>();
+			}
 			if (mapCheck.get(ConstantInterface.ImportExcelStatus.IMP_ERROR) != null) { // 有基本的错误信息(必填，数据类型不正确)
 				return map;
-			}	
+			}			
 			
 			//设置属性
 			for(int i=0;i<templateList.size();i++){
@@ -687,8 +704,8 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}
 			
 			boolean warehouseCheck = false;
-			//如果仓库为空，不允许重复录入。不为空需要校验
-			if(StringUtils.isEmpty(p.getWarehouseId())){
+			//如果仓库为空并且耗材类型不为泡沫箱，不允许重复录入。不为空需要校验
+			if(StringUtils.isEmpty(p.getWarehouseId()) && !"泡沫箱".equals(p.getMaterialType())){
 				for (WarehouseVo warehouseVo : wareHouselist) {
 					if (warehouseVo.getWarehousename().equals(p.getWarehouseId())) {
 						setMessage(infoList, lineNo, "未填写仓库的耗材不允许重复录入!");

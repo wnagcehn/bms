@@ -11,4 +11,7 @@ public interface IStorageQuoteFilterService {
 	PriceStepQuotationEntity quoteFilter(List<PriceStepQuotationEntity> quotes,Map<String,Object> map);
 	
 	PriceMaterialQuotationEntity quoteMaterialFilter(List<PriceMaterialQuotationEntity> quotes,Map<String,Object> map);
+
+	List<PriceMaterialQuotationEntity> quotePMXmaterialFilter(List<PriceMaterialQuotationEntity> quotes,
+			Map<String, Object> map);
 }
