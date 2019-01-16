@@ -2,28 +2,27 @@ package com.jiuyescm.bms.jobhandler;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
-import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
+import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
@@ -51,6 +50,8 @@ import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
+
+import net.sf.json.JSONObject;
 
 @JobHander(value="materialUseNewCalcJob")
 @Service
@@ -276,11 +277,52 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 					return;
 				}
 				
-				//封装数据的仓库和温度
-				map.clear();
-				map.put("warehouse_code", entity.getWarehouseCode());
-				PriceMaterialQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteMaterialFilter(list, map);			
+				PriceMaterialQuotationEntity stepQuoEntity = null;
 				
+				//判断耗材类型是否为泡沫箱
+				Map<String, Object> cond = new HashMap<String, Object>();
+				cond.put("materialCode", entity.getConsumerMaterialCode());
+				List<PubMaterialInfoVo> materialInfoVos = pubMaterialInfoService.queryList(cond);
+				if (CollectionUtils.isNotEmpty(materialInfoVos) && "PLATIC_BOX".equals(materialInfoVos.get(0).getMaterialType())) {
+					//获取当前月份
+					Calendar cale = Calendar.getInstance();
+					int month = cale.get(Calendar.MONTH) + 1;
+					//当前月份在夏季，筛出全国仓和其他仓最低报价
+					List<SystemCodeEntity> pmxTimes = systemCodeRepository.findEnumList("PMX_TIME");
+					String season = "";//季节
+					for (SystemCodeEntity time : pmxTimes) {
+						if (month >= Integer.parseInt(time.getExtattr1()) && month <= Integer.parseInt(time.getExtattr2())) {
+							season = time.getCode();
+							if ("SUMMER".equals(season)) {
+								//夏季，仓库过滤
+								map.clear();
+								map.put("warehouse_code", entity.getWarehouseCode());
+								List<PriceMaterialQuotationEntity> pmxPriceList = storageQuoteFilterService.quotePMXmaterialFilter(list, map);
+								if (CollectionUtils.isNotEmpty(pmxPriceList)) {
+									stepQuoEntity = pmxPriceList.get(0);
+								}else {
+									stepQuoEntity = null;
+								}
+							}else {
+								//其余季节，仓库过滤
+								map.clear();
+								map.put("warehouse_code", entity.getWarehouseCode());
+								List<PriceMaterialQuotationEntity> pmxPriceList = storageQuoteFilterService.quotePMXmaterialFilter(list, map);
+								if (CollectionUtils.isNotEmpty(pmxPriceList)) {
+									stepQuoEntity = pmxPriceList.get(pmxPriceList.size()-1);
+								}else {
+									stepQuoEntity = null;
+								}
+							}
+						}
+					}
+				}else {
+					//封装数据的仓库
+					map.clear();
+					map.put("warehouse_code", entity.getWarehouseCode());
+					stepQuoEntity=storageQuoteFilterService.quoteMaterialFilter(list, map);
+				}
+
 				if(stepQuoEntity==null){
 					XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());

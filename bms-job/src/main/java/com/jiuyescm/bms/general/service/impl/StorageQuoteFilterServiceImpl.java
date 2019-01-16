@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.general.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,50 @@ public class StorageQuoteFilterServiceImpl implements IStorageQuoteFilterService
 			}
 			else{
 				return entity;
+			}
+		}
+		catch(Exception ex){
+			logger.error("仓储耗材阶梯报价过滤异常", ex);
+			return null;
+		}
+	}
+	
+	/**
+	 * 筛选泡沫箱耗材报价
+	 * @param quotes
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<PriceMaterialQuotationEntity> quotePMXmaterialFilter(List<PriceMaterialQuotationEntity> quotes, Map<String, Object> map) {
+		try{
+			Integer level = 3;
+			PriceMaterialQuotationEntity entity = new PriceMaterialQuotationEntity();
+			List<PriceMaterialQuotationEntity> list = new ArrayList<PriceMaterialQuotationEntity>();
+			
+			String warehouse_code = map.get("warehouse_code")==null?"":map.get("warehouse_code").toString();
+			
+			for (PriceMaterialQuotationEntity quoteEntity : quotes) {
+				
+				String warehouse_quote = StringUtils.isEmpty(quoteEntity.getWarehouseId())?"":quoteEntity.getWarehouseId();
+				
+				if(!warehouse_code.equals(warehouse_quote) && StringUtils.isNotEmpty(warehouse_quote)){
+					continue;//仓库不匹配
+				}
+			
+				Integer warehouselevel = warehouse_code.equals(warehouse_quote)?1:2;		//仓库优先级	
+				
+				if(warehouselevel<level){
+					level = warehouselevel;
+					entity = quoteEntity;
+					list.add(entity);
+				}
+			}
+			if(level == 3){
+				return null;
+			}
+			else{
+				return list;
 			}
 		}
 		catch(Exception ex){
