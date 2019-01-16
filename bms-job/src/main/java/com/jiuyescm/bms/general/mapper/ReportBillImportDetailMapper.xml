@@ -139,7 +139,7 @@
 	</select>
 	
 	<select id="queryDispatch" parameterType="java.util.Map" resultType="java.util.Map">
-		select COUNT(0) as count,IFNULL(SUM(amount),0) as amount from bill_fees_receive_dispatch
+		select COUNT(0) as count,SUM(IFNULL(amount,0)-IFNULL(derate_amount,0)) as amount from bill_fees_receive_dispatch
 		where 1=1
 		<if test="(subjectCode != null and subjectCode !='')" >
 			and subject_code=#{subjectCode} 
@@ -318,10 +318,10 @@
     </update>
     
     <select id="queryStorageReceipt" parameterType="java.util.Map" resultType="java.math.BigDecimal">   
-    	select IFNULL(SUM(amount),0) as amount from bill_fees_receive_storage where bill_no= #{billNo} and warehouse_code=#{warehouseCode} and subject_code not in ('wh_abnormal_pay')
+    	select SUM(IFNULL(amount,0)) as amount from bill_fees_receive_storage where bill_no= #{billNo} and warehouse_code=#{warehouseCode} and subject_code not in ('wh_abnormal_pay')
     </select>
     
     <select id="queryDispatchReceipt" parameterType="java.util.Map" resultType="java.math.BigDecimal">
-   		select IFNULL(SUM(amount),0) as amount from bill_fees_receive_dispatch where bill_no= #{billNo} and warehouse_code=#{warehouseCode} and subject_code not in ('de_abnormal_pay')   
+   		select SUM(IFNULL(amount,0)-IFNULL(derate_amount,0)) as amount from bill_fees_receive_dispatch where bill_no= #{billNo} and warehouse_code=#{warehouseCode} and subject_code not in ('de_abnormal_pay')   
     </select>
 </mapper>

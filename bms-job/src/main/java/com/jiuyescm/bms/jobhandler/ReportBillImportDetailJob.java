@@ -186,7 +186,7 @@ public class ReportBillImportDetailJob extends IJobHandler{
 					map.put("subjectCode", "wh_abnormal_pay");
 					XxlJobLogger.log("仓储理赔费金额统计"+JSONObject.fromObject(map));
 					money=reportBillImportService.queryStorageAmount(map);
-					detail.setMaterialAmount(money);
+					detail.setStAbnormalAmount(money);
 					
 					//tb出库箱数
 					map.put("subjectCode", "wh_b2b_work");
