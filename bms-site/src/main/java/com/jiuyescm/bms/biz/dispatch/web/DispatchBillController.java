@@ -3,6 +3,7 @@ package com.jiuyescm.bms.biz.dispatch.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -1003,7 +1004,8 @@ public class DispatchBillController{
 					StringUtils.isBlank(adjustWeight) && 
 					StringUtils.isBlank(adjustCarrier) && 
 					StringUtils.isBlank(adjustDeliver) &&
-					StringUtils.isBlank(serviceTypeName)){
+					StringUtils.isBlank(serviceTypeName)&&
+					StringUtils.isBlank(carrierWeight)){
 				// 除waybillNo外，其他更新字段都为空
 				setMessage(infoList, rowNum+1,"没有需要调整的内容！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
@@ -1117,15 +1119,16 @@ public class DispatchBillController{
 			
 			//物流商重量
 			if(!StringUtils.isEmpty(carrierWeight)){
-				boolean isNumber = ExportUtil.isNumber(adjustWeight);
-				if(!isNumber) {
-					int lieshu = rowNum + 1;
+				//使用BigDecimal校验
+				try {
+					BigDecimal bigDecimal = new BigDecimal(carrierWeight);
+				} catch (Exception e) {
+					int lieshu = 9;
 					setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
 					map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 					return map;
-				}else{
-					map0.put("carrierWeight", carrierWeight);
 				}
+				map0.put("carrierWeight", carrierWeight);
 			}
 			
 			//是否过账
