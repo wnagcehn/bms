@@ -119,7 +119,10 @@ public class ReportBillImportDetailController {
 		    	for(Cell cell:myList1){
 		    		if(map.containsKey(cell.getStringCellValue())){
 		    			if (null != map.get(cell.getStringCellValue()) && map.get(cell.getStringCellValue()) instanceof BigDecimal) {
-		    				newrow.createCell(cell.getColumnIndex()).setCellValue(new BigDecimal(map.get(cell.getStringCellValue()).toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+		    				BigDecimal value=new BigDecimal(map.get(cell.getStringCellValue()).toString());
+		    				if(value!=null && value.compareTo(BigDecimal.ZERO)!=0){
+			    				newrow.createCell(cell.getColumnIndex()).setCellValue(value.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+		    				}
 						}else {
 							newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
 						}	
@@ -147,7 +150,10 @@ public class ReportBillImportDetailController {
 		    	for(Cell cell:myList2){
 		    		if(map.containsKey(cell.getStringCellValue())){
 		    			if (null != map.get(cell.getStringCellValue()) && map.get(cell.getStringCellValue()) instanceof BigDecimal) {
-		    				newrow.createCell(cell.getColumnIndex()).setCellValue(new BigDecimal(map.get(cell.getStringCellValue()).toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+		    				BigDecimal value=new BigDecimal(map.get(cell.getStringCellValue()).toString());
+		    				if(value!=null && value.compareTo(BigDecimal.ZERO)!=0){
+			    				newrow.createCell(cell.getColumnIndex()).setCellValue(value.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+		    				}
 						}else {
 							newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
 						}	
@@ -173,7 +179,10 @@ public class ReportBillImportDetailController {
 		    	for(Cell cell:myList3){
 		    		if(map.containsKey(cell.getStringCellValue())){
 		    			if (null != map.get(cell.getStringCellValue()) && map.get(cell.getStringCellValue()) instanceof BigDecimal) {
-		    				newrow.createCell(cell.getColumnIndex()).setCellValue(new BigDecimal(map.get(cell.getStringCellValue()).toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+		    				BigDecimal value=new BigDecimal(map.get(cell.getStringCellValue()).toString());
+		    				if(value!=null && value.compareTo(BigDecimal.ZERO)!=0){
+			    				newrow.createCell(cell.getColumnIndex()).setCellValue(value.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+		    				}
 						}else {
 							newrow.createCell(cell.getColumnIndex()).setCellValue(map.get(cell.getStringCellValue()).toString());
 						}	
