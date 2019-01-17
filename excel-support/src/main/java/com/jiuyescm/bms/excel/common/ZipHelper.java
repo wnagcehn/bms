@@ -40,7 +40,7 @@ public class ZipHelper {
 	public ZipHelper(InputStream inputStream) throws Exception{
 		
 		classPath = this.getClass().getClassLoader().getResource("").getPath();
-		tempPath = classPath+"temp/";
+		tempPath = classPath+"excelTemp/";
 		xlsxPath = copyFileToLoal(inputStream);
 		unZipFiles(xlsxPath);
 		delZipFile();
