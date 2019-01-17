@@ -221,6 +221,7 @@
 			<if test="adjustDeliverName != null" >adjust_deliver_name=#{adjustDeliverName,jdbcType=VARCHAR},</if>
 			<if test="adjustCarrierId != null" >adjust_carrier_id=#{adjustCarrierId,jdbcType=VARCHAR},</if>
 			<if test="adjustCarrierName != null" >adjust_carrier_name=#{adjustCarrierName,jdbcType=VARCHAR},</if>
+			<if test="carrierWeight != null" >carrier_weight=#{carrierWeight,jdbcType=DOUBLE},</if>
 		</set>
         where
         <if test="(id !=null and id!='')">
