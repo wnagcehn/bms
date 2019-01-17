@@ -1,8 +1,10 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -286,7 +288,9 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				if (null != materialInfoVo && "泡沫箱".equals(materialInfoVo.getMaterialType())) {
 					//获取当前月份
 					Calendar cale = Calendar.getInstance();
-					int month = cale.get(Calendar.MONTH) + 1;
+					Timestamp creTime = entity.getCreateTime();
+					cale.setTime((Date)creTime);
+					int month = cale.get(Calendar.MONTH) + 1;				
 					//当前月份在夏季，筛出全国仓和其他仓最低报价
 					List<SystemCodeEntity> pmxTimes = systemCodeRepository.findEnumList("PMX_TIME");
 					String season = "";//季节
