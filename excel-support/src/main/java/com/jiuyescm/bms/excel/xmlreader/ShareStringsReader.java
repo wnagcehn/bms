@@ -56,7 +56,7 @@ public class ShareStringsReader extends DefaultHandler  {
 	
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		_shareString = new String(ch, start, length);
+		_shareString += new String(ch, start, length);
 	}
 	
 	@Override
