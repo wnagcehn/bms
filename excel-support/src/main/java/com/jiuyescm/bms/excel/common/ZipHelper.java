@@ -93,9 +93,6 @@ public class ZipHelper {
 		ZipFile zip = new ZipFile(zipFile,Charset.forName("GBK"));//解决中文文件夹乱码
 		String name = zip.getName().substring(zip.getName().lastIndexOf('\\')+1, zip.getName().lastIndexOf('.'));
 		File pathFile = new File(unzipPath);
-		logger.info("-----zipPath:{}",zipPath);
-		logger.info("-----descDir:{}",descDir);
-		logger.info("-----name:{}",name);
 		if (!pathFile.exists()) {
 			pathFile.mkdirs();
 		}
