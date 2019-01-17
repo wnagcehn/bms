@@ -38,7 +38,6 @@ public class ZipHelper {
 	}
 	
 	public ZipHelper(InputStream inputStream) throws Exception{
-		
 		classPath = this.getClass().getClassLoader().getResource("").getPath();
 		tempPath = classPath+"excelTemp/";
 		xlsxPath = copyFileToLoal(inputStream);
@@ -94,6 +93,10 @@ public class ZipHelper {
 		ZipFile zip = new ZipFile(zipFile,Charset.forName("GBK"));//解决中文文件夹乱码
 		String name = zip.getName().substring(zip.getName().lastIndexOf('\\')+1, zip.getName().lastIndexOf('.'));
 		File pathFile = new File(descDir+name);
+		logger.info("-----zipPath:{}",zipPath);
+		logger.info("-----descDir:{}",descDir);
+		logger.info("-----name:{}",name);
+		logger.info("-----pathFile:{}",pathFile.getPath());
 		if (!pathFile.exists()) {
 			pathFile.mkdirs();
 		}
