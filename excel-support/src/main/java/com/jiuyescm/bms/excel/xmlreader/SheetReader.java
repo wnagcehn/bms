@@ -105,11 +105,12 @@ public class SheetReader extends DefaultHandler {
 			isString = "s".equals(cellType)?true:false;
 			curColNo = replaceString(curColNo);
 		}
+		colValue = "";
 	}
 	
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		colValue = new String(ch, start, length);
+		colValue += new String(ch, start, length);
 	}
 	
 	@Override
