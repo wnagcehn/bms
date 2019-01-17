@@ -220,6 +220,16 @@ public class DispatchBillController{
 				temp.setLastModifier(userid);
 				temp.setLastModifyTime(nowdate);
 				bizDispatchBillService.adjustBillEntity(temp);
+				
+				//根据waybillNo查询，判断
+				Map<String, String> condition = new HashMap<String, String>();
+				condition.put("waybillNo", temp.getWaybillNo());
+				BizDispatchBillEntity bizDispatchBillEntity = bizDispatchBillService.queryByWayNo(condition);
+				//更新物流商重量
+				if(null!=bizDispatchBillEntity){
+					bizDispatchBillEntity.setCarrierWeight(temp.getCarrierWeight());
+					bizDispatchBillService.updateBillEntity(bizDispatchBillEntity);
+				}
 			}
 			return "更新成功";
 		}catch(Exception e){

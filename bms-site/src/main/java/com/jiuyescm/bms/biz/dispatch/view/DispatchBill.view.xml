@@ -1206,6 +1206,11 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
             <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
+          <AutoFormElement id="carrierWeight">
+            <Property name="property">carrierWeight</Property>
+            <Property name="name">carrierWeight</Property>
+            <Editor/>
+          </AutoFormElement>
         </AutoForm>
       </Children>
       <Tools/>
