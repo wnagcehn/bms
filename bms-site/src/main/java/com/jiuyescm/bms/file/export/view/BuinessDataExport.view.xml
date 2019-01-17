@@ -388,7 +388,7 @@ if(taskState==2){&#xD;
 var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
 if(month==0){&#xD;
-	year=yeay-1;&#xD;
+	year=year-1;&#xD;
 	month=12;&#xD;
 }&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
