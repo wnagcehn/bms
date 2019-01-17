@@ -265,6 +265,13 @@ view.get(&quot;#exportTaskForm.entity&quot;).set(&quot;month&quot;,month);</Clie
       <Separator/>
       <ToolBarButton>
         <ClientEvent name="onClick">var condition=view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+&#xD;
+var cre=condition.get(&quot;customerName&quot;);&#xD;
+&#xD;
+if(isNullOrEmpty(cre)){&#xD;
+	condition.set(&quot;customerId&quot;,&quot;&quot;);&#xD;
+}&#xD;
+&#xD;
 with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
 	set(&quot;parameter&quot;, condition);&#xD;
 	flushAsync();&#xD;
@@ -431,6 +438,10 @@ if(taskState==2){&#xD;
       <ClientEvent name="onShow">var date=new Date;  &#xD;
 var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	year=year-1;&#xD;
+	month=12;&#xD;
+}&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
       <Property name="caption">生成预账单</Property>

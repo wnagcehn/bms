@@ -1358,9 +1358,9 @@ public class NewBuinessDataExportController extends BaseController {
 			for (FeesReceiveStorageEntity entity : itemsList) {
 				conIndex++;
 				if (!set.contains(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()))) {
-				/*	if(cusList.contains(entity.getCustomerId())){*/
+					if(cusList.contains(entity.getCustomerId())){
 						set.add(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()));
-					/*}*/
+					}
 				}
 			}
 			

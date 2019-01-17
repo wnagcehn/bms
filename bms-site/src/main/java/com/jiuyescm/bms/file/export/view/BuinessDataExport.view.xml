@@ -387,6 +387,10 @@ if(taskState==2){&#xD;
       <ClientEvent name="onShow">var date=new Date;  &#xD;
 var year=date.getFullYear();  &#xD;
 var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	year=yeay-1;&#xD;
+	month=12;&#xD;
+}&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
       <Property name="caption">生成预账单</Property>
