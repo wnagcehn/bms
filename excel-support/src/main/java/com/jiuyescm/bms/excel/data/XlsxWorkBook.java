@@ -74,7 +74,7 @@ public class XlsxWorkBook {
 	
 	private void read(Integer sheetId,SheetReadCallBack callback,int titleRowNo,int contentRowNo){
 		SheetReader sr = new SheetReader();
-		String sheetFileName = tempPath+sheetPath+"Sheet"+sheetId+".xml";
+		String sheetFileName = tempPath+sheetPath+"sheet"+sheetId+".xml";
 		sr.readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);
 		//为当前sheet设置总行数
 		for (Sheet sheet : sheets) {
