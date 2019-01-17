@@ -114,6 +114,7 @@ public class StorageQuoteFilterServiceImpl implements IStorageQuoteFilterService
 			Integer level = 3;
 			PriceMaterialQuotationEntity entity = new PriceMaterialQuotationEntity();
 			List<PriceMaterialQuotationEntity> list = new ArrayList<PriceMaterialQuotationEntity>();
+			List<PriceMaterialQuotationEntity> nationList = new ArrayList<PriceMaterialQuotationEntity>();
 			
 			String warehouse_code = map.get("warehouse_code")==null?"":map.get("warehouse_code").toString();
 			
@@ -127,17 +128,23 @@ public class StorageQuoteFilterServiceImpl implements IStorageQuoteFilterService
 			
 				Integer warehouselevel = warehouse_code.equals(warehouse_quote)?1:2;		//仓库优先级	
 				
-				if(warehouselevel<level){
+				if(warehouselevel<=level){
 					level = warehouselevel;
 					entity = quoteEntity;
-					list.add(entity);
+					if (level == 1) {
+						list.add(entity);
+					}
+					if (level == 2) {
+						nationList.add(entity);
+					}
 				}
 			}
 			if(level == 3){
 				return null;
-			}
-			else{
+			}else if (level == 1) {
 				return list;
+			}else {
+				return nationList;
 			}
 		}
 		catch(Exception ex){

@@ -142,7 +142,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 				parameter.put("templateId", entity.getTemplateId());
 				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
 				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
-					if ((priceMaterialQuotationEntity.getMaterialCode()+priceMaterialQuotationEntity.getWarehouseId()).equals(entity.getMaterialCode()+entity.getWarehouseId())) {
+					if ((priceMaterialQuotationEntity.getMaterialCode()+priceMaterialQuotationEntity.getWarehouseId()).equals(entity.getMaterialCode()+(entity.getWarehouseId()==null?"":entity.getWarehouseId()))) {
 						return "非泡沫箱的耗材不允许重复录入!";
 					}
 				}
@@ -205,7 +205,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 				parameter.put("id", entity.getId());
 				List<PriceMaterialQuotationEntity> list = service.queryByTemplateId(parameter);
 				for (PriceMaterialQuotationEntity priceMaterialQuotationEntity : list) {
-					if ((priceMaterialQuotationEntity.getMaterialCode()+priceMaterialQuotationEntity.getWarehouseId()).equals(entity.getMaterialCode()+entity.getWarehouseId())) {
+					if ((priceMaterialQuotationEntity.getMaterialCode()+priceMaterialQuotationEntity.getWarehouseId()).equals(entity.getMaterialCode()+(entity.getWarehouseId()==null?"":entity.getWarehouseId()))) {
 						return "非泡沫箱的耗材不允许重复录入!";
 					}
 				}

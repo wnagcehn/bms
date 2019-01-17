@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -75,6 +76,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
 	@Autowired private ISystemCodeRepository systemCodeRepository;
+	@Autowired private IMaterialDictService materialDictService;
 
 	
 	Map<String,PubMaterialInfoVo> materialMap = null;
@@ -280,41 +282,61 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				PriceMaterialQuotationEntity stepQuoEntity = null;
 				
 				//判断耗材类型是否为泡沫箱
-				Map<String, Object> cond = new HashMap<String, Object>();
-				cond.put("materialCode", entity.getConsumerMaterialCode());
-				List<PubMaterialInfoVo> materialInfoVos = pubMaterialInfoService.queryList(cond);
-				if (CollectionUtils.isNotEmpty(materialInfoVos) && "PLATIC_BOX".equals(materialInfoVos.get(0).getMaterialType())) {
+				PubMaterialInfoVo materialInfoVo = materialDictService.getMaterialByCode(entity.getConsumerMaterialCode());
+				if (null != materialInfoVo && "泡沫箱".equals(materialInfoVo.getMaterialType())) {
 					//获取当前月份
 					Calendar cale = Calendar.getInstance();
-					int month = cale.get(Calendar.MONTH) + 1;
+					int month = 6;
 					//当前月份在夏季，筛出全国仓和其他仓最低报价
 					List<SystemCodeEntity> pmxTimes = systemCodeRepository.findEnumList("PMX_TIME");
 					String season = "";//季节
+					boolean exe = false;
 					for (SystemCodeEntity time : pmxTimes) {
 						if (month >= Integer.parseInt(time.getExtattr1()) && month <= Integer.parseInt(time.getExtattr2())) {
 							season = time.getCode();
+							exe = true;
+							//仓库过滤
+							map.clear();
+							map.put("warehouse_code", entity.getWarehouseCode());
+							List<PriceMaterialQuotationEntity> pmxPriceList = storageQuoteFilterService.quotePMXmaterialFilter(list, map);
 							if ("SUMMER".equals(season)) {
-								//夏季，仓库过滤
-								map.clear();
-								map.put("warehouse_code", entity.getWarehouseCode());
-								List<PriceMaterialQuotationEntity> pmxPriceList = storageQuoteFilterService.quotePMXmaterialFilter(list, map);
+								//夏季
 								if (CollectionUtils.isNotEmpty(pmxPriceList)) {
-									stepQuoEntity = pmxPriceList.get(0);
+									if (pmxPriceList.size() == 2) {
+										if (pmxPriceList.get(0).getUnitPrice() > pmxPriceList.get(1).getUnitPrice()) {
+											stepQuoEntity = pmxPriceList.get(0);
+										}else {
+											stepQuoEntity = pmxPriceList.get(1);
+										}
+									}else {
+										stepQuoEntity = pmxPriceList.get(0);
+									}
 								}else {
 									stepQuoEntity = null;
 								}
 							}else {
-								//其余季节，仓库过滤
-								map.clear();
-								map.put("warehouse_code", entity.getWarehouseCode());
-								List<PriceMaterialQuotationEntity> pmxPriceList = storageQuoteFilterService.quotePMXmaterialFilter(list, map);
+								//其余季节
 								if (CollectionUtils.isNotEmpty(pmxPriceList)) {
-									stepQuoEntity = pmxPriceList.get(pmxPriceList.size()-1);
+									if (pmxPriceList.size() == 2) {
+										if (pmxPriceList.get(0).getUnitPrice() > pmxPriceList.get(1).getUnitPrice()) {
+											stepQuoEntity = pmxPriceList.get(1);
+										}else {
+											stepQuoEntity = pmxPriceList.get(0);
+										}
+									}else {
+										stepQuoEntity = pmxPriceList.get(0);
+									}					
 								}else {
 									stepQuoEntity = null;
 								}
 							}
 						}
+					}
+					if (!exe) {
+						//封装数据的仓库
+						map.clear();
+						map.put("warehouse_code", entity.getWarehouseCode());
+						stepQuoEntity=storageQuoteFilterService.quoteMaterialFilter(list, map);
 					}
 				}else {
 					//封装数据的仓库
@@ -399,6 +421,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				XxlJobLogger.log("-->"+entity.getId()+"报价信息 -- "+map);
 			}
+			
 			//调用规则计算费用
 			Map<String, Object> feesMap = feesCalcuService.ContractCalcuService(feeEntity, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 
