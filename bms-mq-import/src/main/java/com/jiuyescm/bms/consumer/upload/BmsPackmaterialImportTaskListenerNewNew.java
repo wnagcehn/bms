@@ -199,6 +199,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 
 				@Override
 				public void read(DataRow dr) {
+					logger.info("开始处理Excel..........");
 					//行错误信息
 					String errorMsg="";			
 					//----------初始化基础数据
