@@ -135,7 +135,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 					feeEntity=new BillFeesReceiveStorageTempEntity();
 					PropertyUtils.copyProperties(feeEntity, entity);
 				}
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "编码":
 					if(StringUtils.isNotBlank(dc.getColValue())){
 						PubMaterialInfoVo vo=materialDictService.getMaterialByCode(dc.getColValue());

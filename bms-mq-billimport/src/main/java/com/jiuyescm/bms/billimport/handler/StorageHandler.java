@@ -94,7 +94,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity1.setChargeUnit("PALLETS");
 						entity1.setCreateTime(entity.getCreateTime());
 						entity1.setCreateMonth(entity.getCreateMonth());
-						entity1.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
+						entity1.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
 						entity1.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity1.setBillNo(billNo);
 						entity1.setCustomerId(customerId);
@@ -125,7 +125,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2.setChargeUnit("PALLETS");
 						entity2.setCreateTime(entity.getCreateTime());
 						entity2.setCreateMonth(entity.getCreateMonth());
-						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
+						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
 						entity2.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity2.setBillNo(billNo);
 						entity2.setCustomerId(customerId);
@@ -158,7 +158,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity3.setChargeUnit("PALLETS");
 						entity3.setCreateTime(entity.getCreateTime());
 						entity3.setCreateMonth(entity.getCreateMonth());
-						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
+						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
 						entity3.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity3.setBillNo(billNo);
 						entity3.setCustomerId(customerId);
@@ -191,7 +191,7 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4.setChargeUnit("PALLETS");
 						entity4.setCreateTime(entity.getCreateTime());
 						entity4.setCreateMonth(entity.getCreateMonth());
-						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getColName()));
+						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
 						entity4.setTotalQty(Integer.valueOf(dc.getColValue()));
 						entity4.setBillNo(billNo);
 						entity4.setCustomerId(customerId);
