@@ -147,140 +147,140 @@ public class BmsPalletImportListenerNew implements MessageListener{
 
 		try{	
 			reader = new XlsxWorkBook(inputStream);	
-			for (final Sheet sheet : reader.getSheets()) {
-				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 30,null, sheet.getRowCount(), null, null, null, null);
-				bmsFileAsynTaskService.update(updateEntity);
-				reader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
+			Sheet sheet = reader.getSheets().get(0);
+			BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 30,null, sheet.getRowCount(), null, null, null, null);
+			bmsFileAsynTaskService.update(updateEntity);
+			reader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
 
-					@Override
-					public void readTitle(List<String> columns) {				
-						//源生表头
-						int a = 1;
-						for (String column : columns) {
-							originColumn.put(a, column);
-							a++;
-						}
-						
-						logger.info("任务ID【{}】 -> 校验表头...",taskId); 
-						//表头校验
-						if(!checkTitle(columns,neededColumnNames)){
-							String msg = "模板列格式错误,必须包含:";
-							for (String str : neededColumnNames) {
-								msg+=str;
-							}
-							logger.info(msg);
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 32, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
-							return;
-						}
+				@Override
+				public void readTitle(List<String> columns) {				
+					//源生表头
+					int a = 1;
+					for (String column : columns) {
+						originColumn.put(a, column);
+						a++;
 					}
-
-					@Override
-					public void read(DataRow dr) {
-						//行错误信息
-						String errorMsg="";	
-						//----------初始化基础数据--------
-						wareHouseMap = new HashMap<String, String>();
-						customerMap = new HashMap<String, String>();
-						temperatureMap = new HashMap<String, String>();
-						try {
-							//仓库
-							List<WarehouseVo> wareHouseList = warehouseService.queryAllWarehouse();
-							if(wareHouseList != null && wareHouseList.size()>0){
-								for(WarehouseVo wareHouse : wareHouseList){
-									wareHouseMap.put(wareHouse.getWarehousename().trim(),wareHouse.getWarehouseid());
-								}
-							}
-							//商家
-							PageInfo<CustomerVo> tmpPageInfo = customerService.query(null, 0, Integer.MAX_VALUE);
-							if (tmpPageInfo != null && tmpPageInfo.getList() != null && tmpPageInfo.getList().size()>0) {
-								for(CustomerVo customer : tmpPageInfo.getList()){
-									if(customer != null){
-										customerMap.put(customer.getCustomername().trim(), customer.getCustomerid());
-									}
-								}
-							}	
-							//温度类型
-							Map<String, Object> param = new HashMap<String, Object>();
-							param.put("typeCode", "TEMPERATURE_TYPE");
-							List<SystemCodeEntity> temperatureList = systemCodeService.queryCodeList(param);
-							if(temperatureList != null && temperatureList.size()>0){
-							    for(SystemCodeEntity scEntity : temperatureList){
-							    	temperatureMap.put(scEntity.getCodeName().trim(), scEntity.getCode());
-							    }
-							}
-						} catch (Exception e) {
-							logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,e);
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
-							return;
+					
+					logger.info("任务ID【{}】 -> 校验表头...",taskId); 
+					//表头校验
+					if(!checkTitle(columns,neededColumnNames)){
+						String msg = "模板列格式错误,必须包含:";
+						for (String str : neededColumnNames) {
+							msg+=str;
 						}
-						logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
-						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
-						logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
-						
-						//组装往临时表存的数据，校验出错捕获加入errList
-						List<BizPalletInfoTempEntity> tempList = null;
-						try {
-							tempList = loadTemp(dr, errorMsg);
-						} catch (Exception e) {
-							errList.add(dr);
-						}
-
-						//组装好的数据存入全局List中
-						if (tempList == null) {
-							tempList = new ArrayList<BizPalletInfoTempEntity>();
-						}
-						for( int i = 0 ; i < tempList.size() ; i++){
-							newList.add(tempList.get(i));
-						}
-						
-						//1000条数据	
-						if (newList.size() >= batchNum) {
-							if(errMap.size()==0){
-								int result = saveTo();
-								if(result<=0){
-									logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
-								}
-							}
-						}
-						
-						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
-						//存入所有行的DataRow的Map<rowNo,DataRow>
-						mapData.put(dr.getRowNo(), dr);
-						allList.add(dr);
+						logger.info(msg);
+						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 32, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
 						return;
-						
+					}
+				}
+
+				@Override
+				public void read(DataRow dr) {
+					//行错误信息
+					String errorMsg="";	
+					//----------初始化基础数据--------
+					wareHouseMap = new HashMap<String, String>();
+					customerMap = new HashMap<String, String>();
+					temperatureMap = new HashMap<String, String>();
+					try {
+						//仓库
+						List<WarehouseVo> wareHouseList = warehouseService.queryAllWarehouse();
+						if(wareHouseList != null && wareHouseList.size()>0){
+							for(WarehouseVo wareHouse : wareHouseList){
+								wareHouseMap.put(wareHouse.getWarehousename().trim(),wareHouse.getWarehouseid());
+							}
+						}
+						//商家
+						PageInfo<CustomerVo> tmpPageInfo = customerService.query(null, 0, Integer.MAX_VALUE);
+						if (tmpPageInfo != null && tmpPageInfo.getList() != null && tmpPageInfo.getList().size()>0) {
+							for(CustomerVo customer : tmpPageInfo.getList()){
+								if(customer != null){
+									customerMap.put(customer.getCustomername().trim(), customer.getCustomerid());
+								}
+							}
+						}	
+						//温度类型
+						Map<String, Object> param = new HashMap<String, Object>();
+						param.put("typeCode", "TEMPERATURE_TYPE");
+						List<SystemCodeEntity> temperatureList = systemCodeService.queryCodeList(param);
+						if(temperatureList != null && temperatureList.size()>0){
+						    for(SystemCodeEntity scEntity : temperatureList){
+						    	temperatureMap.put(scEntity.getCodeName().trim(), scEntity.getCode());
+						    }
+						}
+					} catch (Exception e) {
+						logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,e);
+						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+						return;
+					}
+					logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
+					logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
+					
+					//组装往临时表存的数据，校验出错捕获加入errList
+					List<BizPalletInfoTempEntity> tempList = null;
+					try {
+						tempList = loadTemp(dr, errorMsg);
+					} catch (Exception e) {
+						errList.add(dr);
 					}
 
-					@Override
-					public void finish() {			
-						//保存数据到临时表
+					//组装好的数据存入全局List中
+					if (tempList == null) {
+						tempList = new ArrayList<BizPalletInfoTempEntity>();
+					}
+					for( int i = 0 ; i < tempList.size() ; i++){
+						newList.add(tempList.get(i));
+					}
+					
+					//1000条数据	
+					if (newList.size() >= batchNum) {
 						if(errMap.size()==0){
 							int result = saveTo();
-							if (result <= 0) {
+							if(result<=0){
 								logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
 							}
 						}
 					}
-
-					@Override
-					public void error(Exception ex) {
-						// TODO Auto-generated method stub
-						
-					}
 					
-				});
-				
-				//更新文件读取行数
-				if(sheet.getRowCount()<=0){
-					logger.info("未从excel读取到任何数据");
-					bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.FAIL.getCode(),"未从excel读取到任何数据");
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
+					//存入所有行的DataRow的Map<rowNo,DataRow>
+					mapData.put(dr.getRowNo(), dr);
+					allList.add(dr);
 					return;
+					
 				}
-				logger.info("excel读取完成，读取行数【"+sheet.getRowCount()+"】");
-				BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 80,null, sheet.getRowCount(), null, null, null, null);
-				bmsFileAsynTaskService.update(updateEntity2);
+
+				@Override
+				public void finish() {			
+					//保存数据到临时表
+					if(errMap.size()==0){
+						int result = saveTo();
+						if (result <= 0) {
+							logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
+						}
+					}
+				}
+
+				@Override
+				public void error(Exception ex) {
+					// TODO Auto-generated method stub
+					
+				}
 				
+			});
+			
+			//更新文件读取行数
+			if(sheet.getRowCount()<=0){
+				logger.info("未从excel读取到任何数据");
+				bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.FAIL.getCode(),"未从excel读取到任何数据");
+				return;
 			}
+			logger.info("excel读取完成，读取行数【"+sheet.getRowCount()+"】");
+			BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 80,null, sheet.getRowCount(), null, null, null, null);
+			bmsFileAsynTaskService.update(updateEntity2);
+			
+		
 			
 			long end = System.currentTimeMillis();
 			logger.info("*****读取excel,耗时:" + (end-start)/1000 + "秒*****");
@@ -657,7 +657,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity1.setBizType("product");
 							tempList.add(tempEntity1);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -672,7 +672,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity2.setBizType("product");
 							tempList.add(tempEntity2);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -687,7 +687,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity3.setBizType("product");
 							tempList.add(tempEntity3);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -702,7 +702,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity4.setBizType("product");
 							tempList.add(tempEntity4);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -717,7 +717,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity5.setBizType("material");
 							tempList.add(tempEntity5);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -732,7 +732,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity6.setBizType("material");
 							tempList.add(tempEntity6);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -747,7 +747,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity7.setBizType("material");
 							tempList.add(tempEntity7);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -762,7 +762,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity8.setBizType("material");
 							tempList.add(tempEntity8);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -776,7 +776,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity9.setBizType("instock");
 							tempList.add(tempEntity9);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;
@@ -790,7 +790,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							tempEntity10.setBizType("outstock");
 							tempList.add(tempEntity10);
 						}else {
-							errorMsg+="列【"+dc.getColNo()+"】为非数字";
+							errorMsg+="列【"+dc.getColNo()+"】为非数字;";
 						}
 					}
 					break;

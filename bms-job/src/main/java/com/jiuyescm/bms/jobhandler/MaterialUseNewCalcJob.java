@@ -406,7 +406,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 					XxlJobLogger.log("-->"+entity.getId()+"规则引擎拼接条件异常");
 					feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 					entity.setIsCalculated(CalculateState.Sys_Error.getCode());
-					entity.setRemark(entity.getRemark()+"系统规则引擎异常;");
+					entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"系统规则引擎异常;");
 					return;
 				}
 				
@@ -416,7 +416,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				XxlJobLogger.log("-->"+entity.getId()+"获取合同在线报价异常:"+e.getMessage());
-				entity.setRemark(entity.getRemark()+"获取合同在线报价异常:"+e.getMessage()+";");
+				entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"获取合同在线报价异常:"+e.getMessage()+";");
 				feeEntity.setCalcuMsg("获取合同在线报价异常:"+e.getMessage());
 				return;
 			}
@@ -432,6 +432,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 			if(feeEntity.getCost().compareTo(BigDecimal.ZERO) == 1){
 				feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setIsCalculated(CalculateState.Finish.getCode());
+				entity.setRemark("计算成功");
 				XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",feeEntity.getCost());
 			}
 			else{
