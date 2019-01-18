@@ -44,31 +44,32 @@ public class ShareStringsReader extends DefaultHandler  {
 	}
 	
 	private String _shareString = "";
-	private String str = "";
-	
+	private boolean isRead = false;
 	@Override
 	public void startElement(String uri, String localName, String name,Attributes attrs) throws SAXException {
 		if ("si".equals(name)) {
 			_shareString = "";
-			str = "";
+		}
+		if("t".equals(name)){
+			isRead = true;
+		}
+		else{
+			isRead = false;
 		}
 	}
 	
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		_shareString += new String(ch, start, length);
+		if(isRead){
+			_shareString += new String(ch, start, length);
+		}
 	}
 	
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
-		if ("t".equals(name)) {
-			str += _shareString;
-		}
 		if("si".equals(name)){
-			shareStrings.add(str);
+			shareStrings.add(_shareString);
 		}
-		
-		
 	}
 	
 }
