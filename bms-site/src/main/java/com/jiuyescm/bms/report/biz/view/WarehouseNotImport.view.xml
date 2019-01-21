@@ -39,7 +39,12 @@ if(userData){&#xD;
 var tmpDataSet=view.get(&quot;#dsWarehouseNotImport&quot;);&#xD;
 var tmpFormCondition=view.get(&quot;#queryForm&quot;);&#xD;
 var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
-tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
+//tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();&#xD;
+&#xD;
+with (view.get(&quot;#dsWarehouseNotImport&quot;)){&#xD;
+					set(&quot;parameter&quot;, entity);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition.data&quot;).insert();&#xD;
 </ClientEvent>
@@ -51,12 +56,17 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
       <Property name="loadMode">manual</Property>
       <Property name="pageSize">20</Property>
     </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsWarehouseNotImport</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+    </ToolBar>
     <Container>
       <DataGrid>
         <Property name="dataSet">dsWarehouseNotImport</Property>
         <Property name="dataType">dtWarehouseNotImport</Property>
-        <Property name="readOnly">true</Property>
-        <Property name="stretchColumnsMode">allColumns</Property>
+        <Property name="readOnly">false</Property>
         <DataColumn name="customerId">
           <Property name="property">customerId</Property>
         </DataColumn>
