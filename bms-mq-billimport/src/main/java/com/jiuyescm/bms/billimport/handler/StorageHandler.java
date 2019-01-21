@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,6 +71,12 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 			errorMessage+="仓库不存在;";
 		}
 		
+		//组装公有数据
+		entity.setWarehouseName(sheetName);
+		entity.setBillNo(billNo);
+		entity.setCustomerId(customerId);
+		entity.setCustomerName(customerName);
+		
 		for (DataColumn dc : dr.getColumns()) {
 			try {
 				switch (dc.getTitleName()) {
@@ -85,22 +92,137 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 				case "冷冻":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						entity1 = new BillFeesReceiveStorageTempEntity();
-						entity1.setWarehouseName(sheetName);
-						//如果没找到，报错
+						PropertyUtils.copyProperties(entity1, entity);
 						if(StringUtils.isNotBlank(warehouseCode)){
 							entity1.setWarehouseCode(warehouseCode);
 						}	
 						entity1.setSubjectCode("wh_product_storage");
 						entity1.setChargeUnit("PALLETS");
-						entity1.setCreateTime(entity.getCreateTime());
-						entity1.setCreateMonth(entity.getCreateMonth());
 						entity1.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
 						entity1.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity1.setBillNo(billNo);
-						entity1.setCustomerId(customerId);
-						entity1.setCustomerName(customerName);
 					}
 					break;
+				case "冷藏":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity2 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity2, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity2.setWarehouseCode(warehouseCode);
+						}	
+						entity2.setSubjectCode("wh_product_storage");
+						entity2.setChargeUnit("PALLETS");
+						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
+						entity2.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "恒温":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity3 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity3, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity3.setWarehouseCode(warehouseCode);
+						}	
+						entity3.setSubjectCode("wh_product_storage");
+						entity3.setChargeUnit("PALLETS");
+						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
+						entity3.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "常温":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity4 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity4, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity4.setWarehouseCode(warehouseCode);
+						}
+						entity4.setSubjectCode("wh_product_storage");
+						entity4.setChargeUnit("PALLETS");
+						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
+						entity4.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "常温包材":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity5 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity5, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity5.setWarehouseCode(warehouseCode);
+						}	
+						entity5.setSubjectCode("wh_material_storage");
+						entity5.setChargeUnit("PALLETS");
+						entity5.setTempretureType("CW");
+						entity5.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "冷冻包材":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity6 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity6, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity6.setWarehouseCode(warehouseCode);
+						}	
+						entity6.setSubjectCode("wh_material_storage");
+						entity6.setTempretureType("LD");
+						entity6.setTotalQty(Integer.valueOf(dc.getColValue()));
+
+					}
+					break;
+				case "库存件数":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity7 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity7, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity7.setWarehouseCode(warehouseCode);
+						}	
+						entity7.setSubjectCode("wh_product_storage");
+						entity7.setChargeUnit("ITEMS");
+						entity7.setTotalQty(Integer.valueOf(dc.getColValue()));				
+					}
+					break;
+				case "入库板数":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity8 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity8, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity8.setWarehouseCode(warehouseCode);
+						}	
+						entity8.setSubjectCode("wh_disposal");
+						//entity8.setChargeUnit("ITEMS");
+						entity8.setTotalQty(Integer.valueOf(dc.getColValue()));
+					}
+					break;
+				case "出库板数":
+					if (StringUtils.isNotBlank(dc.getColValue())) {
+						entity9 = new BillFeesReceiveStorageTempEntity();
+						PropertyUtils.copyProperties(entity9, entity);
+						//如果没找到，报错
+						if(StringUtils.isNotBlank(warehouseCode)){
+							entity9.setWarehouseCode(warehouseCode);
+						}	
+						entity9.setSubjectCode("outstock_pallet_vm");
+						entity9.setTotalQty(Integer.valueOf(dc.getColValue()));
+						entity9.setAmount(BigDecimal.ZERO);
+					}
+					break;
+				default:
+					break;
+				}
+			
+			} catch (Exception e) {
+				errorMessage+="列【"+ dc.getColName() + "】格式不正确;";
+			}
+		}
+		
+		for (DataColumn dc : dr.getColumns()) {
+			try {
+				switch (dc.getTitleName()) {
 				case "冷冻费小计/元":
 					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity1){
@@ -111,25 +233,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					}
 					if (StringUtils.isBlank(dc.getColValue()) && null !=entity1){
 						entity1.setAmount(new BigDecimal(0d));
-					}
-					break;
-				case "冷藏":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity2 = new BillFeesReceiveStorageTempEntity();
-						entity2.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity2.setWarehouseCode(warehouseCode);
-						}	
-						entity2.setSubjectCode("wh_product_storage");
-						entity2.setChargeUnit("PALLETS");
-						entity2.setCreateTime(entity.getCreateTime());
-						entity2.setCreateMonth(entity.getCreateMonth());
-						entity2.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
-						entity2.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity2.setBillNo(billNo);
-						entity2.setCustomerId(customerId);
-						entity2.setCustomerName(customerName);
 					}
 					break;
 				case "冷藏费小计/元":
@@ -146,25 +249,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity2.setAmount(new BigDecimal(0d));
 					}
 					break;
-				case "恒温":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity3 = new BillFeesReceiveStorageTempEntity();
-						entity3.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity3.setWarehouseCode(warehouseCode);
-						}	
-						entity3.setSubjectCode("wh_product_storage");
-						entity3.setChargeUnit("PALLETS");
-						entity3.setCreateTime(entity.getCreateTime());
-						entity3.setCreateMonth(entity.getCreateMonth());
-						entity3.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
-						entity3.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity3.setBillNo(billNo);
-						entity3.setCustomerId(customerId);
-						entity3.setCustomerName(customerName);
-					}
-					break;
 				case "恒温费小计/元":
 				
 					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity3){
@@ -177,25 +261,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					
 					if (StringUtils.isBlank(dc.getColValue()) && null !=entity3){
 						entity3.setAmount(new BigDecimal(0d));
-					}
-					break;
-				case "常温":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity4 = new BillFeesReceiveStorageTempEntity();
-						entity4.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity4.setWarehouseCode(warehouseCode);
-						}
-						entity4.setSubjectCode("wh_product_storage");
-						entity4.setChargeUnit("PALLETS");
-						entity4.setCreateTime(entity.getCreateTime());
-						entity4.setCreateMonth(entity.getCreateMonth());
-						entity4.setTempretureType(BmsEnums.tempretureType.getCode(dc.getTitleName()));
-						entity4.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity4.setBillNo(billNo);
-						entity4.setCustomerId(customerId);
-						entity4.setCustomerName(customerName);
 					}
 					break;
 				case "常温费小计/元":					
@@ -211,25 +276,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity4.setAmount(new BigDecimal(0d));
 					}
 					break;
-				case "常温包材":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity5 = new BillFeesReceiveStorageTempEntity();
-						entity5.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity5.setWarehouseCode(warehouseCode);
-						}	
-						entity5.setSubjectCode("wh_material_storage");
-						entity5.setChargeUnit("PALLETS");
-						entity5.setCreateTime(entity.getCreateTime());
-						entity5.setCreateMonth(entity.getCreateMonth());
-						entity5.setTempretureType("CW");
-						entity5.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity5.setBillNo(billNo);
-						entity5.setCustomerId(customerId);
-						entity5.setCustomerName(customerName);
-					}
-					break;
 				case "常温包材费小计/元":
 					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity5){
@@ -241,26 +287,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					
 					if (StringUtils.isBlank(dc.getColValue()) && null !=entity5){
 						entity5.setAmount(new BigDecimal(0d));
-					}
-					break;
-				case "冷冻包材":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity6 = new BillFeesReceiveStorageTempEntity();
-						entity6.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity6.setWarehouseCode(warehouseCode);
-						}	
-						entity6.setSubjectCode("wh_material_storage");
-						entity6.setChargeUnit("PALLETS");
-						entity6.setCreateTime(entity.getCreateTime());
-						entity6.setCreateMonth(entity.getCreateMonth());
-						entity6.setTempretureType("LD");
-						entity6.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity6.setBillNo(billNo);
-						entity6.setCustomerId(customerId);
-						entity6.setCustomerName(customerName);
-
 					}
 					break;
 				case "冷冻包材费小计/元":
@@ -277,25 +303,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity6.setAmount(new BigDecimal(0d));
 					}
 					break;
-				case "库存件数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity7 = new BillFeesReceiveStorageTempEntity();
-						entity7.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity7.setWarehouseCode(warehouseCode);
-						}	
-						entity7.setSubjectCode("wh_product_storage");
-						entity7.setChargeUnit("ITEMS");
-						entity7.setCreateTime(entity.getCreateTime());
-						entity7.setCreateMonth(entity.getCreateMonth());
-						entity7.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity7.setBillNo(billNo);
-						entity7.setCustomerId(customerId);
-						entity7.setCustomerName(customerName);
-						
-					}
-					break;
 				case "存储费按件小计/元":
 					
 					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity7){
@@ -310,25 +317,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 						entity7.setAmount(new BigDecimal(0d));
 					}
 					break;
-				case "入库板数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity8 = new BillFeesReceiveStorageTempEntity();
-						entity8.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity8.setWarehouseCode(warehouseCode);
-						}	
-						entity8.setSubjectCode("wh_disposal");
-						//entity8.setChargeUnit("ITEMS");
-						entity8.setCreateTime(entity.getCreateTime());
-						entity8.setCreateMonth(entity.getCreateMonth());
-						entity8.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity8.setBillNo(billNo);
-						entity8.setCustomerId(customerId);
-						entity8.setCustomerName(customerName);
-
-					}
-					break;
 				case "处置费小计/元":
 					if (StringUtils.isNotBlank(dc.getColValue()) && null == entity8){
 						errorMessage+="处置费有金额没有入库板数";
@@ -340,24 +328,6 @@ public class StorageHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 					
 					if (StringUtils.isBlank(dc.getColValue()) && null !=entity8){
 						entity8.setAmount(new BigDecimal(0d));
-					}
-					break;
-				case "出库板数":
-					if (StringUtils.isNotBlank(dc.getColValue())) {
-						entity9 = new BillFeesReceiveStorageTempEntity();
-						entity9.setWarehouseName(sheetName);
-						//如果没找到，报错
-						if(StringUtils.isNotBlank(warehouseCode)){
-							entity9.setWarehouseCode(warehouseCode);
-						}	
-						entity9.setSubjectCode("outstock_pallet_vm");
-						entity9.setCreateTime(entity.getCreateTime());
-						entity9.setCreateMonth(entity.getCreateMonth());
-						entity9.setTotalQty(Integer.valueOf(dc.getColValue()));
-						entity9.setAmount(BigDecimal.ZERO);
-						entity9.setBillNo(billNo);
-						entity9.setCustomerId(customerId);
-						entity9.setCustomerName(customerName);
 					}
 					break;
 				default:

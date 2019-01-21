@@ -146,6 +146,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				}
 				finally {
 					logger.info("任务ID：{}，sheetName={} 处理总耗时：【{}】毫秒",taskId,sheetName,System.currentTimeMillis()-startTime);
+					logger.info("任务ID：{}，读取总行数:{}行",taskId,sheet.getRowCount());
 				}
 			}
 			
