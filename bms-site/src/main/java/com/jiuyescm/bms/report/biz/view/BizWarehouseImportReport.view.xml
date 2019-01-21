@@ -216,7 +216,7 @@ jQuery(arg.dom).xCreate([&#xD;
 				var iframe=view.get(&quot;#WarehouseNotImportFrame&quot;);&#xD;
 				iframe.reload();&#xD;
 				iframe.set(&quot;userData&quot;,parameter);&#xD;
-				view.get(&quot;#dialogWarehouseNotImport&quot;).show();;&#xD;
+				view.get(&quot;#dialogWarehouseNotImport&quot;).show();&#xD;
 	    	}&#xD;
 		}&#xD;
 			&#xD;
