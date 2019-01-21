@@ -3,7 +3,9 @@ package com.jiuyescm.bms.excel.data;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ public class XlsxWorkBook {
 	private String sheetPath = "xl/worksheets/";
 	private List<Sheet> sheets = new ArrayList<Sheet>();
 	private List<String> sst = new ArrayList<>();
+	
+	private Map<Integer, String> sheetIdMap = new HashMap<Integer, String>();
 	
 	private Logger logger = LoggerFactory.getLogger(XlsxWorkBook.class);
 	
@@ -48,10 +52,11 @@ public class XlsxWorkBook {
 		
 		
 		start = System.currentTimeMillis();
-		String workbookFilePath = tempPath+"xl/workbook.xml";
-		logger.info("正在读取workbook 路径： {}",workbookFilePath);
-		WorkBookReader wbr = new WorkBookReader(workbookFilePath);
+		/*String workbookFilePath = tempPath+"xl/workbook.xml";
+		logger.info("正在读取workbook 路径： {}",workbookFilePath);*/
+		WorkBookReader wbr = new WorkBookReader(tempPath);
 		this.sheets = wbr.getSheets();
+		this.sheetIdMap = wbr.getSheetIdMap();
 		logger.info("workbook 读取完毕 sheet数量： {} 耗时【{}】",this.sheets.size(),System.currentTimeMillis()-start);
 		
 		start = System.currentTimeMillis();
@@ -78,7 +83,7 @@ public class XlsxWorkBook {
 	
 	private void read(Integer sheetId,SheetReadCallBack callback,int titleRowNo,int contentRowNo){
 		SheetReader sr = new SheetReader();
-		String sheetFileName = tempPath+sheetPath+"sheet"+sheetId+".xml";
+		String sheetFileName = tempPath+"xl/"+sheetIdMap.get(sheetId);
 		sr.readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);
 		//为当前sheet设置总行数
 		for (Sheet sheet : sheets) {
