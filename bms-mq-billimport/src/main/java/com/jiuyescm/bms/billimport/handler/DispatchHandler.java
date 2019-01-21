@@ -169,7 +169,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		}
 		
 		if(isWaybillNull && isCustomerNull){
-			return list;
+			return dispatchList;
 		}
 		
 		for(DataColumn dc : dr.getColumns()){

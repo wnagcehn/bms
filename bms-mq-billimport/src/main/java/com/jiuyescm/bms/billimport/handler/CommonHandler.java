@@ -68,7 +68,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	protected Map<String, String> materialMap = new HashMap<>();
 	protected Map<String, String> carrierMap = new HashMap<>();
 	
-	private int batchNum = 1000;
+	private int batchNum = 500;
 	protected String sheetName;
 	List<T> list = new ArrayList<T>();
 	List<DataRow> errMap = new ArrayList<DataRow>();
@@ -86,6 +86,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 	int lineNo = 1;
 
 	public void initKeyValue(){
+		lineNo = 1;
 		isOK = true; //sheet读取是否成功  true-成功  false-失败
 		isUploadFile = true;
 		poiUtil = new POISXSSUtil();
@@ -214,7 +215,8 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 						list.add(t);
 					}
 					//如果list大于一定的数量（batchNum），则批量写入临时表，分批执行，降低内存消耗
-					if(list.size()>=batchNum||errMap.size()>=batchNum){
+					//||errMap.size()>=batchNum
+					if(errMap.size()>=batchNum){
 						saveTo();
 					}
 				} catch (Exception e) {
@@ -275,16 +277,18 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 				logger.error("任务ID：{}，{}无数据批量写入",billNo,sheetName);
 			}
 		}
+		
 		try{
 			exportErr();
-			errMap.clear();
 		}
 		catch(Exception ex){
 			isOK = false;
 			logger.error("写入结果文件异常",ex);
 		}
-				
-		list.clear();
+		finally{
+			list.clear();
+			errMap.clear();
+		}
 		return result;
 	}
 	
