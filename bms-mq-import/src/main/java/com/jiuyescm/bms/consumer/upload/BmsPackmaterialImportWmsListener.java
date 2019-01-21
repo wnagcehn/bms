@@ -196,10 +196,8 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 
 				@Override
 				public void read(DataRow dr) {
-					logger.info("开始处理Excel..........");
 					//行错误信息
 					String errorMsg="";					
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
 					
 					//组装往临时表存的数据，校验出错捕获加入errList
 					List<BizOutstockPackmaterialTempEntity> tempList = null;
@@ -460,7 +458,6 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 	 * @throws IllegalAccessException 
 	 */
 	private List<BizOutstockPackmaterialTempEntity> loadTemp(DataRow dr, String errorMsg) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
-		logger.info("数据校验并初始化临时表数据");
 		BizOutstockPackmaterialTempEntity tempEntity = null;
 		List<BizOutstockPackmaterialTempEntity> tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
 		//本行是否拥有耗材
@@ -859,7 +856,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 	}
 	
 	private int saveTo(){
-		logger.info("任务ID【{}】 -> 保存数据到临时表 行数【{}】",taskId,newList.size());
+		logger.info("任务ID【{}】 -> 保存数据到临时表 转化成对象数【{}】",taskId,newList.size());
 		int k = bizOutstockPackmaterialTempService.saveBatch(newList); //保存到临时表
 		if (k > 0) {
 			logger.info("任务ID【{}】 -> 所有数据写入临时表-成功",taskId);
