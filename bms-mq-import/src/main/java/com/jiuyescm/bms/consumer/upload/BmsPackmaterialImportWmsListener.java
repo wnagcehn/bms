@@ -54,10 +54,10 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
-@Service("bmsPackmaterialImportWmsListenerNewNew")
-public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
+@Service("bmsPackmaterialImportWmsListener")
+public class BmsPackmaterialImportWmsListener implements MessageListener{
 
-	private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImportWmsListenerNewNew.class);
+	private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImportWmsListener.class);
 	
 	@Autowired private IBmsFileAsynTaskService bmsFileAsynTaskService;
 	@Autowired private StorageClient storageClient;
@@ -90,9 +90,23 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
 	List<BizOutstockPackmaterialTempEntity> newList = new ArrayList<BizOutstockPackmaterialTempEntity>();
 	
+	//----------初始化基础数据
+	public void initKeyValue(){
+		wareHouseMap = bmsMaterialImportTaskCommon.queryAllWarehouse();
+		customerMap  = bmsMaterialImportTaskCommon.queryAllCustomer();
+		materialMap  = bmsMaterialImportTaskCommon.queryAllMaterial();
+	}
+	
 	@Override
 	public void onMessage(Message message) {
-		
+		try {
+			initKeyValue();
+		} catch (Exception e) {
+			logger.info("任务ID【{}】 -> 初始化仓库,商家,耗材数据异常",taskId);
+			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 10, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+			return;
+		}
+			
 		logger.info("--------------------MQ处理操作日志开始---------------------------");
 		long start = System.currentTimeMillis();
 		try {
@@ -184,21 +198,8 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 				public void read(DataRow dr) {
 					logger.info("开始处理Excel..........");
 					//行错误信息
-					String errorMsg="";
-					//----------初始化基础数据
-					try{
-						wareHouseMap = bmsMaterialImportTaskCommon.queryAllWarehouse();
-						customerMap  = bmsMaterialImportTaskCommon.queryAllCustomer();
-						materialMap  = bmsMaterialImportTaskCommon.queryAllMaterial();
-					}
-					catch(Exception ex){
-						logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,ex);
-						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
-						return;
-					}
-					//logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
+					String errorMsg="";					
 					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
-					//logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
 					
 					//组装往临时表存的数据，校验出错捕获加入errList
 					List<BizOutstockPackmaterialTempEntity> tempList = null;

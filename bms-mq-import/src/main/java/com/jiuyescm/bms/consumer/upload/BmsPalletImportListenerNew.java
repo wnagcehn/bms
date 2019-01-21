@@ -91,9 +91,51 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
 	List<BizPalletInfoTempEntity> newList = new ArrayList<BizPalletInfoTempEntity>();
 	
+	//----------初始化基础数据--------
+	public void initKeyValue(){
+		//----------初始化基础数据--------
+		wareHouseMap = new HashMap<String, String>();
+		customerMap = new HashMap<String, String>();
+		temperatureMap = new HashMap<String, String>();
+
+		//仓库
+		List<WarehouseVo> wareHouseList = warehouseService.queryAllWarehouse();
+		if(wareHouseList != null && wareHouseList.size()>0){
+			for(WarehouseVo wareHouse : wareHouseList){
+				wareHouseMap.put(wareHouse.getWarehousename().trim(),wareHouse.getWarehouseid());
+			}
+		}
+		//商家
+		PageInfo<CustomerVo> tmpPageInfo = customerService.query(null, 0, Integer.MAX_VALUE);
+		if (tmpPageInfo != null && tmpPageInfo.getList() != null && tmpPageInfo.getList().size()>0) {
+			for(CustomerVo customer : tmpPageInfo.getList()){
+				if(customer != null){
+					customerMap.put(customer.getCustomername().trim(), customer.getCustomerid());
+				}
+			}
+		}	
+		//温度类型
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("typeCode", "TEMPERATURE_TYPE");
+		List<SystemCodeEntity> temperatureList = systemCodeService.queryCodeList(param);
+		if(temperatureList != null && temperatureList.size()>0){
+		    for(SystemCodeEntity scEntity : temperatureList){
+		    	temperatureMap.put(scEntity.getCodeName().trim(), scEntity.getCode());
+		    }
+		}
+		logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
+	}
 	
 	@Override
 	public void onMessage(Message message) {
+		try {
+			initKeyValue();
+		} catch (Exception e) {
+			logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,e);
+			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 10, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+			return;
+		}	
+		
 		logger.info("--------------------MQ处理操作日志开始---------------------------");
 		long start = System.currentTimeMillis();
 		try {
@@ -179,44 +221,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					logger.info("开始处理Excel..........");
 					//行错误信息
 					String errorMsg="";	
-					//----------初始化基础数据--------
-					wareHouseMap = new HashMap<String, String>();
-					customerMap = new HashMap<String, String>();
-					temperatureMap = new HashMap<String, String>();
-					try {
-						//仓库
-						List<WarehouseVo> wareHouseList = warehouseService.queryAllWarehouse();
-						if(wareHouseList != null && wareHouseList.size()>0){
-							for(WarehouseVo wareHouse : wareHouseList){
-								wareHouseMap.put(wareHouse.getWarehousename().trim(),wareHouse.getWarehouseid());
-							}
-						}
-						//商家
-						PageInfo<CustomerVo> tmpPageInfo = customerService.query(null, 0, Integer.MAX_VALUE);
-						if (tmpPageInfo != null && tmpPageInfo.getList() != null && tmpPageInfo.getList().size()>0) {
-							for(CustomerVo customer : tmpPageInfo.getList()){
-								if(customer != null){
-									customerMap.put(customer.getCustomername().trim(), customer.getCustomerid());
-								}
-							}
-						}	
-						//温度类型
-						Map<String, Object> param = new HashMap<String, Object>();
-						param.put("typeCode", "TEMPERATURE_TYPE");
-						List<SystemCodeEntity> temperatureList = systemCodeService.queryCodeList(param);
-						if(temperatureList != null && temperatureList.size()>0){
-						    for(SystemCodeEntity scEntity : temperatureList){
-						    	temperatureMap.put(scEntity.getCodeName().trim(), scEntity.getCode());
-						    }
-						}
-					} catch (Exception e) {
-						logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,e);
-						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
-						return;
-					}
-					logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
 					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
-					logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
 					
 					//组装往临时表存的数据，校验出错捕获加入errList
 					List<BizPalletInfoTempEntity> tempList = null;
