@@ -5,21 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
-
-
-import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.data.Sheet;
 import com.jiuyescm.bms.excel.data.XlsxWorkBook;
-import com.jiuyescm.bms.excel.opc.OpcSheet;
-
 
 public class Test {
 
@@ -27,9 +17,9 @@ public class Test {
 		
 		//System.out.println("123");
 		test2();	
-		while(true){
+		/*while(true){
 			
-		}
+		}*/
 		//System.out.println(trans("AD"));
 		
 	}
@@ -37,11 +27,8 @@ public class Test {
     public static void test2() throws FileNotFoundException {
         try{
         	final List<DataRow> list =new ArrayList<DataRow>();
-        	// 虚拟机级内存情况查询
-        	final int byteToMb = 1024 * 1024;
         	
-        	
-        	String path = "E:/user/desktop/liuzhicheng/Desktop/10W.xlsx";
+        	String path = "E:/user/desktop/caojianwei/Desktop/aaa/1.xlsx";
     		File file = new File(path);
             FileInputStream inputStream = new FileInputStream(file);
     		
@@ -65,24 +52,9 @@ public class Test {
     					StringBuilder sb  = new StringBuilder();
     					sb.append("\t"+dr.getRowNo()+"\t");
                 		for (DataColumn dc : dr.getColumns()) {
-                         	sb.append("\t"+dc.getColValue()+"\t");
+                         	sb.append("\t"+dc.getColValue()+"\t"+dc.getColNo());
                         }
-//                		System.out.println(sb.toString());
-    					Runtime rt = Runtime.getRuntime();
-    		        	long vmFree = 0;
-    		        	long vmUse = 0;
-    		        	long vmTotal = 0;
-    		        	long vmMax = 0;
-    					vmTotal = rt.totalMemory() / byteToMb;
-    					vmFree = rt.freeMemory() / byteToMb;
-    					vmMax = rt.maxMemory() / byteToMb;
-    					vmUse = vmTotal - vmFree;
-    					System.out.println("JVM内存已用的空间为：" + vmUse + " MB");
-    					System.out.println("JVM内存的空闲空间为：" + vmFree + " MB");
-    					System.out.println("JVM总内存空间为：" + vmTotal + " MB");
-//    					System.out.println("JVM总内存空间为：" + vmMax + " MB");
-                		list.add(dr);
-                		System.out.println(list.size());
+                		System.out.println(sb.toString());
     				}
     				
     				@Override
