@@ -1,9 +1,11 @@
 package com.jiuyescm.bms.excel.xmlreader;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -58,9 +60,10 @@ public class SheetReader extends DefaultHandler {
 	}
 	
 	private void headHander(){
+		titleMap = sortMapByKey(titleMap);
 		List<String> columns = new ArrayList<>();
 		Iterator<Map.Entry<String, DataColumn>> columnIterator = titleMap.entrySet().iterator();
-		
+		System.out.println(titleMap);
 		while (columnIterator.hasNext()) {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
 			columns.add(entry.getValue().getTitleName());
@@ -155,6 +158,22 @@ public class SheetReader extends DefaultHandler {
 	public int getRowCount() {
 		return curRow-titleRowNo;
 	}
+	
+	private Map<String, DataColumn> sortMapByKey(Map<String, DataColumn> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
+        Map<String, DataColumn> sortMap = new TreeMap<String, DataColumn>(new Comparator<String>() {
+            public int compare(String obj1, String obj2) {
+                // 降序排序
+                return obj1.compareTo(obj2);
+            }
+        });
+        sortMap.putAll(map);
+
+        return sortMap;
+    }
 	
 	
 }

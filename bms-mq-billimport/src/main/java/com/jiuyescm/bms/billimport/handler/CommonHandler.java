@@ -163,7 +163,10 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		} catch (Exception e) {
 			param.put("result", "fail");
 			param.put("detail", e.getMessage());
-		}	
+		}
+		finally{
+			workbook.dispose();
+		}
 	}
 	
 	private void readExcel(XlsxWorkBook xlsxReader, final Sheet sheet,int titleRowNo,int contentRowNo) throws Exception{

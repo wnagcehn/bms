@@ -6,6 +6,8 @@ public class Sheet {
 	private Integer sheetId;		//sheet编号
 	private String sheetName; 	//sheet名称
 	
+	private String sheetPath;
+	
 	private int rowCount;
 	
 	public Sheet(){
@@ -32,6 +34,12 @@ public class Sheet {
 	}
 	public void setRowCount(int rowCount) {
 		this.rowCount = rowCount;
+	}
+	public String getSheetPath() {
+		return sheetPath;
+	}
+	public void setSheetPath(String sheetPath) {
+		this.sheetPath = sheetPath;
 	}
 	
 }

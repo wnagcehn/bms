@@ -3,21 +3,13 @@ package com.jiuyescm.bms.excel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
-
-import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.data.Sheet;
 import com.jiuyescm.bms.excel.data.XlsxWorkBook;
-import com.jiuyescm.bms.excel.opc.OpcSheet;
-
 
 public class Test {
 
@@ -25,15 +17,18 @@ public class Test {
 		
 		//System.out.println("123");
 		test2();	
+		/*while(true){
+			
+		}*/
 		//System.out.println(trans("AD"));
 		
 	}
-
-
 	
     public static void test2() throws FileNotFoundException {
         try{
-        	String path = "E:/user/desktop/liuzhicheng/Desktop/1.xlsx";
+        	final List<DataRow> list =new ArrayList<DataRow>();
+        	
+        	String path = "E:/user/desktop/caojianwei/Desktop/aaa/1.xlsx";
     		File file = new File(path);
             FileInputStream inputStream = new FileInputStream(file);
     		
@@ -57,7 +52,7 @@ public class Test {
     					StringBuilder sb  = new StringBuilder();
     					sb.append("\t"+dr.getRowNo()+"\t");
                 		for (DataColumn dc : dr.getColumns()) {
-                         	sb.append("\t"+dc.getColValue()+"\t");
+                         	sb.append("\t"+dc.getColValue()+"\t"+dc.getColNo());
                         }
                 		System.out.println(sb.toString());
     				}
