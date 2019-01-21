@@ -124,7 +124,7 @@ public class OutStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnt
 	
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "B2B订单操作费":
 					PropertyUtils.copyProperties(entity1, entity);
 					entity1.setBillNo(billNo);

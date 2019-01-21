@@ -118,7 +118,7 @@ public class InStockHandler extends CommonHandler<BillFeesReceiveStorageTempEnti
 	
 		for (DataColumn dc:dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "入库操作费":
 					PropertyUtils.copyProperties(entity1, entity);
 					if (StringUtils.isNotBlank(dc.getColValue())) {

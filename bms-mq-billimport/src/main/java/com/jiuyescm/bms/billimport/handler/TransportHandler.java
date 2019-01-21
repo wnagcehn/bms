@@ -192,7 +192,7 @@ public class TransportHandler extends CommonHandler<BillFeesReceiveTransportTemp
 		entity.setCustomerId(customerId);
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "运费":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						PropertyUtils.copyProperties(entity1, entity);

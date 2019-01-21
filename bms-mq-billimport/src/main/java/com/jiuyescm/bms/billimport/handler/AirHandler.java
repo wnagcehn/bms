@@ -117,7 +117,7 @@ public class AirHandler extends CommonHandler<BillFeesReceiveAirTempEntity> {
 		entity.setCustomerId(customerId);
 		for (DataColumn dc : dr.getColumns()) {
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "航空运费":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						PropertyUtils.copyProperties(entity1, entity);

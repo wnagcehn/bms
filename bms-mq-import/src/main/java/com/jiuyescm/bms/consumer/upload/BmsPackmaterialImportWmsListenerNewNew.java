@@ -154,113 +154,113 @@ public class BmsPackmaterialImportWmsListenerNewNew implements MessageListener{
 		InputStream inputStream = new ByteArrayInputStream(bytes);
 		try{	
 			reader = new XlsxWorkBook(inputStream);
-			for (final Sheet sheet : reader.getSheets()) {
-				//更新文件总行数
-				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 30,null, sheet.getRowCount(), null, null, null, null);
-				bmsFileAsynTaskService.update(updateEntity);
-				reader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
+			Sheet sheet = reader.getSheets().get(0);
+			//更新文件总行数
+			BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 30,null, sheet.getRowCount(), null, null, null, null);
+			bmsFileAsynTaskService.update(updateEntity);
+			reader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
 
-					@Override
-					public void readTitle(List<String> columns) {
-						//源生表头
-						int a = 1;
-						for (String column : columns) {
-							originColumn.put(a, column);
-							a++;
-						}
-						
-						//----------校验表头
-						logger.info("任务ID【{}】 -> 校验表头...",taskId);
-						String[] str = {"出库日期", "仓库", "商家", "出库单号", "运单号"}; //必填列
-						if(!checkTitle(columns,str)){
-							logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号",taskId);
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 38, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
-							return;
-						}
-						
+				@Override
+				public void readTitle(List<String> columns) {
+					//源生表头
+					int a = 1;
+					for (String column : columns) {
+						originColumn.put(a, column);
+						a++;
 					}
-
-					@Override
-					public void read(DataRow dr) {
-						
-						//行错误信息
-						String errorMsg="";
-						//----------初始化基础数据
-						try{
-							wareHouseMap = bmsMaterialImportTaskCommon.queryAllWarehouse();
-							customerMap  = bmsMaterialImportTaskCommon.queryAllCustomer();
-							materialMap  = bmsMaterialImportTaskCommon.queryAllMaterial();
-						}
-						catch(Exception ex){
-							logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,ex);
-							bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
-							return;
-						}
-						logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
-						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
-						logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
-						
-						//组装往临时表存的数据，校验出错捕获加入errList
-						List<BizOutstockPackmaterialTempEntity> tempList = null;
-						try {
-							tempList = loadTemp(dr, errorMsg);
-						} catch (Exception e) {
-							errList.add(dr);
-						}
-
-						//组装好的数据存入全局List中
-						if (null == tempList) {
-							tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
-						}
-						for( int i = 0 ; i < tempList.size() ; i++){
-							newList.add(tempList.get(i));
-						}
-						
-						//1000条数据	
-						if (newList.size() >= batchNum) {
-							if(errMap.size()==0){
-								int result = saveTo();
-								if(result<=0){
-									throw new BizException("excel批量写入异常");
-								}
-							}
-						}
-						
-						bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
-						//存入所有行的DataRow的Map<rowNo,DataRow>和List
-						mapData.put(dr.getRowNo(), dr);
-						allList.add(dr);
+					
+					//----------校验表头
+					logger.info("任务ID【{}】 -> 校验表头...",taskId);
+					String[] str = {"出库日期", "仓库", "商家", "出库单号", "运单号"}; //必填列
+					if(!checkTitle(columns,str)){
+						logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号",taskId);
+						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 38, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
 						return;
 					}
+					
+				}
 
-					@Override
-					public void finish() {		
-						//保存数据到临时表
-						if (errMap.size() == 0) {
+				@Override
+				public void read(DataRow dr) {
+					logger.info("开始处理Excel..........");
+					//行错误信息
+					String errorMsg="";
+					//----------初始化基础数据
+					try{
+						wareHouseMap = bmsMaterialImportTaskCommon.queryAllWarehouse();
+						customerMap  = bmsMaterialImportTaskCommon.queryAllCustomer();
+						materialMap  = bmsMaterialImportTaskCommon.queryAllMaterial();
+					}
+					catch(Exception ex){
+						logger.error("任务ID【{}】 -> 仓库,商家,耗材信息异常{}",taskId,ex);
+						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+						return;
+					}
+					//logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
+					//logger.info("任务ID【{}】 -> 分批遍历所有行",taskId);
+					
+					//组装往临时表存的数据，校验出错捕获加入errList
+					List<BizOutstockPackmaterialTempEntity> tempList = null;
+					try {
+						tempList = loadTemp(dr, errorMsg);
+					} catch (Exception e) {
+						errList.add(dr);
+					}
+
+					//组装好的数据存入全局List中
+					if (null == tempList) {
+						tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
+					}
+					for( int i = 0 ; i < tempList.size() ; i++){
+						newList.add(tempList.get(i));
+					}
+					
+					//1000条数据	
+					if (newList.size() >= batchNum) {
+						if(errMap.size()==0){
 							int result = saveTo();
-							if (result <= 0) {
-								logger.error("临时表数据保存失败");
+							if(result<=0){
+								throw new BizException("excel批量写入异常");
 							}
-						}	
+						}
 					}
-
-					@Override
-					public void error(Exception ex) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
-				
-				//更新文件读取行数
-				if(sheet.getRowCount()<=0){
-					logger.info("未从excel读取到任何数据");
-					bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.FAIL.getCode(),"未从excel读取到任何数据");
+					
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
+					//存入所有行的DataRow的Map<rowNo,DataRow>和List
+					mapData.put(dr.getRowNo(), dr);
+					allList.add(dr);
 					return;
 				}
-				logger.info("excel读取完成，读取行数【"+sheet.getRowCount()+"】");
-				BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 72,null, sheet.getRowCount(), null, null, null, null);
-				bmsFileAsynTaskService.update(updateEntity2);
+
+				@Override
+				public void finish() {		
+					//保存数据到临时表
+					if (errMap.size() == 0) {
+						int result = saveTo();
+						if (result <= 0) {
+							logger.error("临时表数据保存失败");
+						}
+					}	
+				}
+
+				@Override
+				public void error(Exception ex) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
+			//更新文件读取行数
+			if(sheet.getRowCount()<=0){
+				logger.info("未从excel读取到任何数据");
+				bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.FAIL.getCode(),"未从excel读取到任何数据");
+				return;
 			}
+			logger.info("excel读取完成，读取行数【"+sheet.getRowCount()+"】");
+			BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 72,null, sheet.getRowCount(), null, null, null, null);
+			bmsFileAsynTaskService.update(updateEntity2);
+		
 			long end = System.currentTimeMillis();
 			logger.info("任务ID【{}】 -> excel读取完成，读取excel,耗时【{}】",taskId,end-start);
 		}

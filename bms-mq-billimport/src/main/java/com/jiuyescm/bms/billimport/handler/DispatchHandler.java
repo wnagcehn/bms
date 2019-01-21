@@ -71,7 +71,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					}
 					break;
 				case "仓库":
-					if(StringUtils.isNotBlank(dc.getColName())){
+					if(StringUtils.isNotBlank(dc.getColValue())){
 						dispatchEntity.setWarehouseName(dc.getColValue());
 						storageEntity.setWarehouseName(dc.getColValue());
 						String wareId = warehouseMap.get(dc.getColValue()).toString();
@@ -174,7 +174,7 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 		
 		for(DataColumn dc : dr.getColumns()){
 			try {
-				switch (dc.getColName()) {
+				switch (dc.getTitleName()) {
 				case "运费":
 					dispatchEntity.setSubjectCode("de_delivery_amount");
 					dispatchEntity.setBillNo(billNo);
