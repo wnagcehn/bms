@@ -67,10 +67,6 @@ public class SheetReader extends DefaultHandler {
 		while (columnIterator.hasNext()) {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
 			columns.add(entry.getValue().getTitleName());
-			System.out.println("getColNo:"+entry.getValue().getColNo()+
-								"|getColName:"+entry.getValue().getColName()+
-								"|getColValue:"+entry.getValue().getColValue()+
-								"|getValue:"+entry.getValue().getTitleName());
 		}
 		callback.readTitle(columns);
 	}
