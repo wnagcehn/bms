@@ -92,7 +92,7 @@ public abstract class CommonHandler<T> implements IFeesHandler {
 		workbook = poiUtil.getXSSFWorkbook();
 		warehouseMap = warehouseDictService.getWarehouseDictForValue();
 		customerMap = customerDictService.getCustomerDictForValue();
-		materialMap = materialDictService.getMaterialDictForValue();
+		materialMap = materialDictService.getMaterialDictForKey();
 		carrierMap = carrierDictService.getCarrierDictForValue();
 	}
 	
