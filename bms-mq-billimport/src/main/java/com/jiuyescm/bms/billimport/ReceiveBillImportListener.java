@@ -1,8 +1,6 @@
 package com.jiuyescm.bms.billimport;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -10,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -41,10 +38,8 @@ import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
-import com.jiuyescm.bms.excel.ExcelXlsxReader;
 import com.jiuyescm.bms.excel.data.Sheet;
 import com.jiuyescm.bms.excel.data.XlsxWorkBook;
-import com.jiuyescm.bms.excel.opc.OpcSheet;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
@@ -54,18 +49,11 @@ import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 @Service("receiveBillImportListener")
 public class ReceiveBillImportListener implements MessageListener {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReceiveBillImportListener.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReceiveBillImportListener.class);
 
-	@Autowired
-	private StorageClient storageClient;
-
-	@Autowired
-	private IWarehouseDictService warehouseDictService;
-	
-	@Autowired
-	private IBillReceiveMasterService billReceiveMasterService;
-	
+	@Autowired private StorageClient storageClient;
+	@Autowired private IWarehouseDictService warehouseDictService;
+	@Autowired private IBillReceiveMasterService billReceiveMasterService;
 	@Autowired private IBillFeesReceiveAirTempService billFeesReceiveAirTempService;
 	@Autowired private IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired private IBillFeesReceiveDispatchTempService billFeesReceiveDispatchTempService;
@@ -73,8 +61,7 @@ public class ReceiveBillImportListener implements MessageListener {
 	@Autowired private IBillFeesReceiveHandService billFeesReceiveHandService;
 	@Autowired private IBillCheckInfoService billCheckInfoService;	
 
-	private XlsxWorkBook  book ;
-	
+	private XlsxWorkBook book ;
 	protected String  taskId = "" ;
 
 	@Override
@@ -102,19 +89,17 @@ public class ReceiveBillImportListener implements MessageListener {
 		logger.info("JSON开始解析……");
 		Map<String, Object> map = resolveJsonToMap(json);
 		if (null == map) {
+			logger.info("未传入json");
 			return;
 		}
 		
 		//获取任务ID
-		taskId += map.get("billNo").toString();
+		taskId = map.get("billNo").toString();
 		logger.info("任务ID：{}",taskId);
 		
 		//MQ拿到消息，更新状态
 		updateStatus(map.get("billNo").toString(), BmsEnums.taskStatus.PROCESS.getCode(), 1);
 		logger.info("任务ID：{}，获取文件路径：{}",taskId,map.get("fullPath").toString());
-
-//		File file = new File(map.get("fullPath").toString());
-//		InputStream inputStream = new FileInputStream(file);
 		
 		String filePath = map.get("fullPath").toString();
 		byte[] bytes = storageClient.downloadFile(filePath, new DownloadByteArray());
@@ -122,12 +107,11 @@ public class ReceiveBillImportListener implements MessageListener {
 
 		try {
 			book  = new XlsxWorkBook(inputStream);
-			//List<OpcSheet> sheets = book .getSheets();
-			//logger.info("解析Excel, 获取Sheet：{}", sheets.size());
-			
 			//更新任务状态
 			updateStatus(taskId, BmsEnums.taskStatus.PROCESS.getCode(), 30);
 			logger.info("任务ID：{}，更新任务进度为30%", taskId);
+			boolean isOk = true; //数据导入是否成功  true-成功 false-失败
+			
 			for (Sheet sheet : book.getSheets()) {
 				String sheetName = sheet.getSheetName();
 				logger.info("任务ID：{}，--------------准备读取sheet - {}", taskId,sheetName);
@@ -143,37 +127,38 @@ public class ReceiveBillImportListener implements MessageListener {
 				}
 				IFeesHandler handler = FeesHandlerFactory.getHandler(sheetName);
 				if (null == handler) {
+					logger.info("任务ID：{}，sheetName={} 无效的sheet", taskId,sheetName);
 					continue;
 				}
 				//handler打印出来为com.jiuyescm.bms.billimport.handler.TransportHandler@38746b97格式，所以需要进行截取
 				String str = handler.toString();
 				logger.info("任务ID：{}，匹配Handler为: {}", taskId,str.substring(36,str.indexOf("@")));
-				//handler.getRows();
 
 				try {
 					handler.process(book, sheet, map);
 					if("fail".equals(map.get("result"))){
+						isOk = false;
 						break;
 					}					
 				} catch (Exception ex) {
-					logger.error("任务ID：{}，处理异常 {}",taskId,ex);
+					logger.error("任务ID：{}，sheetName={} 处理异常  ",taskId,sheetName,ex);
 					break;
 				}
 				finally {
-					logger.info("任务ID：{}，------------读取耗时：【"+(System.currentTimeMillis()-startTime)+"】毫秒",taskId);
+					logger.info("任务ID：{}，sheetName={} 处理总耗时：【{}】毫秒",taskId,sheetName,System.currentTimeMillis()-startTime);
 				}
 			}
 			
 			//保存临时表数据到正式表
-			saveAll(map);
+			if(isOk){
+				saveAll(map);
+			}
 		} catch (Exception ex) {
 			logger.error("任务ID：{}，readExcel 异常 {}",taskId,ex);
 		}
 		finally{
 			book.close();
 		}
-		
-		
 	}
 
 	/**

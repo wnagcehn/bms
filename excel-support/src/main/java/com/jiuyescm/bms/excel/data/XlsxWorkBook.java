@@ -29,6 +29,10 @@ public class XlsxWorkBook {
 		return sheets;
 	}
 	
+	public String getTempPath(){
+		return tempPath;
+	}
+	
 	/**
 	 * 
 	 * @param excelPath xl目录所在路径
@@ -82,6 +86,7 @@ public class XlsxWorkBook {
 				sheet.setRowCount(sr.getRowCount());
 			}
 		}
+		callback.finish();
 	}
 	
 	public void close(){

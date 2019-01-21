@@ -43,16 +43,16 @@ public class AddHandler extends CommonHandler<BillFeesReceiveStorageTempEntity>{
 			return list;
 		}*/
 		
-		StringBuilder sb1  = new StringBuilder();
+		/*StringBuilder sb1  = new StringBuilder();*/
 		
-		StringBuilder sb  = new StringBuilder();
+		/*StringBuilder sb  = new StringBuilder();
 		sb.append("  "+dr.getRowNo()+"  ");
 		for (DataColumn dc : dr.getColumns()) {
 			sb1.append("\t"+dc.getTitleName()+"\t");
          	sb.append("\t"+dc.getColValue()+"\t");
         }
 		System.out.println(sb1.toString());
-		System.out.println(sb.toString());
+		System.out.println(sb.toString());*/
 		
 		boolean isAddCoNull = false;
 		boolean isCustomerNull = false;

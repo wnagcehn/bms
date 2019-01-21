@@ -14,15 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
-import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
-import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveStorageTempService;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
-import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 
 /**
  * 耗材使用费
@@ -34,13 +31,8 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 	
 	private static final Logger logger = LoggerFactory.getLogger(MaterialUseHandler.class);
 
-	
-	@Autowired
-	private IWarehouseDictService warehouseDictService;
 	@Autowired
 	private ICustomerDictService customerDictService;
-	@Autowired
-	private IMaterialDictService materialDictService;
 	@Autowired 
 	IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 
@@ -49,17 +41,9 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			throws Exception {
 		//异常信息
 		String errorMessage="";
-		// TODO Auto-generated method stub
 		List<BillFeesReceiveStorageTempEntity> list = new ArrayList<BillFeesReceiveStorageTempEntity>();
 		
-		/*DataColumn waybillCo=dr.getColumn("运单号");
-		DataColumn customerCo=dr.getColumn("商家名称");
-		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
-			return list;
-		}*/
-		
-		boolean isWaybillNull = false;
-		boolean isCustomerNull = false;
+		boolean isWaybillNull = false; //运单号是否为空  true-空  false-非空
 		
 		BillFeesReceiveStorageTempEntity entity = new BillFeesReceiveStorageTempEntity();
 		Map<String,Integer> repeatMap=new HashMap<String, Integer>();
@@ -68,13 +52,13 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				switch (dc.getTitleName()) {
 				case "商家名称":
 					if (StringUtils.isBlank(dc.getColValue())) {
-						isCustomerNull = true;
+						//isCustomerNull = true;
 					}
 					break;
 				case "仓库":
 					if(StringUtils.isNotBlank(dc.getColValue())){
 						entity.setWarehouseName(dc.getColValue());
-						String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						String wareId=warehouseMap.get(dc.getColValue());
 						if(StringUtils.isNotBlank(wareId)){
 							entity.setWarehouseCode(wareId);
 						}else{
@@ -88,6 +72,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 					if(StringUtils.isNotBlank(dc.getColValue())){
 						entity.setWaybillNo(dc.getColValue());
 					}else{
+						isWaybillNull = true;
 						errorMessage+="运单号不能为空;";
 					}
 					break;
@@ -115,7 +100,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 			}
 		}
 		
-		if(isWaybillNull && isCustomerNull){
+		if(isWaybillNull){
 			return list;
 		}
 		
@@ -138,9 +123,10 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 				switch (dc.getColName()) {
 				case "编码":
 					if(StringUtils.isNotBlank(dc.getColValue())){
-						PubMaterialInfoVo vo=materialDictService.getMaterialByCode(dc.getColValue());
-						if(vo!=null){
-							feeEntity.setMaterialCode(dc.getColValue());
+						
+						String barCode=materialMap.get(dc.getColValue());
+						if(StringUtils.isNotBlank(barCode)){
+							feeEntity.setMaterialCode(barCode);
 						}else{
 							errorMessage+="列【"+dc.getColValue()+"】编码不存在;";
 						}
@@ -191,8 +177,7 @@ public class MaterialUseHandler extends CommonHandler<BillFeesReceiveStorageTemp
 		//重复性校验
 		if(StringUtils.isNotBlank(entity.getWaybillNo())){
 			if(repeatMap.containsKey(entity.getWaybillNo())){
-				errorMessage += "与第"
-						+ repeatMap.get(entity.getWaybillNo()) + "行运单号重复;";
+				errorMessage += "与第" + repeatMap.get(entity.getWaybillNo()) + "行运单号重复;";
 			}else{
 				repeatMap.put(entity.getWaybillNo(), dr.getRowNo());
 			}

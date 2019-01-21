@@ -40,29 +40,16 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 	private IBillFeesReceiveStorageTempService billFeesReceiveStorageTempService;
 	@Autowired
 	private IBillFeesReceiveDispatchTempService billFeesReceiveDispatchTempService;
-	@Autowired
-	private IWarehouseDictService warehouseDictService;
-	@Autowired
-	private ICustomerDictService customerDictService;
-	@Autowired
-	private ICarrierDictService carrierDictService;
 		
 	public List<BillFeesReceiveStorageTempEntity> storageList=new ArrayList<BillFeesReceiveStorageTempEntity>();
 	
 	@Override
-	public List<BillFeesReceiveDispatchTempEntity> transRowToObj(DataRow dr)
-			throws Exception {
+	public List<BillFeesReceiveDispatchTempEntity> transRowToObj(DataRow dr) throws Exception {
 		//异常信息
 		String errorMessage="";
 		// TODO Auto-generated method stub
 		//配送费
 		List<BillFeesReceiveDispatchTempEntity> dispatchList = new ArrayList<BillFeesReceiveDispatchTempEntity>();
-		
-		/*DataColumn waybillCo=dr.getColumn("运单号");
-		DataColumn customerCo=dr.getColumn("商家名称");
-		if(waybillCo!=null && customerCo!=null &&StringUtils.isBlank(waybillCo.getColValue()+customerCo.getColValue())){
-			return dispatchList;
-		}*/
 		
 		boolean isWaybillNull = false;
 		boolean isCustomerNull = false;
@@ -87,7 +74,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 					if(StringUtils.isNotBlank(dc.getColName())){
 						dispatchEntity.setWarehouseName(dc.getColValue());
 						storageEntity.setWarehouseName(dc.getColValue());
-						String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
+						String wareId = warehouseMap.get(dc.getColValue()).toString();
+						//String wareId=warehouseDictService.getWarehouseCodeByName(dc.getColValue());
 						if(StringUtils.isNotBlank(wareId)){
 							dispatchEntity.setWarehouseCode(wareId);
 							storageEntity.setWarehouseCode(wareId);
@@ -137,7 +125,8 @@ public class DispatchHandler extends CommonHandler<BillFeesReceiveDispatchTempEn
 				case "计费物流商":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						dispatchEntity.setCarrierName(dc.getColValue());
-						String carrierCode=carrierDictService.getCarrierCodeByName(dc.getColValue());
+						//String carrierCode=carrierDictService.getCarrierCodeByName(dc.getColValue());
+						String carrierCode = carrierMap.get(dc.getColValue());
 						if(StringUtils.isNotBlank(carrierCode)){
 							dispatchEntity.setCarrierid(carrierCode);
 						}else{

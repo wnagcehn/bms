@@ -17,6 +17,7 @@ import com.google.common.collect.Maps;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
+import com.jiuyescm.bms.excel.data.Sheet;
 
 /**
  * 事件模式 读取xl/worksheets/sheet.xml 文档
@@ -48,7 +49,7 @@ public class SheetReader extends DefaultHandler {
 			SAXParserFactory sf = SAXParserFactory.newInstance();   
 			SAXParser sp = sf.newSAXParser();
 			sp.parse(new InputSource(path), this);
-			callback.finish();
+			//callback.finish();
 		}
 		catch(Exception ex){
 			callback.error(ex);
