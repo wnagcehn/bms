@@ -211,17 +211,15 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							msg+=str;
 						}
 						logger.info(msg);
-						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 32, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
+						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
 						return;
 					}
 				}
 
 				@Override
 				public void read(DataRow dr) {
-					logger.info("开始处理Excel..........");
 					//行错误信息
 					String errorMsg="";	
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 40);		
 					
 					//组装往临时表存的数据，校验出错捕获加入errList
 					List<BizPalletInfoTempEntity> tempList = null;
@@ -566,7 +564,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	}
 	
 	private int saveTo(){
-		logger.info("任务ID【{}】 -> 保存数据到临时表 行数【{}】",taskId,newList.size());
+		logger.info("任务ID【{}】 -> 保存数据到临时表 转化成对象数【{}】",taskId,newList.size());
 		try {
 			bizPalletInfoTempService.saveBatch(newList); //保存到临时表
 		} catch (Exception e) {
