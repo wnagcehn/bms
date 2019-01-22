@@ -252,8 +252,8 @@ view.get(&quot;#exportTaskForm.entity&quot;).set(&quot;month&quot;,month);</Clie
       <ClientEvent name="onCreate">view.get(&quot;#dsFileExportTaskCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtFileExportTaskCondition]</Property>
     </DataSet>
-    <DataSet id="dsCondition">
-      <ClientEvent name="onCreate">view.get(&quot;#dsCondition.data&quot;).insert();&#xD;
+    <DataSet id="dsBCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBCondition.data&quot;).insert();&#xD;
 </ClientEvent>
       <Property name="dataType">[dBtCondition]</Property>
     </DataSet>
@@ -339,7 +339,7 @@ function isNullOrEmpty(e) {&#xD;
       <AutoFormElement>
         <Property name="name">customerName</Property>
         <Property name="property">customerName</Property>
-        <Property name="trigger">triggerInvoiceQuery</Property>
+        <Property name="trigger">triggerQueryInvoice</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -445,12 +445,12 @@ if(month==0){&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
       <Property name="caption">生成预账单</Property>
-      <Property name="width">400</Property>
+      <Property name="width">450</Property>
       <Property name="height">300</Property>
       <Buttons>
         <Button>
           <ClientEvent name="onClick">var action=view.get(&quot;#fileExportAction&quot;);&#xD;
-var data=view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+var data=view.get(&quot;#dsBCondition.data&quot;).current;&#xD;
 action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
 {&#xD;
 	dorado.MessageBox.alert(result);&#xD;
@@ -490,7 +490,7 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
       <Children>
         <AutoForm id="AutoForm">
           <Property name="cols">*</Property>
-          <Property name="dataSet">dsCondition</Property>
+          <Property name="dataSet">dsBCondition</Property>
           <AutoFormElement>
             <Property name="name">year</Property>
             <Property name="property">year</Property>
@@ -531,7 +531,7 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
     <FloatPanel id="panelCustomer">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+	var entity = this.get(&quot;#dsBCondition&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
         customerId: data.get(&quot;customerid&quot;),&#xD;
 		customerName:data.get(&quot;customername&quot;)&#xD;
@@ -597,7 +597,7 @@ if (data != null) {&#xD;
     <FloatPanel id="panelInvoice">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoice.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+	var entity = this.get(&quot;#dsBCondition&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
         customerId: data.get(&quot;customNo&quot;),&#xD;
 		customerName:data.get(&quot;customName&quot;)&#xD;
@@ -609,7 +609,7 @@ if (data != null) {&#xD;
       <Property name="contentOverflow">scroll</Property>
       <Property name="height">450</Property>
       <Property name="modal">true</Property>
-      <Property name="width">500</Property>
+      <Property name="width">520</Property>
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectInvoice">
@@ -618,10 +618,10 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
-    <Trigger id="triggerInvoiceQuery">
-      <ClientEvent name="onExecute">view.get(&quot;#panelInvoiceQuery&quot;).show();</ClientEvent>
+    <Trigger id="triggerQueryInvoice">
+      <ClientEvent name="onExecute">view.get(&quot;#panelQueryInvoice&quot;).show();</ClientEvent>
     </Trigger>
-    <FloatPanel id="panelInvoiceQuery">
+    <FloatPanel id="panelQueryInvoice">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoiceQuery.userData&quot;);&#xD;
 if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsFileExportTaskCondition&quot;).getData(&quot;#&quot;);&#xD;
@@ -636,10 +636,10 @@ if (data != null) {&#xD;
       <Property name="contentOverflow">scroll</Property>
       <Property name="height">450</Property>
       <Property name="modal">true</Property>
-      <Property name="width">500</Property>
+      <Property name="width">520</Property>
       <Buttons/>
       <Children>
-        <SubViewHolder id="viewSelectInvoiceQuery">
+        <SubViewHolder id="queyViewSelectInvoice">
           <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
         </SubViewHolder>
       </Children>

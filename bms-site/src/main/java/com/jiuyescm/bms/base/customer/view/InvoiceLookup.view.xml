@@ -151,6 +151,7 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <AutoFormElement>
         <Property name="name">customName</Property>
         <Property name="property">customName</Property>
+        <Property name="label">合同商家名称</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
