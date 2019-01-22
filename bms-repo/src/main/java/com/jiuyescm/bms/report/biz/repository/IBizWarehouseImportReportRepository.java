@@ -19,4 +19,6 @@ public interface IBizWarehouseImportReportRepository {
 	
 	List<BizWarehouseImportReportEntity> queryAll(Map<String, Object> condition);
 	
+	List<BizWarehouseImportReportEntity> queryByCondition(Map<String, Object> condition);
+	
 }
