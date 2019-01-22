@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.BmsProductsMaterialAccountMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
+		   	<result column="material_type" property="materialType" jdbcType="VARCHAR" />
+		   	<result column="material_mark" property="materialMark" jdbcType="VARCHAR" />
+		   	<result column="percent" property="percent" jdbcType="DOUBLE" />
+		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="type" property="type" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, products_mark, material_type, material_mark, percent, task_id, waybill_no, type
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+products_mark, material_type, material_mark, percent, task_id, waybill_no, type
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_products_material_account
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_products_material_account
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" productsMark != null and productsMark !='' ">
+				and products_mark = #{productsMark}
+			</if>
+        	<if test=" materialType != null and materialType !='' ">
+				and material_type = #{materialType}
+			</if>
+        	<if test=" materialMark != null and materialMark !='' ">
+				and material_mark = #{materialMark}
+			</if>
+        	<if test=" percent != null and percent !='' ">
+				and percent = #{percent}
+			</if>
+        	<if test=" taskId != null and taskId !='' ">
+				and task_id = #{taskId}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" type != null and type !='' ">
+				and type = #{type}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+        insert into bms_products_material_account(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{productsMark,jdbcType=VARCHAR}, 
+			#{materialType,jdbcType=VARCHAR}, 
+			#{materialMark,jdbcType=VARCHAR}, 
+			#{percent,jdbcType=DOUBLE}, 
+			#{taskId,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{type,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+        update bms_products_material_account
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" productsMark != null and productsMark !='' ">
+				products_mark = #{productsMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" materialType != null and materialType !='' ">
+				material_type = #{materialType,jdbcType=VARCHAR},
+			</if>
+			<if test=" materialMark != null and materialMark !='' ">
+				material_mark = #{materialMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" percent != null and percent !='' ">
+				percent = #{percent,jdbcType=DOUBLE},
+			</if>
+			<if test=" taskId != null and taskId !='' ">
+				task_id = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" type != null and type !='' ">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_products_material_account 
+        where id = #{id}
+    </delete>
+</mapper>
