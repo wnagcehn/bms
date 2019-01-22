@@ -49,14 +49,6 @@
 			</if>
     </select>
     
-<!--             <select id="queryNotImport" parameterType="java.util.Map" 
-    	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity">
-    			 	SELECT a.import_type as importType, a.customer_id as customerId,b.customer_name as customerName,b.short_name as shortName 
-			FROM report_warehouse_biz_import a 
-			LEFT JOIN pub_customer b ON a.customer_id=b.customer_id
-			 WHERE a.del_flag = '0' and a.warehouse_code = #{warehouseCode}  AND a.import_date = #{importDate} AND a.biz_type = #{bizType}
-    </select> -->
-    
       <select id="queryNotImport" parameterType="java.util.Map" 
     	resultType="com.jiuyescm.bms.report.biz.entity.BizWarehouseNotImportEntity">
     select a.import_type as importType, a.customer_id as customerId,b.customer_name as customerName,b.short_name as shortName from report_warehouse_biz_import a
