@@ -46,6 +46,9 @@ public class BmsCorrectAsynTaskVo implements Serializable {
 	//业务类型  weight_correct-重量纠正  material_correct-耗材纠正
 	private String bizType;
 	
+	private String lastModifier;
+	private Timestamp lastModifierTime;
+	
 	public String getBizType() {
 		return bizType;
 	}
@@ -191,6 +194,22 @@ public class BmsCorrectAsynTaskVo implements Serializable {
 
 	public void setMonth(String month) {
 		this.month = month;
+	}
+
+	public String getLastModifier() {
+		return lastModifier;
+	}
+
+	public void setLastModifier(String lastModifier) {
+		this.lastModifier = lastModifier;
+	}
+
+	public Timestamp getLastModifierTime() {
+		return lastModifierTime;
+	}
+
+	public void setLastModifierTime(Timestamp lastModifierTime) {
+		this.lastModifierTime = lastModifierTime;
 	}
 	
 }

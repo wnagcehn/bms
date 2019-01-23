@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.asyn.web;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
@@ -260,8 +262,23 @@ public class BmsCorrectAsynTaskController {
 		return result;
 	}
 	
-	public String wayBillCorrect(BmsCorrectAsynTaskVo voEntity){
-		return "";
+	/**
+	 * 纠正
+	 * @param voEntity
+	 * @return
+	 * @throws Exception
+	 */
+	@Expose
+	public String waybillCorrect(BmsCorrectAsynTaskVo voEntity){
+		voEntity.setLastModifier(JAppContext.currentUserName());
+		voEntity.setLastModifierTime(new Timestamp(System.currentTimeMillis()));
+		String message = "";
+		try {
+			message = bmsCorrectAsynTaskService.updateCorrect(voEntity);
+		} catch (Exception e) {
+			logger.error("纠正异常", e);
+		}
+		return message;
 	}
 
 }
