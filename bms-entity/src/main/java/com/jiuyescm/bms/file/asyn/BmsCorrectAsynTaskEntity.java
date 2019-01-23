@@ -44,7 +44,7 @@ public class BmsCorrectAsynTaskEntity implements IEntity{
 	private String bizType;
 	
 	private String lastModifier;
-	private Timestamp lastModifierTime;
+	private Timestamp lastModifyTime;
 	
 	public String getBizType() {
 		return bizType;
@@ -178,14 +178,15 @@ public class BmsCorrectAsynTaskEntity implements IEntity{
 		this.lastModifier = lastModifier;
 	}
 
-	public Timestamp getLastModifierTime() {
-		return lastModifierTime;
+	public Timestamp getLastModifyTime() {
+		return lastModifyTime;
 	}
 
-	public void setLastModifierTime(Timestamp lastModifierTime) {
-		this.lastModifierTime = lastModifierTime;
+	public void setLastModifyTime(Timestamp lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
 	}
-	
+
+
 	
 	
 }

@@ -10,7 +10,6 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,9 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
-import com.jiuyescm.bms.common.enumtype.type.BizTypeEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -160,9 +159,9 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		List<BmsCorrectAsynTaskEntity> list = bmsCorrectAsynTaskRepository.queryList(queryConfition);
 		if(CollectionUtils.isEmpty(list))return "没有查询到此任务";
 		String bizType = list.get(0).getBizType();
-		if("weight_correct".equals(bizType)||"material_correct".equals(bizType))return "此任务不是纠正任务";
+		if(!"weight_correct".equals(bizType)&&!"material_correct".equals(bizType))return "此任务不是纠正任务";
 		String taskStatus = list.get(0).getTaskStatus();
-		if(!"SUCCESS".equals(taskStatus)||!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
+		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
 		try {
 			final String msg = vo.getTaskId();
@@ -181,8 +180,6 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 			vo.setFinishTime(JAppContext.currentTimestamp());
 			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
 			PropertyUtils.copyProperties(entity, vo);
-			entity.setTaskRate(100);
-			entity.setTaskStatus("SUCCESS");
 			bmsCorrectAsynTaskRepository.update(entity);
 			return "纠正成功";
 		}catch(Exception e){

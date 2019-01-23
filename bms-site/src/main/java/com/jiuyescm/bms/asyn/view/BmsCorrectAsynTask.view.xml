@@ -121,10 +121,11 @@
       <PropertyDef name="lastModifier">
         <Property name="label">修改人</Property>
       </PropertyDef>
-      <PropertyDef name="lastModifierTime">
+      <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
+      <PropertyDef name="id"/>
     </DataType>
   </Model>
   <View>
@@ -230,6 +231,12 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
         <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
         <Property name="readOnly">true</Property>
         <RowNumColumn/>
+        <DataColumn>
+          <Property name="name">id</Property>
+          <Property name="property">id</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </DataColumn>
         <DataColumn name="taskId">
           <Property name="property">taskId</Property>
           <Property name="width">180</Property>
@@ -326,8 +333,8 @@ jQuery(arg.dom).xCreate({&#xD;
           <Editor/>
         </DataColumn>
         <DataColumn>
-          <Property name="name">lastModifierTime</Property>
-          <Property name="property">lastModifierTime</Property>
+          <Property name="name">lastModifyTime</Property>
+          <Property name="property">lastModifyTime</Property>
           <Property name="width">200</Property>
           <Editor/>
         </DataColumn>

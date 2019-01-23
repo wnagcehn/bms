@@ -47,7 +47,7 @@ public class BmsCorrectAsynTaskVo implements Serializable {
 	private String bizType;
 	
 	private String lastModifier;
-	private Timestamp lastModifierTime;
+	private Timestamp lastModifyTime;
 	
 	public String getBizType() {
 		return bizType;
@@ -204,12 +204,14 @@ public class BmsCorrectAsynTaskVo implements Serializable {
 		this.lastModifier = lastModifier;
 	}
 
-	public Timestamp getLastModifierTime() {
-		return lastModifierTime;
+	public Timestamp getLastModifyTime() {
+		return lastModifyTime;
 	}
 
-	public void setLastModifierTime(Timestamp lastModifierTime) {
-		this.lastModifierTime = lastModifierTime;
+	public void setLastModifyTime(Timestamp lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
 	}
+
+
 	
 }

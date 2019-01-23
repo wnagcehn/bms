@@ -271,7 +271,7 @@ public class BmsCorrectAsynTaskController {
 	@Expose
 	public String waybillCorrect(BmsCorrectAsynTaskVo voEntity){
 		voEntity.setLastModifier(JAppContext.currentUserName());
-		voEntity.setLastModifierTime(new Timestamp(System.currentTimeMillis()));
+		voEntity.setLastModifyTime(new Timestamp(System.currentTimeMillis()));
 		String message = "";
 		try {
 			message = bmsCorrectAsynTaskService.updateCorrect(voEntity);
