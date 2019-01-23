@@ -106,6 +106,8 @@
 			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR}</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 		</set>
         where id=#{id}
     </update>
