@@ -28,6 +28,9 @@ public class BmsProductsMaterialAccountEntity implements IEntity {
 	private Double percent;
 	// 任务ID
 	private String taskId;
+	
+	private String waybillNo;
+	private String type;
 
 	public BmsProductsMaterialAccountEntity() {
 
@@ -127,6 +130,22 @@ public class BmsProductsMaterialAccountEntity implements IEntity {
      */
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getWaybillNo() {
+		return waybillNo;
+	}
+
+	public void setWaybillNo(String waybillNo) {
+		this.waybillNo = waybillNo;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
     
 }

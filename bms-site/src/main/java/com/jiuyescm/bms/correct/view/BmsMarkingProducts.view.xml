@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBmsMarkingProductsEntity">
+      <Property name="creationType">com.jiuyescm.bms.correct.vo.BmsMarkingProductsVo</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增标识</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="productsMark">
+        <Property name="label">运单商品明细id</Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="label">进位重量</Property>
+      </PropertyDef>
+      <PropertyDef name="correctWeight">
+        <Property name="label">纠正重量</Property>
+      </PropertyDef>
+      <PropertyDef name="pmxzxMark">
+        <Property name="label">泡沫箱纸箱mark</Property>
+      </PropertyDef>
+      <PropertyDef name="bwdMark">
+        <Property name="label">保温袋mark</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property name="label">耗材类别 JY,SH,WH</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="waybillNum">
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="deliverid">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property/>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsMarkingProductsEntityQuery">
+      <PropertyDef name="waybillNo">
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="productsMark">
+        <Property name="label">运单商品明细id</Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="label">进位重量</Property>
+      </PropertyDef>
+      <PropertyDef name="correctWeight">
+        <Property name="label">纠正重量</Property>
+      </PropertyDef>
+      <PropertyDef name="pmxzxMark">
+        <Property name="label">泡沫箱纸箱mark</Property>
+      </PropertyDef>
+      <PropertyDef name="bwdMark">
+        <Property name="label">保温袋mark</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property name="label">耗材类别 JY,SH,WH</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBmsMarkingProductsEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsMarkingProductsEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBmsMarkingProductsEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsMarkingProductsEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();
+</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsMarkingProductsEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsMarkingProductsEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                //刷新&#xD;
+								var data = view.get(&quot;#dsBmsMarkingProductsEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBmsMarkingProductsEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBmsMarkingProductsEntity">
+      <Property name="dataType">[dtBmsMarkingProductsEntity]</Property>
+      <Property name="dataProvider">bmsMarkingProductsController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsMarkingProductsEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBmsMarkingProductsEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBmsMarkingProductsEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <AutoForm id="queryForm">
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="labelWidth">65</Property>
+      <Property name="dataSet">dsBmsMarkingProductsEntityQuery</Property>
+      <AutoFormElement>
+        <Property name="name">waybillNo</Property>
+        <Property name="property">waybillNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">productsMark</Property>
+        <Property name="property">productsMark</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">weight</Property>
+        <Property name="property">weight</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">correctWeight</Property>
+        <Property name="property">correctWeight</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">pmxzxMark</Property>
+        <Property name="property">pmxzxMark</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bwdMark</Property>
+        <Property name="property">bwdMark</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">materialType</Property>
+        <Property name="property">materialType</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsBmsMarkingProductsEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="id">
+        <Property name="property">id</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="waybillNo">
+        <Property name="property">waybillNo</Property>
+      </DataColumn>
+      <DataColumn name="productsMark">
+        <Property name="property">productsMark</Property>
+      </DataColumn>
+      <DataColumn name="weight">
+        <Property name="property">weight</Property>
+      </DataColumn>
+      <DataColumn name="correctWeight">
+        <Property name="property">correctWeight</Property>
+      </DataColumn>
+      <DataColumn name="pmxzxMark">
+        <Property name="property">pmxzxMark</Property>
+      </DataColumn>
+      <DataColumn name="bwdMark">
+        <Property name="property">bwdMark</Property>
+      </DataColumn>
+      <DataColumn name="materialType">
+        <Property name="property">materialType</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBmsMarkingProductsEntity&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="caption">数据维护</Property>
+      <Property name="center">true</Property>
+      <Property name="height">300</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBmsMarkingProductsEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*,*</Property>
+          <Property name="dataSet">dsBmsMarkingProductsEntity</Property>
+          <Property name="dataType">dtBmsMarkingProductsEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">waybillNo</Property>
+            <Property name="property">waybillNo</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">productsMark</Property>
+            <Property name="property">productsMark</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">weight</Property>
+            <Property name="property">weight</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">correctWeight</Property>
+            <Property name="property">correctWeight</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">pmxzxMark</Property>
+            <Property name="property">pmxzxMark</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">bwdMark</Property>
+            <Property name="property">bwdMark</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">materialType</Property>
+            <Property name="property">materialType</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <ClientEvent name="onSuccess">//刷新&#xD;
+var data = view.get(&quot;#dsBmsMarkingProductsEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBmsMarkingProductsEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="successMessage">数据保存成功！</Property>
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">bmsMarkingProductsController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsMarkingProductsEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">bmsMarkingProductsController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBmsMarkingProductsEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

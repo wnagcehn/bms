@@ -15,7 +15,7 @@
         <Property name="label">商品明细</Property>
       </PropertyDef>
       <PropertyDef name="waybillNo">
-        <Property name="label">运单号</Property>
+        <Property name="label">代表运单号</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家</Property>
@@ -35,7 +35,7 @@
         <Property name="label">商品明细</Property>
       </PropertyDef>
       <PropertyDef name="waybillNo">
-        <Property name="label">运单号</Property>
+        <Property name="label">代表运单号</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家Id</Property>
@@ -87,6 +87,83 @@
       </PropertyDef>
       <PropertyDef name="taskId">
         <Property name="label">任务ID</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBmsMarkingProductsEntity">
+      <Property name="creationType">com.jiuyescm.bms.correct.vo.BmsMarkingProductsVo</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增标识</Property>
+      </PropertyDef>
+      <PropertyDef name="waybillNo">
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="productsMark">
+        <Property name="label">商品标</Property>
+      </PropertyDef>
+      <PropertyDef name="weight">
+        <Property name="label">重量</Property>
+      </PropertyDef>
+      <PropertyDef name="correctWeight">
+        <Property name="label">纠正重量</Property>
+      </PropertyDef>
+      <PropertyDef name="pmxzxMark">
+        <Property name="label">泡沫箱纸箱mark</Property>
+      </PropertyDef>
+      <PropertyDef name="bwdMark">
+        <Property name="label">保温袋mark</Property>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property name="label">耗材类别</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property/>
+        <Property name="label">出库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="externalNo">
+        <Property/>
+        <Property name="label">外部单号</Property>
+      </PropertyDef>
+      <PropertyDef name="feesNo">
+        <Property/>
+        <Property name="label">费用编号</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseCode">
+        <Property/>
+        <Property name="label">仓库id</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseName">
+        <Property/>
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="customerid">
+        <Property/>
+        <Property name="label">商家id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+        <Property name="label">商家</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property/>
+        <Property name="label">物流商id</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierName">
+        <Property/>
+        <Property name="label">物流商</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverid">
+        <Property/>
+        <Property name="label">宅配商id</Property>
+      </PropertyDef>
+      <PropertyDef name="deliverName">
+        <Property/>
+        <Property name="label">宅配商</Property>
+      </PropertyDef>
+      <PropertyDef name="consumerMaterialCode">
+        <Property name="label">耗材编码</Property>
+      </PropertyDef>
+      <PropertyDef name="consumerMaterialName">
+        <Property name="label">耗材名称</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -158,38 +235,32 @@ function GetQueryString(name){&#xD;
       <Property name="loadMode">manual</Property>
       <Property name="pageSize">20</Property>
     </DataSet>
+    <DataSet id="dsBmsMarkingWeightEntity">
+      <Property name="dataType">[dtBmsMarkingProductsEntity]</Property>
+      <Property name="dataProvider">bmsMarkingProductsController#queryByWeight</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBmsMarkingMaterialEntity">
+      <Property name="dataType">[dtBmsMarkingProductsEntity]</Property>
+      <Property name="dataProvider">bmsMarkingProductsController#queryByMaterial</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
     <Container>
       <AutoForm id="queryForm">
         <Property name="createPrivateDataSet">true</Property>
-        <Property name="cols">*,*,*,*,*</Property>
+        <Property name="cols">*,*,*,*</Property>
         <Property name="labelWidth">65</Property>
         <Property name="dataSet">dsBmsOrderProductEntityQuery</Property>
-        <Property name="visible">false</Property>
-        <Property name="showHint">false</Property>
-        <AutoFormElement>
-          <Property name="name">productMark</Property>
-          <Property name="property">productMark</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">productDetail</Property>
-          <Property name="property">productDetail</Property>
-          <Editor/>
-        </AutoFormElement>
+        <Property name="visible">true</Property>
+        <Property name="showHint">true</Property>
         <AutoFormElement>
           <Property name="name">waybillNo</Property>
           <Property name="property">waybillNo</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">customerId</Property>
-          <Property name="property">customerId</Property>
-          <Property name="trigger">triggerCus</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">createTime</Property>
-          <Property name="property">createTime</Property>
+          <Property name="labelWidth">80</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -212,6 +283,16 @@ function GetQueryString(name){&#xD;
                     </DataPilot>
                   </ToolBar>
                   <DataGrid id="weightDataGrid">
+                    <ClientEvent name="onDataRowDoubleClick">view.get(&quot;#dialogWeight&quot;).show();&#xD;
+var data = view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsMarkingWeightEntity&quot;)){&#xD;
+	var queryJson={&#xD;
+		productsMark:data.current.get(&quot;productsMark&quot;),&#xD;
+		weight:data.current.get(&quot;weight&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
                     <Property name="dataSet">dsBmsProductsWeightAccountEntity</Property>
                     <Property name="stretchColumnsMode">auto</Property>
                     <Property name="readOnly">true</Property>
@@ -246,6 +327,18 @@ function GetQueryString(name){&#xD;
                     </DataPilot>
                   </ToolBar>
                   <DataGrid id="materialDataGrid">
+                    <ClientEvent name="onDataRowDoubleClick">view.get(&quot;#dialogMaterial&quot;).show();&#xD;
+var data = view.get(&quot;#dsBmsProductsMaterialAccountEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsBmsMarkingMaterialEntity&quot;)){&#xD;
+	var queryJson={&#xD;
+		productsMark:data.current.get(&quot;productsMark&quot;),&#xD;
+		materialType:data.current.get(&quot;materialType&quot;),&#xD;
+		materialMark:data.current.get(&quot;materialMark&quot;),&#xD;
+		type:data.current.get(&quot;type&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
                     <Property name="dataSet">dsBmsProductsMaterialAccountEntity</Property>
                     <Property name="stretchColumnsMode">auto</Property>
                     <Property name="readOnly">true</Property>
@@ -312,6 +405,7 @@ with (view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;)){&#xD;
               </DataColumn>
               <DataColumn name="productMark">
                 <Property name="property">productMark</Property>
+                <Property name="visible">false</Property>
               </DataColumn>
               <DataColumn name="productDetail">
                 <Property name="property">productDetail</Property>
@@ -353,5 +447,107 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <Dialog id="dialogWeight">
+      <Property name="caption">运单明细</Property>
+      <Property name="height">500</Property>
+      <Property name="width">600</Property>
+      <Buttons/>
+      <Children>
+        <DataPilot>
+          <Property name="dataSet">dsBmsMarkingWeightEntity</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <DataGrid id="waybillDetailWei">
+          <Property name="dataSet">dsBmsMarkingWeightEntity</Property>
+          <Property name="readOnly">true</Property>
+          <RowNumColumn/>
+          <DataColumn name="waybillNo">
+            <Property name="property">waybillNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="weight">
+            <Property name="property">weight</Property>
+            <Property name="width">90</Property>
+          </DataColumn>
+          <DataColumn name="correctWeight">
+            <Property name="property">correctWeight</Property>
+            <Property name="width">90</Property>
+          </DataColumn>
+          <DataColumn name="outstockNo">
+            <Property name="property">outstockNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="externalNo">
+            <Property name="property">externalNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="feesNo">
+            <Property name="property">feesNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="warehouseName">
+            <Property name="property">warehouseName</Property>
+            <Property name="width">90</Property>
+          </DataColumn>
+          <DataColumn name="customerName">
+            <Property name="property">customerName</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="carrierName">
+            <Property name="property">carrierName</Property>
+            <Property name="width">90</Property>
+          </DataColumn>
+          <DataColumn name="deliverName">
+            <Property name="property">deliverName</Property>
+            <Property name="width">90</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogMaterial">
+      <Property name="caption">运单明细</Property>
+      <Property name="height">500</Property>
+      <Property name="width">600</Property>
+      <Buttons/>
+      <Children>
+        <DataPilot>
+          <Property name="dataSet">dsBmsMarkingMaterialEntity</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <DataGrid id="waybillDetailMat">
+          <Property name="dataSet">dsBmsMarkingMaterialEntity</Property>
+          <Property name="readOnly">true</Property>
+          <RowNumColumn/>
+          <DataColumn name="waybillNo">
+            <Property name="property">waybillNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn name="outstockNo">
+            <Property name="property">outstockNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">consumerMaterialCode</Property>
+            <Property name="width">120</Property>
+            <Property name="name">consumerMaterialCode</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">consumerMaterialName</Property>
+            <Property name="width">120</Property>
+            <Property name="name">consumerMaterialName</Property>
+          </DataColumn>
+          <DataColumn name="warehouseName">
+            <Property name="property">warehouseName</Property>
+            <Property name="width">90</Property>
+          </DataColumn>
+          <DataColumn name="customerName">
+            <Property name="property">customerName</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

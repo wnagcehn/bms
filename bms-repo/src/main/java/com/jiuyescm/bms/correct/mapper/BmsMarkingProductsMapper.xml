@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.BmsMarkingProductsMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.correct.BmsMarkingProductsEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
+		   	<result column="weight" property="weight" jdbcType="DECIMAL" />
+		   	<result column="correct_weight" property="correctWeight" jdbcType="DECIMAL" />
+		   	<result column="pmxzx_mark" property="pmxzxMark" jdbcType="VARCHAR" />
+		   	<result column="bwd_mark" property="bwdMark" jdbcType="VARCHAR" />
+		   	<result column="material_type" property="materialType" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, material_type
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, material_type
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_marking_products
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_marking_products
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" productsMark != null and productsMark !='' ">
+				and products_mark = #{productsMark}
+			</if>
+        	<if test=" weight != null and weight !='' ">
+				and weight = #{weight}
+			</if>
+        	<if test=" correctWeight != null and correctWeight !='' ">
+				and correct_weight = #{correctWeight}
+			</if>
+        	<if test=" pmxzxMark != null and pmxzxMark !='' ">
+				and pmxzx_mark = #{pmxzxMark}
+			</if>
+        	<if test=" bwdMark != null and bwdMark !='' ">
+				and bwd_mark = #{bwdMark}
+			</if>
+        	<if test=" materialType != null and materialType !='' ">
+				and material_type = #{materialType}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+        insert into bms_marking_products(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{productsMark,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DECIMAL}, 
+			#{correctWeight,jdbcType=DECIMAL}, 
+			#{pmxzxMark,jdbcType=VARCHAR}, 
+			#{bwdMark,jdbcType=VARCHAR}, 
+			#{materialType,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+        update bms_marking_products
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" productsMark != null and productsMark !='' ">
+				products_mark = #{productsMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" weight != null and weight !='' ">
+				weight = #{weight,jdbcType=DECIMAL},
+			</if>
+			<if test=" correctWeight != null and correctWeight !='' ">
+				correct_weight = #{correctWeight,jdbcType=DECIMAL},
+			</if>
+			<if test=" pmxzxMark != null and pmxzxMark !='' ">
+				pmxzx_mark = #{pmxzxMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" bwdMark != null and bwdMark !='' ">
+				bwd_mark = #{bwdMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" materialType != null and materialType !='' ">
+				material_type = #{materialType,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_marking_products 
+        where id = #{id}
+    </delete>
+    
+    <select id="queryByWeight" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+    	select m.weight,m.correct_weight,b.outstock_no, b.external_no, m.waybill_no,
+		b.fees_no, b.waybill_num, b.warehouse_code, b.warehouse_name,
+		b.customerid,b.customer_name,b.shop_name,b.carrier_id,b.carrier_name,
+		b.deliverid,b.deliver_name
+		from bms_marking_products m
+		INNER JOIN biz_dispatch_bill b on m.waybill_no=b.waybill_no and b.del_flag=0
+		WHERE 1=1
+		and m.products_mark=#{productsMark}
+		and m.weight=#{weight}
+    </select>
+    
+    <select id="queryByMaterial" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+    	select m.waybill_no,o.outstock_no,o.customer_id,
+		o.customer_name,o.consumer_material_code, o.consumer_material_name,
+		o.warehouse_code,o.warehouse_name
+		from bms_marking_products m
+		INNER JOIN biz_outstock_packmaterial o on m.waybill_no=o.waybill_no and o.del_flag='0'
+		WHERE 1=1
+		and m.products_mark=#{productsMark}
+		and m.material_type=#{materialType}
+		<if test=" pmxzxMark != null and pmxzxMark !='' ">
+			and m.pmxzx_mark=#{pmxzxMark}
+		</if>
+		<if test=" bwdMark != null and bwdMark !='' ">
+			and m.bwd_mark=#{bwdMark}
+		</if>
+    </select>
+</mapper>
