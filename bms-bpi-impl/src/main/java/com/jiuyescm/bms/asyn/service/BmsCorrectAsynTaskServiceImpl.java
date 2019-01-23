@@ -176,11 +176,13 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 			logger.error("send MQ:", e);
 			return"MQ发送失败！";
 		}
-		//更新任务表
+		//更新任务表（更新修改人，修改时间）
 		try{
 			vo.setFinishTime(JAppContext.currentTimestamp());
 			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
 			PropertyUtils.copyProperties(entity, vo);
+			entity.setTaskRate(100);
+			entity.setTaskStatus("SUCCESS");
 			bmsCorrectAsynTaskRepository.update(entity);
 			return "纠正成功";
 		}catch(Exception e){
