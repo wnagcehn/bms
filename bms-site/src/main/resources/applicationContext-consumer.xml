@@ -106,4 +106,9 @@
 		 <dubbo:reference id="reportBillImportDetailService" interface="com.jiuyescm.bms.report.bill.IReportBillImportDetailService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService"
 				version="1.0.0" id="customerDictService" timeout="1200000" check="false"/> 
+				
+		 <!-- 纠正 -->
+		<dubbo:reference id="bmsOrderProductService" interface="com.jiuyescm.bms.correct.service.IBmsOrderProductService" version="1.0.0" registry="bms"/>	 
+		<dubbo:reference id="bmsProductsWeightAccountService" interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightAccountService" version="1.0.0" registry="bms"/>	 
+		<dubbo:reference id="bmsProductsMaterialAccountService" interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialAccountService" version="1.0.0" registry="bms"/>	 
 </beans> 

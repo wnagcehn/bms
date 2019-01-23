@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.BmsProductsWeightAccountMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
+		   	<result column="weight" property="weight" jdbcType="DECIMAL" />
+		   	<result column="percent" property="percent" jdbcType="DOUBLE" />
+		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, products_mark, weight, percent, task_id
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+products_mark, weight, percent, task_id
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_products_weight_account
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_products_weight_account
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" productsMark != null and productsMark !='' ">
+				and products_mark = #{productsMark}
+			</if>
+        	<if test=" weight != null and weight !='' ">
+				and weight = #{weight}
+			</if>
+        	<if test=" percent != null and percent !='' ">
+				and percent = #{percent}
+			</if>
+        	<if test=" taskId != null and taskId !='' ">
+				and task_id = #{taskId}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
+        insert into bms_products_weight_account(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{productsMark,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DECIMAL}, 
+			#{percent,jdbcType=DOUBLE}, 
+			#{taskId,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
+        update bms_products_weight_account
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" productsMark != null and productsMark !='' ">
+				products_mark = #{productsMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" weight != null and weight !='' ">
+				weight = #{weight,jdbcType=DECIMAL},
+			</if>
+			<if test=" percent != null and percent !='' ">
+				percent = #{percent,jdbcType=DOUBLE},
+			</if>
+			<if test=" taskId != null and taskId !='' ">
+				task_id = #{taskId,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_products_weight_account 
+        where id = #{id}
+    </delete>
+</mapper>

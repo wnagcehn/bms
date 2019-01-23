@@ -28,6 +28,17 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="weight_correct">重量纠正</Property>
+              <Property name="material_correct">耗材纠正</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsCorrectAsynTaskTypeEntity">
       <Property name="creationType">com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo</Property>
@@ -96,9 +107,29 @@
         </Property>
         <Property name="required">true</Property>
       </PropertyDef>
+      <PropertyDef name="bizType">
+        <Property name="label">业务类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="weight_correct">重量纠正</Property>
+              <Property name="material_correct">耗材纠正</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	month=12;&#xD;
+	year=year-1;&#xD;
+}&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
     <ToolBar>
       <DataPilot>
         <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
@@ -113,13 +144,25 @@
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
-      <Separator/>
-      <ToolBarButton id="btnAdd">
-        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;);
-                datas.insert();
-                view.get(&quot;#dialogTask&quot;).show();</ClientEvent>
-        <Property name="caption">新增</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      <ToolBarButton id="btnDetail">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;).current;&#xD;
+if(data == undefined || data == null){&#xD;
+	dorado.MessageBox.alert(&quot;请选择一条数据！&quot;);&#xD;
+}&#xD;
+var date = data.get(&quot;startDate&quot;);&#xD;
+var year = date.getFullYear();//年&#xD;
+var month = date.getMonth()+1;//月&#xD;
+var createTime = &quot;&quot;;&#xD;
+if(month &lt; 10){&#xD;
+	createTime = year+&quot;0&quot;+month;&#xD;
+}else{&#xD;
+	createTime = year+&quot;&quot;+month;&#xD;
+}&#xD;
+&#xD;
+var param=&quot;?customerId=&quot;+data.get(&quot;customerId&quot;)+&quot;&amp;createTime=&quot;+createTime;&#xD;
+window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct.d&quot;+param, &quot;纠正明细&quot;, &quot;&quot;, true);</ClientEvent>
+        <Property name="caption">纠正明细</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -260px -20px</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBmsCorrectAsynTaskEntity">
@@ -136,31 +179,42 @@
     </DataSet>
     <AutoForm id="queryForm">
       <Property name="dataSet">dsBmsCorrectAsynTaskQuery</Property>
-      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="cols">*,*,*,*,*,*</Property>
       <AutoFormElement>
         <Property name="name">year</Property>
         <Property name="property">year</Property>
+        <Property name="labelWidth">40</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">month</Property>
         <Property name="property">month</Property>
+        <Property name="labelWidth">40</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">taskId</Property>
         <Property name="property">taskId</Property>
+        <Property name="labelWidth">50</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">customerId</Property>
         <Property name="property">customerId</Property>
         <Property name="trigger">triggerCus</Property>
+        <Property name="labelWidth">50</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">taskStatus</Property>
         <Property name="property">taskStatus</Property>
+        <Property name="labelWidth">50</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bizType</Property>
+        <Property name="property">bizType</Property>
+        <Property name="labelWidth">60</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -172,12 +226,6 @@
         <DataColumn name="taskId">
           <Property name="property">taskId</Property>
           <Property name="width">230</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">taskName</Property>
-          <Property name="name">taskName</Property>
-          <Property name="width">150</Property>
-          <Editor/>
         </DataColumn>
         <DataColumn name="customerId">
           <Property name="property">customerId</Property>
@@ -204,6 +252,12 @@
         <DataColumn>
           <Property name="property">taskProcess</Property>
           <Property name="name">taskProcess</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">bizType</Property>
+          <Property name="name">bizType</Property>
           <Property name="width">120</Property>
           <Editor/>
         </DataColumn>

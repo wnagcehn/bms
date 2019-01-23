@@ -63,4 +63,8 @@
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IWarehouseDictService" ref="warehouseDictService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService" ref="materialDictService"/>
 	<dubbo:service interface="com.jiuyescm.bms.report.bill.IReportBillImportDetailService" ref="reportBillImportDetailService"/>
+	
+	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsOrderProductService" ref="bmsOrderProductService"/>
+	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialAccountService" ref="bmsProductsMaterialAccountService"/>
+	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightAccountService" ref="bmsProductsWeightAccountService"/>
 </beans>
