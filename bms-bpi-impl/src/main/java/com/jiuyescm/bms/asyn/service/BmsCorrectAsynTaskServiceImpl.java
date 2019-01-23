@@ -161,6 +161,8 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		if(CollectionUtils.isEmpty(list))return "没有查询到此任务";
 		String bizType = list.get(0).getBizType();
 		if("weight_correct".equals(bizType)||"material_correct".equals(bizType))return "此任务不是纠正任务";
+		String taskStatus = list.get(0).getTaskStatus();
+		if(!"SUCCESS".equals(taskStatus)||!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
 		try {
 			final String msg = vo.getTaskId();
