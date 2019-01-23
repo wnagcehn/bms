@@ -1,16 +1,26 @@
 package com.jiuyescm.bms.asyn.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
+import com.jiuyescm.bms.common.enumtype.type.BizTypeEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -20,7 +30,11 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 
 	private static final Logger logger = Logger.getLogger(BmsCorrectAsynTaskServiceImpl.class.getName());
 	
+	private static final String BMS_CORRECT_ASYN_TASK = "BMS.CORRECT.ASYN.TASK";
+	
 	@Autowired private IBmsCorrectAsynTaskRepository bmsCorrectAsynTaskRepository;
+	
+	@Autowired private JmsTemplate jmsQueueTemplate;
 
 	@Override
 	public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition,
@@ -138,4 +152,41 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		return voList;
 	}
 
+	@Override
+	public String updateCorrect(BmsCorrectAsynTaskVo vo) throws Exception {
+		if(StringUtils.isBlank(vo.getTaskId()))return "任务ID为空";
+		Map<String, Object> queryConfition = new HashMap<>();
+		queryConfition.put("(taskId", vo.getTaskId());
+		List<BmsCorrectAsynTaskEntity> list = bmsCorrectAsynTaskRepository.queryList(queryConfition);
+		if(CollectionUtils.isEmpty(list))return "没有查询到此任务";
+		String bizType = list.get(0).getBizType();
+		if("weight_correct".equals(bizType)||"material_correct".equals(bizType))return "此任务不是纠正任务";
+		String taskStatus = list.get(0).getTaskStatus();
+		if(!"SUCCESS".equals(taskStatus)||!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
+		//发送MQ消息纠正
+		try {
+			final String msg = vo.getTaskId();
+			jmsQueueTemplate.send(BMS_CORRECT_ASYN_TASK, new MessageCreator() {
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					return session.createTextMessage(msg);
+				}
+			});
+		} catch (Exception e) {
+			logger.error("send MQ:", e);
+			return"MQ发送失败！";
+		}
+		//更新任务表
+		try{
+			vo.setFinishTime(JAppContext.currentTimestamp());
+			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
+			PropertyUtils.copyProperties(entity, vo);
+			bmsCorrectAsynTaskRepository.update(entity);
+			return "纠正成功";
+		}catch(Exception e){
+			logger.error("updateCorrect:",e);
+			return "更新失败";
+		}
+	}
+	
 }

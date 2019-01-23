@@ -45,6 +45,15 @@ public class BmsCorrectAsynTaskVo implements Serializable {
 	
 	//业务类型  weight_correct-重量纠正  material_correct-耗材纠正
 	private String bizType;
+	
+	public String getBizType() {
+		return bizType;
+	}
+
+	public void setBizType(String bizType) {
+		this.bizType = bizType;
+	}
+	
 	public BmsCorrectAsynTaskVo(){
 	}
 
@@ -182,14 +191,6 @@ public class BmsCorrectAsynTaskVo implements Serializable {
 
 	public void setMonth(String month) {
 		this.month = month;
-	}
-
-	public String getBizType() {
-		return bizType;
-	}
-
-	public void setBizType(String bizType) {
-		this.bizType = bizType;
 	}
 	
 }

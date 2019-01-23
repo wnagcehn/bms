@@ -25,4 +25,6 @@ public interface IBmsCorrectAsynTaskService {
 
 	int saveBatch(List<BmsCorrectAsynTaskVo> voList) throws Exception;
 
+	String updateCorrect(BmsCorrectAsynTaskVo vo) throws Exception;
+
 }

@@ -47,14 +47,14 @@
 		<if test="(creator != null and creator !='')" >
 				and creator = #{creator}
 		</if>
-		<if test="(bizType != null and bizType !='')" >
-				and biz_type = #{bizType}
-		</if>
 		<if test="startDate != null" >
 			    and <![CDATA[startDate <= #{startDate}]]>
 		</if>
 		<if test="endDate != null" >
 			    and endDate >= #{endDate}
+		</if>
+		<if test="(taskStartDate != null and taskStartDate !='')" >
+				and startDate = #{taskStartDate}
 		</if>
     </sql>
 	  
@@ -78,7 +78,6 @@
     <insert id="save" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
         insert into bms_correct_asyn_task(task_id, create_month, customerId, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type)
         values (
-
 #{taskId,jdbcType=VARCHAR}, 
 #{createMonth,jdbcType=VARCHAR}, 
 #{customerId,jdbcType=VARCHAR}, 
@@ -89,10 +88,7 @@
 #{createTime,jdbcType=TIMESTAMP}, 
 #{finishTime,jdbcType=TIMESTAMP}, 
 #{delFlag,jdbcType=VARCHAR},
-#{startDate},
-#{endDate},
-#{remark},
-#{bizType}
+#{startDate},#{endDate},#{remark},#{bizType}
         )
     </insert>
 
@@ -110,7 +106,6 @@
 			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR}</if>
-			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR}</if>
 		</set>
         where id=#{id}
     </update>

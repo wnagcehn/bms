@@ -69,7 +69,6 @@ public class BmsCorrectAsynTaskRepositoryImpl extends MyBatisDao implements IBms
 	@Override
 	public List<BmsCorrectAsynTaskEntity> queryList(
 			Map<String, Object> condition) throws Exception {
-		// TODO Auto-generated method stub
 		List<BmsCorrectAsynTaskEntity> list=this.selectList("com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskMapper.query", condition);
 		return list;
 	}
