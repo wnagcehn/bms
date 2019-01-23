@@ -15,10 +15,11 @@
 	    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark
+        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -52,6 +53,9 @@
 		<if test="endDate != null" >
 			    and endDate >= #{endDate}
 		</if>
+		<if test="(taskStartDate != null and taskStartDate !='')" >
+				and startDate = #{taskStartDate}
+		</if>
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
@@ -72,9 +76,8 @@
     </select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
-        insert into bms_correct_asyn_task(task_id, create_month, customerId, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark)
+        insert into bms_correct_asyn_task(task_id, create_month, customerId, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type)
         values (
-
 #{taskId,jdbcType=VARCHAR}, 
 #{createMonth,jdbcType=VARCHAR}, 
 #{customerId,jdbcType=VARCHAR}, 
@@ -85,7 +88,7 @@
 #{createTime,jdbcType=TIMESTAMP}, 
 #{finishTime,jdbcType=TIMESTAMP}, 
 #{delFlag,jdbcType=VARCHAR},
-#{startDate},#{endDate},#{remark}
+#{startDate},#{endDate},#{remark},#{bizType}
         )
     </insert>
 

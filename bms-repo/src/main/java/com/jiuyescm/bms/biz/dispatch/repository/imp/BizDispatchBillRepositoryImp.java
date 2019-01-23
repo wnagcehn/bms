@@ -17,7 +17,6 @@ import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 @Repository("bizDispatchBillRepository")
-@SuppressWarnings("rawtypes")
 public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDispatchBillRepository{
 
 	private static final Logger logger = Logger.getLogger(BizDispatchBillRepositoryImp.class.getName());
@@ -43,14 +42,12 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	@Override
 	@SuppressWarnings("unchecked")
 	public int updateBill(List<BizDispatchBillEntity> aCondition) {
-		// TODO Auto-generated method stub
 		return updateBatch("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.updateBill", aCondition);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public int updateBillEntity(BizDispatchBillEntity aCondition) {
-		// TODO Auto-generated method stub
 		return update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.updateBill", aCondition);
 	}
 
@@ -58,7 +55,6 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	@SuppressWarnings("unchecked")
 	public PageInfo<BizDispatchBillEntity> queryAllPrice(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BizDispatchBillEntity> list=selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryAllPrice", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BizDispatchBillEntity> p=new PageInfo<>(list);
 		return p;
@@ -68,7 +64,6 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	@SuppressWarnings("unchecked")
 	public PageInfo<BizDispatchBillEntity> queryAllData(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BizDispatchBillEntity> list=selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryAllData", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BizDispatchBillEntity> p=new PageInfo<>(list);
 		return p;
@@ -78,7 +73,6 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	@Override
 	public PageInfo<BizDispatchBillEntity> queryAllCalculate(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BizDispatchBillEntity> list=selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryAllCalculate", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BizDispatchBillEntity> p=new PageInfo<>(list);
 		return p;
@@ -138,13 +132,11 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 
 	@Override
 	public int saveList(List<BizDispatchBillEntity> list) {
-		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.insertBizList", list);
 	}
 
 	@Override
 	public List<BizDispatchBillEntity> queryBizData(List<String> aCondition) {
-		// TODO Auto-generated method stub
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("waybillnos", aCondition);
 		return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryBizData", map);
@@ -158,7 +150,6 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 
 	@Override
 	public BizDispatchBillEntity queryExceptionOne(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		return (BizDispatchBillEntity) selectOne("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryExceptionOne", condition);
 	}
 
@@ -180,7 +171,6 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 
 	@Override
 	public int retryByWaybillNo(List<String> aCondition) {
-		// TODO Auto-generated method stub
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("waybillnos", aCondition);
 		return this.update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.retryByWaybillNo", map);
@@ -189,20 +179,23 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 
 	@Override
 	public List<String> queryWayBillNo(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		return selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryWayBillNo", condition);
 	}
 
 	@Override
 	public int retryByMaterialMark(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		return this.update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.retryByMaterialMark", condition);
 	}
 
 	@Override
 	public List<BizDispatchBillEntity> queryNotCalculate(
 			Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		return selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryNotCalculate", condition);
+	}
+	
+	@Override
+	public List<BizDispatchBillEntity> queryBizCustomerid(Map<String, Object> condition) {
+		List<BizDispatchBillEntity> list = this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryBizCustomerid", condition);
+		return list;
 	}
 }
