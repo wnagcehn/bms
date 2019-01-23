@@ -225,22 +225,22 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
         <RowNumColumn/>
         <DataColumn name="taskId">
           <Property name="property">taskId</Property>
-          <Property name="width">230</Property>
+          <Property name="width">180</Property>
         </DataColumn>
         <DataColumn name="customerId">
           <Property name="property">customerId</Property>
-          <Property name="width">200</Property>
+          <Property name="width">180</Property>
         </DataColumn>
         <DataColumn>
           <Property name="name">startDate</Property>
           <Property name="property">startDate</Property>
-          <Property name="width">150</Property>
+          <Property name="width">120</Property>
           <Editor/>
         </DataColumn>
         <DataColumn>
           <Property name="name">endDate</Property>
           <Property name="property">endDate</Property>
-          <Property name="width">150</Property>
+          <Property name="width">120</Property>
           <Editor/>
         </DataColumn>
         <DataColumn>
@@ -259,6 +259,22 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
           <Property name="property">bizType</Property>
           <Property name="name">bizType</Property>
           <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#&quot;,&#xD;
+	content:&quot;纠正&quot;,&#xD;
+	onclick:function(){&#xD;
+		&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="width">120</Property>
+          <Property name="caption">操作</Property>
+          <Property name="align">center</Property>
           <Editor/>
         </DataColumn>
         <DataColumn>

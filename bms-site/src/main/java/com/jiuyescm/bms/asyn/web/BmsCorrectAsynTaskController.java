@@ -259,5 +259,9 @@ public class BmsCorrectAsynTaskController {
 		}
 		return result;
 	}
+	
+	public String wayBillCorrect(BmsCorrectAsynTaskVo voEntity){
+		return "";
+	}
 
 }
