@@ -118,6 +118,13 @@
           </Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifierTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -268,7 +275,18 @@ jQuery(arg.dom).xCreate({&#xD;
 	href: &quot;#&quot;,&#xD;
 	content:&quot;纠正&quot;,&#xD;
 	onclick:function(){&#xD;
+		var correctAction = view.get(&quot;#correctAction&quot;);&#xD;
+		var datas = view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;).current;&#xD;
+		correctAction.set(&quot;parameter&quot;,datas);&#xD;
 		&#xD;
+		dorado.MessageBox.confirm(&quot;是否纠正?&quot;,function(){&#xD;
+		correctAction.execute(function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		with (view.get(&quot;#dsBmsCorrectAsynTaskEntity&quot;)){&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+});&#xD;
 	}&#xD;
 });&#xD;
 </ClientEvent>
@@ -299,6 +317,18 @@ jQuery(arg.dom).xCreate({&#xD;
           <Property name="name">remark</Property>
           <Property name="property">remark</Property>
           <Property name="width">250</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">lastModifier</Property>
+          <Property name="property">lastModifier</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">lastModifierTime</Property>
+          <Property name="property">lastModifierTime</Property>
+          <Property name="width">200</Property>
           <Editor/>
         </DataColumn>
       </DataGrid>
@@ -417,5 +447,8 @@ if (data != null) {&#xD;
         <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
       </UpdateItem>
     </UpdateAction>
+    <AjaxAction id="correctAction">
+      <Property name="service">bmsCorrectAsynTaskController#waybillCorrect</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

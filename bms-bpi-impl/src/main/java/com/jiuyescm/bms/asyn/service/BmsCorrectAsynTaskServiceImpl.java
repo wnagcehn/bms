@@ -156,7 +156,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 	public String updateCorrect(BmsCorrectAsynTaskVo vo) throws Exception {
 		if(StringUtils.isBlank(vo.getTaskId()))return "任务ID为空";
 		Map<String, Object> queryConfition = new HashMap<>();
-		queryConfition.put("(taskId", vo.getTaskId());
+		queryConfition.put("taskId", vo.getTaskId());
 		List<BmsCorrectAsynTaskEntity> list = bmsCorrectAsynTaskRepository.queryList(queryConfition);
 		if(CollectionUtils.isEmpty(list))return "没有查询到此任务";
 		String bizType = list.get(0).getBizType();
