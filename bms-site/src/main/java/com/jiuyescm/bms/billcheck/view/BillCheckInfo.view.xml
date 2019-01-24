@@ -1801,6 +1801,8 @@ if(data.current){&#xD;
                   </UpdateItem>
                 </UpdateAction>
                 <Dialog id="dialogInvoiceEdit">
+                  <Property name="height">250</Property>
+                  <Property name="width">350</Property>
                   <Buttons>
                     <Button>
                       <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInvoice.data&quot;).current;&#xD;
@@ -1932,10 +1934,11 @@ if(currentData){&#xD;
                   </ToolBarButton>
                   <ToolBarButton>
                     <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
-&#xD;
+var nowdays = new Date();&#xD;
 var current = view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
 datas.insert();&#xD;
 datas.current.set(&quot;billCheckId&quot;,current.get(&quot;id&quot;));&#xD;
+datas.current.set(&quot;receiptDate&quot;,nowdays);&#xD;
 view.get(&quot;#dialogReceiptEdit&quot;).show();</ClientEvent>
                     <Property name="caption">新增</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
@@ -1976,6 +1979,8 @@ if(data.current){&#xD;
                   </UpdateItem>
                 </UpdateAction>
                 <Dialog id="dialogReceiptEdit">
+                  <Property name="width">300</Property>
+                  <Property name="height">240</Property>
                   <Buttons>
                     <Button>
                       <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckReceipt.data&quot;).current;&#xD;
