@@ -869,10 +869,10 @@ public class BillCheckInfoController{
 			checkVo.setInvoiceAmount(total);
 			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.PART_INVOICE.getCode());//部分收票
 		}
-		if("0".equals(checkVo.getIsneedInvoice())){
+		/*if("0".equals(checkVo.getIsneedInvoice())){
 			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票
 		}
-		
+		*/
 		
 		//导入发票除后账单状态只有在待开票状态下才变为待收款
 		if(CheckBillStatusEnum.TB_INVOICE.getCode().equals(checkVo.getBillStatus())){

@@ -1554,7 +1554,6 @@ arg.processDefault = true;</ClientEvent>
               <Property name="property">invoiceUnReceiptAmount</Property>
               <Property name="width">100</Property>
               <Property name="summaryType">sum</Property>
-              <Property name="visible">false</Property>
             </DataColumn>
             <DataColumn name="confirmUnInvoiceAmount">
               <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
