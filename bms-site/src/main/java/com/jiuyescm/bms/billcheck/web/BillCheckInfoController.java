@@ -807,11 +807,12 @@ public class BillCheckInfoController{
 					temp.setLastModifyTime(nowdate);
 					int result=billCheckInvoiceService.save(temp);
 					if(result<=0){
-						return "新增失败";
+						return "新增发票失败";
 					}	
 					//更新账单跟踪
 					updateBillCheck(temp);
 					
+					return "保存发票成功";
 					
 				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
 					temp.setLastModifier(userid);
@@ -819,10 +820,11 @@ public class BillCheckInfoController{
 					//修改报价
 					int result=billCheckInvoiceService.updateOne(temp);
 					if(result<=0){
-						return "更新失败";
+						return "更新发票失败";
 					}
 					//更新账单跟踪
 					updateBillCheck(temp);	
+					return "更新发票成功";
 				}			
 			}			
 			return "数据库操作成功";			
@@ -867,10 +869,10 @@ public class BillCheckInfoController{
 			checkVo.setInvoiceAmount(total);
 			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.PART_INVOICE.getCode());//部分收票
 		}
-		if("0".equals(checkVo.getIsneedInvoice())){
+		/*if("0".equals(checkVo.getIsneedInvoice())){
 			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票
 		}
-		
+		*/
 		
 		//导入发票除后账单状态只有在待开票状态下才变为待收款
 		if(CheckBillStatusEnum.TB_INVOICE.getCode().equals(checkVo.getBillStatus())){
@@ -934,10 +936,11 @@ public class BillCheckInfoController{
 					temp.setReceiptType("正常收款");
 					int result=billCheckReceiptService.save(temp);
 					if(result<=0){
-						return "新增失败";
+						return "新增收款失败";
 					}	
 					//更新账单跟踪
 					updateBillCheckByReceipt(temp);
+					return "新增收款成功";
 		
 				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
 					temp.setLastModifier(userid);
@@ -945,10 +948,11 @@ public class BillCheckInfoController{
 					//修改报价
 					int result=billCheckReceiptService.updateOne(temp);
 					if(result<=0){
-						return "更新失败";
+						return "更新收款失败";
 					}
 					//更新账单跟踪
 					updateBillCheckByReceipt(temp);	
+					return "更新收款成功";					
 				}			
 			}			
 			return "数据库操作成功";			

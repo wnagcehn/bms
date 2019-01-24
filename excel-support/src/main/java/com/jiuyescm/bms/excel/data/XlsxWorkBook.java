@@ -21,7 +21,7 @@ public class XlsxWorkBook {
 	private String tempPath;
 	
 	private int status = 1;
-	private String sheetPath = "xl/worksheets/";
+	//private String sheetPath = "xl/worksheets/";
 	private List<Sheet> sheets = new ArrayList<Sheet>();
 	private List<String> sst = new ArrayList<>();
 	

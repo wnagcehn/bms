@@ -10,8 +10,6 @@ import java.util.Enumeration;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.aspectj.apache.bcel.generic.ReturnaddressType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,14 +82,12 @@ public class ZipHelper {
     }
 	
 	
-	
-	@SuppressWarnings("rawtypes")
 	public void unZipFiles(String zipPath) throws IOException {
 		
 		File zipFile = new File(zipPath);
-		String descDir = zipFile.getParentFile().getPath()+"/"; //解压路径
+		//String descDir = zipFile.getParentFile().getPath()+"/"; //解压路径
 		ZipFile zip = new ZipFile(zipFile,Charset.forName("GBK"));//解决中文文件夹乱码
-		String name = zip.getName().substring(zip.getName().lastIndexOf('\\')+1, zip.getName().lastIndexOf('.'));
+		//String name = zip.getName().substring(zip.getName().lastIndexOf('\\')+1, zip.getName().lastIndexOf('.'));
 		File pathFile = new File(unzipPath);
 		if (!pathFile.exists()) {
 			pathFile.mkdirs();
