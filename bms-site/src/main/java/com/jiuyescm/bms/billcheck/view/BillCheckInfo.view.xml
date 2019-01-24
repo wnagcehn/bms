@@ -1801,6 +1801,7 @@ if(data.current){&#xD;
                   </UpdateItem>
                 </UpdateAction>
                 <Dialog id="dialogInvoiceEdit">
+                  <ClientEvent name="onClose">view.id(&quot;dsBillCheckInvoice&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
                   <Buttons>
                     <Button>
                       <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInvoice.data&quot;).current;&#xD;
@@ -1828,7 +1829,12 @@ view.id(&quot;updateInvoiceAction&quot;).execute(function(result){&#xD;
                       <Property name="caption">保存</Property>
                     </Button>
                     <Button>
-                      <ClientEvent name="onClick">	view.id(&quot;dialogInvoiceEdit&quot;).hide();</ClientEvent>
+                      <ClientEvent name="onClick">	dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillCheckInvoice&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogInvoiceEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
                       <Property name="caption">取消</Property>
                     </Button>
                   </Buttons>
@@ -1976,6 +1982,7 @@ if(data.current){&#xD;
                   </UpdateItem>
                 </UpdateAction>
                 <Dialog id="dialogReceiptEdit">
+                  <ClientEvent name="onClose">view.id(&quot;dsBillCheckReceipt&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
                   <Buttons>
                     <Button>
                       <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckReceipt.data&quot;).current;&#xD;
@@ -1998,11 +2005,18 @@ view.id(&quot;updateReceiptAction&quot;).execute(function(result){&#xD;
 	var subData=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
 	subData.clear();&#xD;
 	view.id(&quot;dialogReceiptEdit&quot;).hide();&#xD;
-});</ClientEvent>
+});&#xD;
+&#xD;
+</ClientEvent>
                       <Property name="caption">保存</Property>
                     </Button>
                     <Button>
-                      <ClientEvent name="onClick">	view.id(&quot;dialogReceiptEdit&quot;).hide();</ClientEvent>
+                      <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillCheckReceipt&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogReceiptEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
                       <Property name="caption">取消</Property>
                     </Button>
                   </Buttons>
