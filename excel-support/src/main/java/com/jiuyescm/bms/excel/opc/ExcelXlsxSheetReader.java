@@ -157,6 +157,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 		System.out.println("headAMap -- "+headAMap);*/
 		//System.out.println("headMap -- "+headMap);
 		DataRow drRow = new DataRow(curRow);
+		drRow.setRowNo(curRow);
 		//System.out.println(curRow);
 		Iterator<Map.Entry<String, String>> headIterator = headAMap.entrySet().iterator();
 		while (headIterator.hasNext()) {
@@ -170,7 +171,7 @@ public class ExcelXlsxSheetReader extends DefaultHandler {
 			}
 			DataColumn dColumn = new DataColumn(colName,colValue);
 			dColumn.setColNo(colNo);
-			//drRow.addColumn(colNo,dColumn);
+			drRow.addColumn(dColumn);
 		}
 		callback.read(drRow);
 	}
