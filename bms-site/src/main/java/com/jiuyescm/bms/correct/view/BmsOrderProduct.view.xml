@@ -116,47 +116,47 @@
         <Property name="label">耗材类别</Property>
       </PropertyDef>
       <PropertyDef name="outstockNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">出库单号</Property>
       </PropertyDef>
       <PropertyDef name="externalNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">外部单号</Property>
       </PropertyDef>
       <PropertyDef name="feesNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">费用编号</Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库id</Property>
       </PropertyDef>
       <PropertyDef name="warehouseName">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库</Property>
       </PropertyDef>
       <PropertyDef name="customerid">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家id</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家</Property>
       </PropertyDef>
       <PropertyDef name="carrierId">
-        <Property/>
+        <Property></Property>
         <Property name="label">物流商id</Property>
       </PropertyDef>
       <PropertyDef name="carrierName">
-        <Property/>
+        <Property></Property>
         <Property name="label">物流商</Property>
       </PropertyDef>
       <PropertyDef name="deliverid">
-        <Property/>
+        <Property></Property>
         <Property name="label">宅配商id</Property>
       </PropertyDef>
       <PropertyDef name="deliverName">
-        <Property/>
+        <Property></Property>
         <Property name="label">宅配商</Property>
       </PropertyDef>
       <PropertyDef name="consumerMaterialCode">
@@ -450,7 +450,7 @@ if (data != null) {&#xD;
     <Dialog id="dialogWeight">
       <Property name="caption">运单明细</Property>
       <Property name="height">500</Property>
-      <Property name="width">600</Property>
+      <Property name="width">780</Property>
       <Buttons/>
       <Children>
         <DataPilot>
@@ -465,6 +465,10 @@ if (data != null) {&#xD;
             <Property name="property">waybillNo</Property>
             <Property name="width">120</Property>
           </DataColumn>
+          <DataColumn name="outstockNo">
+            <Property name="property">outstockNo</Property>
+            <Property name="width">120</Property>
+          </DataColumn>
           <DataColumn name="weight">
             <Property name="property">weight</Property>
             <Property name="width">90</Property>
@@ -472,18 +476,6 @@ if (data != null) {&#xD;
           <DataColumn name="correctWeight">
             <Property name="property">correctWeight</Property>
             <Property name="width">90</Property>
-          </DataColumn>
-          <DataColumn name="outstockNo">
-            <Property name="property">outstockNo</Property>
-            <Property name="width">120</Property>
-          </DataColumn>
-          <DataColumn name="externalNo">
-            <Property name="property">externalNo</Property>
-            <Property name="width">120</Property>
-          </DataColumn>
-          <DataColumn name="feesNo">
-            <Property name="property">feesNo</Property>
-            <Property name="width">120</Property>
           </DataColumn>
           <DataColumn name="warehouseName">
             <Property name="property">warehouseName</Property>
@@ -497,10 +489,6 @@ if (data != null) {&#xD;
             <Property name="property">carrierName</Property>
             <Property name="width">90</Property>
           </DataColumn>
-          <DataColumn name="deliverName">
-            <Property name="property">deliverName</Property>
-            <Property name="width">90</Property>
-          </DataColumn>
         </DataGrid>
       </Children>
       <Tools/>
@@ -508,7 +496,7 @@ if (data != null) {&#xD;
     <Dialog id="dialogMaterial">
       <Property name="caption">运单明细</Property>
       <Property name="height">500</Property>
-      <Property name="width">600</Property>
+      <Property name="width">745</Property>
       <Buttons/>
       <Children>
         <DataPilot>
