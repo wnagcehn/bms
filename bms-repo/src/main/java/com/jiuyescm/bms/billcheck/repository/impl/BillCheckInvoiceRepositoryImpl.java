@@ -39,6 +39,12 @@ public class BillCheckInvoiceRepositoryImpl extends MyBatisDao<BillCheckInvoiceE
 		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInvoiceMapper.save", list);
 	}
+	
+	@Override
+	public int save(BillCheckInvoiceEntity entity) {
+		// TODO Auto-generated method stub
+		return insert("com.jiuyescm.bms.billcheck.mapper.BillCheckInvoiceMapper.save", entity);
+	}
 
 	@Override
 	public List<BillCheckInvoiceEntity> queryByParam(

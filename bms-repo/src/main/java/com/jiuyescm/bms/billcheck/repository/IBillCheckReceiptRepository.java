@@ -23,7 +23,11 @@ public interface IBillCheckReceiptRepository {
 	
 	BillCheckReceiptEntity queyReceipt(Map<String, Object> condition);
 	
+	List<BillCheckReceiptEntity> queryByParam(Map<String, Object> condition);
+	
 	int saveList(List<BillCheckReceiptEntity> list);
+	
+	int save(BillCheckReceiptEntity entity);
 
 	public int update(BillCheckReceiptEntity entity);
 }

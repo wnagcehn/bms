@@ -43,8 +43,6 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.check.service.IBillCheckFollowService;
 import com.jiuyescm.bms.bill.check.vo.BillCheckInfoFollowVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
-import com.jiuyescm.bms.billcheck.BillAccountInfoEntity;
-import com.jiuyescm.bms.billcheck.BillAccountOutEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
@@ -68,6 +66,7 @@ import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
+import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.file.templet.IBmsTempletInfoService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
@@ -781,6 +780,255 @@ public class BillCheckInfoController{
 		}
 		return "删除发票成功";
 	}
+	
+	
+	/**
+	 * 保存数据
+	 * @param datas
+	 */
+	@DataResolver
+	public String saveInvoice(Collection<BillCheckInvoiceVo> datas){
+		
+		if(Session.isMissing()){
+			return "长时间未操作，用户已失效，请重新登录再试！";
+		}
+		try {
+			
+			Timestamp nowdate = JAppContext.currentTimestamp();
+			String userid=JAppContext.currentUserName();
+			for(BillCheckInvoiceVo temp:datas){
+				//对操作类型进行判断
+				//此为新增九曳配送报价模板
+				if(EntityState.NEW.equals(EntityUtils.getState(temp))){
+					temp.setDelFlag("0");
+					temp.setCreator(userid);
+					temp.setCreateTime(nowdate);
+					temp.setLastModifier(userid);
+					temp.setLastModifyTime(nowdate);
+					int result=billCheckInvoiceService.save(temp);
+					if(result<=0){
+						return "新增失败";
+					}	
+					//更新账单跟踪
+					updateBillCheck(temp);
+					
+					
+				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
+					temp.setLastModifier(userid);
+					temp.setLastModifyTime(nowdate);
+					//修改报价
+					int result=billCheckInvoiceService.updateOne(temp);
+					if(result<=0){
+						return "更新失败";
+					}
+					//更新账单跟踪
+					updateBillCheck(temp);	
+				}			
+			}			
+			return "数据库操作成功";			
+		} catch (Exception e) {
+			//写入日志
+			logger.error("数据库操作失败",e);
+			return "数据库操作失败";
+		}
+	}
+	
+	/**
+	 * 根据发票更新账单耿总
+	 * @param temp
+	 */
+	public void updateBillCheck(BillCheckInvoiceVo temp){
+		Map<String,Object> condition=new HashMap<String,Object>();
+		condition.put("id", temp.getBillCheckId());
+		BillCheckInfoVo checkVo=billCheckInfoService.queryBillCheck(condition);
+		
+		BigDecimal total=new BigDecimal(0);
+		checkVo.setLastModifier(JAppContext.currentUserName());
+		checkVo.setLastModifierId(JAppContext.currentUserID());
+		checkVo.setLastModifyTime(JAppContext.currentTimestamp());
+	
+		//开票金额（统计所有的发票金额）
+		condition.clear();
+		condition.put("billCheckId", temp.getBillCheckId());
+		List<BillCheckInvoiceVo> invoiceList=billCheckInvoiceService.queryByParam(condition);
+		for(BillCheckInvoiceVo importInvoiceVo:invoiceList){
+			if(importInvoiceVo.getInvoiceAmount()!=null){
+				total=total.add(importInvoiceVo.getInvoiceAmount());
+			}
+		}
+		
+		//发票金额和  （账单中的确认金额）  比较
+		BigDecimal totalMoney=checkVo.getConfirmAmount();
+		
+		if(total.compareTo(totalMoney)>=0){
+			checkVo.setInvoiceAmount(total);
+			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.INVOICED.getCode());//已开票
+		}else{
+			checkVo.setInvoiceAmount(total);
+			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.PART_INVOICE.getCode());//部分收票
+		}
+		if("0".equals(checkVo.getIsneedInvoice())){
+			checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票
+		}
+		
+		
+		//导入发票除后账单状态只有在待开票状态下才变为待收款
+		if(CheckBillStatusEnum.TB_INVOICE.getCode().equals(checkVo.getBillStatus())){
+			checkVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+		}
+		
+		//开票未回款金额=开票金额+调整金额-回款金额
+		//账单状态是已收款状态: 开票未回款金额为0
+		if(CheckBillStatusEnum.RECEIPTED.getCode().equals(checkVo.getBillStatus())){
+			checkVo.setInvoiceUnReceiptAmount(BigDecimal.ZERO);
+		}else{
+			BigDecimal money=new BigDecimal(0);
+			if(checkVo.getInvoiceAmount()!=null){
+				money=checkVo.getInvoiceAmount();
+			}
+			if(checkVo.getReceiptAmount()!=null){
+				money=money.subtract(checkVo.getReceiptAmount());
+			}
+			checkVo.setInvoiceUnReceiptAmount(money);
+		}
+		
+		//已确认未开票金额=确认金额-开票金额
+		checkVo.setConfirmUnInvoiceAmount(checkVo.getConfirmAmount().subtract(total));
+		
+		//更新账单状态（开票日期）
+		condition.clear();
+		condition.put("id", checkVo.getId());
+		BillCheckInvoiceVo billCheckInvoice=billCheckInvoiceService.queryInvoice(condition);
+		if(billCheckInvoice!=null){
+			checkVo.setInvoiceDate(billCheckInvoice.getInvoiceDate());
+		}
+		
+		billCheckInfoService.update(checkVo);
+	}
+	
+	
+	
+	/**
+	 * 保存数据
+	 * @param datas
+	 */
+	@DataResolver
+	public String saveReceipt(Collection<BillCheckReceiptVo> datas){
+		
+		if(Session.isMissing()){
+			return "长时间未操作，用户已失效，请重新登录再试！";
+		}
+		try {
+			
+			Timestamp nowdate = JAppContext.currentTimestamp();
+			String userid=JAppContext.currentUserName();
+			for(BillCheckReceiptVo temp:datas){
+				//对操作类型进行判断
+				//此为新增九曳配送报价模板
+				if(EntityState.NEW.equals(EntityUtils.getState(temp))){
+					temp.setDelFlag("0");
+					temp.setCreator(userid);
+					temp.setCreateTime(nowdate);
+					temp.setLastModifier(userid);
+					temp.setLastModifyTime(nowdate);
+					temp.setReceiptType("正常收款");
+					int result=billCheckReceiptService.save(temp);
+					if(result<=0){
+						return "新增失败";
+					}	
+					//更新账单跟踪
+					updateBillCheckByReceipt(temp);
+		
+				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
+					temp.setLastModifier(userid);
+					temp.setLastModifyTime(nowdate);
+					//修改报价
+					int result=billCheckReceiptService.updateOne(temp);
+					if(result<=0){
+						return "更新失败";
+					}
+					//更新账单跟踪
+					updateBillCheckByReceipt(temp);	
+				}			
+			}			
+			return "数据库操作成功";			
+		} catch (Exception e) {
+			//写入日志
+			logger.error("数据库操作失败",e);
+			return "数据库操作失败";
+		}
+	}
+	
+	/**
+	 * 根据发票更新账单耿总
+	 * @param temp
+	 */
+	public void updateBillCheckByReceipt(BillCheckReceiptVo temp){
+		Map<String,Object> condition=new HashMap<String,Object>();
+		condition.put("id", temp.getBillCheckId());
+		BillCheckInfoVo checkVo=billCheckInfoService.queryBillCheck(condition);
+		//总回款金额
+		BigDecimal totalReceiptAmount=new BigDecimal(0);
+		//账单应收总额
+		BigDecimal checkReceiptAmount=new BigDecimal(0);
+
+		//总回款金额(所有的回款总额)
+		condition.clear();
+		condition.put("billCheckId", temp.getBillCheckId());
+		List<BillCheckReceiptVo> list=billCheckReceiptService.queryByParam(condition);
+		for(BillCheckReceiptVo vo:list){
+			if(vo.getReceiptAmount()!=null){
+				totalReceiptAmount=totalReceiptAmount.add(vo.getReceiptAmount());
+			}
+		}
+		
+		//确认金额+调整金额
+		if(checkVo.getConfirmAmount()!=null){
+			checkReceiptAmount=checkReceiptAmount.add(checkVo.getConfirmAmount());
+			//调整的金额
+			Map<String, Object> param=new HashMap<String, Object>();
+			param.put("billCheckId", checkVo.getId());
+			BillCheckAdjustInfoVo adjustVo = billCheckInfoService.queryOneAdjust(param);
+			if(adjustVo!=null && adjustVo.getAdjustAmount()!=null){
+				checkReceiptAmount=checkReceiptAmount.add(adjustVo.getAdjustAmount());
+			}	
+		}
+
+		if(totalReceiptAmount.compareTo(checkReceiptAmount)==0){	
+			//回款状态
+			checkVo.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());
+		}if(totalReceiptAmount.compareTo(BigDecimal.ZERO)==0){
+			//回款状态
+			checkVo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());
+		}else{
+			//部分回款
+			checkVo.setReceiptStatus(BillCheckReceiptStateEnum.PART_RECEIPT.getCode());
+		}
+		checkVo.setReceiptAmount(totalReceiptAmount);
+		//未收款金额
+		checkVo.setUnReceiptAmount(checkReceiptAmount.subtract(totalReceiptAmount));
+		
+		//开票未收款金额
+		//发票总金额
+		BigDecimal invoiceAmount=new BigDecimal(0);
+		if(checkVo.getInvoiceAmount()!=null){
+			invoiceAmount=checkVo.getInvoiceAmount();
+		}
+		checkVo.setInvoiceUnReceiptAmount(invoiceAmount.subtract(totalReceiptAmount));
+		
+		//收款日期，未收款金额
+		Map<String, Object> param=new HashMap<>();
+		condition.put("id", checkVo.getId());
+		BillCheckReceiptVo billCheckReceipt=billCheckReceiptService.queyReceipt(param);
+		if(billCheckReceipt!=null){
+			checkVo.setReceiptDate(billCheckReceipt.getReceiptDate());
+		}
+		
+		billCheckInfoService.update(checkVo);
+	}
+	
+	
+	
 	
 	/**
 	 * 删除回款信息
@@ -1623,5 +1871,7 @@ public class BillCheckInfoController{
 			cel31.setCellValue(entity.getRemark());
 		}
 	}
+	
+	
 	
 }

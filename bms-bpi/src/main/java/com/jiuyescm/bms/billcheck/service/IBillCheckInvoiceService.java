@@ -34,6 +34,8 @@ public interface IBillCheckInvoiceService {
 	List<BillCheckInvoiceVo> queryByParam(Map<String, Object> condition);
 	
 	int saveList(List<BillCheckInvoiceVo> list);
+	
+	int save(BillCheckInvoiceVo vo);
 
 	List<BillCheckInvoiceVo> queryAllBillInvoice(List<Integer> checkIdList);
 
@@ -41,4 +43,6 @@ public interface IBillCheckInvoiceService {
 			List<BillCheckInfoVo> checkVoList) throws Exception;
 	
 	public int update(BillCheckInvoiceVo vo);
+	
+	public int updateOne(BillCheckInvoiceVo vo);
 }
