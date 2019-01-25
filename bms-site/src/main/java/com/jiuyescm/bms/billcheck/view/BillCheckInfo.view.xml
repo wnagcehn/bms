@@ -2426,7 +2426,16 @@ if (data != null) {&#xD;
 	var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
 	entity.set(&quot;sellerName&quot;,data.userName);&#xD;
 	entity.set(&quot;sellerId&quot;,data.userId);&#xD;
-	entity.set(&quot;area&quot;,data.deptName);&#xD;
+	&#xD;
+	var param={&#xD;
+		&quot;sellerName&quot;:data.userName&#xD;
+	}&#xD;
+	&#xD;
+	view.get(&quot;#ajaxUserAreaAction&quot;).set(&quot;parameter&quot;,param).execute(function(result){&#xD;
+		if(result!=null){&#xD;
+			entity.set(&quot;area&quot;,result);&#xD;
+		}	&#xD;
+	});&#xD;
 }</ClientEvent>
           <Property name="caption">用户选择</Property>
           <Property name="center">true</Property>
@@ -3534,5 +3543,8 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
       <Property name="caption">导出</Property>
       <Property name="parameter"></Property>
     </DownloadAction>
+    <AjaxAction id="ajaxUserAreaAction">
+      <Property name="service">billCheckInfoController#getUserArea</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

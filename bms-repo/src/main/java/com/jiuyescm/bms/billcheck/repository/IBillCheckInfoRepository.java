@@ -68,6 +68,13 @@ public interface IBillCheckInfoRepository {
             int pageSize);
 	
 	public int update(BillCheckInfoEntity billCheckInfoEntity);
+	
+	/**
+	 * 更新单个账单
+	 * @param billCheckInfoVo
+	 * @return
+	 */
+	public int updateOne(BillCheckInfoEntity billCheckInfoEntity);
 
 	/**
 	 * 根据条件查询

@@ -198,7 +198,27 @@ public class BillCheckInfoController{
 		
 		return vo;
 	}
-		
+	
+	/**
+	 * 获取用户所在区域
+	 * @return
+	 */
+	@Expose
+	public String getUserArea(Map<String,Object> parameter){
+		//区域修改
+		//通过销售区域管理找销售员对应得区域
+		if(parameter!=null){
+			Map<String, Object> condition=new HashMap<>();
+			condition.put("userName", parameter.get("sellerName"));
+			BmsGroupUserVo user=bmsGroupUserService.queryOne(condition);
+			if(user!=null){
+				return user.getAreaCode();
+			}
+		}
+		return "";
+	}
+	
+	
 	/**
 	 * 分页查询账单日志
 	 * 
@@ -460,7 +480,7 @@ public class BillCheckInfoController{
 					//****** 修改模板 ******
 					temp.setLastModifier(userid);
 					temp.setLastModifyTime(nowdate);
-					int result=billCheckInfoService.update(temp);
+					int result=billCheckInfoService.updateOne(temp);
 					if(result<=0){
 						return "修改失败";
 					}
@@ -1022,7 +1042,7 @@ public class BillCheckInfoController{
 		
 		//收款日期，未收款金额
 		Map<String, Object> param=new HashMap<>();
-		condition.put("id", checkVo.getId());
+		param.put("id", checkVo.getId());
 		BillCheckReceiptVo billCheckReceipt=billCheckReceiptService.queyReceipt(param);
 		if(billCheckReceipt!=null){
 			checkVo.setReceiptDate(billCheckReceipt.getReceiptDate());

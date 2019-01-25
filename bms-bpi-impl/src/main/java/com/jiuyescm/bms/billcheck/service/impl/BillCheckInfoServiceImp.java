@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.dubbo.rpc.Result;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
@@ -271,13 +272,33 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 
 	@Override
 	public int update(BillCheckInfoVo billCheckInfoVo) {
-		BillCheckInfoEntity entity=new BillCheckInfoEntity();
+		int result = 0;
 		try {
+			BillCheckInfoEntity entity=new BillCheckInfoEntity();
+		
             PropertyUtils.copyProperties(entity, billCheckInfoVo);
-        } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
-        }
-		return billCheckInfoRepository.update(entity);
+       
+            result=billCheckInfoRepository.update(entity);
+		 } catch (Exception ex) {
+	        	logger.error("保存失败",ex);
+	     }
+		return result;
+	}
+	
+	@Override
+	public int updateOne(BillCheckInfoVo billCheckInfoVo) {
+		// TODO Auto-generated method stub
+		int result = 0;
+		try {
+			BillCheckInfoEntity entity=new BillCheckInfoEntity();
+		
+            PropertyUtils.copyProperties(entity, billCheckInfoVo);
+       
+            result=billCheckInfoRepository.updateOne(entity);
+		 } catch (Exception ex) {
+	        	logger.error("保存失败",ex);
+	     }
+		return result;
 	}
 
 	@Override
@@ -868,4 +889,6 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		
 		
 	}
+
+
 }

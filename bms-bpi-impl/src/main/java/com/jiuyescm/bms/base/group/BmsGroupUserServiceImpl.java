@@ -249,6 +249,23 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 		return null;
 	}
 	
+	@Override
+	public BmsGroupUserVo queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		try{
+			BmsGroupUserEntity groupUser=bmsGroupUserRepository.queryOne(condition);
+			BmsGroupUserVo vo=new BmsGroupUserVo();
+			if(groupUser!=null){
+				PropertyUtils.copyProperties(vo, groupUser);
+			}		
+			return vo;
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return null;
+	}
+	
+	
 //	@Override
 //	public BmsGroupUserVo queryGroupNameByUserId(String userId) {
 //		// TODO Auto-generated method stub

@@ -92,6 +92,13 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		// TODO Auto-generated method stub
 		return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.update", billCheckInfoEntity);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateOne(BillCheckInfoEntity billCheckInfoEntity) {
+		// TODO Auto-generated method stub
+		return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.updateOne", billCheckInfoEntity);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -266,5 +273,4 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		// TODO Auto-generated method stub
 		return delete("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.deleteByBillNo", billNo);
 	}
-	
 }
