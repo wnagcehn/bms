@@ -380,6 +380,7 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 		map.put("项目问题", "PROJECT_PROBLEM");
 		map.put("干线问题", "TS_PROBLEM");
 		map.put("已确认", "CONFIRMED");
+		map.put("异常", "EXCEPTION");
 		return map;
 	}
 	
