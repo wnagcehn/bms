@@ -64,6 +64,18 @@ public interface ConstantInterface {
 		// 已作废
 		public static final int INVALID_1 = 1;
 	}
+	
+	/**
+	 * 合同归属
+	 * 
+	 */
+	public interface ContractAttr {
+		// BMS
+		public static final int INVALID_1 = 1;
+
+		// 合同在线
+		public static final int INVALID_2 = 2;
+	}
 
 	/**
 	 * 单据类型常量定义
