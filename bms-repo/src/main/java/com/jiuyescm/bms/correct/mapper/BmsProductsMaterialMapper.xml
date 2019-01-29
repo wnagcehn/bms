@@ -70,13 +70,12 @@
      </select>
      
      <select id="queyNotMax" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.correct.BmsMarkingMaterialEntity">
-        select DISTINCT(a.waybill_no) from bms_marking_material a 
-		inner JOIN bms_marking_products b on a.waybill_no=b.waybill_no
-		INNER JOIN biz_outstock_packmaterial c on a.waybill_no=c.waybill_no
-		INNER JOIN pub_material_info d on c.consumer_material_code=d.material_code
-		where 1=1 and b.products_mark=#{productsMark} and a.material_type=#{materialType} and a.material_mark!=#{materialMark}
-		and c.del_flag='0' and d.material_type_name in ('泡沫箱','纸箱') and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
+        resultType="com.jiuyescm.bms.correct.BmsMarkingMaterialEntity">       
+        select DISTINCT(a.waybill_no) from bms_marking_products a 
+		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+		where 1=1 and a.products_mark=#{productsMark} and a.material_type=#{materialType} and a.pmxzx_mark!=#{pmxzxMark}
+		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.create_time>={startTime} and b.create_time<![CDATA[<#{endTime}]]>
      </select>
 	
 	 <select id="queryMark" parameterType="java.util.Map"
@@ -160,38 +159,34 @@
      <insert id="saveMaterial" parameterType="java.util.Map">
      	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id, type)
      														    
-     	 select m.products_mark,m.material_type,m.material_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
+     	 select m.products_mark,m.material_type,m.pmxzx_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
      	 from
-			(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num1 from bms_marking_material a 
-			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
-			INNER JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no
-			where 1=1 and c.del_flag='0' and c.customerid=#{customerId} and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
-			GROUP BY b.products_mark,a.material_type,a.material_mark) m
+			(select a.products_mark,a.material_type,a.pmxzx_mark,COUNT(a.pmxzx_mark) as num1 from bms_marking_products a
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
+			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY a.products_mark,a.material_type,a.pmxzx_mark) m
 		 LEFT JOIN 
-		 	(select b.products_mark,a.material_type,a.material_mark,COUNT(a.material_mark) as num2 from bms_marking_material a 
-			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no 
-			INNER JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no 
-			where 1=1 and c.del_flag='0' and c.customerid=#{customerId} and c.create_time>=#{startTime} and c.create_time<![CDATA[<#{endTime}]]>
-			GROUP BY b.products_mark,a.material_type) n
+		 	(select a.products_mark,a.material_type,a.pmxzx_mark,COUNT(a.pmxzx_mark) as num2 from bms_marking_products a 
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
+			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY a.products_mark,a.material_type) n
 		 on m.products_mark=n.products_mark and m.material_type=n.material_type
      </insert>
      
      <insert id="saveBwd" parameterType="java.util.Map">
 		insert into bms_products_material_account(products_mark, material_mark, percent, task_id, type)
-		select m.products_mark,m.consumer_material_code as material_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
-		from
-			(select b.products_mark,a.consumer_material_code,COUNT(a.consumer_material_code) as num1 from biz_outstock_packmaterial a 
-			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
-			INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
-			where 1=1 and a.del_flag='0' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]> and c.material_type_name='保温袋' and c.del_flag='0'
-			GROUP BY b.products_mark,a.consumer_material_code) m
-		LEFT JOIN
-			(select b.products_mark,COUNT(a.consumer_material_code) as num2 from biz_outstock_packmaterial a 
-			INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
-			INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
-			where 1=1 and a.del_flag='0' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]> and c.material_type_name='保温袋' and c.del_flag='0'
-			GROUP BY b.products_mark) n
-		on m.products_mark=n.products_mark
+		select m.products_mark,m.bwd_mark,ROUND(m.num1/n.num2,8) as percent, #{taskId},#{type} 
+     	 from
+			(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num1 from bms_marking_products a
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
+			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY a.products_mark,a.bwd_mark) m
+		 LEFT JOIN 
+		 	(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num2 from bms_marking_products a 
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
+			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			GROUP BY a.products_mark) n
+		 on m.products_mark=n.products_mark
      </insert>
      
      <delete id="deleteMarkMaterialByWaybillNo" parameterType="java.util.Map">
@@ -227,7 +222,7 @@
      <select id="queryBwdMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
      	select a.* from biz_outstock_packmaterial a 
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
-		where b.products_mark=#{productsMark} and a.consumer_material_code=#{materialMark} and a.del_flag='0' limit 1
+		where b.products_mark=#{productsMark} and b.bwd_mark=#{bwdMark} and a.del_flag='0' limit 1
      </select>
      
      <select id="queyNotMaxBwd" parameterType="java.util.Map"
@@ -235,7 +230,7 @@
         select * from biz_outstock_packmaterial a 
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
-		where 1=1 and b.products_mark=#{productsMark} and a.consumer_material_code!=#{materialMark}
+		where 1=1 and b.products_mark=#{productsMark} and b.bwd_mark=#{bwdMark}
 		and a.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]>
      </select>
 </mapper> 
