@@ -65,7 +65,7 @@ public class ReportOrderProductJob  extends IJobHandler{
 			Calendar cl = Calendar.getInstance();
 			cl.setTime(date);
 			cl.add(Calendar.MONTH, 1);
-			String endMonthFirstDay = DateUtil.getFirstDayOfMonth(cl.get(Calendar.YEAR),cl.get(Calendar.MONTH)+1,"yyyy-MM-dd");
+			String endMonthFirstDay = DateUtil.getFirstDayOfMonth(cl.get(Calendar.YEAR),cl.get(Calendar.MONTH)+1);
 			endMonthFirstDay+=" 00:00:00";
 			XxlJobLogger.log("开始月第一天：{0}",startMonthFirstDay);
 			XxlJobLogger.log("结束月第一天：{0}",endMonthFirstDay);
@@ -74,7 +74,7 @@ public class ReportOrderProductJob  extends IJobHandler{
 			//去除结束月第一天
 			dataMap.remove(endMonthFirstDay+".0");
 	
-			//因为数据量大，使用一天天更新
+			//因为数据量大，使用一天天更新（这种方式更新，如果product_mark为null，会出现重复值，但是生产上不会有null出现）
 			Map<String, Object> param = new HashMap<>();
 			for (Map.Entry<String, String> entry : dataMap.entrySet()) {
 				param.put("startTime", entry.getKey());
@@ -85,7 +85,7 @@ public class ReportOrderProductJob  extends IJobHandler{
 			//对etl_condition表更新（默认只对上个月进行统计）
 			Timestamp lastTimestamp = Timestamp.valueOf(endMonthFirstDay);
 			cl.setTime(new Date());
-			cl.add(Calendar.MONTH, -2);
+			cl.add(Calendar.MONTH, -1);
 			Timestamp lastTwoMonth = new Timestamp(cl.getTime().getTime());
 			if(lastTimestamp.before(lastTwoMonth)){
 				 elEntity.setLastTime(lastTimestamp);

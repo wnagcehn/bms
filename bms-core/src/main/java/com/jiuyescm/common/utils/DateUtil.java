@@ -428,20 +428,6 @@ public class DateUtil {
 	}
 	
 	/**
-	 * 获取指定月份第一天
-	 * @param year
-	 * @param month
-	 * @return
-	 */
-	public static String getFirstDayOfMonth(int year, int month,String format){
-		FastDateFormat fdf = FastDateFormat.getInstance(format);
-		Calendar cl = Calendar.getInstance();
-		cl.set(Calendar.YEAR, year);
-		cl.set(Calendar.MONTH, month-1);
-		return fdf.format(cl.getTime()); 
-	}
-	
-	/**
 	 * 获取指定月份最后一天
 	 * @param year
 	 * @param month

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jiuyescm.bms.correct.ElConditionMapper" >
-  
-    <sql id="BASE_COLUMNS_ALL">
-        id, pull_type, last_time, curr_time, takes_time
-    </sql>
 
 	<select id="query" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.correct.ElConditionEntity">
         select
-        <include refid="BASE_COLUMNS_ALL" />
+        id, pull_type pullType, last_time lastTime,  curr_time currTime, takes_time takesTime
         from etl_condition
         where 1 = 1
        	<if test=" pullType != null and pullType !='' ">
