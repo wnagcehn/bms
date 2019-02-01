@@ -58,6 +58,17 @@ public class BizWarehouseImportReportController {
 
 	@DataProvider
 	public void query(Page<BizWarehouseImportReportVo> page, Map<String, Object> parameter) {
+		//解决首次进页面importDate传递不准确问题
+		int month = (int) parameter.get("month");
+		int year = (int) parameter.get("year");
+		String importDate = "";
+		if(month<10){
+			importDate=year+"-0"+month;
+		}else{
+			importDate=year+"-"+month;
+		}
+		parameter.put("importDate", importDate);
+		
 		PageInfo<BizWarehouseImportReportVo> tmpPageInfo = bizWarehouseImportReportService
 				.query(parameter, page.getPageNo(), page.getPageSize());
 		if (tmpPageInfo != null) {
