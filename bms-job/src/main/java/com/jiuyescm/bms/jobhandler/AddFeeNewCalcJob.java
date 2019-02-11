@@ -97,7 +97,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		
 		//费用科目赋值
 		//SubjectId = entity.getFeesType();
-		
+		entity.setRemark("");
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
     	fee.setFeesNo(entity.getFeesNo());
     	if(entity.getPrice()!=null){
