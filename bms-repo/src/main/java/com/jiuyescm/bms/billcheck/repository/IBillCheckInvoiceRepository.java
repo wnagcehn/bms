@@ -25,6 +25,8 @@ public interface IBillCheckInvoiceRepository {
 	
 	int saveList(List<BillCheckInvoiceEntity> list);
 	
+	int save(BillCheckInvoiceEntity entity);
+	
 	List<BillCheckInvoiceEntity> queryByParam(Map<String, Object> condition);
 
 	List<BillCheckInvoiceEntity> queryAllBillInvoice(List<Integer> checkIdList);

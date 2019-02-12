@@ -19,7 +19,8 @@ public enum BillCheckStateEnum {
 	WH_PROBLEM("WH_PROBLEM", "仓库问题"),
 	PROJECT_PROBLEM("PROJECT_PROBLEM", "项目问题"),
 	TS_PROBLEM("TS_PROBLEM","干线问题"),
-	CONFIRMED("CONFIRMED", "已确认");
+	CONFIRMED("CONFIRMED", "已确认"),
+	EXCEPTION("EXCEPTION","异常");
 	private String code;
 	private String desc;
 	private BillCheckStateEnum(String code, String desc){
@@ -51,6 +52,7 @@ public enum BillCheckStateEnum {
 		maps.put(PROJECT_PROBLEM.getCode(), PROJECT_PROBLEM.getDesc());
 		maps.put(TS_PROBLEM.getCode(), TS_PROBLEM.getDesc());
 		maps.put(CONFIRMED.getCode(), CONFIRMED.getDesc());
+		maps.put(EXCEPTION.getCode(), EXCEPTION.getDesc());
 	}
 	public static Map<String,String> getMap(){
 		return maps;

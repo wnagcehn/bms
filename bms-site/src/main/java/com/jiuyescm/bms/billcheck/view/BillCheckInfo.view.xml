@@ -518,6 +518,7 @@
       </PropertyDef>
       <PropertyDef name="remark">
         <Property></Property>
+        <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="receiptAmount">
         <Property name="label">回款金额</Property>
@@ -1553,7 +1554,6 @@ arg.processDefault = true;</ClientEvent>
               <Property name="property">invoiceUnReceiptAmount</Property>
               <Property name="width">100</Property>
               <Property name="summaryType">sum</Property>
-              <Property name="visible">false</Property>
             </DataColumn>
             <DataColumn name="confirmUnInvoiceAmount">
               <ClientEvent name="onRenderFooterCell">var datas=view.get(&quot;#dsBillCheckInfo.data&quot;);             &#xD;
@@ -1751,14 +1751,31 @@ if(currentData){&#xD;
                     <Property name="caption">删除</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
                   </ToolBarButton>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
+&#xD;
+var current = view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+datas.insert();&#xD;
+datas.current.set(&quot;billCheckId&quot;,current.get(&quot;id&quot;));&#xD;
+view.get(&quot;#dialogInvoiceEdit&quot;).show();</ClientEvent>
+                    <Property name="caption">新增</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+                  </ToolBarButton>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var data=view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogInvoiceEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+                    <Property name="caption">修改</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                  </ToolBarButton>
                 </ToolBar>
                 <DataGrid id="invoiceGrid">
                   <Property name="dataSet">dsBillCheckInvoice</Property>
                   <Property name="readOnly">true</Property>
                   <RowNumColumn/>
-                  <DataColumn name="sortNo">
-                    <Property name="property">sortNo</Property>
-                  </DataColumn>
                   <DataColumn name="invoiceNo">
                     <Property name="property">invoiceNo</Property>
                   </DataColumn>
@@ -1771,9 +1788,6 @@ if(currentData){&#xD;
                   <DataColumn name="waybillNo">
                     <Property name="property">waybillNo</Property>
                   </DataColumn>
-                  <DataColumn name="invoiceDays">
-                    <Property name="property">invoiceDays</Property>
-                  </DataColumn>
                   <DataColumn name="remark">
                     <Property name="property">remark</Property>
                   </DataColumn>
@@ -1783,6 +1797,84 @@ if(currentData){&#xD;
                   <UpdateItem>
                     <Property name="dataSet">dsBillCheckInvoice</Property>
                     <Property name="dataPath">[#current]</Property>
+                  </UpdateItem>
+                </UpdateAction>
+                <Dialog id="dialogInvoiceEdit">
+                  <ClientEvent name="onClose">view.id(&quot;dsBillCheckInvoice&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+                  <Property name="height">250</Property>
+                  <Property name="width">350</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInvoice.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;invoiceAmount&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;发票金额必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;invoiceDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;发票日期必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateInvoiceAction&quot;).execute(function(result){&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+	&#xD;
+	var subData=view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
+	subData.clear();&#xD;
+	view.id(&quot;dialogInvoiceEdit&quot;).hide();&#xD;
+});</ClientEvent>
+                      <Property name="caption">保存</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">	dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillCheckInvoice&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogInvoiceEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                      <Property name="caption">取消</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <Property name="dataSet">dsBillCheckInvoice</Property>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">invoiceNo</Property>
+                        <Property name="property">invoiceNo</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">invoiceAmount</Property>
+                        <Property name="property">invoiceAmount</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">invoiceDate</Property>
+                        <Property name="property">invoiceDate</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">waybillNo</Property>
+                        <Property name="property">waybillNo</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">remark</Property>
+                        <Property name="property">remark</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <UpdateAction id="updateInvoiceAction">
+                  <Property name="dataResolver">billCheckInfoController#saveInvoice</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckInvoice</Property>
                   </UpdateItem>
                 </UpdateAction>
               </Container>
@@ -1845,14 +1937,32 @@ if(currentData){&#xD;
                     <Property name="caption">删除</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
                   </ToolBarButton>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
+var nowdays = new Date();&#xD;
+var current = view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+datas.insert();&#xD;
+datas.current.set(&quot;billCheckId&quot;,current.get(&quot;id&quot;));&#xD;
+datas.current.set(&quot;receiptDate&quot;,nowdays);&#xD;
+view.get(&quot;#dialogReceiptEdit&quot;).show();</ClientEvent>
+                    <Property name="caption">新增</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+                  </ToolBarButton>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var data=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogReceiptEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+                    <Property name="caption">修改</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                  </ToolBarButton>
                 </ToolBar>
                 <DataGrid id="receiptGrid">
                   <Property name="dataSet">dsBillCheckReceipt</Property>
                   <Property name="readOnly">true</Property>
                   <RowNumColumn/>
-                  <DataColumn name="sortNo">
-                    <Property name="property">sortNo</Property>
-                  </DataColumn>
                   <DataColumn name="receiptDate">
                     <Property name="property">receiptDate</Property>
                   </DataColumn>
@@ -1862,12 +1972,84 @@ if(currentData){&#xD;
                   <DataColumn name="receiptAmount">
                     <Property name="property">receiptAmount</Property>
                   </DataColumn>
+                  <DataColumn name="remark">
+                    <Property name="property">remark</Property>
+                  </DataColumn>
                 </DataGrid>
                 <UpdateAction id="deleteReceiptAction">
                   <Property name="dataResolver">billCheckInfoController#deleteReceipt</Property>
                   <UpdateItem>
                     <Property name="dataSet">dsBillCheckReceipt</Property>
                     <Property name="dataPath">[#current]</Property>
+                  </UpdateItem>
+                </UpdateAction>
+                <Dialog id="dialogReceiptEdit">
+                  <ClientEvent name="onClose">view.id(&quot;dsBillCheckReceipt&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+                  <Property name="width">300</Property>
+                  <Property name="height">240</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckReceipt.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;receiptDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;回款日期必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;receiptAmount&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;回款金额必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateReceiptAction&quot;).execute(function(result){&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+	var subData=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
+	subData.clear();&#xD;
+	view.id(&quot;dialogReceiptEdit&quot;).hide();&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+                      <Property name="caption">保存</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillCheckReceipt&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogReceiptEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                      <Property name="caption">取消</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <Property name="dataSet">dsBillCheckReceipt</Property>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">receiptDate</Property>
+                        <Property name="property">receiptDate</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">receiptAmount</Property>
+                        <Property name="property">receiptAmount</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">remark</Property>
+                        <Property name="property">remark</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <UpdateAction id="updateReceiptAction">
+                  <Property name="dataResolver">billCheckInfoController#saveReceipt</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckReceipt</Property>
                   </UpdateItem>
                 </UpdateAction>
               </Container>
@@ -2244,7 +2426,16 @@ if (data != null) {&#xD;
 	var entity=view.get(&quot;#dsBillCheckInfoModify.data&quot;).current;&#xD;
 	entity.set(&quot;sellerName&quot;,data.userName);&#xD;
 	entity.set(&quot;sellerId&quot;,data.userId);&#xD;
-	entity.set(&quot;area&quot;,data.deptName);&#xD;
+	&#xD;
+	var param={&#xD;
+		&quot;sellerName&quot;:data.userName&#xD;
+	}&#xD;
+	&#xD;
+	view.get(&quot;#ajaxUserAreaAction&quot;).set(&quot;parameter&quot;,param).execute(function(result){&#xD;
+		if(result!=null){&#xD;
+			entity.set(&quot;area&quot;,result);&#xD;
+		}	&#xD;
+	});&#xD;
 }</ClientEvent>
           <Property name="caption">用户选择</Property>
           <Property name="center">true</Property>
@@ -3352,5 +3543,8 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
       <Property name="caption">导出</Property>
       <Property name="parameter"></Property>
     </DownloadAction>
+    <AjaxAction id="ajaxUserAreaAction">
+      <Property name="service">billCheckInfoController#getUserArea</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

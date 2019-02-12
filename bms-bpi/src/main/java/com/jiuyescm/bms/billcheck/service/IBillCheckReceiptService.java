@@ -32,10 +32,16 @@ public interface IBillCheckReceiptService {
 
 	BillCheckReceiptVo queyReceipt(Map<String, Object> condition);
 	
+	List<BillCheckReceiptVo> queryByParam(Map<String, Object> condition);
+	
 	int saveList(List<BillCheckReceiptVo> list);
+	
+	int save(BillCheckReceiptVo vo);
 
 	void saveImportList(List<BillCheckReceiptVo> list,
 			List<BillCheckInfoVo> billCheckVoList) throws Exception;
 	
 	public int update(BillCheckReceiptVo vo);
+	
+	public int updateOne(BillCheckReceiptVo vo);
 }

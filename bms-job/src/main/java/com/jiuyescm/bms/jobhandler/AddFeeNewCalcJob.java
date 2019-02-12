@@ -97,7 +97,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		
 		//费用科目赋值
 		//SubjectId = entity.getFeesType();
-		
+		entity.setRemark("");
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
     	fee.setFeesNo(entity.getFeesNo());
     	if(entity.getPrice()!=null){
@@ -171,7 +171,7 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 			calcuForBms(entity, feeEntity);
 		}
 		else{
-			XxlJobLogger.log("-->"+entity.getId()+"规则编号【{0}】 ", modelEntity.getRuleCode().trim());
+			XxlJobLogger.log("-->"+entity.getId()+"规则编号【{0}】 ", modelEntity.getRuleCode());
 			calcuForContract(entity,feeEntity,modelEntity);
 		}
 		
@@ -251,7 +251,16 @@ public class AddFeeNewCalcJob extends CommonJobHandler<BizAddFeeEntity,FeesRecei
 		XxlJobLogger.log("-->"+entity.getId()+"合同在线计算");
 		Map<String, Object> con = new HashMap<>();
 		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		//if(StringUtil.isEmpty(contractQuoteInfoVo.getRuleCode()))
+		if(StringUtils.isEmpty(contractQuoteInfoVo.getRuleCode())){
+			XxlJobLogger.log("-->"+entity.getId()+"合同在线未绑定规则");
+			feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			entity.setIsCalculated(CalculateState.Sys_Error.getCode());
+			entity.setRemark(entity.getRemark()+"合同在线未绑定规则;");
+			return;
+		}
 		con.put("quotationNo", contractQuoteInfoVo.getRuleCode());
+		
 		BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 		if (null == ruleEntity) {
 			entity.setRemark(entity.getRemark()+"合同在线规则未绑定;");

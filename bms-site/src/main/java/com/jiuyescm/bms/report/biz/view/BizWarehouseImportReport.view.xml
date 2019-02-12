@@ -23,6 +23,9 @@
         </Property>
         <Property name="label">仓库</Property>
       </PropertyDef>
+      <PropertyDef name="importDate">
+        <Property name="label">时间</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtWarehouseImport">
       <Property name="creationType">com.jiuyescm.bms.report.vo.BizWarehouseImportReportVo</Property>
@@ -137,10 +140,8 @@ if(isNullOrEmpty(month)){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-if(!isNullOrEmpty(month)){&#xD;
-	if(month.length==1){&#xD;
-		month='0'+month;&#xD;
-	}&#xD;
+if(month&lt;10){&#xD;
+	month='0'+month;&#xD;
 }&#xD;
 condition.set(&quot;importDate&quot;, year + &quot;-&quot; +month);&#xD;
 condition.set(&quot;warehouseCode&quot;, condition.get(&quot;warehouseCode&quot;));&#xD;
@@ -197,6 +198,13 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,condition).execu
         <Property name="name">warehouseCode</Property>
         <Property name="property">warehouseCode</Property>
         <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">importDate</Property>
+        <Property name="property">importDate</Property>
+        <Property name="editable">false</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>

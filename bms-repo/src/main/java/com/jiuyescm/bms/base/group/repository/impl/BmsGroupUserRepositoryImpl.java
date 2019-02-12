@@ -141,4 +141,10 @@ public class BmsGroupUserRepositoryImpl extends MyBatisDao<BmsGroupUserEntity> i
 		return this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryUserByBizType", param);
 	}
 
+	@Override
+	public BmsGroupUserEntity queryOne(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (BmsGroupUserEntity) this.selectOne("com.jiuyescm.bms.base.group.mapper.BmsGroupUserMapper.queryOne", condition);
+	}
+
 }

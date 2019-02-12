@@ -6,7 +6,6 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.BmsGroupUserEntity;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
-import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 
 public interface IBmsGroupUserService {
 	
@@ -100,4 +99,11 @@ public interface IBmsGroupUserService {
 	 * @throws Exception
 	 */
 	PageInfo<BmsGroupUserVo> querySaleUser(Map<String, Object> condition, int pageNo, int pageSize) throws Exception;
+	
+	/**
+	 * 查询单个销售员
+	 * @param condition
+	 * @return
+	 */
+	BmsGroupUserVo queryOne(Map<String, Object> condition);
 }

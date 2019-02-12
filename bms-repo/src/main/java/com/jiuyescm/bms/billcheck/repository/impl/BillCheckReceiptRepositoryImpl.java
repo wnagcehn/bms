@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.BillCheckReceiptEntity;
-import com.jiuyescm.bms.billcheck.entity.BillInvoiceEntity;
 import com.jiuyescm.bms.billcheck.entity.BillReceiptEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -28,6 +27,15 @@ public class BillCheckReceiptRepositoryImpl extends MyBatisDao<BillCheckReceiptE
 	}
 
 	@Override
+	public List<BillCheckReceiptEntity> queryByParam(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BillCheckReceiptEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckReceiptMapper.query",condition);
+		return list;
+	}
+	
+	
+	@Override
 	public BillCheckReceiptEntity queyReceipt(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		BillCheckReceiptEntity entity=(BillCheckReceiptEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckReceiptMapper.queyReceipt", condition);
@@ -38,6 +46,12 @@ public class BillCheckReceiptRepositoryImpl extends MyBatisDao<BillCheckReceiptE
 	public int saveList(List<BillCheckReceiptEntity> list) {
 		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckReceiptMapper.save", list);
+	}
+	
+	@Override
+	public int save(BillCheckReceiptEntity entity) {
+		// TODO Auto-generated method stub
+		return insert("com.jiuyescm.bms.billcheck.mapper.BillCheckReceiptMapper.save", entity);
 	}
 
 	@Override
@@ -58,5 +72,6 @@ public class BillCheckReceiptRepositoryImpl extends MyBatisDao<BillCheckReceiptE
 		PageInfo<BillReceiptEntity> page=new PageInfo<>(list);
 		return page;
 	}
+
 
 }

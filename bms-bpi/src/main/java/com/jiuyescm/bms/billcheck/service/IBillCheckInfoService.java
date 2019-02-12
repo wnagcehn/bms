@@ -79,6 +79,13 @@ public interface IBillCheckInfoService {
 	 * @return
 	 */
 	public int update(BillCheckInfoVo billCheckInfoVo);
+	
+	/**
+	 * 更新单个账单
+	 * @param billCheckInfoVo
+	 * @return
+	 */
+	public int updateOne(BillCheckInfoVo billCheckInfoVo);
 
 	/**
 	 * 根据条件查询

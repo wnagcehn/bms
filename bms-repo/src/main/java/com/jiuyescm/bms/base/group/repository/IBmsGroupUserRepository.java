@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.group.BmsGroupEntity;
 import com.jiuyescm.bms.base.group.BmsGroupUserEntity;
 
 public interface IBmsGroupUserRepository {
@@ -77,4 +76,11 @@ public interface IBmsGroupUserRepository {
 	 * @return
 	 */
 	PageInfo<BmsGroupUserEntity> querySaleUser(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 查询单个销售员
+	 * @param condition
+	 * @return
+	 */
+	BmsGroupUserEntity queryOne(Map<String, Object> condition);
 }

@@ -86,6 +86,20 @@ public class BillCheckInvoiceServiceImp implements IBillCheckInvoiceService{
 		return billCheckInvoiceRepository.saveList(enList);
 	}
 
+	
+	@Override
+	public int save(BillCheckInvoiceVo vo) {
+		// TODO Auto-generated method stub
+		BillCheckInvoiceEntity entity = new BillCheckInvoiceEntity();
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        } 		
+		return billCheckInvoiceRepository.save(entity);
+	}
+
+	
 	@Override
 	public List<BillCheckInvoiceVo> queryByParam(Map<String, Object> condition) {
 		List<BillCheckInvoiceEntity> list=billCheckInvoiceRepository.queryByParam(condition);
@@ -236,6 +250,18 @@ public class BillCheckInvoiceServiceImp implements IBillCheckInvoiceService{
 	}
 
 	@Override
+	public int updateOne(BillCheckInvoiceVo vo) {
+		// TODO Auto-generated method stub
+		BillCheckInvoiceEntity entity=new BillCheckInvoiceEntity();
+		try{
+            PropertyUtils.copyProperties(entity, vo);
+		}catch(Exception e){
+			logger.error("update ",e);
+		}
+		return billCheckInvoiceRepository.update(entity);
+	}
+
+	@Override
 	public PageInfo<BillCheckInvoiceVo> queryReport(
 			Map<String, Object> condition, int pageNo, int pageSize) {
 		try {
@@ -261,7 +287,5 @@ public class BillCheckInvoiceServiceImp implements IBillCheckInvoiceService{
 			logger.error("转换失败:{0}",ex);
         }
 		return null;
-	}
-
-	
+	}	
 }

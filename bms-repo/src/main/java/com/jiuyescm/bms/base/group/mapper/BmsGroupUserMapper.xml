@@ -176,4 +176,12 @@
 		</if>
 	</select>
 	
+	<select id="queryOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.group.BmsGroupUserEntity">
+		select a.id,a.group_id,a.user_id,a.user_name,a.area_code,
+		a.creator,a.create_time,a.last_modifier,a.last_modify_time,a.del_flag
+		from  bms_group_user a
+  		INNER JOIN bms_group b on a.group_id=b.id
+		where a.del_flag='0' and a.user_name=#{userName} and b.biz_type='sale_area' limit 1
+	</select>
+	
 </mapper>

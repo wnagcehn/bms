@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupUserRepository;
 import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
@@ -88,7 +91,50 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 		
 		return billCheckReceiptRepository.saveList(enList);
 	}
+	
+	@Override
+	public List<BillCheckReceiptVo> queryByParam(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BillCheckReceiptEntity> list=billCheckReceiptRepository.queryByParam(condition);
+		List<BillCheckReceiptVo> voList = new ArrayList<BillCheckReceiptVo>();
+    	for(BillCheckReceiptEntity entity : list) {
+    		BillCheckReceiptVo vo = new BillCheckReceiptVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+                logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
+	
 
+	@Override
+	public int save(BillCheckReceiptVo vo) {
+		// TODO Auto-generated method stub
+		BillCheckReceiptEntity entity=new BillCheckReceiptEntity();	
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return billCheckReceiptRepository.save(entity);
+	}
+	
+	
+	@Override
+	public int updateOne(BillCheckReceiptVo vo) {
+		// TODO Auto-generated method stub
+		BillCheckReceiptEntity entity=new BillCheckReceiptEntity();	
+		try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+        	logger.error("转换失败:{0}",ex);
+        }
+		return billCheckReceiptRepository.update(entity);
+	}
+	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
 	public void saveImportList(List<BillCheckReceiptVo> list,
@@ -124,6 +170,7 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 			throw e;
 		}
 	}
+
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
 	@Override
@@ -226,5 +273,11 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
         }
 		return null;
 	}
+
+
+
+
+
+
 
 }

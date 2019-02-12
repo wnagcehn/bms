@@ -19,6 +19,7 @@ import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillCheckLogService;
@@ -198,14 +199,24 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 					if(userList.size()>0){
 						UserVO sellerVo=userList.get(0);
 						vo.setSellerId(sellerVo.getUsername());
-						vo.setArea(sellerVo.getDeptName());
+						//vo.setArea(sellerVo.getDeptName());
 					}	
 				}else{
 					mes+="销售员不存在;";
 				}
+				
+				//通过销售区域管理找销售员对应得区域
+				Map<String,Object> condition=new HashMap<>();
+				condition.put("userName", vo.getSellerName());
+				BmsGroupUserVo user=bmsGroupUserService.queryOne(condition);
+				if(user!=null){
+					vo.setArea(user.getAreaCode());
+				}
+				
 			}else{
 				mes+="销售员不能为空;";
 			}
+			
 			//项目管理员
 			if(StringUtils.isNotBlank(vo.getProjectManagerName())){
 				if(userMap.containsKey(vo.getProjectManagerName())){
@@ -369,6 +380,7 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 		map.put("项目问题", "PROJECT_PROBLEM");
 		map.put("干线问题", "TS_PROBLEM");
 		map.put("已确认", "CONFIRMED");
+		map.put("异常", "EXCEPTION");
 		return map;
 	}
 	

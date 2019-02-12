@@ -321,9 +321,9 @@ public class BillCheckInvoiceImportController extends HttpNewImport<BillCheckInv
 				checkVo.setInvoiceAmount(total);
 				checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.PART_INVOICE.getCode());//部分收票
 			}
-			if("0".equals(checkVo.getIsneedInvoice())){
+			/*if("0".equals(checkVo.getIsneedInvoice())){
 				checkVo.setInvoiceStatus(BillCheckInvoiceStateEnum.UNNEED_INVOICE.getCode());//不需要发票
-			}
+			}*/
 			
 			//开票未回款金额
 			BigDecimal money=new BigDecimal(0);

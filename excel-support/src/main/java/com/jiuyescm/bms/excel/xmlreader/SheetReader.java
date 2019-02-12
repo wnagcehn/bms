@@ -19,7 +19,6 @@ import com.google.common.collect.Maps;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
 import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
-import com.jiuyescm.bms.excel.data.Sheet;
 
 /**
  * 事件模式 读取xl/worksheets/sheet.xml 文档
@@ -97,6 +96,7 @@ public class SheetReader extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String name,Attributes attrs) throws SAXException {
 		// <row>:开始处理某一行 
+		//System.out.println("->startElement  localName:"+localName+" |name:"+name);
 		if ("row".equals(name)) {
 			//获取当前行号
 			curRow = Integer.valueOf(attrs.getValue("r"));
@@ -115,11 +115,13 @@ public class SheetReader extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		colValue += new String(ch, start, length);
+		//System.out.println("->characters  "+colValue);
 	}
 	
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
-		if("v".equals(name)){
+		//System.out.println("->endElement  localName:"+localName+" |name:"+name);
+		if("v".equals(name) || "t".equals(name)){
 			if(colValue == null || colValue.length() == 0){
 				return;
 			}
