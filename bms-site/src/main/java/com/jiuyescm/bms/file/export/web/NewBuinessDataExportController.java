@@ -1603,6 +1603,9 @@ public class NewBuinessDataExportController extends BaseController {
 				double rowcolCost = 0.0;
 				double cwCost = 0.0;
 				
+				//处置费金额（包含入库、出库）
+				double dispalCost=0.0;
+				
 				int pIndex = 0;
 				
 				// 库存板数
@@ -1713,7 +1716,9 @@ public class NewBuinessDataExportController extends BaseController {
 							if(!entity.getCreateTime().before(startTime)){
 								//处置费小计
 								Cell cell72 = row.createCell(19-move2);
-								cell72.setCellValue(palletCost+incost);
+								dispalCost=dispalCost+palletCost;
+								cell72.setCellValue(dispalCost);
+								
 								//累加行
 								incost = rowcolCost+palletCost;
 								//累加列
