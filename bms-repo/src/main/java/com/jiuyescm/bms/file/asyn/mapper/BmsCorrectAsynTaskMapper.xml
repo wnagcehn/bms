@@ -48,10 +48,10 @@
 				and creator = #{creator}
 		</if>
 		<if test="startDate != null" >
-			    and <![CDATA[startDate <= #{startDate}]]>
+			    and <![CDATA[startDate >= #{startDate}]]>
 		</if>
 		<if test="endDate != null" >
-			    and endDate >= #{endDate}
+			    and <![CDATA[endDate<=#{endDate} ]]>
 		</if>
 		<if test="(taskStartDate != null and taskStartDate !='')" >
 				and startDate = #{taskStartDate}
