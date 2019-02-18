@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.jiuyescm.bms.base.customer.entity.PubCustomerEntity" >
        		<id column="id" property="id" jdbcType="INTEGER" />
 		   	<result column="mk_id" property="mkId" jdbcType="VARCHAR" />
-		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerid" jdbcType="VARCHAR" />
 		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
 		   	<result column="short_name" property="shortName" jdbcType="VARCHAR" />
 		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
@@ -49,8 +49,8 @@ mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifi
         	<if test=" mkId != null and mkId !='' ">
 				and mk_id = #{mkId}
 			</if>
-        	<if test=" customerId != null and customerId !='' ">
-				and customer_id = #{customerId}
+        	<if test=" customerid != null and customerid !='' ">
+				and customer_id = #{customerid}
 			</if>
         	<if test=" customerName != null and customerName !='' ">
 				and customer_name = #{customerName}
@@ -105,8 +105,8 @@ a.id, a.mk_id, a.customer_id, a.customer_name, a.short_name, a.creator, a.create
         	<if test=" mkId != null and mkId !='' ">
 				and a.mk_id = #{mkId}
 			</if>
-        	<if test=" customerId != null and customerId !='' ">
-				and a.customer_id = #{customerId}
+        	<if test=" customerid != null and customerid !='' ">
+				and a.customer_id = #{customerid}
 			</if>
         	<if test=" customerName != null and customerName !='' ">
 				and a.customer_name = #{customerName}

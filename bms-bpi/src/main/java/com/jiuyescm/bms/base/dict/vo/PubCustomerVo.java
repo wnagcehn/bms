@@ -15,7 +15,7 @@ public class PubCustomerVo implements Serializable {
 	// MkId
 	private String mkId;
 	// CustomerId
-	private String customerId;
+	private String customerid;
 	// CustomerName
 	private String customerName;
 	// ShortName
@@ -81,12 +81,12 @@ public class PubCustomerVo implements Serializable {
 		this.mkId = mkId;
 	}
 	
-	public String getCustomerId() {
-		return this.customerId;
+	public String getCustomerid() {
+		return this.customerid;
 	}
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
+	public void setCustomerid(String customerid) {
+		this.customerid = customerid;
 	}
 	
 	public String getCustomerName() {
