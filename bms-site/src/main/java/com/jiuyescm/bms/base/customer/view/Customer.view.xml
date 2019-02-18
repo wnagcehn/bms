@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtCondition">
-      <PropertyDef name="customerid">
+      <PropertyDef name="customerId">
         <Property></Property>
         <Property name="label">商家ID</Property>
       </PropertyDef>
@@ -36,7 +36,7 @@
       <PropertyDef name="mkId">
         <Property></Property>
       </PropertyDef>
-      <PropertyDef name="customerid">
+      <PropertyDef name="customerId">
         <Property></Property>
         <Property name="label">商家ID</Property>
       </PropertyDef>
@@ -90,11 +90,9 @@
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
-        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
-        <Property name="dataType">DateTime</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -137,8 +135,8 @@ with (view.get(&quot;#dsPubCustomerEntity&quot;)){&#xD;
         <Property name="labelWidth">60</Property>
         <Property name="editorWidth">120</Property>
         <AutoFormElement>
-          <Property name="name">customerid</Property>
-          <Property name="property">customerid</Property>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -168,8 +166,8 @@ with (view.get(&quot;#dsPubCustomerEntity&quot;)){&#xD;
         <Property name="stretchColumnsMode">off</Property>
         <Property name="readOnly">true</Property>
         <DataColumn>
-          <Property name="property">customerid</Property>
-          <Property name="name">customerid</Property>
+          <Property name="property">customerId</Property>
+          <Property name="name">customerId</Property>
           <Property name="width">90</Property>
         </DataColumn>
         <DataColumn>

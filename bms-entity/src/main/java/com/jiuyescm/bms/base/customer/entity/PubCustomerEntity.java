@@ -17,7 +17,7 @@ public class PubCustomerEntity implements IEntity {
 	// MkId
 	private String mkId;
 	// CustomerId
-	private String customerid;
+	private String customerId;
 	// CustomerName
 	private String customerName;
 	// ShortName
@@ -82,12 +82,12 @@ public class PubCustomerEntity implements IEntity {
 		this.mkId = mkId;
 	}
 	
-	public String getCustomerid() {
-		return this.customerid;
+	public String getCustomerId() {
+		return this.customerId;
 	}
 
-	public void setCustomerid(String customerid) {
-		this.customerid = customerid;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 	
 	public String getCustomerName() {
