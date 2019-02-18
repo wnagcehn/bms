@@ -24,6 +24,9 @@
 				<value>classpath:/job.properties</value>
 				<value>classpath:/jdbc.properties</value>
 				<value>classpath:/dubbo.properties</value>
+				<value>classpath:/rocketmq.properties</value>
+			    <value>classpath:/rocketmq.operation.flag</value>
+			    <value>classpath:/rocketmq.email.flag</value>
 			</list>
 		</property>
 	</bean>
