@@ -64,10 +64,9 @@ public class CustomerController {
 	public void query(Page<PubCustomerVo> page,Map<String,Object> parameter) {
 		if(null==parameter)parameter=new HashMap<String,Object>();
 		PageInfo<PubCustomerVo> pageInfo = customerDictService.queryPubCustomer(parameter, page.getPageNo(), page.getPageSize());
-		if (null==pageInfo) return;
-		page.setEntities(pageInfo.getList());
-		page.setEntityCount((int) pageInfo.getTotal());
-
+		if(null!=page){
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int)pageInfo.getTotal());
+		}
 	}
-	
 }
