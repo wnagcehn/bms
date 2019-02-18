@@ -123,10 +123,10 @@ public class CorrectJob  extends IJobHandler{
 						String task = "";
 						if("weight_correct".equals(entity.getBizType())){
 							//发送重量调整MQ
-							task += BMS_CORRECT_WEIGHT_TASK;
+							task = BMS_CORRECT_WEIGHT_TASK;
 						}else if("material_correct".equals(entity.getBizType())) {
 							//发送耗材调整MQ
-							task += BMS_CORRECT_MATERIAL_TASK;
+							task = BMS_CORRECT_MATERIAL_TASK;
 						}
 						jmsQueueTemplate.send(task, new MessageCreator() {
 							@Override
