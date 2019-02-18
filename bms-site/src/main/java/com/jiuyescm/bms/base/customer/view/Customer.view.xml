@@ -90,9 +90,11 @@
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
     </DataType>
   </Model>
