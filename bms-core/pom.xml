@@ -20,6 +20,12 @@
   			<groupId>com.jiuyescm.scm</groupId>
   			<artifactId>scm-common</artifactId>
   			<version>1.0.0-SNAPSHOT</version>
+  			<exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+			</exclusions>
   		</dependency>
   		<dependency>
 			<groupId>org.apache.poi</groupId>
