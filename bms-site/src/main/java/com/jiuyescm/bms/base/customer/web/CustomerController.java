@@ -63,6 +63,8 @@ public class CustomerController {
 	@DataProvider
 	public void query(Page<PubCustomerVo> page,Map<String,Object> parameter) {
 		if(null==parameter)parameter=new HashMap<String,Object>();
+		String delFlag = parameter.get("delFlag").toString();
+		if("999".equals(delFlag)) parameter.put("delFlag", null);
 		PageInfo<PubCustomerVo> pageInfo = customerDictService.queryPubCustomer(parameter, page.getPageNo(), page.getPageSize());
 		if(null!=page){
 			page.setEntities(pageInfo.getList());
