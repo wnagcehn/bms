@@ -97,7 +97,7 @@ a.id, a.mk_id, a.customer_id, a.customer_name, a.short_name, a.creator, a.create
  from pub_customer a LEFT JOIN pub_customer_base b ON a.mk_id = b.mk_id
         where 1 = 1
             <if test=" mkInvoiceName != null and mkInvoiceName !='' ">
-				and b.mk_invoice_name = #{mkInvoiceName}
+				and b.mk_invoice_name LIKE CONCAT('%',#{mkInvoiceName},'%')
 			</if>
         	<if test=" id != null and id !='' ">
 				and a.id = #{id}
@@ -109,10 +109,10 @@ a.id, a.mk_id, a.customer_id, a.customer_name, a.short_name, a.creator, a.create
 				and a.customer_id = #{customerId}
 			</if>
         	<if test=" customerName != null and customerName !='' ">
-				and a.customer_name = #{customerName}
+				and a.customer_name LIKE CONCAT('%',#{customerName},'%')
 			</if>
         	<if test=" shortName != null and shortName !='' ">
-				and a.short_name = #{shortName}
+				and a.short_name LIKE CONCAT('%',#{shortName},'%')
 			</if>
         	<if test=" creator != null and creator !='' ">
 				and a.creator = #{creator}
