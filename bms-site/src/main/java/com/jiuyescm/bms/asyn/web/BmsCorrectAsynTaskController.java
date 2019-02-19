@@ -82,8 +82,10 @@ public class BmsCorrectAsynTaskController {
 			Date startDate = sdf.parse(startDateStr);
 			Date endDate = DateUtils.addMonths(startDate, 1);
 			String endDateStr = sdf.format(endDate);
-			param.put("startDate", startDateStr);
-			param.put("endDate", endDateStr);
+//			param.put("startDate", startDateStr);
+//			param.put("endDate", endDateStr);
+			param.put("startDate", startDate);
+			param.put("endDate", endDate);
 		}
 		PageInfo<BmsCorrectAsynTaskVo> pageInfo = bmsCorrectAsynTaskService.query(param, page.getPageNo(),
 				page.getPageSize());

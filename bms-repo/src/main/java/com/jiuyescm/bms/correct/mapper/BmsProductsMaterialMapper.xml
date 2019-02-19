@@ -112,22 +112,40 @@
      </select>
      
      <insert id="markMaterial" parameterType="java.util.Map">
-     	INSERT INTO bms_marking_material(waybill_no, material_mark, material_type,task_id)
-        SELECT waybill_no, md, tp,#{batchNum}
-        FROM(
-            SELECT waybill_no, tp,
-                MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as md,
-				GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)
-            FROM (
-                SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time,
-                    SUBSTR(consumer_material_code, 1, LOCATE('-', consumer_material_code) - 1) as tp
-                FROM biz_outstock_packmaterial_temp where batchNum=#{batchNum}
-                    AND (consumer_material_code LIKE '%PMX%' or consumer_material_code LIKE '%ZX%')
-            ) a
-            GROUP BY waybill_no, tp
-        ) b
-        GROUP BY waybill_no
-        HAVING COUNT(tp) = 1
+     	INSERT INTO bms_marking_products(waybill_no,pmxzx_mark,material_type,bwd_mark)
+		select m.waybill_no,m.md,m.tp,n.bwd from 
+		( SELECT waybill_no, md, tp
+			FROM(
+					SELECT waybill_no, tp,
+							MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as md,
+			GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)
+					FROM (
+							SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time,
+									SUBSTR(consumer_material_code, 1, LOCATE('-', consumer_material_code) - 1) as tp
+							FROM biz_outstock_packmaterial_temp where batchNum='AT0000000225'
+									AND (consumer_material_code LIKE '%PMX%' or consumer_material_code LIKE '%ZX%')
+					) a
+					GROUP BY waybill_no, tp
+			) b
+			GROUP BY waybill_no
+			HAVING COUNT(tp) = 1) m
+		 left JOIN
+		(
+			SELECT waybill_no, bwd
+			FROM(
+					SELECT waybill_no,
+							MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as bwd
+					FROM (
+							SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time
+							FROM biz_outstock_packmaterial_temp where batchNum='AT0000000225'
+									AND (consumer_material_code LIKE '%BWD%')
+					) a
+					GROUP BY waybill_no
+			) b
+			GROUP BY waybill_no
+		) n on m.waybill_no=n.waybill_no
+		ON DUPLICATE KEY UPDATE
+		    pmxzx_mark = m.md,material_type=m.tp,bwd_mark=n.bwd
      </insert>
      
      <select id="queyMaterialCount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
