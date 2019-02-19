@@ -23,6 +23,7 @@
         </Property>
         <Property name="required">false</Property>
         <Property name="defaultValue">0</Property>
+        <Property name="dataType">int</Property>
       </PropertyDef>
       <PropertyDef name="mkInvoiceName">
         <Property name="label">商家合同名称</Property>
