@@ -180,8 +180,8 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 				pallet_entity.setCreatorId(taskEntity.getCreatorId());
 				pallet_entity.setTaskId(taskEntity.getTaskId());
 				
-				
-				if(StringUtils.isNotEmpty(cells.get(str)))
+				//托数不为空，不为0
+				if(StringUtils.isNotEmpty(cells.get(str)) && !"0".equals(cells.get(str)))
 				{
 					if(ExportUtil.isNumber(cells.get(str)))
 					{
@@ -242,6 +242,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 					}else{
 						errorMsg+="列【"+str+"】为非数字;";
 					}
+					
 				}
 				
 			}

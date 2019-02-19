@@ -61,9 +61,9 @@
     
     <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="1-1">
     	<jms:listener destination="BMS_FILE_EXPORT_QUEUE" ref="bmsFileExportTaskListener"/>
-    	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK" ref="bmsPackmaterialImportTaskListenerNew"/>
-    	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListenerNew"/>
-    	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListener"/>
+    	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK" ref="bmsPackmaterialImportTaskListener"/>
+    	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListener"/>
+    	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListenerNew"/>
 <!--     	<jms:listener destination="BMS.QUEUE.DISPATCH_BILL_EXPORT" ref="dispatchBillExportListener"/>
     	<jms:listener destination="BMS.QUEUE.DISPATCH_BILL_PAY_EXPORT" ref="dispatchBillPayExportListener"/>
     	<jms:listener destination="BMS.QUEUE.OUTSTOCK_PACKMATERIAL_EXPORT" ref="bizOutStockPackMaterialExportListener"/>
