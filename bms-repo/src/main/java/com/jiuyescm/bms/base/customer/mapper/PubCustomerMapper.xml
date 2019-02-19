@@ -126,7 +126,7 @@ a.id, a.mk_id, a.customer_id, a.customer_name, a.short_name, a.creator, a.create
         	<if test=" lastModifyTime != null and lastModifyTime !='' ">
 				and a.last_modify_time = #{lastModifyTime}
 			</if>
-        	<if test=" delFlag != null">
+        	<if test=" delFlag != 999">
 				and a.del_flag = #{delFlag}
 			</if>
         	<if test=" linkman != null and linkman !='' ">
