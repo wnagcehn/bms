@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.asyn.web;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DateUtil;
 
 /**
  * 
@@ -79,6 +81,9 @@ public class BmsCorrectAsynTaskController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date startDate = sdf.parse(startDateStr);
 			Date endDate = DateUtils.addMonths(startDate, 1);
+			String endDateStr = sdf.format(endDate);
+//			param.put("startDate", startDateStr);
+//			param.put("endDate", endDateStr);
 			param.put("startDate", startDate);
 			param.put("endDate", endDate);
 		}

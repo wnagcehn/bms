@@ -98,7 +98,7 @@
     
     <insert id="saveWeight" parameterType="java.util.Map">
    		 insert into bms_products_weight_account(products_mark, weight, percent, task_id)
-   		 select a.products_mark,a.weight,ROUND(a.num1/b.num2*100)/100 as percent,#{taskId} 
+   		 select a.products_mark,a.weight,ROUND(a.num1/b.num2,8) as percent,#{taskId} 
    		  from (
 			select m1.products_mark,m1.weight,count(m1.weight) as num1 from bms_marking_products m1
 			INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 

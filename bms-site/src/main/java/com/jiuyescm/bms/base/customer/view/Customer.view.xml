@@ -34,47 +34,47 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="mkId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家ID</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家全称</Property>
       </PropertyDef>
       <PropertyDef name="shortName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家简称</Property>
       </PropertyDef>
       <PropertyDef name="creator">
-        <Property/>
+        <Property></Property>
         <Property name="label">创建人</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
-        <Property/>
+        <Property></Property>
         <Property name="label">修改人</Property>
       </PropertyDef>
       <PropertyDef name="delFlag">
-        <Property/>
+        <Property></Property>
         <Property name="label">删除标记</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="linkman">
-        <Property/>
+        <Property></Property>
         <Property name="label">联系人</Property>
       </PropertyDef>
       <PropertyDef name="tel">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="mobile">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="address">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家地址</Property>
       </PropertyDef>
       <PropertyDef name="contractAttr">
@@ -85,14 +85,16 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="mkInvoiceName">
-        <Property/>
+        <Property></Property>
         <Property name="label">合同商家名称</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="lastModifyTime">
         <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -110,7 +112,7 @@
     <Container id="Container_Main">
       <ToolBar>
         <DataPilot>
-          <Property name="dataSet">dsCustomerEntity</Property>
+          <Property name="dataSet">dsPubCustomerEntity</Property>
           <Property name="itemCodes">pages,pageSize</Property>
         </DataPilot>
         <Separator/>

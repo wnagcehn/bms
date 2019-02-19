@@ -1603,6 +1603,9 @@ public class NewBuinessDataExportController extends BaseController {
 				double rowcolCost = 0.0;
 				double cwCost = 0.0;
 				
+				//处置费金额（包含入库、出库）
+				double dispalCost=0.0;
+				
 				int pIndex = 0;
 				
 				// 库存板数
@@ -1713,7 +1716,9 @@ public class NewBuinessDataExportController extends BaseController {
 							if(!entity.getCreateTime().before(startTime)){
 								//处置费小计
 								Cell cell72 = row.createCell(19-move2);
-								cell72.setCellValue(palletCost+incost);
+								dispalCost=dispalCost+palletCost;
+								cell72.setCellValue(dispalCost);
+								
 								//累加行
 								incost = rowcolCost+palletCost;
 								//累加列
@@ -1734,10 +1739,10 @@ public class NewBuinessDataExportController extends BaseController {
 				double rowTotalCost = 0.0;
 				double colTotalCost = 0.0;
 				
-				if (newIndex > 0) {
-					//商品存储费（按件）
-					for (FeesReceiveStorageEntity entity : itemsList) {
-						if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {
+				//商品存储费（按件）
+				for (FeesReceiveStorageEntity entity : itemsList) {
+					if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {						
+						if (newIndex > 0) {
 							//商家名称
 							Cell cell40=row.createCell(0);
 							cell40.setCellValue(entity.getCustomerName());		
@@ -1752,12 +1757,7 @@ public class NewBuinessDataExportController extends BaseController {
 							if(cusList.contains(entity.getCustomerId())){
 								productCost = entity.getCost().doubleValue();
 							}
-							
-							Cell cell60 = row.createCell(9);
-							cell60.setCellValue(entity.getQuantity()+qty);
-							//件数累加
-							qty = qty+entity.getQuantity();
-							
+
 							//不是当月的时间，则是上月结余，上月结余的不显示金额
 							if(!entity.getCreateTime().before(startTime)){
 								//存储费按件小计
@@ -1768,12 +1768,18 @@ public class NewBuinessDataExportController extends BaseController {
 								rowProCost = rowProCost + productCost;
 								//累加列
 								ccfcost = ccfcost+productCost;
-							}
-						}else {
-							rowProCost = 0.0;
-						}		
-					}	
-				}		
+							}	
+						}
+						
+						Cell cell60 = row.createCell(9);
+						cell60.setCellValue(entity.getQuantity()+qty);
+						//件数累加
+						qty = qty+entity.getQuantity();					
+					}else {
+						rowProCost = 0.0;
+					}		
+				}
+				
 				
 				//行总的+存储费（托）
 				rowCost = rowCost+rowcolCost;
