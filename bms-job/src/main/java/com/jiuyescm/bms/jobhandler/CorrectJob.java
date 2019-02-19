@@ -26,6 +26,7 @@ import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
@@ -43,13 +44,14 @@ public class CorrectJob  extends IJobHandler{
 		private IBizDispatchBillRepository bizDispatchBillRepository;
 		@Autowired
 		private IBmsCorrectAsynTaskRepository bmsCorrectAsynTaskRepository;
-		
-		private static final String BMS_CORRECT_WEIGHT_TASK = "BMS.CORRECT.WEIGHT.ASYN.TASK";
-		private static final String BMS_CORRECT_MATERIAL_TASK = "BMS.CORRECT.MATERIAL.ASYN.TASK";
-		
+		@Autowired
+		private ISnowflakeSequenceService snowflakeSequenceService;
 		@Resource
 		private JmsTemplate jmsQueueTemplate;
 		
+		private static final String BMS_CORRECT_WEIGHT_TASK = "BMS.CORRECT.WEIGHT.ASYN.TASK";
+		private static final String BMS_CORRECT_MATERIAL_TASK = "BMS.CORRECT.MATERIAL.ASYN.TASK";
+
 		@Override
 		public ReturnT<String> execute(String... params) throws Exception {
 			XxlJobLogger.log("CorrectJob start.");
@@ -109,10 +111,18 @@ public class CorrectJob  extends IJobHandler{
 				taskStartDate=taskStartDate.replace("-","");
 				Date startDate = DateUtil.getFirstDayOfMonth(1);
 				Date endDate = DateUtil.getFirstDayOfMonth(0);
+				
+				long ids[] = new long[customeridSet.size()*2];
+				ids = snowflakeSequenceService.nextId(customeridSet.size()*2);
+				int i = 0;
 				for (String customerid : customeridSet) {
 					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"weight_correct");
+					entity.setTaskId(ids[i]+"");
+					i++;
 					list.add(entity);
 					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"material_correct");
+					entity2.setTaskId(ids[i]+"");
+					i++;
 					list.add(entity2);
 				}
 				bmsCorrectAsynTaskRepository.saveBatch(list);
@@ -155,15 +165,8 @@ public class CorrectJob  extends IJobHandler{
 			entity.setStartDate(startDate);
 			entity.setEndDate(endDate);
 			entity.setCustomerId(customerid);
-			entity.setTaskId(getUuid());
 			entity.setBizType(bizType);
 			return entity;
 		}
 		
-		//使用uuid生成任务id，未来会被分布式id生成器替换
-		private String getUuid() {
-			String uuid = java.util.UUID.randomUUID().toString(); // 获取UUID并转化为String对象
-			uuid = uuid.replace("-", "");
-			return uuid;
-		}
 }
