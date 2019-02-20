@@ -61,6 +61,9 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 	//商家类型
 	private String customerType;
 
+	//物流产品类型
+	private String serviceTypeCode;
+	private String servicename;
 	public BmsDiscountAsynTaskEntity() {
 		super();
 	}
@@ -254,6 +257,22 @@ public class BmsDiscountAsynTaskEntity implements IEntity {
 
 	public void setCustomerType(String customerType) {
 		this.customerType = customerType;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getServicename() {
+		return servicename;
+	}
+
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
 	}
     
 	

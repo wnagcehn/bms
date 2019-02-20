@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialTempRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialTempService;
+import com.jiuyescm.exception.BizException;
 
 /**
  * 
@@ -56,9 +57,12 @@ public class BizOutstockPackmaterialTempServiceImpl implements IBizOutstockPackm
     }
 
 	@Override
-	public int saveBatch(List<BizOutstockPackmaterialTempEntity> tempList) {
-	
-		return bizOutstockPackmaterialTempRepository.saveBatch(tempList);
+	public void saveBatch(List<BizOutstockPackmaterialTempEntity> tempList) {
+		try {
+			bizOutstockPackmaterialTempRepository.saveBatch(tempList);
+		} catch (Exception e) {
+			throw new BizException(e.getMessage());
+		}	
 	}
 
 	@Override

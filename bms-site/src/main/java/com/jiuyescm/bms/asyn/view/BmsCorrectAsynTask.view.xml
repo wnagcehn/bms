@@ -157,7 +157,7 @@ view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);</ClientEve
 if(data == undefined || data == null){&#xD;
 	dorado.MessageBox.alert(&quot;请选择一条数据！&quot;);&#xD;
 }&#xD;
-var date = data.get(&quot;startDate&quot;);&#xD;
+var date = data.get(&quot;endDate&quot;);&#xD;
 var year = date.getFullYear();//年&#xD;
 var month = date.getMonth()+1;//月&#xD;
 var createTime = &quot;&quot;;&#xD;
@@ -166,7 +166,6 @@ if(month &lt; 10){&#xD;
 }else{&#xD;
 	createTime = year+&quot;&quot;+month;&#xD;
 }&#xD;
-&#xD;
 var param=&quot;?customerId=&quot;+data.get(&quot;customerId&quot;)+&quot;&amp;createTime=&quot;+createTime;&#xD;
 window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct.d&quot;+param, &quot;纠正明细&quot;, &quot;&quot;, true);</ClientEvent>
         <Property name="caption">纠正明细</Property>

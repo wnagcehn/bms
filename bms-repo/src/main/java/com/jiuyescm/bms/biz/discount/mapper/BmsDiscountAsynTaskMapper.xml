@@ -45,12 +45,14 @@
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity">
         select
-        d.id, d.task_id,d.discount_type, d.create_month,d.customerId, d.customer_type, d.biz_typecode, d.subject_code, d.task_name, 
-        d.task_rate, d.task_status, d.creator, d.create_time, d.finish_time, d.del_flag, d.startDate, 
-        d.endDate, d.remark, d.carrier_id, s.subject_name as subjectName, c.code_name as bizTypeName
-        from bms_discount_asyn_task d
-        left join bms_subject_info s on d.subject_code=s.subject_code and s.del_flag='0'
-        left join system_code c on c.`code` = d.biz_typecode
+		d.id, d.task_id,d.discount_type, d.create_month,d.customerId, d.customer_type, d.biz_typecode, d.subject_code, d.task_name, 
+		d.task_rate, d.task_status, d.creator, d.create_time, d.finish_time, d.del_flag, d.startDate, 
+		d.endDate, d.remark, d.carrier_id, s.subject_name as subjectName, c.code_name as bizTypeName, d.service_type_code as serviceTypeCode,
+		p.servicename
+		from bms_discount_asyn_task d
+		left join bms_subject_info s on d.subject_code=s.subject_code and s.del_flag='0'
+		left join system_code c on c.`code` = d.biz_typecode
+		left join pub_carrier_servicetype p on d.carrier_id=p.carrierid and p.servicecode=d.service_type_code and p.delflag='0'
         where 1 = 1
         	<if test=" createMonth != null and createMonth !='' ">
 				and d.create_month = #{createMonth}
@@ -131,7 +133,8 @@
 			#{delFlag,jdbcType=VARCHAR}, 
 			#{startDate,jdbcType=DATE}, 
 			#{endDate,jdbcType=DATE}, 
-			#{remark,jdbcType=VARCHAR}
+			#{remark,jdbcType=VARCHAR},
+			#{serviceTypeCode,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -186,6 +189,9 @@
 			</if>
 			<if test=" remark != null and remark !='' ">
 				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" serviceTypeCode != null and serviceTypeCode !='' ">
+				service_type_code = #{serviceTypeCode,jdbcType=VARCHAR},
 			</if>
         </trim>
         where id = #{id}

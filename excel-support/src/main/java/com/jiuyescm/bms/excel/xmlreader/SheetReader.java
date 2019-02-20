@@ -1,7 +1,9 @@
 package com.jiuyescm.bms.excel.xmlreader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -165,17 +167,41 @@ public class SheetReader extends DefaultHandler {
         if (map == null || map.isEmpty()) {
             return null;
         }
-
-        Map<String, DataColumn> sortMap = new TreeMap<String, DataColumn>(new Comparator<String>() {
-            public int compare(String obj1, String obj2) {
-                // 降序排序
-                return obj1.compareTo(obj2);
-            }
-        });
-        sortMap.putAll(map);
-
+        ArrayList<String> list = new ArrayList<>();
+		Map<Integer,String> retMap = new HashMap<>(); // 65，A
+		for (Map.Entry<String, DataColumn> entry : map.entrySet()) { 
+        	list.add(entry.getKey());
+        	retMap.put(Integer.parseInt(stringToAscii(entry.getKey())), entry.getKey());
+        }
+		
+		int[] abc = new int[map.size()];
+		for (int i = 0;i<list.size();i++) {
+			abc[i] = Integer.parseInt(stringToAscii(list.get(i)));
+		}
+		
+		Arrays.sort(abc);
+        Map<String, DataColumn> sortMap = Maps.newLinkedHashMap();
+        for (int i : abc) {
+        	String indexString = retMap.get(i); //A AA
+			sortMap.put(indexString, map.get(indexString));
+		}
         return sortMap;
     }
 	
+	private String stringToAscii(String value)
+	{
+		StringBuffer sbu = new StringBuffer();
+		char[] chars = value.toCharArray(); 
+		for (int i = 0; i < chars.length; i++) {
+			if(i != chars.length - 1)
+			{
+				sbu.append((int)chars[i]);
+			}
+			else {
+				sbu.append((int)chars[i]);
+			}
+		}
+		return sbu.toString();
+	}
 	
 }

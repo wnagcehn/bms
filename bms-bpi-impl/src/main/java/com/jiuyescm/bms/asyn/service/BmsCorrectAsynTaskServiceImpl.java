@@ -23,6 +23,7 @@ import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCorrectAsynTaskService")
 public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService{
@@ -35,6 +36,8 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 	@Autowired private IBmsCorrectAsynTaskRepository bmsCorrectAsynTaskRepository;
 	
 	@Autowired private JmsTemplate jmsQueueTemplate;
+	
+	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 
 	@Override
 	public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition,
@@ -187,7 +190,9 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		//更新任务表（更新修改人，修改时间）
 		try{
 			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
+			String taskId = snowflakeSequenceService.nextStringId();
 			entity.setId(vo.getId());
+			entity.setTaskId(taskId);
 			entity.setLastModifier(vo.getLastModifier());
 			entity.setLastModifyTime(vo.getLastModifyTime());
 			bmsCorrectAsynTaskRepository.update(entity);
