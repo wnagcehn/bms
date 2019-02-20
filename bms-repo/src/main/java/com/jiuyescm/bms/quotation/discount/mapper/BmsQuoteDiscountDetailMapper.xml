@@ -24,7 +24,7 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit, up_limit, first_price, first_price_rate, continue_price, continue_pirce_rate, unit_price, unit_price_rate, creator, create_time, last_modifier, last_modify_time, del_flag
+        id, template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit, up_limit, first_price, first_price_rate, continue_price, continue_pirce_rate, unit_price, unit_price_rate, creator, create_time, last_modifier, last_modify_time, del_flag,service_type_code
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">

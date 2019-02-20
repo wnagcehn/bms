@@ -48,6 +48,9 @@ public interface IBmsProductsMaterialRepository {
 	
 	// 根据批次号查询运单中耗材明细，打标
 	int markMaterial(Map<String,Object> condition);
+	
+	// 根据批次号查询运单中耗材明细，打标保温袋
+	int markBwd(Map<String,Object> condition);
 
 	int deleteMarkMaterialByWaybillNo(List<String> waybillNoList);
 	
