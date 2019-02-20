@@ -55,6 +55,26 @@ public class BmsQuoteDiscountDetailEntity implements IEntity {
 	private Timestamp lastModifyTime;
 	// 作废标志（0：未作废，1：已作废）
 	private String delFlag;
+	//物流产品类型
+	private String serviceTypeCode;
+	//物流产品类型
+	private String serviceTypeName;
+
+	public String getServiceTypeName() {
+		return serviceTypeName;
+	}
+
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
 
 	public BmsQuoteDiscountDetailEntity() {
 		super();
