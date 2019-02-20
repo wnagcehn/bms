@@ -72,6 +72,14 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		SqlSession session = this.getSqlSessionTemplate();
 		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.markMaterial", condition);
 	}
+	
+	@Override
+	public int markBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.markBwd", condition);
+	
+	}
 
 	@Override
 	public List<BmsProductsMaterialAccountEntity> queyMaterialCount(
@@ -131,6 +139,5 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		SqlSession session=this.getSqlSessionTemplate();
 		return session.selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queryBwdMaterial", condition);
 	
-	}
-	
+	}	
 }
