@@ -195,7 +195,8 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 38, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
 						return;
 					}
-					
+					logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 50);
 				}
 
 				@Override
@@ -228,16 +229,12 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 							}
 						}
 					}
-					
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
-					//存入所有行的DataRow的Map<rowNo,DataRow>和List
-//					mapData.put(dr.getRowNo(), dr);
-//					allList.add(dr);
 					return;
 				}
 
 				@Override
-				public void finish() {		
+				public void finish() {	
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
 					if (errMap.size() == 0) {
 						int result = saveTo();

@@ -16,10 +16,12 @@
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type
+        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type,last_modifier,last_modify_time
     </sql>
 	
 	<sql id="baseSelectColumns">

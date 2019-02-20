@@ -108,12 +108,6 @@
       <PropertyDef name="customerType">
         <Property></Property>
       </PropertyDef>
-      <PropertyDef name="serviceTypeCode">
-        <Property name="label">物流产品类型</Property>
-      </PropertyDef>
-      <PropertyDef name="servicename">
-        <Property name="label">物流产品类型</Property>
-      </PropertyDef>
     </DataType>
     <DataType name="dtBmsDiscountAsynTaskEntityQuery">
       <PropertyDef name="year">
@@ -357,12 +351,6 @@ entity.set(&quot;subjectName&quot;, &quot;&quot;);&#xD;
         <DataColumn>
           <Property name="name">subjectName</Property>
           <Property name="property">subjectName</Property>
-          <Property name="width">110</Property>
-          <Editor/>
-        </DataColumn>
-        <DataColumn>
-          <Property name="name">servicename</Property>
-          <Property name="property">servicename</Property>
           <Property name="width">110</Property>
           <Editor/>
         </DataColumn>

@@ -210,6 +210,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							return;
 						}
 					}
+					logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 50);
 				}
 
 				@Override
@@ -241,14 +243,13 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 								logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
 							}
 						}
-					}
-					
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
+					}							
 					return;
 				}
 
 				@Override
 				public void finish() {
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
 					if (errorMap.size() == 0) {
 						int result = saveTo();
@@ -566,6 +567,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
     private int saveTo(){
     	int k = 0;
 		logger.info("任务ID【{}】 -> 保存数据到临时表 转化成对象数【{}】",taskId,newList.size());
+		long start = System.currentTimeMillis();
 		try {
 			//保存到临时表
 			bizOutstockPackmaterialTempService.saveBatch(newList); 
@@ -573,7 +575,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			logger.info("任务ID【{}】 -> 写入临时表-失败:【{}】",taskId,e);
 			k = -1;
 		}
-
+		logger.info("保存到临时表，耗时：【{}】毫秒", System.currentTimeMillis()-start);
 		bmsMaterialImportTaskCommon.setTaskProcess(taskId, 75);
 		newList.clear();
 		return k;

@@ -157,7 +157,7 @@ view.get(&quot;#queryForm.entity&quot;).set(&quot;month&quot;,month);</ClientEve
 if(data == undefined || data == null){&#xD;
 	dorado.MessageBox.alert(&quot;请选择一条数据！&quot;);&#xD;
 }&#xD;
-var date = data.get(&quot;endDate&quot;);&#xD;
+var date = data.get(&quot;startDate&quot;);&#xD;
 var year = date.getFullYear();//年&#xD;
 var month = date.getMonth()+1;//月&#xD;
 var createTime = &quot;&quot;;&#xD;

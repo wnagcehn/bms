@@ -308,8 +308,9 @@ with (view.get(&quot;#dsBmsMarkingWeightEntity&quot;)){&#xD;
                     <DataColumn name="weight">
                       <Property name="property">weight</Property>
                     </DataColumn>
-                    <DataColumn name="percent">
+                    <DataColumn>
                       <Property name="property">percent</Property>
+                      <Property name="name">percent</Property>
                     </DataColumn>
                     <DataColumn name="taskId">
                       <Property name="property">taskId</Property>

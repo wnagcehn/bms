@@ -218,6 +218,8 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
 						return;
 					}
+					logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 50);
 				}
 
 				@Override
@@ -250,14 +252,14 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							}
 						}
 					}
-					
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
+							
 					return;
 					
 				}
 
 				@Override
-				public void finish() {			
+				public void finish() {		
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
 					if(errorMap.size()==0){
 						int result = saveTo();
