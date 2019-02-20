@@ -122,7 +122,7 @@
 					FROM (
 							SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time,
 									SUBSTR(consumer_material_code, 1, LOCATE('-', consumer_material_code) - 1) as tp
-							FROM biz_outstock_packmaterial_temp where batchNum='AT0000000225'
+							FROM biz_outstock_packmaterial_temp where batchNum=#{batchNum}
 									AND (consumer_material_code LIKE '%PMX%' or consumer_material_code LIKE '%ZX%')
 					) a
 					GROUP BY waybill_no, tp
@@ -137,7 +137,7 @@
 							MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as bwd
 					FROM (
 							SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time
-							FROM biz_outstock_packmaterial_temp where batchNum='AT0000000225'
+							FROM biz_outstock_packmaterial_temp where batchNum=#{batchNum}
 									AND (consumer_material_code LIKE '%BWD%')
 					) a
 					GROUP BY waybill_no
