@@ -5,7 +5,7 @@
        		<id column="id" property="id" jdbcType="INTEGER" />
 		   	<result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
 		   	<result column="weight" property="weight" jdbcType="DECIMAL" />
-		   	<result column="percent" property="percent" jdbcType="DOUBLE" />
+		   	<result column="percent" property="percent" jdbcType="DECIMAL" />
 		   	<result column="task_id" property="taskId" jdbcType="VARCHAR" />
     </resultMap>
   
@@ -58,7 +58,7 @@ products_mark, weight, percent, task_id
 
 			#{productsMark,jdbcType=VARCHAR}, 
 			#{weight,jdbcType=DECIMAL}, 
-			#{percent,jdbcType=DOUBLE}, 
+			#{percent,jdbcType=DECIMAL}, 
 			#{taskId,jdbcType=VARCHAR}
         )
     </insert>
@@ -74,7 +74,7 @@ products_mark, weight, percent, task_id
 				weight = #{weight,jdbcType=DECIMAL},
 			</if>
 			<if test=" percent != null and percent !='' ">
-				percent = #{percent,jdbcType=DOUBLE},
+				percent = #{percent,jdbcType=DECIMAL},
 			</if>
 			<if test=" taskId != null and taskId !='' ">
 				task_id = #{taskId,jdbcType=VARCHAR},

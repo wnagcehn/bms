@@ -84,6 +84,7 @@
       </PropertyDef>
       <PropertyDef name="percent">
         <Property name="label">百分比</Property>
+        <Property name="dataType">BigDecimal</Property>
       </PropertyDef>
       <PropertyDef name="taskId">
         <Property name="label">任务ID</Property>
