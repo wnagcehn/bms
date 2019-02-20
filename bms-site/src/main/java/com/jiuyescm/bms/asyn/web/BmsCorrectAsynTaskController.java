@@ -4,7 +4,6 @@
  */
 package com.jiuyescm.bms.asyn.web;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.DateUtil;
 
 /**
  * 

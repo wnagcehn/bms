@@ -122,5 +122,5 @@ public class BmsProductsWeightAccountVo implements IEntity {
 	public void setWeightList(String weightList) {
 		this.weightList = weightList;
 	}
-    
+
 }
