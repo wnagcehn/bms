@@ -25,7 +25,7 @@ public class BmsProductsWeightAccountVo implements IEntity {
 	// 重量
 	private BigDecimal weight;
 	// 百分比
-	private Double percent;
+	private BigDecimal percent;
 	// 任务ID
 	private String taskId;
 
@@ -86,7 +86,7 @@ public class BmsProductsWeightAccountVo implements IEntity {
 	/**
      * 百分比
      */
-	public Double getPercent() {
+	public BigDecimal getPercent() {
 		return this.percent;
 	}
 
@@ -95,7 +95,7 @@ public class BmsProductsWeightAccountVo implements IEntity {
      *
      * @param percent
      */
-	public void setPercent(Double percent) {
+	public void setPercent(BigDecimal percent) {
 		this.percent = percent;
 	}
 	
