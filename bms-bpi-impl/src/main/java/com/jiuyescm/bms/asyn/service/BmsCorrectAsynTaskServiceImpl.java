@@ -159,6 +159,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 	public String updateCorrect(BmsCorrectAsynTaskVo vo) throws Exception {
 		//发送MQ消息类型
 		String task = "";
+		logger.info("之前的taskId:" + vo.getTaskId());
 		if(StringUtils.isBlank(vo.getTaskId()))return "任务ID为空";
 		Map<String, Object> queryConfition = new HashMap<>();
 		queryConfition.put("taskId", vo.getTaskId());
@@ -176,8 +177,23 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
 		String taskId = snowflakeSequenceService.nextStringId();
+		
+		//更新任务表（更新修改人，修改时间）
+		try{
+			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
+			entity.setId(vo.getId());
+			entity.setTaskId(taskId);
+			entity.setLastModifier(vo.getLastModifier());
+			entity.setLastModifyTime(vo.getLastModifyTime());
+			bmsCorrectAsynTaskRepository.update(entity);
+		}catch(Exception e){
+			logger.error("updateCorrect:",e);
+			return "更新失败";
+		}
+		
 		try {
 			final String msg = taskId;
+			logger.info("生成最新的taskId:" + taskId);
 			jmsQueueTemplate.send(task, new MessageCreator() {
 				@Override
 				public Message createMessage(Session session) throws JMSException {
@@ -188,19 +204,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 			logger.error("send MQ:", e);
 			return"MQ发送失败！";
 		}
-		//更新任务表（更新修改人，修改时间）
-		try{
-			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
-			entity.setId(vo.getId());
-			entity.setTaskId(taskId);
-			entity.setLastModifier(vo.getLastModifier());
-			entity.setLastModifyTime(vo.getLastModifyTime());
-			bmsCorrectAsynTaskRepository.update(entity);
-			return "纠正成功";
-		}catch(Exception e){
-			logger.error("updateCorrect:",e);
-			return "更新失败";
-		}
+		return "纠正成功";
 	}
 	
 }

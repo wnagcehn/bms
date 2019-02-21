@@ -96,7 +96,7 @@
 
     <update id="update" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
         update bms_correct_asyn_task 
-		<set >
+		<set>
 			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
 			<if test="createMonth != null" >create_month=#{createMonth,jdbcType=VARCHAR},</if>
 			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
@@ -107,7 +107,7 @@
 			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
 			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
-			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR}</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
 			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 		</set>

@@ -171,12 +171,15 @@
   <View>
     <ClientEvent name="onReady">var customerId = GetQueryString(&quot;customerId&quot;);&#xD;
 var createTime = GetQueryString(&quot;createTime&quot;);&#xD;
+var taskId = GetQueryString(&quot;taskId&quot;);&#xD;
 &#xD;
 var data = view.get(&quot;#dsBmsOrderProductEntityQuery.data&quot;).current;&#xD;
 &#xD;
 if(customerId == undefined || customerId == null){&#xD;
 	return;&#xD;
 }&#xD;
+&#xD;
+view.id(&quot;taskId&quot;).set(&quot;text&quot;,taskId);&#xD;
 &#xD;
 var dsBmsOrderProductEntity= view.get(&quot;#dsBmsOrderProductEntity&quot;);&#xD;
 data.set(&quot;customerId&quot;,customerId);&#xD;
@@ -380,10 +383,13 @@ with (view.get(&quot;#dsBmsMarkingMaterialEntity&quot;)){&#xD;
         <SideControl>
           <Container>
             <DataGrid id="masData">
-              <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsBmsOrderProductEntity&quot;).getData();&#xD;
+              <ClientEvent name="onDataRowClick">var taskid = view.id(&quot;taskId&quot;).get(&quot;text&quot;);&#xD;
+&#xD;
+var data = view.get(&quot;#dsBmsOrderProductEntity&quot;).getData();&#xD;
 with (view.get(&quot;#dsBmsProductsMaterialAccountEntity&quot;)){&#xD;
 	var queryJson={&#xD;
 		productsMark:data.current.get(&quot;productMark&quot;),&#xD;
+		taskId:taskid,&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -392,6 +398,7 @@ with (view.get(&quot;#dsBmsProductsMaterialAccountEntity&quot;)){&#xD;
 with (view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;)){&#xD;
 	var queryJson={&#xD;
 		productsMark:data.current.get(&quot;productMark&quot;),&#xD;
+		taskId:taskid,&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -539,5 +546,9 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </Dialog>
+    <Label id="taskId">
+      <Property name="visible">false</Property>
+      <Property name="hideMode">display</Property>
+    </Label>
   </View>
 </ViewConfig>
