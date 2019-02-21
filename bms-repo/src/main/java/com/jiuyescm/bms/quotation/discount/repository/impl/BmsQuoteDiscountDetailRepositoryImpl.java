@@ -2,8 +2,10 @@ package com.jiuyescm.bms.quotation.discount.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
@@ -45,7 +47,7 @@ public class BmsQuoteDiscountDetailRepositoryImpl extends MyBatisDao<BmsQuoteDis
                 pageNo, pageSize));
         return new PageInfo<BmsQuoteDiscountDetailEntity>(list);
     }
-    
+
     /**
 	 * 查询
 	 * @param page
@@ -96,5 +98,14 @@ public class BmsQuoteDiscountDetailRepositoryImpl extends MyBatisDao<BmsQuoteDis
 	public int insertBatch(List<BmsQuoteDiscountDetailEntity> list) {
 		return insertBatch("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountDetailMapper.save", list);
 	}
+	
+	/**
+	 * 查询物流产品类型
+	 */
+	@Override
+    public String queryServiceTypeName(Map<String, Object> condition) {
+		String string = (String) selectOne("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountDetailMapper.queryServiceTypeName", condition);
+        return string;
+    }
 	
 }
