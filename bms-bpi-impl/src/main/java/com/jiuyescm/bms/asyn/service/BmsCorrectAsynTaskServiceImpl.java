@@ -175,8 +175,9 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		String taskStatus = list.get(0).getTaskStatus();
 		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
+		String taskId = snowflakeSequenceService.nextStringId();
 		try {
-			final String msg = vo.getTaskId();
+			final String msg = taskId;
 			jmsQueueTemplate.send(task, new MessageCreator() {
 				@Override
 				public Message createMessage(Session session) throws JMSException {
@@ -190,7 +191,6 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		//更新任务表（更新修改人，修改时间）
 		try{
 			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
-			String taskId = snowflakeSequenceService.nextStringId();
 			entity.setId(vo.getId());
 			entity.setTaskId(taskId);
 			entity.setLastModifier(vo.getLastModifier());
