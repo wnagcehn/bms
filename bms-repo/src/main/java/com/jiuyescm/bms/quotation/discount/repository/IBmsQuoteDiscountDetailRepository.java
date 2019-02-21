@@ -2,6 +2,7 @@ package com.jiuyescm.bms.quotation.discount.repository;
 
 import java.util.Map;
 import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 
@@ -33,5 +34,7 @@ public interface IBmsQuoteDiscountDetailRepository {
 	 * @return
 	 */
 	int insertBatch(List<BmsQuoteDiscountDetailEntity> list);
+
+	String queryServiceTypeName(Map<String, Object> condition);
 
 }

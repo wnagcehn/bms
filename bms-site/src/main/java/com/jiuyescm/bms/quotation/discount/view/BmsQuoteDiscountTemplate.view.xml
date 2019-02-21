@@ -627,9 +627,9 @@ if(data){&#xD;
               <Property name="width">80</Property>
             </DataColumn>
             <DataColumn>
-              <Property name="property">serviceTypeCode</Property>
+              <Property name="property">serviceTypeName</Property>
               <Property name="width">80</Property>
-              <Property name="name">serviceTypeCode</Property>
+              <Property name="name">serviceTypeName</Property>
             </DataColumn>
             <DataColumn name="startTime">
               <Property name="property">startTime</Property>
@@ -712,6 +712,12 @@ if(data){&#xD;
               <Property name="property">delFlag</Property>
               <Property name="visible">false</Property>
             </DataColumn>
+            <DataColumn>
+              <Property name="property">serviceTypeCode</Property>
+              <Property name="width">80</Property>
+              <Property name="name">serviceTypeCode</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
           </DataGrid>
         </Container>
       </MainControl>
@@ -723,11 +729,12 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
 		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+		bizType:data.current.get(&quot;bizType&quot;),&#xD;
+		subjectCode:data.current.get(&quot;subjectCode&quot;)&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
-}&#xD;
-</ClientEvent>
+}</ClientEvent>
             <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
             <Property name="stretchColumnsMode">auto</Property>
             <Property name="readOnly">true</Property>
