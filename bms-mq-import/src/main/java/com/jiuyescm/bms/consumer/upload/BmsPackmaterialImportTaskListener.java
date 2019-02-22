@@ -488,47 +488,42 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	 */
 	private boolean dbCheck(){
 
-		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId());
-			if(null == list || list.size() <= 0){
-				return true;
-			}
-			Map<String,String> map=Maps.newLinkedHashMap();
+		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId(), batchNum);
+		if(null == list || list.size() <= 0){
+			return true;
+		}
+		Map<String,String> map=Maps.newLinkedHashMap();
+		
+		//一共几行,去重
+		Set<Integer> rowNos = new TreeSet<>();
+		for(BizOutstockPackmaterialTempEntity entity:list){
+			rowNos.add(entity.getRowExcelNo());
+		}
+		
+		//存在重复记录
+		for(BizOutstockPackmaterialTempEntity entity:list){
+			String row=String.valueOf(entity.getRowExcelNo());
 			
-			//一共几行,去重
-			Set<Integer> rowNos = new TreeSet<>();
-			for(BizOutstockPackmaterialTempEntity entity:list){
-				rowNos.add(entity.getRowExcelNo());
+			String mes="";
+			if(map.containsKey(row)){
+				mes=map.get(row);
+				mes+=","+entity.getRowExcelName()+"【"+entity.getConsumerMaterialCode()+"】";
+				map.put(row,mes);
+			}else{
+				mes="系统中已存在运单号【" + entity.getWaybillNo() + "】,"+entity.getRowExcelName()+"【"+entity.getConsumerMaterialCode()+"】";
+				map.put(row,mes);
 			}
-			
-			//存在异常的dataRow
-//			for (Integer rowNo : rowNos) {
-//				errList.add(mapData.get(rowNo));
-//			}
-			
-			//存在重复记录
-			for(BizOutstockPackmaterialTempEntity entity:list){
-				String row=String.valueOf(entity.getRowExcelNo());
-				
-				String mes="";
-				if(map.containsKey(row)){
-					mes=map.get(row);
-					mes+=","+entity.getRowExcelName()+"【"+entity.getConsumerMaterialCode()+"】";
-					map.put(row,mes);
-				}else{
-					mes="系统中已存在运单号【" + entity.getWaybillNo() + "】,"+entity.getRowExcelName()+"【"+entity.getConsumerMaterialCode()+"】";
-					map.put(row,mes);
-				}
+		}
+		Set<String> set=map.keySet();
+		for(String key:set){
+			Integer rowNum=Integer.valueOf(key);
+			if(errorMap.containsKey(rowNum)){
+				errorMap.put(rowNum, errorMap.get(rowNum)+","+map.get(key));
+			}else{
+				errorMap.put(rowNum, map.get(key));
 			}
-			Set<String> set=map.keySet();
-			for(String key:set){
-				Integer rowNum=Integer.valueOf(key);
-				if(errorMap.containsKey(rowNum)){
-					errorMap.put(rowNum, errorMap.get(rowNum)+","+map.get(key));
-				}else{
-					errorMap.put(rowNum, map.get(key));
-				}
-			}
-			return false;
+		}
+		return false;
 	}
 	
 	public boolean checkTitle(List<String> headColumn, String[] str) {
@@ -597,8 +592,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg += "出库日期必填;";
+//						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg += "出库日期是必填项;";
 					}
 					break;
 				case "仓库":
@@ -611,8 +606,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							errorMsg+="仓库不存在;";
 						}
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="仓库必填;";
+//						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="仓库是必填项;";
 					}
 					break;
 				case "商家":
@@ -625,24 +620,24 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							errorMsg+="商家不存在;";
 						}
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="商家必填;";
+//						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="商家是必填项;";
 					}
 					break;
 				case "出库单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						tempEntity.setOutstockNo(dc.getColValue());
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="出库单号必填;";
+//						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="出库单号是必填项;";
 					}
 					break;
 				case "运单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						tempEntity.setWaybillNo(dc.getColValue());
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="运单号必填;";
+//						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
+						errorMsg+="运单号是必填项;";
 					}
 					break;
 				default:

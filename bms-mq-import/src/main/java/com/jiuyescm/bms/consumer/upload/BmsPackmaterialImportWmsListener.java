@@ -472,8 +472,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg += "出库日期必填;";
+						errorMsg += "出库日期是必填项;";
 					}
 					break;
 				case "仓库":
@@ -486,8 +485,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 							errorMsg+="仓库不存在;";
 						}
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="仓库必填;";
+						errorMsg+="仓库是必填项;";
 					}
 					break;
 				case "商家":
@@ -500,24 +498,21 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 							errorMsg+="商家不存在;";
 						}
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="商家必填;";
+						errorMsg+="商家是必填项;";
 					}
 					break;
 				case "出库单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						tempEntity.setOutstockNo(dc.getColValue());
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="出库单号必填;";
+						errorMsg+="出库单号是必填项;";
 					}
 					break;
 				case "运单号":
 					if (StringUtils.isNotBlank(dc.getColValue())) {
 						tempEntity.setWaybillNo(dc.getColValue());
 					}else {
-						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
-						errorMsg+="运单号必填;";
+						errorMsg+="运单号是必填项;";
 					}
 					break;
 				default:
