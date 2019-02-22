@@ -467,6 +467,9 @@
     	and create_time>=#{startTime} and <![CDATA[create_time<#{endTime}]]>
     	and carrier_id=#{carrierId}
 		and is_calculated in ('0','99')
+		<if test="(serviceTypeCode != null and serviceTypeCode !='')">
+			and service_type_code=#{serviceTypeCode}
+		</if>
     </select>
     
          <select id="queryBizCustomerid" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
