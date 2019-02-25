@@ -212,12 +212,12 @@
 		 on m.products_mark=n.products_mark
      </insert>
      
-     <delete id="deleteMarkMaterialByWaybillNo" parameterType="java.util.Map">
-     	delete from bms_marking_material where waybill_no in
+     <update id="deleteMarkMaterialByWaybillNo" parameterType="java.util.Map">
+     	update bms_marking_products set pmxzx_mark=null,bwd_mark=null,material_type=null  where waybill_no in
      	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
      		#{item}
      	</foreach>
-     </delete>
+     </update>
      
      <update id="updateMaterialAccount" parameterType="java.util.Map">
      	 update bms_products_material_account set waybill_no=#{waybillNo,jdbcType=VARCHAR}
