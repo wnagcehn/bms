@@ -254,7 +254,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			//如果excel数据本身存在问题，就没有将数据写入临时表的必要
 			long start = System.currentTimeMillis();
 			logger.info("任务ID【{}】 -> 保存数据到临时表 行数【{}】",taskId,tempList.size());
-			bizOutstockPackmaterialTempService.saveBatch(tempList);//保存到临时表
+			if (tempList.size() > 0) {
+				bizOutstockPackmaterialTempService.saveBatch(tempList);//保存到临时表
+			}
 			logger.info("任务ID【{}】 -> 保存至临时表成功 耗时【{}】",taskId,System.currentTimeMillis()-start);
 		}
 		
@@ -590,7 +592,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	private boolean dbCheck(){
 		
 		
-		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId());
+		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId(), 1000);
 			if(null == list || list.size() <= 0){
 				return true;
 			}
