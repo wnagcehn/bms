@@ -23,6 +23,7 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountDetailService;
+import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountTemplateService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
@@ -46,6 +47,9 @@ public class BmsQuoteDiscountDetailController {
 	
 	@Resource
 	private ISystemCodeService systemCodeService;
+	
+	@Autowired
+	private IBmsQuoteDiscountTemplateService bmsQuoteDiscountTemplateService;
 	/**
 	 * 根据id查询
 	 * @param id
@@ -64,6 +68,9 @@ public class BmsQuoteDiscountDetailController {
 	 */
 	@DataProvider
 	public void query(Page<BmsQuoteDiscountDetailEntity> page, Map<String, Object> param) {
+		BmsQuoteDiscountTemplateEntity templateEntity =bmsQuoteDiscountTemplateService.queryOne(param); 
+		param.put("bizType", templateEntity.getBizType());
+		param.put("subjectCode", templateEntity.getSubjectCode());
 		PageInfo<BmsQuoteDiscountDetailEntity> pageInfo;
 		String carrierid = "";
 		if("DISPATCH".equals(param.get("bizType"))){

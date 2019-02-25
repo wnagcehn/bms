@@ -97,16 +97,12 @@
     
     
     <select id="queryDiscountPrice" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity">
-		select * from bms_quote_discount_detail a 
-		INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code and b.del_flag='0'
-		INNER JOIN price_contract_discount_item c on b.template_code=c.template_code and c.del_flag='0'
-		INNER JOIN price_contract_info d on c.contract_code=d.contract_code and d.del_flag='0'
-		where 1=1  and d.customerId=#{customerId} and d.contract_type_code=#{contractTypeCode} 
-		and <![CDATA[d.start_date < current_timestamp()]]> and d.expire_date <![CDATA[>= ]]> current_timestamp()
-		and c.subject_id=#{subjectId} 
-		and a.start_time <![CDATA[<= #{createTime}]]> and a.end_time > #{createTime}
-		and a.down_limit<![CDATA[<=#{count}]]> and a.up_limit>#{count}
-		and a.del_flag=0
+		select * from bms_quote_discount_detail
+		where 1=1 
+		and template_code=#{templateCode}
+		and start_time <![CDATA[<= #{createTime}]]> and end_time > #{createTime}
+		and down_limit<![CDATA[<=#{count}]]> and up_limit>#{count}
+		and del_flag=0
     </select>
     
     <select id="queryByCustomerId" parameterType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
