@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.jms.JMSException;
@@ -75,7 +76,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	
 	public Map<Integer, String> errMap = null;
 	private Map<Integer, String> errorMap = null;
-	public Map<String,Integer> repeatMap = null;
 	public List<String> readColumnNames = null;
 	public String[] neededColumnNames = null;
 	
@@ -86,7 +86,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	private String taskId;
 	private int batchNum = 1000;
 
-	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
+	TreeMap<Integer,String> originColumn = new TreeMap<Integer,String>(); //源生表头信息
 	List<BizPalletInfoTempEntity> newList = new ArrayList<BizPalletInfoTempEntity>();
 	
 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
@@ -168,7 +168,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		
 		errMap = new HashMap<Integer, String>();
 		errorMap = new HashMap<Integer, String>();
-		repeatMap = new HashMap<String, Integer>();
 		
 		bmsMaterialImportTaskCommon.setTaskStatus(taskId, 0, FileAsynTaskStatusEnum.PROCESS.getCode());
 		
@@ -233,6 +232,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						tempList = loadTemp(dr, errorMsg);
 					} catch (Exception e) {
 						errorMap.put(dr.getRowNo(), e.getMessage());
+						errMap.clear();
 					}
 
 					//组装好的数据存入全局List中
@@ -258,7 +258,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				}
 
 				@Override
-				public void finish() {		
+				public void finish() {	
 					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
 					if(errorMap.size()==0){
@@ -478,6 +478,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							logger.error("写入结果文件失败！", e);
 						}
 		        		dataList.clear();
+		        		errorMap.clear();
 					}
 				}
 
@@ -510,6 +511,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		logger.info("上传结果文件到fastDfs");
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
+		workbook.dispose();
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 	    resultFullPath = resultStorePath.getFullPath();

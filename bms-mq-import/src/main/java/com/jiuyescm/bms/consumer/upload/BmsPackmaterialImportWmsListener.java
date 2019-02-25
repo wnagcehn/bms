@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.jms.JMSException;
@@ -86,7 +87,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 	private String taskId;
 	private int batchNum = 1000;
 
-	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
+	TreeMap<Integer,String> originColumn = new TreeMap<Integer,String>(); //源生表头信息
 	List<BizOutstockPackmaterialTempEntity> newList = new ArrayList<BizOutstockPackmaterialTempEntity>();
 	
 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
@@ -210,6 +211,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 						tempList = loadTemp(dr, errorMsg);
 					} catch (Exception e) {
 						errorMap.put(dr.getRowNo(), e.getMessage());
+						errMap.clear();
 					}
 
 					//组装好的数据存入全局List中
@@ -234,6 +236,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 
 				@Override
 				public void finish() {	
+					repeatMap.clear();
 					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
 					if (errMap.size() == 0) {
@@ -571,8 +574,8 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 								errorMsg += "【"+num0+"】不是数字;";
 							}
 							else{
-								if(num0.contains("-")){
-									errorMsg += "【"+num0+"】必须>0";
+								if(num0.contains("-") || "0".equals(num0)){
+									errorMsg += "【"+dc.getTitleName()+"】必须>0";
 								}
 							}
 							
@@ -624,8 +627,8 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 								errorMsg += "【"+num0+"】不是数字;";
 							}
 							else{
-								if(num0.contains("-")){
-									errorMsg += "【"+num0+"】必须>0";
+								if(num0.contains("-") || "0".equals(num0)){
+									errorMsg += "【"+dc.getTitleName()+"】必须>0";
 								}
 							}
 							
@@ -784,6 +787,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 						logger.error("写入结果文件失败！", e);
 					}
 	        		dataList.clear();
+	        		errorMap.clear();
 				}
 
 				@Override
@@ -803,6 +807,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
     	logger.info("上传结果文件到fastDfs");
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
+		workbook.dispose();
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 		String resultFullPath = resultStorePath.getFullPath();
