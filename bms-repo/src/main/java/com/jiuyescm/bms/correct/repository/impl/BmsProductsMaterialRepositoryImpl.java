@@ -122,7 +122,7 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		Map<String,Object> map=Maps.newHashMap();
 		map.put("waybillNoList", waybillNoList);
 		SqlSession session=this.getSqlSessionTemplate();
-		return session.delete("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.deleteMarkMaterialByWaybillNo",map);
+		return session.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.deleteMarkMaterialByWaybillNo",map);
 	}
 
 	@Override
