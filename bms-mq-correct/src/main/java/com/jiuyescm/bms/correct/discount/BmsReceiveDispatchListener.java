@@ -484,7 +484,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId("");
 					//queryVo.setServiceOrderNo(vo.getServiceOrderNo());
-					queryVo.setServiceOrderNo("PUR20190221000253");
+					queryVo.setServiceOrderNo(vo.getServiceOrderNo());
 					queryVo.setBizTypeCode("DISTRIBUTION");				
 					queryVo.setCarrierId(task.getCarrierId());
 					queryVo.setWarehouseCode("");
@@ -642,7 +642,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					//查询原始报价
 					if(DoubleUtil.isBlank(fee.getUnitPrice())){	
 						amount=getDispatchAmount(fee,configVo);
-					}	
+					}
 				}			
 				handAmount(discountVo,fee,amount);
 				//保存折扣方式
