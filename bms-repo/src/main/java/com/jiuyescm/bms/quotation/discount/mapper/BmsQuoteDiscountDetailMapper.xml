@@ -214,4 +214,11 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
         from pub_carrier_servicetype
         where delflag = "0" and carrierid = #{carrierid} and servicecode = #{servicecode}
     </select>
+    
+        <select id="queryServiceTypeCode" parameterType="java.util.Map"
+        resultType="String">
+        select servicecode
+        from pub_carrier_servicetype
+        where delflag = "0" and carrierid = #{carrierid} and servicename = #{servicename}
+    </select>
 </mapper>

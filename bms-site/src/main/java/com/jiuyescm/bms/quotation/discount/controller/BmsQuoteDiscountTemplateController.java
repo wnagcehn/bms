@@ -8,11 +8,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
@@ -243,7 +245,22 @@ public class BmsQuoteDiscountTemplateController {
 
 			// 解析Excel
 			long start = System.currentTimeMillis();
-			templateList = readExcelProduct(file, bs);
+			//查物流商id
+			BmsQuoteDiscountTemplateEntity templateEntity =bmsQuoteDiscountTemplateService.queryOne(parameter); 
+			String carrierid = "";
+			if("DISPATCH".equals(templateEntity.getBizType())){
+				Map<String, Object> map1 = new HashMap<>();
+				map1.put("typeCode", "DISPATCH_COMPANY");
+				map1.put("code", templateEntity.getSubjectCode());
+				PageInfo<SystemCodeEntity> sysPageInfo = systemCodeService.query(map1, 1, 20);
+				if(CollectionUtils.isNotEmpty(sysPageInfo.getList())){
+					carrierid = sysPageInfo.getList().get(0).getExtattr1();
+				}
+			}
+			Map<String,Object> conditionMap = new HashMap<>();
+			conditionMap.put("carrierid", carrierid);
+
+			templateList = readExcelProduct(file, bs,conditionMap);
 			System.out.println("读取数据:" + templateList.size() + "条，耗时："+  (System.currentTimeMillis()-start) + "毫秒");
 			if (null == templateList || templateList.size() <= 0) {
 				errorVo = new ErrorMessageVo();
@@ -362,9 +379,10 @@ public class BmsQuoteDiscountTemplateController {
 	 * @param file
 	 * @return
 	 */
-	private List<BmsQuoteDiscountDetailEntity> readExcelProduct(UploadFile file, BaseDataType bs) {
+	private List<BmsQuoteDiscountDetailEntity> readExcelProduct(UploadFile file, BaseDataType bs,Map condition) {
 		String fileSuffix = StringUtils.substringAfterLast(file.getFileName(), ".");
 		IFileReader reader = FileReaderFactory.getFileReader(fileSuffix);
+		String carrierid = (String) condition.get("carrierid");
 		try {
 			List<Map<String, String>> list = reader.getFileContent(file.getInputStream());
 			List<Map<String, String>> datas = Lists.newArrayList();
@@ -375,6 +393,15 @@ public class BmsQuoteDiscountTemplateController {
 				for (DataProperty prop : props) {
 
 					data.put(prop.getPropertyId(), map.get(prop.getPropertyName().toLowerCase()));
+				}
+				if(StringUtils.isNotBlank(carrierid)&&StringUtils.isNotBlank(data.get("serviceTypeName"))){
+					Map<String,Object> conditionMap = new HashMap<>();
+					conditionMap.put("carrierid", carrierid);
+			        conditionMap.put("servicename", data.get("serviceTypeName"));
+			        String codeString =  bmsQuoteDiscountDetailService.queryServiceTypeCode(conditionMap);
+			        if(StringUtils.isNoneBlank(codeString)){
+			        	data.put("serviceTypeCode", codeString);
+			        }
 				}
 				datas.add(data);
 			}
@@ -529,12 +556,42 @@ public class BmsQuoteDiscountTemplateController {
 	}
 	
 	private List<Map<String,Object>> getDataList(Map<String,Object> parameter) throws Exception{
+		//查询物流商id
+		BmsQuoteDiscountTemplateEntity templateEntity =bmsQuoteDiscountTemplateService.queryOne(parameter); 
+		Map<String,Object> param = new HashMap<>();
+		param.put("bizType", templateEntity.getBizType());
+		param.put("subjectCode", templateEntity.getSubjectCode());
+		PageInfo<BmsQuoteDiscountDetailEntity> pageInfo;
+		String carrierid = "";
+		if("DISPATCH".equals(param.get("bizType"))){
+			String string = (String) param.get("subjectCode");
+			Map<String, Object> map = new HashMap<>();
+			map.put("typeCode", "DISPATCH_COMPANY");
+			map.put("code", string);
+			PageInfo<SystemCodeEntity> sysPageInfo = systemCodeService.query(map, 1, 20);
+			if(CollectionUtils.isNotEmpty(sysPageInfo.getList())){
+				carrierid = sysPageInfo.getList().get(0).getExtattr1();
+			}
+		}
+		Map<String,Object> conditionMap = new HashMap<>();
+		conditionMap.put("carrierid", carrierid);
+
 		List<BmsQuoteDiscountDetailEntity> list = bmsQuoteDiscountDetailService.queryByTemplateCode(parameter.get("templateCode").toString());
 		List<Map<String,Object>> mapList=new ArrayList<Map<String,Object>>();
 		if(list!=null && list.size()>0){
 			Map<String,Object> map=null;
 			for(BmsQuoteDiscountDetailEntity entity:list){
 				map=new HashMap<String,Object>();
+				
+				if(StringUtils.isNotBlank(carrierid)&&StringUtils.isNotBlank(entity.getServiceTypeCode())){
+			        conditionMap.put("servicecode", entity.getServiceTypeCode());
+			        String nameString =  bmsQuoteDiscountDetailService.queryServiceTypeName(conditionMap);
+			        if(StringUtils.isNoneBlank(nameString)){
+			        	entity.setServiceTypeName(nameString);
+			        }
+				}
+
+				map.put("serviceTypeName",entity.getServiceTypeName() );
 				map.put("startTime", entity.getStartTime());
 				map.put("endTime", entity.getEndTime());
 				map.put("downLimit", entity.getDownLimit());
