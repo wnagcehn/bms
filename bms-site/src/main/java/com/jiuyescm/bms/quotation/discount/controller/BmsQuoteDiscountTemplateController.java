@@ -276,9 +276,9 @@ public class BmsQuoteDiscountTemplateController {
 			}
 			//检验物流产品类型
 			String check = checkServiceType(file, bs,servicenameSet);
-			if (null == templateList || templateList.size() <= 0) {
+			if (StringUtils.isNoneBlank(check)) {
 				errorVo = new ErrorMessageVo();
-				errorVo.setMsg("导入的Excel数据为空或者数据格式不对!");
+				errorVo.setMsg("没有物流产品类型："+check);
 				infoList.add(errorVo);
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
@@ -643,7 +643,7 @@ public class BmsQuoteDiscountTemplateController {
 	/**
 	 * 检验物流产品类型
 	 */
-	private String checkServiceType(UploadFile file, BaseDataType bs,Set set) {
+	private String checkServiceType(UploadFile file, BaseDataType bs,Set<String> set) {
 		String fileSuffix = StringUtils.substringAfterLast(file.getFileName(), ".");
 		IFileReader reader = FileReaderFactory.getFileReader(fileSuffix);
 		StringBuilder stringBuilder = new StringBuilder();
