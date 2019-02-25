@@ -455,6 +455,9 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					for (DataColumn dc : dr.getColumns()) {
 						if ("库存日期".equals(dc.getTitleName())) {
 							try {
+								if (StringUtils.isBlank(dc.getColValue())) {
+									continue;
+								}
 								dataItem.put(dc.getTitleName(), DateUtil.transStringToTimeStamp(dc.getColValue()).toString());
 							} catch (Exception e) {
 								logger.error("日期格式异常！");

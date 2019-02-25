@@ -147,5 +147,6 @@ public class BmsProductsMaterialAccountEntity implements IEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
+
     
 }

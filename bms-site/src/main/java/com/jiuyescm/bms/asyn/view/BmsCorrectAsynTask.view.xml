@@ -166,7 +166,7 @@ if(month &lt; 10){&#xD;
 }else{&#xD;
 	createTime = year+&quot;&quot;+month;&#xD;
 }&#xD;
-var param=&quot;?customerId=&quot;+data.get(&quot;customerId&quot;)+&quot;&amp;createTime=&quot;+createTime+&quot;&amp;taskId=&quot;+data.get(&quot;taskId&quot;);&#xD;
+var param=&quot;?customerId=&quot;+data.get(&quot;customerId&quot;)+&quot;&amp;createTime=&quot;+createTime;&#xD;
 window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct.d&quot;+param, &quot;纠正明细&quot;, &quot;&quot;, true);</ClientEvent>
         <Property name="caption">纠正明细</Property>
         <Property name="icon">url(>skin>common/icons.gif) -260px -20px</Property>

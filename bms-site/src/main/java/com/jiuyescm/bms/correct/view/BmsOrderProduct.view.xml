@@ -171,7 +171,7 @@
   <View>
     <ClientEvent name="onReady">var customerId = GetQueryString(&quot;customerId&quot;);&#xD;
 var createTime = GetQueryString(&quot;createTime&quot;);&#xD;
-var taskId = GetQueryString(&quot;taskId&quot;);&#xD;
+//var taskId = GetQueryString(&quot;taskId&quot;);&#xD;
 &#xD;
 var data = view.get(&quot;#dsBmsOrderProductEntityQuery.data&quot;).current;&#xD;
 &#xD;
@@ -179,7 +179,8 @@ if(customerId == undefined || customerId == null){&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
-view.id(&quot;taskId&quot;).set(&quot;text&quot;,taskId);&#xD;
+//view.id(&quot;taskId&quot;).set(&quot;text&quot;,taskId);&#xD;
+view.id(&quot;customerId&quot;).set(&quot;text&quot;,customerId);&#xD;
 &#xD;
 var dsBmsOrderProductEntity= view.get(&quot;#dsBmsOrderProductEntity&quot;);&#xD;
 data.set(&quot;customerId&quot;,customerId);&#xD;
@@ -316,9 +317,6 @@ with (view.get(&quot;#dsBmsMarkingWeightEntity&quot;)){&#xD;
                       <Property name="property">percent</Property>
                       <Property name="name">percent</Property>
                     </DataColumn>
-                    <DataColumn name="taskId">
-                      <Property name="property">taskId</Property>
-                    </DataColumn>
                   </DataGrid>
                 </Container>
               </ControlTab>
@@ -365,9 +363,6 @@ with (view.get(&quot;#dsBmsMarkingMaterialEntity&quot;)){&#xD;
                     <DataColumn name="percent">
                       <Property name="property">percent</Property>
                     </DataColumn>
-                    <DataColumn name="taskId">
-                      <Property name="property">taskId</Property>
-                    </DataColumn>
                     <DataColumn name="waybillNo">
                       <Property name="property">waybillNo</Property>
                     </DataColumn>
@@ -383,13 +378,15 @@ with (view.get(&quot;#dsBmsMarkingMaterialEntity&quot;)){&#xD;
         <SideControl>
           <Container>
             <DataGrid id="masData">
-              <ClientEvent name="onDataRowClick">var taskid = view.id(&quot;taskId&quot;).get(&quot;text&quot;);&#xD;
+              <ClientEvent name="onDataRowClick">//var taskid = view.id(&quot;taskId&quot;).get(&quot;text&quot;);&#xD;
+var customerId = view.id(&quot;customerId&quot;).get(&quot;text&quot;);&#xD;
 &#xD;
 var data = view.get(&quot;#dsBmsOrderProductEntity&quot;).getData();&#xD;
 with (view.get(&quot;#dsBmsProductsMaterialAccountEntity&quot;)){&#xD;
 	var queryJson={&#xD;
 		productsMark:data.current.get(&quot;productMark&quot;),&#xD;
-		taskId:taskid,&#xD;
+		//taskId:taskid,&#xD;
+		customerId:customerId,&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -398,7 +395,8 @@ with (view.get(&quot;#dsBmsProductsMaterialAccountEntity&quot;)){&#xD;
 with (view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;)){&#xD;
 	var queryJson={&#xD;
 		productsMark:data.current.get(&quot;productMark&quot;),&#xD;
-		taskId:taskid,&#xD;
+		//taskId:taskid,&#xD;
+		customerId:customerId,&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -546,7 +544,7 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <Label id="taskId">
+    <Label id="customerId">
       <Property name="visible">false</Property>
       <Property name="hideMode">display</Property>
     </Label>

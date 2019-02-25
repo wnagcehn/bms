@@ -426,6 +426,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 					for (DataColumn dc : dr.getColumns()) {
 						if ("出库日期".equals(dc.getTitleName())) {
 							try {
+								if (StringUtils.isBlank(dc.getColValue())) {
+									continue;
+								}
 								dataItem.put(dc.getTitleName(), format.format(DateUtil.transStringToTimeStamp(dc.getColValue())));
 							} catch (Exception e) {
 								logger.error("日期格式异常！");
@@ -709,7 +712,10 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							//校验耗材Code
 							if(!materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
 								errorMsg += "耗材【"+newTempEntity.getConsumerMaterialCode()+"】不存在;";
+							}else if (!materialName.equals(materialMap.get(newTempEntity.getConsumerMaterialCode()).getMaterialType())) {
+								errorMsg += materialName+"类型下无耗材【"+ newTempEntity.getConsumerMaterialCode() +"】;";
 							}
+							
 							if(errorMsg.length()>0){
 								count = 1;
 								continue;
@@ -767,7 +773,10 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 							//校验耗材Code
 							if(!materialMap.containsKey(newTempEntity.getConsumerMaterialCode())){
 								errorMsg += "耗材【"+newTempEntity.getConsumerMaterialCode()+"】不存在;";
+							}else if (!materialName.equals(materialMap.get(newTempEntity.getConsumerMaterialCode()).getMaterialType())) {
+								errorMsg += materialName+"类型下无耗材【"+ newTempEntity.getConsumerMaterialCode() +"】;";
 							}
+							
 							if(errorMsg.length()>0){
 								count=1;
 								continue;

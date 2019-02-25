@@ -31,33 +31,35 @@ products_mark, material_type, material_mark, percent, task_id, waybill_no, type
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
-        select
-        <include refid="BASE_COLUMNS_ALL" />
-        from bms_products_material_account
+        select w.id,w.products_mark,w.material_type,w.material_mark,w.percent,w.task_id,w.waybill_no,w.type from bms_products_material_account w
+		LEFT JOIN bms_correct_asyn_task c on w.task_id=c.task_id
         where 1 = 1
         	<if test=" id != null and id !='' ">
-				and id = #{id}
+				and w.id = #{id}
 			</if>
         	<if test=" productsMark != null and productsMark !='' ">
-				and products_mark = #{productsMark}
+				and w.products_mark = #{productsMark}
 			</if>
         	<if test=" materialType != null and materialType !='' ">
-				and material_type = #{materialType}
+				and w.material_type = #{materialType}
 			</if>
         	<if test=" materialMark != null and materialMark !='' ">
-				and material_mark = #{materialMark}
+				and w.material_mark = #{materialMark}
 			</if>
         	<if test=" percent != null and percent !='' ">
-				and percent = #{percent}
+				and w.percent = #{percent}
 			</if>
         	<if test=" taskId != null and taskId !='' ">
-				and task_id = #{taskId}
+				and w.task_id = #{taskId}
 			</if>
         	<if test=" waybillNo != null and waybillNo !='' ">
-				and waybill_no = #{waybillNo}
+				and w.waybill_no = #{waybillNo}
 			</if>
         	<if test=" type != null and type !='' ">
-				and type = #{type}
+				and w.type = #{type}
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				and c.customerId=#{customerId}
 			</if>
     </select>
 

@@ -28,24 +28,26 @@ products_mark, weight, percent, task_id
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity">
-        select
-        <include refid="BASE_COLUMNS_ALL" />
-        from bms_products_weight_account
+        select w.id,w.products_mark,w.weight,w.percent,w.task_id from bms_products_weight_account w
+		LEFT JOIN bms_correct_asyn_task c on w.task_id=c.task_id
         where 1 = 1
         	<if test=" id != null and id !='' ">
-				and id = #{id}
+				and w.id = #{id}
 			</if>
         	<if test=" productsMark != null and productsMark !='' ">
-				and products_mark = #{productsMark}
+				and w.products_mark = #{productsMark}
 			</if>
         	<if test=" weight != null and weight !='' ">
-				and weight = #{weight}
+				and w.weight = #{weight}
 			</if>
         	<if test=" percent != null and percent !='' ">
-				and percent = #{percent}
+				and w.percent = #{percent}
 			</if>
         	<if test=" taskId != null and taskId !='' ">
-				and task_id = #{taskId}
+				and w.task_id = #{taskId}
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				and c.customerId=#{customerId}
 			</if>
     </select>
 
