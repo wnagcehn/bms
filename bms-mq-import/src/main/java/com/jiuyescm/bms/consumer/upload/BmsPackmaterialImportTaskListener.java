@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.jms.JMSException;
@@ -81,13 +82,14 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	private Map<String,Integer> repeatMap = null;
 	
 	List<BizOutstockPackmaterialTempEntity> newList = new ArrayList<BizOutstockPackmaterialTempEntity>();
-	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
+	TreeMap<Integer,String> originColumn = new TreeMap<Integer,String>(); //源生表头信息
 	private List<String> materialCommonList = null;
 	
 	BmsFileAsynTaskVo taskEntity = new BmsFileAsynTaskVo();
 	
 	private String taskId;
 	private int batchNum = 1000;
+	//生成结果文件集合
 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	private int roNo = 1;
 	
@@ -166,9 +168,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		XlsxWorkBook reader = null;
 		byte[] bytes = storageClient.downloadFile(taskEntity.getOriginFilePath(), new DownloadByteArray());
 		logger.info("任务ID【{}】 -> byte长度【{}】",taskId,bytes.length);
-		InputStream inputStream = new ByteArrayInputStream(bytes);	
+		InputStream inputStream = new ByteArrayInputStream(bytes);
 		try{
-			reader = new XlsxWorkBook(inputStream);		
+			reader = new XlsxWorkBook(inputStream);	
 			Sheet sheet = reader.getSheets().get(0);
 			//更新文件总行数
 			BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 30,null, sheet.getRowCount(), null, null, null, null);
@@ -221,10 +223,12 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 					
 					//组装往临时表存的数据，校验出错捕获加入errList
 					List<BizOutstockPackmaterialTempEntity> tempList = null;
+					
 					try {
 						tempList = loadTemp(dr, errorMsg);
 					} catch (Exception e) {
 						errorMap.put(dr.getRowNo(), e.getMessage());
+						errMap.clear();
 					}
 
 					//组装好的数据存入全局List中
@@ -249,6 +253,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 
 				@Override
 				public void finish() {
+					repeatMap.clear();
 					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
 					if (errorMap.size() == 0) {
@@ -456,6 +461,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						logger.error("写入结果文件失败！", e);
 					}
 	        		dataList.clear();
+	        		errorMap.clear();
 				}
 
 				@Override
@@ -474,6 +480,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
+		workbook.dispose();
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 	    String resultFullPath = resultStorePath.getFullPath();
@@ -565,7 +572,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		long start = System.currentTimeMillis();
 		try {
 			//保存到临时表
-			bizOutstockPackmaterialTempService.saveBatch(newList); 
+			if (newList.size() > 0) {
+				bizOutstockPackmaterialTempService.saveBatch(newList); 
+			}		
 		} catch (Exception e) {
 			logger.info("任务ID【{}】 -> 写入临时表-失败:【{}】",taskId,e);
 			k = -1;
@@ -692,8 +701,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 								errorMsg += "【"+num0+"】不是数字;";
 							}
 							else{
-								if(num0.contains("-")){
-									errorMsg += "【"+num0+"】必须>0";
+								if(num0.contains("-") || "0".equals(num0)){
+									errorMsg += "【"+dc.getTitleName()+"】必须>0";
 								}
 							}
 							
@@ -750,8 +759,8 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 								errorMsg += "【"+num0+"】不是数字;";
 							}
 							else{
-								if(num0.contains("-")){
-									errorMsg += "【"+num0+"】必须>0";
+								if(num0.contains("-") || "0".equals(num0)){
+									errorMsg += "【"+dc.getTitleName()+"】必须>0";
 								}
 							}
 							
