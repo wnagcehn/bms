@@ -152,7 +152,7 @@
         <Property name="label">整单折扣率(%)</Property>
       </PropertyDef>
       <PropertyDef name="creator">
-        <Property name="label">创建时间</Property>
+        <Property name="label">创建人</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>

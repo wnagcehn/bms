@@ -1,10 +1,13 @@
 package com.jiuyescm.bms.quotation.discount.controller;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -28,6 +31,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
+import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.RecordLogBizTypeEnum;
 import com.jiuyescm.bms.common.enumtype.RecordLogOperateType;
@@ -87,6 +92,9 @@ public class BmsQuoteDiscountTemplateController {
 
 	@Autowired
 	private IWarehouseService warehouseService;
+	
+	@Autowired
+	private ICarrierProductService carrierProductService;
 
 	@Resource
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
@@ -227,6 +235,34 @@ public class BmsQuoteDiscountTemplateController {
 		// 当期时间
 		Timestamp currentTime = JAppContext.currentTimestamp();
 		String userName = JAppContext.currentUserName();
+		
+		//查物流商id
+		BmsQuoteDiscountTemplateEntity templateEntity =bmsQuoteDiscountTemplateService.queryOne(parameter); 
+		String carrierid = "";
+		if("DISPATCH".equals(templateEntity.getBizType())){
+			Map<String, Object> map1 = new HashMap<>();
+			map1.put("typeCode", "DISPATCH_COMPANY");
+			map1.put("code", templateEntity.getSubjectCode());
+			PageInfo<SystemCodeEntity> sysPageInfo = systemCodeService.query(map1, 1, 20);
+			if(CollectionUtils.isNotEmpty(sysPageInfo.getList())){
+				carrierid = sysPageInfo.getList().get(0).getExtattr1();
+			}
+		}
+		Map<String,Object> conditionMap = new HashMap<>();
+		conditionMap.put("carrierid", carrierid);
+		conditionMap.put("delflag", "0");
+		List<CarrierProductVo> list= null;
+		try {
+			list = carrierProductService.query(conditionMap);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		Set<String> servicenameSet = new HashSet<>();
+		if(CollectionUtils.isNotEmpty(list)){
+			for (CarrierProductVo vo : list) {
+				servicenameSet.add(vo.getServicename());
+			}
+		}
 		try {
 			BaseDataType bs = new DiscountQuoteTemplateDataType();
 			// 检查导入模板是否正确
@@ -238,6 +274,15 @@ public class BmsQuoteDiscountTemplateController {
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
 			}
+			//检验物流产品类型
+			String check = checkServiceType(file, bs,servicenameSet);
+			if (null == templateList || templateList.size() <= 0) {
+				errorVo = new ErrorMessageVo();
+				errorVo.setMsg("导入的Excel数据为空或者数据格式不对!");
+				infoList.add(errorVo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
 
 			logger.info("验证列名耗时：" + FileOperationUtil.getOperationTime(starTime));
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 100);
@@ -245,20 +290,6 @@ public class BmsQuoteDiscountTemplateController {
 
 			// 解析Excel
 			long start = System.currentTimeMillis();
-			//查物流商id
-			BmsQuoteDiscountTemplateEntity templateEntity =bmsQuoteDiscountTemplateService.queryOne(parameter); 
-			String carrierid = "";
-			if("DISPATCH".equals(templateEntity.getBizType())){
-				Map<String, Object> map1 = new HashMap<>();
-				map1.put("typeCode", "DISPATCH_COMPANY");
-				map1.put("code", templateEntity.getSubjectCode());
-				PageInfo<SystemCodeEntity> sysPageInfo = systemCodeService.query(map1, 1, 20);
-				if(CollectionUtils.isNotEmpty(sysPageInfo.getList())){
-					carrierid = sysPageInfo.getList().get(0).getExtattr1();
-				}
-			}
-			Map<String,Object> conditionMap = new HashMap<>();
-			conditionMap.put("carrierid", carrierid);
 
 			templateList = readExcelProduct(file, bs,conditionMap);
 			System.out.println("读取数据:" + templateList.size() + "条，耗时："+  (System.currentTimeMillis()-start) + "毫秒");
@@ -608,4 +639,35 @@ public class BmsQuoteDiscountTemplateController {
 		}	
 		return mapList;
 	}
+	
+	/**
+	 * 检验物流产品类型
+	 */
+	private String checkServiceType(UploadFile file, BaseDataType bs,Set set) {
+		String fileSuffix = StringUtils.substringAfterLast(file.getFileName(), ".");
+		IFileReader reader = FileReaderFactory.getFileReader(fileSuffix);
+		StringBuilder stringBuilder = new StringBuilder();
+			List<Map<String, String>> list = null;
+			try {
+				list = reader.getFileContent(file.getInputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			List<DataProperty> props = bs.getDataProps();
+			for (Map<String, String> map : list) {
+				Map<String, String> data = Maps.newHashMap();
+				for (DataProperty prop : props) {
+					data.put(prop.getPropertyId(), map.get(prop.getPropertyName().toLowerCase()));
+				}
+				if(!set.isEmpty()&&StringUtils.isNotBlank(data.get("serviceTypeName"))){
+					String serviceTypeName = data.get("serviceTypeName");
+					if(!set.contains(serviceTypeName)){
+						stringBuilder.append(serviceTypeName+";");
+					}
+				}
+			}
+			return stringBuilder.toString();
+	}
+	
+	
 }
