@@ -113,5 +113,10 @@ public class BmsQuoteDiscountDetailServiceImpl implements IBmsQuoteDiscountDetai
     public String queryServiceTypeName(Map<String, Object> condition) {
        return  bmsQuoteDiscountDetailRepository.queryServiceTypeName(condition);
     }
+    
+    @Override
+    public String queryServiceTypeCode(Map<String, Object> condition) {
+       return  bmsQuoteDiscountDetailRepository.queryServiceTypeCode(condition);
+    }
 	
 }

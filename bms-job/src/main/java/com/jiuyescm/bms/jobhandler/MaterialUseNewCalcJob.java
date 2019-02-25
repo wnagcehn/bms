@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
@@ -54,8 +57,6 @@ import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
 
-import net.sf.json.JSONObject;
-
 @JobHander(value="materialUseNewCalcJob")
 @Service
 public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmaterialEntity,FeesReceiveStorageEntity> {
@@ -86,6 +87,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	Map<String,List<PriceMaterialQuotationEntity>> mapCusPrice=null;
 	Map<String,SystemCodeEntity> noFeesMap=null;
+	List<SystemCodeEntity> noCarrierMap=null;
 	
 	protected void initConf(){
 		mapCusPrice=new ConcurrentHashMap<String,List<PriceMaterialQuotationEntity>>();
@@ -93,6 +95,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
 		materialMap=queryAllMaterial();
 		noFeesMap=queryNoFees();
+		noCarrierMap=queryNoCarrier();
 	}
 	
 
@@ -213,11 +216,34 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	public boolean isNoExe(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity feeEntity) {
+		//运单
+		BizDispatchBillEntity biz=bizDispatchBillService.getDispatchEntityByWaybillNo(entity.getWaybillNo());
+		//耗材类型
+		String materialType = "";
+		if(materialMap!=null && materialMap.containsKey(entity.getConsumerMaterialCode())){
+			materialType=materialMap.get(entity.getConsumerMaterialCode()).getMaterialType();
+		}
+
+		//物流商对应得耗材不计费
+		if(biz!=null && StringUtils.isNotBlank(materialType)){
+			for (SystemCodeEntity scEntity : noCarrierMap) {
+				if(scEntity.getCode().equals(biz.getCarrierId()) && scEntity.getExtattr1().equals(materialType)){
+					XxlJobLogger.log("-->"+entity.getId()+String.format("该物流商使用的耗材不收钱", entity.getId()));
+					entity.setIsCalculated(CalculateState.No_Exe.getCode());
+					feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+					entity.setRemark(entity.getRemark()+String.format("该物流商使用的耗材不收钱", entity.getId())+";");
+					return true;
+				}
+			}
+			
+		}
+		
+		//指定耗材不计费
 		if(entity.getConsumerMaterialCode()!=null && noFeesMap.containsKey(entity.getConsumerMaterialCode())){
 				XxlJobLogger.log("-->"+entity.getId()+String.format("不计算耗材使用费的耗材", entity.getId()));
 				entity.setIsCalculated(CalculateState.No_Exe.getCode());
 				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
-				entity.setRemark(entity.getRemark()+String.format("顺丰防水袋，不收钱", entity.getId())+";");
+				entity.setRemark(entity.getRemark()+String.format("耗材不收钱", entity.getId())+";");
 				return true;
 		}
 		return false;
@@ -553,5 +579,19 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		return map;
 	}
 	
+	/**
+	 * 查询不计算的物流商
+	 * @return
+	 */
+	public List<SystemCodeEntity> queryNoCarrier(){
+		List<SystemCodeEntity> list=new ArrayList<SystemCodeEntity>();
+		Map<String,Object> condition=Maps.newHashMap();
+		condition.put("typeCode", "CARRIER_FREE");
+		PageInfo<SystemCodeEntity> page = systemCodeRepository.query(condition, 1, 999999);
+		if(page.getList()!=null||page.getList().size()>0){
+			list = page.getList();
+		}
+		return list;
+	}
 
 }

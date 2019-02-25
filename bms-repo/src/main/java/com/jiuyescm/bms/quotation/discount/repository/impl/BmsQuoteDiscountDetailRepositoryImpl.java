@@ -107,5 +107,10 @@ public class BmsQuoteDiscountDetailRepositoryImpl extends MyBatisDao<BmsQuoteDis
 		String string = (String) selectOne("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountDetailMapper.queryServiceTypeName", condition);
         return string;
     }
-	
+
+	@Override
+    public String queryServiceTypeCode(Map<String, Object> condition) {
+		String string = (String) selectOne("com.jiuyescm.bms.quotation.discount.BmsQuoteDiscountDetailMapper.queryServiceTypeCode", condition);
+        return string;
+    }
 }

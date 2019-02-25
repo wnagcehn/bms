@@ -4,6 +4,7 @@ public class DiscountQuoteTemplateDataType extends BaseDataType{
 	
 	public DiscountQuoteTemplateDataType(){
 		this.name = "折扣报价模板";
+		this.dataProps.add(new DataProperty("serviceTypeName", "物流产品类型"));
 		this.dataProps.add(new DataProperty("startTime", "开始时间"));
 		this.dataProps.add(new DataProperty("endTime", "结束时间"));
 		this.dataProps.add(new DataProperty("downLimit", "下限"));

@@ -37,4 +37,6 @@ public interface IBmsQuoteDiscountDetailService {
 
 	String queryServiceTypeName(Map<String, Object> condition);
 
+	String queryServiceTypeCode(Map<String, Object> condition);
+
 }
