@@ -647,6 +647,8 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		BizPalletInfoTempEntity tempEntity10 = null;
 		List<BizPalletInfoTempEntity> tempList = new ArrayList<BizPalletInfoTempEntity>();
 		
+		boolean isCustomerNull = false;
+		boolean isDateNull = false;
 		boolean isAllEmpty=false;
 		tempEntity = new BizPalletInfoTempEntity();
 		tempEntity.setRowExcelNo(dr.getRowNo());
@@ -665,6 +667,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}else {
 						errorMsg += "库存日期必填;";
+						isDateNull = true;
 					}
 					break;
 				case "仓库":
@@ -691,6 +694,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						}
 					}else {
 						errorMsg+="商家必填;";
+						isCustomerNull = true;
 					}
 					break;
 				case "商品冷冻":
@@ -847,6 +851,10 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			}
 		} catch (Exception e) {
 			errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
+		}
+		
+		if (isDateNull && isCustomerNull) {
+			return tempList;
 		}
 		
 		if(!isAllEmpty){

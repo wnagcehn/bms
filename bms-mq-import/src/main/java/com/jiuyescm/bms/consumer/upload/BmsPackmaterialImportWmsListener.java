@@ -465,6 +465,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 	private List<BizOutstockPackmaterialTempEntity> loadTemp(DataRow dr, String errorMsg) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
 		BizOutstockPackmaterialTempEntity tempEntity = null;
 		List<BizOutstockPackmaterialTempEntity> tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
+		boolean isWaybillNull = false;
 		//本行是否拥有耗材
 		boolean isHaveMaterial = false;
 		tempEntity = new BizOutstockPackmaterialTempEntity();
@@ -527,7 +528,10 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 			errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
 		}
 
-			
+		if (isWaybillNull) {
+			return tempList;
+		}	
+		
 		//****************************************************************** 遍历耗材
 		for (Map<String,String> map : materialGroup) {
 			String codeName = "";

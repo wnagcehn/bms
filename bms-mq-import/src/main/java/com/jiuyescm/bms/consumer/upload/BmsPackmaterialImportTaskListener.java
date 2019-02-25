@@ -220,7 +220,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 				public void read(DataRow dr) {
 					//行错误信息
 					String errorMsg="";			
-					
+
 					//组装往临时表存的数据，校验出错捕获加入errList
 					List<BizOutstockPackmaterialTempEntity> tempList = null;
 					
@@ -403,6 +403,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		for (Map.Entry<Integer, String> map : originColumn.entrySet()) {
 			exportColumns.add(map.getValue());
 		}
+		originColumn.clear();
 		
 		final POISXSSUtil poiUtil = new POISXSSUtil();
 		final SXSSFWorkbook workbook = new SXSSFWorkbook(10000);	
@@ -593,6 +594,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	private List<BizOutstockPackmaterialTempEntity> loadTemp(DataRow dr, String errorMsg) {
 		BizOutstockPackmaterialTempEntity tempEntity = null;
 		List<BizOutstockPackmaterialTempEntity> tempList = new ArrayList<BizOutstockPackmaterialTempEntity>(); 
+		boolean isWaybillNull = false; //运单号是否为空  true-空  false-非空
 		//本行是否拥有耗材
 		boolean isHaveMaterial = false;
 		
@@ -651,6 +653,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 					}else {
 //						errMap.put(dr.getRowNo(), dc.getTitleName()+"是必填项");
 						errorMsg+="运单号是必填项;";
+						isWaybillNull = true;
 					}
 					break;
 				default:
@@ -661,6 +664,10 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 		} catch (Exception e) {
 			errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
 		}		
+		
+		if (isWaybillNull) {
+			return tempList;
+		}
 		
 		//起始列
 		int index=0;
