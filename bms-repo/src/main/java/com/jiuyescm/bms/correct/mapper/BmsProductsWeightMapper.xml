@@ -141,5 +141,6 @@
        	<if test=" materialType != null and materialType !='' ">
 			and material_type = #{materialType}
 		</if> 
+		limit 1
     </select>
 </mapper> 
