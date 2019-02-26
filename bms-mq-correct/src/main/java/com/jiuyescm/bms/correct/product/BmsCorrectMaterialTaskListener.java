@@ -528,9 +528,22 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 					for(int i=0;i<array.length;i++){
 						pList.add(array[i]);
 					}
+					condition.put("productsMark", proAccountVo.getProductsMark());
 					condition.put("list", pList);
+					//查询出耗材标对应得耗材编码
+					Map<String,String> materialMap=bmsProductsMaterialService.getMaterialMap(condition);
+					pList=new ArrayList<String>();
+					//遍历map中的值 (key是编码，value是标)
+					for (String value : materialMap.keySet()) { 
+					  pList.add(value);
+					}
+					condition.clear();
+					condition.put("list", pList);
+					//返回的是code
 					metrialDetail=bizOutstockPackmaterialService.getMaxBwdVolumn(condition);
-				}			
+					//将编码code转化为标
+					metrialDetail=materialMap.get(metrialDetail);
+				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

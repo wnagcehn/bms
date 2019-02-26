@@ -139,5 +139,13 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		SqlSession session=this.getSqlSessionTemplate();
 		return session.selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queryBwdMaterial", condition);
 	
+	}
+
+	@Override
+	public Map<String, String> getMaterialMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		Map<String,String> result=(Map<String, String>) selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.getMaterialMap", condition);
+
+		return result;
 	}	
 }
