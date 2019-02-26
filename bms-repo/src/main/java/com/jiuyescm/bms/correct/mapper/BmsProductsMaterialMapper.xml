@@ -186,12 +186,12 @@
      	 from
 			(select a.products_mark,a.material_type,a.pmxzx_mark,COUNT(a.pmxzx_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
 			GROUP BY a.products_mark,a.material_type,a.pmxzx_mark) m
 		 LEFT JOIN 
 		 	(select a.products_mark,a.material_type,a.pmxzx_mark,COUNT(a.pmxzx_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
 			GROUP BY a.products_mark,a.material_type) n
 		 on m.products_mark=n.products_mark and m.material_type=n.material_type
      </insert>
@@ -202,12 +202,12 @@
      	 from
 			(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
 			GROUP BY a.products_mark,a.bwd_mark) m
 		 LEFT JOIN 
 		 	(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
 			GROUP BY a.products_mark) n
 		 on m.products_mark=n.products_mark
      </insert>
