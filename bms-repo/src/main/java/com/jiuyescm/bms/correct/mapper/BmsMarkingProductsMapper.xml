@@ -135,7 +135,9 @@ waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, materia
 		INNER JOIN biz_outstock_packmaterial o on m.waybill_no=o.waybill_no and o.del_flag='0'
 		WHERE 1=1
 		and m.products_mark=#{productsMark}
-		and m.material_type=#{materialType}
+		<if test=" materialType != null and materialType !='' ">
+			and m.material_type=#{materialType}
+		</if>
 		<if test=" pmxzxMark != null and pmxzxMark !='' ">
 			and m.pmxzx_mark=#{pmxzxMark}
 		</if>

@@ -174,7 +174,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 			return "此任务不是纠正任务";
 		}
 		String taskStatus = list.get(0).getTaskStatus();
-		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus))return "此纠正任务的状态不能纠正";
+		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus)&&!"FAIL".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
 		String taskId = snowflakeSequenceService.nextStringId();
 		
