@@ -257,7 +257,7 @@
 		and a.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]>
      </select>
        
-     <select id="getMaterialMap" parameterType="java.util.Map" resultType="java.util.Map">
+     <select id="getMaterialMap" parameterType="java.util.Map" resultMap="java.util.Map">
 		select b.consumer_material_code,a.bwd_mark from bms_marking_products a 
 		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
