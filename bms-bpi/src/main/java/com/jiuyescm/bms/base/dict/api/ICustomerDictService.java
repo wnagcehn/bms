@@ -3,6 +3,7 @@ package com.jiuyescm.bms.base.dict.api;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 
@@ -71,4 +72,7 @@ public interface ICustomerDictService {
 	 * @return
 	 */
 	PageInfo<PubCustomerVo> queryPubCustomer(Map<String, Object> condition,int pageNo,int pageSize);
+
+	PageInfo<PubCustomerLookupEntity> queryPubCustomerLookup(
+			Map<String, Object> condition, int pageNo, int pageSize);
 }

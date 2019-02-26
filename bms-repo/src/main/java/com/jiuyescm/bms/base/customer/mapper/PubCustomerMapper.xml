@@ -145,4 +145,38 @@ a.id, a.mk_id, a.customer_id, a.customer_name, a.short_name, a.creator, a.create
 				and a.write_time = #{writeTime}
 			</if>
     </select>
+    
+        <select id="queryPageLookup" parameterType="java.util.Map" resultType = "com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity">
+        select
+a.mk_id mkInvoiceId, a.customer_id customerid, a.customer_name customername, a.short_name shortname, a.creator creperson, a.create_time cretime , a.last_modifier modperson, a.last_modify_time modtime, a.del_flag delflag, a.linkman, a.tel, a.mobile, a.address,b.mk_invoice_name mkInvoiceName
+ from pub_customer a LEFT JOIN pub_customer_base b ON a.mk_id = b.mk_id
+        where 1 = 1
+            <if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				and b.mk_invoice_name LIKE CONCAT('%',#{mkInvoiceName},'%')
+			</if>
+        	<if test=" mkInvoiceId != null and mkInvoiceId !='' ">
+				and a.mk_id = #{mkInvoiceId}
+			</if>
+        	<if test=" customerid != null and customerid !='' ">
+				and a.customer_id = #{customerid}
+			</if>
+        	<if test=" customername != null and customername !='' ">
+				and a.customer_name LIKE CONCAT('%',#{customername},'%')
+			</if>
+        	<if test=" shortname != null and shortname !='' ">
+				and a.short_name LIKE CONCAT('%',#{shortname},'%')
+			</if>
+        	<if test=" creperson != null and creperson !='' ">
+				and a.creator = #{creperson}
+			</if>
+        	<if test=" cretime != null and cretime !='' ">
+				and a.create_time = #{cretime}
+			</if>
+        	<if test=" modperson != null and modperson !='' ">
+				and a.last_modifier = #{modperson}
+			</if>
+        	<if test=" modtime != null and modtime !='' ">
+				and a.last_modify_time = #{modtime}
+			</if>
+    </select>
 </mapper>

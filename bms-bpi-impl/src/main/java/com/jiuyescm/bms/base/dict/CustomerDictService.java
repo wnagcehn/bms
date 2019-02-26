@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
 import com.jiuyescm.bms.base.customer.repository.IPubCustomerBaseRepository;
+import com.jiuyescm.bms.base.customer.repository.IPubCustomerLookupRepository;
 import com.jiuyescm.bms.base.customer.repository.IPubCustomerRepository;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
@@ -37,6 +39,8 @@ public class CustomerDictService implements ICustomerDictService {
 	IPubCustomerRepository pubCustomerRepository;
 	@Autowired
 	IPubCustomerBaseRepository pubCustomerBaseRepository;
+	@Autowired
+	IPubCustomerLookupRepository pubCustomerLookupRepository;
 	@Autowired
 	private IRedisClient redisClient;
 
@@ -278,6 +282,13 @@ public class CustomerDictService implements ICustomerDictService {
 		}
 		
 		return page;
+	}
+	
+	@Override
+	public PageInfo<PubCustomerLookupEntity> queryPubCustomerLookup(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		PageInfo<PubCustomerLookupEntity> pageEntity = pubCustomerLookupRepository.query(condition, pageNo, pageSize);
+		return pageEntity;
 	}
 
 }
