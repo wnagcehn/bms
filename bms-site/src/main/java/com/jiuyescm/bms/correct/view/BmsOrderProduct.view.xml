@@ -363,9 +363,6 @@ with (view.get(&quot;#dsBmsMarkingMaterialEntity&quot;)){&#xD;
                     <DataColumn name="percent">
                       <Property name="property">percent</Property>
                     </DataColumn>
-                    <DataColumn name="waybillNo">
-                      <Property name="property">waybillNo</Property>
-                    </DataColumn>
                     <DataColumn name="type">
                       <Property name="property">type</Property>
                     </DataColumn>

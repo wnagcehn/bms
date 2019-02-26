@@ -518,6 +518,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 						tempEntity.setWaybillNo(dc.getColValue());
 					}else {
 						errorMsg+="运单号是必填项;";
+						isWaybillNull = true;
 					}
 					break;
 				default:
