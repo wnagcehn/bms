@@ -559,7 +559,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 				 for (int i = 0; i < array.length; i++) {
 					condition=new HashMap<String,Object>();
 				    condition.put("materialType", proAccountVo.getMaterialType());
-					condition.put("materialMark", array[i]);
+					condition.put("pmxzxMark", array[i]);
 					//查询出该商品明细下使用运单号
 					BmsMarkingProductsVo markVo=bmsProductsWeightService.queryOneMaterial(condition);
 					if(markVo!=null){
