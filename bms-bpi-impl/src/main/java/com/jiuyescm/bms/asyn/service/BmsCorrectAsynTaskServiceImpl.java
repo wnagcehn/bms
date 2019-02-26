@@ -185,6 +185,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 			entity.setTaskId(taskId);
 			entity.setLastModifier(vo.getLastModifier());
 			entity.setLastModifyTime(vo.getLastModifyTime());
+			entity.setTaskStatus("PROCESS");
 			bmsCorrectAsynTaskRepository.update(entity);
 		}catch(Exception e){
 			logger.error("updateCorrect:",e);
