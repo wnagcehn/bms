@@ -259,7 +259,7 @@
      </select>
        
      <select id="getMaterialMap" parameterType="java.util.Map" resultType="String">
-		select b.consumer_material_code,a.bwd_mark from bms_marking_products a 
+		select CONCAT(b.consumer_material_code,'&',a.bwd_mark) from bms_marking_products a 
 		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
 		where a.products_mark=#{productsMark} 	
