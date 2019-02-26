@@ -10,6 +10,7 @@
 	    <result column="percent" property="percent" jdbcType="DOUBLE" />
 	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
     </resultMap>
+    
   
     <sql id="baseColumns">
 		id, products_mark, material_type, material_mark, percent, task_id
@@ -257,7 +258,7 @@
 		and a.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]>
      </select>
        
-     <select id="getMaterialMap" parameterType="java.util.Map" resultMap="java.util.Map">
+     <select id="getMaterialMap" parameterType="java.util.Map" resultType="String">
 		select b.consumer_material_code,a.bwd_mark from bms_marking_products a 
 		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code

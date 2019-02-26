@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.correct.repository.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import com.jiuyescm.bms.correct.repository.IBmsProductsMaterialRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 @Repository("bmsProductsMaterialRepository")
-public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMaterialAccountEntity> implements IBmsProductsMaterialRepository{
+public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBmsProductsMaterialRepository{
 
 	@Override
 	public List<BmsProductsMaterialAccountEntity> queyAllMax(
@@ -144,8 +145,11 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 	@Override
 	public Map<String, String> getMaterialMap(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		Map<String,String> result=(Map<String, String>) selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.getMaterialMap", condition);
-
+		Map<String,String> result=new HashMap<String, String>();
+		List<String> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.getMaterialMap", condition);
+		for(String sr:list){
+			result.put(sr.substring(0,sr.indexOf("&")), sr.substring(sr.indexOf("&")+1));
+		}
 		return result;
 	}	
 }
