@@ -148,7 +148,9 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 		Map<String,String> result=new HashMap<String, String>();
 		List<String> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.getMaterialMap", condition);
 		for(String sr:list){
-			result.put(sr.substring(0,sr.indexOf("&")), sr.substring(sr.indexOf("&")+1));
+			if(sr.indexOf("%")!=-1){
+				result.put(sr.substring(0,sr.indexOf("%")), sr.substring(sr.indexOf("%")+1));
+			}
 		}
 		return result;
 	}	
