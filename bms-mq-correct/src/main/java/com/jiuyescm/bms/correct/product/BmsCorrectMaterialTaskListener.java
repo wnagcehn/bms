@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonObject;
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
@@ -531,7 +532,9 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 					condition.put("productsMark", proAccountVo.getProductsMark());
 					condition.put("list", pList);
 					//查询出耗材标对应得耗材编码
+					logger.info("查询出耗材标对应得耗材编码条件"+JSONObject.fromObject(condition));
 					Map<String,String> materialMap=bmsProductsMaterialService.getMaterialMap(condition);
+					logger.info("查询出耗材标对应得耗材编码结果"+materialMap);
 					pList=new ArrayList<String>();
 					//遍历map中的值 (key是编码，value是标)
 					for (String value : materialMap.keySet()) { 
@@ -540,9 +543,12 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 					condition.clear();
 					condition.put("list", pList);
 					//返回的是code
+					logger.info("获取最高体积的条件"+JSONObject.fromObject(condition));
 					metrialDetail=bizOutstockPackmaterialService.getMaxBwdVolumn(condition);
+					logger.info("查询结果"+metrialDetail);
 					//将编码code转化为标
 					metrialDetail=materialMap.get(metrialDetail);
+					logger.info("最后返回的结果"+metrialDetail);
 				}
 			}
 		} catch (Exception e) {
