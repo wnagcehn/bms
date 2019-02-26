@@ -227,4 +227,11 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return bmsProductsMaterialRepository.queryBwdMaterial(condition);
 	}
 
+
+	@Override
+	public Map<String, String> getMaterialMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.getMaterialMap(condition);
+	}
+
 }

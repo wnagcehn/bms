@@ -56,4 +56,7 @@ public interface IBmsProductsMaterialRepository {
 	
 	//更新汇总表
 	int updateMaterialAccount(Map<String,Object> condition);
+	
+	//根据耗材标得到对应得耗材编码
+	Map<String,String> getMaterialMap(Map<String,Object> condition);
 }
