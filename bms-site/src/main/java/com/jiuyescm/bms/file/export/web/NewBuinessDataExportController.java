@@ -322,6 +322,9 @@ public class NewBuinessDataExportController extends BaseController {
 			condition.put("customerName", customerMap.get("customerName"));
 		}else {		
 			List<String> customerIdList=billPrepareExportTaskService.getChildCustomerId(condition.get("customerId").toString());
+			if(customerIdList.size()<=0){
+				return;
+			}
 			condition.put("customerId", "");
 			condition.put("customerIds", customerIdList);
 		}
