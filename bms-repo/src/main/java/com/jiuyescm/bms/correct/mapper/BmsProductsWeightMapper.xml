@@ -115,31 +115,33 @@
     </insert>
     
     <select id="queryOneMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
-    	select * from bms_marking_products
-        where 1 = 1
+    	select a.* from bms_marking_products a
+    	INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+        where 1 = 1 and b.del_flag='0' and b.extattr5='origin' and (c.material_type_name='泡沫箱' or c.material_type_name='纸箱')
        	<if test=" id != null and id !='' ">
-			and id = #{id}
+			and a.id = #{id}
 		</if>
        	<if test=" waybillNo != null and waybillNo !='' ">
-			and waybill_no = #{waybillNo}
+			and a.waybill_no = #{waybillNo}
 		</if>
        	<if test=" productsMark != null and productsMark !='' ">
-			and products_mark = #{productsMark}
+			and a.products_mark = #{productsMark}
 		</if>
        	<if test=" weight != null and weight !='' ">
-			and weight = #{weight}
+			and a.weight = #{weight}
 		</if>
        	<if test=" correctWeight != null and correctWeight !='' ">
-			and correct_weight = #{correctWeight}
+			and a.correct_weight = #{correctWeight}
 		</if>
        	<if test=" pmxzxMark != null and pmxzxMark !='' ">
-			and pmxzx_mark = #{pmxzxMark}
+			and a.pmxzx_mark = #{pmxzxMark}
 		</if>
        	<if test=" bwdMark != null and bwdMark !='' ">
-			and bwd_mark = #{bwdMark}
+			and a.bwd_mark = #{bwdMark}
 		</if>
        	<if test=" materialType != null and materialType !='' ">
-			and material_type = #{materialType}
+			and a.material_type = #{materialType}
 		</if> 
 		limit 1
     </select>
