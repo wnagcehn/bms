@@ -230,6 +230,11 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 								continue;
 							}
 							
+							String consumerMaterial="";
+							for(BizOutstockPackmaterialEntity entity:standMaterial){
+								consumerMaterial+=entity.getConsumerMaterialCode()+",";
+							}
+							
 							//找出未使用标准的运单号
 							condition=new HashMap<String,Object>();
 							condition.put("productsMark", proAccountVo.getProductsMark());
@@ -237,6 +242,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							condition.put("pmxzxMark", metrialDetail);
 							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 							condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+							condition.put("consumerMaterial", consumerMaterial);
 							start = System.currentTimeMillis();
 							logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
 							List<BmsMarkingMaterialVo> notMaxList=bmsProductsMaterialService.queyNotMax(condition);
@@ -455,7 +461,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							//找出未使用标准的运单号
 							condition=new HashMap<String,Object>();
 							condition.put("productsMark", proAccountVo.getProductsMark());
-							condition.put("bwdMark", metrialDetail);
+							condition.put("consumerMaterialCode", markVo.getConsumerMaterialCode());
 							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 							condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
 							condition.put("customerId", taskVo.getCustomerId());
