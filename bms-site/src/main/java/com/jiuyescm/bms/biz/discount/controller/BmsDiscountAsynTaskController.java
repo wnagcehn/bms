@@ -209,6 +209,7 @@ public class BmsDiscountAsynTaskController {
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				logger.error("查询合同在线折扣异常："+e.getMessage());
 				Map<String, String> param = new HashMap<>();
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
