@@ -1,4 +1,4 @@
-package com.jiuyescm.common.utils.excel;
+package com.jiuyescm.bms.excel;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,6 +27,9 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
  * poi 导出excel 工具类
  */
 public class POISXSSUtil {
+	
+    public final static short BOLDWEIGHT_BOLD = 0x2bc;
+
 	
 	private int row =1;
 	
