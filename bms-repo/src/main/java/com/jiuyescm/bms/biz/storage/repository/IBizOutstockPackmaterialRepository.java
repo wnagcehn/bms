@@ -107,4 +107,18 @@ public interface IBizOutstockPackmaterialRepository {
 	 * @return
 	 */
 	public String getMaxBwdVolumn(Map<String, Object> condition);
+	
+	/**
+	 * 删除运单号对应的泡沫箱和纸箱
+	 * @param wayList
+	 * @return
+	 */
+	public int deleteOldMaterial(Map<String, Object> condition);
+	
+	/**
+	 * 删除运单号对应的保温袋
+	 * @param wayList
+	 * @return
+	 */
+	public int deleteOldBwd(Map<String,Object> condition);
 }

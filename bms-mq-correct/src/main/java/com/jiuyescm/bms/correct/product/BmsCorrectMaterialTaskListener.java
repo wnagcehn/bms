@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
@@ -29,7 +28,6 @@ import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.correct.service.IBmsProductsMaterialService;
 import com.jiuyescm.bms.correct.service.IBmsProductsWeightService;
-import com.jiuyescm.bms.correct.vo.BmsMarkingMaterialVo;
 import com.jiuyescm.bms.correct.vo.BmsMarkingProductsVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsMaterialAccountVo;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -175,7 +173,6 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 				for(int i=0,length=list.size();i<length;i++){					
 					BmsProductsMaterialAccountVo proAccountVo=list.get(i);								
 					if(proAccountVo!=null){						
-						List<String> waybillNoList=new ArrayList<String>();					
 						String waybillNo="";					
 						String metrialDetail=getMaxVolumMaterial(proAccountVo);
 						if(StringUtils.isBlank(metrialDetail)){
@@ -239,6 +236,59 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
 							start = System.currentTimeMillis();
 							logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
+							List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxMaterial(condition);
+							end = System.currentTimeMillis();
+							logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
+							long total = 0l;
+							long delTimeTotal = 0l;
+							List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();
+							List<String> waybillNoList=new ArrayList<String>();					
+							for(int j=0,lenth=notMaxList.size();j<lenth;j++){
+								BizOutstockPackmaterialEntity pack=notMaxList.get(j);
+								waybillNoList.add(pack.getWaybillNo());	
+								//新耗材插入								
+								for(BizOutstockPackmaterialEntity entity:standMaterial){
+									BizOutstockPackmaterialEntity packEntity=new BizOutstockPackmaterialEntity();								
+									try {
+						                PropertyUtils.copyProperties(packEntity, pack);
+						            } catch (Exception ex) {
+						               logger.error("转换失败");
+						            }						
+									packEntity.setConsumerMaterialCode(entity.getConsumerMaterialCode());
+									packEntity.setConsumerMaterialName(entity.getConsumerMaterialName());
+									packEntity.setSpecDesc(entity.getSpecDesc());
+									packEntity.setLastModifier(taskVo.getCreator());
+									packEntity.setLastModifyTime(JAppContext.currentTimestamp());
+									packEntity.setIsCalculated("99");
+									packEntity.setFeesNo("");
+									packEntity.setDelFlag("0");
+									packEntity.setextattr4(taskId);
+									packEntity.setextattr5("");
+									newList.add(packEntity);
+								}											
+							}
+							//删除老耗材
+							condition=new HashMap<String,Object>();
+							condition.put("waybillNoList", waybillNoList);
+							condition.put("lastModifier", taskVo.getCreator());
+							condition.put("lastModifyTime", JAppContext.currentTimestamp());
+							start = System.currentTimeMillis();
+							int resultDelete=bizOutstockPackmaterialService.deleteOldMaterial(condition);
+							end = System.currentTimeMillis();
+							delTimeTotal = delTimeTotal + (end-start);						
+							if(resultDelete>0){
+								//logger.info("保存新耗材");
+								start = System.currentTimeMillis();
+								int resultSave=bizOutstockPackmaterialService.saveList(newList);
+								if(resultSave<=0){
+									logger.info("新增耗材失败");
+								}
+								end = System.currentTimeMillis();
+								total = total + (end-start);
+								
+							}
+							
+							/*
 							List<BmsMarkingMaterialVo> notMaxList=bmsProductsMaterialService.queyNotMax(condition);
 							end = System.currentTimeMillis();
 							logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
@@ -303,7 +353,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 										logger.error("新增标准耗材失败");
 									}															
 								}							
-							}
+							}*/
 							logger.info(taskId+"------------------删除原运单号对应得耗材和费用总耗时：" + delTimeTotal + "毫秒------------------");
 							logger.info(taskId+"------------------保存新耗材成功，总耗时：" + total + "毫秒------------------");
 						}
@@ -466,22 +516,11 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
 							
 							List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();				
-							
+							List<String> waybillNoList=new ArrayList<String>();					
+
 							for(int j=0,lenth=notMaxList.size();j<lenth;j++){
-								BizOutstockPackmaterialEntity entity=notMaxList.get(j);							
-								entity.setDelFlag("2");
-								entity.setLastModifier(taskVo.getCreator());
-								entity.setLastModifyTime(JAppContext.currentTimestamp());																
-								//logger.info("删除原始耗材");
-									
-								//删除原运单号对应得耗材和费用
-								start = System.currentTimeMillis();
-								int result=bizOutstockPackmaterialService.update(entity);
-								end = System.currentTimeMillis();
-								if(result<=0){
-									logger.info("删除占比小耗材失败");
-									continue;
-								}							
+								BizOutstockPackmaterialEntity entity=notMaxList.get(j);		
+								waybillNoList.add(entity.getWaybillNo());
 								//将新耗材插入并重算
 								entity.setConsumerMaterialCode(markVo.getConsumerMaterialCode());
 								entity.setConsumerMaterialName(markVo.getConsumerMaterialName());
@@ -492,10 +531,19 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 								entity.setextattr5("");								
 								newList.add(entity);
 																
-							}
+							}						
 							logger.info("------------------删除原对应得保温袋");
-							bizOutstockPackmaterialService.saveList(newList);
-							logger.info("------------------保存新保温袋------------------");	
+							//删除原运单号对应得耗材
+							condition=new HashMap<String,Object>();
+							condition.put("waybillNoList", waybillNoList);
+							condition.put("lastModifier", taskVo.getCreator());
+							condition.put("lastModifyTime", JAppContext.currentTimestamp());
+							
+							int result=bizOutstockPackmaterialService.deleteOldBwd(condition);
+							if(result>0){
+								logger.info("------------------保存新保温袋------------------");	
+								bizOutstockPackmaterialService.saveList(newList);
+							}
 						}					
 					}
 				}		

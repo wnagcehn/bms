@@ -41,6 +41,15 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 	}
 	
 	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stubo
+		SqlSession session=this.getSqlSessionTemplate();
+		List<BizOutstockPackmaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMaxMaterial", condition);
+		return list;
+	}
+	
+	@Override
 	public List<BizOutstockPackmaterialEntity> queyNotMaxBwd(
 			Map<String, Object> condition) {
 		// TODO Auto-generated method stubo

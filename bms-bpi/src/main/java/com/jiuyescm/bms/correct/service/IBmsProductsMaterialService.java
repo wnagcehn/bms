@@ -33,6 +33,9 @@ public interface IBmsProductsMaterialService {
 	//查询出所有占比不是最高的
 	List<BmsMarkingMaterialVo> queyNotMax(Map<String,Object> condition);
 	
+	//查询出所有占比不是最高的泡沫箱纸箱
+	List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(Map<String,Object> condition);
+	
 	//查询出所有占比不是最高的保温袋
 	List<BizOutstockPackmaterialEntity> queyNotMaxBwd(Map<String,Object> condition);
 	

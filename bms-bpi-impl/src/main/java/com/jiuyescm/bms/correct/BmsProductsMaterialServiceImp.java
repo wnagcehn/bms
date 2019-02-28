@@ -234,4 +234,12 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return bmsProductsMaterialRepository.getMaterialMap(condition);
 	}
 
+
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.queyNotMaxMaterial(condition);
+	}
+
 }
