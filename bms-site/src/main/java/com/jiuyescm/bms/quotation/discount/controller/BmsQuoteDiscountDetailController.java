@@ -1,6 +1,9 @@
 package com.jiuyescm.bms.quotation.discount.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +137,24 @@ public class BmsQuoteDiscountDetailController {
 			result.put("fail", "上限下限同时存在，或者同时不存在！");
 			return result;
 		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String start = sdf.format(entity.getStartTime());
+		Date startTime = null;
+		try {
+			startTime = sdf.parse(start);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		entity.setStartTime(new Timestamp(startTime.getTime()));
+		String end = sdf.format(entity.getEndTime());
+		Date endTime = null;
+		try {
+			endTime = sdf.parse(end);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		entity.setEndTime(new Timestamp(endTime.getTime()));
+		
 		if (null == entity.getId()) {
 			entity.setDelFlag("0");
 			entity.setCreator(username);
