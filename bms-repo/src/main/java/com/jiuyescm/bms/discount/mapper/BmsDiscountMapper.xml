@@ -137,6 +137,9 @@
 		<if test="(serviceTypeCode != null and serviceTypeCode !='')">
 			and a.service_type_code=#{serviceTypeCode}
 		</if>
+		<if test="(adjustServiceTypeCode != null and adjustServiceTypeCode !='')">
+			and a.adjust_service_type_code=#{adjustServiceTypeCode}
+		</if>
 		group by a.customerid,a.carrier_id
     </select>
     

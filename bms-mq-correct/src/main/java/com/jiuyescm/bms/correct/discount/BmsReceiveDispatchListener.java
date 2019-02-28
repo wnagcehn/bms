@@ -583,12 +583,15 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			condition.put("carrierId", task.getCarrierId());
 			//物流产品类型
 			String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();
+		
+			if(StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())){
+				condition.put("adjustServiceTypeCode", discountVo.getAdjustServiceTypeCode());
+			}else{
+				condition.put("serviceTypeCode", discountVo.getServiceTypeCode());
+			}
 			
 			logger.info("合同在线统计单量的参数"+JSONObject.fromObject(condition));
-			
-			if(StringUtils.isNotBlank(serviceTypeCode)){
-				condition.put("serviceTypeCode", serviceTypeCode);
-			}
+						
 			BmsDiscountAccountVo discountAccountVo=bmsDiscountService.queryAccount(condition);
 			if(discountAccountVo==null){
 				discountVo.setIsCalculated("2");
@@ -727,8 +730,10 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				//物流产品类型
 				String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();
 				
-				if(StringUtils.isNotBlank(serviceTypeCode)){
-					condition.put("serviceTypeCode", serviceTypeCode);
+				if(StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())){
+					condition.put("adjustServiceTypeCode", discountVo.getAdjustServiceTypeCode());
+				}else{
+					condition.put("serviceTypeCode", discountVo.getServiceTypeCode());
 				}
 				
 				logger.info("Bms统计单量的参数"+JSONObject.fromObject(condition));
