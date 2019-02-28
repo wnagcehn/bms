@@ -243,6 +243,7 @@ public class BmsDiscountAsynTaskController {
 					bdatList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
+				logger.error("查询合同在线折扣失败:"+e.getMessage());
 				// TODO: handle exception
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
