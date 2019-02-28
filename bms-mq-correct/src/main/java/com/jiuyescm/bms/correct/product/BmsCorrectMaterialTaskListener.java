@@ -525,9 +525,12 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 								//将新耗材插入并重算
 								entity.setConsumerMaterialCode(markVo.getConsumerMaterialCode());
 								entity.setConsumerMaterialName(markVo.getConsumerMaterialName());
+								entity.setLastModifier(taskVo.getCreator());
+								entity.setLastModifyTime(JAppContext.currentTimestamp());
 								entity.setSpecDesc(markVo.getSpecDesc());
 								entity.setIsCalculated("99");
 								entity.setDelFlag("0");
+								entity.setFeesNo("");
 								entity.setextattr4(taskId);
 								entity.setextattr5("");								
 								newList.add(entity);

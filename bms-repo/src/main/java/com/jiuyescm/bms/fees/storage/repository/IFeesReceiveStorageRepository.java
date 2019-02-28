@@ -223,4 +223,18 @@ public interface IFeesReceiveStorageRepository {
 	 * @return
 	 */
 	List<FeesReceiveStorageEntity> queryCalculateFail(Map<String, Object> parameter);
+	
+	/**
+	 * 删除泡沫箱和纸箱对应得费用
+	 * @param parameter
+	 * @return
+	 */
+	int deleteMaterialFee(Map<String,Object> parameter);
+	
+	/**
+	 * 删除保温袋对应得费用
+	 * @param parameter
+	 * @return
+	 */
+	int deleteBwdFee(Map<String,Object> parameter);
 }

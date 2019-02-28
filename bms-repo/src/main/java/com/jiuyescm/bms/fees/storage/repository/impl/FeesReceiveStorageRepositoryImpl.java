@@ -437,6 +437,18 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 	}
 
 	@Override
+	public int deleteMaterialFee(Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return delete("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.deleteMaterialFee",parameter);
+	}
+	
+	@Override
+	public int deleteBwdFee(Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return delete("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.deleteBwdFee",parameter);
+	}
+	
+	@Override
 	public List<String> queryPreBillWarehouse(Map<String, Object> condition) {
 		return (List<String>)selectList("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryPreBillWarehouse", condition);
 	}
@@ -478,6 +490,5 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 		// TODO Auto-generated method stub
 		return (FeesReceiveStorageEntity) selectOne("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryOne", condition);
 	}
-
 
 }

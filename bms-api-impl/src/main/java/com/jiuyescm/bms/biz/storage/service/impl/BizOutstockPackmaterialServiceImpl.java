@@ -248,15 +248,25 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public int deleteOldMaterial(Map<String,Object> condition) {
 		// TODO Auto-generated method stub
-		return repository.deleteOldMaterial(condition);
+		int result=repository.deleteOldMaterial(condition);
+		if(result>0){
+			feesReceiveStorageRepository.deleteMaterialFee(condition);
+		}
+		return result;
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public int deleteOldBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		return repository.deleteOldBwd(condition);
+		int result=repository.deleteOldBwd(condition);
+		if(result>0){
+			feesReceiveStorageRepository.deleteBwdFee(condition);
+		}
+		return result;
 	}
 
 }
