@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.rule.receiveRule.mapper.BillRuleReceiveRecordMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveRecordEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="quotationNo" property="quotationNo" jdbcType="VARCHAR" />
+		   	<result column="creator" property="creator" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		   	<result column="rule" property="rule" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, quotationNo, creator, create_time, rule
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+quotationNo, creator, create_time, rule
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_rule_receive_record
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveRecordEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_rule_receive_record
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" quotationNo != null and quotationNo !='' ">
+				and quotationNo = #{quotationNo}
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and creator = #{creator}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+        	<if test=" rule != null and rule !='' ">
+				and rule = #{rule}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveRecordEntity">
+        insert into bill_rule_receive_record(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{quotationNo,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{rule,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveRecordEntity">
+        update bill_rule_receive_record
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" quotationNo != null and quotationNo !='' ">
+				quotationNo = #{quotationNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" creator != null and creator !='' ">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" rule != null and rule !='' ">
+				rule = #{rule,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bill_rule_receive_record 
+        where id = #{id}
+    </delete>
+</mapper>

@@ -38,14 +38,14 @@ public interface IReceiveRuleService{
 	 * @param aCondition
 	 * @return
 	 */
-	public int updateRule(BillRuleReceiveEntity aCondition);
+	public void updateRule(BillRuleReceiveEntity aCondition);
 	
 	/**
 	 * 删除计费规则
 	 * @param ruleId
 	 * @return
 	 */
-	public int removeRule(String ruleId);
+	public void removeRule(String ruleId);
 	
 	/**
 	 * 查询计费规则
