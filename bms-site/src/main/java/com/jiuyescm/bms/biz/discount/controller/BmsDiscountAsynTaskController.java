@@ -204,13 +204,13 @@ public class BmsDiscountAsynTaskController {
 				}
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
+				//logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
-				logger.error("查询合同在线折扣异常："+e.getMessage());
+				logger.error("查询合同在线折扣异常", e);
 				Map<String, String> param = new HashMap<>();
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
@@ -239,12 +239,12 @@ public class BmsDiscountAsynTaskController {
 				queryVo.setSettlementTime(entity.getCreateMonth());
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
+				//logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					bdatList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
-				logger.error("查询合同在线折扣失败:"+e.getMessage());
+				logger.error("查询合同在线折扣失败", e);
 				// TODO: handle exception
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
