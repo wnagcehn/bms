@@ -61,6 +61,8 @@ public class FeesReceiveDispatchDiscountVo implements IEntity {
 	private Timestamp createTime;
 	//物流产品类型
 	private String serviceTypeCode;
+	//调整物流产品类型
+	private String adjustServiceTypeCode;
 	
 	public FeesReceiveDispatchDiscountVo() {
 
@@ -304,6 +306,14 @@ public class FeesReceiveDispatchDiscountVo implements IEntity {
 
 	public void setServiceTypeCode(String serviceTypeCode) {
 		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getAdjustServiceTypeCode() {
+		return adjustServiceTypeCode;
+	}
+
+	public void setAdjustServiceTypeCode(String adjustServiceTypeCode) {
+		this.adjustServiceTypeCode = adjustServiceTypeCode;
 	}
     
 	

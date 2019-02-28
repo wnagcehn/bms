@@ -51,7 +51,7 @@
     <select id="queryAll" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.discount.FeesReceiveDispatchDiscountEntity">
         select
-               a.id, a.task_id, a.waybill_no, a.discount_amount, a.derate_amount, a.is_calculated, a.calculate_time, a.write_time, a.remark,b.create_time,b.customerid,b.service_type_code
+               a.id, a.task_id, a.waybill_no, a.discount_amount, a.derate_amount, a.is_calculated, a.calculate_time, a.write_time, a.remark,b.create_time,b.customerid,b.service_type_code,b.adjust_service_type_code
         from fees_receive_dispatch_discount a
         inner join biz_dispatch_bill b on a.waybill_no=b.waybill_no
         where 1=1 and b.del_flag ='0' and a.is_calculated='0'
