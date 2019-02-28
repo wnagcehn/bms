@@ -234,6 +234,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							condition.put("pmxzxMark", metrialDetail);
 							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 							condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+							condition.put("customerId", taskVo.getCustomerId());
 							start = System.currentTimeMillis();
 							logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
 							List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxMaterial(condition);

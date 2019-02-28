@@ -300,7 +300,7 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 	@Override
 	public int deleteOldBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldMaterial", condition);
+		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldBwd", condition);
 	}
 
 }
