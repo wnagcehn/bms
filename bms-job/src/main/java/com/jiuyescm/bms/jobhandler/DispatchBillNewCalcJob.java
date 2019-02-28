@@ -361,7 +361,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 											//物流商重量小于纠正重量
 											double dd = getResult(correctWeight);
 											entity.setWeight(dd);
-											entity.setTotalWeight(correctWeight);
+											double resultWeight = compareWeight(entity.getTotalWeight(), 
+													getResult(entity.getTotalWeight()), correctWeight);
+											entity.setTotalWeight(resultWeight);
 										}
 										
 										
