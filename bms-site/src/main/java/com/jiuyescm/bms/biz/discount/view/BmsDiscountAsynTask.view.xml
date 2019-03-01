@@ -17,7 +17,7 @@
       <PropertyDef name="customerId">
         <Property name="label">商家</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCustomer&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="bizTypecode">
