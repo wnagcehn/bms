@@ -952,7 +952,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("-->"+entity.getId()+"走筛选 筛选前报价条数【{0}】",list.size());
 			list=handNewBizDispatch(list, entity);
 			XxlJobLogger.log("-->"+entity.getId()+"筛选后报价条数【{0}】",list.size());
-			if(list.size()==0){
+			if(null==list||list.size()==0){
 				return list;
 			}
 			for (BmsQuoteDispatchDetailVo bmsQuoteDispatchDetailVo : list) {
@@ -1404,6 +1404,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		
 		if(!(minValue+"").contains("3")){
 			String result=newPrice.get(minValue);
+			if(StringUtils.isEmpty(result)){
+				return null;
+			}
 			if(result.contains(",")){
 				String[] array=result.split(",");
 				for (int a = 0; a < array.length; a++) {		
