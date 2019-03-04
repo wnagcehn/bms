@@ -341,7 +341,11 @@ public class BmsDiscountAsynTaskController {
 			newEntity.setCreator(JAppContext.currentUserName());
 			newEntity.setCreateTime(JAppContext.currentTimestamp());
 			newEntity.setBizTypecode(bizEntity.getBizTypeCode());
-			newEntity.setCustomerId(bizEntity.getCustomerId());
+			if(StringUtils.isNotBlank(bizEntity.getCustomerId())){
+				newEntity.setCustomerId(bizEntity.getCustomerId());
+			}else{
+				newEntity.setCustomerId(entity.getCustomerId());
+			}
 			newEntity.setSubjectCode(bizEntity.getSubjectId());
 			newEntity.setCustomerType("bms");
 			newList.add(newEntity);
