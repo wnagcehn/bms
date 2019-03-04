@@ -26,7 +26,8 @@ import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
-import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
+import com.jiuyescm.framework.sequence.api.ISequenceService;
+//import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
@@ -45,7 +46,7 @@ public class CorrectJob  extends IJobHandler{
 		@Autowired
 		private IBmsCorrectAsynTaskRepository bmsCorrectAsynTaskRepository;
 		@Autowired
-		private ISnowflakeSequenceService snowflakeSequenceService;
+		private ISequenceService sequenceService;
 		@Resource
 		private JmsTemplate jmsQueueTemplate;
 		
@@ -112,16 +113,43 @@ public class CorrectJob  extends IJobHandler{
 				Date startDate = DateUtil.getFirstDayOfMonth(1);
 				Date endDate = DateUtil.getFirstDayOfMonth(0);
 				
-				long ids[] = new long[customeridSet.size()*2];
-				ids = snowflakeSequenceService.nextId(customeridSet.size()*2);
+				/*long ids[] = new long[customeridSet.size()*2];
+				ids = snowflakeSequenceService.nextId(customeridSet.size()*2);*/
 				int i = 0;
 				for (String customerid : customeridSet) {
+					/*String id = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+					String taskId = "CT";
+					for(int i = 1;i<=10-id.length();i++){
+						taskId +="0";
+					}
+					taskId += id;
 					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"weight_correct");
 					entity.setTaskId(ids[i]+"");
 					i++;
 					list.add(entity);
 					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"material_correct");
 					entity2.setTaskId(ids[i]+"");
+					i++;
+					list.add(entity2);*/
+					
+					String id1 = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+					String taskId1 = "CT";
+					for(int j = 1;j<=10-id1.length();j++){
+						taskId1 +="0";
+					}
+					taskId1 += id1;
+					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"weight_correct");
+					entity.setTaskId(taskId1);
+					i++;
+					list.add(entity);
+					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"material_correct");
+					String id2 = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+					String taskId2 = "CT";
+					for(int j = 1;j<=10-id2.length();j++){
+						taskId2 +="0";
+					}
+					taskId2 += id2;
+					entity2.setTaskId(taskId2);
 					i++;
 					list.add(entity2);
 				}

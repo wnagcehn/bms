@@ -40,5 +40,7 @@
 		 <dubbo:reference id="materialDictService" interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService" 
 		 version="1.0.0"/>
 		 <!-- 基于snowflake算法的分布式id接口 -->
-		<dubbo:reference id="snowflakeSequenceService" interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"  />
+		<!-- <dubbo:reference id="snowflakeSequenceService" interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"  /> -->
+		
+		<dubbo:reference id="sequenceService" interface="com.jiuyescm.framework.sequence.api.ISequenceService"  />
 </beans>							
