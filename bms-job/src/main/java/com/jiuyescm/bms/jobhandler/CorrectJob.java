@@ -46,7 +46,7 @@ public class CorrectJob  extends IJobHandler{
 		@Autowired
 		private IBmsCorrectAsynTaskRepository bmsCorrectAsynTaskRepository;
 		@Autowired
-		private ISequenceService sequenceService;
+		private ISequenceService sequenceService1;
 		@Resource
 		private JmsTemplate jmsQueueTemplate;
 		
@@ -132,7 +132,7 @@ public class CorrectJob  extends IJobHandler{
 					i++;
 					list.add(entity2);*/
 					
-					String id1 = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+					String id1 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT")) ;
 					String taskId1 = "CT";
 					for(int j = 1;j<=10-id1.length();j++){
 						taskId1 +="0";
@@ -143,7 +143,7 @@ public class CorrectJob  extends IJobHandler{
 					i++;
 					list.add(entity);
 					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"material_correct");
-					String id2 = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+					String id2 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT")) ;
 					String taskId2 = "CT";
 					for(int j = 1;j<=10-id2.length();j++){
 						taskId2 +="0";
