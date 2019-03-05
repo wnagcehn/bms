@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.BmsOrderProductMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.correct.BmsOrderProductEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="product_mark" property="productMark" jdbcType="VARCHAR" />
+		   	<result column="product_detail" property="productDetail" jdbcType="LONGVARCHAR" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="create_time" property="createTime" jdbcType="INTEGER" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, product_mark, product_detail, waybill_no, customer_id, create_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+product_mark, product_detail, waybill_no, customer_id, create_time
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_order_product
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsOrderProductEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bms_order_product
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" productMark != null and productMark !='' ">
+				and product_mark = #{productMark}
+			</if>
+        	<if test=" productDetail != null and productDetail !='' ">
+				and product_detail = #{productDetail}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and create_time = #{createTime}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.correct.BmsOrderProductEntity">
+        insert into bms_order_product(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{productMark,jdbcType=VARCHAR}, 
+			#{productDetail,jdbcType=LONGVARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=INTEGER}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.correct.BmsOrderProductEntity">
+        update bms_order_product
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" productMark != null and productMark !='' ">
+				product_mark = #{productMark,jdbcType=VARCHAR},
+			</if>
+			<if test=" productDetail != null and productDetail !='' ">
+				product_detail = #{productDetail,jdbcType=LONGVARCHAR},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=INTEGER},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bms_order_product 
+        where id = #{id}
+    </delete>
+</mapper>

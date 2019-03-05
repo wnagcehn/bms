@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.jms.JMSException;
@@ -74,7 +75,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	BmsFileAsynTaskVo taskEntity = new BmsFileAsynTaskVo();
 	
 	public Map<Integer, String> errMap = null;
-	public Map<String,Integer> repeatMap = null;
+	private Map<Integer, String> errorMap = null;
 	public List<String> readColumnNames = null;
 	public String[] neededColumnNames = null;
 	
@@ -83,13 +84,13 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	private Map<String,String> temperatureMap = null;
 	
 	private String taskId;
-	private XlsxWorkBook reader;
 	private int batchNum = 1000;
-	List<DataRow> errList = new ArrayList<DataRow>();
-	List<DataRow> allList = new ArrayList<DataRow>();
-	Map<Integer, DataRow> mapData = new HashMap<>();
-	Map<Integer,String> originColumn = new HashMap<Integer,String>(); //源生表头信息
+
+	TreeMap<Integer,String> originColumn = new TreeMap<Integer,String>(); //源生表头信息
 	List<BizPalletInfoTempEntity> newList = new ArrayList<BizPalletInfoTempEntity>();
+	
+	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+	private int roNo = 1;
 	
 	//----------初始化基础数据--------
 	public void initKeyValue(){
@@ -159,13 +160,14 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			logger.info("消息应答失败");
 		}
 		errMap = null;
+		errorMap=null;
 		logger.info("--------------------MQ处理操作日志结束,耗时:"+(end-start)+"ms---------------");
 	}
 	
 	protected void handImportFile() throws Exception{
 		
 		errMap = new HashMap<Integer, String>();
-		repeatMap = new HashMap<String, Integer>();
+		errorMap = new HashMap<Integer, String>();
 		
 		bmsMaterialImportTaskCommon.setTaskStatus(taskId, 0, FileAsynTaskStatusEnum.PROCESS.getCode());
 		
@@ -183,6 +185,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		neededColumnNames = initColumnsNamesForNeed();
 		
 		long start = System.currentTimeMillis();
+		XlsxWorkBook reader = null;
 		byte[] bytes = storageClient.downloadFile(taskEntity.getOriginFilePath(), new DownloadByteArray());
 		logger.info("任务ID【{}】 -> byte长度【{}】",taskId,bytes.length);
 		InputStream inputStream = new ByteArrayInputStream(bytes);
@@ -214,6 +217,8 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
 						return;
 					}
+					logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 50);
 				}
 
 				@Override
@@ -226,7 +231,8 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					try {
 						tempList = loadTemp(dr, errorMsg);
 					} catch (Exception e) {
-						errList.add(dr);
+						errorMap.put(dr.getRowNo(), e.getMessage());
+						errMap.clear();
 					}
 
 					//组装好的数据存入全局List中
@@ -239,26 +245,23 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					
 					//1000条数据	
 					if (newList.size() >= batchNum) {
-						if(errMap.size()==0){
+						if(errorMap.size()==0){
 							int result = saveTo();
 							if(result<=0){
 								logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
 							}
 						}
 					}
-					
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
-					//存入所有行的DataRow的Map<rowNo,DataRow>
-					mapData.put(dr.getRowNo(), dr);
-					allList.add(dr);
+							
 					return;
 					
 				}
 
 				@Override
-				public void finish() {			
+				public void finish() {	
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
 					//保存数据到临时表
-					if(errMap.size()==0){
+					if(errorMap.size()==0){
 						int result = saveTo();
 						if (result <= 0) {
 							logger.error("任务ID【{}】 ->,保存到临时表失败", taskId);
@@ -293,15 +296,15 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			logger.error("excel解析异常--",ex);
 			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.EXCEPTION.getCode());
 			return;
-		}finally {
+		}/*finally {
 			reader.close();
-		}
+		}*/
 		
  		//如果excel数据本身存在问题，直接生产结果文件返回给用户
-		if(errMap.size()>0){
+		if(errorMap.size()>0){
 			logger.info("任务ID【{}】 -> 数据不合法,产生结果文件",taskId);
 			try {
-				createResultFile();
+				createResultFile(reader);
 			} catch (Exception e) {
 				logger.error("文件创建失败！", e);
 			}
@@ -314,10 +317,10 @@ public class BmsPalletImportListenerNew implements MessageListener{
         }
 		
  		//如果excel数据本身存在问题，直接生产结果文件返回给用户
-		if(errMap.size()>0){
+		if(errorMap.size()>0){
 			logger.info("任务ID【{}】 -> 数据不合法,产生结果文件",taskId);
 			try {
-				createResultFile();
+				createResultFile(reader);
 			} catch (Exception e) {
 				logger.error("文件创建失败！", e);
 			}
@@ -327,7 +330,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		//数据库层面重复校验  false - 校验不通过 存在重复  原则上（时间+仓库+商家+温度+类型）只有一条  
 		if(!dbCheck()){
 			try {
-				createResultFile();
+				createResultFile(reader);
 			} catch (Exception e) {
 				logger.error("文件创建失败！", e);
 			}
@@ -335,10 +338,10 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}
 		
 		//如果excel数据本身存在问题，直接生产结果文件返回给用户
-		if(errMap.size()>0){
+		if(errorMap.size()>0){
 			logger.info("任务ID【{}】 -> 数据不合法,产生结果文件",taskId);
 			try {
-				createResultFile();
+				createResultFile(reader);
 			} catch (Exception e) {
 				logger.error("文件创建失败！", e);
 			}
@@ -360,9 +363,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
 			}
-			errList.clear();
-			mapData.clear();
-			allList.clear();
 			newList.clear();
 		}catch(Exception e){
 			logger.error("异步导入异常", e);
@@ -413,7 +413,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	 * @throws IOException 
 	 * @throws ParseException 
 	 */
-	private void createResultFile() throws IOException, ParseException{
+	private void createResultFile(XlsxWorkBook reader) throws IOException, ParseException{
 		
 		if(!StringUtil.isEmpty(taskEntity.getResultFilePath())){
 			logger.info("删除历史结果文件");
@@ -433,26 +433,94 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}
 		
 		
-		POISXSSUtil poiUtil = new POISXSSUtil();
-    	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
-    	List<Map<String, Object>> headDetailMapList = getBizHead(exportColumns); 
-		List<Map<String, Object>> dataDetailList = getBizHeadItem();
-		poiUtil.exportExcel2FilePath(poiUtil, workbook, "Sheet1",1, headDetailMapList, dataDetailList);
+		final POISXSSUtil poiUtil = new POISXSSUtil();
+    	final SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
+    	final List<Map<String, Object>> headDetailMapList = getBizHead(exportColumns); 
+    	
+    	//重新读取Excel，生成结果文件
+    	logger.info("重新读取Excel--->生成结果文件");
+    	try {
+    		Sheet sheet = reader.getSheets().get(0);
+			reader.readSheet(sheet.getSheetId(), new SheetReadCallBack() {
+
+				@Override
+				public void readTitle(List<String> columns) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void read(DataRow dr) {
+			        Map<String, Object> dataItem = new HashMap<String, Object>();
+					for (DataColumn dc : dr.getColumns()) {
+						if ("库存日期".equals(dc.getTitleName())) {
+							try {
+								if (StringUtils.isBlank(dc.getColValue())) {
+									continue;
+								}
+								dataItem.put(dc.getTitleName(), DateUtil.transStringToTimeStamp(dc.getColValue()).toString());
+							} catch (Exception e) {
+								logger.error("日期格式异常！");
+								errorMap.put(dr.getRowNo(), "日期格式异常！");
+							}			
+						}else {
+							dataItem.put(dc.getTitleName(), dc.getColValue());
+						}
+					}
+					if (errorMap.containsKey(dr.getRowNo())) {
+		        		dataItem.put("备注", errorMap.get(dr.getRowNo()));
+					}
+		        	dataList.add(dataItem);
+		        	
+		        	//1000条写入一次
+		        	if (dataList.size() >= 1) {
+		        		try {
+		        			poiUtil.exportExcel2FilePath(poiUtil, workbook, "耗材出库结果文件",roNo, headDetailMapList, dataList);
+		        			roNo = roNo + dataList.size();
+						} catch (IOException e) {
+							logger.error("写入结果文件失败！", e);
+						}
+		        		dataList.clear();
+		        		errorMap.clear();
+					}
+				}
+
+				@Override
+				public void finish() {
+					try {
+						poiUtil.exportExcel2FilePath(poiUtil, workbook, "耗材出库结果文件",roNo, headDetailMapList, dataList);
+						roNo = 1;
+					} catch (IOException e) {
+						logger.error("写入结果文件失败！", e);
+					}
+	        		dataList.clear();
+				}
+
+				@Override
+				public void error(Exception ex) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+		} catch (Exception e) {
+			logger.error("任务ID【{}】 -> 第二次excel解析异常{}",taskId, e);
+			bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+		}finally {
+			reader.close();
+		}
 		
 		String resultFullPath="";	
 		logger.info("上传结果文件到fastDfs");
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
+		workbook.dispose();
 		byte[] b1 = os.toByteArray();
 		StorePath resultStorePath = storageClient.uploadFile(new ByteArrayInputStream(b1), b1.length, "xlsx");
 	    resultFullPath = resultStorePath.getFullPath();
 	    logger.info("上传结果文件到FastDfs - 成功");
 	    BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), taskEntity.getOriginFileName(), resultFullPath, REMARK);
 		bmsFileAsynTaskService.update(updateEntity);
-		newList.clear();
-		errList.clear();
-		mapData.clear();
-		allList.clear();
 	}
 	
 	private List<Map<String, Object>> getBizHead(List<String> exportColumns){
@@ -471,26 +539,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		itemMap.put("dataKey", "备注");
 		headInfoList.add(itemMap);
 		return headInfoList;
-	}
-	
-	private List<Map<String, Object>> getBizHeadItem() throws ParseException{
-		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
-        Map<String, Object> dataItem = null;
-        for (DataRow row : allList) {
-        	dataItem = new HashMap<String, Object>();
-        	for (DataColumn dc : row.getColumns()) {
-        		if ("库存日期".equals(dc.getTitleName())) {
-        			dataItem.put(dc.getTitleName(), DateUtil.transStringToTimeStamp(dc.getColValue()).toString());
-				}else {
-					dataItem.put(dc.getTitleName(), dc.getColValue());
-				}		
-			}
-        	if (errMap.containsKey(row.getRowNo())) {
-        		dataItem.put("备注", errMap.get(row.getRowNo()));
-			}
-        	dataList.add(dataItem);
-        }
-        return dataList;
 	}
 	
 	private boolean dbCheck(){
@@ -512,11 +560,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			rowNos.add(entity.getRowExcelNo());
 		}
 		
-		//存在异常的dataRow
-		for (Integer rowNo : rowNos) {
-			errList.add(mapData.get(rowNo));
-		}
-		
 		//存在重复记录
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		for(BizPalletInfoTempEntity entity:palletlist){
@@ -535,10 +578,10 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		Set<String> set=map.keySet();
 		for(String key:set){
 			Integer rowNum=Integer.valueOf(key);
-			if(errMap.containsKey(rowNum)){
-				errMap.put(rowNum, errMap.get(rowNum)+","+map.get(key));
+			if(errorMap.containsKey(rowNum)){
+				errorMap.put(rowNum, errorMap.get(rowNum)+","+map.get(key));
 			}else{
-				errMap.put(rowNum, map.get(key));
+				errorMap.put(rowNum, map.get(key));
 			}
 		}
 		
@@ -553,7 +596,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			if(!keyList.contains(key)){//excel数据无重复 验证与数据库对比
 				keyList.add(key);
 			}else{			
-				errMap.put(temp.getRowExcelNo(), "Excel中数据重复");
+				errorMap.put(temp.getRowExcelNo(), "Excel中数据重复");
 			}
 		}
 	}
@@ -604,6 +647,8 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		BizPalletInfoTempEntity tempEntity10 = null;
 		List<BizPalletInfoTempEntity> tempList = new ArrayList<BizPalletInfoTempEntity>();
 		
+		boolean isCustomerNull = false;
+		boolean isDateNull = false;
 		boolean isAllEmpty=false;
 		tempEntity = new BizPalletInfoTempEntity();
 		tempEntity.setRowExcelNo(dr.getRowNo());
@@ -622,6 +667,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
 					}else {
 						errorMsg += "库存日期必填;";
+						isDateNull = true;
 					}
 					break;
 				case "仓库":
@@ -648,6 +694,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						}
 					}else {
 						errorMsg+="商家必填;";
+						isCustomerNull = true;
 					}
 					break;
 				case "商品冷冻":
@@ -804,6 +851,10 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			}
 		} catch (Exception e) {
 			errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
+		}
+		
+		if (isDateNull && isCustomerNull) {
+			return tempList;
 		}
 		
 		if(!isAllEmpty){

@@ -339,7 +339,13 @@ public class BillCheckInvoiceImportController extends HttpNewImport<BillCheckInv
 				money=money.subtract(checkVo.getReceiptAmount());
 			}
 			money.add(adjustMoney);
-			checkVo.setInvoiceUnReceiptAmount(money);
+			
+			//如果是已收款状态，开票未回款金额变成0
+			if(CheckBillStatusEnum.RECEIPTED.getCode().equals(checkVo.getBillStatus())){
+				checkVo.setInvoiceUnReceiptAmount(BigDecimal.ZERO);
+			}else{
+				checkVo.setInvoiceUnReceiptAmount(money);
+			}
 			
 			//已确认未开票金额
 			checkVo.setConfirmUnInvoiceAmount(checkVo.getConfirmAmount().subtract(total));

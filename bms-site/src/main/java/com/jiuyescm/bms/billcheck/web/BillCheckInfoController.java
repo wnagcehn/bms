@@ -650,10 +650,10 @@ public class BillCheckInfoController{
 					for(BillCheckInfoVo vo:list){
 						
 						
-						//1.状态必须为“待收款” 已确认未开票金额必须大于等于0,为负数时，不允许一键收款
-						if(CheckBillStatusEnum.TB_RECEIPT.getCode().equals(vo.getBillStatus()) && vo.getConfirmUnInvoiceAmount()!=null && vo.getConfirmUnInvoiceAmount().compareTo(BigDecimal.ZERO)>=0){
+						//1.状态必须为“待收款” 允许一键收款(确认金额+调整金额=收款金额) 开票未回款金额也变成0
+						if(CheckBillStatusEnum.TB_RECEIPT.getCode().equals(vo.getBillStatus())){
 							//确认金额+调整金额
-							BigDecimal totalAmount=new BigDecimal(0);	
+							BigDecimal totalAmount=new BigDecimal(0);
 							if(vo.getConfirmAmount()!=null){
 								totalAmount=vo.getConfirmAmount();
 							}
@@ -675,6 +675,7 @@ public class BillCheckInfoController{
 							
 							if(totalAmount.compareTo(receiptAmount)==0){
 								//账单状态修改
+								vo.setInvoiceUnReceiptAmount(BigDecimal.ZERO);
 								vo.setBillStatus(CheckBillStatusEnum.RECEIPTED.getCode());
 								vo.setLastModifier(JAppContext.currentUserName());
 								vo.setLastModifierId(JAppContext.currentUserID());

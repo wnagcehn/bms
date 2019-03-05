@@ -47,6 +47,16 @@
 			<groupId>com.jiuyescm.contract</groupId>
 			<artifactId>contract-api</artifactId>
 			<version>${contract.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>tenant-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
         
     </dependencies>

@@ -98,7 +98,7 @@
     
     <insert id="saveWeight" parameterType="java.util.Map">
    		 insert into bms_products_weight_account(products_mark, weight, percent, task_id)
-   		 select a.products_mark,a.weight,ROUND(a.num1/b.num2*100)/100 as percent,#{taskId} 
+   		 select a.products_mark,a.weight,ROUND(a.num1/b.num2,8) as percent,#{taskId} 
    		  from (
 			select m1.products_mark,m1.weight,count(m1.weight) as num1 from bms_marking_products m1
 			INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
@@ -113,4 +113,36 @@
 			) b
 		 on a.products_mark=b.products_mark	
     </insert>
+    
+    <select id="queryOneMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
+    	select a.* from bms_marking_products a
+    	INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+        where 1 = 1 and b.del_flag='0' and b.extattr5='origin' and (c.material_type_name='泡沫箱' or c.material_type_name='纸箱')
+       	<if test=" id != null and id !='' ">
+			and a.id = #{id}
+		</if>
+       	<if test=" waybillNo != null and waybillNo !='' ">
+			and a.waybill_no = #{waybillNo}
+		</if>
+       	<if test=" productsMark != null and productsMark !='' ">
+			and a.products_mark = #{productsMark}
+		</if>
+       	<if test=" weight != null and weight !='' ">
+			and a.weight = #{weight}
+		</if>
+       	<if test=" correctWeight != null and correctWeight !='' ">
+			and a.correct_weight = #{correctWeight}
+		</if>
+       	<if test=" pmxzxMark != null and pmxzxMark !='' ">
+			and a.pmxzx_mark = #{pmxzxMark}
+		</if>
+       	<if test=" bwdMark != null and bwdMark !='' ">
+			and a.bwd_mark = #{bwdMark}
+		</if>
+       	<if test=" materialType != null and materialType !='' ">
+			and a.material_type = #{materialType}
+		</if> 
+		limit 1
+    </select>
 </mapper> 

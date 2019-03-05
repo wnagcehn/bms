@@ -17,6 +17,8 @@
 		   	<result column="mobile" property="mobile" jdbcType="VARCHAR" />
 		   	<result column="address" property="address" jdbcType="VARCHAR" />
 		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="contract_attr" property="contractAttr" jdbcType="INTEGER" />
+		   	<result column="mk_invoice_name" property="mkInvoiceName" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
@@ -85,6 +87,96 @@ mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifi
 			</if>
         	<if test=" writeTime != null and writeTime !='' ">
 				and write_time = #{writeTime}
+			</if>
+    </select>
+    
+    	<!-- 分页查询 -->
+    <select id="queryPage" parameterType="java.util.Map" resultMap = "BaseResultMap">
+        select
+a.id, a.mk_id, a.customer_id, a.customer_name, a.short_name, a.creator, a.create_time, a.last_modifier, a.last_modify_time, a.del_flag, a.linkman, a.tel, a.mobile, a.address, a.write_time, a.contract_attr,b.mk_invoice_name
+ from pub_customer a LEFT JOIN pub_customer_base b ON a.mk_id = b.mk_id
+        where 1 = 1
+            <if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				and b.mk_invoice_name LIKE CONCAT('%',#{mkInvoiceName},'%')
+			</if>
+        	<if test=" id != null and id !='' ">
+				and a.id = #{id}
+			</if>
+        	<if test=" mkId != null and mkId !='' ">
+				and a.mk_id = #{mkId}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and a.customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and a.customer_name LIKE CONCAT('%',#{customerName},'%')
+			</if>
+        	<if test=" shortName != null and shortName !='' ">
+				and a.short_name LIKE CONCAT('%',#{shortName},'%')
+			</if>
+        	<if test=" creator != null and creator !='' ">
+				and a.creator = #{creator}
+			</if>
+        	<if test=" createTime != null and createTime !='' ">
+				and a.create_time = #{createTime}
+			</if>
+        	<if test=" lastModifier != null and lastModifier !='' ">
+				and a.last_modifier = #{lastModifier}
+			</if>
+        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
+				and a.last_modify_time = #{lastModifyTime}
+			</if>
+        	<if test=" delFlag != 999 and delFlag != '999'">
+				and a.del_flag = #{delFlag}
+			</if>
+        	<if test=" linkman != null and linkman !='' ">
+				and a.linkman = #{linkman}
+			</if>
+        	<if test=" tel != null and tel !='' ">
+				and a.tel = #{tel}
+			</if>
+        	<if test=" mobile != null and mobile !='' ">
+				and a.mobile = #{mobile}
+			</if>
+        	<if test=" address != null and address !='' ">
+				and a.address = #{address}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and a.write_time = #{writeTime}
+			</if>
+    </select>
+    
+        <select id="queryPageLookup" parameterType="java.util.Map" resultType = "com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity">
+        select
+a.mk_id mkInvoiceId, a.customer_id customerid, a.customer_name customername, a.short_name shortname, a.creator creperson, a.create_time cretime , a.last_modifier modperson, a.last_modify_time modtime, a.del_flag delflag, a.linkman, a.tel, a.mobile, a.address,b.mk_invoice_name mkInvoiceName
+ from pub_customer a LEFT JOIN pub_customer_base b ON a.mk_id = b.mk_id
+        where 1 = 1
+            <if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				and b.mk_invoice_name LIKE CONCAT('%',#{mkInvoiceName},'%')
+			</if>
+        	<if test=" mkInvoiceId != null and mkInvoiceId !='' ">
+				and a.mk_id = #{mkInvoiceId}
+			</if>
+        	<if test=" customerid != null and customerid !='' ">
+				and a.customer_id = #{customerid}
+			</if>
+        	<if test=" customername != null and customername !='' ">
+				and a.customer_name LIKE CONCAT('%',#{customername},'%')
+			</if>
+        	<if test=" shortname != null and shortname !='' ">
+				and a.short_name LIKE CONCAT('%',#{shortname},'%')
+			</if>
+        	<if test=" creperson != null and creperson !='' ">
+				and a.creator = #{creperson}
+			</if>
+        	<if test=" cretime != null and cretime !='' ">
+				and a.create_time = #{cretime}
+			</if>
+        	<if test=" modperson != null and modperson !='' ">
+				and a.last_modifier = #{modperson}
+			</if>
+        	<if test=" modtime != null and modtime !='' ">
+				and a.last_modify_time = #{modtime}
 			</if>
     </select>
 </mapper>

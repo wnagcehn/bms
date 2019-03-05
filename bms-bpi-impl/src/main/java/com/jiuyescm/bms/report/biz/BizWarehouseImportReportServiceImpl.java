@@ -106,32 +106,6 @@ public class BizWarehouseImportReportServiceImpl implements IBizWarehouseImportR
 		}else{
 			return null;
 		}
-//			List<BizWarehouseNotImportVo> voList = new ArrayList<BizWarehouseNotImportVo>();
-//			for(BizWarehouseNotImportEntity entity : entityList){
-//				BizWarehouseNotImportVo vo = new BizWarehouseNotImportVo();
-//				try {
-//					PropertyUtils.copyProperties(vo, entity);
-//				} catch (IllegalAccessException | InvocationTargetException
-//						| NoSuchMethodException e) {
-//					e.printStackTrace();
-//				}
-//				voList.add(vo);
-//			}
-//			//使用list进行对比，找出未导入商家
-//			List<String> actualImportList = new ArrayList<String>();
-//			for(int i=0;i<voList.size();i++){
-//				if("ACTUAL".equals(voList.get(i).getImportType())){
-//					actualImportList.add(voList.get(i).getCustomerId());
-//				}
-//			}
-//			List<BizWarehouseNotImportVo> notImportList = new ArrayList<BizWarehouseNotImportVo>();
-//			for(int i=0;i<voList.size();i++){
-//				if("THEORY".equals(voList.get(i).getImportType())&&!actualImportList.contains(voList.get(i).getCustomerId())){
-//					notImportList.add(voList.get(i));
-//				}
-//			}
-//			PageHelper.startPage(pageNo, pageSize);
-//			PageInfo<BizWarehouseNotImportVo> page = new PageInfo<BizWarehouseNotImportVo>(notImportList);
-		
 	}
+	
 }

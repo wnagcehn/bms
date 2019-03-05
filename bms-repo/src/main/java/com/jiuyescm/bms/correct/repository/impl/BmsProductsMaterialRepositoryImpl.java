@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.correct.repository.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import com.jiuyescm.bms.correct.repository.IBmsProductsMaterialRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 @Repository("bmsProductsMaterialRepository")
-public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMaterialAccountEntity> implements IBmsProductsMaterialRepository{
+public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBmsProductsMaterialRepository{
 
 	@Override
 	public List<BmsProductsMaterialAccountEntity> queyAllMax(
@@ -36,6 +37,15 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 			Map<String, Object> condition) {
 		SqlSession session=this.getSqlSessionTemplate();
 		List<BmsMarkingMaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMax", condition);
+		return list;
+	}
+	
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stubo
+		SqlSession session=this.getSqlSessionTemplate();
+		List<BizOutstockPackmaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMaxMaterial", condition);
 		return list;
 	}
 	
@@ -71,6 +81,14 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 	public int markMaterial(Map<String, Object> condition) {
 		SqlSession session = this.getSqlSessionTemplate();
 		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.markMaterial", condition);
+	}
+	
+	@Override
+	public int markBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.markBwd", condition);
+	
 	}
 
 	@Override
@@ -114,7 +132,7 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		Map<String,Object> map=Maps.newHashMap();
 		map.put("waybillNoList", waybillNoList);
 		SqlSession session=this.getSqlSessionTemplate();
-		return session.delete("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.deleteMarkMaterialByWaybillNo",map);
+		return session.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.deleteMarkMaterialByWaybillNo",map);
 	}
 
 	@Override
@@ -132,5 +150,17 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao<BmsProductsMat
 		return session.selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queryBwdMaterial", condition);
 	
 	}
-	
+
+	@Override
+	public Map<String, String> getMaterialMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		Map<String,String> result=new HashMap<String, String>();
+		List<String> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.getMaterialMap", condition);
+		for(String sr:list){
+			if(sr.indexOf("%")!=-1){
+				result.put(sr.substring(0,sr.indexOf("%")), sr.substring(sr.indexOf("%")+1));
+			}
+		}
+		return result;
+	}	
 }

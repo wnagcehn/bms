@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialTempRepository;
 
@@ -60,11 +62,13 @@ public class BizOutstockPackmaterialTempRepositoryImpl extends MyBatisDao<BizOut
     }
 
 	@Override
-	public int saveBatch(List<BizOutstockPackmaterialTempEntity> list) {
+	public void saveBatch(List<BizOutstockPackmaterialTempEntity> list){
 		SqlSession session = getSqlSessionTemplate();
-		int ret = session.insert("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper.save", list);
-		logger.info("保存行数【"+ret+"】");
-		return ret;
+		try {
+			session.insert("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper.save", list);
+		} catch (Exception e) {
+			throw new BizException(e.getMessage());
+		}
 	}
 
 	@Override

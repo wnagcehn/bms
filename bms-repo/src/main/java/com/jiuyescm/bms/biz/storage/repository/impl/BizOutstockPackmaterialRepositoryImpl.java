@@ -291,4 +291,16 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		return (String) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getMaxBwdVolumn", condition);
 	}
 
+	@Override
+	public int deleteOldMaterial(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldMaterial", condition);
+	}
+
+	@Override
+	public int deleteOldBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldBwd", condition);
+	}
+
 }

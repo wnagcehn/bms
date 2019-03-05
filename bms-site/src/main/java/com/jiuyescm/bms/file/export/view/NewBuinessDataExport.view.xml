@@ -622,7 +622,7 @@ if (data != null) {&#xD;
       <ClientEvent name="onExecute">view.get(&quot;#panelQueryInvoice&quot;).show();</ClientEvent>
     </Trigger>
     <FloatPanel id="panelQueryInvoice">
-      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoiceQuery.userData&quot;);&#xD;
+      <ClientEvent name="onHide">var data = this.get(&quot;#queyViewSelectInvoice.userData&quot;);&#xD;
 if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsFileExportTaskCondition&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;

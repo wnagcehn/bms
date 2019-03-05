@@ -21,7 +21,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 
 /**
  * 各仓业务数据导入统计报表job
- * @author yangss
+ * @author yangss&&liuzhicheng
  */
 @JobHander(value="warehouseBizImportReportJob")
 @Service

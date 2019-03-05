@@ -138,6 +138,11 @@
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
       </ToolBarButton>
+      <ToolBarButton id="btnSelect">
+        <ClientEvent name="onClick">this.get(&quot;#actionSelectServiceType&quot;).execute();</ClientEvent>
+        <Property name="caption">选择</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+      </ToolBarButton>
     </ToolBar>
     <DataSet id="dsPubCarrierServicetypeEntity">
       <Property name="dataProvider">pubCarrierServicetypeController#query</Property>

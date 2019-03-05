@@ -41,7 +41,7 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
     </ToolBar>
     <DataSet id="dsCustomerLookup">
       <Property name="dataType">[dtCustomerEntity]</Property>
-      <Property name="dataProvider">customerController#query</Property>
+      <Property name="dataProvider">customerController#queryLookup</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
     </DataSet>

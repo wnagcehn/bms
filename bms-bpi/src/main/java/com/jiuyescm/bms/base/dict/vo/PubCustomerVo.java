@@ -40,6 +40,26 @@ public class PubCustomerVo implements Serializable {
 	private String address;
 	// WriteTime
 	private Timestamp writeTime;
+	//合同归属
+	private Integer contractAttr;
+	//合同商家名称
+	private String mkInvoiceName;
+	
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
+	}
+
+	public Integer getContractAttr() {
+		return contractAttr;
+	}
+
+	public void setContractAttr(Integer contractAttr) {
+		this.contractAttr = contractAttr;
+	}
 
 	public PubCustomerVo() {
 		super();

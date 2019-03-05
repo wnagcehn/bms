@@ -17,7 +17,7 @@
       <PropertyDef name="customerId">
         <Property name="label">商家</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getJyCustomer&quot;).getResult()}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getCustomer&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="bizTypecode">
@@ -42,6 +42,7 @@
               <Property name="SUCCESS">成功</Property>
               <Property name="EXCEPTION">处理异常</Property>
               <Property name="CANCEL">取消</Property>
+              <Property name="FAIL">失败</Property>
             </Entity>
           </Property>
         </Property>

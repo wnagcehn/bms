@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.repository.IBmsQuoteDiscountDetailRepository;
@@ -107,5 +108,15 @@ public class BmsQuoteDiscountDetailServiceImpl implements IBmsQuoteDiscountDetai
 		}
 		return 0;
 	}
+
+    @Override
+    public String queryServiceTypeName(Map<String, Object> condition) {
+       return  bmsQuoteDiscountDetailRepository.queryServiceTypeName(condition);
+    }
+    
+    @Override
+    public String queryServiceTypeCode(Map<String, Object> condition) {
+       return  bmsQuoteDiscountDetailRepository.queryServiceTypeCode(condition);
+    }
 	
 }

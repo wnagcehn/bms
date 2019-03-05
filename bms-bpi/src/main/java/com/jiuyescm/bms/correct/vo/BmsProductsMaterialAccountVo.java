@@ -31,6 +31,8 @@ public class BmsProductsMaterialAccountVo implements IEntity {
 	// 运单号
 	private String waybillNo;
 	
+	private String type;
+	
 	public BmsProductsMaterialAccountVo() {
 
 	}
@@ -137,6 +139,14 @@ public class BmsProductsMaterialAccountVo implements IEntity {
 
 	public void setWaybillNo(String waybillNo) {
 		this.waybillNo = waybillNo;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
     
 }

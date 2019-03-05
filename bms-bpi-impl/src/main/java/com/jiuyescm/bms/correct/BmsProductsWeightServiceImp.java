@@ -90,6 +90,21 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
 	}
 
 	@Override
+	public BmsMarkingProductsVo queryOneMaterial(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		BmsMarkingProductsEntity entity=bmsProductsWeightRepository.queryOneMaterial(condition);
+		try {
+			BmsMarkingProductsVo vo=new BmsMarkingProductsVo();
+            PropertyUtils.copyProperties(vo, entity);
+            return vo;
+        } catch (Exception ex) {
+            logger.error("转换失败");
+        }
+		return null;
+	}
+	
+	
+	@Override
 	public List<BmsProductsWeightAccountVo> queyWeightCount(
 			Map<String, Object> condition) {
 		// TODO Auto-generated method stub
@@ -134,5 +149,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
 		// TODO Auto-generated method stub
 		return bmsProductsWeightRepository.saveWeight(condition);
 	}
+
+
 
 }
