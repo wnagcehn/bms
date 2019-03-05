@@ -14,6 +14,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -203,12 +204,13 @@ public class BmsDiscountAsynTaskController {
 				}
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
+				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				logger.info("查询合同在线报错",e);
 				Map<String, String> param = new HashMap<>();
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
@@ -237,12 +239,13 @@ public class BmsDiscountAsynTaskController {
 				queryVo.setSettlementTime(entity.getCreateMonth());
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
+				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					bdatList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				logger.info("查询合同在线报错",e);
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {
@@ -278,12 +281,13 @@ public class BmsDiscountAsynTaskController {
 				queryVo.setSettlementTime(entity.getCreateMonth());
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
+				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				logger.info("查询合同在线报错",e);
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {
@@ -341,7 +345,11 @@ public class BmsDiscountAsynTaskController {
 			newEntity.setCreator(JAppContext.currentUserName());
 			newEntity.setCreateTime(JAppContext.currentTimestamp());
 			newEntity.setBizTypecode(bizEntity.getBizTypeCode());
-			newEntity.setCustomerId(bizEntity.getCustomerId());
+			if(StringUtils.isNotBlank(bizEntity.getCustomerId())){
+				newEntity.setCustomerId(bizEntity.getCustomerId());
+			}else{
+				newEntity.setCustomerId(entity.getCustomerId());
+			}
 			newEntity.setSubjectCode(bizEntity.getSubjectId());
 			newEntity.setCustomerType("bms");
 			newList.add(newEntity);
