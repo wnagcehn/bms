@@ -53,7 +53,6 @@ public class SnapshotBillReceiptJob extends IJobHandler {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("monday",monday);
 		condition.put("sunday",sunday);
-		condition.put("deptName","销售部");
 		List<SnapshotBillReceiptEntity> list = snapshotBillReceiptService.query(condition);
 		XxlJobLogger.log("共查询到预计回款记录数：{0}",list.size());
 		

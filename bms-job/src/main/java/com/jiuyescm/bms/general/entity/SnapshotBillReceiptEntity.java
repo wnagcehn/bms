@@ -33,6 +33,16 @@ public class SnapshotBillReceiptEntity implements IEntity {
 	private String sellerName;
 	
 	private String sellerId;
+	
+	private String deptName;
+	
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
     
 	public Long getId() {
 		return id;
