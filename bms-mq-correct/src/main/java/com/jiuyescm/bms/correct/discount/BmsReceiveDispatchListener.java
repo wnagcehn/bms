@@ -12,6 +12,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -203,7 +204,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				queryVo.setSettlementTime(task.getCreateMonth());
 				logger.info(taskId+"查询合同在线服务订购号的参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
-				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONObject.fromObject(disCountVoList));
+				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONArray.fromObject(disCountVoList));
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId(task.getSubjectCode());
@@ -480,7 +481,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				queryVo.setBizTypeCode("");
 				logger.info(taskId+"查询合同在线服务订购号的参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
-				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONObject.fromObject(disCountVoList));
+				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONArray.fromObject(disCountVoList));
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId("");
