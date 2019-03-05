@@ -169,6 +169,8 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 			
 			
 			List<BmsProductsWeightAccountVo> list=bmsProductsWeightService.queyAllMax(condition);
+			
+			logger.info("查询出来的占比最高的重量大小"+list.size());
 
 			if(list.size()>0){
 				//循环更新每个商品明细对应的运单

@@ -816,7 +816,11 @@ public class CustomerContractController {
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.info("合同在线未查询到折扣信息"+e.getMessage());
-				List<PriceContractInfoEntity> list = priceContractService.queryByCustomerId(param.get("customerId").toString());
+				Map<String,String> map=new HashMap<>();
+				String startD = param.get("createMonth").toString() + "-01 00:00:00";
+				param.put("startTime", startD);
+				param.put("customerId", param.get("customerId").toString());
+				List<PriceContractInfoEntity> list = priceContractService.queryByCustomerId(map);
 				return list;
 			}		
 		}
@@ -876,7 +880,8 @@ public class CustomerContractController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.info("合同在线未查询到折扣信息"+e.getMessage());
-
+			String startD = param.get("createMonth").toString() + "-01 00:00:00";
+			param.put("startTime", startD);
 			list = priceContractService.queryByCustomerIdAndBizType(param);
 			return list;
 		}

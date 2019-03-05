@@ -112,9 +112,8 @@
     	where 1=1
 		and i.contract_code=(select contract_code 
         from price_contract_info 
-        where del_flag = 0
-        and customerid=#{customerId} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) 
-        and <![CDATA[c.start_date <= #{startDate}]]>
+        where del_flag = '0'
+        and customerid=#{customerId} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' and <![CDATA[start_date <= #{startDate}]]> and expire_date>#{startDate} limit 1) 
         and i.del_flag='0'
     </select>
     
@@ -124,8 +123,11 @@
     	where 1=1
 		and i.contract_code=(select contract_code 
         from price_contract_info 
-        where del_flag = 0
-        and customerid=#{customerid} and biz_type_code=#{bizTypeCode} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and i.del_flag='0'
+        where del_flag = '0'
+        and customerid=#{customerid} and biz_type_code=#{bizTypeCode} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1'
+        and <![CDATA[start_date <= #{startTime}]]> and expire_date>#{startTime}
+        limit 1
+        ) and i.del_flag='0'
     </select>
     
     <select id="queryAll" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity" parameterType="java.sql.Timestamp">
@@ -135,9 +137,8 @@
 		where 1=1
 		and i.contract_code in (select contract_code 
         from price_contract_info 
-        where del_flag = 0
-        and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1') 
-        and <![CDATA[c.start_date <= #{time}]]>
+        where del_flag = '0'
+        and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' and <![CDATA[start_date <= #{time}]]> and expire_date>#{time}) 
         and i.del_flag='0'
     </select>
     
