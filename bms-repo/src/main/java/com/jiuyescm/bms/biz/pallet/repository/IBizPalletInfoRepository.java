@@ -44,6 +44,13 @@ public interface IBizPalletInfoRepository {
 	 * @return
 	 */
 	PageInfo<BizPalletInfoEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 批量更新导入托数
+	 * @param list
+	 * @return
+	 */
+	int updatePalletNumBatch(List<BizPalletInfoEntity> list);
 
 
 

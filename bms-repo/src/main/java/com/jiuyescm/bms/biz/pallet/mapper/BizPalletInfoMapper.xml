@@ -27,11 +27,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, adjust_pallet_num, fees_no, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, is_calculated, calculate_time, write_time, del_flag, remark
+        id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, adjust_pallet_num, fees_no, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, is_calculated, calculate_time, write_time, del_flag, remark, charge_source, sys_pallet_num
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, adjust_pallet_num, fees_no, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, is_calculated, calculate_time, write_time, del_flag, remark
+cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, adjust_pallet_num, fees_no, creator, creator_id, create_time, last_modifier, last_modifier_id, last_modify_time, is_calculated, calculate_time, write_time, del_flag, remark, charge_source, sys_pallet_num
     </sql>
 
 	<!-- 根据id查询 -->
@@ -47,8 +47,8 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
         select
 		p.id, p.cur_time, p.biz_type, p.warehouse_code, p.warehouse_name,
-		p.customer_id, p.customer_name, p.temperature_type_code, 
-		p.pallet_num, p.adjust_pallet_num, p.fees_no, p.creator, p.creator_id, 
+		p.customer_id, p.customer_name, p.temperature_type_code, p.charge_source,
+		p.sys_pallet_num, p.pallet_num, (p.sys_pallet_num-p.pallet_num) as diffPalletNum, p.adjust_pallet_num, p.fees_no, p.creator, p.creator_id, 
 		p.create_time, p.last_modifier, p.last_modifier_id, p.last_modify_time, 
 		p.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
 		s.cost as cost, s.subject_code as subjectCode
@@ -82,8 +82,8 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 				and s.subject_code = #{subjectCode}
 			</if>
-			<if test=" feesNo != null and feesNo !='' ">
-				and s.fees_no = #{feesNo}
+			<if test=" chargeSource != null and chargeSource !='' ">
+				and s.charge_source = #{chargeSource}
 			</if>
     </select>
 
@@ -114,7 +114,9 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			#{calculateTime,jdbcType=TIMESTAMP}, 
 			#{writeTime,jdbcType=TIMESTAMP}, 
 			#{delFlag,jdbcType=VARCHAR}, 
-			#{remark,jdbcType=VARCHAR}
+			#{remark,jdbcType=VARCHAR},
+			#{chargeSource,jdbcType=VARCHAR},
+			#{sysPalletNum,jdbcType=DECIMAL}
         )
     </insert>
 
@@ -166,6 +168,15 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         where cur_time=#{curTime} and customer_id=#{customerId}
         and warehouse_code=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
         and biz_type=#{bizType}
+    </update>
+    
+    <!-- 批量更新导入托数 -->
+    <update id="updatePalletNumBatch" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+        update biz_pallet_info
+        <trim prefix="set" suffixOverrides=",">
+			pallet_num = #{palletNum,jdbcType=DECIMAL},
+        </trim>
+        where id=#{id}
     </update>
     
     <!-- 重算 -->

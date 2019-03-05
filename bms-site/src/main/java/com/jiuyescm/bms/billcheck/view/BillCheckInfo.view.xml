@@ -388,6 +388,9 @@
         <Property name="label">待催款金额</Property>
         <Property name="displayFormat">###,###,###,##0.00</Property>
       </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInvoice">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo</Property>
@@ -434,6 +437,9 @@
       </PropertyDef>
       <PropertyDef name="delFlag">
         <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property name="label">开票名称</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckLog">
@@ -1444,6 +1450,12 @@ if(index==3){&#xD;
               <Property name="property">invoiceName</Property>
               <Property name="width">130</Property>
             </DataColumn>
+            <DataColumn>
+              <Property name="name">mkInvoiceName</Property>
+              <Property name="property">mkInvoiceName</Property>
+              <Property name="width">130</Property>
+              <Editor/>
+            </DataColumn>
             <DataColumn name="billName">
               <Property name="property">billName</Property>
               <Property name="width">130</Property>
@@ -1757,6 +1769,7 @@ if(currentData){&#xD;
 var current = view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
 datas.insert();&#xD;
 datas.current.set(&quot;billCheckId&quot;,current.get(&quot;id&quot;));&#xD;
+datas.current.set(&quot;mkInvoiceName&quot;,current.get(&quot;invoiceName&quot;));&#xD;
 view.get(&quot;#dialogInvoiceEdit&quot;).show();</ClientEvent>
                     <Property name="caption">新增</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
@@ -1776,6 +1789,11 @@ if(data.current){&#xD;
                   <Property name="dataSet">dsBillCheckInvoice</Property>
                   <Property name="readOnly">true</Property>
                   <RowNumColumn/>
+                  <DataColumn>
+                    <Property name="name">mkInvoiceName</Property>
+                    <Property name="property">mkInvoiceName</Property>
+                    <Editor/>
+                  </DataColumn>
                   <DataColumn name="invoiceNo">
                     <Property name="property">invoiceNo</Property>
                   </DataColumn>
@@ -1801,11 +1819,16 @@ if(data.current){&#xD;
                 </UpdateAction>
                 <Dialog id="dialogInvoiceEdit">
                   <ClientEvent name="onClose">view.id(&quot;dsBillCheckInvoice&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
-                  <Property name="height">250</Property>
+                  <Property name="height">280</Property>
                   <Property name="width">350</Property>
                   <Buttons>
                     <Button>
                       <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInvoice.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;mkInvoiceName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;开票名称必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 &#xD;
 if(isNullOrEmpty(entity.get(&quot;invoiceAmount&quot;))){&#xD;
 	dorado.MessageBox.alert(&quot;发票金额必填!&quot;);&#xD;
@@ -1842,6 +1865,12 @@ view.id(&quot;updateInvoiceAction&quot;).execute(function(result){&#xD;
                   <Children>
                     <AutoForm>
                       <Property name="dataSet">dsBillCheckInvoice</Property>
+                      <Property name="cols">*</Property>
+                      <AutoFormElement>
+                        <Property name="name">mkInvoiceName</Property>
+                        <Property name="property">mkInvoiceName</Property>
+                        <Editor/>
+                      </AutoFormElement>
                       <AutoFormElement layoutConstraint="colSpan:2">
                         <Property name="name">invoiceNo</Property>
                         <Property name="property">invoiceNo</Property>

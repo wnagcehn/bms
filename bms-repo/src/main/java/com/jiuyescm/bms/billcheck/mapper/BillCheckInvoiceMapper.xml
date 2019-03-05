@@ -18,10 +18,11 @@
 	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
 	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="mk_invoice_name" property="mkInvoiceName" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, bill_check_id, sort_no, invoice_no, invoice_amount, invoice_date, waybill_no, invoice_days, remark, creator_id,creator, create_time, last_modifier, last_modify_time, del_flag
+        id, bill_check_id, sort_no, invoice_no, invoice_amount, invoice_date, waybill_no, invoice_days, remark, creator_id,creator, create_time, last_modifier, last_modify_time, del_flag, mk_invoice_name
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -54,6 +55,9 @@
 		</if>
 		<if test="(creator != null and creator !='')" >
 				and creator = #{creator}
+		</if>
+		<if test="(mkInvoiceName != null and mkInvoiceName !='')" >
+				and mk_invoice_name = #{mkInvoiceName}
 		</if>
 		<if test="(createTime != null and createTime !='')" >
 			    and create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
@@ -170,7 +174,7 @@
     </select>
     
     <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillCheckInvoiceEntity">
-        insert into bill_check_invoice(bill_check_id, sort_no, invoice_no, invoice_amount, invoice_date, waybill_no, invoice_days, remark,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag)
+        insert into bill_check_invoice(bill_check_id, sort_no, invoice_no, invoice_amount, invoice_date, waybill_no, invoice_days, remark,creator_id, creator, create_time, last_modifier, last_modify_time, del_flag, mk_invoice_name)
         values (
 
 #{billCheckId,jdbcType=INTEGER}, 
@@ -186,7 +190,8 @@
 #{createTime,jdbcType=TIMESTAMP}, 
 #{lastModifier,jdbcType=VARCHAR}, 
 #{lastModifyTime,jdbcType=TIMESTAMP}, 
-#{delFlag,jdbcType=VARCHAR}
+#{delFlag,jdbcType=VARCHAR},
+#{mkInvoiceName,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -207,6 +212,7 @@
 <if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
 <if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 <if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+<if test="mkInvoiceName != null" >mk_invoice_name=#{mkInvoiceName,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>

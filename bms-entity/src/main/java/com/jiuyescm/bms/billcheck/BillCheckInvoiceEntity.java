@@ -50,6 +50,9 @@ public class BillCheckInvoiceEntity implements IEntity {
 	private Timestamp lastModifyTime;
 	// DelFlag
 	private String delFlag;
+	
+	//开票名称
+	private String mkInvoiceName;
 
 	public BillCheckInvoiceEntity() {
 
@@ -279,6 +282,14 @@ public class BillCheckInvoiceEntity implements IEntity {
 
 	public void setCreatorId(String creatorId) {
 		this.creatorId = creatorId;
+	}
+
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
 	}
     
 }

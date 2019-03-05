@@ -172,6 +172,9 @@ public class BillCheckInfoVo implements IEntity {
 	//待催款金额
 	private BigDecimal tbDunAmount;
 	
+	//开票名称
+	private String mkInvoiceName;
+	
 	public BillCheckInfoVo() {
 
 	}
@@ -1080,6 +1083,14 @@ public class BillCheckInfoVo implements IEntity {
 	public void setBillNo(String billNo) {
 		this.billNo = billNo;
 	}
-   
+
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
+	}
+    
 	
 }

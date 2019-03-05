@@ -45,6 +45,13 @@ public interface IBizPalletInfoService {
 	 * @return
 	 */
 	int updateBatch(List<Map<String, Object>> list);
+	
+	/**
+	 * 批量更新导入托数
+	 * @param list
+	 * @return
+	 */
+	int updatePalletNumBatch(List<BizPalletInfoEntity> list);
 
 
 }

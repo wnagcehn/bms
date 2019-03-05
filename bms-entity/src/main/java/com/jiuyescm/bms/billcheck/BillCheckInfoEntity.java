@@ -138,6 +138,9 @@ public class BillCheckInfoEntity implements IEntity {
 	private BigDecimal accountAmount;
 	
 	private String billNo;
+	
+	//开票名称
+	private String mkInvoiceName;
 	public BillCheckInfoEntity() {
 
 	}
@@ -931,6 +934,14 @@ public class BillCheckInfoEntity implements IEntity {
 
 	public void setBillNo(String billNo) {
 		this.billNo = billNo;
+	}
+
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
 	}
 
 	

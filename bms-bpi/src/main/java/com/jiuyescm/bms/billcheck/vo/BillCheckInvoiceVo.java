@@ -63,6 +63,10 @@ public class BillCheckInvoiceVo implements IEntity {
 	private String area;
 	//合计金额
 	private BigDecimal totalPrice;
+	
+	//开票名称
+	private String mkInvoiceName;
+	
 	public BillCheckInvoiceVo() {
 
 	}
@@ -339,6 +343,14 @@ public class BillCheckInvoiceVo implements IEntity {
 
 	public void setArea(String area) {
 		this.area = area;
+	}
+
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
 	}
 	
 }

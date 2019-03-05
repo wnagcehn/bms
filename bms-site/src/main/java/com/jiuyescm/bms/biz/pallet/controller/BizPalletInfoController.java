@@ -172,15 +172,38 @@ public class BizPalletInfoController {
 	 * @param entity
 	 */
 	@DataResolver
-	public void delete(List<BizPalletInfoEntity> lists) {
+	public String delete(List<BizPalletInfoEntity> lists) {
+		List<BizPalletInfoEntity> delList = new ArrayList<BizPalletInfoEntity>();
+		List<BizPalletInfoEntity> modList = new ArrayList<BizPalletInfoEntity>();
 		for (BizPalletInfoEntity entity : lists) {
 			entity.setDelFlag("1");
+			//如果计费来源是系统，返回
+			if ("system".equals(entity.getChargeSource())) {
+				return "不能删除计费来源是系统的数据!";
+			}
+			//计费来源是导入, 如果系统托数是0, 那么整体数据可以删除
+			if ("import".equals(entity.getChargeSource()) && entity.getSysPalletNum() == 0) {
+				delList.add(entity);
+			}
+			//计费来源是导入,如果系统托数不等于0, 那么删除动作就是更新导入托数为0
+			if ("import".equals(entity.getChargeSource()) && entity.getSysPalletNum() != 0) {
+				entity.setPalletNum(0d);
+				modList.add(entity);
+			}
 		}		
 		try {
-			bizPalletInfoService.delete(lists);
+			bizPalletInfoService.delete(delList);
 		} catch (Exception e) {
 			logger.error("删除失败",e);
-		}	
+			return "删除失败!";
+		}
+		try {
+			bizPalletInfoService.updatePalletNumBatch(modList);
+		} catch (Exception e) {
+			logger.error("更新失败",e);
+			return "更新失败!";
+		}
+		return "删除成功！";
 	}
 	
 	/**

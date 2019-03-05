@@ -66,6 +66,13 @@ public class BizPalletInfoEntity implements IEntity {
 	private String subjectName;
 	
 	private Integer totalNum;
+	
+	//计费来源
+	private String chargeSource;
+	//系统托数
+	private Double sysPalletNum;
+	//差异托数
+	private Double diffPalletNum;
 
 	public BizPalletInfoEntity() {
 		super();
@@ -277,6 +284,30 @@ public class BizPalletInfoEntity implements IEntity {
 
 	public void setTotalNum(Integer totalNum) {
 		this.totalNum = totalNum;
+	}
+
+	public String getChargeSource() {
+		return chargeSource;
+	}
+
+	public void setChargeSource(String chargeSource) {
+		this.chargeSource = chargeSource;
+	}
+
+	public Double getSysPalletNum() {
+		return sysPalletNum;
+	}
+
+	public void setSysPalletNum(Double sysPalletNum) {
+		this.sysPalletNum = sysPalletNum;
+	}
+
+	public Double getDiffPalletNum() {
+		return diffPalletNum;
+	}
+
+	public void setDiffPalletNum(Double diffPalletNum) {
+		this.diffPalletNum = diffPalletNum;
 	}
     
 }

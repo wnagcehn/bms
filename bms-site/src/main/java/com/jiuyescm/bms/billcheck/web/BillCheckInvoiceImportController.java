@@ -232,6 +232,11 @@ public class BillCheckInvoiceImportController extends HttpNewImport<BillCheckInv
 				mes+="商家合同名称不能为空;";
 			}
 			
+			//开票名称校验
+			if (StringUtils.isBlank(vo.getMkInvoiceName())) {
+				mes+="开票名称不能为空;";
+			}
+			
 			//月份判断
 			if(vo.getInvoiceDate()==null){
 				mes+="开票日期格式不对或者为空;";

@@ -47,7 +47,7 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="palletNum">
-        <Property name="label">托数</Property>
+        <Property name="label">导入托数</Property>
       </PropertyDef>
       <PropertyDef name="adjustPalletNum">
         <Property name="label">调整托数</Property>
@@ -101,6 +101,23 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;PALLET_CAL_FEE&quot;)}</Property>
         </Property>
+      </PropertyDef>
+      <PropertyDef name="chargeSource">
+        <Property name="label">计费来源</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="system">系统</Property>
+              <Property name="import">导入</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="sysPalletNum">
+        <Property name="label">系统托数</Property>
+      </PropertyDef>
+      <PropertyDef name="diffPalletNum">
+        <Property name="label">差异托数</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBizPalletInfoEntityQuery">
@@ -190,6 +207,17 @@
           <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;PALLET_CAL_FEE_QUERY&quot;)}</Property>
         </Property>
         <Property name="defaultValue">ALL</Property>
+      </PropertyDef>
+      <PropertyDef name="chargeSource">
+        <Property name="label">计费来源</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="system">系统</Property>
+              <Property name="import">导入</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtPalletGroup">
@@ -399,18 +427,17 @@ dialog.show();</ClientEvent>
 			}&#xD;
 			else {&#xD;
 				dorado.MessageBox.confirm(&quot;是否确定要废除此条记录?&quot;, function(){&#xD;
-					view.get(&quot;#deleteAction&quot;).execute({&#xD;
-						callback: function(success){&#xD;
-							with (view.get(&quot;#dsBizPalletInfoEntity&quot;)) {&#xD;
+					view.get(&quot;#deleteAction&quot;).execute(function(result){&#xD;
+						dorado.MessageBox.alert(result);&#xD;
+						with (view.get(&quot;#dsBizPalletInfoEntity&quot;)) {&#xD;
 								flushAsync();&#xD;
-							}&#xD;
 						}&#xD;
 					});&#xD;
 				});&#xD;
 			}&#xD;
         }else{&#xD;
               dorado.MessageBox.alert(&quot;请首先选择要废除的记录!&quot;);&#xD;
-        }</ClientEvent>
+    		 }</ClientEvent>
         <Property name="caption">删除</Property>
         <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
       </ToolBarButton>
@@ -483,8 +510,8 @@ dialog.show();</ClientEvent>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">feesNo</Property>
-          <Property name="property">feesNo</Property>
+          <Property name="name">chargeSource</Property>
+          <Property name="property">chargeSource</Property>
           <Property name="showHint">false</Property>
           <Editor/>
         </AutoFormElement>
@@ -559,13 +586,35 @@ dialog.show();</ClientEvent>
           <Property name="property">bizType</Property>
           <Property name="width">90</Property>
         </DataColumn>
+        <DataColumn>
+          <Property name="name">chargeSource</Property>
+          <Property name="property">chargeSource</Property>
+          <Property name="width">90</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">sysPalletNum</Property>
+          <Property name="property">sysPalletNum</Property>
+          <Property name="width">90</Property>
+          <Property name="align">right</Property>
+          <Editor/>
+        </DataColumn>
         <DataColumn name="palletNum">
           <Property name="property">palletNum</Property>
           <Property name="width">90</Property>
+          <Property name="align">right</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">diffPalletNum</Property>
+          <Property name="property">diffPalletNum</Property>
+          <Property name="width">90</Property>
+          <Property name="align">right</Property>
+          <Editor/>
         </DataColumn>
         <DataColumn name="adjustPalletNum">
           <Property name="property">adjustPalletNum</Property>
           <Property name="width">90</Property>
+          <Property name="align">right</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">cost</Property>

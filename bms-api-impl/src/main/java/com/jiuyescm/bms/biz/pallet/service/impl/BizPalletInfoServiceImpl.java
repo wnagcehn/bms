@@ -82,6 +82,16 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
     }
     
     /**
+     * 批量更新导入托数
+     * @param list
+     * @return
+     */
+    @Override
+    public int updatePalletNumBatch(List<BizPalletInfoEntity> list){
+    	return bizPalletInfoRepository.updatePalletNumBatch(list);
+    }
+    
+    /**
      * 重算
      * @param param
      * @return

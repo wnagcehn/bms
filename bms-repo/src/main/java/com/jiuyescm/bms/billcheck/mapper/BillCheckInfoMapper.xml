@@ -219,11 +219,21 @@
 	  
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-        select
-        <include refid="baseColumns" />
-        from bill_check_info
-        where 1=1 and del_flag='0'
+        select b.id, b.create_month, b.invoice_name, b.bill_name, 
+		b.customer_name, b.bill_start_time, b.first_class_name, b.biz_type_name, 
+		b.project_name,b.seller_id, b.seller_name, b.dept_name, b.dept_code,b.project_manager_id, 
+		b.project_manager_name,b.balance_id, b.balance_name, b.bill_status, b.bill_check_status, 
+		b.bill_confirm_date, b.invoice_status, b.expect_amount, ifnull(b.confirm_amount,0) as confirm_amount, 
+		b.confirm_date, b.confirm_man_id, b.confirm_man, b.isneed_invoice,b.isapply_bad, ifnull(b.invoice_amount,0) as invoice_amount, 
+		b.invoice_date, b.expect_receipt_date, ifnull(b.un_receipt_amount,0) as un_receipt_amount,
+		ifnull(b.confirm_un_invoice_amount,0) as confirm_un_invoice_amount, ifnull(b.invoice_un_receipt_amount,0) as invoice_un_receipt_amount, 
+		ifnull(b.receipt_amount,0) as receipt_amount,receipt_status, b.receipt_date,area, b.creator_id, b.creator, b.create_time, b.last_modifier_id, 
+		b.last_modifier, b.last_modify_time, b.invoice_man_id, b.invoice_man, b.receipt_man_id, b.receipt_man, b.bad_bill_amount, b.del_flag, b.remark, b.bill_excel_url,
+		GROUP_CONCAT(DISTINCT i.mk_invoice_name) as mkInvoiceName from bill_check_info b
+		LEFT JOIN bill_check_invoice i on b.id=i.bill_check_id and i.del_flag='0'
+        where 1=1 and b.del_flag='0'
 		<include refid="baseSelectColumns" />
+		GROUP BY b.id
     </select>
     
         <select id="queryForOut" parameterType="java.util.Map"
@@ -591,16 +601,40 @@
 	
 	<select id="queryByInvoiceNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
 		select
-		<include refid="baseColumns" />
-		from bill_check_info where 1=1 and del_flag='0' and id in
+		b.id, b.create_month, b.invoice_name, b.bill_name, 
+		b.customer_name, b.bill_start_time, b.first_class_name, b.biz_type_name, 
+		b.project_name,b.seller_id, b.seller_name, b.dept_name, b.dept_code,b.project_manager_id, 
+		b.project_manager_name,b.balance_id, b.balance_name, b.bill_status, b.bill_check_status, 
+		b.bill_confirm_date, b.invoice_status, b.expect_amount, ifnull(b.confirm_amount,0) as confirm_amount, 
+		b.confirm_date, b.confirm_man_id, b.confirm_man, b.isneed_invoice,b.isapply_bad, ifnull(b.invoice_amount,0) as invoice_amount, 
+		b.invoice_date, b.expect_receipt_date, ifnull(b.un_receipt_amount,0) as un_receipt_amount,
+		ifnull(b.confirm_un_invoice_amount,0) as confirm_un_invoice_amount, ifnull(b.invoice_un_receipt_amount,0) as invoice_un_receipt_amount, 
+		ifnull(b.receipt_amount,0) as receipt_amount,receipt_status, b.receipt_date,area, b.creator_id, b.creator, b.create_time, b.last_modifier_id, 
+		b.last_modifier, b.last_modify_time, b.invoice_man_id, b.invoice_man, b.receipt_man_id, b.receipt_man, b.bad_bill_amount, b.del_flag, b.remark, b.bill_excel_url,
+		GROUP_CONCAT(DISTINCT i.mk_invoice_name) as mkInvoiceName 
+		from bill_check_info b 
+		LEFT JOIN bill_check_invoice i on b.id=i.bill_check_id and i.del_flag='0'
+		where 1=1 and b.del_flag='0' and b.id in
 		(select DISTINCT bill_check_id from bill_check_invoice where 1=1 and del_flag='0' and invoice_no like '%${invoiceNo}%')
 		<include refid="baseSelectColumns" />
 	</select>
 	
 	<select id="queryByFollowType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
 		select
-		<include refid="baseColumns" />
-		from bill_check_info where 1=1 and del_flag='0' and id in
+		b.id, b.create_month, b.invoice_name, b.bill_name, 
+		b.customer_name, b.bill_start_time, b.first_class_name, b.biz_type_name, 
+		b.project_name,b.seller_id, b.seller_name, b.dept_name, b.dept_code,b.project_manager_id, 
+		b.project_manager_name,b.balance_id, b.balance_name, b.bill_status, b.bill_check_status, 
+		b.bill_confirm_date, b.invoice_status, b.expect_amount, ifnull(b.confirm_amount,0) as confirm_amount, 
+		b.confirm_date, b.confirm_man_id, b.confirm_man, b.isneed_invoice,b.isapply_bad, ifnull(b.invoice_amount,0) as invoice_amount, 
+		b.invoice_date, b.expect_receipt_date, ifnull(b.un_receipt_amount,0) as un_receipt_amount,
+		ifnull(b.confirm_un_invoice_amount,0) as confirm_un_invoice_amount, ifnull(b.invoice_un_receipt_amount,0) as invoice_un_receipt_amount, 
+		ifnull(b.receipt_amount,0) as receipt_amount,receipt_status, b.receipt_date,area, b.creator_id, b.creator, b.create_time, b.last_modifier_id, 
+		b.last_modifier, b.last_modify_time, b.invoice_man_id, b.invoice_man, b.receipt_man_id, b.receipt_man, b.bad_bill_amount, b.del_flag, b.remark, b.bill_excel_url,
+		GROUP_CONCAT(DISTINCT i.mk_invoice_name) as mkInvoiceName 
+		from bill_check_info b 
+		LEFT JOIN bill_check_invoice i on b.id=i.bill_check_id and i.del_flag='0'
+		where 1=1 and b.del_flag='0' and b.id in
 		(select DISTINCT bill_check_id from bill_receipt_follow where 1=1 and del_flag='0' and follow_type=#{followType})
 		<include refid="baseSelectColumns" />
 	</select>
