@@ -818,8 +818,8 @@ public class CustomerContractController {
 				logger.info("合同在线未查询到折扣信息"+e.getMessage());
 				Map<String,String> map=new HashMap<>();
 				String startD = param.get("createMonth").toString() + "-01 00:00:00";
-				param.put("startTime", startD);
-				param.put("customerId", param.get("customerId").toString());
+				map.put("startTime", startD);
+				map.put("customerId", param.get("customerId").toString());
 				List<PriceContractInfoEntity> list = priceContractService.queryByCustomerId(map);
 				return list;
 			}		
