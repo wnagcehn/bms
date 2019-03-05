@@ -76,7 +76,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 				pageInfo=billCheckInfoRepository.queryByInvoiceNo(condition, pageNo, pageSize);
 	
 			}else if(condition!=null  && condition.get("followType")!=null && condition.get("followType")!=""){
-				//跟进类型不为空时，需要根据跟进类型去查询字表再查询主表
+				//跟进类型不为空时，需要根据跟进类型去查询子表再查询主表
 				pageInfo=billCheckInfoRepository.queryByFollowType(condition, pageNo, pageSize);
 			}else{
 				pageInfo=billCheckInfoRepository.query(condition, pageNo, pageSize);

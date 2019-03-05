@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.SnapshotBillReceiptMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.general.entity.SnapshotBillReceiptEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="snapshot_date" property="snapshotDate" jdbcType="DATE" />
+	    <result column="area" property="area" jdbcType="VARCHAR" />
+	    <result column="expect_amount" property="expectAmount" jdbcType="DECIMAL" />
+	    <result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
+	    <result column="seller_id" property="sellerId" jdbcType="VARCHAR" />
+	    <result column="bill_name" property="billName" jdbcType="VARCHAR" />
+	    <result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	    <result column="invoice_name" property="invoiceName" jdbcType="VARCHAR" />
+	    <result column="create_month" property="createMonth" jdbcType="VARCHAR" />
+    </resultMap>
+  
+      <select id="query" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.SnapshotBillReceiptEntity">
+	SELECT create_month as createMonth,
+	invoice_name as invoiceName,
+	bill_name as billName,
+	seller_id as sellerId,
+	seller_name as sellerName,
+	expect_amount as expectAmount,
+	expect_receipt_date as snapshotDate,
+	area ,
+	dept_name as deptName
+	FROM bill_check_info
+	WHERE del_flag = 0
+    and <![CDATA[expect_receipt_date >= #{monday}]]>
+    and <![CDATA[expect_receipt_date <= #{sunday}]]>
+    </select>
+    
+      <insert id="insert" parameterType="com.jiuyescm.bms.general.entity.SnapshotBillReceiptEntity">
+       insert into bms_snapshot_bill_receipt(
+    		area,snapshot_date,expect_amount,write_time,create_month,invoice_name,bill_name,seller_id,seller_name,dept_name)
+        values (
+			#{area}, 
+			#{snapshotDate}, 
+			#{expectAmount}, 
+			#{writeTime}, 
+			#{createMonth}, 
+		    #{invoiceName}, 
+			#{billName},
+			#{sellerId},		
+			#{sellerName},
+			#{deptName}
+        )
+    </insert>
+</mapper>

@@ -57,6 +57,8 @@ public class BillCheckReceiptVo implements IEntity {
 	private String sellerName;
 	//地区
 	private String area;
+	//责任部门
+	private String deptName;
 	//统计金额
 	private BigDecimal totalPrice;
 	public BillCheckReceiptVo() {
@@ -294,6 +296,14 @@ public class BillCheckReceiptVo implements IEntity {
 
 	public void setArea(String area) {
 		this.area = area;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
    
 	

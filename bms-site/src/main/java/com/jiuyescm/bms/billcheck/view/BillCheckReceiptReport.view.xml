@@ -43,6 +43,10 @@
         <Property></Property>
         <Property name="label">区域</Property>
       </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property/>
+        <Property name="label">责任部门</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckReceipt">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckReceiptVo</Property>
@@ -106,6 +110,13 @@
       <PropertyDef name="area">
         <Property></Property>
         <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptType">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property/>
+        <Property name="label">责任部门</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -196,6 +207,11 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
         <Property name="property">area</Property>
         <Editor/>
       </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">deptName</Property>
+        <Property name="property">deptName</Property>
+        <Editor/>
+      </AutoFormElement>
     </AutoForm>
     <Container>
       <DataGrid id="dataList">
@@ -213,6 +229,9 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
         <DataColumn name="billName">
           <Property name="property">billName</Property>
           <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn name="deptName">
+          <Property name="property">deptName</Property>
         </DataColumn>
         <DataColumn name="area">
           <Property name="property">area</Property>
