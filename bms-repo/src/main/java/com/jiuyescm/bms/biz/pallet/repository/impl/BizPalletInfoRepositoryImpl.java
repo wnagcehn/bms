@@ -103,7 +103,7 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
     }
     
 	/**
-	 * 批量更新导入托数
+	 * 点击删除时批量更新导入托数
 	 * @param entity
 	 * @return
 	 */
@@ -123,5 +123,6 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
                 pageNo, pageSize));
 		return new PageInfo<BizPalletInfoEntity>(list);
 	}
+	
     
 }

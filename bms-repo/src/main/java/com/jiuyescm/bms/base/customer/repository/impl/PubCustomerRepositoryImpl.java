@@ -59,4 +59,5 @@ public class PubCustomerRepositoryImpl extends MyBatisDao<PubCustomerEntity> imp
                 pageNo, pageSize));
         return new PageInfo<PubCustomerEntity>(list);
 	}
+
 }

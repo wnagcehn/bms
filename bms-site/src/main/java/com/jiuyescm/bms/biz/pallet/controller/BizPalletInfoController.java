@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,7 @@ import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
+import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeNewEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
 import com.jiuyescm.bms.common.enumtype.type.ExeclOperateTypeEnum;
@@ -59,10 +61,15 @@ import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.tool.Tools;
+import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
+import com.jiuyescm.bms.common.web.HttpCommanExport;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.common.utils.upload.DiscountQuoteTemplateDataType;
+import com.jiuyescm.common.utils.upload.PalletDataType;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
@@ -752,4 +759,89 @@ public class BizPalletInfoController {
 		}
 		return fileSize;
 	}
+	
+	/**
+	 * 导出报价
+	 * @param parameter
+	 * @return
+	 * @throws Exception
+	 */
+	@FileProvider
+	public DownloadFile downLoadData(Map<String,Object> parameter) throws Exception{
+		try{
+			String path=getPath();
+			HttpCommanExport commanExport=new HttpCommanExport(path);
+			ExportDataVoEntity voEntity=new ExportDataVoEntity();
+			voEntity.setTitleName("托数导出");
+			voEntity.setBaseType(new PalletDataType());
+			voEntity.setDataList(getDataList(parameter));
+			return commanExport.exportFile(voEntity);
+		}catch(Exception e){
+			//写入日志
+			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
+			throw e;
+		}
+		
+	}
+	
+	private String getPath(){
+		SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode("GLOABL_PARAM", "EXPORT_PALLET_INFO");
+		if(systemCodeEntity == null){
+			throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_PALLET_INFO");
+		}
+		return systemCodeEntity.getExtattr1();
+	}
+	
+	private List<Map<String,Object>> getDataList(Map<String,Object> parameter) throws Exception{
+		//费用科目
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList("PALLET_CAL_FEE");
+		for (SystemCodeEntity SystemCodeEntity : tmscodels) {	
+			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+		}
+		//计算状态
+		Map<String, String> calStatus = new HashMap<String, String>();
+		calStatus = CalculateState.getMap();
+		List<BizPalletInfoEntity> list = bizPalletInfoService.query(parameter);
+		List<Map<String,Object>> mapList=new ArrayList<Map<String,Object>>();
+		Map<String,Object> map=null;
+		for (BizPalletInfoEntity entity : list) {
+			map = new HashMap<>();
+			map.put("curTime",entity.getCurTime() );
+			map.put("warehouseName", entity.getWarehouseName());
+			map.put("customerName", entity.getCustomerName());
+			map.put("temperatureTypeCode", BmsEnums.tempretureType.getDesc(entity.getTemperatureTypeCode()));
+			map.put("subjectCode", mapValue.get(entity.getSubjectCode()));
+			map.put("bizType", BmsEnums.palletType.getDesc(entity.getBizType()));
+			if ("import".equals(entity.getChargeSource())) {
+				map.put("chargeSource", "导入");
+			}else if ("system".equals(entity.getChargeSource())) {
+				map.put("chargeSource", "系统");
+			}else {
+				map.put("chargeSource", "");
+			}
+			map.put("sysPalletNum", entity.getSysPalletNum());
+			map.put("palletNum", entity.getPalletNum());
+			map.put("diffPalletNum", entity.getSysPalletNum()-entity.getPalletNum());
+			map.put("adjustPalletNum", entity.getAdjustPalletNum());
+			map.put("cost", entity.getCost());
+			map.put("isCalculated", calStatus.get(entity.getIsCalculated()));
+			map.put("remark", entity.getRemark());
+			map.put("feesNo", entity.getFeesNo());
+			map.put("creator", entity.getCreator());
+			map.put("createTime", entity.getCreateTime());
+			mapList.add(map);
+		}
+		return mapList;
+	}
+	
+	public Map<String, String> getEnumList(String typeCode) {	
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		List<SystemCodeEntity> tmscodels = systemCodeService.findEnumList(typeCode);
+		for (SystemCodeEntity SystemCodeEntity : tmscodels) {	
+			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
+		}
+		return mapValue;
+	}
+	
 }

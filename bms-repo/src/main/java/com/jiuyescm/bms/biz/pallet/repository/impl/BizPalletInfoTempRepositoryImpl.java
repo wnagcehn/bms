@@ -42,9 +42,10 @@ public class BizPalletInfoTempRepositoryImpl extends MyBatisDao<BizPalletInfoTem
      * @return
      */
 	@Override
-	public List<BizPalletInfoTempEntity> queryInBiz(String taskId) {
+	public List<BizPalletInfoTempEntity> queryInBiz(String taskId, int errorNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
+		map.put("errorNum", errorNum);
 		return this.selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.queryInBiz", map);
 		
 	}
@@ -127,6 +128,13 @@ public class BizPalletInfoTempRepositoryImpl extends MyBatisDao<BizPalletInfoTem
 		 return session.insert("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.saveDataFromTemp", map);
 	}
 	
+	@Override
+	public List<BizPalletInfoTempEntity> queryNeedInsert(String taskId) {
+		 Map<String,String> map=Maps.newHashMap();
+		 map.put("taskId", taskId);
+		 return this.selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.queryNeedInsert", map);
+	}
+	
 	/**
 	 * 批量删除
 	 * @param taskId
@@ -141,5 +149,22 @@ public class BizPalletInfoTempRepositoryImpl extends MyBatisDao<BizPalletInfoTem
 		logger.info("删除托数临时表 行数【"+k+"】,批次号【"+taskId+"】");
 		return k;
 	}
+	
+	/**
+	 * 批量更新导入的导入托数
+	 * @param entity
+	 * @return
+	 */
+    @Override
+    public int importUpdatePalletNumBatch(List<BizPalletInfoTempEntity> list) {
+       int k = updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.importUpdatePalletNumBatch", list);
+       return k;
+    }
+    
+    @Override
+    public int importSaveBatch(List<BizPalletInfoTempEntity> list){
+    	int k = insertBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.importSaveBatch", list);
+    	return k;
+    }
 	
 }

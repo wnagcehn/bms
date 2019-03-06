@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -33,8 +32,14 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
+import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoTempService;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
@@ -70,6 +75,9 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	@Autowired private ISystemCodeService systemCodeService; //业务类型
 	@Autowired private ICustomerService customerService;
 	@Autowired private IBizPalletInfoTempService bizPalletInfoTempService;
+	@Autowired private IBmsGroupService bmsGroupService;
+	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
+	@Autowired private ICustomerDictService customerDictService;
 	
 	private static final String REMARK = "导入数据不规范,请下载查看最后一列说明";
 	BmsFileAsynTaskVo taskEntity = new BmsFileAsynTaskVo();
@@ -82,6 +90,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	private Map<String,String> wareHouseMap = null;
 	private Map<String,String> customerMap = null;
 	private Map<String,String> temperatureMap = null;
+	List<String> cusNames = null;
 	
 	private String taskId;
 	private int batchNum = 1000;
@@ -93,7 +102,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	private int roNo = 1;
 	
 	//----------初始化基础数据--------
-	public void initKeyValue(){
+	public void initKeyValue() throws Exception{
 		//----------初始化基础数据--------
 		wareHouseMap = new HashMap<String, String>();
 		customerMap = new HashMap<String, String>();
@@ -125,7 +134,32 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		    }
 		}
 		logger.info("任务ID【{}】 -> 成功获取所有仓库,商家,耗材信息 ",taskId);
+		
+		//如果导入的商家不在 《使用导入商品托数的商家》中, 报错提示<此商家使用商品系统托数,不能重复导入.>
+		Map<String,String> cusMap=customerMap();
+		Map<String, Object> map= new HashMap<String, Object>();
+		map.put("groupCode", "Product_Pallet");
+		map.put("bizType", "group_customer");
+		BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+		if(bmsGroup!=null){
+			cusNames = new ArrayList<String>();
+			List<BmsGroupCustomerVo> custList=bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
+			for(BmsGroupCustomerVo vo:custList){
+				cusNames.add(cusMap.get(vo.getCustomerid()));
+			}
+		}		
 	}
+	
+	public Map<String,String> customerMap(){
+    	Map<String,String> map=new HashMap<String,String>();
+    	List<PubCustomerEntity> cusList = customerDictService.queryAllCus(null);
+		for(PubCustomerEntity entity:cusList){
+			if (StringUtils.isNotBlank(entity.getCustomerName())) {
+				map.put(entity.getCustomerId(),entity.getCustomerName());
+			}		
+		}	
+		return map;
+    }
 	
 	@Override
 	public void onMessage(Message message) {
@@ -325,10 +359,11 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				logger.error("文件创建失败！", e);
 			}
 			return;
-		}
+		}	
 		
+		List<BizPalletInfoTempEntity> updateList = new ArrayList<BizPalletInfoTempEntity>();
 		//数据库层面重复校验  false - 校验不通过 存在重复  原则上（时间+仓库+商家+温度+类型）只有一条  
-		if(!dbCheck()){
+		if(!dbCheck(updateList)){
 			try {
 				createResultFile(reader);
 			} catch (Exception e) {
@@ -350,9 +385,11 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		
 		bmsMaterialImportTaskCommon.setTaskProcess(taskId, 80);	
 		logger.info("************ OK **********");
+		//组装需要新增的
+		List<BizPalletInfoTempEntity> insertList = bizPalletInfoTempService.queryNeedInsert(taskId);
 		//往正式表存数据
 		try{
-			int k=saveDataFromTemp(taskEntity.getTaskId());
+			int k=saveData(updateList, insertList);
 			if(k>0){
 				logger.error("托数从临时表写入业务表成功");
 				bmsMaterialImportTaskCommon.setTaskProcess(taskEntity.getTaskId(), 90);
@@ -541,38 +578,42 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		return headInfoList;
 	}
 	
-	private boolean dbCheck(){
+	private boolean dbCheck(List<BizPalletInfoTempEntity> updateList){
+		boolean result = true;
 		Map<String, String> tranTemperature = new HashMap<String, String>();
 		tranTemperature.put("LD", "冷冻");
 		tranTemperature.put("LC", "冷藏");
 		tranTemperature.put("CW", "常温");
 		tranTemperature.put("HW", "恒温");
-		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBiz(taskEntity.getTaskId());
+		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBiz(taskEntity.getTaskId(), 1000);
 		if(null == palletlist || palletlist.size() <= 0){
 			return true;
 		}
 		
 		Map<String,String> map=Maps.newLinkedHashMap();
-			
-		//一共几行,去重
-		Set<Integer> rowNos = new TreeSet<>();
-		for(BizPalletInfoTempEntity entity:palletlist){
-			rowNos.add(entity.getRowExcelNo());
-		}
 		
 		//存在重复记录
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		for(BizPalletInfoTempEntity entity:palletlist){
 			String row=String.valueOf(entity.getRowExcelNo());
 			String mes="";
-			if(map.containsKey(row)){
-				mes=map.get(row);
-				mes+=",【"+formatter.format(entity.getCurTime())+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+tranTemperature.get(entity.getTemperatureTypeCode())+"】【"+entity.getBizType()+"】";
-				map.put(row,mes);
-			}else{
-				mes="系统中已存在,【"+formatter.format(entity.getCurTime())+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeCode()+"】【"+entity.getBizType()+"】";
-				map.put(row,mes);
-			}
+			
+			//如果对应数据存在,系统托数不等于0,导入托数等于0, 那么更新导入托数;
+			//如果对应数据存在,导入托数不等于0, 报错提示;
+			if (entity.getSysPalletNum() != 0 && entity.getPalletNum() == 0) {
+				updateList.add(entity);
+			}else if (entity.getPalletNum() != 0) {
+				result = false;
+				if(map.containsKey(row)){
+					mes=map.get(row);
+					mes+=",【"+formatter.format(entity.getCurTime())+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+tranTemperature.get(entity.getTemperatureTypeCode())+"】【"+entity.getBizType()+"】";
+					map.put(row,mes);
+				}else{
+					mes="系统中已存在,【"+formatter.format(entity.getCurTime())+"】【"+entity.getWarehouseName()+"】【"+entity.getCustomerName()+"】【"+entity.getTemperatureTypeCode()+"】【"+entity.getBizType()+"】";
+					map.put(row,mes);
+				}
+			}		
+
 		}
 		
 		Set<String> set=map.keySet();
@@ -585,7 +626,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			}
 		}
 		
-		return false;
+		return result;
 	}
 	
 	private void checkPallet(List<BizPalletInfoTempEntity> list){
@@ -619,9 +660,9 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		return 1;
     }
 	
-	private int saveDataFromTemp(String taskId){
-		int result=bizPalletInfoTempService.saveTempData(taskId);		
-		return result;
+	private int saveData(List<BizPalletInfoTempEntity> insertList, List<BizPalletInfoTempEntity> updateList){
+		int k = bizPalletInfoTempService.saveData(insertList, updateList);
+		return k;
 	}
 	
 	/**
@@ -656,6 +697,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		tempEntity.setCreator(taskEntity.getCreator());
 		tempEntity.setCreatorId(taskEntity.getCreatorId());
 		tempEntity.setTaskId(taskEntity.getTaskId());
+		tempEntity.setChargeSource("import");
 		
 		try {
 			for (DataColumn dc : dr.getColumns()) {			
@@ -688,7 +730,12 @@ public class BmsPalletImportListenerNew implements MessageListener{
 						tempEntity.setCustomerName(dc.getColValue());
 						//如果没找到，报错
 						if (customerMap.containsKey(dc.getColValue())) {
-							tempEntity.setCustomerId(customerMap.get(dc.getColValue()));
+							//如果导入的商家不在 《使用导入商品托数的商家》中, 报错提示<此商家使用商品系统托数,不能重复导入
+							if (cusNames.contains(dc.getColValue())) {
+								tempEntity.setCustomerId(customerMap.get(dc.getColValue()));
+							}else {
+								errorMsg+="此商家使用商品系统托数,不能重复导入;";
+							}
 						}else {
 							errorMsg+="商家不存在;";
 						}

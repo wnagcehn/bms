@@ -48,7 +48,11 @@ public class BizPalletInfoTempEntity implements IEntity {
 	private Integer rowExcelNo;
 	// excel列名
 	private String rowExcelName;
-
+	
+	//系统托数
+	private Double sysPalletNum;
+	//计费来源
+	private String chargeSource;
 	public BizPalletInfoTempEntity() {
 		super();
 	}
@@ -180,6 +184,22 @@ public class BizPalletInfoTempEntity implements IEntity {
 
 	public void setRowExcelName(String rowExcelName) {
 		this.rowExcelName = rowExcelName;
+	}
+
+	public Double getSysPalletNum() {
+		return sysPalletNum;
+	}
+
+	public void setSysPalletNum(Double sysPalletNum) {
+		this.sysPalletNum = sysPalletNum;
+	}
+
+	public String getChargeSource() {
+		return chargeSource;
+	}
+
+	public void setChargeSource(String chargeSource) {
+		this.chargeSource = chargeSource;
 	}
     
 }

@@ -14,66 +14,6 @@
         <Property name="label">商家名称</Property>
       </PropertyDef>
     </DataType>
-    <DataType name="dtCustomerEntity" meta="x:15;y:15">
-      <Property name="matchType">com.jiuyescm.mdm.warehouse.vo.WarehouseVo</Property>
-      <Property name="creationType">com.jiuyescm.mdm.warehouse.vo.WarehouseVo</Property>
-      <PropertyDef name="customerid">
-        <Property name="label">商家ID</Property>
-      </PropertyDef>
-      <PropertyDef name="orgid">
-        <Property name="label">组织ID</Property>
-      </PropertyDef>
-      <PropertyDef name="customercode">
-        <Property name="label">商家助记码</Property>
-      </PropertyDef>
-      <PropertyDef name="shortname">
-        <Property name="label">商家简称</Property>
-      </PropertyDef>
-      <PropertyDef name="customername">
-        <Property name="label">商家名称</Property>
-      </PropertyDef>
-      <PropertyDef name="linkman">
-        <Property name="label">联系人</Property>
-      </PropertyDef>
-      <PropertyDef name="address">
-        <Property name="label">商家地址</Property>
-      </PropertyDef>
-      <PropertyDef name="tel">
-        <Property name="label">商家电话</Property>
-      </PropertyDef>
-      <PropertyDef name="mobile">
-        <Property name="label">商家移动电话</Property>
-      </PropertyDef>
-      <PropertyDef name="zipcode">
-        <Property name="label">邮编</Property>
-      </PropertyDef>
-      <PropertyDef name="remark">
-        <Property name="label">备注</Property>
-      </PropertyDef>
-      <PropertyDef name="delflag">
-        <Property name="dataType">int</Property>
-        <Property name="label">作废标记</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
-        </Property>
-      </PropertyDef>
-      <PropertyDef name="creperson">
-        <Property name="label">创建者</Property>
-      </PropertyDef>
-      <PropertyDef name="cretime">
-        <Property name="dataType">DateTime</Property>
-        <Property name="displayFormat">Y-m-d H:i:s</Property>
-        <Property name="label">创建时间</Property>
-      </PropertyDef>
-      <PropertyDef name="modperson">
-        <Property name="label">修改者</Property>
-      </PropertyDef>
-      <PropertyDef name="modtime">
-        <Property name="dataType">DateTime</Property>
-        <Property name="displayFormat">Y-m-d H:i:s</Property>
-        <Property name="label">修改时间</Property>
-      </PropertyDef>
-    </DataType>
   </Model>
   <View>
     <ClientEvent name="onReady">view.get(&quot;#dsCustomerLookup.data&quot;).clear();&#xD;
@@ -106,7 +46,7 @@ if (tableData != null&amp;&amp;tableData.length>0) {	&#xD;
     </ToolBar>
     <DataSet id="dsCustomerLookup">
       <Property name="dataType">[dtCustomerEntity]</Property>
-      <Property name="dataProvider">customerLookupPR#query</Property>
+      <Property name="dataProvider">customerController#queryLookup</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
       <Property name="loadMode">manual</Property>

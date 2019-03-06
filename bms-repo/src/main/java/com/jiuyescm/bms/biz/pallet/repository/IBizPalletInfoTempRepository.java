@@ -3,6 +3,7 @@ package com.jiuyescm.bms.biz.pallet.repository;
 import java.util.Map;
 import java.util.List;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity;
 
 /**
@@ -36,7 +37,7 @@ public interface IBizPalletInfoTempRepository {
 	 * @param taskId
 	 * @return
 	 */
-	List<BizPalletInfoTempEntity> queryInBiz(String taskId);
+	List<BizPalletInfoTempEntity> queryInBiz(String taskId, int errorNum);
 	
 	/**
 	 * 从临时表保存到业务表
@@ -51,5 +52,27 @@ public interface IBizPalletInfoTempRepository {
 	 * @return
 	 */
 	int deleteBybatchNum(String taskId);
+	
+	/**
+	 * 查询需要新增的
+	 * @param taskId
+	 * @return
+	 */
+	List<BizPalletInfoTempEntity> queryNeedInsert(String taskId);
+
+	/**
+	 * 从临时表批量写入正式表
+	 * @param list
+	 * @return
+	 */
+	int importSaveBatch(List<BizPalletInfoTempEntity> list);
+	
+	/**
+	 * 批量更新正式表
+	 * @param list
+	 * @return
+	 */
+	int importUpdatePalletNumBatch(List<BizPalletInfoTempEntity> list);
+
 
 }

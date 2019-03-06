@@ -1,8 +1,10 @@
 package com.jiuyescm.bms.base.dict.api;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
@@ -75,4 +77,11 @@ public interface ICustomerDictService {
 
 	PageInfo<PubCustomerLookupEntity> queryPubCustomerLookup(
 			Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 查询商家
+	 * @param condition
+	 * @return
+	 */
+	List<PubCustomerEntity> queryAllCus(Map<String, Object> condition);
 }

@@ -36,7 +36,7 @@ public interface IBizPalletInfoTempService {
 	 * @param taskId
 	 * @return
 	 */
-	List<BizPalletInfoTempEntity> queryInBiz(String taskId);
+	List<BizPalletInfoTempEntity> queryInBiz(String taskId, int errorNum);
 	
 	/**
 	 * 从临时表保存到业务表
@@ -51,5 +51,20 @@ public interface IBizPalletInfoTempService {
 	 * @return
 	 */
 	int deleteBybatchNum(String taskId);
-
+	
+	/**
+	 * 查询需要新增的entity
+	 * @param taskId
+	 * @return
+	 */
+	List<BizPalletInfoTempEntity> queryNeedInsert(String taskId);
+	
+	/**
+	 * 批量更新和保存到正式表
+	 * @param insertList
+	 * @param updateList
+	 * @return
+	 */
+	int saveData(List<BizPalletInfoTempEntity> insertList, List<BizPalletInfoTempEntity> updateList);
+	
 }
