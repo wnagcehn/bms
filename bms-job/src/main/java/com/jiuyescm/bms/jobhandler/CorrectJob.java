@@ -2,6 +2,7 @@ package com.jiuyescm.bms.jobhandler;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -134,15 +135,20 @@ public class CorrectJob  extends IJobHandler{
 					
 					String id1 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT")) ;
 					String taskId1 = "CT";
+					//任务的结束时间为开始时间的月份最后一天
+					Calendar calendar = Calendar.getInstance();  
+					calendar.setTime(endDate);  
+					calendar.add(Calendar.DAY_OF_MONTH, -1);  
+					Date end = calendar.getTime();
 					for(int j = 1;j<=10-id1.length();j++){
 						taskId1 +="0";
 					}
 					taskId1 += id1;
-					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"weight_correct");
+					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,end,customerid,"weight_correct");
 					entity.setTaskId(taskId1);
 					i++;
 					list.add(entity);
-					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"material_correct");
+					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,end,customerid,"material_correct");
 					String id2 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT")) ;
 					String taskId2 = "CT";
 					for(int j = 1;j<=10-id2.length();j++){
