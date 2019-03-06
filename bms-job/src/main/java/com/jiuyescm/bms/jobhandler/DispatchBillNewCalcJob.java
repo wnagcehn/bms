@@ -334,7 +334,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 							
 							//原始泡重并且纠正泡重为0的时候,才需要考虑物流商重量
 							//比较物流商重量和运单重量,哪个大取哪个计费
-							if(DoubleUtil.isBlank(entity.getCorrectThrowWeight()) && DoubleUtil.isBlank(entity.getThrowWeight())){
+					/*		if(DoubleUtil.isBlank(entity.getCorrectThrowWeight()) && DoubleUtil.isBlank(entity.getThrowWeight())){
 								if(entity.getCarrierWeight()>=entity.getTotalWeight()){
 									//物流商重量大于等于运单重量
 									double dd = getResult(entity.getCarrierWeight());
@@ -347,18 +347,46 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 									entity.setTotalWeight(entity.getTotalWeight());
 								}
 								
-							}else{
+							}else{*/
 								//纠正泡重不存在
 								if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
 									if (hasCorrect) {
-										double dd = getResult(correctWeight);
+										//有纠正重量时，直接比较纠正重量和物流商重量
+										if(entity.getCarrierWeight()>=correctWeight){
+											//物流商重量大于等于纠正重量
+											double dd = getResult(entity.getCarrierWeight());
+											entity.setWeight(dd);
+											entity.setTotalWeight(entity.getCarrierWeight());
+										}else{
+											//物流商重量小于纠正重量
+											double dd = getResult(correctWeight);
+											entity.setWeight(dd);
+											double resultWeight = compareWeight(entity.getTotalWeight(), 
+													getResult(entity.getTotalWeight()), correctWeight);
+											entity.setTotalWeight(resultWeight);
+										}
+										
+										
+									/*	double dd = getResult(correctWeight);
 										entity.setWeight(dd);
 										// 有纠正重量，比较纠正重量和运单重量是否相等
 										double resultWeight = compareWeight(entity.getTotalWeight(), 
 												getResult(entity.getTotalWeight()), correctWeight);
-										entity.setTotalWeight(resultWeight);
+										entity.setTotalWeight(resultWeight);*/
 									}else {
-										if(!DoubleUtil.isBlank(entity.getTotalWeight())){
+										//没有纠正重量，物流商重量和运单重量比较
+										if(entity.getCarrierWeight()>=entity.getTotalWeight()){
+											//物流商重量大于等于运单重量
+											double dd = getResult(entity.getCarrierWeight());
+											entity.setWeight(dd);
+											entity.setTotalWeight(entity.getCarrierWeight());
+										}else{
+											//物流商重量小于重量
+											double dd = getResult(entity.getTotalWeight());
+											entity.setWeight(dd);
+											entity.setTotalWeight(entity.getTotalWeight());
+										}
+										/*if(!DoubleUtil.isBlank(entity.getTotalWeight())){
 											double dd = getResult(entity.getTotalWeight());
 											entity.setWeight(dd);
 											//实际重量存在时取实际重量
@@ -368,7 +396,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 											entity.setIsCalculated(CalculateState.Sys_Error.getCode());
 											feeEntity.setIsCalculated(CalculateState.Sys_Error.getCode());
 											entity.setRemark(entity.getRemark()+"顺丰非同城，泡重和实际重量都不存在，无法计算;");
-										}
+										}*/
 									}
 									
 								}else{
@@ -411,7 +439,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 										}
 									}
 								}
-							}						
+							/*}*/						
 						}
 					}else{
 						XxlJobLogger.log("-->"+entity.getId()+"--------顺丰发件人省或市地址不对 计算失败--------");
@@ -924,7 +952,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			XxlJobLogger.log("-->"+entity.getId()+"走筛选 筛选前报价条数【{0}】",list.size());
 			list=handNewBizDispatch(list, entity);
 			XxlJobLogger.log("-->"+entity.getId()+"筛选后报价条数【{0}】",list.size());
-			if(list.size()==0){
+			if(null==list||list.size()==0){
 				return list;
 			}
 			for (BmsQuoteDispatchDetailVo bmsQuoteDispatchDetailVo : list) {
@@ -1376,6 +1404,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		
 		if(!(minValue+"").contains("3")){
 			String result=newPrice.get(minValue);
+			if(StringUtils.isEmpty(result)){
+				return null;
+			}
 			if(result.contains(",")){
 				String[] array=result.split(",");
 				for (int a = 0; a < array.length; a++) {		
