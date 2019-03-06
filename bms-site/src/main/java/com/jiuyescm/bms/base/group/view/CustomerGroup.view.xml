@@ -548,5 +548,28 @@ view.get(&quot;#dialogEditLevel&quot;).hide();&#xD;
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
   </View>
 </ViewConfig>

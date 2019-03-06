@@ -4,7 +4,11 @@ import java.util.Map;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoTempRepository;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoTempService;
@@ -49,8 +53,8 @@ public class BizPalletInfoTempServiceImpl implements IBizPalletInfoTempService {
      * @return
      */
 	@Override
-	public List<BizPalletInfoTempEntity> queryInBiz(String taskId) {
-		return bizPalletInfoTempRepository.queryInBiz(taskId);
+	public List<BizPalletInfoTempEntity> queryInBiz(String taskId, int errorNum) {
+		return bizPalletInfoTempRepository.queryInBiz(taskId, errorNum);
 	}
     
      /**
@@ -123,4 +127,20 @@ public class BizPalletInfoTempServiceImpl implements IBizPalletInfoTempService {
 		// TODO Auto-generated method stub
 		return bizPalletInfoTempRepository.deleteBybatchNum(taskId);
 	}
+	
+
+	@Override
+	public List<BizPalletInfoTempEntity> queryNeedInsert(String taskId) {
+		return bizPalletInfoTempRepository.queryNeedInsert(taskId);
+	}
+	
+
+	@Transactional(readOnly = false, propagation=Propagation.REQUIRED)
+	@Override
+	public int saveData(List<BizPalletInfoTempEntity> insertList, List<BizPalletInfoTempEntity> updateList) {
+		int s = bizPalletInfoTempRepository.importSaveBatch(insertList);
+		int u = bizPalletInfoTempRepository.importUpdatePalletNumBatch(updateList);
+		return s+u;
+	}
+	
 }

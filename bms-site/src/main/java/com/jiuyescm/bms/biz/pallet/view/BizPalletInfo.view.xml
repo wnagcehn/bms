@@ -442,9 +442,10 @@ dialog.show();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBizPalletInfoEntityQuery.data&quot;).current;&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
-        <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBizPalletInfoEntity">
@@ -1177,5 +1178,10 @@ view.get(&quot;#importCloseBtn&quot;).set(&quot;disabled&quot;,true);</ClientEve
       </Children>
       <Tools/>
     </Dialog>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">bizPalletInfoController#downLoadData</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

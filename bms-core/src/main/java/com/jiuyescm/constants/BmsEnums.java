@@ -258,4 +258,61 @@ public class BmsEnums {
 		}	
 	}
 	
+	/**
+	 * 托数类型
+	 * @author wangchen870
+	 *
+	 */
+	public enum palletType{
+		product("product","商品托数"),material("material","耗材托数"),instock("instock","入库托数"),outstock("outstock","出库托数");
+		private String code;
+		private String desc;
+		private palletType(String code, String desc){
+			this.code = code;
+			this.desc = desc;
+		}
+		
+		public String getCode(){
+			return code;
+		}
+		
+		public String getDesc(){
+			return desc;
+		}
+		
+		private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
+		private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
+		static{
+			mapKey.put(product.code, product.desc);
+			mapKey.put(material.code, material.desc);
+			mapKey.put(instock.code, instock.desc);
+			mapKey.put(outstock.code, outstock.desc);
+			mapValue.put(product.desc,product.code);
+			mapValue.put(material.desc, material.code);
+			mapValue.put(instock.desc, instock.code);
+			mapValue.put(outstock.desc, outstock.code);
+		}
+		public static Map<String,String> getMap(){
+			return mapKey;
+		}
+		
+		public static String getDesc(String code)
+		{
+			if (mapKey.containsKey(code))
+			{
+				return mapKey.get(code);
+			}
+			return null;
+		}
+		
+		public static String getCode(String desc)
+		{
+			if (mapValue.containsKey(desc))
+			{
+				return mapValue.get(desc);
+			}
+			return null;
+		}	
+	}
+	
 }

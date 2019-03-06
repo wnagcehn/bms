@@ -349,7 +349,7 @@ public class BmsPalletImportListener extends BmsCommonImportListener {
 		tranTemperature.put("LC", "冷藏");
 		tranTemperature.put("CW", "常温");
 		tranTemperature.put("HW", "恒温");
-		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBiz(taskEntity.getTaskId());
+		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBiz(taskEntity.getTaskId(), 1000);
 		Map<String,String> map=Maps.newLinkedHashMap();
 		if(palletlist.size()> 0){			
 			//存在重复记录

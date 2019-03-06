@@ -224,5 +224,6 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         delete from biz_pallet_info 
         where id = #{id}
     </delete>
+   
     
 </mapper>

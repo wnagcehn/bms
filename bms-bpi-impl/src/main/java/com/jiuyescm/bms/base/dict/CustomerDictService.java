@@ -290,5 +290,10 @@ public class CustomerDictService implements ICustomerDictService {
 		PageInfo<PubCustomerLookupEntity> pageEntity = pubCustomerLookupRepository.query(condition, pageNo, pageSize);
 		return pageEntity;
 	}
+	
+	@Override
+	public List<PubCustomerEntity> queryAllCus(Map<String, Object> condition){
+		return pubCustomerRepository.query(condition);
+	}
 
 }

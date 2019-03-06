@@ -30,12 +30,22 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
 	
 	<select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
         select a.cur_time, a.warehouse_name, a.customer_name, 
-        a.temperature_type_code,a.rowExcelNo,a.rowExcelName,a.biz_type
+        a.temperature_type_code,a.rowExcelNo,a.rowExcelName,
+        a.biz_type,a.pallet_num,a.sys_pallet_num
 		from biz_pallet_info_temp a 
 		inner join biz_pallet_info b on a.customer_id = b.customer_id 
 		and a.cur_time = b.cur_time and a.warehouse_code = b.warehouse_code 
 		and a.temperature_type_code = b.temperature_type_code
-		where 1=1 and b.del_flag=0 and a.task_id=#{taskId}
+		where 1=1 and b.del_flag=0 and a.task_id=#{taskId} limit #{errorNum}
+    </select>
+    
+    <select id="queryNeedInsert" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+    	select
+    	<include refid="BASE_COLUMNS_ALL" /> 
+    	from biz_pallet_info_temp 
+		WHERE task_id=#{taskId}
+		and CONCAT(cur_time,warehouse_code,customer_id,IFNULL(temperature_type_code,''),biz_type) not in
+		(select CONCAT(cur_time,warehouse_code,customer_id,IFNULL(temperature_type_code,''),biz_type) from biz_pallet_info)
     </select>
 	
 	<!-- 根据id查询 -->
@@ -196,8 +206,48 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
     </delete>
     
    	<insert id="saveDataFromTemp" parameterType="java.util.Map">
-    	insert into biz_pallet_info(cur_time, biz_type,warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, is_calculated, creator, creator_id, create_time, del_flag, write_time)
-		select  cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, '0', creator, creator_id, create_time, '0', write_time
-		from biz_pallet_info_temp where task_id=#{taskId}                           
+    	insert into biz_pallet_info(cur_time, biz_type,warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, is_calculated, creator, creator_id, create_time, del_flag, write_time, sys_pallet_num, charge_source)
+		select  cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, temperature_type_code, pallet_num, '0', creator, creator_id, create_time, '0', write_time, sys_pallet_num, charge_source
+		from biz_pallet_info_temp where task_id=#{taskId}                             
     </insert>
+    
+    <!-- 批量更新 -->
+    <update id="importUpdatePalletNumBatch" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+        update biz_pallet_info
+        <trim prefix="set" suffixOverrides=",">
+			pallet_num = #{palletNum,jdbcType=DECIMAL},
+        </trim>
+        where cur_time=#{curTime} and customer_id=#{customerId}
+        and warehouse_code=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
+        and biz_type=#{bizType}
+    </update>
+    
+    <!-- 批量写入 -->
+    <insert id="importSaveBatch" parameterType="java.util.List">
+        insert into biz_pallet_info(
+        	cur_time, biz_type,warehouse_code, warehouse_name, customer_id, customer_name, 
+        	temperature_type_code, pallet_num, is_calculated, creator, creator_id, 
+        	create_time, del_flag, write_time, sys_pallet_num, charge_source
+    	)
+        values (
+
+			#{item.curTime,jdbcType=TIMESTAMP}, 
+			#{item.bizType,jdbcType=VARCHAR}, 
+			#{item.warehouseCode,jdbcType=VARCHAR}, 
+			#{item.warehouseName,jdbcType=VARCHAR}, 
+			#{item.customerId,jdbcType=VARCHAR}, 
+			#{item.customerName,jdbcType=VARCHAR}, 
+			#{item.temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{item.palletNum,jdbcType=DECIMAL}, 
+			'0',
+			#{item.creator,jdbcType=VARCHAR}, 
+			#{item.creatorId,jdbcType=VARCHAR}, 
+			#{item.createTime,jdbcType=TIMESTAMP}, 
+			'0',
+			#{item.writeTime,jdbcType=TIMESTAMP}, 
+			#{item.sysPalletNum,jdbcType=DECIMAL},
+			#{item.chargeSource,jdbcType=VARCHAR}
+        )
+    </insert>
+    
 </mapper>
