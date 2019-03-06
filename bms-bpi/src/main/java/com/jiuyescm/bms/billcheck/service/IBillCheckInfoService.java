@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
@@ -193,5 +194,8 @@ public interface IBillCheckInfoService {
 	 * @return
 	 */
 	int saveNew(BillCheckInfoVo vo);
+
+
+	List<BillCheckInfoEntity> querySnapshot(Map<String, Object> condition);
 	
 	}

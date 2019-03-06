@@ -80,4 +80,6 @@ public interface ISystemCodeRepository {
 	 */
 	List<SystemCodeEntity> queryBySortNo(Map<String, Object> param);
 
+	List<SystemCodeEntity> queryExtattr1(Map<String, Object> condition);
+
 }

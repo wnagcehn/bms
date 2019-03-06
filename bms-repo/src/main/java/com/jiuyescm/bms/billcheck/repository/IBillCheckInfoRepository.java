@@ -184,5 +184,7 @@ public interface IBillCheckInfoRepository {
 	 * @return
 	 */
 	int deleteByBillNo(String billNo);
+
+	List<BillCheckInfoEntity> querySnapshot(Map<String, Object> condition);
 	
 	}

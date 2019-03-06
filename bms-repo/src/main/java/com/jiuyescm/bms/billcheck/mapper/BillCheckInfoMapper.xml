@@ -850,4 +850,14 @@
 		<include refid="baseSelectColumns" />
 		GROUP BY create_month desc limit 1
     </select>
+    
+    <select id="querySnapshot" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select area,
+        snapshot_date as expectReceiptDate,
+        expect_amount as expectAmount
+        from bms_snapshot_bill_receipt
+        where dept_name = #{deptName}
+        and <![CDATA[snapshot_date >= #{startDate}]]>
+    	and <![CDATA[snapshot_date <= #{endDate}]]>
+    </select>
 </mapper> 

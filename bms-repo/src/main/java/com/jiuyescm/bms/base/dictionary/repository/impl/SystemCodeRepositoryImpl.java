@@ -124,4 +124,9 @@ public class SystemCodeRepositoryImpl extends MyBatisDao<SystemCodeEntity> imple
 		return selectList("com.jiuyescm.bms.base.dictionary.SystemCodeMapper.queryValueAddList", mapCondition);
 	}
 	
+	@Override
+    public List<SystemCodeEntity> queryExtattr1(Map<String, Object> condition) {
+        List<SystemCodeEntity> list = selectList("com.jiuyescm.bms.base.dictionary.SystemCodeMapper.queryExtattr1", condition);
+        return list;
+    }
 }

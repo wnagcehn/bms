@@ -25,4 +25,24 @@ public class ListTool {
 		}
 		return listArray;
 	}
+	
+
+	 public static <T> List<List<T>> split(List<T> list, int batchSize) {
+	   int totalSize = list.size();
+	   List<List<T>> retList = new ArrayList<>();
+	   if(totalSize < batchSize) {
+	      retList.add(list);
+	      return retList;
+	   }
+	   int batchNum = totalSize % batchSize ==0 ? totalSize / batchSize : totalSize / batchSize + 1;
+	   for(int i=0;i < batchNum; i++ ) {
+	      int start = i * batchSize;
+	      int end = (i+1) * batchSize;
+	      if(end > totalSize) {
+	         end = totalSize;
+	      }
+	      retList.add(list.subList(start, end));
+	   }
+	   return  retList;
+	}
 }
