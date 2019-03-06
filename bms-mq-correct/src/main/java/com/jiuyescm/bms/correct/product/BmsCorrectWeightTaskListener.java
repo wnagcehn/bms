@@ -149,7 +149,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 			condition=new HashMap<String,Object>();
 			condition.put("customerId", taskVo.getCustomerId());
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-			condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+			condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()+" 23:59:59"));
 			condition.put("taskId", taskId);
 			updateProgress(taskVo,50);
 			logger.info(taskId+"正在进行重量汇总统计 ");
@@ -201,7 +201,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 						condition.put("productsMark", productDetail);
 						condition.put("weight", newWeight);
 						condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-						condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+						condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()+" 23:59:59"));
 						
 						logger.info(taskId+"商品明细"+productDetail+"的标准重量"+newWeight);
 						
@@ -237,6 +237,8 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 		}
 		
 		updateProgress(taskVo,80);
+		errorMessage.append("运单重量调整成功;");
+		logger.info(taskId+"运单重量调整成功;");
 		return "sucess";
 	}
 	

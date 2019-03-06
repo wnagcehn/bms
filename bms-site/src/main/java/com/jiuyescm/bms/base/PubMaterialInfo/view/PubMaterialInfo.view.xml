@@ -208,6 +208,7 @@ with (view.get(&quot;#dsPubMaterial&quot;)){&#xD;
         <Property name="property">delFlag</Property>
         <Property name="name">delFlag</Property>
         <Property name="editorType">CheckBox</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
