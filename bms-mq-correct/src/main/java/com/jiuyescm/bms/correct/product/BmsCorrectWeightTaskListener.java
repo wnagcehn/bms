@@ -2,6 +2,7 @@ package com.jiuyescm.bms.correct.product;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +140,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 		}	
 	}
 	
+	@SuppressWarnings("deprecation")
 	private String handWeight(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
 		Map<String,Object> condition=new HashMap<String,Object>();
 		long start = 0l;
@@ -149,7 +151,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 			condition=new HashMap<String,Object>();
 			condition.put("customerId", taskVo.getCustomerId());
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-			condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()+" 23:59:59"));
+			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
 			updateProgress(taskVo,50);
 			logger.info(taskId+"正在进行重量汇总统计 ");
@@ -201,7 +203,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 						condition.put("productsMark", productDetail);
 						condition.put("weight", newWeight);
 						condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-						condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()+" 23:59:59"));
+						condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 						
 						logger.info(taskId+"商品明细"+productDetail+"的标准重量"+newWeight);
 						
