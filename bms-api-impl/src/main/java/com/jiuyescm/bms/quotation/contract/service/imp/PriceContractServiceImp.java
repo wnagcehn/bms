@@ -67,8 +67,8 @@ public class PriceContractServiceImp implements IPriceContractService{
 	}
 	
 	@Override
-	public List<PriceContractInfoEntity> queryByCustomerId(String customerId) {
-		return priceContractDao.queryByCustomerId(customerId);
+	public List<PriceContractInfoEntity> queryByCustomerId(Map<String, String> param) {
+		return priceContractDao.queryByCustomerId(param);
 	}
 	
 	@Override

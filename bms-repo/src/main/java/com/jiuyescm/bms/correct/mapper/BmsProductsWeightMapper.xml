@@ -6,7 +6,7 @@
 	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="products_mark" property="productsMark" jdbcType="VARCHAR" />
 	    <result column="weight" property="weight" jdbcType="DECIMAL" />
-	    <result column="percent" property="percent" jdbcType="DOUBLE" />
+	    <result column="percent" property="percent" jdbcType="DECIMAL" />
 	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
     </resultMap>
   
