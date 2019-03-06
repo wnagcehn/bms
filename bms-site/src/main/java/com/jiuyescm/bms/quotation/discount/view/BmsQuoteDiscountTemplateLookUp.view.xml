@@ -188,6 +188,14 @@
       <PropertyDef name="unitPriceRateDT">
         <Property name="label">整单折扣率(%)</Property>
       </PropertyDef>
+      <PropertyDef name="serviceTypeCode">
+        <Property/>
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
+      <PropertyDef name="serviceTypeName">
+        <Property/>
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsQuoteDiscountDetailEntityQuery">
       <PropertyDef name="templateCode">
@@ -493,6 +501,10 @@ entity.set(&quot;subjectName&quot;, &quot;&quot;);</ClientEvent>
               <Property name="property">templateCode</Property>
               <Property name="visible">false</Property>
               <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="serviceTypeName">
+              <Property name="property">serviceTypeName</Property>
+              <Property name="width">120</Property>
             </DataColumn>
             <DataColumn name="startTime">
               <Property name="property">startTime</Property>

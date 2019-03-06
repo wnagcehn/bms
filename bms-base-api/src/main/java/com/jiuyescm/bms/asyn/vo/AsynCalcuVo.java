@@ -1,10 +1,10 @@
 package com.jiuyescm.bms.asyn.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.jiuyescm.cfm.domain.IEntity;
 
-public class AsynCalcuVo implements IEntity {
+public class AsynCalcuVo implements Serializable {
 	
 	/**
 	 * 

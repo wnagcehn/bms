@@ -14,10 +14,13 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
 import com.jiuyescm.bms.base.customer.repository.IPubCustomerBaseRepository;
+import com.jiuyescm.bms.base.customer.repository.IPubCustomerLookupRepository;
 import com.jiuyescm.bms.base.customer.repository.IPubCustomerRepository;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.constants.RedisCache;
 import com.jiuyescm.framework.redis.callback.GetDataCallBack;
 import com.jiuyescm.framework.redis.client.IRedisClient;
@@ -36,6 +39,8 @@ public class CustomerDictService implements ICustomerDictService {
 	IPubCustomerRepository pubCustomerRepository;
 	@Autowired
 	IPubCustomerBaseRepository pubCustomerBaseRepository;
+	@Autowired
+	IPubCustomerLookupRepository pubCustomerLookupRepository;
 	@Autowired
 	private IRedisClient redisClient;
 
@@ -250,6 +255,40 @@ public class CustomerDictService implements ICustomerDictService {
 			}
 		}
 		return page;
+	}
+
+	@Override
+	public PageInfo<PubCustomerVo> queryPubCustomer(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		PageInfo<PubCustomerVo> page = new PageInfo<PubCustomerVo>();
+		PageInfo<PubCustomerEntity> pageEntity = pubCustomerRepository.queryPage(condition, pageNo, pageSize);
+
+		if (pageEntity != null) {
+			try {
+				PropertyUtils.copyProperties(page, pageEntity);
+			if(pageEntity.getList()!=null&&pageEntity.getList().size()>0){
+				for(int i=0;pageEntity.getList().size()>i;i++){
+					PubCustomerVo vo = new PubCustomerVo();
+					PropertyUtils.copyProperties(vo, pageEntity.getList().get(i));
+					page.getList().set(i, vo);
+				}
+			}
+			} catch (IllegalAccessException | InvocationTargetException
+					| NoSuchMethodException e) {
+				logger.info("转换失败 pageEntity:{}", pageEntity);
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		return page;
+	}
+	
+	@Override
+	public PageInfo<PubCustomerLookupEntity> queryPubCustomerLookup(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		PageInfo<PubCustomerLookupEntity> pageEntity = pubCustomerLookupRepository.query(condition, pageNo, pageSize);
+		return pageEntity;
 	}
 
 }

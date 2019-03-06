@@ -9,6 +9,12 @@
 	<artifactId>bms-site</artifactId>
 	<dependencies>
 	
+	<dependency>
+  <groupId>com.bstek.dorado</groupId>
+  <artifactId>dorado-chart</artifactId>
+  <version>0.4.6-BETA</version>
+</dependency>
+	
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -401,6 +407,12 @@
 		  <groupId>com.jiuyescm.scm</groupId>
 		  <artifactId>scm-common</artifactId>
 		  <version>1.0.0-SNAPSHOT</version>
+		  <exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -431,6 +443,12 @@
 		  <groupId>com.jiuyescm.framework</groupId>
 		  <artifactId>message-api</artifactId>
 		  <version>1.0.4-SNAPSHOT</version>
+		  <exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>

@@ -105,5 +105,12 @@ public interface IBizDispatchBillRepository{
 	 * @return
 	 */
 	BizDispatchBillEntity queryByWayNo(Map<String, String> aCondition);
+	
+	/**
+	 * 查询发生业务的商家
+	 * @param condition
+	 * @return
+	 */
+	List<BizDispatchBillEntity> queryBizCustomerid(Map<String, Object> condition);
 
 }

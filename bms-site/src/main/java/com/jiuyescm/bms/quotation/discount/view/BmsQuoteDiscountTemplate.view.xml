@@ -152,7 +152,7 @@
         <Property name="label">整单折扣率(%)</Property>
       </PropertyDef>
       <PropertyDef name="creator">
-        <Property name="label">创建时间</Property>
+        <Property name="label">创建人</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
         <Property name="label">创建时间</Property>
@@ -184,6 +184,12 @@
       </PropertyDef>
       <PropertyDef name="unitPriceRateDT">
         <Property name="label">整单折扣率(%)</Property>
+      </PropertyDef>
+      <PropertyDef name="serviceTypeCode">
+        <Property name="label">物流产品类型</Property>
+      </PropertyDef>
+      <PropertyDef name="serviceTypeName">
+        <Property name="label">物流产品类型</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBmsQuoteDiscountDetailEntityQuery">
@@ -513,16 +519,14 @@ entity.set(&quot;subjectName&quot;, &quot;&quot;);</ClientEvent>
             </DataPilot>
             <Separator/>
             <ToolBarButton id="btnAdd1">
-              <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData().current;
-if(data){
-	var datas = view.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);
-                datas.insert();
-                view.get(&quot;#dialogEditDetail&quot;).show();
-}else{
-	dorado.MessageBox.alert(&quot;请选择一条数据&quot;);
-}
-
-</ClientEvent>
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity&quot;).getData().current;&#xD;
+if(data){&#xD;
+	var datas = view.get(&quot;#dsBmsQuoteDiscountDetailEntity.data&quot;);&#xD;
+                datas.insert();&#xD;
+                view.get(&quot;#dialogEditDetail&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择一条数据&quot;);&#xD;
+}</ClientEvent>
               <Property name="caption">新增</Property>
               <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
             </ToolBarButton>
@@ -622,6 +626,11 @@ if(data){&#xD;
               <Property name="visible">false</Property>
               <Property name="width">80</Property>
             </DataColumn>
+            <DataColumn>
+              <Property name="property">serviceTypeName</Property>
+              <Property name="width">80</Property>
+              <Property name="name">serviceTypeName</Property>
+            </DataColumn>
             <DataColumn name="startTime">
               <Property name="property">startTime</Property>
               <Property name="width">120</Property>
@@ -703,6 +712,12 @@ if(data){&#xD;
               <Property name="property">delFlag</Property>
               <Property name="visible">false</Property>
             </DataColumn>
+            <DataColumn>
+              <Property name="property">serviceTypeCode</Property>
+              <Property name="width">80</Property>
+              <Property name="name">serviceTypeCode</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
           </DataGrid>
         </Container>
       </MainControl>
@@ -714,11 +729,12 @@ with (view.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
 		templateCode:data.current.get(&quot;templateCode&quot;),&#xD;
+		bizType:data.current.get(&quot;bizType&quot;),&#xD;
+		subjectCode:data.current.get(&quot;subjectCode&quot;)&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
-}&#xD;
-</ClientEvent>
+}</ClientEvent>
             <Property name="dataSet">dsBmsQuoteDiscountTemplateEntity</Property>
             <Property name="stretchColumnsMode">auto</Property>
             <Property name="readOnly">true</Property>
@@ -967,6 +983,12 @@ view.id(&quot;updateDetailAction&quot;).execute(&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
+            <Property name="name">serviceTypeName</Property>
+            <Property name="property">serviceTypeName</Property>
+            <Property name="trigger">triggerServiceType</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
             <Property name="name">startTime</Property>
             <Property name="property">startTime</Property>
             <Editor/>
@@ -1014,6 +1036,12 @@ view.id(&quot;updateDetailAction&quot;).execute(&#xD;
           <AutoFormElement>
             <Property name="name">unitPriceRate</Property>
             <Property name="property">unitPriceRate</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">serviceTypeCode</Property>
+            <Property name="property">serviceTypeCode</Property>
+            <Property name="visible">false</Property>
             <Editor/>
           </AutoFormElement>
         </AutoForm>
@@ -1301,5 +1329,51 @@ arg.processDefault = false;</ClientEvent>
       <Property name="useEmptyItem">true</Property>
       <Property name="displayProperty">subjectName</Property>
     </DataSetDropDown>
+    <Trigger id="triggerServiceType">
+      <ClientEvent name="onExecute">var correctAction = view.get(&quot;#ajaxSystemCodeAction&quot;);&#xD;
+var datas = view.get(&quot;#dsBmsQuoteDiscountTemplateEntity.data&quot;).current;&#xD;
+correctAction.set(&quot;parameter&quot;,datas);&#xD;
+correctAction.execute(function(result){&#xD;
+	if(result!=null){	&#xD;
+		var subview = view.get(&quot;#viewSelectServiceType&quot;).get(&quot;subView&quot;);&#xD;
+		//清空&#xD;
+		var subviewData=subview.get(&quot;#dsPubCarrierServicetypeEntity.data&quot;);&#xD;
+		subviewData.clear();&#xD;
+		var ds = subview.get(&quot;#dsPubCarrierServicetypeEntityQuery.data&quot;).current;&#xD;
+		ds.set(&quot;carrierid&quot;,result);&#xD;
+		//直接调用方法查询&#xD;
+		var tmpDataSet=subview.get(&quot;#dsPubCarrierServicetypeEntity&quot;);&#xD;
+		tmpDataSet.set(&quot;parameter&quot;, ds).flushAsync();&#xD;
+		view.get(&quot;#panelServiceType&quot;).show();&#xD;
+	}&#xD;
+});</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelServiceType">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectServiceType.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        serviceTypeCode:data.get(&quot;servicecode&quot;),&#xD;
+		serviceTypeName:data.get(&quot;servicename&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">物流产品类型选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectServiceType">
+          <Property name="subView">com.jiuyescm.bms.base.servicetype.view.ServicetypeLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <AjaxAction id="ajaxSystemCodeAction">
+      <Property name="service">systemCodeController#queryAll</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

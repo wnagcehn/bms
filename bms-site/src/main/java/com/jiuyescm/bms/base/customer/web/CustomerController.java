@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.bms.quotation.system.service.IBmsJiuyeQuotationSystemService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
@@ -23,28 +26,13 @@ public class CustomerController {
 	
 	@Autowired
 	private IBmsJiuyeQuotationSystemService bmsCustomerService;
+	@Autowired
+	private ICustomerDictService customerDictService;
 	
-	@DataProvider
+/*	@DataProvider
 	public void query(Page<CustomerVo> page,Map<String,Object> parameter) {
 		//查询标准商家
 		List<CustomerVo> customerList = new ArrayList<CustomerVo>();
-		/*try {
-			//versionName
-			if(parameter.containsKey("customername")){
-				parameter.put("versionName",parameter.get("customername"));
-			}
-			List<BmsJiuyeQuotationSystemEntity> list = bmsCustomerService.queryCustomerBmsList(parameter);
-			for(BmsJiuyeQuotationSystemEntity entity:list)
-			{
-				CustomerVo vo = new CustomerVo();
-				vo.setCustomerid(entity.getVersionCode());
-				vo.setCustomername(entity.getVersionName());
-				vo.setShortname(entity.getShortname());
-				customerList.add(vo);
-			}
-		} catch (Exception e) {
-		
-		}*/
 		
 		if(null==parameter){
 			parameter=new HashMap<String,Object>();
@@ -55,8 +43,6 @@ public class CustomerController {
 		PageInfo<CustomerVo> tmpPageInfo = customerService.query(parameter, page.getPageNo(), page.getPageSize());
 		
 		if (tmpPageInfo != null) {
-//			page.setEntities(tmpPageInfo.getList());
-//			page.setEntityCount((int) tmpPageInfo.getTotal());
 			if(customerList.size()>0)
 			{
 				List<CustomerVo> c = tmpPageInfo.getList();
@@ -72,6 +58,26 @@ public class CustomerController {
 				page.setEntityCount((int) tmpPageInfo.getTotal());
 			}
 			
+		}
+	}*/
+	
+	@DataProvider
+	public void query(Page<PubCustomerVo> page,Map<String,Object> parameter) {
+		if(null==parameter)parameter=new HashMap<String,Object>();
+		PageInfo<PubCustomerVo> pageInfo = customerDictService.queryPubCustomer(parameter, page.getPageNo(), page.getPageSize());
+		if(null!=page){
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int)pageInfo.getTotal());
+		}
+	}
+	
+	@DataProvider
+	public void queryLookup(Page<PubCustomerLookupEntity> page,Map<String,Object> parameter) {
+		if(null==parameter)parameter=new HashMap<String,Object>();
+		PageInfo<PubCustomerLookupEntity> pageInfo = customerDictService.queryPubCustomerLookup(parameter, page.getPageNo(), page.getPageSize());
+		if(null!=page){
+			page.setEntities(pageInfo.getList());
+			page.setEntityCount((int)pageInfo.getTotal());
 		}
 	}
 }

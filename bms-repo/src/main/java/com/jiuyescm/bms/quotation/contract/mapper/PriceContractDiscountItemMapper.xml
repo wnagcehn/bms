@@ -97,16 +97,12 @@
     
     
     <select id="queryDiscountPrice" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity">
-		select * from bms_quote_discount_detail a 
-		INNER JOIN bms_quote_discount_template b on a.template_code=b.template_code and b.del_flag='0'
-		INNER JOIN price_contract_discount_item c on b.template_code=c.template_code and c.del_flag='0'
-		INNER JOIN price_contract_info d on c.contract_code=d.contract_code and d.del_flag='0'
-		where 1=1  and d.customerId=#{customerId} and d.contract_type_code=#{contractTypeCode} 
-		and <![CDATA[d.start_date < current_timestamp()]]> and d.expire_date <![CDATA[>= ]]> current_timestamp()
-		and c.subject_id=#{subjectId} 
-		and a.start_time <![CDATA[<= #{createTime}]]> and a.end_time > #{createTime}
-		and a.down_limit<![CDATA[<=#{count}]]> and a.up_limit>#{count}
-		and a.del_flag=0
+		select * from bms_quote_discount_detail
+		where 1=1 
+		and template_code=#{templateCode}
+		and start_time <![CDATA[<= #{createTime}]]> and end_time > #{createTime}
+		and down_limit<![CDATA[<=#{count}]]> and up_limit>#{count}
+		and del_flag=0
     </select>
     
     <select id="queryByCustomerId" parameterType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
@@ -116,9 +112,8 @@
     	where 1=1
 		and i.contract_code=(select contract_code 
         from price_contract_info 
-        where del_flag = 0
-        and customerid=#{customerId} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) 
-        and <![CDATA[c.start_date <= #{startDate}]]>
+        where del_flag = '0'
+        and customerid=#{customerId} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' and <![CDATA[start_date <= #{startDate}]]> and expire_date>#{startDate} limit 1) 
         and i.del_flag='0'
     </select>
     
@@ -128,8 +123,11 @@
     	where 1=1
 		and i.contract_code=(select contract_code 
         from price_contract_info 
-        where del_flag = 0
-        and customerid=#{customerid} and biz_type_code=#{bizTypeCode} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' limit 1) and i.del_flag='0'
+        where del_flag = '0'
+        and customerid=#{customerid} and biz_type_code=#{bizTypeCode} and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1'
+        and <![CDATA[start_date <= #{startTime}]]> and expire_date>#{startTime}
+        limit 1
+        ) and i.del_flag='0'
     </select>
     
     <select id="queryAll" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity" parameterType="java.sql.Timestamp">
@@ -139,9 +137,8 @@
 		where 1=1
 		and i.contract_code in (select contract_code 
         from price_contract_info 
-        where del_flag = 0
-        and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1') 
-        and <![CDATA[c.start_date <= #{time}]]>
+        where del_flag = '0'
+        and contract_type_code='CUSTOMER_CONTRACT' and contract_state='1' and <![CDATA[start_date <= #{time}]]> and expire_date>#{time}) 
         and i.del_flag='0'
     </select>
     

@@ -1060,8 +1060,7 @@ public class EnumControlPR {
 		mapValue.put("1", "是");
 		return mapValue;
 	}
-	
-	
+
 	/**
 	 * 获取所有单据类型
 	 * @return
@@ -1073,5 +1072,17 @@ public class EnumControlPR {
 		map.put("2", "已确认");
 		map.put("3", "已关账");
 		return map;
+	}
+	
+	/**
+	 * 合同归属
+	 * @return
+	 */
+	@DataProvider
+	public Map<Integer, String> getContractAttr(String all) {
+		Map<Integer, String> mapValue = new LinkedHashMap<Integer, String>();
+		mapValue.put(ConstantInterface.ContractAttr.INVALID_1, "BMS");
+		mapValue.put(ConstantInterface.ContractAttr.INVALID_2, "合同在线");
+		return mapValue;
 	}
 }

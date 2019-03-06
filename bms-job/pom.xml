@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
@@ -10,41 +11,41 @@
 
 	<dependencies>
 		<dependency>
-		  <groupId>com.jiuyescm.bms</groupId>
-		  <artifactId>bms-bpi</artifactId>
-		  <version>1.0.1-SNAPSHOT</version>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-bpi</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>com.jiuyescm.bms</groupId>
-		  <artifactId>bms-core</artifactId>
-		  <version>1.0.1-SNAPSHOT</version>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-core</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>com.jiuyescm.bms</groupId>
-		  <artifactId>bms-repo</artifactId>
-		  <version>1.0.1-SNAPSHOT</version>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-repo</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>com.jiuyescm.bms</groupId>
-		  <artifactId>drools-support</artifactId>
-		  <version>1.0.1-SNAPSHOT</version>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>drools-support</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>com.jiuyescm.framework</groupId>
-		  <artifactId>redis-client</artifactId>
-		  <version>1.2.0-SNAPSHOT</version>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>redis-client</artifactId>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>com.jiuyescm.framework</groupId>
-		  <artifactId>distributed-lock</artifactId>
-		  <version>1.2.0-SNAPSHOT</version>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>distributed-lock</artifactId>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -78,6 +79,12 @@
 			<groupId>com.jiuyescm.framework</groupId>
 			<artifactId>datasource-multiple</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- dubbo -->
 		<dependency>
@@ -129,14 +136,19 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>net.sf.json-lib</groupId>
-		    <artifactId>json-lib</artifactId>
-		    <version>2.4</version>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>distributed-sequence-api</artifactId>
+			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -171,10 +183,10 @@
 			<resource>
 				<targetPath>${project.build.directory}/classes/META-INF/spring</targetPath>
 				<directory>src/main/resources/spring</directory>
-<!-- 				<filtering>true</filtering> -->
-<!-- 				<includes> -->
-<!-- 					<include>spring-context.xml</include> -->
-<!-- 				</includes> -->
+				<!-- <filtering>true</filtering> -->
+				<!-- <includes> -->
+				<!-- <include>spring-context.xml</include> -->
+				<!-- </includes> -->
 			</resource>
 			<resource>
 				<targetPath>${project.build.directory}/classes/META-INF/dubbo</targetPath>

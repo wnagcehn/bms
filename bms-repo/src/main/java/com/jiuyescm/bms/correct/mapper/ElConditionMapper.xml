@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.correct.ElConditionMapper" >
+
+	<select id="query" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.correct.ElConditionEntity">
+        select
+        id, pull_type pullType, last_time lastTime,  curr_time currTime, takes_time takesTime
+        from etl_condition
+        where 1 = 1
+       	<if test=" pullType != null and pullType !='' ">
+			and pull_type = #{pullType}
+		</if>
+    </select>
+
+    <insert id="save" parameterType="java.util.Map" >
+insert into bms_order_product(product_mark,product_detail,waybill_no,customer_id,create_time)
+select b.products_mark,a.product_detail,a.waybill_no,a.customerid,date_format(a.create_time,'%Y%m') as create_time from biz_dispatch_bill a
+left join bms_marking_products b on a.waybill_no = b.waybill_no
+where a.del_flag = '0' and a.create_time <![CDATA[>=#{startTime}]]>   and a.create_time <![CDATA[<#{endTime}]]> group by b.products_mark
+on DUPLICATE KEY update
+mod_time=CURRENT_TIMESTAMP;
+    </insert>
+    
+      <update id="update" parameterType="com.jiuyescm.bms.correct.ElConditionEntity">
+      update etl_condition 
+		<set >
+			<if test="lastTime != null" >last_time=#{lastTime,jdbcType=TIMESTAMP},</if>
+			<if test="currTime != null" >curr_time=#{currTime,jdbcType=TIMESTAMP},</if>
+			<if test="takesTime != null" >takes_time=#{takesTime,jdbcType=INTEGER},</if>
+		</set>
+      where id=#{id}
+  </update>
+</mapper>

@@ -40,6 +40,20 @@ public class BmsCorrectAsynTaskEntity implements IEntity{
 	//备注
 	private String remark;
 	
+	//业务类型  weight_correct-重量纠正  material_correct-耗材纠正
+	private String bizType;
+	
+	private String lastModifier;
+	private Timestamp lastModifyTime;
+	
+	public String getBizType() {
+		return bizType;
+	}
+
+	public void setBizType(String bizType) {
+		this.bizType = bizType;
+	}
+
 	public BmsCorrectAsynTaskEntity(){
 		
 	}
@@ -155,5 +169,24 @@ public class BmsCorrectAsynTaskEntity implements IEntity{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+	public String getLastModifier() {
+		return lastModifier;
+	}
+
+	public void setLastModifier(String lastModifier) {
+		this.lastModifier = lastModifier;
+	}
+
+	public Timestamp getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public void setLastModifyTime(Timestamp lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+
+	
 	
 }

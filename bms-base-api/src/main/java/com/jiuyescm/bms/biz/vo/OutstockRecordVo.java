@@ -1,11 +1,11 @@
 package com.jiuyescm.bms.biz.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import com.jiuyescm.cfm.domain.IEntity;
 
-public class OutstockRecordVo implements IEntity{
+public class OutstockRecordVo implements Serializable{
 	 // TODO Change serialVersionUID by eclipse
     private static final long serialVersionUID = -1;
     

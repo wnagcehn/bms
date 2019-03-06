@@ -28,7 +28,7 @@ public interface IBizOutstockPackmaterialTempRepository {
 
     public void delete(Long id);
 
-	public int saveBatch(List<BizOutstockPackmaterialTempEntity> tempList);
+	public void saveBatch(List<BizOutstockPackmaterialTempEntity> tempList);
 
 	public void deleteBybatchNum(String batchNum);
 

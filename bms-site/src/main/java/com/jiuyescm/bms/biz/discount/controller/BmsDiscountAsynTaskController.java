@@ -210,11 +210,13 @@ public class BmsDiscountAsynTaskController {
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
-				logger.info("查询合同在线报错",e);
+				logger.error("查询合同在线折扣异常", e);
 				Map<String, String> param = new HashMap<>();
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
 					param.put("bizTypeCode", entity.getBizTypecode());
+					String startD = entity.getCreateMonth() + "-01 00:00:00";
+					param.put("startTime", startD);
 				}
 				List<PriceContractDiscountItemEntity> bizList = priceContractDiscountService.queryByCustomerIdAndBizType(param);
 				if (bizList.isEmpty()) {
@@ -244,6 +246,7 @@ public class BmsDiscountAsynTaskController {
 					bdatList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
+				logger.error("查询合同在线折扣失败", e);
 				// TODO: handle exception
 				logger.info("查询合同在线报错",e);
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
@@ -457,11 +460,13 @@ public class BmsDiscountAsynTaskController {
 					newEntity.setBizTypecode("DISPATCH");
 					newEntity.setCustomerId(vo.getCustomerId());				
 					SystemCodeEntity sys=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
-					newEntity.setCarrierId(s.getCarrierId());
-					newEntity.setSubjectCode(sys.getCode());
+					newEntity.setCarrierId(s.getCarrierId());	
 					newEntity.setDiscountType(s.getDiscountType());
 					newEntity.setCustomerType("contract");
-					newList.add(newEntity);	
+					if (null != sys) {
+						newEntity.setSubjectCode(sys.getCode());
+						newList.add(newEntity);	
+					}	
 				}			
 			}			
 

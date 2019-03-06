@@ -59,6 +59,11 @@ public class FeesReceiveDispatchDiscountVo implements IEntity {
 	private String customerId;
 	//业务时间
 	private Timestamp createTime;
+	//物流产品类型
+	private String serviceTypeCode;
+	//调整物流产品类型
+	private String adjustServiceTypeCode;
+	
 	public FeesReceiveDispatchDiscountVo() {
 
 	}
@@ -293,6 +298,22 @@ public class FeesReceiveDispatchDiscountVo implements IEntity {
 
 	public void setContinuePrice(BigDecimal continuePrice) {
 		this.continuePrice = continuePrice;
+	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getAdjustServiceTypeCode() {
+		return adjustServiceTypeCode;
+	}
+
+	public void setAdjustServiceTypeCode(String adjustServiceTypeCode) {
+		this.adjustServiceTypeCode = adjustServiceTypeCode;
 	}
     
 	

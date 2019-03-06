@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeTypeService;
 import com.jiuyescm.bms.base.jywarehouse.web.BmsWarehouseVo;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.mdm.customer.api.IOmsCsrReasonService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
@@ -78,6 +80,20 @@ public class SystemCodeController {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
+	}
+	
+	/**
+	 * Ajax调用
+	 */
+	@Expose
+	public String queryAll(BmsQuoteDiscountTemplateEntity entity) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("typeCode", "DISPATCH_COMPANY");
+		map.put("code", entity.getSubjectCode());
+		PageInfo<SystemCodeEntity> pageInfo = systemCodeService.query(map, 1, 20);
+		if(CollectionUtils.isEmpty(pageInfo.getList()))return null;
+		String string = pageInfo.getList().get(0).getExtattr1();
+		return string;
 	}
 	
 	/**

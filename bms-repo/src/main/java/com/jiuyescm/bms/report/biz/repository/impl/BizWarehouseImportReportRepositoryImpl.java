@@ -34,4 +34,10 @@ public class BizWarehouseImportReportRepositoryImpl extends MyBatisDao<BizWareho
 		return selectList("com.jiuyescm.bms.report.biz.mapper.BizWarehouseImportReportMapper.query", condition);
 	}
 
+	@Override
+	public List<BizWarehouseImportReportEntity> queryByCondition(
+			Map<String, Object> condition) {
+		return selectList("com.jiuyescm.bms.report.biz.mapper.BizWarehouseImportReportMapper.queryByCondition", condition);
+	}
+
 }
