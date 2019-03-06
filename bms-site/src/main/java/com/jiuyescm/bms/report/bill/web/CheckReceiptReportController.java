@@ -20,6 +20,7 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
+import com.jiuyescm.common.tool.ListTool;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -59,6 +60,7 @@ public class CheckReceiptReportController {
 			map.put("startDate", startString);
 			map.put("endDate", endString);
 			List<BillCheckInfoEntity> checkInfoEntities =  billCheckInfoService.querySnapshot(map);
+			//预计金额map
 			Map<String,Object> expectMap = new HashMap<>();
 			for (BillCheckInfoEntity billCheckInfoEntity : checkInfoEntities) {
 				StringBuilder stringBuilder = new StringBuilder(billCheckInfoEntity.getArea());
@@ -68,12 +70,30 @@ public class CheckReceiptReportController {
 					BigDecimal expectAmount = (BigDecimal) expectMap.get(key);
 					expectAmount.add(billCheckInfoEntity.getExpectAmount());
 					expectMap.put(key, expectAmount);
+					continue;
 				}
-				
+				expectMap.put(key, billCheckInfoEntity.getExpectAmount());
 			}
-			
-			
-			
+			//查询回款
+			map.put("startDate", startString+" 00:00:00");
+			map.put("endDate", endString+" 23:59:59");
+			List<BillCheckInfoEntity> receiptEntities =  billCheckInfoService.queryReceipt(map);
+			//实际金额map
+			Map<String,Object> receiptMap = new HashMap<>();
+			for (BillCheckInfoEntity billCheckInfoEntity : receiptEntities) {
+				StringBuilder stringBuilder = new StringBuilder(billCheckInfoEntity.getArea());
+				String time = format.format(billCheckInfoEntity.getReceiptDate());
+				time=time.substring(0,10);
+				stringBuilder.append("-").append(time);
+				String key = stringBuilder.toString();
+				if(receiptMap.containsKey(key)){
+					BigDecimal receiptAmount = (BigDecimal) receiptMap.get(key);
+					receiptAmount.add(billCheckInfoEntity.getReceiptAmount());
+					receiptMap.put(key, receiptAmount);
+					continue;
+				}
+				receiptMap.put(key, billCheckInfoEntity.getReceiptAmount());
+			}
 			
 			//初始化区域模型
 			for (String dateString : dateList) {
@@ -85,19 +105,48 @@ public class CheckReceiptReportController {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-					checkReceiptEntity.setArea(entity.getExtattr1());
+					String areaString = entity.getCodeName();
+					checkReceiptEntity.setArea(areaString);
+					//通过key找出对应的预计金额和实际金额
+					StringBuilder key = new StringBuilder(areaString);
+					key.append("-").append(dateString);
+					String keyString = key.toString();
+					BigDecimal expectBigDecimal;
+					BigDecimal receiptBigDecimal;
+					if(expectMap.containsKey(keyString)){
+						expectBigDecimal=(BigDecimal) expectMap.get(keyString);
+					}else{
+						expectBigDecimal=new BigDecimal(0);
+					}
+					if(receiptMap.containsKey(keyString)){
+						receiptBigDecimal=(BigDecimal) receiptMap.get(keyString);
+					}else{
+						receiptBigDecimal=new BigDecimal(0);
+					}
+					checkReceiptEntity.setExpectAmount(expectBigDecimal);
+					checkReceiptEntity.setFinishAmount(receiptBigDecimal);
+					//计算完成率
+					String finish ="";
+					if(expectBigDecimal.equals(BigDecimal.ZERO)){
+						finish = "100%";
+					}else if(receiptBigDecimal.equals(BigDecimal.ZERO)) {
+						finish = "0%";
+					}else {
+						BigDecimal div = receiptBigDecimal.divide(expectBigDecimal);
+						BigDecimal mul = div.multiply(new BigDecimal(100));
+						finish = mul.toString()+"%";
+					}
+					checkReceiptEntity.setFinishRate(finish);
 					checkList.add(checkReceiptEntity);
 				}
 			}
-			
-			
-			//page.getPageNo(), page.getPageSize()
-		
-			
-			
-//			page.setEntities(pageInfo.getList());
-//			page.setEntityCount(pageInfo.);
+			//物理分页
+			List<List<CheckReceiptEntity>> list = ListTool.split(checkList, page.getPageSize());
+			List<CheckReceiptEntity> pageList =list.get(page.getPageNo()-1);
+			page.setEntities(pageList);
+			page.setEntityCount(checkList.size());
 		}
+
 	}
 	
 	

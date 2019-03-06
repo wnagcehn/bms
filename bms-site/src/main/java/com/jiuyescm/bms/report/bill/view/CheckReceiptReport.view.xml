@@ -40,6 +40,7 @@
       </PropertyDef>
       <PropertyDef name="detail">
         <Property></Property>
+        <Property name="label"> </Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -56,15 +57,52 @@
     </DataSet>
     <ToolBar>
       <DataPilot>
-        <Property name="dataSet">dsCustomerDailyIncomeReport</Property>
+        <Property name="dataSet">dsCheckReceiptEntity</Property>
         <Property name="itemCodes">pages,pageSize</Property>
       </DataPilot>
       <Separator/>
       <ToolBarButton id="btnSearch">
         <ClientEvent name="onClick">var parameter=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+if(isNullOrEmpty(parameter.get(&quot;deptName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;部门名称不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;startDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;开始日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;endDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;结束日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var m=getDays(parameter.get(&quot;startDate&quot;),parameter.get(&quot;endDate&quot;));&#xD;
+if(m>60){&#xD;
+	dorado.MessageBox.alert(&quot;不能查询时间间隔大于60天的数据!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(parameter.get(&quot;startDate&quot;) > parameter.get(&quot;endDate&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间必须大于开始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var now = new Date();&#xD;
+var nowTime = now.getTime() ;&#xD;
+var day = now.getDay();&#xD;
+var oneDayTime = 24*60*60*1000 ;&#xD;
+var SundayTime =  nowTime + (7-day)*oneDayTime ;//周日&#xD;
+&#xD;
+if(parameter.get(&quot;endDate&quot;) >new Date(SundayTime)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间必须小于本周天&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
 with(view.get(&quot;#dsCheckReceiptEntity&quot;)){&#xD;
 	set(&quot;parameter&quot;,parameter);&#xD;
 	flushAsync();&#xD;
+}&#xD;
+function getDays(strDateStart,strDateEnd){&#xD;
+   var iDays = parseInt(Math.abs(strDateEnd - strDateStart ) / 1000 / 60 / 60 /24)//把相差的毫秒数转换为天数&#xD;
+   return iDays ;&#xD;
 }</ClientEvent>
         <Property name="caption">查询</Property>
       </ToolBarButton>
