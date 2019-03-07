@@ -619,7 +619,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				ContractDiscountConfigVo configVo=null;
 				try {
 					configVo=contractDiscountService.queryDiscount(queryVo);
-					logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(queryVo));
+					logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
 				} catch (Exception e) {
 					// TODO: handle exception
 					//费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
