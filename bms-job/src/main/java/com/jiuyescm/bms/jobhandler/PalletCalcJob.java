@@ -14,10 +14,13 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 
 import com.jiuyescm.bms.drools.IFeesCalcuService;
@@ -81,6 +84,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 	List<String> cusList=null;
 	String priceType="";
 	Map<String, String> temMap=null;
+	List<String> cusNames = null;
 	
 	@Override
 	protected List<BizPalletInfoEntity> queryBillList(Map<String, Object> map) {
@@ -134,6 +138,24 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 	}
 	
 	protected void initConf(){
+		//《使用导入商品托数的商家》
+		Map<String, Object> cond= new HashMap<String, Object>();
+		cond.put("groupCode", "Product_Pallet");
+		cond.put("bizType", "group_customer");
+		BmsGroupVo bmsGroup=bmsGroupService.queryOne(cond);
+		if(bmsGroup!=null){
+			cusNames = new ArrayList<String>();
+			List<BmsGroupCustomerVo> cusList = null;
+			try {
+				cusList = bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
+			} catch (Exception e) {
+				XxlJobLogger.log("查询使用导入商品托数的商家异常:【{0}】", e);
+			}
+			for(BmsGroupCustomerVo vo:cusList){
+				cusNames.add(vo.getCustomerid());
+			}
+		}
+		
 		mapCusPrice=new ConcurrentHashMap<String,PriceGeneralQuotationEntity>();
 		mapCusStepPrice=new ConcurrentHashMap<String,PriceStepQuotationEntity>();
 		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
@@ -178,7 +200,22 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		storageFeeEntity.setSubjectCode(SubjectId);		//费用科目
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setProductType("");							//商品类型
-		double num=DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum();
+		//调整托数优先级最高
+		double num = 0d;
+		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
+			//如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
+			//如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
+			if (cusNames.contains(entity.getCustomerId())) {
+				entity.setChargeSource("import");
+				num = entity.getPalletNum();
+			}else {
+				entity.setChargeSource("system");
+				num = entity.getSysPalletNum();
+			}
+		}else {
+			num = entity.getAdjustPalletNum();
+		}
+		
 		if(!DoubleUtil.isBlank(num)){
 			storageFeeEntity.setQuantity(num);
 		}
