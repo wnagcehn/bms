@@ -29,13 +29,14 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
     </sql>
 	
 	<select id="queryInBiz" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
-        select a.cur_time, a.warehouse_name, a.customer_name, 
-        a.temperature_type_code,a.rowExcelNo,a.rowExcelName,
-        a.biz_type,a.pallet_num,a.sys_pallet_num
+        select a.cur_time, a.warehouse_code, a.warehouse_name, 
+		a.customer_name, a.customer_id,a.temperature_type_code,a.rowExcelNo,a.rowExcelName,
+		a.biz_type,b.pallet_num as oldPalletNum,b.sys_pallet_num as oldSysPalletNum,
+		a.pallet_num as palletNum,a.sys_pallet_num as sysPalletNum
 		from biz_pallet_info_temp a 
 		inner join biz_pallet_info b on a.customer_id = b.customer_id 
 		and a.cur_time = b.cur_time and a.warehouse_code = b.warehouse_code 
-		and a.temperature_type_code = b.temperature_type_code
+		and IFNULL(a.temperature_type_code,'') = IFNULL(b.temperature_type_code,'')
 		where 1=1 and b.del_flag=0 and a.task_id=#{taskId} limit #{errorNum}
     </select>
     
@@ -44,8 +45,8 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
     	<include refid="BASE_COLUMNS_ALL" /> 
     	from biz_pallet_info_temp 
 		WHERE task_id=#{taskId}
-		and CONCAT(cur_time,warehouse_code,customer_id,IFNULL(temperature_type_code,''),biz_type) not in
-		(select CONCAT(cur_time,warehouse_code,customer_id,IFNULL(temperature_type_code,''),biz_type) from biz_pallet_info)
+		and CONCAT(IFNULL(cur_time,''),IFNULL(warehouse_code,''),IFNULL(customer_id,''),IFNULL(temperature_type_code,''),IFNULL(biz_type,'')) not in
+		(select CONCAT(IFNULL(cur_time,''),IFNULL(warehouse_code,''),IFNULL(customer_id,''),IFNULL(temperature_type_code,''),IFNULL(biz_type,'')) from biz_pallet_info)
     </select>
 	
 	<!-- 根据id查询 -->
@@ -217,8 +218,12 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
         <trim prefix="set" suffixOverrides=",">
 			pallet_num = #{palletNum,jdbcType=DECIMAL},
         </trim>
-        where cur_time=#{curTime} and customer_id=#{customerId}
-        and warehouse_code=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
+        where cur_time=#{curTime} 
+        and customer_id=#{customerId}
+        and warehouse_code=#{warehouseCode}
+        <if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+       and temperature_type_code=#{temperatureTypeCode}
+        </if>
         and biz_type=#{bizType}
     </update>
     
@@ -231,22 +236,22 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
     	)
         values (
 
-			#{item.curTime,jdbcType=TIMESTAMP}, 
-			#{item.bizType,jdbcType=VARCHAR}, 
-			#{item.warehouseCode,jdbcType=VARCHAR}, 
-			#{item.warehouseName,jdbcType=VARCHAR}, 
-			#{item.customerId,jdbcType=VARCHAR}, 
-			#{item.customerName,jdbcType=VARCHAR}, 
-			#{item.temperatureTypeCode,jdbcType=VARCHAR}, 
-			#{item.palletNum,jdbcType=DECIMAL}, 
+			#{curTime,jdbcType=TIMESTAMP}, 
+			#{bizType,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{palletNum,jdbcType=DECIMAL}, 
 			'0',
-			#{item.creator,jdbcType=VARCHAR}, 
-			#{item.creatorId,jdbcType=VARCHAR}, 
-			#{item.createTime,jdbcType=TIMESTAMP}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{creatorId,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
 			'0',
-			#{item.writeTime,jdbcType=TIMESTAMP}, 
-			#{item.sysPalletNum,jdbcType=DECIMAL},
-			#{item.chargeSource,jdbcType=VARCHAR}
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			0,
+			'import'
         )
     </insert>
     

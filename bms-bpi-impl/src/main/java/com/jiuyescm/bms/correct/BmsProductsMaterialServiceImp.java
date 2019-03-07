@@ -242,4 +242,18 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return bmsProductsMaterialRepository.queyNotMaxMaterial(condition);
 	}
 
+
+	@Override
+	public int saveMarkMaterial(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.saveMarkMaterial(condition);
+	}
+
+
+	@Override
+	public int saveMarkBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.saveMarkBwd(condition);
+	}
+
 }

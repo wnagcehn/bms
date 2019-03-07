@@ -53,8 +53,14 @@ public interface IBmsProductsMaterialService {
 	//根据批次号查询运单中耗材明细，打标
 	int markMaterial(Map<String,Object> condition);
 	
+	//根据批次号保存标对应得耗材明细
+	int saveMarkMaterial(Map<String,Object> condition);
+	
 	//打标保温袋
 	int markBwd(Map<String,Object> condition);
+	
+	//根据批次号保存标对应得保温袋明细
+	int saveMarkBwd(Map<String,Object> condition);
 
 	int deleteMarkMaterialByWaybillNo(List<String> waybillNoList);
 	
