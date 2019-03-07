@@ -53,6 +53,9 @@ public class BizPalletInfoTempEntity implements IEntity {
 	private Double sysPalletNum;
 	//计费来源
 	private String chargeSource;
+	
+	private Double oldPalletNum;
+	private Double oldSysPalletNum;
 	public BizPalletInfoTempEntity() {
 		super();
 	}
@@ -200,6 +203,22 @@ public class BizPalletInfoTempEntity implements IEntity {
 
 	public void setChargeSource(String chargeSource) {
 		this.chargeSource = chargeSource;
+	}
+
+	public Double getOldPalletNum() {
+		return oldPalletNum;
+	}
+
+	public void setOldPalletNum(Double oldPalletNum) {
+		this.oldPalletNum = oldPalletNum;
+	}
+
+	public Double getOldSysPalletNum() {
+		return oldSysPalletNum;
+	}
+
+	public void setOldSysPalletNum(Double oldSysPalletNum) {
+		this.oldSysPalletNum = oldSysPalletNum;
 	}
     
 }
