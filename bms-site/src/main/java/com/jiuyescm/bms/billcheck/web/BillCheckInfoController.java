@@ -1897,6 +1897,42 @@ public class BillCheckInfoController{
 		}
 	}
 	
-	
+	/**
+	 * 更新账单状态
+	 * @param billCheckInfoVo
+	 * @return
+	 */
+	@DataResolver
+	public String updateStatus(BillCheckInfoVo billCheckInfoVo){
+		billCheckInfoVo.setBillStatus(CheckBillStatusEnum.EXCEPTION.getCode());
+		billCheckInfoVo.setLastModifier(JAppContext.currentUserName());
+		billCheckInfoVo.setLastModifyTime(JAppContext.currentTimestamp());
+		int result=billCheckInfoService.update(billCheckInfoVo);
+		if(result<0){
+			return "确认账单失败";
+		}
+		
+		try {
+			
+			String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
+
+			
+			BillCheckLogVo vo=new BillCheckLogVo();
+			vo.setBillCheckId(billCheckInfoVo.getId());
+			vo.setBillStatusCode(billCheckInfoVo.getBillCheckStatus());
+			vo.setLogType(0);
+			vo.setOperateDesc("异常");
+			vo.setCreator(JAppContext.currentUserName());
+			vo.setCreatorId(JAppContext.currentUserID());
+			vo.setCreateTime(JAppContext.currentTimestamp());
+			vo.setDeptName(groupName);
+			
+			billCheckLogService.addBillCheckLog(vo);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "sucess";
+	}
 	
 }

@@ -940,6 +940,41 @@ if(selectDatas.length == 1){&#xD;
         <Property name="caption">作废</Property>
         <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
       </ToolBarButton>
+      <ToolBarButton id="btnExp">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+//var data = view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){&#xD;
+ 	//修改，只能选择一条&#xD;
+	var entity=selectDatas[0];&#xD;
+	if(entity!=null){&#xD;
+		//已收款状态无法操作&#xD;
+		if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;已收款状态下无法操作!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+		&#xD;
+		dorado.MessageBox.confirm(&quot;是否更改状态为异常？&quot;,function(){&#xD;
+			view.id(&quot;updateStatus&quot;).execute(&#xD;
+				function(result){&#xD;
+					with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+						flushAsync();&#xD;
+					}&#xD;
+				}&#xD;
+			);&#xD;
+		});&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请勾选一条账单&quot;);&#xD;
+	}&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条账单!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条账单!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">异常</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -80px -0px</Property>
+      </ToolBarButton>
       <ToolBarButton id="btnZhipai">
         <ClientEvent name="onClick">view.get(&quot;#dsBillCheckFollow&quot;).insert();&#xD;
 view.id(&quot;txtFileName2&quot;).set(&quot;text&quot;,&quot;&quot;);&#xD;
@@ -3546,5 +3581,12 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
     <AjaxAction id="ajaxUserAreaAction">
       <Property name="service">billCheckInfoController#getUserArea</Property>
     </AjaxAction>
+    <UpdateAction id="updateStatus">
+      <Property name="dataResolver">billCheckInfoController#updateStatus</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>
