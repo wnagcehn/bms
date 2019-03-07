@@ -17,9 +17,7 @@ import com.jiuyescm.cfm.domain.IEntity;
  */
 public class BillCheckInfoEntity implements IEntity {
 
-    // TODO Change serialVersionUID by eclipse
-    private static final long serialVersionUID = -1;
-    
+	private static final long serialVersionUID = -8844284544168534400L;
 	// id
 	private Integer id;
 	// 业务月份

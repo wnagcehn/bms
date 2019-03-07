@@ -12,6 +12,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -203,7 +204,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				queryVo.setSettlementTime(task.getCreateMonth());
 				logger.info(taskId+"查询合同在线服务订购号的参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
-				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONObject.fromObject(disCountVoList));
+				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONArray.fromObject(disCountVoList));
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId(task.getSubjectCode());
@@ -479,7 +480,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				queryVo.setBizTypeCode("");
 				logger.info(taskId+"查询合同在线服务订购号的参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVoList=contractDiscountService.querySubject(queryVo);
-				//logger.info(taskId+"查询合同在线服务订购号的结果"+JSONObject.fromObject(disCountVoList));
+				logger.info(taskId+"查询合同在线服务订购号的结果"+JSONArray.fromObject(disCountVoList));
 				if(disCountVoList.size()>0){
 					ContractDiscountVo vo=disCountVoList.get(0);
 					queryVo.setSubjectId("");
@@ -718,6 +719,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryOne(condition);
 			
 			if(fee!=null && "1".equals(fee.getIsCalculated()) && StringUtils.isNotBlank(fee.getPriceId())){
+				//初始化折扣费用
+				setValue(discountVo,amount);
 				logger.info(taskId+"原始报价id为"+fee.getPriceId());
 				
 				//统计单量
@@ -739,11 +742,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				logger.info("Bms统计单量的参数"+JSONObject.fromObject(condition));
 				
 				BmsDiscountAccountVo discountAccountVo=bmsDiscountService.queryAccount(condition);
-				if(discountAccountVo==null){
-					discountVo.setIsCalculated("2");
-					discountVo.setCalculateTime(JAppContext.currentTimestamp());
-					discountVo.setDerateAmount(amount);
-					discountVo.setDiscountAmount(amount);
+				if(discountAccountVo==null){					
 					discountVo.setRemark(taskId+"没有查询到该商家的统计记录");
 					fee.setDerateAmount(0d);
 					feeList.add(fee);
@@ -768,10 +767,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
 				if(discountPriceList==null || discountPriceList.size()<=0){
 					logger.info(taskId+"未查询到折扣报价明细");
-					discountVo.setIsCalculated("2");
-					discountVo.setDerateAmount(amount);
-					discountVo.setDiscountAmount(amount);
-					discountVo.setCalculateTime(JAppContext.currentTimestamp());
 					discountVo.setRemark(taskId+"未查询到折扣报价明细");
 					fee.setDerateAmount(0d);
 					feeList.add(fee);
@@ -782,10 +777,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				BmsQuoteDiscountDetailEntity discountPrice=quoteFilter(discountPriceList,serviceTypeCode);
 				if(discountPrice==null){
 					logger.info(taskId+"未筛选到折扣报价明细");
-					discountVo.setIsCalculated("2");
-					discountVo.setDerateAmount(amount);
-					discountVo.setDiscountAmount(amount);
-					discountVo.setCalculateTime(JAppContext.currentTimestamp());
 					discountVo.setRemark(taskId+"未筛选到折扣报价明细");
 					fee.setDerateAmount(0d);
 					feeList.add(fee);
@@ -795,16 +786,17 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				logger.info("最后得到的报价"+JSONObject.fromObject(discountPrice));
 				
 				//判断是否是整单折扣
-				logger.info(taskId+"折扣报价的id"+discountPrice.getId());
-				
+				logger.info(taskId+"折扣报价的id"+discountPrice.getId());		
 				if(!DoubleUtil.isBlank(discountPrice.getUnitPrice())){
 					logger.info(waybillNo+"进入整单折扣价计算");
 					//整单折扣价
 					amount=BigDecimal.valueOf(discountPrice.getUnitPrice());
+					discountVo.setUnitPrice(BigDecimal.valueOf(discountPrice.getUnitPrice()));
 				}else if(!DoubleUtil.isBlank(discountPrice.getUnitPriceRate())){
 					logger.info(waybillNo+"进入整单折扣率计算");
 					//整单折扣率
 					amount=BigDecimal.valueOf(fee.getAmount()*discountPrice.getUnitPriceRate()/100);
+					discountVo.setUnitRate(BigDecimal.valueOf(discountPrice.getUnitPriceRate()/100));
 				}else{
 					//其余的（包含首重续重折扣）
 					//查询原始报价
@@ -813,10 +805,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					condition.put("id", fee.getPriceId());
 					BmsQuoteDispatchDetailVo oldPrice=priceDspatchService.queryOne(condition);
 					if(oldPrice==null){
+						setValue(discountVo,amount);
 						discountVo.setIsCalculated("2");
-						discountVo.setDerateAmount(amount);
-						discountVo.setDiscountAmount(amount);
-						discountVo.setCalculateTime(JAppContext.currentTimestamp());
 						discountVo.setRemark("未查询到原始报价");
 						fee.setDerateAmount(0d);
 						feeList.add(fee);
@@ -824,15 +814,16 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					}
 					
 					//===========================通过原始报价和折扣报价，得到最后计算的首重续重===============================
-					BmsQuoteDispatchDetailVo newprice=getNewPrice(oldPrice,discountPrice);	
+					BmsQuoteDispatchDetailVo newprice=getNewPrice(oldPrice,discountPrice,discountVo);	
 					
 					//开始进行计算
 					if(!DoubleUtil.isBlank(newprice.getUnitPrice())){
 						amount=BigDecimal.valueOf(newprice.getUnitPrice());
+						discountVo.setUnitPrice(amount);
 					}else{
 						amount=BigDecimal.valueOf(newprice.getFirstWeight()<fee.getChargedWeight()?newprice.getFirstWeightPrice()+newprice.getContinuedPrice()*((fee.getChargedWeight()-newprice.getFirstWeight())/newprice.getContinuedWeight()):newprice.getFirstWeightPrice());	        		
 					}
-				}			
+				}	
 				handAmount(discountVo,fee,amount);
 				discountVo.setQuoteId(discountPrice.getId().longValue());
 				feeList.add(fee);
@@ -862,6 +853,19 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		}
 
 		
+	}
+	
+	public void setValue(FeesReceiveDispatchDiscountVo discountVo,BigDecimal amount){
+		discountVo.setIsCalculated("2");
+		discountVo.setCalculateTime(JAppContext.currentTimestamp());
+		discountVo.setDerateAmount(amount);
+		discountVo.setDiscountAmount(amount);
+		discountVo.setUnitRate(BigDecimal.ZERO);
+		discountVo.setUnitPrice(BigDecimal.ZERO);
+		discountVo.setFirstRate(BigDecimal.ZERO);
+		discountVo.setFirstPrice(BigDecimal.ZERO);
+		discountVo.setContinueRate(BigDecimal.ZERO);
+		discountVo.setContinuePrice(BigDecimal.ZERO);
 	}
 	
 	/**
@@ -916,20 +920,24 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	 * @param discount
 	 * @return
 	 */
-	public BmsQuoteDispatchDetailVo getNewPrice(BmsQuoteDispatchDetailVo oldPrice,BmsQuoteDiscountDetailEntity discount){
+	public BmsQuoteDispatchDetailVo getNewPrice(BmsQuoteDispatchDetailVo oldPrice,BmsQuoteDiscountDetailEntity discount,FeesReceiveDispatchDiscountVo discountVo){
 		
 		if(!DoubleUtil.isBlank(discount.getFirstPrice())){
 			//折扣首价
 			oldPrice.setFirstWeightPrice(discount.getFirstPrice());
+			discountVo.setFirstPrice(BigDecimal.valueOf(discount.getFirstPrice()));
 		}else if(!DoubleUtil.isBlank(discount.getFirstPriceRate())){
 			//首价折扣率
 			oldPrice.setFirstWeightPrice(oldPrice.getFirstWeightPrice()*discount.getFirstPriceRate()/100);
+			discountVo.setFirstRate(BigDecimal.valueOf(discount.getFirstPriceRate()/100));
 		}else if(!DoubleUtil.isBlank(discount.getContinuePrice())){
 			//折扣续重价
 			oldPrice.setContinuedPrice(discount.getContinuePrice());
+			discountVo.setContinuePrice(BigDecimal.valueOf(discount.getContinuePrice()));
 		}else if(!DoubleUtil.isBlank(discount.getContinuePirceRate())){
 			//续重折扣率
 			oldPrice.setContinuedPrice(oldPrice.getContinuedPrice()*discount.getContinuePirceRate()/100);
+			discountVo.setContinueRate(BigDecimal.valueOf(discount.getContinuePirceRate()/100));
 		}
 		
 		return oldPrice;

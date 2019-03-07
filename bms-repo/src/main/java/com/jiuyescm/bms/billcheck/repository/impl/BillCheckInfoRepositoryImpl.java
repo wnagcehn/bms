@@ -23,7 +23,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> query(Map<String, Object> condition,
 			int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.query", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -33,7 +32,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> queryWarn(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryWarn", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -43,7 +41,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> queryWarnList(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryWarnList", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -53,7 +50,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> queryByInvoiceNo(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryByInvoiceNo", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -63,7 +59,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> queryByFollowType(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryByFollowType", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -72,7 +67,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public List<BillCheckAdjustInfoEntity> queryAdjust(
 			Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		SqlSession session=this.getSqlSessionTemplate();
 		List<BillCheckAdjustInfoEntity> list=session.selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryAdjust", condition);
 		return list;
@@ -81,7 +75,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public BillCheckInfoEntity queryOne(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		BillCheckInfoEntity entity=(BillCheckInfoEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryOne", condition);
 		return entity;
 	}
@@ -89,28 +82,24 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public int update(BillCheckInfoEntity billCheckInfoEntity) {
-		// TODO Auto-generated method stub
 		return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.update", billCheckInfoEntity);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public int updateOne(BillCheckInfoEntity billCheckInfoEntity) {
-		// TODO Auto-generated method stub
 		return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.updateOne", billCheckInfoEntity);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public int saveList(List<BillCheckInfoEntity> list) {
-		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.save", list);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public int save(BillCheckInfoEntity entity) {
-		// TODO Auto-generated method stub
 		int k = insert("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.save", entity);
 		return k;
 	}
@@ -118,7 +107,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public int saveNew(BillCheckInfoEntity entity) {
-		// TODO Auto-generated method stub
 		int k = insert("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.saveNew", entity);
 		return k;
 	}
@@ -126,7 +114,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<BillCheckInfoEntity> queryList(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryList", condition);
 
 		return list;
@@ -134,7 +121,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 
 	@Override
 	public int saveReceiptFollow(BillReceiptFollowEntity entity) {
-		// TODO Auto-generated method stub
 		SqlSession session=this.getSqlSessionTemplate();
 		return session.insert("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.saveReceiptFollow", entity);
 	}
@@ -142,7 +128,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillReceiptFollowEntity> queryReceiptFollow(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		SqlSession session=this.getSqlSessionTemplate();
 		List<BillReceiptFollowEntity> list=session.selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryReceiptFollow", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillReceiptFollowEntity> page=new PageInfo<>(list);
@@ -152,7 +137,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public int saveAjustList(List<BillCheckAdjustInfoEntity> list) {
-		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.saveAjustList", list);
 	}
 
@@ -160,21 +144,18 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public BillCheckAdjustInfoEntity queryOneAdjust(
 			Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		return (BillCheckAdjustInfoEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryOneAdjust", condition);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public int updateAjustList(List<BillCheckAdjustInfoEntity> list) {
-		// TODO Auto-generated method stub	
 		return updateBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.updateAjustList", list);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public int saveReceiptFollowList(List<BillReceiptFollowEntity> list) {
-		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.saveReceiptFollow", list);
 	}
 
@@ -222,7 +203,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public BillReceiptFollowEntity queryReceiptFollow(
 			Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		return (BillReceiptFollowEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryReceiptFollowOne", condition);
 	}
 
@@ -230,7 +210,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> queryReceiptDetail(
 			Map<String, Object> condition, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryReceiptDetail", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -238,14 +217,12 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 
 	@Override
 	public BillCheckInfoEntity queryBillCheck(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		BillCheckInfoEntity entity=(BillCheckInfoEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryBillCheck", condition);
 		return entity;
 	}
 
 	@Override
 	public List<BillCheckInfoEntity> queryAllUnreceipt(Map<String,Object> condition) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryAllUnreceipt",condition);
 		return list;
 	}
@@ -254,7 +231,6 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@Override
 	public PageInfo<BillCheckInfoEntity> queryForOut(Map<String, Object> condition,
 			int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryForOut", condition,new RowBounds(pageNo,pageSize));
 		PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
 		return page;
@@ -263,14 +239,24 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public BillCheckInfoEntity getLatestBill(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		BillCheckInfoEntity entity=(BillCheckInfoEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.getLatestBill", condition);
 		return entity;
 	}
 
 	@Override
 	public int deleteByBillNo(String billNo) {
-		// TODO Auto-generated method stub
 		return delete("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.deleteByBillNo", billNo);
+	}
+	
+	@Override
+	public List<BillCheckInfoEntity> querySnapshot(Map<String,Object> condition) {
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySnapshot",condition);
+		return list;
+	}
+	
+	@Override
+	public List<BillCheckInfoEntity> queryReceipt(Map<String,Object> condition) {
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryReceipt",condition);
+		return list;
 	}
 }

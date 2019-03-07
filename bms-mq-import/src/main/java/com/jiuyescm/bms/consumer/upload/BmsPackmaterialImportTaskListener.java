@@ -328,8 +328,19 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 				condition.put("taskId", taskId);
 				logger.info("任务ID【{}】 -> 进行耗材和保温袋打标操作",taskId);
 				start = System.currentTimeMillis();
-				bmsProductsMaterialService.markMaterial(condition);
-				bmsProductsMaterialService.markBwd(condition);
+				//耗材打标
+				int materialResult=bmsProductsMaterialService.markMaterial(condition);
+				if(materialResult>0){
+					//保存标对应得耗材明细
+					bmsProductsMaterialService.saveMarkMaterial(condition);
+				}
+				//保温袋打标
+				int bwdResult=bmsProductsMaterialService.markBwd(condition);
+				if(bwdResult>0){
+					//保存标对应得保温袋明细
+					bmsProductsMaterialService.saveMarkBwd(condition);
+				}
+				
 				//bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
 				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
 				bmsFileAsynTaskService.update(updateEntity);

@@ -29,38 +29,6 @@ public class CustomerController {
 	@Autowired
 	private ICustomerDictService customerDictService;
 	
-/*	@DataProvider
-	public void query(Page<CustomerVo> page,Map<String,Object> parameter) {
-		//查询标准商家
-		List<CustomerVo> customerList = new ArrayList<CustomerVo>();
-		
-		if(null==parameter){
-			parameter=new HashMap<String,Object>();
-		}
-		String userid=JAppContext.currentUserID();
-		parameter.put("userid", userid);
-		
-		PageInfo<CustomerVo> tmpPageInfo = customerService.query(parameter, page.getPageNo(), page.getPageSize());
-		
-		if (tmpPageInfo != null) {
-			if(customerList.size()>0)
-			{
-				List<CustomerVo> c = tmpPageInfo.getList();
-				boolean b = c.addAll(customerList);
-				page.setEntities(c);
-				int total = (int) tmpPageInfo.getTotal();
-				if(b){
-					total = total+customerList.size();
-				}
-				page.setEntityCount(total);
-			}else{
-				page.setEntities(tmpPageInfo.getList());
-				page.setEntityCount((int) tmpPageInfo.getTotal());
-			}
-			
-		}
-	}*/
-	
 	@DataProvider
 	public void query(Page<PubCustomerVo> page,Map<String,Object> parameter) {
 		if(null==parameter)parameter=new HashMap<String,Object>();

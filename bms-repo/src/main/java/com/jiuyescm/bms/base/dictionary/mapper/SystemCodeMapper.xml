@@ -229,4 +229,16 @@
     	select status from system_code where type_code='GLOABL_PARAM' and code='SUPPORT_PARTIAL_OUTBOUND'
     </select>
     
+    
+         <select id="queryExtattr1" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity">
+        select
+        <include refid="baseColumns" />
+        from system_code
+        where 1=1 and status='0' and 
+<!--         extattr1 LIKE CONCAT('%',#{deptName},'%') -->
+		extattr1 = #{deptName}
+		<include refid="baseSelectColumns" />
+		order by sort_no
+    </select>
 </mapper>

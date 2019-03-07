@@ -143,7 +143,7 @@ public interface IPriceContractDao {
 	 * @param customerId
 	 * @return
 	 */
-	List<PriceContractInfoEntity> queryByCustomerId(String customerId);
+	List<PriceContractInfoEntity> queryByCustomerId(Map<String, String> param);
 	
 	/**
 	 * 查询商家下业务类型下的科目

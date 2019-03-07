@@ -145,7 +145,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			condition=new HashMap<String,Object>();
 			condition.put("customerId", taskVo.getCustomerId());
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-			condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
 			condition.put("type", "PMXZX");
 			
@@ -233,7 +233,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							condition.put("materialType", proAccountVo.getMaterialType());
 							condition.put("pmxzxMark", metrialDetail);
 							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-							condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+							condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 							condition.put("customerId", taskVo.getCustomerId());
 							start = System.currentTimeMillis();
 							logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
@@ -445,7 +445,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			condition=new HashMap<String,Object>();
 			condition.put("customerId", taskVo.getCustomerId());
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-			condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
 			condition.put("type", "BWD");
 			
@@ -508,7 +508,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							condition.put("productsMark", proAccountVo.getProductsMark());
                             condition.put("bwdMark", metrialDetail);
 							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-							condition.put("endTime", DateUtil.formatTimestamp(taskVo.getEndDate()));
+							condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 							condition.put("customerId", taskVo.getCustomerId());
 							start = System.currentTimeMillis();
 							logger.info("找出未使用标准的运单号参数"+JSONObject.fromObject(condition));

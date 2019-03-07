@@ -215,6 +215,8 @@ public class BmsDiscountAsynTaskController {
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
 					param.put("bizTypeCode", entity.getBizTypecode());
+					String startD = entity.getCreateMonth() + "-01 00:00:00";
+					param.put("startTime", startD);
 				}
 				List<PriceContractDiscountItemEntity> bizList = priceContractDiscountService.queryByCustomerIdAndBizType(param);
 				if (bizList.isEmpty()) {
@@ -246,6 +248,7 @@ public class BmsDiscountAsynTaskController {
 			} catch (Exception e) {
 				logger.error("查询合同在线折扣失败", e);
 				// TODO: handle exception
+				logger.info("查询合同在线报错",e);
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {
@@ -281,12 +284,13 @@ public class BmsDiscountAsynTaskController {
 				queryVo.setSettlementTime(entity.getCreateMonth());
 				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
 				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONObject.fromObject(disCountVo));
+				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
 				if(disCountVo.size()>0){
 					newList=getContractList(disCountVo, entity, month);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				logger.info("查询合同在线报错",e);
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {
@@ -348,7 +352,7 @@ public class BmsDiscountAsynTaskController {
 				newEntity.setCustomerId(bizEntity.getCustomerId());
 			}else{
 				newEntity.setCustomerId(entity.getCustomerId());
-			}		
+			}
 			newEntity.setSubjectCode(bizEntity.getSubjectId());
 			newEntity.setCustomerType("bms");
 			newList.add(newEntity);
