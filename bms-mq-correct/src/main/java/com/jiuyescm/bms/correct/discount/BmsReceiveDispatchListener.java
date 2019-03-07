@@ -574,10 +574,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			//根据运单号查询业务数据对应得费用，判断是否是计算成功的，成功的继续折扣，失败的返回计算失败
 			condition.put("waybillNo", discountVo.getWaybillNo());
 			FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryOne(condition);
-			
+			//初始化折扣费用
+			setValue(discountVo,amount);
 			if(fee!=null && "1".equals(fee.getIsCalculated())){	
-				//初始化折扣费用
-				setValue(discountVo,amount);
 				//统计单量
 				condition.clear();
 				condition.put("startTime", task.getStartDate());
@@ -704,10 +703,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			BigDecimal amount=new BigDecimal(0);
 			condition.put("waybillNo", waybillNo);
 			FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryOne(condition);
-			
+			//初始化折扣费用
+			setValue(discountVo,amount);
 			if(fee!=null && "1".equals(fee.getIsCalculated()) && StringUtils.isNotBlank(fee.getPriceId())){
-				//初始化折扣费用
-				setValue(discountVo,amount);
 				logger.info(taskId+"原始报价id为"+fee.getPriceId());
 				
 				//统计单量
@@ -816,10 +814,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				feeList.add(fee);
 			}else{
 				//费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
-				discountVo.setIsCalculated("2");
-				discountVo.setCalculateTime(JAppContext.currentTimestamp());
-				discountVo.setDerateAmount(amount);
-				discountVo.setDiscountAmount(amount);
 				discountVo.setRemark(taskId+"费用计算失败或者报价为空或者计算规则为空");
 				fee.setDerateAmount(0d);
 				feeList.add(fee);
