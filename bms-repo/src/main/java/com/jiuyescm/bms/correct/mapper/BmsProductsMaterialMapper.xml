@@ -85,7 +85,7 @@
 		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
 		where 1=1 and a.products_mark=#{productsMark} and a.material_type=#{materialType} and a.pmxzx_mark!=#{pmxzxMark}
-		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
     	GROUP BY b.waybill_no
      </select>
 	
@@ -197,12 +197,12 @@
      	 from
 			(select a.products_mark,a.material_type,a.pmxzx_mark,COUNT(a.pmxzx_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			GROUP BY a.products_mark,a.material_type,a.pmxzx_mark) m
 		 LEFT JOIN 
 		 	(select a.products_mark,a.material_type,a.pmxzx_mark,COUNT(a.pmxzx_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			GROUP BY a.products_mark,a.material_type) n
 		 on m.products_mark=n.products_mark and m.material_type=n.material_type
      </insert>
@@ -213,12 +213,12 @@
      	 from
 			(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			GROUP BY a.products_mark,a.bwd_mark) m
 		 LEFT JOIN 
 		 	(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<#{endTime}]]>
+			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			GROUP BY a.products_mark) n
 		 on m.products_mark=n.products_mark
      </insert>
@@ -266,7 +266,7 @@
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
 		where 1=1 and b.products_mark=#{productsMark} and b.bwd_mark!=#{bwdMark}
-		and a.del_flag='0' and c.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<#{endTime}]]>
+		and a.del_flag='0' and c.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<=#{endTime}]]>
      </select>
    
      <select id="getMaterialMap" parameterType="java.util.Map" resultType="String">

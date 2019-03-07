@@ -215,6 +215,8 @@ public class BmsDiscountAsynTaskController {
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
 					param.put("bizTypeCode", entity.getBizTypecode());
+					String startD = entity.getCreateMonth() + "-01 00:00:00";
+					param.put("startTime", startD);
 				}
 				List<PriceContractDiscountItemEntity> bizList = priceContractDiscountService.queryByCustomerIdAndBizType(param);
 				if (bizList.isEmpty()) {
@@ -344,7 +346,11 @@ public class BmsDiscountAsynTaskController {
 			newEntity.setCreator(JAppContext.currentUserName());
 			newEntity.setCreateTime(JAppContext.currentTimestamp());
 			newEntity.setBizTypecode(bizEntity.getBizTypeCode());
-			newEntity.setCustomerId(bizEntity.getCustomerId());
+			if(StringUtils.isNotBlank(bizEntity.getCustomerId())){
+				newEntity.setCustomerId(bizEntity.getCustomerId());
+			}else{
+				newEntity.setCustomerId(entity.getCustomerId());
+			}		
 			newEntity.setSubjectCode(bizEntity.getSubjectId());
 			newEntity.setCustomerType("bms");
 			newList.add(newEntity);

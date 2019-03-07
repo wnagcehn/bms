@@ -23,6 +23,7 @@ import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.framework.sequence.api.ISequenceService;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCorrectAsynTaskService")
@@ -37,7 +38,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 	
 	@Autowired private JmsTemplate jmsQueueTemplate;
 	
-	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
+	@Autowired private ISequenceService sequenceService;
 
 	@Override
 	public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition,
@@ -176,8 +177,13 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		String taskStatus = list.get(0).getTaskStatus();
 		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus)&&!"FAIL".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
-		String taskId = snowflakeSequenceService.nextStringId();
-		
+		//String taskId = snowflakeSequenceService.nextStringId();
+		String id = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+		String taskId = "CT";
+		for(int i = 1;i<=10-id.length();i++){
+			taskId +="0";
+		}
+		taskId += id;
 		//更新任务表（更新修改人，修改时间）
 		try{
 			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
