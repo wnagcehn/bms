@@ -797,6 +797,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 		}
 	}
 
+	
 	@Override
 	public List<BillCheckInfoEntity> querySnapshot(Map<String, Object> condition) {
 		return billCheckInfoRepository.querySnapshot(condition);
@@ -805,5 +806,15 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	@Override
 	public List<BillCheckInfoEntity> queryReceipt(Map<String, Object> condition) {
 		return billCheckInfoRepository.queryReceipt(condition);
+	}
+	
+	@Override
+	public List<BillCheckInfoEntity> queryCheckReceipt(Map<String, Object> condition) {
+		return billCheckInfoRepository.queryCheckReceipt(condition);
+	}
+	
+	@Override
+	public List<BillCheckInfoEntity> querySnapshotExpect(Map<String, Object> condition) {
+		return billCheckInfoRepository.querySnapshotExpect(condition);
 	}
 }

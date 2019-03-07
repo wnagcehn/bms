@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.report.bill.web;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
+import com.jiuyescm.bms.report.vo.BizWarehouseNotImportVo;
 import com.jiuyescm.common.tool.ListTool;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -54,7 +56,6 @@ public class CheckReceiptReportController {
 		List<String> deptList = new ArrayList<>();
 		//区域模型
 		ArrayList<CheckReceiptEntity> checkList = new ArrayList<CheckReceiptEntity>();
-//		PageInfo<CheckReceiptEntity> pageInfo = null;
 		if (CollectionUtils.isNotEmpty(codeEntities)) {
 			//查询快照
 			map.put("startDate", startString);
@@ -68,28 +69,25 @@ public class CheckReceiptReportController {
 				String key = stringBuilder.toString();
 				if(expectMap.containsKey(key)){
 					BigDecimal expectAmount = (BigDecimal) expectMap.get(key);
-					expectAmount.add(billCheckInfoEntity.getExpectAmount());
-					expectMap.put(key, expectAmount);
+					BigDecimal add = expectAmount.add(billCheckInfoEntity.getExpectAmount());
+					expectMap.put(key, add);
 					continue;
 				}
 				expectMap.put(key, billCheckInfoEntity.getExpectAmount());
 			}
 			//查询回款
-			map.put("startDate", startString+" 00:00:00");
-			map.put("endDate", endString+" 23:59:59");
 			List<BillCheckInfoEntity> receiptEntities =  billCheckInfoService.queryReceipt(map);
 			//实际金额map
 			Map<String,Object> receiptMap = new HashMap<>();
 			for (BillCheckInfoEntity billCheckInfoEntity : receiptEntities) {
 				StringBuilder stringBuilder = new StringBuilder(billCheckInfoEntity.getArea());
 				String time = format.format(billCheckInfoEntity.getReceiptDate());
-				time=time.substring(0,10);
 				stringBuilder.append("-").append(time);
 				String key = stringBuilder.toString();
 				if(receiptMap.containsKey(key)){
 					BigDecimal receiptAmount = (BigDecimal) receiptMap.get(key);
-					receiptAmount.add(billCheckInfoEntity.getReceiptAmount());
-					receiptMap.put(key, receiptAmount);
+					BigDecimal add = receiptAmount.add(billCheckInfoEntity.getReceiptAmount());
+					receiptMap.put(key, add);
 					continue;
 				}
 				receiptMap.put(key, billCheckInfoEntity.getReceiptAmount());
@@ -98,8 +96,8 @@ public class CheckReceiptReportController {
 			//初始化区域模型
 			for (String dateString : dateList) {
 				for (SystemCodeEntity entity : codeEntities) {
-					
 					CheckReceiptEntity checkReceiptEntity = new CheckReceiptEntity();
+					checkReceiptEntity.setDeptName(deptName);
 					try {
 						checkReceiptEntity.setExpectDate(format.parse(dateString));
 					} catch (ParseException e) {
@@ -132,9 +130,11 @@ public class CheckReceiptReportController {
 					}else if(receiptBigDecimal.equals(BigDecimal.ZERO)) {
 						finish = "0%";
 					}else {
-						BigDecimal div = receiptBigDecimal.divide(expectBigDecimal);
+						BigDecimal div = receiptBigDecimal.divide(expectBigDecimal,6, RoundingMode.HALF_UP);
 						BigDecimal mul = div.multiply(new BigDecimal(100));
-						finish = mul.toString()+"%";
+						String num = mul.toString();
+						String numString = num.substring(0,num.length()-2);
+						finish = numString+"%";
 					}
 					checkReceiptEntity.setFinishRate(finish);
 					checkList.add(checkReceiptEntity);
@@ -149,6 +149,38 @@ public class CheckReceiptReportController {
 
 	}
 	
+	@DataProvider
+	public void queryDetail(Page<BillCheckInfoEntity> page, Map<String, Object> param) {
+		List<BillCheckInfoEntity> checkList = billCheckInfoService.queryCheckReceipt(param);
+		if(CollectionUtils.isNotEmpty(checkList)){
+			List<BillCheckInfoEntity> snapshotList = billCheckInfoService.querySnapshotExpect(param);
+			Map<String,BillCheckInfoEntity> snapshotMap = new HashMap<>();
+			//防止有回款，但快照中没有账单，加此判断
+			if(CollectionUtils.isNotEmpty(snapshotList)){
+				for (BillCheckInfoEntity entity : snapshotList) {
+					snapshotMap.put(entity.getId()+"", entity);
+				}
+			}
+			//初始化返回明细
+			List<BillCheckInfoEntity> pageEntities = new ArrayList<>();
+			//如果快照后账单及回款作废，则无此明细，所以使用快照数据过滤实际账单数据
+			for (BillCheckInfoEntity check : checkList) {
+				String keyString = check.getId()+"";
+				//如果账单及快照都存在数据，使用快照的预计金额，如果不是置为0
+				if(snapshotMap.containsKey(keyString)){
+					check.setExpectAmount(snapshotMap.get(keyString).getExpectAmount());
+				}else {
+					check.setExpectAmount(new BigDecimal(0));
+				}
+				pageEntities.add(check);
+			}
+			//物理分页
+			List<List<BillCheckInfoEntity>> list = ListTool.split(pageEntities, page.getPageSize());
+			List<BillCheckInfoEntity> pageList =list.get(page.getPageNo()-1);
+			page.setEntities(pageList);
+			page.setEntityCount(checkList.size());
+		}
+	}
 	
     private static List<String> getBetweenDate(String begin,String end){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

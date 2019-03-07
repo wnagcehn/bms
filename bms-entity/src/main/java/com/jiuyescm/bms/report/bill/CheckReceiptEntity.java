@@ -14,7 +14,14 @@ public class CheckReceiptEntity implements IEntity{
 	private BigDecimal expectAmount;
 	private BigDecimal finishAmount;
 	private String finishRate;
+	private String deptName;
 	
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
 	public BigDecimal getFinishAmount() {
 		return finishAmount;
 	}
