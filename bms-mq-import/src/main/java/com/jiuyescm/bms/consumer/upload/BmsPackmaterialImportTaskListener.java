@@ -466,7 +466,6 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 						logger.error("写入结果文件失败！", e);
 					}
 	        		dataList.clear();
-	        		errorMap.clear();
 				}
 
 				@Override
@@ -483,6 +482,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			reader.close();
 		}
 		
+		errorMap.clear();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);
 		workbook.dispose();

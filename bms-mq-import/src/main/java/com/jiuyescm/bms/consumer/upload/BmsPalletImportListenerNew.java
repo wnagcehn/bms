@@ -88,6 +88,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 
 	TreeMap<Integer,String> originColumn = new TreeMap<Integer,String>(); //源生表头信息
 	List<BizPalletInfoTempEntity> newList = new ArrayList<BizPalletInfoTempEntity>();
+	List<BizPalletInfoTempEntity> repeatList = new ArrayList<BizPalletInfoTempEntity>();
 	
 	List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	private int roNo = 1;
@@ -241,6 +242,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					}
 					for( int i = 0 ; i < tempList.size() ; i++){
 						newList.add(tempList.get(i));
+						repeatList.add(tempList.get(i));
 					}
 					
 					//1000条数据	
@@ -312,8 +314,8 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}
 		
 		//重复性校验
-        if(newList!=null&&newList.size()>0){
-       	  checkPallet(newList);		
+        if(repeatList!=null&&repeatList.size()>0){
+       	  checkPallet(repeatList);		
         }
 		
  		//如果excel数据本身存在问题，直接生产结果文件返回给用户
@@ -473,7 +475,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		        	dataList.add(dataItem);
 		        	
 		        	//1000条写入一次
-		        	if (dataList.size() >= 1) {
+		        	if (dataList.size() >= 1000) {
 		        		try {
 		        			poiUtil.exportExcel2FilePath(poiUtil, workbook, "耗材出库结果文件",roNo, headDetailMapList, dataList);
 		        			roNo = roNo + dataList.size();
@@ -481,7 +483,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							logger.error("写入结果文件失败！", e);
 						}
 		        		dataList.clear();
-		        		errorMap.clear();
 					}
 				}
 
@@ -510,6 +511,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			reader.close();
 		}
 		
+    	errorMap.clear();
 		String resultFullPath="";	
 		logger.info("上传结果文件到fastDfs");
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -599,6 +601,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				errorMap.put(temp.getRowExcelNo(), "Excel中数据重复");
 			}
 		}
+		repeatList.clear();
 	}
 	
 	private String getPalletKey(BizPalletInfoTempEntity dataEntity){
