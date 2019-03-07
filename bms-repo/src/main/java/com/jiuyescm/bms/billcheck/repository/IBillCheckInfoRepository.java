@@ -188,5 +188,8 @@ public interface IBillCheckInfoRepository {
 	List<BillCheckInfoEntity> querySnapshot(Map<String, Object> condition);
 
 	List<BillCheckInfoEntity> queryReceipt(Map<String, Object> condition);
-	
-	}
+
+	List<BillCheckInfoEntity> querySnapshotExpect(Map<String, Object> condition);
+
+	List<BillCheckInfoEntity> queryCheckReceipt(Map<String, Object> condition);
+}

@@ -259,4 +259,16 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryReceipt",condition);
 		return list;
 	}
+	
+	@Override
+	public List<BillCheckInfoEntity> queryCheckReceipt(Map<String,Object> condition) {
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryCheckReceipt",condition);
+		return list;
+	}
+	
+	@Override
+	public List<BillCheckInfoEntity> querySnapshotExpect(Map<String,Object> condition) {
+		List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySnapshotExpect",condition);
+		return list;
+	}
 }

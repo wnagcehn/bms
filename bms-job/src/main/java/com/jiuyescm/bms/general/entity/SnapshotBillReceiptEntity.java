@@ -15,6 +15,8 @@ public class SnapshotBillReceiptEntity implements IEntity {
 	private static final long serialVersionUID = 8475198729296815993L;
 
 	private Long id;
+
+	private Long checkId;
 	
 	private String area;
 	
@@ -35,6 +37,14 @@ public class SnapshotBillReceiptEntity implements IEntity {
 	private String sellerId;
 	
 	private String deptName;
+	
+	public Long getCheckId() {
+		return checkId;
+	}
+
+	public void setCheckId(Long checkId) {
+		this.checkId = checkId;
+	}
 	
 	public String getDeptName() {
 		return deptName;

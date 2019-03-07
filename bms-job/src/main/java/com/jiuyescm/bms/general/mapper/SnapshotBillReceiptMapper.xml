@@ -16,7 +16,8 @@
     </resultMap>
   
       <select id="query" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.SnapshotBillReceiptEntity">
-	SELECT create_month as createMonth,
+	SELECT id as checkId,
+	create_month as createMonth,
 	invoice_name as invoiceName,
 	bill_name as billName,
 	seller_id as sellerId,
@@ -33,7 +34,7 @@
     
       <insert id="insert" parameterType="com.jiuyescm.bms.general.entity.SnapshotBillReceiptEntity">
        insert into bms_snapshot_bill_receipt(
-    		area,snapshot_date,expect_amount,write_time,create_month,invoice_name,bill_name,seller_id,seller_name,dept_name)
+    		area,snapshot_date,expect_amount,write_time,create_month,invoice_name,bill_name,seller_id,seller_name,dept_name,check_id)
         values (
 			#{area}, 
 			#{snapshotDate}, 
@@ -44,7 +45,8 @@
 			#{billName},
 			#{sellerId},		
 			#{sellerName},
-			#{deptName}
+			#{deptName},
+			#{checkId}
         )
     </insert>
 </mapper>

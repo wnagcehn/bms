@@ -862,13 +862,46 @@
     </select>
     
         <select id="queryReceipt" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-        select b.receipt_amount receiptAmount,
-				b.create_time receiptDate,
-				a.area
+        select b.id,
+        a.seller_name sellerName,
+        a.invoice_name  invoiceName,
+        a.bill_name billName,
+        b.receipt_amount receiptAmount,
+		b.receipt_date receiptDate,
+		a.area
         from bill_check_info a
 				LEFT JOIN bill_check_receipt b on a.id = b.bill_check_id
         where a.del_flag = 0 AND b.del_flag='0' AND a.dept_name = #{deptName}
-        and <![CDATA[b.create_time >= #{startDate}]]>
-    	and <![CDATA[b.create_time <= #{endDate}]]>
+        and <![CDATA[b.receipt_date >= #{startDate}]]>
+    	and <![CDATA[b.receipt_date <= #{endDate}]]>
+    </select>
+    
+            <select id="queryCheckReceipt" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select b.id,
+        a.create_month  createMonth,
+        a.seller_name sellerName,
+        a.invoice_name  invoiceName,
+        a.bill_name billName,
+        b.receipt_amount receiptAmount,
+		b.receipt_date receiptDate,
+		a.area
+        from bill_check_info a
+				LEFT JOIN bill_check_receipt b on a.id = b.bill_check_id
+        where a.del_flag = 0 AND b.del_flag='0' AND a.dept_name = #{deptName}
+        and b.receipt_date = #{expectDate}
+        and a.area = #{area}
+    </select>
+    
+            <select id="querySnapshotExpect" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select a.check_id id,
+        a.seller_name sellerName,
+        a.invoice_name  invoiceName,
+        a.bill_name billName,
+        a.expect_amount expectAmount,
+		a.area
+        from bms_snapshot_bill_receipt a
+        where a.dept_name = #{deptName}
+        and a.snapshot_date = #{expectDate}
+        and a.area = #{area}
     </select>
 </mapper> 
