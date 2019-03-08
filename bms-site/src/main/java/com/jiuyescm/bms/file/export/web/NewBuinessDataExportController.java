@@ -167,9 +167,12 @@ public class NewBuinessDataExportController extends BaseController {
 
 	@DataResolver
 	public String asynExport(Map<String, Object> param) throws ParseException {
+		
 		if (null == param) {
 			return MessageConstant.QUERY_PARAM_NULL_MSG;
 		}
+		
+		final String mkId=param.get("customerId").toString();
 		String year = "";
 		String month = "";
 		if (param.containsKey("year") && param.containsKey("month")) {
@@ -254,7 +257,7 @@ public class NewBuinessDataExportController extends BaseController {
 							entity.setCreateTime(JAppContext.currentTimestamp());
 							entity.setDelFlag("0");
 							entity.setCustomerid(cu.get("customerId").toString());
-							entity.setMkId(condition.get("customerId").toString());
+							entity.setMkId(mkId);
 							//区分是否按照子商家生成
 							if ((Boolean)condition.get("isChildCustomer") == true) {
 								entity.setIsChildCustomer("0");

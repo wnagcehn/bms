@@ -281,7 +281,9 @@ with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
       </ToolBarButton>
       <Separator/>
       <ToolBarButton>
-        <ClientEvent name="onClick">view.get(&quot;#dialogBill&quot;).show();&#xD;
+        <ClientEvent name="onClick">var current=view.get(&quot;#dsBCondition.data&quot;).current;&#xD;
+current.set(&quot;customerName&quot;,&quot;&quot;);&#xD;
+view.get(&quot;#dialogBill&quot;).show();&#xD;
 </ClientEvent>
         <Property name="caption">生成预账单</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
