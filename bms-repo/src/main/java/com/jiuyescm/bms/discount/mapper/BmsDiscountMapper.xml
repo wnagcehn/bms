@@ -123,42 +123,25 @@
 
     <select id="queryAccount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
-       select 
-			a.customerid as customerId,
-			a.carrier_id as carrierId,
-			count(0) as orderCount, 
-			sum(b.amount) as amount
-		from biz_dispatch_bill a
-		left join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag=0
-		where a.create_time >= #{startTime}
-		and a.create_time<![CDATA[<#{endTime}]]>
-		and a.customerid = #{customerId} and a.carrier_id =#{carrierId}
-		and a.del_flag = 0 and a.is_calculated in ('1')
-		<if test="(serviceTypeCode != null and serviceTypeCode !='')">
-			and a.service_type_code=#{serviceTypeCode}
-		</if>
-		<if test="(adjustServiceTypeCode != null and adjustServiceTypeCode !='')">
-			and a.adjust_service_type_code=#{adjustServiceTypeCode}
-		</if>
-		group by a.customerid,a.carrier_id
+        select COUNT(0) as orderCount,sum(amount) as amount
+		from fees_receive_dispatch 
+		where customerid=#{customerId}
+			and carrierid=#{carrierId} 
+			and create_time>= #{startTime} and create_time<![CDATA[<#{endTime}]]>
+			and del_flag='0' 
+			and is_calculated in ('1','5')
     </select>
     
     <select id="queryAccountServiceList" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
-       select a.customerId as customerId,a.carrierId as carrierId,a.orderCount as orderCount,a.amount as amount,a.service as serviceTypeCode FROM (
-       select 
-			a.customerid as customerId,
-			a.carrier_id as carrierId,
-			count(0) as orderCount, 
-			sum(b.amount) as amount,
-			IFNULL(a.adjust_service_type_code,a.service_type_code) as service			
-		from biz_dispatch_bill a
-		left join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag=0
-		where a.create_time >= #{startTime}
-		and a.create_time<![CDATA[<#{endTime}]]>
-		and a.customerid = #{customerId} and a.carrier_id =#{carrierId}
-		and a.del_flag = '0' and a.is_calculated in ('1')
-		) a GROUP BY a.customerId,a.carrierId,a.service
+        select COUNT(0) as orderCount,sum(amount) as amount,service_type_code as serviceTypeCode
+		from fees_receive_dispatch 
+		where customerid=#{customerId}
+			and carrierid=#{carrierId}  
+			and create_time>=#{startTime} and create_time<![CDATA[<#{endTime}]]>
+			and del_flag='0' 
+			and is_calculated in ('1','5')
+		GROUP BY service_type_code
     </select>
     
     <select id="queryStorageAccount" parameterType="java.util.Map"
