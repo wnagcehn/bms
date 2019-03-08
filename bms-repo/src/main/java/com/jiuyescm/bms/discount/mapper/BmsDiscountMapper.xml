@@ -143,6 +143,24 @@
 		group by a.customerid,a.carrier_id
     </select>
     
+    <select id="queryAccountList" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
+       select a.customerId as customerId,a.carrierId as carrierId,a.orderCount as orderCount,a.amount as amount,a.service as serviceTypeCode FROM (
+       select 
+			a.customerid as customerId,
+			a.carrier_id as carrierId,
+			count(0) as orderCount, 
+			sum(b.amount) as amount,
+			IFNULL(a.adjust_service_type_code,a.service_type_code) as service			
+		from biz_dispatch_bill a
+		left join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag=0
+		where a.create_time >= #{startTime}
+		and a.create_time<![CDATA[<#{endTime}]]>
+		and a.customerid = #{customerId} and a.carrier_id =#{carrierId}
+		and a.del_flag = '0' and a.is_calculated in ('1')
+		) a GROUP BY a.customerId,a.carrierId,a.service
+    </select>
+    
     <select id="queryStorageAccount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">     
   		select 
