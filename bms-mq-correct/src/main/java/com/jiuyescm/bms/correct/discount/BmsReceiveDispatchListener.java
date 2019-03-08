@@ -715,7 +715,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 		for(FeesReceiveDispatchDiscountVo discountVo:list){
 			
 			String waybillNo=discountVo.getWaybillNo();
-			logger.info(taskId+"运单号为"+waybillNo);
 			
 			Map<String,Object> condition=new HashMap<String,Object>();
 			//根据运单号查询业务数据对应得费用，判断是否是计算成功的，成功的继续折扣，失败的返回计算失败
