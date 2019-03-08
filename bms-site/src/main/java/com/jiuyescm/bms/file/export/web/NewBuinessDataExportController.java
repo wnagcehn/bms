@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
@@ -212,6 +213,7 @@ public class NewBuinessDataExportController extends BaseController {
 			return "未查询到需要导出的商家";
 		}
 		
+		final String username = ContextHolder.getLoginUser().getCname();
 		
 		try {
 			final List<Map<String,String>> newCuList=cuList;
@@ -253,7 +255,7 @@ public class NewBuinessDataExportController extends BaseController {
 							entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
 							entity.setProgress(0d);
 							entity.setFilePath(filePath);
-							entity.setCreator(JAppContext.currentUserName());
+							entity.setCreator(username);
 							entity.setCreateTime(JAppContext.currentTimestamp());
 							entity.setDelFlag("0");
 							entity.setCustomerid(cu.get("customerId").toString());
