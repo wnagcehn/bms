@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.correct.vo.BmsMarkingMaterialVo;
+import com.jiuyescm.bms.correct.vo.BmsMaterialMarkOriginVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsMaterialAccountVo;
 
 public interface IBmsProductsMaterialService {
@@ -69,4 +70,13 @@ public interface IBmsProductsMaterialService {
 	
 	//根据耗材标得到对应得耗材编码
 	Map<String,String> getMaterialMap(Map<String,Object> condition);
+	
+	//通过耗材标查询原始对应得耗材
+	List<BmsMaterialMarkOriginVo> queryByMark(Map<String,Object> condition);
+	
+	//更新打标表
+	int updatePmxzxMark(List<String> waybillNoList);
+	
+	//更新耗材表
+	int updateBwdMark(List<String> waybillNoList);
 }

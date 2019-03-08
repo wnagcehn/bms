@@ -24,6 +24,8 @@ public class BmsProductsMaterialAccountVo implements IEntity {
 	private String materialType;
 	// 耗材使用明细id
 	private String materialMark;
+	//耗材明细
+	private String materialDetail;
 	// 百分比
 	private Double percent;
 	// 任务ID
@@ -148,5 +150,14 @@ public class BmsProductsMaterialAccountVo implements IEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	public String getMaterialDetail() {
+		return materialDetail;
+	}
+
+	public void setMaterialDetail(String materialDetail) {
+		this.materialDetail = materialDetail;
+	}
     
+	
 }
