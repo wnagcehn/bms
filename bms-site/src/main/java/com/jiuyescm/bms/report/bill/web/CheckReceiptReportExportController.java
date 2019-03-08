@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,38 +19,22 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
-import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
-import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
-import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
-import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
-import com.jiuyescm.bms.base.system.BaseController;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
-import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
-import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
-import com.jiuyescm.bms.common.constants.MessageConstant;
-import com.jiuyescm.bms.common.enumtype.CalculateState;
-import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
-import com.jiuyescm.bms.common.enumtype.OrderStatus;
-import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
-import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
-import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
-import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.framework.fastdfs.client.StorageClient;
+import com.jiuyescm.framework.fastdfs.model.StorePath;
 
 @Controller("checkReceiptReportExportController")
 public class CheckReceiptReportExportController{
@@ -62,6 +45,8 @@ public class CheckReceiptReportExportController{
 	private ISystemCodeService systemCodeService;
 	@Autowired
 	private IBillCheckInfoService billCheckInfoService;
+	@Autowired 
+	private StorageClient storageClient;
 	/**
 	 * 导出
 	 */
@@ -74,12 +59,12 @@ public class CheckReceiptReportExportController{
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String startString = format.format(startDate);
         String endString = format.format(endDate);
-        List<String> dateList = DateUtil.getBetweenDate(startString,endString);
+        final List<String> dateList = DateUtil.getBetweenDate(startString,endString);
         //查询区域
 		Map<String, Object> map = new HashMap<>();
 		map.put("typeCode", "SALE_AREA");
 		map.put("deptName", deptName);
-		List<SystemCodeEntity> codeEntities = systemCodeService.queryExtattr1(map);
+		final List<SystemCodeEntity> codeEntities = systemCodeService.queryExtattr1(map);
 		//区域模型
 		ArrayList<CheckReceiptEntity> checkList = new ArrayList<CheckReceiptEntity>();
 		if (CollectionUtils.isNotEmpty(codeEntities)) {
@@ -156,50 +141,35 @@ public class CheckReceiptReportExportController{
 				}
 			}
 			//回款追踪报表数据map
-			Map<String,CheckReceiptEntity> reportMap = new HashMap<>();
+			final Map<String,CheckReceiptEntity> reportMap = new HashMap<>();
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (CheckReceiptEntity entity : checkList) {
 				String key = getKey(entity.getArea(),  sdf.format(entity.getExpectDate()));
 				reportMap.put(key, entity);
 			}
-		
-		
 
-		
-		
-		
-		
-		
         try {
-         	String key=sequenceService.getBillNoOne(CheckReceiptReportExportController.class.getName(), "RD", "000000000");   	
-        	String path = getCheckReceiveExportPath();
-        	String filepath=path+ FileConstant.SEPARATOR + 
-        			FileTaskTypeEnum.BIZ_REC_DIS.getCode() + key + FileConstant.SUFFIX_XLSX;
-        	
-    		final Map<String, Object> condition = param;
-    		final String filePath=filepath;
     		new Thread(){
     			public void run() {
     				try {
-    					export(condition,filePath,dateList,codeEntities,reportMap);
+    					export(dateList,codeEntities,reportMap);
     				} catch(Exception e){
     					logger.error(e.getMessage());
     				}
     			};
     		}.start();
-    		
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
+			}
 		}
 	}
 	/**
-	 * 异步导出
+	 * 导出
 	 */
-	private void export(Map<String, Object> param,String filePath,List<String> dateList,List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap)throws Exception{
-		String path = getCheckReceiveExportPath();
+	private void export(List<String> dateList,List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap)throws Exception{
 		long beginTime = System.currentTimeMillis();
-		
-		logger.info("====应收运单导出：");
+		String path = "E://test";
+		logger.info("====导出：");
 		//如果存放上传文件的目录不存在就新建
     	File storeFolder=new File(path);
 		if(!storeFolder.isDirectory()){
@@ -209,65 +179,20 @@ public class CheckReceiptReportExportController{
     	logger.info("====回款追踪报表导出：写入Excel begin.");
     	POISXSSUtil poiUtil = new POISXSSUtil();
     	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
-    	hand(poiUtil, workbook, filePath, param, dateList,codeEntities,reportMap);
-    	//最后写到文件
-    	poiUtil.write2FilePath(workbook, filePath);
-    	
-    	logger.info("====应收运单导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
-	}
-	
-	/**
-	 * 应收运单
-	 * @param poiUtil
-	 * @param workbook
-	 * @param path
-	 * @param myparam
-	 * @throws Exception
-	 */
-	private void hand(POISXSSUtil poiUtil, SXSSFWorkbook workbook,String path, Map<String, Object> myparam, List<String> dateList,List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap)throws Exception{
-		//物流商
-		if(myparam.get("logistics") != null && 
-				StringUtils.equalsIgnoreCase(myparam.get("logistics").toString(), "ALL")){
-			myparam.put("logistics", null);
-		}
-		
-		Map<String, String> temMap=getTemperatureTypeList();
-		Map<String,String> b2bMap=getIstB();
-		Map<String,String> orderStatusMap=getOrderStatus();
-		Map<String,String> serviceMap=getServiceMap();
-		int pageNo = 1;
 		int lineNo = 1;
-		boolean doLoop = true;
-		while (doLoop) {			
-			PageInfo<BizDispatchBillVo> pageInfo = 
-					bizDispatchBillService.queryData(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
-					doLoop = false;
-				}else {
-					pageNo += 1; 
-				}
-			}else {
-				doLoop = false;
-			}
-			//
-			
-			
-			//头、内容信息
-			List<Map<String, Object>> headDetailMapList = getHead(dateList); 
-			List<Map<String, Object>> dataDetailList = getData(pageInfo.getList(),temMap,b2bMap,orderStatusMap,serviceMap, dateList,codeEntities,reportMap);
-			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.CHECK_RECEIPT.getDesc(), 
-					lineNo, headDetailMapList, dataDetailList);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				lineNo += pageInfo.getList().size();
-			}
-		}
+		//头、内容信息
+		List<Map<String, Object>> headDetailMapList = getHead(dateList); 
+		List<Map<String, Object>> dataDetailList = getData(dateList,codeEntities,reportMap);
+		poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.CHECK_RECEIPT.getDesc(),lineNo, headDetailMapList, dataDetailList);
+    	//最后写到文件
+    	poiUtil.write2FilePath(workbook, "E:/test/回款追踪报表.xlsx");
+    	
+		// 保存导入文件到fastDFS，获取文件路径
+		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
+		String fullPath = storePath.getFullPath();
+    	logger.info("====导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 	}
-	
-	/**
-	 * 运单
-	 */
+
 	public List<Map<String, Object>> getHead(List<String> dateList){
 		List<Map<String, Object>> headInfoList = new ArrayList<Map<String,Object>>();
 		Map<String, Object> itemMap = new HashMap<String, Object>();
@@ -299,12 +224,10 @@ public class CheckReceiptReportExportController{
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getData(List<BizDispatchBillVo> list,Map<String, String> temMap,
-			Map<String,String> b2bMap,Map<String,String> orderStatusMap,Map<String,String> serviceMap,List<String> dateList,
-			List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap){
-		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
+	private List<Map<String, Object>> getData(List<String> dateList,List<SystemCodeEntity> codeEntities,
+			Map<String,CheckReceiptEntity> reportMap){
+			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
-	        
 	        //无区域
 	        if(CollectionUtils.isEmpty(codeEntities)){
 	    		return dataList;
@@ -322,8 +245,6 @@ public class CheckReceiptReportExportController{
 	        	Map<String,Object> totalMap = new HashMap<String, Object>();
 	        	totalMap.put("totalExpect", new BigDecimal(0));
 	        	totalMap.put("totalFinish", new BigDecimal(0));
-	        	//完成率合计
-	        	String totalRate = "";
 				for(int i = 0	;i<4;i++){
 					//初始化行
 		        	dataItem = new HashMap<String, Object>();
@@ -385,9 +306,11 @@ public class CheckReceiptReportExportController{
 	        
 	        //插入合计行
         	//初始化行合计map（回款目标合计，实际完成合计）
-        	Map<String,Object> totalMap = new HashMap<String, Object>();
+        	Map<String,Object> totalMap = new HashMap<>();
         	totalMap.put("totalExpect", new BigDecimal(0));
         	totalMap.put("totalFinish", new BigDecimal(0));
+        	//存放合计的每一行数据map
+        	Map<String,Object> totalRowMap = new HashMap<>();
 			for(int i = 0	;i<4;i++){
 				//初始化行
 	        	dataItem = new HashMap<String, Object>();
@@ -427,6 +350,7 @@ public class CheckReceiptReportExportController{
 						BigDecimal finishAmount = (BigDecimal) totalColumnMap.get(finishKey);
 			        	dataItem.put(date,getFinishRate(expectAmount,finishAmount));
 					}
+		        	//计算合计行的合计列
 					BigDecimal expectAmount = (BigDecimal) totalMap.get("totalExpect");
 					BigDecimal finishAmount = (BigDecimal) totalMap.get("totalFinish");
 		        	dataItem.put("total",getFinishRate(expectAmount,finishAmount));
@@ -437,146 +361,17 @@ public class CheckReceiptReportExportController{
 					}
 		        	dataItem.put("total","");
 				}
-				dataList.add(dataItem);
+				//先放到map里，再从map取行插入dataList，这样保证了合计行在第一位置
+				totalRowMap.put(i+"", dataItem);
 			}
-
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        for (BizDispatchBillVo entity : list) {
-	        	dataItem = new HashMap<String, Object>();
-	        	dataItem.put("warehouseName", entity.getWarehouseName());
-	        	dataItem.put("customerName", entity.getCustomerName());
-	        	dataItem.put("shopName", entity.getShopName());
-	        	dataItem.put("outstockNo", entity.getOutstockNo());
-	        	dataItem.put("externalNo", entity.getExternalNo());
-	        	dataItem.put("waybillNo", entity.getWaybillNo());
-	        	dataItem.put("zexpressnum", entity.getZexpressnum());
-	        	dataItem.put("originWeight", entity.getOriginWeight());
-	        	dataItem.put("bigstatus", entity.getBigstatus());
-	        	dataItem.put("smallstatus", entity.getSmallstatus());
-	        	if(StringUtils.isNotBlank(entity.getOrderStatus())){
-		        	dataItem.put("orderStatus", orderStatusMap.get(entity.getOrderStatus()));
-	        	}
-	        	dataItem.put("b2bFlag",b2bMap.get(entity.getB2bFlag()));
-	        	dataItem.put("temperatureTypeCode", temMap.get(entity.getTemperatureTypeCode()));
-	        	dataItem.put("systemWeight", entity.getSystemWeight());
-	        	dataItem.put("totalWeight", entity.getTotalWeight());
-	        	dataItem.put("carrierWeight", entity.getCarrierWeight());
-	        	dataItem.put("adjustWeight", entity.getAdjustWeight());
-	        	dataItem.put("throwWeight", entity.getThrowWeight());
-	        	dataItem.put("correctThrowWeight", entity.getCorrectThrowWeight());
-	        	dataItem.put("correctWeight", entity.getCorrectWeight());       	
-	        	dataItem.put("chargeWeight", entity.getChargeWeight());
-	        	dataItem.put("totalqty", entity.getTotalqty());
-	        	dataItem.put("resizeNum", entity.getResizeNum());
-	        	dataItem.put("totalVarieties", entity.getTotalVarieties());
-	        	dataItem.put("boxnum", entity.getBoxnum());
-	        	dataItem.put("adjustBoxnum", entity.getAdjustBoxnum());
-	        	dataItem.put("productDetail", entity.getProductDetail());
-	        	dataItem.put("monthFeeCount", entity.getMonthFeeCount());
-	   
-	        	String carrierId=StringUtils.isNotBlank(entity.getAdjustCarrierId())?entity.getAdjustCarrierId():entity.getCarrierId();        	
-		        dataItem.put("servicename", serviceMap.get(entity.getCarrierId()+"&"+entity.getServiceTypeCode()));					
-		        dataItem.put("adjustServiceTypeName", serviceMap.get(carrierId+"&"+entity.getAdjustServiceTypeCode()));				
-	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
-	        	dataItem.put("sendCityId", entity.getSendCityId());        	
-	        	dataItem.put("receiveName", entity.getReceiveName());
-
-	        	String provinceId="";
-	    		String cityId="";
-	    		String districtId="";
-	    		//调整省市区不为空
-	    		if(StringUtils.isNotBlank(entity.getAdjustProvinceId())||
-	    				StringUtils.isNotBlank(entity.getAdjustCityId())||
-	    				StringUtils.isNotBlank(entity.getAdjustDistrictId())){
-	    			provinceId=entity.getAdjustProvinceId();
-	    			cityId=entity.getAdjustCityId();
-	    			districtId=entity.getAdjustDistrictId();
-	    		}else{
-	    			provinceId=entity.getReceiveProvinceId();
-	    			cityId=entity.getReceiveCityId();
-	    			districtId=entity.getReceiveDistrictId();
-	    		}
-        		dataItem.put("receiveProvinceId", provinceId);
-        		dataItem.put("receiveCityId", cityId);
-        		dataItem.put("receiveDistrictId",districtId);
-	
-	        	dataItem.put("createTime", entity.getCreateTime());	
-	        	dataItem.put("acceptTime", entity.getAcceptTime());
-	        	dataItem.put("signTime", entity.getSignTime());     	
-	        	dataItem.put("deliverName", entity.getDeliverName());
-	        	dataItem.put("carrierName", entity.getCarrierName());
-	        	dataItem.put("adjustCarrierName", entity.getAdjustCarrierName());
-	        	dataItem.put("originCarrierName", entity.getOriginCarrierName());
-	        	dataItem.put("chargeCarrierName", entity.getChargeCarrierName());
-	        	dataItem.put("operateAmount", entity.getOperateAmount());
-        		dataItem.put("dutyType", entity.getDutyType());
-	        	dataItem.put("updateReasonDetail", entity.getUpdateReasonDetail());
-	        	dataItem.put("headPrice", entity.getHeadPrice());
-	        	dataItem.put("continuedPrice", entity.getContinuedPrice());
-	        	dataItem.put("dsAmount", entity.getDsAmount());
-	        	dataItem.put("discountAmount", entity.getDiscountAmount());
-	        	dataItem.put("dsIsCalculated", CalculateState.getMap().get(entity.getDsIsCalculated()));
-	        	dataItem.put("dsRemark", entity.getDsRemark());
-	        	dataItem.put("orderAmount", entity.getOrderAmount());
-	        	dataItem.put("orderIsCalculated", CalculateState.getMap().get(entity.getOrderIsCalculated()));
-	        	dataItem.put("orderRemark", entity.getOrderRemark());
-	        	dataList.add(dataItem);
+			//取合计行数据
+			for(int i = 0	;i<4;i++){
+				int index =3-i;
+		        @SuppressWarnings("unchecked")
+				Map<String, Object> row =(Map<String, Object>) totalRowMap.get(index+"");
+				dataList.add(0,row);
 			}
-	        
 		return dataList;
-	}
-	
-	public Map<String,String> getServiceMap() throws Exception{
-		Map<String,String> map=new HashMap<String,String>();
-		Map<String,Object> con=new HashMap<String,Object>();
-		con.put("delflag", "0");
-		List<CarrierProductVo> list=carrierProductService.query(con);
-		for(CarrierProductVo p:list){
-			map.put(p.getCarrierid()+"&"+p.getServicecode(), p.getServicename());
-		}
-		return map;
-	}
-	
-	/**
-	 * 获取应收业务数据导出的文件路径
-	 * @return
-	 */
-	public String getCheckReceiveExportPath(){
-		SystemCodeEntity systemCodeEntity = getSystemCode("GLOABL_PARAM", "EXPORT_RECEIVE_BIZ");
-		return systemCodeEntity.getExtattr1();
-	}
-	
-	/**
-	 * 获取系统参数对象
-	 * @param typeCode
-	 * @param code
-	 * @return
-	 */
-	@SuppressWarnings("deprecation")
-	public SystemCodeEntity getSystemCode(String typeCode, String code){
-		if (StringUtils.isNotEmpty(typeCode) && StringUtils.isNotEmpty(code)) {
-			SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode(typeCode, code);
-			if(systemCodeEntity == null){
-				throw new BizException("请在系统参数中配置文件上传路径,参数" + typeCode + "," + code);
-			}
-			return systemCodeEntity;
-		}
-		return null;
 	}
 	
 	static String getKey(String area, String date) {
