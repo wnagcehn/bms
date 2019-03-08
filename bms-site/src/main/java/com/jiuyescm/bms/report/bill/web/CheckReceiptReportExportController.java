@@ -188,8 +188,8 @@ public class CheckReceiptReportExportController{
     	poiUtil.write2FilePath(workbook, "E:/test/回款追踪报表.xlsx");
     	
 		// 保存导入文件到fastDFS，获取文件路径
-		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
-		String fullPath = storePath.getFullPath();
+//		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
+//		String fullPath = storePath.getFullPath();
     	logger.info("====导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 	}
 
