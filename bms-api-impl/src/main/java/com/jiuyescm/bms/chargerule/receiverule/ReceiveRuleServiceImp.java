@@ -56,7 +56,7 @@ public class ReceiveRuleServiceImp implements IReceiveRuleService{
 	@Override
 	public void updateRule(BillRuleReceiveEntity aCondition) {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("quotation", aCondition.getQuotationNo());
+		param.put("quotationNo", aCondition.getQuotationNo());
 		BillRuleReceiveEntity billRuleReceiveEntity = receiveRuleRepository.queryRule(param);
 		BillRuleReceiveRecordEntity recordEntity = new BillRuleReceiveRecordEntity();
 		recordEntity.setQuotationNo(aCondition.getQuotationNo());
