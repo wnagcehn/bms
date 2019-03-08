@@ -143,7 +143,7 @@
 		group by a.customerid,a.carrier_id
     </select>
     
-    <select id="queryAccountList" parameterType="java.util.Map"
+    <select id="queryAccountServiceList" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
        select a.customerId as customerId,a.carrierId as carrierId,a.orderCount as orderCount,a.amount as amount,a.service as serviceTypeCode FROM (
        select 
