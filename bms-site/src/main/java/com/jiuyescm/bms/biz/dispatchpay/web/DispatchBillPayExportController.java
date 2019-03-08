@@ -43,8 +43,6 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
 import com.jiuyescm.bms.common.sequence.service.SequenceService;
-import com.jiuyescm.bms.excel.ExcelAnnotionUtil;
-import com.jiuyescm.bms.excel.TitleDemo;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
@@ -253,24 +251,13 @@ public class DispatchBillPayExportController extends BaseController{
 				}
 				
 				//头、内容信息
-		    	ExcelAnnotionUtil util = new ExcelAnnotionUtil();
-		    	//表头
-		    	Class<BizDispatchBillPayEntity> clazz = BizDispatchBillPayEntity.class;
-		    	List<Map<String, Object>> headInfoList = (List<Map<String, Object>>) util.getTitle(clazz);
-		    	//创建行对象集合
-		    	List<BizDispatchBillPayEntity> demos = pageInfo.getList();
-		    	//内容
-		        List<Map<String, Object>> dataList = util.getDataList(demos);
-		        
-	    		poiUtil.exportExcel2FilePath(poiUtil,workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), headInfoList, dataList);
-		
-		    	
-// 			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
-//				logger.info("lineNo:"+lineNo);
-//				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), lineNo, headDetailMapList, dataDetailList);
-//				if(dataDetailList !=null){
-//					lineNo += dataDetailList.size();
-//				}
+				
+				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
+				logger.info("lineNo:"+lineNo);
+				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), lineNo, headDetailMapList, dataDetailList);
+				if(dataDetailList !=null){
+					lineNo += dataDetailList.size();
+				}
 			}
 		}
 				
