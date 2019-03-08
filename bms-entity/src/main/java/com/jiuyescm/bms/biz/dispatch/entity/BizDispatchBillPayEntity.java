@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.jiuyescm.bms.excel.ExcelAnnotation.ExcelField;
 import com.jiuyescm.bms.quotation.out.dispatch.entity.vo.PriceOutMainDispatchEntity;
 import com.jiuyescm.cfm.domain.IEntity;
 
@@ -25,6 +26,7 @@ public class BizDispatchBillPayEntity implements IEntity {
 	// 商家id
 	private String customerid;
 	//商家名称
+	@ExcelField(title = "商家名称", num = 2)
 	private String customerName;
 	// 物流商
 	private String carrierId;
@@ -35,18 +37,22 @@ public class BizDispatchBillPayEntity implements IEntity {
 	// 宅配商名称
 	private String deliverName;
 	// 运单号
+	@ExcelField(title = "运单号", num = 4)
 	private String waybillNo;
 	// 运单数量
+	@ExcelField(title = "运单数量", num = 5)
 	private Double waybillNum;
 	// 运单列表
 	private String waybillList;
 	// 重量
+	@ExcelField(title = "运单重量", num = 10)
 	private Double totalWeight;
 	// 调整重量
 	private Double adjustWeight;
 	// 仓库id
 	private String warehouseCode;
 	//仓库名称
+	@ExcelField(title = "仓库", num = 1)
 	private String warehouseName;
 	// 服务类型
 	private String serviceTypeCode;
@@ -89,6 +95,7 @@ public class BizDispatchBillPayEntity implements IEntity {
 	// 结算状态
 	private String accountState;	
 	// 外部单号
+	@ExcelField(title = "商家订单号", num = 3)
 	private String externalNo;
 	// 签收时间
 	private Timestamp signTime;
@@ -97,6 +104,7 @@ public class BizDispatchBillPayEntity implements IEntity {
 	// 创建者
 	private String creator;
 	// 创建时间
+	@ExcelField(title = "运单生成时间", num = 6)
 	private Timestamp createTime;
 	// 修改者
 	private String lastModifier;
@@ -136,11 +144,14 @@ public class BizDispatchBillPayEntity implements IEntity {
 	
 	// 转寄后运单号
 	private String zexpressnum;
-	// 小状态
-	private String bigstatus;
 	// 大状态
+	@ExcelField(title = "大状态", num = 7)
+	private String bigstatus;
+	// 小状态
+	@ExcelField(title = "小状态", num = 8)
 	private String smallstatus;
 	// 系统逻辑重量
+	@ExcelField(title = "系统逻辑重量", num = 9)
 	private Double systemWeight;
 	// 总数量
 	private Integer totalqty;
