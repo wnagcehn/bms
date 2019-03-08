@@ -15,10 +15,13 @@
 	    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
 	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark
+        id, task_id, create_month, customerid, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type,last_modifier,last_modify_time
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -47,10 +50,13 @@
 				and creator = #{creator}
 		</if>
 		<if test="startDate != null" >
-			    and <![CDATA[startDate <= #{startDate}]]>
+			    and <![CDATA[startDate >= #{startDate}]]>
 		</if>
 		<if test="endDate != null" >
-			    and endDate >= #{endDate}
+			    and <![CDATA[endDate<=#{endDate} ]]>
+		</if>
+		<if test="(taskStartDate != null and taskStartDate !='')" >
+				and startDate = #{taskStartDate}
 		</if>
     </sql>
 	  
@@ -72,9 +78,8 @@
     </select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
-        insert into bms_correct_asyn_task(task_id, create_month, customerId, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark)
+        insert into bms_correct_asyn_task(task_id, create_month, customerId, task_name, task_rate, task_status, creator, create_time, finish_time, del_flag,startDate,endDate,remark,biz_type)
         values (
-
 #{taskId,jdbcType=VARCHAR}, 
 #{createMonth,jdbcType=VARCHAR}, 
 #{customerId,jdbcType=VARCHAR}, 
@@ -85,13 +90,13 @@
 #{createTime,jdbcType=TIMESTAMP}, 
 #{finishTime,jdbcType=TIMESTAMP}, 
 #{delFlag,jdbcType=VARCHAR},
-#{startDate},#{endDate},#{remark}
+#{startDate},#{endDate},#{remark},#{bizType}
         )
     </insert>
 
     <update id="update" parameterType="com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity">
         update bms_correct_asyn_task 
-		<set >
+		<set>
 			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
 			<if test="createMonth != null" >create_month=#{createMonth,jdbcType=VARCHAR},</if>
 			<if test="customerId != null" >customerId=#{customerId,jdbcType=VARCHAR},</if>
@@ -102,7 +107,9 @@
 			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
 			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
-			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR}</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 		</set>
         where id=#{id}
     </update>

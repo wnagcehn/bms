@@ -254,7 +254,9 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			//如果excel数据本身存在问题，就没有将数据写入临时表的必要
 			long start = System.currentTimeMillis();
 			logger.info("任务ID【{}】 -> 保存数据到临时表 行数【{}】",taskId,tempList.size());
-			bizOutstockPackmaterialTempService.saveBatch(tempList);//保存到临时表
+			if (tempList.size() > 0) {
+				bizOutstockPackmaterialTempService.saveBatch(tempList);//保存到临时表
+			}
 			logger.info("任务ID【{}】 -> 保存至临时表成功 耗时【{}】",taskId,System.currentTimeMillis()-start);
 		}
 		
@@ -293,13 +295,14 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 				Map<String,Object> condition = Maps.newHashMap();
 				condition.put("batchNum", taskId);
 				condition.put("taskId", taskId);
-				logger.info("任务ID【{}】 -> 进行耗材打标操作",taskId);
+				logger.info("任务ID【{}】 -> 进行耗材和保温袋打标操作",taskId);
 				start = System.currentTimeMillis();
 				bmsProductsMaterialService.markMaterial(condition);
+				bmsProductsMaterialService.markBwd(condition);
 				//bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
 				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
 				bmsFileAsynTaskService.update(updateEntity);
-				logger.info("任务ID【{}】 -> 耗材打标成功,耗时【{}】",taskId,System.currentTimeMillis()-start);
+				logger.info("任务ID【{}】 -> 耗材和保温袋打标成功,耗时【{}】",taskId,System.currentTimeMillis()-start);
 			}else{
 				logger.error("任务ID【{}】 -> 未从临时表中保存数据到业务表",taskId);
 				bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskId+"】,任务编号【"+taskId+"】");
@@ -590,7 +593,7 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 	private boolean dbCheck(){
 		
 		
-		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId());
+		List<BizOutstockPackmaterialTempEntity> list = bizOutstockPackmaterialTempService.queryContainsList(taskEntity.getTaskId(), 1000);
 			if(null == list || list.size() <= 0){
 				return true;
 			}

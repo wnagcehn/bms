@@ -29,4 +29,7 @@ public interface IBmsProductsWeightRepository {
 	
 	//根据条件批量更新打标记录
 	int updateMark(Map<String,Object> condition);
+	
+	//查询条件查询出单个耗材明细
+	BmsMarkingProductsEntity queryOneMaterial(Map<String,Object> condition);
 }

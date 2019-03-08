@@ -16,6 +16,8 @@ import com.bstek.dorado.annotation.DataProvider;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService;
 import com.jiuyescm.bms.base.config.vo.BmsWarehouseConfigVo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
+import com.jiuyescm.bms.base.customer.repository.IPubCustomerRepository;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.jywarehouse.web.BmsWarehouseVo;
@@ -45,6 +47,8 @@ public class SelectFromTablePR {
 	private ICustomerService customerService;
 	@Resource
 	private IPubTransportProductTypeService productTypeService;
+	@Autowired
+	private IPubCustomerRepository pubCustomerRepository;
 	
 	@DataProvider
 	public Map<String, String> getBusinessTypeList(String all){
@@ -560,6 +564,16 @@ public class SelectFromTablePR {
 		Map<String, String> map = new LinkedHashMap<String,String>();
 		for (CustomerVo vo : cList) {
 			map.put(vo.getCustomerid(), vo.getCustomername());
+		}
+		return map;
+	}
+	
+	@DataProvider
+	public Map<String, String> getCustomer() {
+		List<PubCustomerEntity> list = pubCustomerRepository.query(null);
+		Map<String, String> map = new LinkedHashMap<String,String>();
+		for (PubCustomerEntity vo : list) {
+			map.put(vo.getCustomerId(), vo.getCustomerName());
 		}
 		return map;
 	}

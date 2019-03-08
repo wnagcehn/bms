@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.base.customer.entity;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**
@@ -41,6 +42,25 @@ public class PubCustomerEntity implements IEntity {
 	private String address;
 	// WriteTime
 	private Timestamp writeTime;
+	//合同归属
+	private Integer contractAttr;
+	//合同商家名称
+	private String mkInvoiceName;
+	
+	public String getMkInvoiceName() {
+		return mkInvoiceName;
+	}
+
+	public void setMkInvoiceName(String mkInvoiceName) {
+		this.mkInvoiceName = mkInvoiceName;
+	}
+	public Integer getContractAttr() {
+		return contractAttr;
+	}
+
+	public void setContractAttr(Integer contractAttr) {
+		this.contractAttr = contractAttr;
+	}
 
 	public PubCustomerEntity() {
 		super();

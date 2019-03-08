@@ -46,6 +46,15 @@ public class BmsProductsWeightRepositoryImpl extends MyBatisDao implements IBmsP
 		return (BmsMarkingProductsEntity) selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsWeightMapper.queryMarkVo", condition);
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public BmsMarkingProductsEntity queryOneMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return (BmsMarkingProductsEntity) selectOne("com.jiuyescm.bms.correct.mapper.BmsProductsWeightMapper.queryOneMaterial", condition);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<BmsProductsWeightAccountEntity> queyWeightCount(
@@ -75,5 +84,7 @@ public class BmsProductsWeightRepositoryImpl extends MyBatisDao implements IBmsP
 		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsWeightMapper.saveWeight", condition);
 	
 	}
+
+
 	
 }

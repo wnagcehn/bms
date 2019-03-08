@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
+    xmlns:jms="http://www.springframework.org/schema/jms"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/jms
+        http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+        http://activemq.apache.org/schema/core
+        http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd">       
+    
+    <!-- 配置activeMQ连接  tcp://192.168.0.66:61616 -->
+    <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">  
+        <property name="useAsyncSend" value="${activemq.connnect.useAsyncSend}"></property>
+        <property name="brokerURL" value="${rocketmq.namesrv.addr}" />
+        <property name="sendTimeout" value="${activemq.sendTimeout}" />
+    </bean>  
+    
+    <!-- 通过往PooledConnectionFactory注入一个ActiveMQConnectionFactory可以用来将Connection，Session和MessageProducer池化   
+        这样可以大大减少我们的资源消耗， -->  
+    <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">  
+        <property name="connectionFactory" ref="targetConnectionFactory" />  
+        <property name="maxConnections" value="${activemq.maxConnections}" />  
+    </bean>  
+     
+    <!-- 定义JmsTemplate的Queue类型 -->
+    <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="pooledConnectionFactory" />
+        <!-- 非pub/sub模型（发布/订阅），即队列模式 -->
+        <property name="pubSubDomain" value="false" />
+    </bean>
+    
+    
+   
+    
+
+</beans>
+ 

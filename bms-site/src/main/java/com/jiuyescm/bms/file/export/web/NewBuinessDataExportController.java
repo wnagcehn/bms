@@ -211,73 +211,70 @@ public class NewBuinessDataExportController extends BaseController {
 		
 		
 		try {
-			for(Map<String, String> cu:cuList){
-				Timestamp startDate = DateUtil.formatTimestamp(param.get("startDate"));
-				Timestamp endDate = DateUtil.formatTimestamp(param.get("endDate"));
-		
-				//Map<String, Object> queryEntity = new HashMap<String, Object>();
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-				Date date = format.parse(endDate.toString());
-				String endTime = format.format(addDay(1, date));
-				String startTime = format.format(startDate);
-				//queryEntity.put("customerId", customerId);
-
-				//queryEntity.put("startTime", startTime);
-				//queryEntity.put("endTime", endTime);
-				param.put("startTime", startTime);
-				param.put("endTime", endTime);
-				//queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
-				//if (checkFileHasDownLoad(queryEntity)) {
-				//	return MessageConstant.BILL_FILE_ISEXIST_MSG;
-				//}
-				DateFormat sdf = new SimpleDateFormat("yyyy-MM");
-				String path = getPath();
-				String filePath = path + "/" + cu.get("customerName").toString() + "-"
-						+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
-				BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
-
-				entity.setTaskName(cu.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
-				entity.setBillNo("");
-				entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
-				entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
-				//entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
-				entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
-				entity.setProgress(0d);
-				entity.setFilePath(filePath);
-				entity.setCreator(JAppContext.currentUserName());
-				entity.setCreateTime(JAppContext.currentTimestamp());
-				entity.setDelFlag("0");
-				entity.setCustomerid(cu.get("customerId").toString());
-				entity.setMkId(param.get("customerId").toString());
-				//区分是否按照子商家生成
-				if ((Boolean)param.get("isChildCustomer") == true) {
-					entity.setIsChildCustomer("0");
-				}else{
-					entity.setIsChildCustomer("1");
-				}
-				entity = billPrepareExportTaskService.save(entity);
-
-				// 生成账单文件
-				param.put("taskId", entity.getTaskId());
-				param.put("path2", path);
-				param.put("filepath", filePath);
-				final Map<String, Object> condition = param;
-				final Map<String, String> customerMap=cu;
-				final String taskId = entity.getTaskId();
-				final String path2 = path;
-				final String filepath = filePath;
-				new Thread() {
-					public void run() {
+			final List<Map<String,String>> newCuList=cuList;
+			final Map<String, Object> condition = param;
+			new Thread() {
+				public void run() {
 					try {
-							export(condition, taskId, path2, filepath,customerMap);
+						for(Map<String, String> cu:newCuList){
+							Timestamp startDate = DateUtil.formatTimestamp(condition.get("startDate"));
+							Timestamp endDate = DateUtil.formatTimestamp(condition.get("endDate"));
+					
+							//Map<String, Object> queryEntity = new HashMap<String, Object>();
+							SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+							Date date = format.parse(endDate.toString());
+							String endTime = format.format(addDay(1, date));
+							String startTime = format.format(startDate);
+							//queryEntity.put("customerId", customerId);
+
+							//queryEntity.put("startTime", startTime);
+							//queryEntity.put("endTime", endTime);
+							condition.put("startTime", startTime);
+							condition.put("endTime", endTime);
+							//queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
+							//if (checkFileHasDownLoad(queryEntity)) {
+							//	return MessageConstant.BILL_FILE_ISEXIST_MSG;
+							//}
+							DateFormat sdf = new SimpleDateFormat("yyyy-MM");
+							String path = getPath();
+							String filePath = path + "/" + cu.get("customerName").toString() + "-"
+									+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
+							BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
+
+							entity.setTaskName(cu.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
+							entity.setBillNo("");
+							entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
+							entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
+							//entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
+							entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
+							entity.setProgress(0d);
+							entity.setFilePath(filePath);
+							entity.setCreator(JAppContext.currentUserName());
+							entity.setCreateTime(JAppContext.currentTimestamp());
+							entity.setDelFlag("0");
+							entity.setCustomerid(cu.get("customerId").toString());
+							entity.setMkId(condition.get("customerId").toString());
+							//区分是否按照子商家生成
+							if ((Boolean)condition.get("isChildCustomer") == true) {
+								entity.setIsChildCustomer("0");
+							}else{
+								entity.setIsChildCustomer("1");
+							}
+							entity = billPrepareExportTaskService.save(entity);
+
+							// 生成账单文件
+							condition.put("taskId", entity.getTaskId());
+							condition.put("path2", path);
+							condition.put("filepath", filePath);
+							
+							export(condition, entity.getTaskId(), path, filePath,cu);
+						}
 					} catch (Exception e) {
-						billPrepareExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
 							logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
 						}
 					};
 				}.start();
-			}
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
@@ -325,6 +322,9 @@ public class NewBuinessDataExportController extends BaseController {
 			condition.put("customerName", customerMap.get("customerName"));
 		}else {		
 			List<String> customerIdList=billPrepareExportTaskService.getChildCustomerId(condition.get("customerId").toString());
+			if(customerIdList.size()<=0){
+				return;
+			}
 			condition.put("customerId", "");
 			condition.put("customerIds", customerIdList);
 		}
@@ -1603,6 +1603,9 @@ public class NewBuinessDataExportController extends BaseController {
 				double rowcolCost = 0.0;
 				double cwCost = 0.0;
 				
+				//处置费金额（包含入库、出库）
+				double dispalCost=0.0;
+				
 				int pIndex = 0;
 				
 				// 库存板数
@@ -1713,7 +1716,9 @@ public class NewBuinessDataExportController extends BaseController {
 							if(!entity.getCreateTime().before(startTime)){
 								//处置费小计
 								Cell cell72 = row.createCell(19-move2);
-								cell72.setCellValue(palletCost+incost);
+								dispalCost=dispalCost+palletCost;
+								cell72.setCellValue(dispalCost);
+								
 								//累加行
 								incost = rowcolCost+palletCost;
 								//累加列
@@ -1734,10 +1739,10 @@ public class NewBuinessDataExportController extends BaseController {
 				double rowTotalCost = 0.0;
 				double colTotalCost = 0.0;
 				
-				if (newIndex > 0) {
-					//商品存储费（按件）
-					for (FeesReceiveStorageEntity entity : itemsList) {
-						if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {
+				//商品存储费（按件）
+				for (FeesReceiveStorageEntity entity : itemsList) {
+					if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {						
+						if (newIndex > 0) {
 							//商家名称
 							Cell cell40=row.createCell(0);
 							cell40.setCellValue(entity.getCustomerName());		
@@ -1752,12 +1757,7 @@ public class NewBuinessDataExportController extends BaseController {
 							if(cusList.contains(entity.getCustomerId())){
 								productCost = entity.getCost().doubleValue();
 							}
-							
-							Cell cell60 = row.createCell(9);
-							cell60.setCellValue(entity.getQuantity()+qty);
-							//件数累加
-							qty = qty+entity.getQuantity();
-							
+
 							//不是当月的时间，则是上月结余，上月结余的不显示金额
 							if(!entity.getCreateTime().before(startTime)){
 								//存储费按件小计
@@ -1768,12 +1768,18 @@ public class NewBuinessDataExportController extends BaseController {
 								rowProCost = rowProCost + productCost;
 								//累加列
 								ccfcost = ccfcost+productCost;
-							}
-						}else {
-							rowProCost = 0.0;
-						}		
-					}	
-				}		
+							}	
+						}
+						
+						Cell cell60 = row.createCell(9);
+						cell60.setCellValue(entity.getQuantity()+qty);
+						//件数累加
+						qty = qty+entity.getQuantity();					
+					}else {
+						rowProCost = 0.0;
+					}		
+				}
+				
 				
 				//行总的+存储费（托）
 				rowCost = rowCost+rowcolCost;

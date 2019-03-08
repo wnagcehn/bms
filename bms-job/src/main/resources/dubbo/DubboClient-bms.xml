@@ -10,6 +10,7 @@
 	<!-- <dubbo:application name="bms-xxljob" /> -->
 	<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" />
 	<dubbo:registry protocol="zookeeper" address="${dubbo.registry}" />
+	
 
 	<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IAddressService" version="1.0.0" id="addressService" timeout="1200000" check="false" />
 	<dubbo:reference interface="com.jiuyescm.mdm.customer.api.IPubMaterialInfoService" version="1.0.0" id="pubMaterialInfoService" timeout="1200000" check="false" />	
@@ -38,4 +39,8 @@
 		 version="1.0.0"/>
 		 <dubbo:reference id="materialDictService" interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService" 
 		 version="1.0.0"/>
+		 <!-- 基于snowflake算法的分布式id接口 -->
+		<!-- <dubbo:reference id="snowflakeSequenceService" interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"  /> -->
+		
+		<dubbo:reference id="sequenceService1" interface="com.jiuyescm.framework.sequence.api.ISequenceService"  />
 </beans>							

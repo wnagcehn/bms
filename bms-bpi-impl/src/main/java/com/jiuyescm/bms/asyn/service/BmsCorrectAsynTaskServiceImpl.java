@@ -1,26 +1,44 @@
 package com.jiuyescm.bms.asyn.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.framework.sequence.api.ISequenceService;
+import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCorrectAsynTaskService")
 public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService{
 
 	private static final Logger logger = Logger.getLogger(BmsCorrectAsynTaskServiceImpl.class.getName());
 	
+	private static final String BMS_CORRECT_WEIGHT_TASK = "BMS.CORRECT.WEIGHT.ASYN.TASK";
+	private static final String BMS_CORRECT_MATERIAL_TASK = "BMS.CORRECT.MATERIAL.ASYN.TASK";
+	
 	@Autowired private IBmsCorrectAsynTaskRepository bmsCorrectAsynTaskRepository;
+	
+	@Autowired private JmsTemplate jmsQueueTemplate;
+	
+	@Autowired private ISequenceService sequenceService;
 
 	@Override
 	public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition,
@@ -138,4 +156,62 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		return voList;
 	}
 
+	@Override
+	public String updateCorrect(BmsCorrectAsynTaskVo vo) throws Exception {
+		//发送MQ消息类型
+		String task = "";
+		logger.info("之前的taskId:" + vo.getTaskId());
+		if(StringUtils.isBlank(vo.getTaskId()))return "任务ID为空";
+		Map<String, Object> queryConfition = new HashMap<>();
+		queryConfition.put("taskId", vo.getTaskId());
+		List<BmsCorrectAsynTaskEntity> list = bmsCorrectAsynTaskRepository.queryList(queryConfition);
+		if(CollectionUtils.isEmpty(list))return "没有查询到此任务";
+		String bizType = list.get(0).getBizType();
+		if("weight_correct".equals(bizType)){
+			task +=BMS_CORRECT_WEIGHT_TASK;
+		}else if("material_correct".equals(bizType)) {
+			task +=BMS_CORRECT_MATERIAL_TASK;
+		}else {
+			return "此任务不是纠正任务";
+		}
+		String taskStatus = list.get(0).getTaskStatus();
+		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus)&&!"FAIL".equals(taskStatus))return "此纠正任务的状态不能纠正";
+		//发送MQ消息纠正
+		//String taskId = snowflakeSequenceService.nextStringId();
+		String id = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+		String taskId = "CT";
+		for(int i = 1;i<=10-id.length();i++){
+			taskId +="0";
+		}
+		taskId += id;
+		//更新任务表（更新修改人，修改时间）
+		try{
+			BmsCorrectAsynTaskEntity entity=new BmsCorrectAsynTaskEntity();
+			entity.setId(vo.getId());
+			entity.setTaskId(taskId);
+			entity.setLastModifier(vo.getLastModifier());
+			entity.setLastModifyTime(vo.getLastModifyTime());
+			entity.setTaskStatus("PROCESS");
+			bmsCorrectAsynTaskRepository.update(entity);
+		}catch(Exception e){
+			logger.error("updateCorrect:",e);
+			return "更新失败";
+		}
+		
+		try {
+			final String msg = taskId;
+			logger.info("生成最新的taskId:" + taskId);
+			jmsQueueTemplate.send(task, new MessageCreator() {
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					return session.createTextMessage(msg);
+				}
+			});
+		} catch (Exception e) {
+			logger.error("send MQ:", e);
+			return"MQ发送失败！";
+		}
+		return "纠正成功";
+	}
+	
 }

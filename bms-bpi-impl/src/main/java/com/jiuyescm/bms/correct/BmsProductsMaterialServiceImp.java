@@ -141,6 +141,12 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 	}
 
 	@Override
+	public int markBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.markBwd(condition);
+	}
+	
+	@Override
 	public List<BmsProductsMaterialAccountVo> queyMaterialCount(
 			Map<String, Object> condition) {
 		// TODO Auto-generated method stub
@@ -222,6 +228,18 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 	}
 
 
+	@Override
+	public Map<String, String> getMaterialMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.getMaterialMap(condition);
+	}
 
+
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.queyNotMaxMaterial(condition);
+	}
 
 }

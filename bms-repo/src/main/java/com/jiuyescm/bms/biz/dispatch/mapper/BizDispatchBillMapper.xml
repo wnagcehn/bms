@@ -438,12 +438,11 @@
     </update>
     
     <update id="retryByMaterialMark" parameterType="java.util.Map">
-    	update biz_dispatch_bill a,bms_marking_material b set a.is_calculated = '99' 
+    	update biz_dispatch_bill a,bms_marking_products b set a.is_calculated = '99' 
 		where a.waybill_no = b.waybill_no
-		and b.material_mark in
-		( select a.material_mark from bms_marking_material a 
-			inner JOIN bms_marking_products b on a.waybill_no=b.waybill_no 
-			where 1=1 and b.products_mark=#{productsMark} and a.material_type=#{materialType} and a.material_mark!=#{materialMark}
+		and b.pmxzx_mark in
+		( select a.pmxzx_mark from bms_marking_products a 
+			where 1=1 and a.products_mark=#{productsMark} and a.material_type=#{materialType} and a.pmxzx_mark!=#{pmxzxMark}
 		)
     </update>
     
@@ -468,5 +467,19 @@
     	and create_time>=#{startTime} and <![CDATA[create_time<#{endTime}]]>
     	and carrier_id=#{carrierId}
 		and is_calculated in ('0','99')
+		<if test="(serviceTypeCode != null and serviceTypeCode !='')">
+			and service_type_code=#{serviceTypeCode}
+		</if>
+    </select>
+    
+         <select id="queryBizCustomerid" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
+    	SELECT * from biz_dispatch_bill where del_flag='0' 
+    	<if test="(startTime != null and startTime !='')" >
+			    and create_time>= #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time < #{endTime} ]]>
+		</if>
+    	 group by customerid
     </select>
 </mapper>

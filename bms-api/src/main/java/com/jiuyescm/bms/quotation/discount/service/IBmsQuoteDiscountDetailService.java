@@ -2,6 +2,7 @@ package com.jiuyescm.bms.quotation.discount.service;
 
 import java.util.Map;
 import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 
@@ -33,5 +34,9 @@ public interface IBmsQuoteDiscountDetailService {
 	 * @throws Exception
 	 */
 	int insertBatchTmp(List<BmsQuoteDiscountDetailEntity> list) throws Exception;
+
+	String queryServiceTypeName(Map<String, Object> condition);
+
+	String queryServiceTypeCode(Map<String, Object> condition);
 
 }

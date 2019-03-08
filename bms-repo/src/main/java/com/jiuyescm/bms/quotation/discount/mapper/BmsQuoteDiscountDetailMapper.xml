@@ -21,14 +21,15 @@
 		   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
 		   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
 		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+			<result column="service_type_code" property="serviceTypeCode" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit, up_limit, first_price, first_price_rate, continue_price, continue_pirce_rate, unit_price, unit_price_rate, creator, create_time, last_modifier, last_modify_time, del_flag
+        id, template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit, up_limit, first_price, first_price_rate, continue_price, continue_pirce_rate, unit_price, unit_price_rate, creator, create_time, last_modifier, last_modify_time, del_flag,service_type_code
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit, up_limit, first_price, first_price_rate, continue_price, continue_pirce_rate, unit_price, unit_price_rate, creator, create_time, last_modifier, last_modify_time, del_flag
+template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit, up_limit, first_price, first_price_rate, continue_price, continue_pirce_rate, unit_price, unit_price_rate, creator, create_time, last_modifier, last_modify_time, del_flag,service_type_code
     </sql>
 
 	<!-- 根据id查询 -->
@@ -136,7 +137,8 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{lastModifier,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{serviceTypeCode,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -182,6 +184,9 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
 			<if test=" delFlag != null and delFlag !='' ">
 				del_flag = #{delFlag,jdbcType=VARCHAR},
 			</if>
+			<if test=" serviceTypeCode != null and serviceTypeCode !='' ">
+				service_type_code = #{serviceTypeCode,jdbcType=VARCHAR},
+			</if>
         </trim>
         where id = #{id}
     </update>
@@ -202,4 +207,18 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
         </trim>
         where id = #{id}
     </delete>
+
+    <select id="queryServiceTypeName" parameterType="java.util.Map"
+        resultType="String">
+        select servicename
+        from pub_carrier_servicetype
+        where delflag = "0" and carrierid = #{carrierid} and servicecode = #{servicecode}
+    </select>
+    
+        <select id="queryServiceTypeCode" parameterType="java.util.Map"
+        resultType="String">
+        select servicecode
+        from pub_carrier_servicetype
+        where delflag = "0" and carrierid = #{carrierid} and servicename = #{servicename}
+    </select>
 </mapper>

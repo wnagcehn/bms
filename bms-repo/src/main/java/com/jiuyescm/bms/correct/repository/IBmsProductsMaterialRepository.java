@@ -32,6 +32,9 @@ public interface IBmsProductsMaterialRepository {
 	//查询出所有占比最高的
 	List<BmsMarkingMaterialEntity> queyNotMax(Map<String,Object> condition);
 	
+	//查询出所有占比不是最高的泡沫箱纸箱
+	List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(Map<String,Object> condition);
+	
 	//查询出所有占比不是最高的保温袋
 	List<BizOutstockPackmaterialEntity> queyNotMaxBwd(Map<String,Object> condition);
 		
@@ -48,9 +51,15 @@ public interface IBmsProductsMaterialRepository {
 	
 	// 根据批次号查询运单中耗材明细，打标
 	int markMaterial(Map<String,Object> condition);
+	
+	// 根据批次号查询运单中耗材明细，打标保温袋
+	int markBwd(Map<String,Object> condition);
 
 	int deleteMarkMaterialByWaybillNo(List<String> waybillNoList);
 	
 	//更新汇总表
 	int updateMaterialAccount(Map<String,Object> condition);
+	
+	//根据耗材标得到对应得耗材编码
+	Map<String,String> getMaterialMap(Map<String,Object> condition);
 }

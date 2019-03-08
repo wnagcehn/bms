@@ -428,7 +428,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * 获取指定月份第一天
+	 * 获取指定月份最后一天
 	 * @param year
 	 * @param month
 	 * @return
@@ -589,5 +589,52 @@ public class DateUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取某月的最后一号
+	 * @param quantity 1-上个月1号  0-当月1号  -1-下月1号
+	 * @param format
+	 * @return
+	 */
+	public static String getLastDayOfMonth(int quantity,String format) {
+		FastDateFormat fdf = FastDateFormat.getInstance(format);
+		Calendar cal = Calendar.getInstance();
+		
+		int month = 1;
+		if (0 == quantity) {
+			month = cal.get(Calendar.MONTH);
+		}else {
+			month = cal.get(Calendar.MONTH) - quantity;
+		}
+		
+		cal.set(cal.get(Calendar.YEAR), month, 1);
+		
+        //获取某月最大天数
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        //设置日历中月份的最大天数
+        cal.set(Calendar.DAY_OF_MONTH, lastDay);	
+		return fdf.format(cal.getTime());
+	}
+	
+	/**
+	 * 获取每月的1号
+	 * @param quantity 1-上个月1号  0-当月1号  -1-下月1号
+	 * @param format
+	 * @return
+	 */
+	public static Date getFirstDayOfMonth(int quantity) {
+		Calendar cal = Calendar.getInstance();
+		
+		int month = 1;
+		if (0 == quantity) {
+			month = cal.get(Calendar.MONTH);
+		}else {
+			month = cal.get(Calendar.MONTH) - quantity;
+		}
+		
+		cal.set(cal.get(Calendar.YEAR), month, 1);
+		
+		return cal.getTime();
 	}
 }

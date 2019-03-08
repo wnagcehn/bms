@@ -4,26 +4,98 @@
   <Context/>
   <Model>
     <DataType name="dtCondition">
-      <PropertyDef name="customerid">
+      <PropertyDef name="customerId">
         <Property></Property>
         <Property name="label">商家ID</Property>
       </PropertyDef>
-      <PropertyDef name="shortname">
+      <PropertyDef name="shortName">
         <Property></Property>
         <Property name="label">商家简称</Property>
       </PropertyDef>
-      <PropertyDef name="customername">
+      <PropertyDef name="customerName">
         <Property></Property>
         <Property name="label">商家全称</Property>
       </PropertyDef>
-      <PropertyDef name="delflag">
+      <PropertyDef name="delFlag">
         <Property name="label">作废标记</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
         </Property>
+        <Property name="required">false</Property>
+        <Property name="defaultValue">0</Property>
+        <Property name="dataType">int</Property>
       </PropertyDef>
       <PropertyDef name="mkInvoiceName">
         <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPubCustomerEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.dict.vo.PubCustomerVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="mkId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家全称</Property>
+      </PropertyDef>
+      <PropertyDef name="shortName">
+        <Property></Property>
+        <Property name="label">商家简称</Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifier">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property></Property>
+        <Property name="label">删除标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property></Property>
+        <Property name="label">联系人</Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property></Property>
+        <Property name="label">商家地址</Property>
+      </PropertyDef>
+      <PropertyDef name="contractAttr">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">合同归属</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getContractAttr&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property></Property>
+        <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="lastModifyTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -32,8 +104,8 @@
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
     </DataSet>
-    <DataSet id="dsCustomerEntity">
-      <Property name="dataType">[dtCustomerEntity]</Property>
+    <DataSet id="dsPubCustomerEntity">
+      <Property name="dataType">[dtPubCustomerEntity]</Property>
       <Property name="pageSize">20</Property>
       <Property name="loadMode">manual</Property>
       <Property name="dataProvider">customerController#query</Property>
@@ -41,13 +113,13 @@
     <Container id="Container_Main">
       <ToolBar>
         <DataPilot>
-          <Property name="dataSet">dsCustomerEntity</Property>
+          <Property name="dataSet">dsPubCustomerEntity</Property>
           <Property name="itemCodes">pages,pageSize</Property>
         </DataPilot>
         <Separator/>
         <ToolBarButton id="btnQuery">
           <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
-with (view.get(&quot;#dsCustomerEntity&quot;)){&#xD;
+with (view.get(&quot;#dsPubCustomerEntity&quot;)){&#xD;
 					set(&quot;parameter&quot;, data);&#xD;
 					flushAsync();&#xD;
 				}		&#xD;
@@ -66,23 +138,18 @@ with (view.get(&quot;#dsCustomerEntity&quot;)){&#xD;
         <Property name="labelWidth">60</Property>
         <Property name="editorWidth">120</Property>
         <AutoFormElement>
-          <Property name="name">customerid</Property>
-          <Property name="property">customerid</Property>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">shortname</Property>
-          <Property name="property">shortname</Property>
+          <Property name="name">shortName</Property>
+          <Property name="property">shortName</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">customername</Property>
-          <Property name="property">customername</Property>
-          <Editor/>
-        </AutoFormElement>
-        <AutoFormElement>
-          <Property name="name">delflag</Property>
-          <Property name="property">delflag</Property>
+          <Property name="name">customerName</Property>
+          <Property name="property">customerName</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -91,64 +158,73 @@ with (view.get(&quot;#dsCustomerEntity&quot;)){&#xD;
           <Property name="labelWidth">100</Property>
           <Editor/>
         </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">delFlag</Property>
+          <Property name="property">delFlag</Property>
+          <Editor/>
+        </AutoFormElement>
       </AutoForm>
       <DataGrid id="dg_CustomerList">
-        <Property name="dataSet">dsCustomerEntity</Property>
+        <Property name="dataSet">dsPubCustomerEntity</Property>
         <Property name="stretchColumnsMode">off</Property>
         <Property name="readOnly">true</Property>
-        <DataColumn name="customerid">
-          <Property name="property">customerid</Property>
+        <DataColumn>
+          <Property name="property">customerId</Property>
+          <Property name="name">customerId</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="customercode">
-          <Property name="property">customercode</Property>
+        <DataColumn>
+          <Property name="property">shortName</Property>
+          <Property name="name">shortName</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="shortname">
-          <Property name="property">shortname</Property>
-        </DataColumn>
-        <DataColumn name="customername">
-          <Property name="property">customername</Property>
+        <DataColumn>
+          <Property name="property">customerName</Property>
+          <Property name="name">customerName</Property>
+          <Property name="width">150</Property>
         </DataColumn>
         <DataColumn name="mkInvoiceName">
           <Property name="property">mkInvoiceName</Property>
+          <Property name="width">150</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">contractAttr</Property>
+          <Property name="name">contractAttr</Property>
+          <Property name="width">100</Property>
+          <Property name="align">left</Property>
         </DataColumn>
         <DataColumn name="linkman">
           <Property name="property">linkman</Property>
+          <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="address">
           <Property name="property">address</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="tel">
-          <Property name="property">tel</Property>
+        <DataColumn>
+          <Property name="property">delFlag</Property>
+          <Property name="name">delFlag</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="mobile">
-          <Property name="property">mobile</Property>
+        <DataColumn>
+          <Property name="property">creator</Property>
+          <Property name="name">creator</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="remark">
-          <Property name="property">remark</Property>
+        <DataColumn>
+          <Property name="property">createTime</Property>
+          <Property name="name">createTime</Property>
+          <Property name="width">150</Property>
         </DataColumn>
-        <DataColumn name="delflag">
-          <Property name="property">delflag</Property>
+        <DataColumn>
+          <Property name="property">lastModifier</Property>
+          <Property name="name">lastModifier</Property>
+          <Property name="width">90</Property>
         </DataColumn>
-        <DataColumn name="creperson">
-          <Property name="property">creperson</Property>
-        </DataColumn>
-        <DataColumn name="cretime">
-          <Property name="property">cretime</Property>
-        </DataColumn>
-        <DataColumn name="modperson">
-          <Property name="property">modperson</Property>
-        </DataColumn>
-        <DataColumn name="modtime">
-          <Property name="property">modtime</Property>
-        </DataColumn>
-        <DataColumn name="province">
-          <Property name="property">province</Property>
-        </DataColumn>
-        <DataColumn name="city">
-          <Property name="property">city</Property>
-        </DataColumn>
-        <DataColumn name="district">
-          <Property name="property">district</Property>
+        <DataColumn>
+          <Property name="property">lastModifyTime</Property>
+          <Property name="name">lastModifyTime</Property>
+          <Property name="width">150</Property>
         </DataColumn>
       </DataGrid>
     </Container>

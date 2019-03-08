@@ -18,4 +18,7 @@ public interface IPubCustomerRepository {
 		int pageNo, int pageSize);
 
 	List<PubCustomerEntity> query(Map<String, Object> condition);
+	
+	PageInfo<PubCustomerEntity> queryPage(Map<String, Object> condition,
+			int pageNo, int pageSize);
 }

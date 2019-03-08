@@ -99,8 +99,8 @@ public class PriceContractDaoImp extends MyBatisDao implements IPriceContractDao
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PriceContractInfoEntity> queryByCustomerId(String customerId) {
-		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.queryByCustomerId", customerId);
+	public List<PriceContractInfoEntity> queryByCustomerId(Map<String, String> param) {
+		return selectList("com.jiuyescm.bms.quotation.contract.mapper.PriceContractMapper.queryByCustomerId", param);
 	}
 	
 	@SuppressWarnings("unchecked")

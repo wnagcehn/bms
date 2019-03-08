@@ -10,7 +10,8 @@ public enum BmsCorrectAsynTaskStatusEnum {
 	SUCCESS("SUCCESS","成功"),
 	EXCEPTION("EXCEPTION","异常"),
 	CANCEL("CANCEL","取消"),
-	FAIL("FAIL","失败");
+	FAIL("FAIL","失败"),
+	NOTCORRECT("NOTCORRECT","不纠正");
 	private String code;
 	private String desc;
 	
@@ -43,6 +44,7 @@ public enum BmsCorrectAsynTaskStatusEnum {
 		maps.put(EXCEPTION.getCode(), EXCEPTION.getDesc());
 		maps.put(CANCEL.getCode(), CANCEL.getDesc());
 		maps.put(FAIL.getCode(), FAIL.getDesc());
+		maps.put(NOTCORRECT.getCode(), NOTCORRECT.getDesc());
 	}
 	
 	public static Map<String,String> getMap(){

@@ -247,4 +247,26 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 		return repository.getMaxBwdVolumn(condition);
 	}
 
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public int deleteOldMaterial(Map<String,Object> condition) {
+		// TODO Auto-generated method stub
+		int result=repository.deleteOldMaterial(condition);
+		if(result>0){
+			feesReceiveStorageRepository.deleteMaterialFee(condition);
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public int deleteOldBwd(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		int result=repository.deleteOldBwd(condition);
+		if(result>0){
+			feesReceiveStorageRepository.deleteBwdFee(condition);
+		}
+		return result;
+	}
+
 }
