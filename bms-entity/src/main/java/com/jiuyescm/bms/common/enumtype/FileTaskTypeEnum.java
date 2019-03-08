@@ -34,6 +34,7 @@ public enum FileTaskTypeEnum {
 	BIZ_PAY_DIS_ORIGIN_DATA("origin_paydis", "原始耗材出库明细"),
 	BIZ_TIHUO("tihuo", "配送提货"),
 	BILL_REC_DISPATCH("billrecdispatch","账单应收配送费"),
+	CHECK_RECEIPT("check_receipt","回款追踪报表"),
 	BILL_OTHER_STORAGE("other_storage","仓储其它费用"),
 	BILL_ABNORMAL_STORAGE("abnormal_storage","仓储异常费用"),
 	BILL_ABNORMAL_DISPATCH("abnormal_dispatch","配送异常费用"),

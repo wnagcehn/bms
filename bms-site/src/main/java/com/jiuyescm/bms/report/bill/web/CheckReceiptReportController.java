@@ -23,6 +23,7 @@ import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
 import com.jiuyescm.bms.report.vo.BizWarehouseNotImportVo;
 import com.jiuyescm.common.tool.ListTool;
+import com.jiuyescm.common.utils.DateUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -46,14 +47,12 @@ public class CheckReceiptReportController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String startString = format.format(startDate);
         String endString = format.format(endDate);
-        List<String> dateList = getBetweenDate(startString,endString);
+        List<String> dateList = DateUtil.getBetweenDate(startString,endString);
         //查询区域
 		Map<String, Object> map = new HashMap<>();
 		map.put("typeCode", "SALE_AREA");
 		map.put("deptName", deptName);
 		List<SystemCodeEntity> codeEntities = systemCodeService.queryExtattr1(map);
-		//所有区域
-		List<String> deptList = new ArrayList<>();
 		//区域模型
 		ArrayList<CheckReceiptEntity> checkList = new ArrayList<CheckReceiptEntity>();
 		if (CollectionUtils.isNotEmpty(codeEntities)) {
@@ -124,18 +123,7 @@ public class CheckReceiptReportController {
 					checkReceiptEntity.setExpectAmount(expectBigDecimal);
 					checkReceiptEntity.setFinishAmount(receiptBigDecimal);
 					//计算完成率
-					String finish ="";
-					if(expectBigDecimal.equals(BigDecimal.ZERO)){
-						finish = "100%";
-					}else if(receiptBigDecimal.equals(BigDecimal.ZERO)) {
-						finish = "0%";
-					}else {
-						BigDecimal div = receiptBigDecimal.divide(expectBigDecimal,6, RoundingMode.HALF_UP);
-						BigDecimal mul = div.multiply(new BigDecimal(100));
-						String num = mul.toString();
-						String numString = num.substring(0,num.length()-2);
-						finish = numString+"%";
-					}
+					String finish =CheckReceiptReportExportController.getFinishRate(expectBigDecimal, receiptBigDecimal);
 					checkReceiptEntity.setFinishRate(finish);
 					checkList.add(checkReceiptEntity);
 				}
@@ -148,7 +136,7 @@ public class CheckReceiptReportController {
 		}
 
 	}
-	
+
 	@DataProvider
 	public void queryDetail(Page<BillCheckInfoEntity> page, Map<String, Object> param) {
 		List<BillCheckInfoEntity> checkList = billCheckInfoService.queryCheckReceipt(param);
@@ -181,26 +169,5 @@ public class CheckReceiptReportController {
 			page.setEntityCount(checkList.size());
 		}
 	}
-	
-    private static List<String> getBetweenDate(String begin,String end){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        List<String> betweenList = new ArrayList<String>();
-        try{
-            Calendar startDay = Calendar.getInstance();
-            startDay.setTime(format.parse(begin));
-            startDay.add(Calendar.DATE, -1);
-            while(true){
-                startDay.add(Calendar.DATE, 1);
-                Date newDate = startDay.getTime();
-                String newend=format.format(newDate);
-                betweenList.add(newend);
-                if(end.equals(newend)){
-                    break;
-                }
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return betweenList;
-    }
+
 }
