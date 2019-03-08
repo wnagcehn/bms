@@ -304,26 +304,26 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 					//报价模板
 					PriceGeneralQuotationEntity generalEntity=mapCusPrice.get(customerId+SubjectId);
 					//数量
-					double num=DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum();
+					//double num=DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum();
 					//如果有调整托数按照调整托数算钱  185需求
-					entity.setPalletNum(num);
+					//entity.setPalletNum(num);
 							
 					//计算方法
 					double amount=0d;
 					switch(priceType){
 					case "PRICE_TYPE_NORMAL"://一口价				
 			            // -> 费用 = 托数*模板单价
-						amount=num*generalEntity.getUnitPrice();					
+						amount=feeEntity.getQuantity()*generalEntity.getUnitPrice();					
 						feeEntity.setUnitPrice(generalEntity.getUnitPrice());
 						feeEntity.setParam3(generalEntity.getId()+"");
 						break;
 					case "PRICE_TYPE_STEP"://阶梯价
 						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId+SubjectId);
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-							amount=num*stepQuoEntity.getUnitPrice();
+							amount=feeEntity.getQuantity()*stepQuoEntity.getUnitPrice();
 							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 						}else{
-							amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+							amount=stepQuoEntity.getFirstNum()<feeEntity.getQuantity()?stepQuoEntity.getFirstPrice()+(feeEntity.getQuantity()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 						}
 						//判断封顶价
 						if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
