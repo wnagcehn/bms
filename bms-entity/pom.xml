@@ -7,6 +7,11 @@
   </parent>
   <artifactId>bms-entity</artifactId>
   <dependencies>
+  				<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>excel-support</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
   		<dependency>
   			<groupId>com.jiuyescm.scm</groupId>
   			<artifactId>scm-beans</artifactId>

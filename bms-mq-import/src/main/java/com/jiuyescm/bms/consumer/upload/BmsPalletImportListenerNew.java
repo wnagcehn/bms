@@ -520,7 +520,6 @@ public class BmsPalletImportListenerNew implements MessageListener{
 							logger.error("写入结果文件失败！", e);
 						}
 		        		dataList.clear();
-		        		//errorMap.clear();
 					}
 				}
 
@@ -548,7 +547,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}finally {
 			reader.close();
 		}
-    	
+
     	errorMap.clear();
 		String resultFullPath="";	
 		logger.info("上传结果文件到fastDfs");

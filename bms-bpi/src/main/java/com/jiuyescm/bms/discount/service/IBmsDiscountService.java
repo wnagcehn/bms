@@ -18,6 +18,13 @@ public interface IBmsDiscountService {
 	public BmsDiscountAccountVo queryAccount(Map<String,Object> condition);
 	
 	/**
+	 * 通过物流产品类型汇总统计配送
+	 * @param condition
+	 * @return
+	 */
+	public List<BmsDiscountAccountVo> queryAccountServiceList(Map<String,Object> condition);
+	
+	/**
 	 * 汇总统计仓储
 	 * @param condition
 	 * @return

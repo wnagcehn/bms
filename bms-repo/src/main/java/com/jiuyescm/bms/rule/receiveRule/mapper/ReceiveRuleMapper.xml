@@ -203,7 +203,13 @@
 		</if>
 		<if test="ruleType != null">
 			and rule_type = #{ruleType}
-		</if>		
+		</if>	
+		<if test="quotationNo != null">
+			and quotationNo = #{quotationNo}
+		</if>	
+		<if test="id != null">
+			and id = #{id}
+		</if>
 		and del_flag = '0'
 		limit 1
     </select>

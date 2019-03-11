@@ -14,6 +14,7 @@ public enum CheckBillStatusEnum {
 	TB_RECEIPT("TB_RECEIPT", "待收款"),
 	RECEIPTED("RECEIPTED", "已收款"),
 	INVALIDATE("INVALIDATE","已作废"),
+	EXCEPTION("EXCEPTION","异常"),
 	BAD_BILL("BAD_BILL", "坏账");
 	
 	private String code;
@@ -47,6 +48,7 @@ public enum CheckBillStatusEnum {
 		maps.put(TB_RECEIPT.getCode(), TB_RECEIPT.getDesc());
 		maps.put(RECEIPTED.getCode(), RECEIPTED.getDesc());
 		maps.put(INVALIDATE.getCode(), INVALIDATE.getDesc());
+		maps.put(EXCEPTION.getCode(), EXCEPTION.getDesc());
 		maps.put(BAD_BILL.getCode(), BAD_BILL.getDesc());
 	}
 	

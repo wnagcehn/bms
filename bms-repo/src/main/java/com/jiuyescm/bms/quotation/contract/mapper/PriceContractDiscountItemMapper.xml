@@ -100,7 +100,7 @@
 		select * from bms_quote_discount_detail
 		where 1=1 
 		and template_code=#{templateCode}
-		and start_time <![CDATA[<= #{createTime}]]> and end_time > #{createTime}
+		and start_time <![CDATA[<= #{createTime}]]> and end_time >= #{createTime}
 		and down_limit<![CDATA[<=#{count}]]> and up_limit>#{count}
 		and del_flag=0
     </select>

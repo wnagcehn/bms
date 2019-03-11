@@ -12,6 +12,8 @@ public class BmsDiscountAccountVo implements Serializable{
 	
 	private String subjectCode;
 	
+	private String serviceTypeCode;
+	
 	private String orderCount;
 	
 	private String amount;
@@ -55,6 +57,15 @@ public class BmsDiscountAccountVo implements Serializable{
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
 	}
+
+	public String getServiceTypeCode() {
+		return serviceTypeCode;
+	}
+
+	public void setServiceTypeCode(String serviceTypeCode) {
+		this.serviceTypeCode = serviceTypeCode;
+	}
+	
 	
 	
 }

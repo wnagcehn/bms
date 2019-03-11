@@ -41,6 +41,26 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
 	}
 
 	@Override
+	public List<BmsDiscountAccountVo> queryAccountServiceList(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsDiscountAccountEntity> list=bmsDiscountRepository.queryAccountServiceList(condition);
+		try {
+			List<BmsDiscountAccountVo> voList = new ArrayList<BmsDiscountAccountVo>();
+	    	for(BmsDiscountAccountEntity entity : list) {
+	    		BmsDiscountAccountVo vo = new BmsDiscountAccountVo();    		
+	            PropertyUtils.copyProperties(vo, entity);          
+	            voList.add(vo);
+	    	}
+	    	
+            return voList;
+        } catch (Exception ex) {
+            logger.error("转换失败");
+        }
+		return null;
+	}
+	
+	@Override
 	public BmsDiscountAccountVo queryStorageAccount(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		BmsDiscountAccountEntity entity=bmsDiscountRepository.queryStorageAccount(condition);
@@ -155,4 +175,6 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
 		// TODO Auto-generated method stub
 		return bmsDiscountRepository.deleteFeeStorageDiscount(condition);
 	}
+
+
 }
