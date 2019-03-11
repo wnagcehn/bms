@@ -216,9 +216,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 			num = entity.getAdjustPalletNum();
 		}
 		
-		if(!DoubleUtil.isBlank(num)){
-			storageFeeEntity.setQuantity(num);
-		}
+		storageFeeEntity.setQuantity(num);
 		//storageFeeEntity.setStatus("0");			
 		storageFeeEntity.setUnit("PALLETS");
 		storageFeeEntity.setTempretureType(entity.getTemperatureTypeCode());//设置温度类型  zhangzw
