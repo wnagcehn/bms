@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.excel;
+package com.jiuyescm.bms.excel.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jiuyescm.bms.excel.ExcelAnnotation.ExcelField;
+import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
 
 public class ExcelAnnotionUtil {
     

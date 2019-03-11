@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.jiuyescm.bms.excel.ExcelAnnotation.ExcelField;
+import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
 import com.jiuyescm.bms.quotation.out.dispatch.entity.vo.PriceOutMainDispatchEntity;
 import com.jiuyescm.cfm.domain.IEntity;
 
