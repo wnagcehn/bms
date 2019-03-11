@@ -602,7 +602,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			
 			//如果对应数据存在,导入托数等于0, 那么更新导入托数;
 			//如果对应数据存在,导入托数不等于0, 报错提示;
-			if (entity.getOldSysPalletNum() != 0 && entity.getOldPalletNum() == 0) {
+			if (entity.getOldPalletNum() == 0) {
 				updateList.add(entity);
 			}else if (entity.getOldPalletNum() != 0) {
 				result = false;
