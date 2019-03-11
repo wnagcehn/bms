@@ -877,7 +877,7 @@
     </select>
     
             <select id="queryCheckReceipt" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-        select b.id,
+        select b.bill_check_id id,
         a.create_month  createMonth,
         a.seller_name sellerName,
         a.invoice_name  invoiceName,

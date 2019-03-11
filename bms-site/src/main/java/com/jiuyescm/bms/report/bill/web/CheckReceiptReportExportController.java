@@ -1,7 +1,9 @@
 
 package com.jiuyescm.bms.report.bill.web;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -11,30 +13,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.uploader.DownloadFile;
+import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
-import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
+import com.jiuyescm.bms.excel.write.SXSSFExporter;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
 import com.jiuyescm.common.utils.DateUtil;
-import com.jiuyescm.common.utils.excel.POISXSSUtil;
-import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
-import com.jiuyescm.framework.fastdfs.model.StorePath;
 
 @Controller("checkReceiptReportExportController")
 public class CheckReceiptReportExportController{
@@ -50,15 +50,16 @@ public class CheckReceiptReportExportController{
 	/**
 	 * 导出
 	 */
-	@DataResolver
-	public void asynExport(Map<String, Object> param) {
+	@FileProvider
+	public DownloadFile asynExport(Map<String, Object> parameter) {
+		String path = null;
 		//切割日期
-		String deptName = (String) param.get("deptName");
-		Date startDate = (Date) param.get("startDate");
-		Date endDate = (Date) param.get("endDate");
+		String deptName = (String) parameter.get("deptName");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String startString = format.format(startDate);
-        String endString = format.format(endDate);
+		String startDate = (String) parameter.get("startDate");
+		String endDate = (String) parameter.get("endDate");
+        String startString = startDate.substring(0,10);
+        String endString = endDate.substring(0,10);
         final List<String> dateList = DateUtil.getBetweenDate(startString,endString);
         //查询区域
 		Map<String, Object> map = new HashMap<>();
@@ -147,50 +148,38 @@ public class CheckReceiptReportExportController{
 				String key = getKey(entity.getArea(),  sdf.format(entity.getExpectDate()));
 				reportMap.put(key, entity);
 			}
-
-        try {
-    		new Thread(){
-    			public void run() {
-    				try {
-    					export(dateList,codeEntities,reportMap);
-    				} catch(Exception e){
-    					logger.error(e.getMessage());
-    				}
-    			};
-    		}.start();
-		} catch (Exception e) {
-			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
+			try {
+				path = export(dateList,codeEntities,reportMap);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
+		InputStream is = null;
+		try {
+			is = new FileInputStream(path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+    	return new DownloadFile("回款追踪报表" + FileConstant.SUFFIX_XLSX, is);
 	}
 	/**
 	 * 导出
 	 */
-	private void export(List<String> dateList,List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap)throws Exception{
+	private String export(List<String> dateList,List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap)throws Exception{
 		long beginTime = System.currentTimeMillis();
-		String path = "E://test";
-		logger.info("====导出：");
-		//如果存放上传文件的目录不存在就新建
-    	File storeFolder=new File(path);
-		if(!storeFolder.isDirectory()){
-			storeFolder.mkdirs();
-		}
-		
     	logger.info("====回款追踪报表导出：写入Excel begin.");
-    	POISXSSUtil poiUtil = new POISXSSUtil();
-    	SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
-		int lineNo = 1;
-		//头、内容信息
+    	SXSSFExporter exporter = new SXSSFExporter();
+		//创建sheet，写入头信息
 		List<Map<String, Object>> headDetailMapList = getHead(dateList); 
+		Sheet sheet =exporter.createSheet(FileTaskTypeEnum.CHECK_RECEIPT.getDesc(),1,headDetailMapList);
+		//内容
 		List<Map<String, Object>> dataDetailList = getData(dateList,codeEntities,reportMap);
-		poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.CHECK_RECEIPT.getDesc(),lineNo, headDetailMapList, dataDetailList);
-    	//最后写到文件
-    	poiUtil.write2FilePath(workbook, "E:/test/回款追踪报表.xlsx");
-    	
-		// 保存导入文件到fastDFS，获取文件路径
-//		StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extendFileName);
-//		String fullPath = storePath.getFullPath();
+		exporter.writeContent(sheet, dataDetailList);
+		String path = exporter.saveFile(UUID.randomUUID().toString()+".xlsx");
+//		String path = exporter.saveFile("E:/","test.xlsx");
+    	logger.info("====回款追踪报表临时文件路径："+path);
     	logger.info("====导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
+    	return path;
 	}
 
 	public List<Map<String, Object>> getHead(List<String> dateList){

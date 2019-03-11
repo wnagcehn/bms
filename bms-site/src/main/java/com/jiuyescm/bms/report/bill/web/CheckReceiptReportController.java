@@ -139,6 +139,7 @@ public class CheckReceiptReportController {
 
 	@DataProvider
 	public void queryDetail(Page<BillCheckInfoEntity> page, Map<String, Object> param) {
+		//查询实际金额
 		List<BillCheckInfoEntity> checkList = billCheckInfoService.queryCheckReceipt(param);
 		if(CollectionUtils.isNotEmpty(checkList)){
 			List<BillCheckInfoEntity> snapshotList = billCheckInfoService.querySnapshotExpect(param);
@@ -149,7 +150,7 @@ public class CheckReceiptReportController {
 					snapshotMap.put(entity.getId()+"", entity);
 				}
 			}
-			//初始化返回明细
+			//初始化返回明细	
 			List<BillCheckInfoEntity> pageEntities = new ArrayList<>();
 			//如果快照后账单及回款作废，则无此明细，所以使用快照数据过滤实际账单数据
 			for (BillCheckInfoEntity check : checkList) {
