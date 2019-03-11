@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.excel.util;
+package com.jiuyescm.bms.excel.write;
 
 import java.io.File;
 import java.io.FileOutputStream;
