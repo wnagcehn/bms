@@ -42,12 +42,14 @@ public class SXSSFExporter {
 		workbook = new SXSSFWorkbook(rowAccessWindowSize);
 		sheets = new HashMap<String, SXSSFWorkSheet>();
 		initTempPath();
+		logger.info("export initialize success!");
 	}
 	
 	public SXSSFExporter(int windowSize){
 		workbook = new SXSSFWorkbook(windowSize);
 		sheets = new HashMap<String, SXSSFWorkSheet>();
 		initTempPath();
+		logger.info("export initialize success!");
 	}
 	
 	private void initTempPath(){
@@ -214,6 +216,7 @@ public class SXSSFExporter {
                 fileOut.close();
             }
         }
+    	logger.info("export success!");
         return exportFilePath;
     }
     

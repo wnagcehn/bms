@@ -1,6 +1,6 @@
 package com.jiuyescm.bms.excel;
 
-import com.jiuyescm.bms.excel.ExcelAnnotation.ExcelField;
+import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
 
 public class TitleDemo {
 
