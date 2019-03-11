@@ -147,9 +147,11 @@ public class BmsQuoteDiscountDetailController {
 		}
 		entity.setStartTime(new Timestamp(startTime.getTime()));
 		String end = sdf.format(entity.getEndTime());
+		end=end.substring(0,10);
 		Date endTime = null;
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			endTime = sdf.parse(end);
+			endTime = sdf2.parse(end+" 23:59:59");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

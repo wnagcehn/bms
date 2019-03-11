@@ -28,6 +28,25 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
  */
 public class POISXSSUtil {
 	
+	private int row =1;
+	
+    public synchronized void exportExcel2FilePath(POISXSSUtil poiUtil,SXSSFWorkbook xssfWorkbook,String sheetName,
+             List<Map<String, Object>> headInfoList,
+            List<Map<String, Object>> dataList) throws IOException {
+    	Sheet xssfSheet = xssfWorkbook.getSheet(sheetName);
+    	if (null != xssfSheet) {
+    		//写入内容
+			poiUtil.writeContent(xssfSheet, row, headInfoList, dataList);
+		}else {
+			xssfSheet = poiUtil.getXSSFSheet(xssfWorkbook, sheetName);
+			//写入 head
+			poiUtil.writeHeader(xssfWorkbook, xssfSheet, headInfoList);
+			//写入内容
+			poiUtil.writeContent(xssfSheet, row, headInfoList, dataList);
+		}
+		row+=dataList.size();
+	}
+	
 	private static final Logger logger = Logger.getLogger(POISXSSUtil.class.getName());
 	
 	//内存中缓存记录数
@@ -320,7 +339,7 @@ public class POISXSSUtil {
         	poiUtil.exportExcel2FilePath(poiUtil,hssfWorkbook,"test sheet 1",1, headInfoList, dataList);
         	poiUtil.exportExcel2FilePath(poiUtil,hssfWorkbook,"test sheet 1",dataList.size()+1, headInfoList, dataList);
 //        	poiUtil.exportExcelFilePath(poiUtil,hssfWorkbook,"test sheet 2","e:\\tmp\\customer2.xlsx", headInfoList, dataList);
-        	poiUtil.write2FilePath(hssfWorkbook, "e:\\tmp\\customer2.xlsx");
+        	poiUtil.write2FilePath(hssfWorkbook, "e:\\my-test.xlsx");
 		} catch (IOException e) {
 			logger.error("写入文件异常", e);
 		}

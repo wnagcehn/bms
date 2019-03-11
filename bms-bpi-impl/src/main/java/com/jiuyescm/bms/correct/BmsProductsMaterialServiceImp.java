@@ -14,6 +14,7 @@ import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsMaterialRepository;
 import com.jiuyescm.bms.correct.service.IBmsProductsMaterialService;
 import com.jiuyescm.bms.correct.vo.BmsMarkingMaterialVo;
+import com.jiuyescm.bms.correct.vo.BmsMaterialMarkOriginVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsMaterialAccountVo;
 
 @Service("bmsProductsMaterialService")
@@ -163,6 +164,25 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
     	}
 		return voList;
 	}
+	
+	@Override
+	public List<BmsMaterialMarkOriginVo> queryByMark(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsMaterialMarkOriginEntity> list=bmsProductsMaterialRepository.queryByMark(condition);
+		List<BmsMaterialMarkOriginVo> voList = new ArrayList<BmsMaterialMarkOriginVo>();
+    	for(BmsMaterialMarkOriginEntity entity : list) {
+    		BmsMaterialMarkOriginVo vo = new BmsMaterialMarkOriginVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
+
 
 	@Override
 	public int saveList(List<BmsProductsMaterialAccountVo> list) {
@@ -255,5 +275,20 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		// TODO Auto-generated method stub
 		return bmsProductsMaterialRepository.saveMarkBwd(condition);
 	}
+
+	@Override
+	public int updatePmxzxMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.updatePmxzxMark(waybillNoList);
+	}
+
+
+	@Override
+	public int updateBwdMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.updateBwdMark(waybillNoList);
+	}
+
+
 
 }

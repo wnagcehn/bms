@@ -28,7 +28,7 @@ import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.correct.service.IBmsProductsMaterialService;
 import com.jiuyescm.bms.correct.service.IBmsProductsWeightService;
-import com.jiuyescm.bms.correct.vo.BmsMarkingProductsVo;
+import com.jiuyescm.bms.correct.vo.BmsMaterialMarkOriginVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsMaterialAccountVo;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
@@ -114,7 +114,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 		try{
 			handMaterial(taskVo,taskId,errorMessage);		
 			taskVo.setTaskRate(50);
-			taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
+			taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
 			taskVo.setRemark(errorMessage.toString());
 			int returnTask=bmsCorrectAsynTaskService.update(taskVo);
 			if(returnTask<=0){
@@ -136,7 +136,6 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	private String handMaterial(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
 		long start = 0l;
 		long end = 0l;
-		long totalStart = System.currentTimeMillis();
 		long totalRetry = 0l;
 		Map<String,Object> condition=new HashMap<String,Object>();
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
@@ -151,9 +150,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			
 			logger.info(taskId+"插入汇总统计"+JSONObject.fromObject(condition));		
 			//插入汇总统计
-			long sta = System.currentTimeMillis();
 			int re=bmsProductsMaterialService.saveMaterial(condition);
-			long en = System.currentTimeMillis();
 			if(re<=0){
 				errorMessage.append("耗材不存在;");
 				logger.info(taskId+"耗材不存在;");
@@ -168,213 +165,111 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			end = System.currentTimeMillis();
 			logger.info(taskId+"------------------获取占比最高耗时：" + (end-start) + "毫秒------------------");
 			//循环判断是否有重复之
+			long sta = System.currentTimeMillis();
 			if(list.size()>0){
 				//循环更新每个商品明细对应的耗材
 				for(int i=0,length=list.size();i<length;i++){					
 					BmsProductsMaterialAccountVo proAccountVo=list.get(i);								
 					if(proAccountVo!=null){						
-						String waybillNo="";					
+						//占比最高的耗材标
 						String metrialDetail=getMaxVolumMaterial(proAccountVo);
+						logger.info("查询占比最高的标准耗材标"+metrialDetail);
 						if(StringUtils.isBlank(metrialDetail)){
 							continue;
 						}				
-						//判断耗材明细									
-						condition=new HashMap<String,Object>();
-						condition.put("materialType", proAccountVo.getMaterialType());
-						condition.put("pmxzxMark", metrialDetail);
-						condition.put("productsMark", proAccountVo.getProductsMark());
 						
-						//查询出该商品明细下使用最多的运单打标记录
+						//查询该标使用到的标准泡沫箱和纸箱
+						condition=new HashMap<String,Object>();
+						condition.put("materialMark", metrialDetail);
+						
 						start = System.currentTimeMillis();
-						logger.info(taskId+"查询出该商品明细下使用最多的运单打标参数"+JSONObject.fromObject(condition));		
-						BmsMarkingProductsVo markVo=bmsProductsWeightService.queryOneMaterial(condition);
+						List<BmsMaterialMarkOriginVo> standMaterial=bmsProductsMaterialService.queryByMark(condition);
 						end = System.currentTimeMillis();
-						logger.info(taskId+"------------------查询出该商品明细下使用最多的运单打标记录耗时：" + (end-start) + "毫秒------------------");
-						if(markVo!=null){
-							waybillNo=markVo.getWaybillNo();
+						logger.info(taskId+"------------------查询该标使用到的标准泡沫箱和纸箱耗时：" + (end-start) + "毫秒------------------");
+						//未查询到耗材
+						if(standMaterial.size()==0){
+							logger.info("查询该标使用到的标准泡沫箱和纸箱"+metrialDetail);
+							continue;
 						}
-						if(StringUtils.isNotBlank(waybillNo)){
-							//将占比最高的运单号更新到汇总表里
-							condition=new HashMap<String,Object>();
-							condition.put("productsMark", proAccountVo.getProductsMark());
-							condition.put("materialType", proAccountVo.getMaterialType());
-							condition.put("materialMark", metrialDetail);
-							condition.put("percent", proAccountVo.getPercent());
-							condition.put("taskId", proAccountVo.getTaskId());
-							condition.put("waybillNo", waybillNo);
-							condition.put("type", "PMXZX");
-							start = System.currentTimeMillis();
-							logger.info(taskId+"查询出该商品明细下使用最多的运单打标参数"+JSONObject.fromObject(condition));		
-
-							int updateResult=bmsProductsMaterialService.updateMaterialAccount(condition);
-							end = System.currentTimeMillis();
-							logger.info(taskId+"------------------将占比最高的运单号更新到汇总表里耗时：" + (end-start) + "毫秒------------------");
-							if(updateResult<=0){
-								logger.info(taskId+"更新汇总表失败"+condition);
-								continue;
-							}
-													
-							//查询该运单使用到的标准泡沫箱和纸箱
-							condition=new HashMap<String,Object>();
-							condition.put("waybillNo", waybillNo);
-							logger.info("查询标准耗材运单号为"+waybillNo);
-							start = System.currentTimeMillis();
-							List<BizOutstockPackmaterialEntity> standMaterial=bizOutstockPackmaterialService.queryMaterial(condition);
-							end = System.currentTimeMillis();
-							logger.info(taskId+"------------------查询该运单使用到的标准泡沫箱和纸箱耗时：" + (end-start) + "毫秒------------------");
-							//未查询到耗材
-							if(standMaterial.size()==0){
-								continue;
-							}
-							
-							//找出未使用标准的运单号
-							condition=new HashMap<String,Object>();
-							condition.put("productsMark", proAccountVo.getProductsMark());
-							condition.put("materialType", proAccountVo.getMaterialType());
-							condition.put("pmxzxMark", metrialDetail);
-							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
-							condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
-							condition.put("customerId", taskVo.getCustomerId());
-							start = System.currentTimeMillis();
-							logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
-							List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxMaterial(condition);
-							end = System.currentTimeMillis();
-							logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
-							long total = 0l;
-							long delTimeTotal = 0l;
-							List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();
-							List<String> waybillNoList=new ArrayList<String>();					
-							for(int j=0,lenth=notMaxList.size();j<lenth;j++){
-								BizOutstockPackmaterialEntity pack=notMaxList.get(j);
-								waybillNoList.add(pack.getWaybillNo());	
-								//新耗材插入								
-								for(BizOutstockPackmaterialEntity entity:standMaterial){
-									BizOutstockPackmaterialEntity packEntity=new BizOutstockPackmaterialEntity();								
-									try {
-						                PropertyUtils.copyProperties(packEntity, pack);
-						            } catch (Exception ex) {
-						               logger.error("转换失败");
-						            }						
-									packEntity.setConsumerMaterialCode(entity.getConsumerMaterialCode());
-									packEntity.setConsumerMaterialName(entity.getConsumerMaterialName());
-									packEntity.setSpecDesc(entity.getSpecDesc());
-									packEntity.setLastModifier(taskVo.getCreator());
-									packEntity.setLastModifyTime(JAppContext.currentTimestamp());
-									packEntity.setIsCalculated("99");
-									packEntity.setFeesNo("");
-									packEntity.setDelFlag("0");
-									packEntity.setextattr4(taskId);
-									packEntity.setextattr5("");
-									newList.add(packEntity);
-								}											
-							}
-							//删除老耗材
-							condition=new HashMap<String,Object>();
-							condition.put("waybillNoList", waybillNoList);
-							condition.put("lastModifier", taskVo.getCreator());
-							condition.put("lastModifyTime", JAppContext.currentTimestamp());
-							start = System.currentTimeMillis();
-							int resultDelete=bizOutstockPackmaterialService.deleteOldMaterial(condition);
-							end = System.currentTimeMillis();
-							delTimeTotal = delTimeTotal + (end-start);						
-							if(resultDelete>0){
-								//logger.info("保存新耗材");
-								start = System.currentTimeMillis();
-								int resultSave=bizOutstockPackmaterialService.saveList(newList);
-								if(resultSave<=0){
-									logger.info("新增耗材失败");
-								}
-								end = System.currentTimeMillis();
-								total = total + (end-start);
-								
-							}
-							
-							/*
-							List<BmsMarkingMaterialVo> notMaxList=bmsProductsMaterialService.queyNotMax(condition);
-							end = System.currentTimeMillis();
-							logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
-							
-							long total = 0l;
-							long delTimeTotal = 0l;
-							for(int j=0,lenth=notMaxList.size();j<lenth;j++){
-								BmsMarkingMaterialVo vo=notMaxList.get(j);
-								String wayNo=vo.getWaybillNo();
-								condition=new HashMap<String,Object>();
-								condition.put("waybillNo", wayNo);
-								List<BizOutstockPackmaterialEntity> materialList=bizOutstockPackmaterialService.queryMaterial(condition);			
-								if(materialList.size()>0){									
-									for(BizOutstockPackmaterialEntity entity:materialList){
-										entity.setDelFlag("2");
-										entity.setLastModifier(taskVo.getCreator());
-										entity.setLastModifyTime(JAppContext.currentTimestamp());
-									}									
-									//logger.info("删除原始耗材");
-									
-									//删除原运单号对应得耗材和费用
-									start = System.currentTimeMillis();
-									int result=bizOutstockPackmaterialService.updateList(materialList);
-									end = System.currentTimeMillis();
-									delTimeTotal = delTimeTotal + (end-start);
-									if(result<=0){
-										logger.info(taskId+"删除占比小耗材失败");
-										continue;
-									}
-									
-									//将新耗材插入并重算
-									List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();
-									for(BizOutstockPackmaterialEntity entity:standMaterial){
-										BizOutstockPackmaterialEntity pack=materialList.get(0);
-										BizOutstockPackmaterialEntity packEntity=new BizOutstockPackmaterialEntity();								
-										try {
-							                PropertyUtils.copyProperties(packEntity, pack);
-							            } catch (Exception ex) {
-							               logger.error("转换失败");
-							            }						
-										packEntity.setConsumerMaterialCode(entity.getConsumerMaterialCode());
-										packEntity.setConsumerMaterialName(entity.getConsumerMaterialName());
-										packEntity.setSpecDesc(entity.getSpecDesc());
-										packEntity.setLastModifier(taskVo.getCreator());
-										packEntity.setLastModifyTime(JAppContext.currentTimestamp());
-										packEntity.setIsCalculated("99");
-										packEntity.setFeesNo("");
-										packEntity.setDelFlag("0");
-										packEntity.setextattr4(taskId);
-										packEntity.setextattr5("");
-										newList.add(packEntity);
-									}
-									//logger.info("保存新耗材");
-									start = System.currentTimeMillis();
-									int resultSave=bizOutstockPackmaterialService.saveList(newList);
-									end = System.currentTimeMillis();
-									total = total + (end-start);
-									if(resultSave>0){
-										//对运单重算
-										waybillNoList.add(wayNo);									
-									}else{
-										logger.error("新增标准耗材失败");
-									}															
-								}							
-							}*/
-							logger.info(taskId+"------------------删除原运单号对应得耗材和费用总耗时：" + delTimeTotal + "毫秒------------------");
-							logger.info(taskId+"------------------保存新耗材成功，总耗时：" + total + "毫秒------------------");
-						}
+						
+						//找出未使用标准的运单号
 						condition=new HashMap<String,Object>();
 						condition.put("productsMark", proAccountVo.getProductsMark());
 						condition.put("materialType", proAccountVo.getMaterialType());
 						condition.put("pmxzxMark", metrialDetail);
+						condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
+						condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
+						condition.put("customerId", taskVo.getCustomerId());
 						start = System.currentTimeMillis();
-						bizDispatchBillService.retryByMaterialMark(condition);	
+						logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
+						List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxMaterial(condition);
+						end = System.currentTimeMillis();
+						logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
+						long total = 0l;
+						long delTimeTotal = 0l;
+						List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();
+						List<String> waybillNoList=new ArrayList<String>();					
+						for(int j=0,lenth=notMaxList.size();j<lenth;j++){
+							BizOutstockPackmaterialEntity pack=notMaxList.get(j);
+							waybillNoList.add(pack.getWaybillNo());	
+							//新耗材插入								
+							for(BmsMaterialMarkOriginVo entity:standMaterial){
+								BizOutstockPackmaterialEntity packEntity=new BizOutstockPackmaterialEntity();								
+								try {
+					                PropertyUtils.copyProperties(packEntity, pack);
+					            } catch (Exception ex) {
+					               logger.error("转换失败");
+					            }						
+								packEntity.setConsumerMaterialCode(entity.getConsumerMaterialCode());
+								packEntity.setConsumerMaterialName(entity.getConsumerMaterialName());
+								packEntity.setSpecDesc(entity.getSpecDesc());
+								packEntity.setLastModifier(taskVo.getCreator());
+								packEntity.setLastModifyTime(JAppContext.currentTimestamp());
+								packEntity.setIsCalculated("99");
+								packEntity.setFeesNo("");
+								packEntity.setDelFlag("0");
+								packEntity.setextattr4(taskId);
+								packEntity.setextattr5("");
+								newList.add(packEntity);
+							}											
+						}
+						//删除老耗材
+						condition=new HashMap<String,Object>();
+						condition.put("waybillNoList", waybillNoList);
+						condition.put("lastModifier", taskVo.getCreator());
+						condition.put("lastModifyTime", JAppContext.currentTimestamp());
+						start = System.currentTimeMillis();
+						int resultDelete=bizOutstockPackmaterialService.deleteOldMaterial(condition);
+						end = System.currentTimeMillis();
+						delTimeTotal = delTimeTotal + (end-start);						
+						if(resultDelete>0){
+							//logger.info("保存新耗材");
+							start = System.currentTimeMillis();
+							int resultSave=bizOutstockPackmaterialService.saveList(newList);
+							if(resultSave<=0){
+								logger.info("新增耗材失败");
+							}
+							end = System.currentTimeMillis();
+							total = total + (end-start);
+						}
+						
+						logger.info(taskId+"------------------删除原运单号对应得耗材和费用总耗时：" + delTimeTotal + "毫秒------------------");
+						logger.info(taskId+"------------------保存新耗材成功，总耗时：" + total + "毫秒------------------");
+						
+						//重算运单
+						start = System.currentTimeMillis();
+						bizDispatchBillService.retryByWaybillNo(waybillNoList);
 						end = System.currentTimeMillis();
 						totalRetry = totalRetry+(end-start);
-						
+						logger.info(taskId+"------------------重算运单，总耗时：" + totalRetry + "毫秒------------------");						
+						//更新打标表，标记该运单的耗材已被纠正
+						bmsProductsMaterialService.updatePmxzxMark(waybillNoList);
 					}
 				}		
 			}
-			logger.info(taskId+"------------------插入汇总统计运单:"+re+"条,耗时：" + (en-sta) + "毫秒------------------");
+			long en = System.currentTimeMillis();
+			logger.info(taskId+"------------------总共耗时：" + (en-sta) + "毫秒------------------");
 		}
-		logger.info(taskId+"------------------修改重算状态总耗时：" + totalRetry + "毫秒------------------");
-		long totalEnd = System.currentTimeMillis();
-		logger.info(taskId+"------------------修改重算状态耗时占比:" + totalRetry*1.0/(totalEnd-totalStart)*100 + "%------------------");
 		updateProgress(taskVo, 40);
 		errorMessage.append("耗材调整成功;");
 		logger.info(taskId+"耗材调整成功;");
@@ -470,39 +365,30 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 				//循环更新每个商品明细对应的耗材
 				for(int i=0,length=list.size();i<length;i++){					
 					BmsProductsMaterialAccountVo proAccountVo=list.get(i);								
-					if(proAccountVo!=null){											
-						String metrialDetail=getMaxVolumBwd(proAccountVo);
+					if(proAccountVo!=null){
+						//耗材标
+						String metrialDetail=getMaxVolumBwd(proAccountVo);					
+						logger.info("查询占比最高的标准耗材标"+metrialDetail);				
 						if(StringUtils.isBlank(metrialDetail)){
 							continue;
-						}				
-						//判断耗材明细									
-						condition=new HashMap<String,Object>();
-						condition.put("bwdMark", metrialDetail);
-						condition.put("productsMark", proAccountVo.getProductsMark());
+						}
 						
-						//查询出该商品明细下使用最多的保温袋记录
+						//查询出该标下使用最多的保温袋明细							
+						condition=new HashMap<String,Object>();
+						condition.put("materialMark", metrialDetail);
+						
 						start = System.currentTimeMillis();
-						BizOutstockPackmaterialEntity markVo=bmsProductsMaterialService.queryBwdMaterial(condition);
+						List<BmsMaterialMarkOriginVo> standMaterialList=bmsProductsMaterialService.queryByMark(condition);
 						end = System.currentTimeMillis();
-						logger.info(taskId+"------------------查询出该商品明细下使用最多的耗材记录耗时：" + (end-start) + "毫秒------------------");
-						if(markVo!=null){
-							//将占比最高的运单号更新到汇总表里
-							condition=new HashMap<String,Object>();
-							condition.put("productsMark", proAccountVo.getProductsMark());
-							condition.put("materialMark", metrialDetail);
-							condition.put("percent", proAccountVo.getPercent());
-							condition.put("taskId", proAccountVo.getTaskId());
-							condition.put("waybillNo", markVo.getWaybillNo());
-							condition.put("type", "BWD");
-							start = System.currentTimeMillis();
-							int updateResult=bmsProductsMaterialService.updateMaterialAccount(condition);
-							end = System.currentTimeMillis();
-							logger.info(taskId+"------------------将占比最高的运单号更新到汇总表里耗时：" + (end-start) + "毫秒------------------");
-							if(updateResult<=0){
-								logger.info(taskId+"更新汇总表失败"+condition);
-								continue;
-							}
-							
+						logger.info(taskId+"------------------查询该标使用到的保温袋耗时：" + (end-start) + "毫秒------------------");
+						//未查询到耗材
+						if(standMaterialList.size()==0){
+							logger.info(taskId+"未查询到该标下对应得保温袋"+metrialDetail);
+							continue;
+						}
+						
+						BmsMaterialMarkOriginVo markVo=standMaterialList.get(0);					
+						if(markVo!=null){				
 							//找出未使用标准的运单号
 							condition=new HashMap<String,Object>();
 							condition.put("productsMark", proAccountVo.getProductsMark());
@@ -547,6 +433,9 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							if(result>0){
 								logger.info("------------------保存新保温袋------------------");	
 								bizOutstockPackmaterialService.saveList(newList);
+								//更新打标表
+								bmsProductsMaterialService.updateBwdMark(waybillNoList);
+								
 							}
 						}					
 					}
@@ -569,19 +458,18 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	private String getMaxVolumBwd(BmsProductsMaterialAccountVo proAccountVo){
 		String metrialDetail="";
 		try {
-			Map<String,Object> condition=new HashMap<String,Object>();			
 			String metrialMark=proAccountVo.getMaterialMark();
 			if(StringUtils.isNotBlank(metrialMark)){
 				String[] array=metrialMark.split(",");
 				if(array.length==1){
 					metrialDetail=array[0];
 				}else if(array.length>1){
+					Map<String,Object> condition=new HashMap<String,Object>();
 					List<String> pList=new ArrayList<String>();
 					//判断获取体积最大的耗材
 					for(int i=0;i<array.length;i++){
 						pList.add(array[i]);
 					}
-					condition.put("productsMark", proAccountVo.getProductsMark());
 					condition.put("list", pList);
 					//查询出耗材标对应得耗材编码
 					logger.info("查询出耗材标对应得耗材编码条件"+JSONObject.fromObject(condition));
@@ -616,7 +504,6 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	 * @return
 	 */
 	private String getMaxVolumMaterial(BmsProductsMaterialAccountVo proAccountVo){
-		Map<String,Object> condition=new HashMap<String,Object>();
 		List<Double> volumList=new ArrayList<Double>();
 		String metrialDetail="";
 		String metrialMark=proAccountVo.getMaterialMark();
@@ -628,26 +515,16 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 				//判断获取体积最大的耗材
 				Map<Double,String> map=new HashMap<Double,String>();
 				 for (int i = 0; i < array.length; i++) {
-					condition=new HashMap<String,Object>();
-				    condition.put("materialType", proAccountVo.getMaterialType());
-					condition.put("pmxzxMark", array[i]);
-					//查询出该商品明细下使用运单号
-					BmsMarkingProductsVo markVo=bmsProductsWeightService.queryOneMaterial(condition);
-					if(markVo!=null){
-						String waybillNo=markVo.getWaybillNo();
-						if(StringUtils.isNotBlank(waybillNo)){
-							//查询该运单使用到的标准泡沫箱和纸箱
-							condition=new HashMap<String,Object>();
-							condition.put("waybillNo", waybillNo);						
-							double volumn=0d;					
-							Double vol=bizOutstockPackmaterialService.getMaxVolum(condition);
-							if(!DoubleUtil.isBlank(vol)){
-								volumn=vol;
-							}
-							map.put(volumn, array[i]);
-							volumList.add(volumn);
-						}
-					}						
+					 Map<String,Object> condition=new HashMap<String,Object>();
+					//查询该耗材标对应得最高体积
+					condition.put("materialMark", array[i]);						
+					double volumn=0d;					
+					Double vol=bizOutstockPackmaterialService.getMaxVolum(condition);
+					if(!DoubleUtil.isBlank(vol)){
+						volumn=vol;
+					}
+					map.put(volumn, array[i]);
+					volumList.add(volumn);					
 			     }
 				 double maxVolum=Collections.max(volumList);
 				 metrialDetail=map.get(maxVolum);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.correct.BmsMarkingMaterialEntity;
+import com.jiuyescm.bms.correct.BmsMaterialMarkOriginEntity;
 import com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsMaterialRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -115,6 +116,13 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 	}
 
 	@Override
+	public List<BmsMaterialMarkOriginEntity> queryByMark(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queryByMark", condition);
+	}
+	
+	@Override
 	public int saveList(List<BmsProductsMaterialAccountEntity> list) {
 		// TODO Auto-generated method stub
 		return insertBatch("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.saveList", list);
@@ -180,5 +188,21 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 		return result;
 	}
 
+	@Override
+	public int updatePmxzxMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("waybillnos", waybillNoList);
+		return this.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.updatePmxzxMark", map);
+	
+	}
 
+	@Override
+	public int updateBwdMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("waybillnos", waybillNoList);
+		return this.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.updateBwdMark", map);
+	
+	}
 }

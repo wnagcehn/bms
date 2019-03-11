@@ -31,8 +31,10 @@ products_mark, material_type, material_mark, percent, task_id, waybill_no, type
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
-        select w.id,w.products_mark,w.material_type,w.material_mark,w.percent,w.task_id,w.waybill_no,w.type from bms_products_material_account w
+        select w.id,w.products_mark,w.material_type,w.material_mark,w.percent,w.task_id,w.waybill_no,w.type,d.consumer_material_code,d.num,GROUP_CONCAT(d.consumer_material_code,"*",d.num) as materialDetail
+        from bms_products_material_account w
 		LEFT JOIN bms_correct_asyn_task c on w.task_id=c.task_id
+		LEFT JOIN (select * from bms_material_mark_origin GROUP BY material_mark,consumer_material_code desc) d on w.material_mark=d.material_mark
         where 1 = 1
         	<if test=" id != null and id !='' ">
 				and w.id = #{id}
@@ -61,6 +63,7 @@ products_mark, material_type, material_mark, percent, task_id, waybill_no, type
 			<if test=" customerId != null and customerId !='' ">
 				and c.customerId=#{customerId}
 			</if>
+			GROUP BY w.material_type desc,w.material_mark
     </select>
 
 	<!-- 保存 -->

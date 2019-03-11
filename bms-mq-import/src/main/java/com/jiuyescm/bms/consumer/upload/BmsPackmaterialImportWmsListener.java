@@ -810,7 +810,6 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 						logger.error("写入结果文件失败！", e);
 					}
 	        		dataList.clear();
-	        		errorMap.clear();
 				}
 
 				@Override
@@ -827,6 +826,7 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 			reader.close();
 		}
     	
+    	errorMap.clear();
     	logger.info("上传结果文件到fastDfs");
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		workbook.write(os);

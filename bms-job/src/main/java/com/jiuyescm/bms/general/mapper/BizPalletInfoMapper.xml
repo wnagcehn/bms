@@ -24,6 +24,8 @@
 		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
 		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
 		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="charge_source" property="chargeSource" jdbcType="VARCHAR" />
+		   	<result column="sys_pallet_num" property="sysPalletNum" jdbcType="DECIMAL" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
@@ -220,7 +222,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		customer_id as customerId, customer_name as customerName, temperature_type_code as temperatureTypeCode, pallet_num as palletNum, 
 		adjust_pallet_num as adjustPalletNum, fees_no as feesNo, creator, creator_id as creatorId, create_time as createTime, 
 		last_modifier as lastModifier, last_modifier_id as lastModifierId, last_modify_time as lastModifyTime, is_calculated as isCalculated, 
-		calculate_time as calculateTime, write_time as writeTime, del_flag as delFlag, remark
+		calculate_time as calculateTime, write_time as writeTime, del_flag as delFlag, remark, charge_source as chargeSource, sys_pallet_num as sysPalletNum
 		from biz_pallet_info
 		where del_flag = 0
         <if test="(beginTime != null and beginTime !='')" >
@@ -251,6 +253,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="chargeSource != null" >charge_source=#{chargeSource,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>

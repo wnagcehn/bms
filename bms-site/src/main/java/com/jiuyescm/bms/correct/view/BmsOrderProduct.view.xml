@@ -70,6 +70,10 @@
       <PropertyDef name="type">
         <Property name="label">类型</Property>
       </PropertyDef>
+      <PropertyDef name="materialDetail">
+        <Property/>
+        <Property name="label">耗材明细</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsProductsWeightAccountEntity">
       <Property name="creationType">com.jiuyescm.bms.correct.vo.BmsProductsWeightAccountVo</Property>
@@ -353,12 +357,17 @@ with (view.get(&quot;#dsBmsMarkingMaterialEntity&quot;)){&#xD;
                     </DataColumn>
                     <DataColumn name="productsMark">
                       <Property name="property">productsMark</Property>
+                      <Property name="visible">false</Property>
                     </DataColumn>
                     <DataColumn name="materialType">
                       <Property name="property">materialType</Property>
                     </DataColumn>
+                    <DataColumn name="materialDetail">
+                      <Property name="property">materialDetail</Property>
+                    </DataColumn>
                     <DataColumn name="materialMark">
                       <Property name="property">materialMark</Property>
+                      <Property name="visible">false</Property>
                     </DataColumn>
                     <DataColumn name="percent">
                       <Property name="property">percent</Property>

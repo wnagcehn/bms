@@ -243,6 +243,12 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 					//数量
 					double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
 							
+					double weight = 0d;
+					if ((double)feeEntity.getWeight()/1000 < 1) {
+						weight = 1d;
+					}else {
+						weight = (double)feeEntity.getWeight()/1000;
+					}
 					//计算方法
 					double amount=0d;
 					switch(priceType){
@@ -256,11 +262,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 						}else if ("CARTON".equals(unit)) {
 							amount=feeEntity.getBox()*generalEntity.getUnitPrice();
 						}else if ("TONS".equals(unit)) {
-							if ((double)feeEntity.getWeight()/1000 < 1) {
-								amount=1d*generalEntity.getUnitPrice();
-							}else {
-								amount=(double)feeEntity.getWeight()*generalEntity.getUnitPrice()/1000;
-							}						
+							amount=weight*generalEntity.getUnitPrice();					
 						}else if ("KILOGRAM".equals(unit)) {
 							amount=feeEntity.getWeight()*generalEntity.getUnitPrice();
 						}
@@ -299,7 +301,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 						}
 						
 						XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
-
+						
 		                // 如果计费单位是 件
 						if ("ITEMS".equals(unit)) {//按件
 							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
@@ -310,11 +312,10 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 							}
 						}else if ("TONS".equals(unit)) {//按吨
 							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-								amount=(double)feeEntity.getWeight()*stepQuoEntity.getUnitPrice()/1000;
+								amount=weight*generalEntity.getUnitPrice();
 								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 							}else{
-								amount=stepQuoEntity.getFirstNum()<feeEntity.getWeight()?stepQuoEntity.getFirstPrice()+(feeEntity.getWeight()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-								amount=(double)amount/1000;
+								amount=(double)(stepQuoEntity.getFirstNum()<weight?stepQuoEntity.getFirstPrice()+(weight-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice());
 							}		
 						}else if("CARTON".equals(unit)){//按箱
 							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){

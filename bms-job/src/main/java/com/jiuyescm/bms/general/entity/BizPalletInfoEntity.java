@@ -64,6 +64,9 @@ public class BizPalletInfoEntity implements IEntity {
 	
 	private String subjectCode;
 	private String subjectName;
+	
+	private String chargeSource;
+	private Double sysPalletNum;
 
 	public BizPalletInfoEntity() {
 		super();
@@ -267,6 +270,22 @@ public class BizPalletInfoEntity implements IEntity {
 
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
+	}
+
+	public String getChargeSource() {
+		return chargeSource;
+	}
+
+	public void setChargeSource(String chargeSource) {
+		this.chargeSource = chargeSource;
+	}
+
+	public Double getSysPalletNum() {
+		return sysPalletNum;
+	}
+
+	public void setSysPalletNum(Double sysPalletNum) {
+		this.sysPalletNum = sysPalletNum;
 	}
     
 }

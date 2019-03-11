@@ -26,6 +26,14 @@ public class BmsDiscountRepositoryImpl extends MyBatisDao implements IBmsDiscoun
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<BmsDiscountAccountEntity> queryAccountServiceList(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return selectList("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.queryAccountServiceList", condition);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public BmsDiscountAccountEntity queryStorageAccount(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		return (BmsDiscountAccountEntity) selectOne("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.queryStorageAccount", condition);
@@ -84,6 +92,8 @@ public class BmsDiscountRepositoryImpl extends MyBatisDao implements IBmsDiscoun
 		// TODO Auto-generated method stub
 		return delete("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.deleteFeeStorageDiscount", condition);
 	}
+
+
 
 
 
