@@ -82,7 +82,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 				and s.subject_code = #{subjectCode}
 			</if>
-			<if test=" chargeSource != null and chargeSource !='' ">
+			<if test=" chargeSource != null and chargeSource !='' and chargeSource !='ALL' ">
 				and s.charge_source = #{chargeSource}
 			</if>
     </select>
