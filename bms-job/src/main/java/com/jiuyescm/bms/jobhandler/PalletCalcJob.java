@@ -200,25 +200,27 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		storageFeeEntity.setSubjectCode(SubjectId);		//费用科目
 		storageFeeEntity.setOtherSubjectCode(SubjectId);
 		storageFeeEntity.setProductType("");							//商品类型
-		//调整托数优先级最高
+
+		//如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
+		//如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 		double num = 0d;
+		if (cusNames.contains(entity.getCustomerId())) {
+			entity.setChargeSource("import");
+		}else {
+			entity.setChargeSource("system");
+		}
+		//调整托数优先级最高
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
-			//如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
-			//如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 			if (cusNames.contains(entity.getCustomerId())) {
-				entity.setChargeSource("import");
 				num = entity.getPalletNum();
 			}else {
-				entity.setChargeSource("system");
 				num = entity.getSysPalletNum();
 			}
 		}else {
 			num = entity.getAdjustPalletNum();
 		}
 		
-		if(!DoubleUtil.isBlank(num)){
-			storageFeeEntity.setQuantity(num);
-		}
+		storageFeeEntity.setQuantity(num);
 		//storageFeeEntity.setStatus("0");			
 		storageFeeEntity.setUnit("PALLETS");
 		storageFeeEntity.setTempretureType(entity.getTemperatureTypeCode());//设置温度类型  zhangzw

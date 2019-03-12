@@ -83,7 +83,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 				and s.subject_code = #{subjectCode}
 			</if>
 			<if test=" chargeSource != null and chargeSource !='' and chargeSource !='ALL' ">
-				and s.charge_source = #{chargeSource}
+				and p.charge_source = #{chargeSource}
 			</if>
     </select>
 
