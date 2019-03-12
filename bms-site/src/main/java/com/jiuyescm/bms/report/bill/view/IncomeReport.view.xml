@@ -25,18 +25,20 @@
         <Property></Property>
         <Property name="label">责任部门名称</Property>
       </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+        <Property name="label">销售员ID</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtQueryCondition">
       <PropertyDef name="deptName">
         <Property name="label">责任部门</Property>
       </PropertyDef>
       <PropertyDef name="startDate">
-        <Property name="label">预计回款日期</Property>
-        <Property name="dataType">Date</Property>
+        <Property name="label">业务月份</Property>
       </PropertyDef>
       <PropertyDef name="endDate">
         <Property name="label">-</Property>
-        <Property name="dataType">Date</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInfo">
@@ -495,14 +497,16 @@ jQuery(arg.dom).xCreate({&#xD;
 	href: &quot;#&quot;,&#xD;
 	content:&quot;明细&quot;,&#xD;
 	onclick:function(){&#xD;
-		var checkReceiptEntity=view.get(&quot;#dsCheckReceiptEntity.data&quot;).current;&#xD;
-		var deptName = checkReceiptEntity.get(&quot;deptName&quot;);&#xD;
-		var area = checkReceiptEntity.get(&quot;area&quot;);&#xD;
-		var expectDate = checkReceiptEntity.get(&quot;expectDate&quot;);&#xD;
+		var entity=view.get(&quot;#dsIncomeEntity.data&quot;).current;&#xD;
+		var deptName = entity.get(&quot;deptName&quot;);&#xD;
+		var area = entity.get(&quot;area&quot;);&#xD;
+		var sellerId = entity.get(&quot;sellerId&quot;);&#xD;
+		var createMonth = entity.get(&quot;createMonth&quot;);&#xD;
 		var parameter={&#xD;
 			deptName:deptName,&#xD;
 			area:area,&#xD;
-			expectDate:expectDate,&#xD;
+			sellerId:sellerId,&#xD;
+			createMonth:createMonth,&#xD;
 		};&#xD;
 		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
 			set(&quot;parameter&quot;, parameter);&#xD;
@@ -520,6 +524,11 @@ jQuery(arg.dom).xCreate({&#xD;
         <DataColumn>
           <Property name="property">deptName</Property>
           <Property name="name">deptName</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">sellerId</Property>
+          <Property name="name">sellerId</Property>
           <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>

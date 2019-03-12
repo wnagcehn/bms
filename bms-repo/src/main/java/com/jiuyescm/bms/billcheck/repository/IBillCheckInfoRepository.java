@@ -192,4 +192,6 @@ public interface IBillCheckInfoRepository {
 	List<BillCheckInfoEntity> querySnapshotExpect(Map<String, Object> condition);
 
 	List<BillCheckInfoEntity> queryCheckReceipt(Map<String, Object> condition);
+
+	List<BillCheckInfoEntity> queryIncomeReport(Map<String, Object> condition);
 }

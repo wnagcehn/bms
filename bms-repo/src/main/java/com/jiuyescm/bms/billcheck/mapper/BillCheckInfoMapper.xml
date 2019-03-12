@@ -904,4 +904,12 @@
         and a.snapshot_date = #{expectDate}
         and a.area = #{area}
     </select>
+    
+<select id="queryIncomeReport" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT sum(confirm_amount) confirmAmount,seller_id sellerId,seller_name sellerName,area,create_month createMonth,dept_name deptName
+FROM bill_check_info 
+WHERE del_flag = 0 AND create_month =#{calculateFeeDate} AND dept_name =#{deptName}
+AND invoice_name in (SELECT a.invoice_name FROM (SELECT create_month,invoice_name FROM bill_check_info WHERE create_month >= 1901 AND del_flag = 0 GROUP BY invoice_name ORDER BY create_month) a WHERE a.create_month =#{startBizDate}) 
+GROUP BY seller_id,area
+    </select>
 </mapper> 

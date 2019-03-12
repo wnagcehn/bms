@@ -817,4 +817,9 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	public List<BillCheckInfoEntity> querySnapshotExpect(Map<String, Object> condition) {
 		return billCheckInfoRepository.querySnapshotExpect(condition);
 	}
+	
+	@Override
+	public List<BillCheckInfoEntity> queryIncomeReport(Map<String, Object> condition) {
+		return billCheckInfoRepository.queryIncomeReport(condition);
+	}
 }

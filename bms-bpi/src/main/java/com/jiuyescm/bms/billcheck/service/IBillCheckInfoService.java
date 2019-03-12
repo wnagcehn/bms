@@ -206,5 +206,8 @@ public interface IBillCheckInfoService {
 
 
 	List<BillCheckInfoEntity> queryCheckReceipt(Map<String, Object> condition);
+
+
+	List<BillCheckInfoEntity> queryIncomeReport(Map<String, Object> condition);
 	
 	}
