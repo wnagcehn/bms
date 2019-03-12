@@ -619,6 +619,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}
 		logger.info("任务ID【{}】 -> 所有数据写入临时表-成功",taskId);
 		bmsMaterialImportTaskCommon.setTaskProcess(taskId, 75);
+		newList.clear();
 		return 1;
     }
 	
