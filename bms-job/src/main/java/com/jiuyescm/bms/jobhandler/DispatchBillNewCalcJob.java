@@ -169,6 +169,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		monthFeeList = systemCodeService.querySysCodes(map);//月结账号
 		
 		map= new HashMap<String, Object>();
+		throwWeightList=new ArrayList<String>();
 		map.put("typeCode", "THROW_WEIGHT_CARRIER");
 		List<SystemCodeEntity> throwList = systemCodeService.querySysCodes(map);//计抛的物流商
 		for(SystemCodeEntity s:throwList){
