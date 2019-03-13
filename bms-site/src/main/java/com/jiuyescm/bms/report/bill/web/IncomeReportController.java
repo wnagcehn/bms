@@ -170,9 +170,6 @@ public class IncomeReportController {
 	    	return new DownloadFile("新增收入报表" + FileConstant.SUFFIX_XLSX, is);
 		}
 
-	/**
-	 * 导出
-	 */
 	private String export(List<BillCheckInfoEntity> reportList )throws Exception{
 		long beginTime = System.currentTimeMillis();
     	logger.info("====新增收入报表导出：写入Excel begin.");
