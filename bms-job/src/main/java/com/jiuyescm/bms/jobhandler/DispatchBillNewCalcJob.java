@@ -21,6 +21,8 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
+import com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService;
+import com.jiuyescm.bms.base.monthFeeCount.vo.PubMonthFeeCountVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -31,7 +33,6 @@ import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
-import com.jiuyescm.bms.general.entity.PubMonthFeeCountEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
@@ -89,6 +90,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
+	@Autowired private IPubMonthFeeCountService pubMonthFeeCountService;
 	
 	private String BizTypeCode = "DISPATCH"; //配送费编码
 	private String contractTypeCode="CUSTOMER_CONTRACT";
@@ -210,10 +212,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		//月结账号
 		map= new HashMap<String, Object>();
 		map.put("ownflag", "0");
-		List<PubMonthFeeCountEntity> monthFeeList=bizDispatchBillService.queryMonthCount(map);
+		map.put("delflag", "0");
+		List<PubMonthFeeCountVo> monthFeeList=pubMonthFeeCountService.query(map);
 		monthCountList=new ArrayList<>();
 		if(monthFeeList.size()>0){
-			for(PubMonthFeeCountEntity en:monthFeeList){
+			for(PubMonthFeeCountVo en:monthFeeList){
 				monthCountList.add(en.getCarrierId()+"&"+en.getMonthFeeCount());
 			}
 		}

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
-import com.jiuyescm.bms.general.entity.PubMonthFeeCountEntity;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -105,15 +104,5 @@ public class BizDispatchBillServiceImpl extends MyBatisDao implements IBizDispat
 		// TODO Auto-generated method stub
 		return this.update("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.updateByParam", condition);
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<PubMonthFeeCountEntity> queryMonthCount(
-			Map<String, Object> condition) {
-		// TODO Auto-generated method stub
-		return this.selectList("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.queryMonthCount", condition);
-	}
-
-
 
 }

@@ -111,6 +111,6 @@
 		<dubbo:reference id="bmsOrderProductService" interface="com.jiuyescm.bms.correct.service.IBmsOrderProductService" version="1.0.0" registry="bms"/>	 
 		<dubbo:reference id="bmsProductsWeightAccountService" interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightAccountService" version="1.0.0" registry="bms"/>	 
 		<dubbo:reference id="bmsProductsMaterialAccountService" interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialAccountService" version="1.0.0" registry="bms"/>	 
-		<dubbo:reference id="bmsMarkingProductsService" interface="com.jiuyescm.bms.correct.service.IBmsMarkingProductsService" version="1.0.0" registry="bms"/>	 
-
+		<dubbo:reference id="bmsMarkingProductsService" interface="com.jiuyescm.bms.correct.service.IBmsMarkingProductsService" version="1.0.0" registry="bms"/>
+		<dubbo:reference id="pubMonthFeeCountService" interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" version="1.0.0" registry="bms"/>
 </beans> 
