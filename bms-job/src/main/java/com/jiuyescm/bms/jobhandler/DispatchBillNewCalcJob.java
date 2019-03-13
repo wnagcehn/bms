@@ -31,6 +31,7 @@ import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
+import com.jiuyescm.bms.general.entity.PubMonthFeeCountEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
@@ -105,6 +106,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	Map<String, String> carrierMap=null;
 	List<String> cancelCusList=null;
 	Map<String,WarehouseVo> wareMap=null;
+	List<String> monthCountList=null;
 	
 	@Override
 	protected List<BizDispatchBillEntity> queryBillList(Map<String, Object> map) {
@@ -203,6 +205,17 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		List<WarehouseVo> wareList=warehouseService.queryAllWarehouse();
 		for(WarehouseVo vo:wareList){
 			wareMap.put(vo.getWarehouseid(), vo);
+		}
+		
+		//月结账号
+		map= new HashMap<String, Object>();
+		map.put("ownflag", "0");
+		List<PubMonthFeeCountEntity> monthFeeList=bizDispatchBillService.queryMonthCount(map);
+		monthCountList=new ArrayList<>();
+		if(monthFeeList.size()>0){
+			for(PubMonthFeeCountEntity en:monthFeeList){
+				monthCountList.add(en.getCarrierId()+"&"+en.getMonthFeeCount());
+			}
 		}
 	}
 	
@@ -628,28 +641,26 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 	
 		//********************************九曳自己的顺丰月结账号才计算费用*********************************
-		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			boolean ismouthCount= false;
-			String feeCount=entity.getMonthFeeCount();//获取月结账号
-			for (SystemCodeEntity mouthfeeEntity : monthFeeList) {
-				if(mouthfeeEntity.getCode().equals(feeCount)){
-					ismouthCount = true;//false-此单参与计算费用
-					XxlJobLogger.log("-->"+entity.getId()+entity.getRemark());
-					break;
-				}
-			}
-			if(!ismouthCount){
-				entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
-				feeEntity.setAmount(0.0d);
-				feeEntity.setTotalWeight(getBizTotalWeight(entity));
-				feeEntity.setChargedWeight(0d);
-				entity.setIsCalculated(CalculateState.No_Exe.getCode());
-				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
-				feeEntity.setOtherSubjectCode(_subjectCode);
-				feeEntity.setSubjectCode(_subjectCode);
-				return true;
-			}
+		boolean ismouthCount= false;
+		String feeCountKey=feeEntity.getCarrierid()+"&"+entity.getMonthFeeCount();//获取月结账号
+		
+		if(monthCountList.contains(feeCountKey)){
+			ismouthCount = true;//false-此单参与计算费用
+			XxlJobLogger.log("-->"+entity.getId()+entity.getRemark());
 		}
+		
+		if(!ismouthCount){
+			entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
+			feeEntity.setAmount(0.0d);
+			feeEntity.setTotalWeight(getBizTotalWeight(entity));
+			feeEntity.setChargedWeight(0d);
+			entity.setIsCalculated(CalculateState.No_Exe.getCode());
+			feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+			feeEntity.setOtherSubjectCode(_subjectCode);
+			feeEntity.setSubjectCode(_subjectCode);
+			return true;
+		}
+		
 		
 		//=*******************************判断取消的单子是否继续计算*******************************
 		//指定需要计算取消状态单子的商家
