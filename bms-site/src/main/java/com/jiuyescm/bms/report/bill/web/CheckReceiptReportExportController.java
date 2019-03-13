@@ -52,6 +52,7 @@ public class CheckReceiptReportExportController{
 	 */
 	@FileProvider
 	public DownloadFile asynExport(Map<String, Object> parameter) {
+		logger.info("前台传入信息："+parameter);
 		String path = null;
 		//切割日期
 		String deptName = (String) parameter.get("deptName");
@@ -68,6 +69,8 @@ public class CheckReceiptReportExportController{
 		final List<SystemCodeEntity> codeEntities = systemCodeService.queryExtattr1(map);
 		//区域模型
 		ArrayList<CheckReceiptEntity> checkList = new ArrayList<CheckReceiptEntity>();
+		//回款追踪报表数据map
+		Map<String,CheckReceiptEntity> reportMap = null;
 		if (CollectionUtils.isNotEmpty(codeEntities)) {
 			//查询快照
 			map.put("startDate", startString);
@@ -141,18 +144,17 @@ public class CheckReceiptReportExportController{
 					checkList.add(checkReceiptEntity);
 				}
 			}
-			//回款追踪报表数据map
-			final Map<String,CheckReceiptEntity> reportMap = new HashMap<>();
+			reportMap = new HashMap<>();
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (CheckReceiptEntity entity : checkList) {
 				String key = getKey(entity.getArea(),  sdf.format(entity.getExpectDate()));
 				reportMap.put(key, entity);
 			}
-			try {
-				path = export(dateList,codeEntities,reportMap);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		}
+		try {
+			path = export(dateList,codeEntities,reportMap);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		InputStream is = null;
 		try {

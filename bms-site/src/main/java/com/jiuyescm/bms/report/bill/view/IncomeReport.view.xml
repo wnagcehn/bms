@@ -170,6 +170,29 @@ with(view.get(&quot;#dsIncomeEntity&quot;)){&#xD;
         <Property name="caption">查询</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var parameter=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+if(isNullOrEmpty(parameter.get(&quot;deptName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;部门名称不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;startDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;开始日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;endDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;结束日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(parameter.get(&quot;startDate&quot;) > parameter.get(&quot;endDate&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间必须大于开始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+with(view.get(&quot;#dsIncomeEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;,parameter);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
         <Property name="visible">true</Property>
@@ -321,5 +344,8 @@ jQuery(arg.dom).xCreate({&#xD;
       </Children>
       <Tools/>
     </Dialog>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">incomeReportController#asynExport</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

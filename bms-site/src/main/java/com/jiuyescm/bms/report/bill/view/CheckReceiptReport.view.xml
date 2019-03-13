@@ -470,7 +470,6 @@ function getDays(strDateStart,strDateEnd){&#xD;
    var iDays = parseInt(Math.abs(strDateEnd - strDateStart ) / 1000 / 60 / 60 /24)//把相差的毫秒数转换为天数&#xD;
    return iDays ;&#xD;
 }&#xD;
- alert(1111);&#xD;
 view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
