@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
-import com.jiuyescm.bms.general.entity.PubMonthFeeCountEntity;
 
 public interface IBizDispatchBillService {
 	
@@ -84,11 +83,4 @@ public interface IBizDispatchBillService {
 	 * @return
 	 */
 	BizDispatchBillEntity getDispatchEntityByWaybillNo(String waybillNo);
-	
-	/**
-	 * 查询所有的月结账号
-	 * @param condition
-	 * @return
-	 */
-	public List<PubMonthFeeCountEntity> queryMonthCount(Map<String, Object> condition);
 }

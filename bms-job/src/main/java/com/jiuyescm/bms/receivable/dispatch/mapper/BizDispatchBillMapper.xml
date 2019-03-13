@@ -374,23 +374,5 @@
    		 </set>
    		 where waybill_no=#{waybillNo} and del_flag='0'
     </update>
-    
-    <select id="queryMonthCount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.PubMonthFeeCountEntity">
-     	select
-        id, carrier_id as carrierId, month_fee_count as monthFeeCount, ownflag, delflag
-        from pub_month_fee_count
-        where 1 = 1 and delflag='0'
-	 	<if test=" id != null and id !='' ">
-			and id = #{id}
-		</if>
-       	<if test=" carrierId != null and carrierId !='' ">
-			and carrier_id = #{carrierId}
-		</if>
-       	<if test=" monthFeeCount != null and monthFeeCount !='' ">
-			and month_fee_count = #{monthFeeCount}
-		</if>
-       	<if test=" ownflag != null and ownflag !='' ">
-			and ownflag = #{ownflag}
-		</if>
-    </select>
+
 </mapper>
