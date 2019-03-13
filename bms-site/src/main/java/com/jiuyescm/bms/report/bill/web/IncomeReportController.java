@@ -71,10 +71,14 @@ public class IncomeReportController {
 		page.setEntities(pageList);
 		page.setEntityCount(reportList.size());
 		}
-
+	
 	@DataProvider
 	public void queryDetail(Page<BillCheckInfoEntity> page, Map<String, Object> param) {
-
+		PageInfo<BillCheckInfoEntity> entities =  billCheckInfoService.queryIncomeDetail(param, page.getPageNo(), page.getPageSize());
+		if (entities != null) {
+			page.setEntities(entities.getList());
+			page.setEntityCount((int) entities.getTotal());
+		}
 	}
 	
 	private static List<String> getMonth(String start,String end){
