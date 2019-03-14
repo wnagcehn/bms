@@ -989,7 +989,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			//验证是否存在签约服务
 			Map<String,Object> condition=new HashMap<String,Object>();
 			condition.put("waybillNo", entity.getWaybillNo());
-			Double volumn=bizOutstockPackmaterialRepository.getMaxVolum(condition);
+			Double volumn=bizOutstockPackmaterialRepository.getMaxVolumByMap(condition);
 			if(!DoubleUtil.isBlank(volumn)){
 				throwWeight=(double)volumn/6000;
 				throwWeight=(double)Math.round(throwWeight*100)/100;
