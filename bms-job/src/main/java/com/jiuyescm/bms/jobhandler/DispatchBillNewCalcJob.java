@@ -316,7 +316,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			
 			//如果存在调整重量，优先取
 			if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
-				double dd = getResult(entity.getAdjustWeight());
+				double dd = getResult(entity.getAdjustWeight(),carrierId);
 				entity.setWeight(dd);
 				entity.setTotalWeight(entity.getAdjustWeight());
 			}
@@ -338,15 +338,15 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 						//有纠正重量时，直接比较纠正重量和物流商重量
 						if(entity.getCarrierWeight()>=correctWeight){
 							//物流商重量大于等于纠正重量
-							double dd = getResult(entity.getCarrierWeight());
+							double dd = getResult(entity.getCarrierWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getCarrierWeight());
 						}else{
 							//物流商重量小于纠正重量
-							double dd = getResult(correctWeight);
+							double dd = getResult(correctWeight,carrierId);
 							entity.setWeight(dd);
 							double resultWeight = compareWeight(entity.getTotalWeight(), 
-									getResult(entity.getTotalWeight()), correctWeight);
+									getResult(entity.getTotalWeight(),carrierId), correctWeight);
 							entity.setTotalWeight(resultWeight);
 						}
 						
@@ -361,12 +361,12 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 						//没有纠正重量，物流商重量和运单重量比较
 						if(entity.getCarrierWeight()>=entity.getTotalWeight()){
 							//物流商重量大于等于运单重量
-							double dd = getResult(entity.getCarrierWeight());
+							double dd = getResult(entity.getCarrierWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getCarrierWeight());
 						}else{
 							//物流商重量小于重量
-							double dd = getResult(entity.getTotalWeight());
+							double dd = getResult(entity.getTotalWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getTotalWeight());
 						}
@@ -389,15 +389,15 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 						// 有纠正重量时比较 泡重和 纠正重量
 						if(correctWeight >= entity.getCorrectThrowWeight()){
 							// 纠正重量大于抛重重量，按纠正重量算
-							double dd = getResult(correctWeight);
+							double dd = getResult(correctWeight,carrierId);
 							entity.setWeight(dd);
 							// 有纠正重量，比较纠正重量和运单重量是否相等
 							double resultWeight = compareWeight(entity.getTotalWeight(), 
-									getResult(entity.getTotalWeight()), correctWeight);
+									getResult(entity.getTotalWeight(),carrierId), correctWeight);
 							entity.setTotalWeight(resultWeight);
 						}else if(correctWeight < entity.getCorrectThrowWeight()){
 							// 纠正重量小于抛重时，按抛重算
-							double dd = getResult(entity.getCorrectThrowWeight());
+							double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 							entity.setWeight(dd);//计费重量
 							entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 						}
@@ -406,18 +406,18 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 							// 没有纠正重量时比较 泡重和 实际重量
 							if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
 								// 运单重量大于抛重时，按运单重量算
-								double dd = getResult(entity.getTotalWeight());
+								double dd = getResult(entity.getTotalWeight(),carrierId);
 								entity.setWeight(dd);
 								entity.setTotalWeight(entity.getTotalWeight());
 							}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
 								// 运单重量小于抛重时，按抛重算
-								double dd = getResult(entity.getCorrectThrowWeight());
+								double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 								entity.setWeight(dd);//计费重量
 								entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 							}
 						}else{
 							//实际重量为空时，直接取泡重
-							double dd = getResult(entity.getCorrectThrowWeight());
+							double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getCorrectThrowWeight());
 						}
@@ -460,7 +460,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 					entity.setWeight(Math.ceil(weight));//计费重量 : 6
 					// 比较重量
 					double resultWeight = compareWeight(entity.getTotalWeight(), 
-							getResult(entity.getTotalWeight()), weight);
+							Math.ceil(entity.getTotalWeight()), weight);
 					entity.setTotalWeight(resultWeight);//实际重量 eg:5.1
 				}else{
 					entity.setWeight(Math.ceil(entity.getTotalWeight()));//计费重量 : 6
@@ -1154,7 +1154,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				double weight=markEntity.getCorrectWeight().doubleValue();
 				// 比较重量
 				double resultWeight = compareWeight(entity.getTotalWeight(), 
-						getResult(entity.getTotalWeight()), weight);
+						getResult(entity.getTotalWeight(),entity.getChargeCarrierId()), weight);
 				totalWeight=resultWeight;//实际重量 eg:5.1
 			}else{
 				totalWeight=entity.getTotalWeight();//实际重量 eg:5.1
@@ -1391,28 +1391,38 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	/**
-	 * 顺丰运费计算规则（超重1.4kg时 用续费重量*1.5, ;超重1.6kg时 用续重*2计算）
+	 * 根据物流商判断进位规则
+	 * 1.除顺丰外 1.1kg或者1.6kg，重量进位为2
+	 * 2.顺丰运费计算规则（超重1.4kg时 重量进位为1.5, ;超重1.6kg时 重量进位为*2计算）
 	 * @param weight
 	 * @return
 	 */
-	public double getResult(double weight){
+	public double getResult(double weight,String carrierId){
 		//原重
-		double a=weight;	
+		double a=weight;
 		//现重
-		double c=0.0;	
-		int b=(int)a;
-		double min=a-b;
-
-		if(0<min && min <0.5){
-			c=b+0.5;
-		}
+		double c=0.0;
 		
-		if(0.5<min && min<1){
-			c=b+1;
+		if("1500000015".equals(carrierId)){
+			//顺丰				
+			int b=(int)a;
+			double min=a-b;
+
+			if(0<min && min <0.5){
+				c=b+0.5;
+			}
+			
+			if(0.5<min && min<1){
+				c=b+1;
+			}
+			if(min==0 || min==0.5){
+				c=a;
+			}
+		}else{
+			//除顺丰外
+			c=Math.ceil(a);
 		}
-		if(min==0 || min==0.5){
-			c=a;
-		}
+			
 		return c;
 	}
 
