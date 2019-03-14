@@ -180,8 +180,8 @@ public class IncomeReportController {
 		//内容
 		List<Map<String, Object>> dataDetailList = getData(reportList);
 		exporter.writeContent(sheet, dataDetailList);
-//		String path = exporter.saveFile(UUID.randomUUID().toString()+".xlsx");
-		String path = exporter.saveFile("E:/","test.xlsx");
+		String path = exporter.saveFile(UUID.randomUUID().toString()+".xlsx");
+//		String path = exporter.saveFile("E:/","test.xlsx");
     	logger.info("====新增收入报表临时文件路径："+path);
     	logger.info("====导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
     	return path;

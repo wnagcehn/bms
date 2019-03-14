@@ -21,6 +21,9 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
@@ -50,6 +53,10 @@ public class CorrectJob  extends IJobHandler{
 		private ISequenceService sequenceService1;
 		@Resource
 		private JmsTemplate jmsQueueTemplate;
+		@Resource
+		private IBmsGroupCustomerService bmsGroupCustomerService;
+		@Autowired
+		private IBmsGroupService bmsGroupService;
 		
 		private static final String BMS_CORRECT_WEIGHT_TASK = "BMS.CORRECT.WEIGHT.ASYN.TASK";
 		private static final String BMS_CORRECT_MATERIAL_TASK = "BMS.CORRECT.MATERIAL.ASYN.TASK";
@@ -106,6 +113,20 @@ public class CorrectJob  extends IJobHandler{
 					if(!existCustomeridSet.contains(entity.getCustomerid()))customeridSet.add(entity.getCustomerid());
 				}
 			}
+			
+			// 查询不需要运单纠正的商家
+			List<String> notCurCustList = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("groupCode", "notpartin_orderCorrent_customer");
+			map.put("bizType", "group_customer");
+			BmsGroupVo bmsCancelCus = bmsGroupService.queryOne(map);
+			if (null != bmsCancelCus) {
+				notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
+			}
+			
+			
+			
+			
 			//创建未生成的任务
 			if(CollectionUtils.isNotEmpty(customeridSet)){
 				List<BmsCorrectAsynTaskEntity> list = new ArrayList<>();
