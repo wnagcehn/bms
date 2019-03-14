@@ -137,6 +137,25 @@ public class BillCheckInfoEntity implements IEntity {
 	
 	private String billNo;
 	
+	//业务时间
+	private String bizYear;
+	private String bizMonth;
+	public String getBizYear() {
+		return bizYear;
+	}
+
+	public void setBizYear(String bizYear) {
+		this.bizYear = bizYear;
+	}
+
+	public String getBizMonth() {
+		return bizMonth;
+	}
+
+	public void setBizMonth(String bizMonth) {
+		this.bizMonth = bizMonth;
+	}
+	
 	//开票名称
 	private String mkInvoiceName;
 	public BillCheckInfoEntity() {

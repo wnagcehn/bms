@@ -564,15 +564,14 @@
 		</if>	
     </select>
     
-    <!-- <select id="getMaxVolum" parameterType="java.util.Map" resultType="Double" >
+    <select id="getMaxVolumByMap" parameterType="java.util.Map" resultType="Double" >
     	select MAX(c.volumn) from (
 		select b.material_type_name,sum(b.out_volume*a.adjust_num) volumn from biz_outstock_packmaterial a 
 		left JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
 		where a.del_flag='0' and a.waybill_no=#{waybillNo} and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
 		GROUP BY b.material_type_name) c
     </select>
-  	 -->
-  	 
+  	
   	<select id="getMaxVolum" parameterType="java.util.Map" resultType="Double" >
     	select max(c.volumn) from 
 		(select a.material_mark,b.material_type_name,SUM(b.out_volume*a.num) volumn FROM

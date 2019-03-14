@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtIncomeEntity">
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员名称</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">新增收入</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">责任部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+        <Property name="label">销售员ID</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtQueryCondition">
+      <PropertyDef name="deptName">
+        <Property name="label">责任部门</Property>
+      </PropertyDef>
+      <PropertyDef name="startDate">
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="endDate">
+        <Property name="label">-</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillCheckInfo">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property></Property>
+        <Property name="label">商家合同名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billName">
+        <Property></Property>
+        <Property name="label">账单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">bms商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStartTime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">业务启动时间</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerName">
+        <Property></Property>
+        <Property name="label">销售员名称</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">责任部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="billStatus">
+        <Property></Property>
+        <Property name="label">账单状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getCheckBillStatusMap&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="billConfirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">账单确认日期</Property>
+      </PropertyDef>
+      <PropertyDef name="expectAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">预计金额</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmAmount">
+        <Property name="dataType">BigDecimal</Property>
+        <Property name="label">最终确认额</Property>
+        <Property name="displayFormat">###,###,###,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtDetailCondition">
+      <PropertyDef name="area">
+        <Property></Property>
+        <Property name="label">区域</Property>
+      </PropertyDef>
+      <PropertyDef name="deptName">
+        <Property></Property>
+        <Property name="label">部门</Property>
+      </PropertyDef>
+      <PropertyDef name="sellerId">
+        <Property></Property>
+        <Property name="label">销售员ID</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">业务月份</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
+      <Property name="dataType">[dtQueryCondition]</Property>
+    </DataSet>
+    <DataSet id="dsIncomeEntity">
+      <Property name="dataType">[dtIncomeEntity]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">incomeReportController#query</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckInfo">
+      <Property name="dataType">[dtBillCheckInfo]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">incomeReportController#queryDetail</Property>
+    </DataSet>
+    <DataSet id="dsDetailCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
+      <Property name="dataType">[dtDetailCondition]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsIncomeEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnSearch">
+        <ClientEvent name="onClick">var parameter=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+if(isNullOrEmpty(parameter.get(&quot;deptName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;部门名称不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;startDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;开始日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;endDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;结束日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(parameter.get(&quot;startDate&quot;) > parameter.get(&quot;endDate&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间必须大于开始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+with(view.get(&quot;#dsIncomeEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;,parameter);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var parameter=view.get(&quot;#dsQuery.data&quot;).current;&#xD;
+if(isNullOrEmpty(parameter.get(&quot;deptName&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;部门名称不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;startDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;开始日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(isNullOrEmpty(parameter.get(&quot;endDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;结束日期不能为空！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(parameter.get(&quot;startDate&quot;) > parameter.get(&quot;endDate&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;结束时间必须大于开始时间&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+with(view.get(&quot;#dsIncomeEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;,parameter);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+        <Property name="visible">true</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm>
+      <Property name="dataSet">dsQuery</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="labelWidth">120</Property>
+      <AutoFormElement>
+        <Property name="name">deptName</Property>
+        <Property name="property">deptName</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">startDate</Property>
+        <Property name="property">startDate</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">endDate</Property>
+        <Property name="property">endDate</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsIncomeEntity</Property>
+        <Property name="readOnly">true</Property>
+        <DataColumn name="createMonth">
+          <Property name="property">createMonth</Property>
+        </DataColumn>
+        <DataColumn name="sellerName">
+          <Property name="property">sellerName</Property>
+        </DataColumn>
+        <DataColumn name="area">
+          <Property name="property">area</Property>
+        </DataColumn>
+        <DataColumn name="confirmAmount">
+          <Property name="property">confirmAmount</Property>
+        </DataColumn>
+        <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#&quot;,&#xD;
+	content:&quot;明细&quot;,&#xD;
+	onclick:function(){&#xD;
+		var entity=view.get(&quot;#dsIncomeEntity.data&quot;).current;&#xD;
+		var deptName = entity.get(&quot;deptName&quot;);&#xD;
+		var area = entity.get(&quot;area&quot;);&#xD;
+		var sellerId = entity.get(&quot;sellerId&quot;);&#xD;
+		var createMonth = entity.get(&quot;createMonth&quot;);&#xD;
+		var parameter={&#xD;
+			deptName:deptName,&#xD;
+			area:area,&#xD;
+			sellerId:sellerId,&#xD;
+			createMonth:createMonth,&#xD;
+		};&#xD;
+		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
+			set(&quot;parameter&quot;, parameter);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+		view.get(&quot;#dialogDetail&quot;).show();&#xD;
+	}&#xD;
+});</ClientEvent>
+          <Property name="visible">true</Property>
+          <Property name="name"> </Property>
+          <Property name="align">center</Property>
+          <Property name="caption"> </Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">deptName</Property>
+          <Property name="name">deptName</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">sellerId</Property>
+          <Property name="name">sellerId</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogDetail">
+      <Property name="width">1000</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">明细</Property>
+      <Buttons/>
+      <Children>
+        <DataPilot>
+          <Property name="dataSet">dsBillCheckInfo</Property>
+          <Property name="itemCodes">pages,pageSize</Property>
+        </DataPilot>
+        <Container>
+          <AutoForm id="autoform">
+            <Property name="dataSet">dsDetailCondition</Property>
+            <Property name="dataType">dtDetailCondition</Property>
+            <Property name="showLabel">false</Property>
+            <Property name="visible">false</Property>
+            <Property name="showHint">false</Property>
+            <AutoFormElement>
+              <Property name="name">area</Property>
+              <Property name="property">area</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">deptName</Property>
+              <Property name="property">deptName</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">sellerId</Property>
+              <Property name="property">sellerId</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">createMonth</Property>
+              <Property name="property">createMonth</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid>
+            <Property name="dataSet">dsBillCheckInfo</Property>
+            <Property name="dataType">dtBillCheckInfo</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="invoiceName">
+              <Property name="property">invoiceName</Property>
+            </DataColumn>
+            <DataColumn name="billName">
+              <Property name="property">billName</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">billStartTime</Property>
+              <Property name="name">billStartTime</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">confirmAmount</Property>
+              <Property name="dataType">BigDecimal</Property>
+              <Property name="name">confirmAmount</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">billStatus</Property>
+              <Property name="dataType">BigDecimal</Property>
+              <Property name="name">billStatus</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">incomeReportController#asynExport</Property>
+    </DownloadAction>
+  </View>
+</ViewConfig>

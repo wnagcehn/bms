@@ -166,7 +166,7 @@
         <Property name="label">创建者id</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
-        <Property name="label">创建时间</Property>
+        <Property name="label">库存日期</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
@@ -215,6 +215,7 @@
             <Entity>
               <Property name="system">系统</Property>
               <Property name="import">导入</Property>
+              <Property name="ALL">全部</Property>
             </Entity>
           </Property>
         </Property>

@@ -279,6 +279,13 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 	}
 
 	@Override
+	public Double getMaxVolumByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		Double v=(Double) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getMaxVolumByMap", condition);
+		return v;
+	}
+		
+	@Override
 	public int deleteAllByWayBillNo(List<String> waybillNoList) {
 		Map<String,Object> map=Maps.newHashMap();
 		map.put("waybillNoList", waybillNoList);

@@ -877,7 +877,7 @@
     </select>
     
             <select id="queryCheckReceipt" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-        select b.id,
+        select b.bill_check_id id,
         a.create_month  createMonth,
         a.seller_name sellerName,
         a.invoice_name  invoiceName,
@@ -903,5 +903,23 @@
         where a.dept_name = #{deptName}
         and a.snapshot_date = #{expectDate}
         and a.area = #{area}
+    </select>
+    
+<select id="queryIncomeReport" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT sum(confirm_amount) confirmAmount,seller_id sellerId,seller_name sellerName,area,create_month createMonth,dept_name deptName
+FROM bill_check_info 
+WHERE del_flag = 0 AND create_month =#{calculateFeeDate} AND dept_name =#{deptName}
+AND invoice_name in (SELECT a.invoice_name FROM (SELECT create_month,invoice_name FROM bill_check_info WHERE create_month >= 1901 AND del_flag = 0 GROUP BY invoice_name ORDER BY create_month) a WHERE a.create_month =#{startBizDate}) 
+GROUP BY seller_id,area
+    </select>
+    
+    <select id="queryIncomeDetail" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT create_month createMonth,seller_id sellerId,seller_name sellerName,area,
+confirm_amount confirmAmount,
+dept_name deptName,bill_name billName,invoice_name  invoiceName,
+bill_start_time billStartTime,
+bill_status billStatus
+FROM bill_check_info WHERE seller_id = #{sellerId}  AND create_month = #{createMonth}
+AND area = #{area} and dept_name = #{deptName} and del_flag=0
     </select>
 </mapper> 

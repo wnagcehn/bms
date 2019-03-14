@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="carrierId">
+        <Property/>
+        <Property name="label">物流商id</Property>
+      </PropertyDef>
+      <PropertyDef name="monthFeeCount">
+        <Property/>
+        <Property name="label">月结账号</Property>
+      </PropertyDef>
+      <PropertyDef name="ownflag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">是否商家自有</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubMonthFeeCountController#getOwnflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">作废标识</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubMonthFeeCountController#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPubMonthFeeCountVo">
+      <Property name="creationType">com.jiuyescm.bms.base.monthFeeCount.vo.PubMonthFeeCountVo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="carrierId">
+        <Property/>
+        <Property name="label">物流商id</Property>
+      </PropertyDef>
+      <PropertyDef name="monthFeeCount">
+        <Property/>
+        <Property name="label">月结账号</Property>
+      </PropertyDef>
+      <PropertyDef name="ownflag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">是否商家自有</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubMonthFeeCountController#getOwnflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">作废标识</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;pubMonthFeeCountController#getInvalidflag&quot;).getResult(&quot;ALL&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="crePerson">
+        <Property/>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="creTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="modPerson">
+        <Property/>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="modTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsPubMonthFeeCountEntity">
+      <Property name="dataType">[dtPubMonthFeeCountVo]</Property>
+      <Property name="dataProvider">pubMonthFeeCountController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPubMonthFeeCountEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsPubMonthFeeCountEntity&quot;);&#xD;
+var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <AutoForm id="formCondition">
+      <Property name="dataType">dtCondition</Property>
+      <Property name="cols">200,200,220,200</Property>
+      <Property name="dataSet">dsCondition</Property>
+      <AutoFormElement>
+        <Property name="name">carrierId</Property>
+        <Property name="property">carrierId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">monthFeeCount</Property>
+        <Property name="property">monthFeeCount</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">ownflag</Property>
+        <Property name="property">ownflag</Property>
+        <Property name="labelWidth">120</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">delflag</Property>
+        <Property name="property">delflag</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container>
+      <DataGrid>
+        <Property name="dataSet">dsPubMonthFeeCountEntity</Property>
+        <Property name="readOnly">true</Property>
+        <RowNumColumn/>
+        <DataColumn name="carrierId">
+          <Property name="property">carrierId</Property>
+        </DataColumn>
+        <DataColumn name="monthFeeCount">
+          <Property name="property">monthFeeCount</Property>
+        </DataColumn>
+        <DataColumn name="ownflag">
+          <Property name="property">ownflag</Property>
+        </DataColumn>
+        <DataColumn name="delflag">
+          <Property name="property">delflag</Property>
+        </DataColumn>
+        <DataColumn name="crePerson">
+          <Property name="property">crePerson</Property>
+        </DataColumn>
+        <DataColumn name="creTime">
+          <Property name="property">creTime</Property>
+        </DataColumn>
+        <DataColumn name="modPerson">
+          <Property name="property">modPerson</Property>
+        </DataColumn>
+        <DataColumn name="modTime">
+          <Property name="property">modTime</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+  </View>
+</ViewConfig>

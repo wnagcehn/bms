@@ -21,6 +21,8 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
+import com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService;
+import com.jiuyescm.bms.base.monthFeeCount.vo.PubMonthFeeCountVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
@@ -88,6 +90,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
+	@Autowired private IPubMonthFeeCountService pubMonthFeeCountService;
 	
 	private String BizTypeCode = "DISPATCH"; //配送费编码
 	private String contractTypeCode="CUSTOMER_CONTRACT";
@@ -105,6 +108,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	Map<String, String> carrierMap=null;
 	List<String> cancelCusList=null;
 	Map<String,WarehouseVo> wareMap=null;
+	List<String> monthCountList=null;
 	
 	@Override
 	protected List<BizDispatchBillEntity> queryBillList(Map<String, Object> map) {
@@ -169,6 +173,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		monthFeeList = systemCodeService.querySysCodes(map);//月结账号
 		
 		map= new HashMap<String, Object>();
+		throwWeightList=new ArrayList<String>();
 		map.put("typeCode", "THROW_WEIGHT_CARRIER");
 		List<SystemCodeEntity> throwList = systemCodeService.querySysCodes(map);//计抛的物流商
 		for(SystemCodeEntity s:throwList){
@@ -202,6 +207,18 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		List<WarehouseVo> wareList=warehouseService.queryAllWarehouse();
 		for(WarehouseVo vo:wareList){
 			wareMap.put(vo.getWarehouseid(), vo);
+		}
+		
+		//月结账号
+		map= new HashMap<String, Object>();
+		map.put("ownflag", "0");
+		map.put("delflag", "0");
+		List<PubMonthFeeCountVo> monthFeeList=pubMonthFeeCountService.query(map);
+		monthCountList=new ArrayList<>();
+		if(monthFeeList.size()>0){
+			for(PubMonthFeeCountVo en:monthFeeList){
+				monthCountList.add(en.getCarrierId()+"&"+en.getMonthFeeCount());
+			}
 		}
 	}
 	
@@ -299,7 +316,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			
 			//如果存在调整重量，优先取
 			if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
-				double dd = getResult(entity.getAdjustWeight());
+				double dd = getResult(entity.getAdjustWeight(),carrierId);
 				entity.setWeight(dd);
 				entity.setTotalWeight(entity.getAdjustWeight());
 			}
@@ -321,15 +338,15 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 						//有纠正重量时，直接比较纠正重量和物流商重量
 						if(entity.getCarrierWeight()>=correctWeight){
 							//物流商重量大于等于纠正重量
-							double dd = getResult(entity.getCarrierWeight());
+							double dd = getResult(entity.getCarrierWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getCarrierWeight());
 						}else{
 							//物流商重量小于纠正重量
-							double dd = getResult(correctWeight);
+							double dd = getResult(correctWeight,carrierId);
 							entity.setWeight(dd);
 							double resultWeight = compareWeight(entity.getTotalWeight(), 
-									getResult(entity.getTotalWeight()), correctWeight);
+									getResult(entity.getTotalWeight(),carrierId), correctWeight);
 							entity.setTotalWeight(resultWeight);
 						}
 						
@@ -344,12 +361,12 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 						//没有纠正重量，物流商重量和运单重量比较
 						if(entity.getCarrierWeight()>=entity.getTotalWeight()){
 							//物流商重量大于等于运单重量
-							double dd = getResult(entity.getCarrierWeight());
+							double dd = getResult(entity.getCarrierWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getCarrierWeight());
 						}else{
 							//物流商重量小于重量
-							double dd = getResult(entity.getTotalWeight());
+							double dd = getResult(entity.getTotalWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getTotalWeight());
 						}
@@ -372,15 +389,15 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 						// 有纠正重量时比较 泡重和 纠正重量
 						if(correctWeight >= entity.getCorrectThrowWeight()){
 							// 纠正重量大于抛重重量，按纠正重量算
-							double dd = getResult(correctWeight);
+							double dd = getResult(correctWeight,carrierId);
 							entity.setWeight(dd);
 							// 有纠正重量，比较纠正重量和运单重量是否相等
 							double resultWeight = compareWeight(entity.getTotalWeight(), 
-									getResult(entity.getTotalWeight()), correctWeight);
+									getResult(entity.getTotalWeight(),carrierId), correctWeight);
 							entity.setTotalWeight(resultWeight);
 						}else if(correctWeight < entity.getCorrectThrowWeight()){
 							// 纠正重量小于抛重时，按抛重算
-							double dd = getResult(entity.getCorrectThrowWeight());
+							double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 							entity.setWeight(dd);//计费重量
 							entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 						}
@@ -389,18 +406,18 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 							// 没有纠正重量时比较 泡重和 实际重量
 							if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
 								// 运单重量大于抛重时，按运单重量算
-								double dd = getResult(entity.getTotalWeight());
+								double dd = getResult(entity.getTotalWeight(),carrierId);
 								entity.setWeight(dd);
 								entity.setTotalWeight(entity.getTotalWeight());
 							}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
 								// 运单重量小于抛重时，按抛重算
-								double dd = getResult(entity.getCorrectThrowWeight());
+								double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 								entity.setWeight(dd);//计费重量
 								entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 							}
 						}else{
 							//实际重量为空时，直接取泡重
-							double dd = getResult(entity.getCorrectThrowWeight());
+							double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 							entity.setWeight(dd);
 							entity.setTotalWeight(entity.getCorrectThrowWeight());
 						}
@@ -443,7 +460,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 					entity.setWeight(Math.ceil(weight));//计费重量 : 6
 					// 比较重量
 					double resultWeight = compareWeight(entity.getTotalWeight(), 
-							getResult(entity.getTotalWeight()), weight);
+							Math.ceil(entity.getTotalWeight()), weight);
 					entity.setTotalWeight(resultWeight);//实际重量 eg:5.1
 				}else{
 					entity.setWeight(Math.ceil(entity.getTotalWeight()));//计费重量 : 6
@@ -627,28 +644,26 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 	
 		//********************************九曳自己的顺丰月结账号才计算费用*********************************
-		if("SHUNFENG_DISPATCH".equals(subjectId)){
-			boolean ismouthCount= false;
-			String feeCount=entity.getMonthFeeCount();//获取月结账号
-			for (SystemCodeEntity mouthfeeEntity : monthFeeList) {
-				if(mouthfeeEntity.getCode().equals(feeCount)){
-					ismouthCount = true;//false-此单参与计算费用
-					XxlJobLogger.log("-->"+entity.getId()+entity.getRemark());
-					break;
-				}
-			}
-			if(!ismouthCount){
-				entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
-				feeEntity.setAmount(0.0d);
-				feeEntity.setTotalWeight(getBizTotalWeight(entity));
-				feeEntity.setChargedWeight(0d);
-				entity.setIsCalculated(CalculateState.No_Exe.getCode());
-				feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
-				feeEntity.setOtherSubjectCode(_subjectCode);
-				feeEntity.setSubjectCode(_subjectCode);
-				return true;
-			}
+		boolean ismouthCount= false;
+		String feeCountKey=feeEntity.getCarrierid()+"&"+entity.getMonthFeeCount();//获取月结账号
+		
+		if(monthCountList.contains(feeCountKey)){
+			ismouthCount = true;//false-此单参与计算费用
+			XxlJobLogger.log("-->"+entity.getId()+entity.getRemark());
 		}
+		
+		if(!ismouthCount){
+			entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
+			feeEntity.setAmount(0.0d);
+			feeEntity.setTotalWeight(getBizTotalWeight(entity));
+			feeEntity.setChargedWeight(0d);
+			entity.setIsCalculated(CalculateState.No_Exe.getCode());
+			feeEntity.setIsCalculated(CalculateState.No_Exe.getCode());
+			feeEntity.setOtherSubjectCode(_subjectCode);
+			feeEntity.setSubjectCode(_subjectCode);
+			return true;
+		}
+		
 		
 		//=*******************************判断取消的单子是否继续计算*******************************
 		//指定需要计算取消状态单子的商家
@@ -974,7 +989,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			//验证是否存在签约服务
 			Map<String,Object> condition=new HashMap<String,Object>();
 			condition.put("waybillNo", entity.getWaybillNo());
-			Double volumn=bizOutstockPackmaterialRepository.getMaxVolum(condition);
+			Double volumn=bizOutstockPackmaterialRepository.getMaxVolumByMap(condition);
 			if(!DoubleUtil.isBlank(volumn)){
 				throwWeight=(double)volumn/6000;
 				throwWeight=(double)Math.round(throwWeight*100)/100;
@@ -1139,7 +1154,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				double weight=markEntity.getCorrectWeight().doubleValue();
 				// 比较重量
 				double resultWeight = compareWeight(entity.getTotalWeight(), 
-						getResult(entity.getTotalWeight()), weight);
+						getResult(entity.getTotalWeight(),entity.getChargeCarrierId()), weight);
 				totalWeight=resultWeight;//实际重量 eg:5.1
 			}else{
 				totalWeight=entity.getTotalWeight();//实际重量 eg:5.1
@@ -1376,28 +1391,38 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	}
 	
 	/**
-	 * 顺丰运费计算规则（超重1.4kg时 用续费重量*1.5, ;超重1.6kg时 用续重*2计算）
+	 * 根据物流商判断进位规则
+	 * 1.除顺丰外 1.1kg或者1.6kg，重量进位为2
+	 * 2.顺丰运费计算规则（超重1.4kg时 重量进位为1.5, ;超重1.6kg时 重量进位为*2计算）
 	 * @param weight
 	 * @return
 	 */
-	public double getResult(double weight){
+	public double getResult(double weight,String carrierId){
 		//原重
-		double a=weight;	
+		double a=weight;
 		//现重
-		double c=0.0;	
-		int b=(int)a;
-		double min=a-b;
-
-		if(0<min && min <0.5){
-			c=b+0.5;
-		}
+		double c=0.0;
 		
-		if(0.5<min && min<1){
-			c=b+1;
+		if("1500000015".equals(carrierId)){
+			//顺丰				
+			int b=(int)a;
+			double min=a-b;
+
+			if(0<min && min <0.5){
+				c=b+0.5;
+			}
+			
+			if(0.5<min && min<1){
+				c=b+1;
+			}
+			if(min==0 || min==0.5){
+				c=a;
+			}
+		}else{
+			//除顺丰外
+			c=Math.ceil(a);
 		}
-		if(min==0 || min==0.5){
-			c=a;
-		}
+			
 		return c;
 	}
 

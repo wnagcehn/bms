@@ -393,12 +393,12 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		try{
 			int k=saveData(insertList, updateList);
 			if(k>0){
-				logger.error("托数从临时表写入业务表成功");
+				logger.error("托数从写入业务表成功");
 				bmsMaterialImportTaskCommon.setTaskProcess(taskEntity.getTaskId(), 90);
 				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
 				bmsFileAsynTaskService.update(updateEntity);
 			}else{
-				logger.error("未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
+				logger.error("托数从写入业务表失败，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
 			}
@@ -600,9 +600,9 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			String row=String.valueOf(entity.getRowExcelNo());
 			String mes="";
 			
-			//如果对应数据存在,系统托数不等于0,导入托数等于0, 那么更新导入托数;
+			//如果对应数据存在,导入托数等于0, 那么更新导入托数;
 			//如果对应数据存在,导入托数不等于0, 报错提示;
-			if (entity.getOldSysPalletNum() != 0 && entity.getOldPalletNum() == 0) {
+			if (entity.getOldPalletNum() == 0) {
 				updateList.add(entity);
 			}else if (entity.getOldPalletNum() != 0) {
 				result = false;
@@ -660,6 +660,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}
 		logger.info("任务ID【{}】 -> 所有数据写入临时表-成功",taskId);
 		bmsMaterialImportTaskCommon.setTaskProcess(taskId, 75);
+		newList.clear();
 		return 1;
     }
 	
