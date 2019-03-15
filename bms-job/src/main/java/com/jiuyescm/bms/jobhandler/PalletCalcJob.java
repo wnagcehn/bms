@@ -78,7 +78,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 
 
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
-	static Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
+	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	List<String> cusList=null;
