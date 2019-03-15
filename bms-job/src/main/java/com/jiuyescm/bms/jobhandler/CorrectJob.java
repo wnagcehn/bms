@@ -127,13 +127,11 @@ public class CorrectJob  extends IJobHandler{
 			if(CollectionUtils.isNotEmpty(notCurCustList)){
 				for (String string : notCurCustList) {
 					if(notCurCustList.contains(string)){
-						notCurCustList.remove(starttime)
+						notCurCustList.remove(starttime);
 					}
 				}
 			}
-			
-			
-			
+
 			//创建未生成的任务
 			if(CollectionUtils.isNotEmpty(customeridSet)){
 				List<BmsCorrectAsynTaskEntity> list = new ArrayList<>();
