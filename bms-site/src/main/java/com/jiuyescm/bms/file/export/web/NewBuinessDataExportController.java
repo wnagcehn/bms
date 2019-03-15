@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -962,7 +963,7 @@ public class NewBuinessDataExportController extends BaseController {
 
 		}
 
-		if (headPackMaterialMapList != null && dataPackMaterialList != null) {
+		if (CollectionUtils.isNotEmpty(headPackMaterialMapList) && CollectionUtils.isNotEmpty(dataPackMaterialList)) {
 			poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook,"耗材使用费",
 					headPackMaterialMapList, dataPackMaterialList);
 		}		

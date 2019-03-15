@@ -123,10 +123,15 @@ public class CorrectJob  extends IJobHandler{
 			if (null != bmsCancelCus) {
 				notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
 			}
-			
-			
-			
-			
+			//去除
+			if(CollectionUtils.isNotEmpty(notCurCustList)){
+				for (String string : notCurCustList) {
+					if(notCurCustList.contains(string)){
+						notCurCustList.remove(starttime);
+					}
+				}
+			}
+
 			//创建未生成的任务
 			if(CollectionUtils.isNotEmpty(customeridSet)){
 				List<BmsCorrectAsynTaskEntity> list = new ArrayList<>();
