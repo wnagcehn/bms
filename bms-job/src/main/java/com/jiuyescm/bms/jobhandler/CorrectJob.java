@@ -127,7 +127,7 @@ public class CorrectJob  extends IJobHandler{
 			if(CollectionUtils.isNotEmpty(notCurCustList)){
 				for (String string : notCurCustList) {
 					if(notCurCustList.contains(string)){
-						notCurCustList.remove(starttime)
+						notCurCustList.remove(starttime);
 					}
 				}
 			}
