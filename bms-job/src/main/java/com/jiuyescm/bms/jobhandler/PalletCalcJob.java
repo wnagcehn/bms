@@ -78,7 +78,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 
 
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
-	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
+	static Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	List<String> cusList=null;
@@ -527,7 +527,6 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 				return  false;
 			}else {
 				XxlJobLogger.log("-->"+entity.getId()+"筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
-				mapCusStepPrice.clear();
 				mapCusStepPrice.put(customerId+SubjectId,price);
 			}
 		}else if("PRICE_TYPE_NORMAL".equals(priceType)){//一口价
