@@ -131,9 +131,7 @@ public class CorrectJob  extends IJobHandler{
 					}
 				}
 			}
-			
-			
-			
+
 			//创建未生成的任务
 			if(CollectionUtils.isNotEmpty(customeridSet)){
 				List<BmsCorrectAsynTaskEntity> list = new ArrayList<>();

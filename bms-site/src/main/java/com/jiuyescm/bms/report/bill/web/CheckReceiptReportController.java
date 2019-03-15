@@ -92,6 +92,7 @@ public class CheckReceiptReportController {
 				receiptMap.put(key, billCheckInfoEntity.getReceiptAmount());
 			}
 			
+			
 			//初始化区域模型
 			for (String dateString : dateList) {
 				for (SystemCodeEntity entity : codeEntities) {

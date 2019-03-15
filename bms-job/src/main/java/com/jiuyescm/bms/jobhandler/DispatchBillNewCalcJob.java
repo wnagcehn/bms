@@ -653,7 +653,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 		
 		if(!ismouthCount){
-			entity.setRemark("该顺丰运单不是九曳的月结账号，金额置0");
+			entity.setRemark("该运单不是九曳的月结账号，金额置0");
 			feeEntity.setAmount(0.0d);
 			feeEntity.setTotalWeight(getBizTotalWeight(entity));
 			feeEntity.setChargedWeight(0d);

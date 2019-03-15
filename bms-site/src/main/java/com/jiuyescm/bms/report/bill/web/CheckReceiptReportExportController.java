@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -31,6 +32,9 @@ import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
+import com.jiuyescm.bms.excel.constants.ExportConstants;
+import com.jiuyescm.bms.excel.write.ExcelExporterFactory;
+import com.jiuyescm.bms.excel.write.IExcelExporter;
 import com.jiuyescm.bms.excel.write.SXSSFExporter;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
 import com.jiuyescm.common.utils.DateUtil;
@@ -170,13 +174,23 @@ public class CheckReceiptReportExportController{
 	private String export(List<String> dateList,List<SystemCodeEntity> codeEntities,Map<String,CheckReceiptEntity> reportMap)throws Exception{
 		long beginTime = System.currentTimeMillis();
     	logger.info("====回款追踪报表导出：写入Excel begin.");
-    	SXSSFExporter exporter = new SXSSFExporter();
+    	IExcelExporter exporter = ExcelExporterFactory.createExporter(ExportConstants.XSSF);
+    	
 		//创建sheet，写入头信息
 		List<Map<String, Object>> headDetailMapList = getHead(dateList); 
 		Sheet sheet =exporter.createSheet(FileTaskTypeEnum.CHECK_RECEIPT.getDesc(),1,headDetailMapList);
 		//内容
 		List<Map<String, Object>> dataDetailList = getData(dateList,codeEntities,reportMap);
 		exporter.writeContent(sheet, dataDetailList);
+		
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
+		int regions = dataDetailList.size()/4;
+		for(int i =0;i<regions;i++){
+			int startRow = 1+(4*i);
+			int endRow = startRow+3;
+			sheet.addMergedRegion(new CellRangeAddress(startRow, endRow, 0, 0));
+		}
+		
 		String path = exporter.saveFile(UUID.randomUUID().toString()+".xlsx");
 //		String path = exporter.saveFile("E:/","test.xlsx");
     	logger.info("====回款追踪报表临时文件路径："+path);
