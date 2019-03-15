@@ -524,7 +524,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 				entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"阶梯报价未配置;");
 				return  false;
 			}else {
-				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
+				XxlJobLogger.log("-->"+entity.getId()+"筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
 				mapCusStepPrice.put(customerId+SubjectId,price);
 			}
 		}else if("PRICE_TYPE_NORMAL".equals(priceType)){//一口价
