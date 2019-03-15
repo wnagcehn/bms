@@ -17,6 +17,137 @@
         <Property name="label">商家助记码</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtCustomer" meta="x:839;y:10">
+      <Property name="creationType">com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity</Property>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
+      </PropertyDef>
+      <PropertyDef name="orgid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="customercode">
+        <Property></Property>
+        <Property name="label">商家编码</Property>
+      </PropertyDef>
+      <PropertyDef name="shortname">
+        <Property></Property>
+        <Property name="label">商家简称</Property>
+      </PropertyDef>
+      <PropertyDef name="customername">
+        <Property></Property>
+        <Property name="label">商家全称</Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property></Property>
+        <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="linkman">
+        <Property></Property>
+        <Property name="label">联系人</Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property></Property>
+        <Property name="label">商家地址</Property>
+      </PropertyDef>
+      <PropertyDef name="tel">
+        <Property></Property>
+        <Property name="label">商家电话</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property></Property>
+        <Property name="label">商家移动电话</Property>
+      </PropertyDef>
+      <PropertyDef name="zipcode">
+        <Property></Property>
+        <Property name="label">编码</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="delflag">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">删除标记</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getInvalidflag&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="creperson">
+        <Property></Property>
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="cretime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="modperson">
+        <Property></Property>
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="modtime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmbatchflag">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="uploadExpressnumStatus">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="packagedesc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="province">
+        <Property></Property>
+        <Property name="label">省</Property>
+      </PropertyDef>
+      <PropertyDef name="city">
+        <Property></Property>
+        <Property name="label">市</Property>
+      </PropertyDef>
+      <PropertyDef name="district">
+        <Property></Property>
+        <Property name="label">区</Property>
+      </PropertyDef>
+      <PropertyDef name="area">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="level">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="type1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="type2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="type3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="signdate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="mainProduct">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="productInfo">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="companyProfile">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="custid">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="projectContents">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="mkInvoiceId">
+        <Property></Property>
+        <Property name="label">合同商家编号</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ToolBar>
@@ -40,16 +171,21 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsCustomerLookup">
-      <Property name="dataType">[dtCustomerEntity]</Property>
+      <Property name="dataType">[dtCustomer]</Property>
       <Property name="dataProvider">customerController#queryLookup</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataSet id="dsCusCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCusCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondLookupCustomer]</Property>
     </DataSet>
     <AutoForm id="formConditionCustomer">
       <Property name="dataType">dtCondLookupCustomer</Property>
       <Property name="createPrivateDataSet">true</Property>
       <Property name="cols">*,*,*</Property>
       <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsCusCondition</Property>
       <AutoFormElement>
         <Property name="name">shortname</Property>
         <Property name="property">shortname</Property>
@@ -63,6 +199,7 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <AutoFormElement>
         <Property name="name">mkInvoiceName</Property>
         <Property name="property">mkInvoiceName</Property>
+        <Property name="label">商家合同名称</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>

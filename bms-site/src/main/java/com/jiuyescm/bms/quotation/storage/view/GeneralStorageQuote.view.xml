@@ -2762,8 +2762,7 @@ var progressJob = setInterval(getProgress, 500);</ClientEvent>
 if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
-        customerId:data.get(&quot;customerid&quot;),&#xD;
-		customerName:data.get(&quot;customername&quot;)&#xD;
+        customerId:data.get(&quot;customerid&quot;)&#xD;
     });&#xD;
 }</ClientEvent>
       <Property name="caption">商家选择</Property>
