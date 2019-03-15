@@ -82,6 +82,8 @@ public interface IBizOutstockPackmaterialRepository {
 	public List<String> queryWayBillNo(Map<String,Object> condition);
 	
 	Double getMaxVolum(Map<String,Object> condition);
+	
+	Double getMaxVolumByMap(Map<String,Object> condition);
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);
 	

@@ -68,5 +68,6 @@
 	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialAccountService" ref="bmsProductsMaterialAccountService"/>
 	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightAccountService" ref="bmsProductsWeightAccountService"/>
 	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsMarkingProductsService" ref="bmsMarkingProductsService"/>
+	<dubbo:service interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" ref="pubMonthFeeCountService"/>
 	
 </beans>

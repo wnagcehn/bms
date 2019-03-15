@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.monthFeeCount.mapper.PubMonthFeeCountMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.base.monthFeeCount.PubMonthFeeCountEntity" >
+      	<id column="id" property="id" jdbcType="INTEGER" />
+	   	<result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	   	<result column="month_fee_count" property="monthFeeCount" jdbcType="VARCHAR" />
+	   	<result column="ownflag" property="ownflag" jdbcType="INTEGER" />
+	   	<result column="delflag" property="delflag" jdbcType="INTEGER" />
+	   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+	   	<result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+	   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+	   	<result column="mod_person" property="modPerson" jdbcType="VARCHAR" />
+	   	<result column="mod_person_id" property="modPersonId" jdbcType="VARCHAR" />
+	   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+	   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+    <sql id="BASE_COLUMNS_ALL">
+        id, carrier_id, month_fee_count, ownflag, delflag, cre_person, cre_person_id, cre_time, mod_person, mod_person_id, mod_time, write_time
+    </sql>
+
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.monthFeeCount.PubMonthFeeCountEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from pub_month_fee_count
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" carrierId != null and carrierId !='' ">
+				and carrier_id = #{carrierId}
+			</if>
+        	<if test=" monthFeeCount != null and monthFeeCount !='' ">
+				and month_fee_count like '%${monthFeeCount}%'
+			</if>
+        	<if test=" ownflag != null and ownflag !='' and ownflag!='999'">
+				and ownflag = #{ownflag}
+			</if>
+        	<if test=" delflag != null and delflag !='' and delflag!='999' ">
+				and delflag = #{delflag}
+			</if>
+        	<if test=" crePerson != null and crePerson !='' ">
+				and cre_person = #{crePerson}
+			</if>
+        	<if test=" crePersonId != null and crePersonId !='' ">
+				and cre_person_id = #{crePersonId}
+			</if>
+        	<if test=" creTime != null and creTime !='' ">
+				and cre_time = #{creTime}
+			</if>
+        	<if test=" modPerson != null and modPerson !='' ">
+				and mod_person = #{modPerson}
+			</if>
+        	<if test=" modPersonId != null and modPersonId !='' ">
+				and mod_person_id = #{modPersonId}
+			</if>
+        	<if test=" modTime != null and modTime !='' ">
+				and mod_time = #{modTime}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+    </select>
+	
+</mapper>

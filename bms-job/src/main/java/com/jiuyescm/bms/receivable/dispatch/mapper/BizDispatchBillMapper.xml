@@ -374,4 +374,5 @@
    		 </set>
    		 where waybill_no=#{waybillNo} and del_flag='0'
     </update>
+
 </mapper>

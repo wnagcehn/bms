@@ -105,6 +105,4 @@ public class BizDispatchBillServiceImpl extends MyBatisDao implements IBizDispat
 		return this.update("com.jiuyescm.bms.receivable.dispatch.BizDispatchBillMapper.updateByParam", condition);
 	}
 
-
-
 }

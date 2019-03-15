@@ -374,7 +374,7 @@ public class CustomerContractController {
 			for(PriceContractItemEntity temp:datas){
 				//对操作类型进行判断
 				//此为新增商家合同明细信息
-				if(EntityState.NEW.equals(EntityUtils.getState(temp))){ 
+				if(EntityState.NEW.equals(EntityUtils.getState(temp))){
 					//先判断该合同是否已签约服务
 					List<ContractDetailEntity> contractList=priceContractService.findAllContractItemName(temp.getContractCode());
 					//若存在原来的服务需删除后签约
@@ -394,30 +394,32 @@ public class CustomerContractController {
 					
 					/*1001-RC00024&1007-12&1002-16&1006-19*/
 					List<PriceContractItemEntity> itemList=new ArrayList<>();
-					String[] item=temp.getSubjectId().split("&");
-					if(item.length>0){
-						for(String s:item){
-							PriceContractItemEntity newItem=new PriceContractItemEntity();
-							if(!StringUtils.isBlank(s)){
-								String[] detail=s.split("#");
-								String[] bizDetail=s.split("@");
-								if(StringUtils.isNotBlank(bizDetail[0]) && StringUtils.isNotBlank(detail[0]) && StringUtils.isNotBlank(detail[1])){
-									newItem.setContractCode(temp.getContractCode());
-									newItem.setBizTypeCode(bizDetail[0].trim());
-									newItem.setSubjectId(detail[0].substring(detail[0].indexOf("@")+1));	
-									newItem.setTemplateId(detail[1].trim());
-									newItem.setCreator(userid);
-									newItem.setCreateTime(nowdate);
-									newItem.setDelFlag("0");
-									itemList.add(newItem);
-								}							
+					if(StringUtils.isNotBlank(temp.getSubjectId())){
+						String[] item=temp.getSubjectId().split("&");
+						if(item.length>0){
+							for(String s:item){
+								PriceContractItemEntity newItem=new PriceContractItemEntity();
+								if(!StringUtils.isBlank(s)){
+									String[] detail=s.split("#");
+									String[] bizDetail=s.split("@");
+									if(StringUtils.isNotBlank(bizDetail[0]) && StringUtils.isNotBlank(detail[0]) && StringUtils.isNotBlank(detail[1])){
+										newItem.setContractCode(temp.getContractCode());
+										newItem.setBizTypeCode(bizDetail[0].trim());
+										newItem.setSubjectId(detail[0].substring(detail[0].indexOf("@")+1));	
+										newItem.setTemplateId(detail[1].trim());
+										newItem.setCreator(userid);
+										newItem.setCreateTime(nowdate);
+										newItem.setDelFlag("0");
+										itemList.add(newItem);
+									}							
+								}
+							}
+							int result=priceContractService.createContractItem(itemList);
+							if(result<=0){
+								return "保存科目失败";
 							}
 						}
-						int result=priceContractService.createContractItem(itemList);
-						if(result<=0){
-							return "保存科目失败";
-						}
-					}
+					}				
 				}
 				
 			}
@@ -482,30 +484,32 @@ public class CustomerContractController {
 				
 			/*1001-RC00024&1007-12&1002-16&1006-19*/
 			List<PriceContractDiscountItemEntity> itemList=new ArrayList<>();
-			String[] item=temp.getSubjectId().split("&");
-			if(item.length>0){
-				for(String s:item){
-					PriceContractDiscountItemEntity newItem=new PriceContractDiscountItemEntity();
-					if(!StringUtils.isBlank(s)){
-						String[] detail=s.split("#");
-						String[] bizDetail=s.split("@");
-						if(StringUtils.isNotBlank(bizDetail[0]) && StringUtils.isNotBlank(detail[0]) && StringUtils.isNotBlank(detail[1])){
-							newItem.setContractCode(temp.getContractCode());
-							newItem.setBizTypeCode(bizDetail[0].trim());
-							newItem.setSubjectId(detail[0].substring(detail[0].indexOf("@")+1));	
-							newItem.setTemplateCode(detail[1].trim());
-							newItem.setCreator(userid);
-							newItem.setCreateTime(nowdate);
-							newItem.setDelFlag("0");
-							itemList.add(newItem);
-						}							
+			if(StringUtils.isNotBlank(temp.getSubjectId())){
+				String[] item=temp.getSubjectId().split("&");
+				if(item.length>0){
+					for(String s:item){
+						PriceContractDiscountItemEntity newItem=new PriceContractDiscountItemEntity();
+						if(!StringUtils.isBlank(s)){
+							String[] detail=s.split("#");
+							String[] bizDetail=s.split("@");
+							if(StringUtils.isNotBlank(bizDetail[0]) && StringUtils.isNotBlank(detail[0]) && StringUtils.isNotBlank(detail[1])){
+								newItem.setContractCode(temp.getContractCode());
+								newItem.setBizTypeCode(bizDetail[0].trim());
+								newItem.setSubjectId(detail[0].substring(detail[0].indexOf("@")+1));	
+								newItem.setTemplateCode(detail[1].trim());
+								newItem.setCreator(userid);
+								newItem.setCreateTime(nowdate);
+								newItem.setDelFlag("0");
+								itemList.add(newItem);
+							}							
+						}
+					}
+					int result=priceContractDiscountService.insertDiscountItem(itemList);
+					if(result<=0){
+						return "保存科目失败";
 					}
 				}
-				int result=priceContractDiscountService.insertDiscountItem(itemList);
-				if(result<=0){
-					return "保存科目失败";
-				}
-			}
+			}		
 			try{
 				PubRecordLogEntity model=new PubRecordLogEntity();
 				model.setBizType(RecordLogBizTypeEnum.CONTACT.getCode());
