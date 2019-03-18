@@ -235,6 +235,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 //		if(StringUtils.isNotBlank(entity.getTemperatureTypeCode())){
 //			entity.setTemperatureTypeName(temMap.get(entity.getTemperatureTypeCode()));
 //		}
+		entity.setRemark("");
 		return storageFeeEntity;
 	}
 	
