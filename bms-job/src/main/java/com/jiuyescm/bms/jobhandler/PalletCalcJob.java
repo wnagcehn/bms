@@ -529,6 +529,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 			}else {
 				XxlJobLogger.log("-->"+entity.getId()+"筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
 				mapCusStepPrice.put(customerId+SubjectId,price);
+				XxlJobLogger.log("-->"+entity.getId()+"put后得到的报价结果【{0}】",JSONObject.fromObject(price));
 			}
 		}else if("PRICE_TYPE_NORMAL".equals(priceType)){//一口价
 			
