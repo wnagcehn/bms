@@ -52,4 +52,14 @@ public interface IExcelExporter {
 	
 	public void setvMergeColumn(Sheet sheet,String columns);
 	
+	/**
+     * 注解类创建 sheet
+     */
+	public Sheet createSheetByAnno(String sheetName,int startIndex,Class clazz) throws ExcelHandlerException;
+	
+	/**
+	 * 注解类写入内容
+	 */
+    public void writeContentByAnno(Sheet sheet, List list);
+	
 }

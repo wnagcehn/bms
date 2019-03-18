@@ -8,9 +8,14 @@ import java.util.Map;
 
 import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
 
+/**
+ * 
+ * @author liuzhicheng
+ *
+ */
 public class ExcelAnnotionUtil {
     
-    public static Map<String,Object>  getData(Object obj) {
+    private static Map<String,Object>  getData(Object obj) {
     	Class clazz =  obj.getClass();
         Field[] fields = clazz.getDeclaredFields(); // 返回所有的属性
         Map<String, Object> dataItem = new HashMap<String, Object>();
