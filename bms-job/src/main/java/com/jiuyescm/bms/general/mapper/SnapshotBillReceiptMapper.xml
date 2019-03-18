@@ -22,7 +22,7 @@
 	bill_name as billName,
 	seller_id as sellerId,
 	seller_name as sellerName,
-	expect_amount as expectAmount,
+	un_receipt_amount as expectAmount,
 	expect_receipt_date as snapshotDate,
 	area ,
 	dept_name as deptName
