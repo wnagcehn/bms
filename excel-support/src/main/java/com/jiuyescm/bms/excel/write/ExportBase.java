@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jiuyescm.bms.excel.data.WorkSheet;
 import com.jiuyescm.bms.excel.exception.ExcelHandlerException;
+import com.jiuyescm.bms.excel.util.ExcelAnnotionUtil;
 
 public class ExportBase implements IExcelExporter{
 
@@ -209,4 +210,20 @@ public class ExportBase implements IExcelExporter{
 		WorkSheet workSheet = sheets.get(sheet.getSheetName());
 		workSheet.setvMergeColumn(columns);
 	}
+	
+	/**
+     * 注解类创建 sheet
+     */
+	public Sheet createSheetByAnno(String sheetName,int startIndex,Class clazz) throws ExcelHandlerException{
+		List<Map<String, Object>> headInfoList = ExcelAnnotionUtil.getTitle(clazz);
+		return createSheet(sheetName,startIndex,headInfoList);
+    }
+	
+	/**
+	 * 注解类写入内容
+	 */
+    public void writeContentByAnno(Sheet sheet, List list){
+    	List<Map<String, Object>> dataList =ExcelAnnotionUtil.getDataList(list);
+    	writeContent(sheet,dataList);
+    }
 }
