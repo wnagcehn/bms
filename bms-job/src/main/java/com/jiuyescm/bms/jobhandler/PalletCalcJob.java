@@ -321,6 +321,8 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 						break;
 					case "PRICE_TYPE_STEP"://阶梯价
 						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId+SubjectId);
+						XxlJobLogger.log("-->"+entity.getId()+"报价Map：【{0}】",mapCusStepPrice);
+						XxlJobLogger.log("-->"+entity.getId()+"取出后的报价为【{0}】",JSONObject.fromObject(stepQuoEntity));
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 							amount=feeEntity.getQuantity()*stepQuoEntity.getUnitPrice();
 							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
@@ -341,7 +343,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 					
 					feeEntity.setCost(BigDecimal.valueOf(amount));
 					feeEntity.setParam4(priceType);
-					entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"计算成功;");
+					entity.setRemark((entity.getRemark()==null?"":entity.getRemark())+"计算成功;");
 					entity.setIsCalculated(CalculateState.Finish.getCode());
 					feeEntity.setIsCalculated(CalculateState.Finish.getCode());
 				}
@@ -524,7 +526,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 				entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"阶梯报价未配置;");
 				return  false;
 			}else {
-				XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
+				XxlJobLogger.log("-->"+entity.getId()+"筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
 				mapCusStepPrice.put(customerId+SubjectId,price);
 			}
 		}else if("PRICE_TYPE_NORMAL".equals(priceType)){//一口价
