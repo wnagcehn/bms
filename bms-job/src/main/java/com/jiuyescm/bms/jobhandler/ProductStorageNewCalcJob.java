@@ -152,6 +152,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	
 	@Override
 	public FeesReceiveStorageEntity initFeeEntity(BizProductStorageEntity entity){		
+		entity.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(entity.getCreateTime());

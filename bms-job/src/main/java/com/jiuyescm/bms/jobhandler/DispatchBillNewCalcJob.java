@@ -249,6 +249,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	
 	@Override
 	public FeesReceiveDispatchEntity initFeeEntity(BizDispatchBillEntity entity){
+		entity.setRemark("");
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
 		

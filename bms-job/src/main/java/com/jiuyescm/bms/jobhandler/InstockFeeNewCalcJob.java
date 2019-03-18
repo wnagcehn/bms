@@ -121,7 +121,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 	
 	@Override
 	public FeesReceiveStorageEntity initFeeEntity(BmsBizInstockInfoEntity instock){
-		
+		instock.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		
 		double num=DoubleUtil.isBlank(instock.getAdjustQty())?instock.getTotalQty():instock.getAdjustQty();
