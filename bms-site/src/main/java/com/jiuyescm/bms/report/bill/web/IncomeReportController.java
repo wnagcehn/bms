@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -217,6 +218,9 @@ public class IncomeReportController {
 	}
 	
 	private List<Map<String, Object>> getData(List<BillCheckInfoEntity> reportList ){
+		// 保留两位小数，个位无数字填充0
+		  NumberFormat nformat = NumberFormat.getNumberInstance();
+		  nformat.setMaximumFractionDigits(2);
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	        //无数据
 	        if(CollectionUtils.isEmpty(reportList)){
@@ -227,7 +231,7 @@ public class IncomeReportController {
 	        	dataItem.put("createMonth", entity.getCreateMonth());
 	        	dataItem.put("sellerName", entity.getSellerName());
 	        	dataItem.put("area", entity.getArea());
-	        	dataItem.put("confirmAmount", entity.getConfirmAmount());
+	        	dataItem.put("confirmAmount", nformat.format(entity.getConfirmAmount()));
 	        	dataList.add(dataItem);
 			}
 		return dataList;
