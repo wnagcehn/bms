@@ -137,6 +137,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	
 	@Override
 	public FeesReceiveStorageEntity initFeeEntity(BizOutstockPackmaterialEntity entity) {
+		entity.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(entity.getCreateTime());

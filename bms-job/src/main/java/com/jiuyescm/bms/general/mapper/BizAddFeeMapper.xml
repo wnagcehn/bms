@@ -283,7 +283,7 @@
 		a.warehouse_name, a.customerid, a.customer_name,a.num, a.fees_no,
 		a.fees_type, a.fees_unit, a.item, a.is_calculated, a.creator,
 		a.create_time, a.last_modifier, a.last_modify_time, a.del_flag,
-		a.calculate_time, a.write_time, a.adjust_num, a.fees_type_name, a.remark,
+		a.calculate_time, a.write_time, a.adjust_num, a.fees_type_name, '' as remark,
 		a.external_no
 		from biz_add_fee a
 		where a.del_flag = 0 

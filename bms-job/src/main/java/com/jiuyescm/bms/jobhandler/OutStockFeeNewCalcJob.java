@@ -179,6 +179,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	// 初始化
 	@Override
 	public FeesReceiveStorageEntity initFeeEntity(BizOutstockMasterEntity outstock) {
+		outstock.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(outstock.getCreateTime());
