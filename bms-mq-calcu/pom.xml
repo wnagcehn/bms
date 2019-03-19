@@ -48,10 +48,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -60,7 +57,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
-		<!-- Spring security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
@@ -83,7 +79,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 		</dependency>
-		<!-- Mybatis -->
+
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
@@ -92,12 +88,12 @@
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 		</dependency>
-		<!-- Pagination -->
+
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
 		</dependency>
-		<!-- Dorado -->
+
 		<dependency>
 			<groupId>com.bstek.dorado</groupId>
 			<artifactId>dorado-uploader</artifactId>
@@ -226,7 +222,7 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
-		<!-- Dubbo -->
+
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
@@ -241,7 +237,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- Zookeeper -->
+
 		<dependency>
 			<groupId>com.github.sgroschupf</groupId>
 			<artifactId>zkclient</artifactId>
@@ -320,56 +316,28 @@
 			<artifactId>jasperdata</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		
-		<!-- bms -->
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-core</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>drools-support</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-repo</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-api</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-api-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		
-		<!-- mdm -->
-				
-		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-forwarder-api</artifactId>
-			<version>${mdm.version}</version>
-		</dependency>
-		
 		
 		<dependency>
-		  <groupId>com.jiuyescm.framework</groupId>
-		  <artifactId>fastdfs-client</artifactId>
-		  <version>1.0.0-SNAPSHOT</version>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-entity</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>
@@ -378,7 +346,7 @@
 		<resources>
 			<resource>
 				<targetPath>${project.build.directory}/classes</targetPath>
-				<directory>src/main/resources</directory>
+				<directory>src/main/resources/conf</directory>
 				<excludes>
 					<exclude>dev/*</exclude>
 					<exclude>qa/*</exclude>
@@ -387,7 +355,7 @@
 				</excludes>
 			</resource>
 			<resource>
-				<directory>src/main/resources/${profiles.active}</directory>
+				<directory>src/main/resources/conf/${profiles.active}</directory>
 			</resource>
 		</resources>
 		<plugins>
