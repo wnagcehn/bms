@@ -9,11 +9,15 @@
 	</parent>
 	<artifactId>bms-mq-calcu</artifactId>
 	<name>bms-mq-calcu</name>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 
 	<dependencies>
 		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -52,10 +56,28 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
 		<!-- Spring security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-cas</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -75,10 +97,120 @@
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
 		</dependency>
-		
+		<!-- Dorado -->
+		<dependency>
+			<groupId>com.bstek.dorado</groupId>
+			<artifactId>dorado-uploader</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-jcl</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-jdk14</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.dorado</groupId>
+			<artifactId>dorado-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>javassist</artifactId>
+					<groupId>javassist</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-orm-hibernate3</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>javassist</artifactId>
+					<groupId>org.javassist</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-export</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>ant-launcher</artifactId>
+					<groupId>org.apache.ant</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>ant</artifactId>
+					<groupId>org.apache.ant</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-uploader</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-jasperreports</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>asm-analysis</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>asm-tree</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>asm-commons</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>asm-util</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcmail-jdk14</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bctsp-jdk14</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>castor</artifactId>
+					<groupId>org.codehaus.castor</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jcommon</artifactId>
+					<groupId>jfree</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jdtcore</artifactId>
+					<groupId>eclipse</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jfreechart</artifactId>
+					<groupId>jfree</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -114,18 +246,80 @@
 			<groupId>com.github.sgroschupf</groupId>
 			<artifactId>zkclient</artifactId>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.bstek.dorado</groupId>
+			<artifactId>dorado-intro</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm</groupId>
+			<artifactId>scm-api</artifactId>
+			<version>${scm.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+				    <groupId>org.slf4j</groupId>
+				    <artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>com.jiuyescm</groupId>
+				    <artifactId>scm-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		
-		
+		<dependency>
+			<groupId>com.jiuyescm.log</groupId>
+			<artifactId>log-api</artifactId>
+			<version>${log.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+				    <groupId>org.slf4j</groupId>
+				    <artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>com.jiuyescm</groupId>
+				    <artifactId>scm-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>com.baidu.disconf</groupId>
 			<artifactId>disconf-client</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.0.3.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-recipes</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuye</groupId>
+			<artifactId>jasperdata</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -137,34 +331,54 @@
 			<artifactId>bms-core</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>drools-support</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-repo</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-api</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-api-impl</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-bpi</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
+		<!-- mdm -->
+				
+		<dependency>
+			<groupId>com.jiuyescm.mdm</groupId>
+			<artifactId>mdm-forwarder-api</artifactId>
+			<version>${mdm.version}</version>
+		</dependency>
+		
+		
+		<dependency>
+		  <groupId>com.jiuyescm.framework</groupId>
+		  <artifactId>fastdfs-client</artifactId>
+		  <version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		
 	</dependencies>
-	
-	
 	
 	<build>
 		<resources>
 			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-			<resource>
+				<targetPath>${project.build.directory}/classes</targetPath>
 				<directory>src/main/resources</directory>
-				<includes>
-					<include>spring/*</include>
-					<include>dubbo/*</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources/conf</directory>
 				<excludes>
 					<exclude>dev/*</exclude>
 					<exclude>qa/*</exclude>
@@ -173,60 +387,16 @@
 				</excludes>
 			</resource>
 			<resource>
-				<directory>src/main/resources/conf/${profiles.active}</directory>
-			</resource>
-			<!-- 结合com.alibaba.dubbo.container.Main -->
-			<resource>
-				<targetPath>${project.build.directory}/classes/META-INF/spring</targetPath>
-				<directory>src/main/resources/spring</directory>
-<!-- 				<filtering>true</filtering> -->
-<!-- 				<includes> -->
-<!-- 					<include>spring-context.xml</include> -->
-<!-- 				</includes> -->
-			</resource>
-			<resource>
-				<targetPath>${project.build.directory}/classes/META-INF/dubbo</targetPath>
-				<directory>src/main/resources/dubbo</directory>
+				<directory>src/main/resources/${profiles.active}</directory>
 			</resource>
 		</resources>
 		<plugins>
-			<!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
+				<artifactId>maven-deploy-plugin</artifactId>
 				<configuration>
-					<classesDirectory>target/classes/</classesDirectory>
-					<archive>
-						<manifest>
-							<mainClass>com.jiuyescm.bms.JobApplication</mainClass>
-							<!-- 打包时 MANIFEST.MF文件不记录的时间戳版本 -->
-							<useUniqueVersions>true</useUniqueVersions>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-						</manifest>
-						<manifestEntries>
-							<Class-Path>.</Class-Path>
-						</manifestEntries>
-					</archive>
+					<skip>true</skip>
 				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/distribution.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
