@@ -157,7 +157,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		}
 		
 		mapCusPrice=new ConcurrentHashMap<String,PriceGeneralQuotationEntity>();
-		//mapCusStepPrice=new ConcurrentHashMap<String,PriceStepQuotationEntity>();
+		mapCusStepPrice=new ConcurrentHashMap<String,List<PriceStepQuotationEntity>>();
 		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
 		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
 		
