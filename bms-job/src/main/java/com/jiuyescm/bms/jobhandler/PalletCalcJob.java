@@ -78,7 +78,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 
 
 	Map<String,PriceGeneralQuotationEntity> mapCusPrice=null;
-	Map<String,PriceStepQuotationEntity> mapCusStepPrice=null;
+	Map<String,List<PriceStepQuotationEntity>> mapCusStepPrice=null;
 	Map<String,PriceContractInfoEntity> mapContact=null;
 	Map<String,BillRuleReceiveEntity> mapRule=null;
 	List<String> cusList=null;
@@ -157,7 +157,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		}
 		
 		mapCusPrice=new ConcurrentHashMap<String,PriceGeneralQuotationEntity>();
-		mapCusStepPrice=new ConcurrentHashMap<String,PriceStepQuotationEntity>();
+		//mapCusStepPrice=new ConcurrentHashMap<String,PriceStepQuotationEntity>();
 		mapContact=new ConcurrentHashMap<String,PriceContractInfoEntity>();
 		mapRule=new ConcurrentHashMap<String,BillRuleReceiveEntity>();
 		
@@ -321,7 +321,26 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 						feeEntity.setParam3(generalEntity.getId()+"");
 						break;
 					case "PRICE_TYPE_STEP"://阶梯价
-						PriceStepQuotationEntity stepQuoEntity=mapCusStepPrice.get(customerId+SubjectId);
+						List<PriceStepQuotationEntity> list=mapCusStepPrice.get(customerId+SubjectId);
+						
+						Map<String, Object> map = new HashMap<>();
+						XxlJobLogger.log("-->"+entity.getWarehouseCode());
+						XxlJobLogger.log("-->"+entity.getTemperatureTypeCode());
+						map.put("warehouse_code", entity.getWarehouseCode());
+						map.put("temperature_code", entity.getTemperatureTypeCode());
+						PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);
+						
+						if(stepQuoEntity==null){
+							XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+							XxlJobLogger.log("2222222");
+							entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+							entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"阶梯报价未配置;");
+						}else {
+							XxlJobLogger.log("-->"+entity.getId()+"筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+						}
+						
+						
 						XxlJobLogger.log("-->"+entity.getId()+"报价Map：【{0}】",mapCusStepPrice);
 						XxlJobLogger.log("-->"+entity.getId()+"取出后的报价为【{0}】",JSONObject.fromObject(stepQuoEntity));
 						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
@@ -491,44 +510,28 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		//报价模板
 		PriceGeneralQuotationEntity priceGeneral=quoTemplete;
 		priceType=priceGeneral.getPriceType();
-		List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
-		PriceStepQuotationEntity price=new PriceStepQuotationEntity();
 		if("PRICE_TYPE_STEP".equals(priceType)){//阶梯价格
-			//寻找阶梯报价
-			map.clear();
-			map.put("quotationId", priceGeneral.getId());
-			//根据报价单位判断
-			map.put("num", DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum());			
-			//查询出的所有子报价
-			list=repository.queryPriceStepByQuatationId(map);
-			
-			if(list==null || list.size() == 0){
-				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
-				XxlJobLogger.log("11111111");
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"阶梯报价未配置;");
-				return  false;
-			}
-			
-			//封装数据的仓库和温度
-			map.clear();
-			XxlJobLogger.log("-->"+entity.getWarehouseCode());
-			XxlJobLogger.log("-->"+entity.getTemperatureTypeCode());
-			map.put("warehouse_code", entity.getWarehouseCode());
-			map.put("temperature_code", entity.getTemperatureTypeCode());
-			price=storageQuoteFilterService.quoteFilter(list, map);
-			
-			if(price==null){
-				XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
-				XxlJobLogger.log("2222222");
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"阶梯报价未配置;");
-				return  false;
-			}else {
-				XxlJobLogger.log("-->"+entity.getId()+"筛选后得到的报价结果【{0}】",JSONObject.fromObject(price));
-				mapCusStepPrice.put(customerId+SubjectId,price);
+			if(!mapCusStepPrice.containsKey(customerId+SubjectId)){
+				//寻找阶梯报价
+				map.clear();
+				map.put("quotationId", priceGeneral.getId());
+				//根据报价单位判断
+				map.put("num", DoubleUtil.isBlank(entity.getAdjustPalletNum())?entity.getPalletNum():entity.getAdjustPalletNum());			
+				List<PriceStepQuotationEntity> list=new ArrayList<PriceStepQuotationEntity>();
+				//查询出的所有子报价
+				list=repository.queryPriceStepByQuatationId(map);
+				
+				if(list==null || list.size() == 0){
+					XxlJobLogger.log("-->"+entity.getId()+"阶梯报价未配置");
+					XxlJobLogger.log("11111111");
+					entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					entity.setRemark(entity.getRemark()==null?"":entity.getRemark()+"阶梯报价未配置;");
+					return false;
+				}
+				mapCusStepPrice.put(customerId+SubjectId,list);
+				//封装数据的仓库和温度
+				map.clear();
 			}
 		}else if("PRICE_TYPE_NORMAL".equals(priceType)){//一口价
 			
