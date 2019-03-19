@@ -2,7 +2,6 @@ package com.jiuyescm.bms.correct.product;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
@@ -49,6 +50,8 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 	private IPubMaterialInfoService pubMaterialInfoService;	
 	@Autowired
 	private IBmsCorrectAsynTaskService bmsCorrectAsynTaskService;
+	@Autowired 
+	private ISystemCodeService systemCodeService;
 	
 	/**
 	 * 运单重量调整
@@ -140,9 +143,11 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 		}	
 	}
 	
-	@SuppressWarnings("deprecation")
 	private String handWeight(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
 		Map<String,Object> condition=new HashMap<String,Object>();
+		//获取不纠正的订单类型
+		List<String> noCorrectList=getNoCorrectList();
+		
 		long start = 0l;
 		long end = 0l;
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
@@ -153,6 +158,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
+			condition.put("orderList", noCorrectList);
 			updateProgress(taskVo,50);
 			logger.info(taskId+"正在进行重量汇总统计 ");
 			logger.info(condition);
@@ -204,6 +210,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 						condition.put("weight", newWeight);
 						condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 						condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
+						condition.put("orderList", noCorrectList);
 						
 						logger.info(taskId+"商品明细"+productDetail+"的标准重量"+newWeight);
 						
@@ -244,6 +251,16 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 		return "sucess";
 	}
 	
+	public List<String> getNoCorrectList(){
+		List<String> noCorrectList=new ArrayList<String>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeCode", "NO_CORRECT_ORDER_TYPE");
+		List<SystemCodeEntity> list= systemCodeService.queryCodeList(map);
+		for(SystemCodeEntity s:list){
+			noCorrectList.add(s.getCode());
+		}
+		return noCorrectList;
+	}
 	
 	public void updateProgress(BmsCorrectAsynTaskVo taskVo,int num)throws Exception{
 		taskVo.setTaskRate(num);

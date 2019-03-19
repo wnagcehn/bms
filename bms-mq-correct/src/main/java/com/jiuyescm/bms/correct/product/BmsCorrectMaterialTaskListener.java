@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
@@ -54,6 +56,8 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	private IPubMaterialInfoService pubMaterialInfoService;	
 	@Autowired
 	private IBmsCorrectAsynTaskService bmsCorrectAsynTaskService;
+	@Autowired 
+	private ISystemCodeService systemCodeService;
 	
 	/**
 	 * 运单重量调整
@@ -138,6 +142,8 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 		long end = 0l;
 		long totalRetry = 0l;
 		Map<String,Object> condition=new HashMap<String,Object>();
+		//获取不纠正的订单类型
+		List<String> noCorrectList=getNoCorrectList();
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
 			//根据商家和时间查询耗材出库表业务数据里的运单号
 			logger.info(taskId+"查询耗材汇总统计");
@@ -147,7 +153,8 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
 			condition.put("type", "PMXZX");
-			
+			condition.put("orderList", noCorrectList);
+
 			logger.info(taskId+"插入汇总统计"+JSONObject.fromObject(condition));		
 			//插入汇总统计
 			int re=bmsProductsMaterialService.saveMaterial(condition);
@@ -200,6 +207,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 						condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 						condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 						condition.put("customerId", taskVo.getCustomerId());
+						condition.put("orderList", noCorrectList);
 						start = System.currentTimeMillis();
 						logger.info(taskId+"找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
 						List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxMaterial(condition);
@@ -334,6 +342,8 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 		long totalStart = System.currentTimeMillis();
 		long totalRetry = 0l;
 		Map<String,Object> condition=new HashMap<String,Object>();
+		//获取不纠正的订单类型
+		List<String> noCorrectList=getNoCorrectList();
 		if(StringUtils.isNotBlank(taskVo.getCustomerId())){
 			//根据商家和时间查询耗材出库表业务数据里的运单号
 			logger.info(taskId+"查询保温袋汇总统计");
@@ -343,7 +353,8 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
 			condition.put("type", "BWD");
-			
+			condition.put("orderList", noCorrectList);
+
 			logger.info(taskId+"插入保温袋汇总统计"+JSONObject.fromObject(condition));
 			//插入汇总统计
 			int re=bmsProductsMaterialService.saveBwd(condition);
@@ -396,6 +407,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 							condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 							condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 							condition.put("customerId", taskVo.getCustomerId());
+							condition.put("orderList", noCorrectList);
 							start = System.currentTimeMillis();
 							logger.info("找出未使用标准的运单号参数"+JSONObject.fromObject(condition));
 							List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxBwd(condition);
@@ -554,5 +566,16 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	public void updateProgress(BmsCorrectAsynTaskVo taskVo,int num)throws Exception{
 		taskVo.setTaskRate(num);
 		bmsCorrectAsynTaskService.update(taskVo);
+	}
+	
+	public List<String> getNoCorrectList(){
+		List<String> noCorrectList=new ArrayList<String>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeCode", "NO_CORRECT_ORDER_TYPE");
+		List<SystemCodeEntity> list= systemCodeService.queryCodeList(map);
+		for(SystemCodeEntity s:list){
+			noCorrectList.add(s.getCode());
+		}
+		return noCorrectList;
 	}
 }
