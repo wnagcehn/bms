@@ -126,6 +126,7 @@ public class CorrectJob  extends IJobHandler{
 			//去除
 			if(CollectionUtils.isNotEmpty(notCurCustList)){
 				for (String string : notCurCustList) {
+					XxlJobLogger.log("查到不需要纠正商家id：{0}",string);
 					if(customeridSet.contains(string)){
 						customeridSet.remove(starttime);
 					}
