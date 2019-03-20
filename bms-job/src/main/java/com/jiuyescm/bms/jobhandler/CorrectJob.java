@@ -101,19 +101,6 @@ public class CorrectJob  extends IJobHandler{
 				}
 			}
 
-			//查询上月发生业务的商家id，因为数据量大，使用一天天查询
-			HashSet<String> customeridSet = new HashSet<>();
-			Map<String, Object> param = new HashMap<>();
-			for (Map.Entry<String, String> entry : dataMap.entrySet()) {
-				param.put("startTime", entry.getKey());
-				param.put("endTime", entry.getValue());
-				List<BizDispatchBillEntity> entityList=  bizDispatchBillRepository.queryBizCustomerid(param);
-				//查询的customerId若没有生成纠正任务，则放入set去重
-				for (BizDispatchBillEntity entity : entityList) {
-					if(!existCustomeridSet.contains(entity.getCustomerid()))customeridSet.add(entity.getCustomerid());
-				}
-			}
-			
 			// 查询不需要运单纠正的商家
 			List<String> notCurCustList = null;
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -123,11 +110,27 @@ public class CorrectJob  extends IJobHandler{
 			if (null != bmsCancelCus) {
 				notCurCustList = bmsGroupCustomerService.queryCustomerByGroupId(bmsCancelCus.getId());
 			}
-			//去除
-			if(CollectionUtils.isNotEmpty(notCurCustList)){
-				for (String string : notCurCustList) {
-					if(notCurCustList.contains(string)){
-						notCurCustList.remove(starttime);
+
+			//查询上月发生业务的商家id，因为数据量大，使用一天天查询
+			HashSet<String> customeridSet = new HashSet<>();
+			Map<String, Object> param = new HashMap<>();
+			for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+				param.put("startTime", entry.getKey());
+				param.put("endTime", entry.getValue());
+				List<BizDispatchBillEntity> entityList=  bizDispatchBillRepository.queryBizCustomerid(param);
+				//查询的customerId若没有生成纠正任务，则放入set去重
+				for (BizDispatchBillEntity entity : entityList) {
+					if(!existCustomeridSet.contains(entity.getCustomerid())){
+						String idString = entity.getCustomerid();
+						//去除不需要纠正商家id
+						if(CollectionUtils.isNotEmpty(notCurCustList)){
+							if(!notCurCustList.contains(idString)){
+								customeridSet.add(idString);
+							}
+						}else {
+							customeridSet.add(idString);
+						}
+						
 					}
 				}
 			}
