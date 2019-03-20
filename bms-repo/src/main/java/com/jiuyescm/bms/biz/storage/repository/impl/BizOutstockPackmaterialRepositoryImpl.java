@@ -277,6 +277,20 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		Double v=(Double) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getMaxVolum", condition);
 		return v;
 	}
+	
+	@Override
+	public Double getMaxPmxVolum(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		Double v=(Double) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getMaxPmxVolum", condition);
+		return v;
+	}
+
+	@Override
+	public Double getMaxZxVolum(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		Double v=(Double) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getMaxZxVolum", condition);
+		return v;
+	}
 
 	@Override
 	public Double getMaxVolumByMap(Map<String, Object> condition) {

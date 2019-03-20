@@ -13,6 +13,12 @@ public interface IBmsProductsMaterialService {
 	//查询出所有占比最高的
 	List<BmsProductsMaterialAccountVo> queyAllMax(Map<String,Object> condition);
 	
+	//查询出所有占比最高的泡沫箱
+	List<BmsProductsMaterialAccountVo> queyAllPmxMax(Map<String,Object> condition);
+	
+	//查询出所有占比最高的纸箱
+	List<BmsProductsMaterialAccountVo> queyAllZxMax(Map<String,Object> condition);
+	
 	//查询出所有占比最高的保温袋
 	List<BmsProductsMaterialAccountVo> queyAllBwxMax(Map<String,Object> condition);
 
@@ -28,6 +34,12 @@ public interface IBmsProductsMaterialService {
 	//插入耗材统计表
 	int saveMaterial(Map<String,Object> condition);
 	
+	//插入耗材统计表
+	int savePmx(Map<String,Object> condition);
+	
+	//插入耗材统计表
+	int saveZx(Map<String,Object> condition);
+	
 	//插入保温袋统计表
 	int saveBwd(Map<String,Object> condition);
 	
@@ -36,6 +48,12 @@ public interface IBmsProductsMaterialService {
 	
 	//查询出所有占比不是最高的泡沫箱纸箱
 	List<BizOutstockPackmaterialEntity> queyNotMaxMaterial(Map<String,Object> condition);
+		
+	//查询出所有占比不是最高的泡沫箱
+	List<BizOutstockPackmaterialEntity> queyNotMaxPmx(Map<String,Object> condition);
+	
+	//查询出所有占比不是最高的纸箱
+	List<BizOutstockPackmaterialEntity> queyNotMaxZx(Map<String,Object> condition);
 	
 	//查询出所有占比不是最高的保温袋
 	List<BizOutstockPackmaterialEntity> queyNotMaxBwd(Map<String,Object> condition);
@@ -54,8 +72,20 @@ public interface IBmsProductsMaterialService {
 	//根据批次号查询运单中耗材明细，打标
 	int markMaterial(Map<String,Object> condition);
 	
+	//根据批次号打标保温袋，打标
+	int markPmx(Map<String,Object> condition);
+	
+	//根据批次号打标纸箱，打标
+	int markZx(Map<String,Object> condition);
+	
 	//根据批次号保存标对应得耗材明细
 	int saveMarkMaterial(Map<String,Object> condition);
+	
+	//根据批次号保存标对应得泡沫箱明细
+	int saveMarkPmx(Map<String,Object> condition);
+	
+	//根据批次号保存标对应得纸箱明细
+	int saveMarkZx(Map<String,Object> condition);
 	
 	//打标保温袋
 	int markBwd(Map<String,Object> condition);

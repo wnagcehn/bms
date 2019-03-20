@@ -40,9 +40,9 @@ import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 
 
 @Service("bmsCorrectMaterialTaskListener")
-public class BmsCorrectMaterialTaskListener implements MessageListener{
+public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 
-	private static final Logger logger = Logger.getLogger(BmsCorrectMaterialTaskListener.class.getName());
+	private static final Logger logger = Logger.getLogger(BmsCorrectMaterialTaskNewListener.class.getName());
 	
 	@Autowired 
 	private IBmsProductsWeightService bmsProductsWeightService;	
@@ -78,11 +78,11 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			StringBuffer errorMessage=new StringBuffer();
 			logger.info(taskId+"正在消费");
 			
-			//处理运单耗材统一
-			logger.info(taskId+"正在处理耗材纠正");
+			//处理运单保温袋统一
+			logger.info(taskId+"正在处理保温袋纠正");
 			start = System.currentTimeMillis();
-			handMaterialTask(taskId,errorMessage);
-			logger.info(taskId+"耗材纠正结束 耗时--"+(System.currentTimeMillis()-start));
+			handPmxTask(taskId,errorMessage);
+			logger.info(taskId+"保温袋纠正结束 耗时--"+(System.currentTimeMillis()-start));
 			
 			//处理运单保温袋统一
 			logger.info(taskId+"正在处理保温袋纠正");
@@ -104,7 +104,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	}
 	
 	
-	private void handMaterialTask(String taskId,StringBuffer errorMessage) throws Exception{
+	private void handPmxTask(String taskId,StringBuffer errorMessage) throws Exception{
 		Map<String,Object> condition=new HashMap<String,Object>();
 		//根据taskId查询商家和时间
 		condition.put("taskId", taskId);
@@ -116,7 +116,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 		}
 		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
 		try{
-			handMaterial(taskVo,taskId,errorMessage);		
+			handPmx(taskVo,taskId,errorMessage);		
 			taskVo.setTaskRate(50);
 			taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
 			taskVo.setRemark(errorMessage.toString());
@@ -137,7 +137,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 		}
 	}
 	
-	private String handMaterial(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
+	private String handPmx(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
 		long start = 0l;
 		long end = 0l;
 		long totalRetry = 0l;
@@ -152,12 +152,12 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			condition.put("startTime", DateUtil.formatTimestamp(taskVo.getStartDate()));
 			condition.put("endTime", DateUtil.formatyymmddLine(taskVo.getEndDate())+" 23:59:59");
 			condition.put("taskId", taskId);
-			condition.put("type", "PMXZX");
+			condition.put("type", "PMX");
 			condition.put("orderList", noCorrectList);
 
 			logger.info(taskId+"插入汇总统计"+JSONObject.fromObject(condition));		
 			//插入汇总统计
-			int re=bmsProductsMaterialService.saveMaterial(condition);
+			int re=bmsProductsMaterialService.savePmx(condition);
 			if(re<=0){
 				errorMessage.append("耗材不存在;");
 				logger.info(taskId+"耗材不存在;");
@@ -168,7 +168,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 			//获取占比最高
 			condition.put("taskId", taskId);
 			start = System.currentTimeMillis();
-			List<BmsProductsMaterialAccountVo> list=bmsProductsMaterialService.queyAllMax(condition);
+			List<BmsProductsMaterialAccountVo> list=bmsProductsMaterialService.queyAllPmxMax(condition);
 			end = System.currentTimeMillis();
 			logger.info(taskId+"------------------获取占比最高耗时：" + (end-start) + "毫秒------------------");
 			//循环判断是否有重复之
@@ -179,11 +179,11 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 					BmsProductsMaterialAccountVo proAccountVo=list.get(i);								
 					if(proAccountVo!=null){						
 						//占比最高的耗材标
-						String metrialDetail=getMaxVolumMaterial(proAccountVo);
+						String metrialDetail=getMaxPmxVolumMaterial(proAccountVo);
 						logger.info("查询占比最高的标准耗材标"+metrialDetail);
 						if(StringUtils.isBlank(metrialDetail)){
 							continue;
-						}				
+						}
 						
 						//查询该标使用到的标准泡沫箱和纸箱
 						condition=new HashMap<String,Object>();
@@ -515,7 +515,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 	 * @param proAccountVo
 	 * @return
 	 */
-	private String getMaxVolumMaterial(BmsProductsMaterialAccountVo proAccountVo){
+	private String getMaxPmxVolumMaterial(BmsProductsMaterialAccountVo proAccountVo){
 		List<Double> volumList=new ArrayList<Double>();
 		String metrialDetail="";
 		String metrialMark=proAccountVo.getMaterialMark();
@@ -531,7 +531,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 					//查询该耗材标对应得最高体积
 					condition.put("materialMark", array[i]);						
 					double volumn=0d;					
-					Double vol=bizOutstockPackmaterialService.getMaxVolum(condition);
+					Double vol=bizOutstockPackmaterialService.getMaxPmxVolum(condition);
 					if(!DoubleUtil.isBlank(vol)){
 						volumn=vol;
 					}

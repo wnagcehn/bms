@@ -88,6 +88,10 @@ public interface IBizOutstockPackmaterialService {
 	public List<String> queryWayBillNo(Map<String,Object> condition);
 	
 	Double getMaxVolum(Map<String,Object> condition);
+	
+	Double getMaxPmxVolum(Map<String,Object> condition);
+	
+	Double getMaxZxVolum(Map<String,Object> condition);
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);
 	
