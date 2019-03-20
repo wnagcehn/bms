@@ -83,6 +83,10 @@ public interface IBizOutstockPackmaterialRepository {
 	
 	Double getMaxVolum(Map<String,Object> condition);
 	
+	Double getMaxPmxVolum(Map<String,Object> condition);
+	
+	Double getMaxZxVolum(Map<String,Object> condition);
+	
 	Double getMaxVolumByMap(Map<String,Object> condition);
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);

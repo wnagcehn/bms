@@ -237,6 +237,18 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 	}
 
 	@Override
+	public Double getMaxPmxVolum(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return repository.getMaxPmxVolum(condition);
+	}
+
+	@Override
+	public Double getMaxZxVolum(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return repository.getMaxZxVolum(condition);
+	}
+	
+	@Override
 	public int deleteAllByWayBillNo(List<String> waybillNoList) {
 		return repository.deleteAllByWayBillNo(waybillNoList);
 	}

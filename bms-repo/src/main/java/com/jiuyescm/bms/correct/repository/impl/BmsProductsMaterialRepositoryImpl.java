@@ -24,6 +24,21 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 		List<BmsProductsMaterialAccountEntity> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyAllMax", condition);
 		return list;
 	}
+	@Override
+	public List<BmsProductsMaterialAccountEntity> queyAllPmxMax(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsProductsMaterialAccountEntity> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyAllPmxMax", condition);
+		return list;
+	}
+
+	@Override
+	public List<BmsProductsMaterialAccountEntity> queyAllZxMax(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsProductsMaterialAccountEntity> list=selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyAllZxMax", condition);
+		return list;
+	}
 
 	@Override
 	public List<BmsProductsMaterialAccountEntity> queyAllBwxMax(
@@ -85,6 +100,20 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 	}
 	
 	@Override
+	public int markPmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.markPmx", condition);
+	}
+
+	@Override
+	public int markZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.markZx", condition);
+	}
+	
+	@Override
 	public int markBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		SqlSession session = this.getSqlSessionTemplate();
@@ -100,6 +129,21 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 	
 	}
 
+	@Override
+	public int saveMarkPmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.saveMarkPmx", condition);
+	
+	}
+	@Override
+	public int saveMarkZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.saveMarkZx", condition);
+	}
+
+	
 	@Override
 	public int saveMarkBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
@@ -135,6 +179,20 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.saveMaterial", condition);
 	}
 
+	@Override
+	public int savePmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.savePmx", condition);
+	}
+
+	@Override
+	public int saveZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session = this.getSqlSessionTemplate();
+		return session.insert("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.saveZx", condition);
+	}
+	
 	@Override
 	public int saveBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub

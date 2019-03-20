@@ -580,6 +580,24 @@
 		LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
 		where (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') GROUP BY a.material_mark,b.material_type_name) c
     </select>
+    
+    <select id="getMaxPmxVolum" parameterType="java.util.Map" resultType="Double" >
+    	select max(c.volumn) from 
+		(select a.material_mark,b.material_type_name,SUM(b.out_volume*a.num) volumn FROM
+		(select * from bms_material_mark_origin where material_mark=#{materialMark}
+		GROUP BY material_mark,consumer_material_code) a 
+		LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
+		where b.material_type_name='泡沫箱' GROUP BY a.material_mark,b.material_type_name) c
+    </select>
+    
+    <select id="getMaxZxVolum" parameterType="java.util.Map" resultType="Double" >
+    	select max(c.volumn) from 
+		(select a.material_mark,b.material_type_name,SUM(b.out_volume*a.num) volumn FROM
+		(select * from bms_material_mark_origin where material_mark=#{materialMark}
+		GROUP BY material_mark,consumer_material_code) a 
+		LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
+		where b.material_type_name='纸箱' GROUP BY a.material_mark,b.material_type_name) c
+    </select>
   	 		
     <select id="getMaxBwdVolumn" parameterType="java.util.Map" resultType="String" >
     	select

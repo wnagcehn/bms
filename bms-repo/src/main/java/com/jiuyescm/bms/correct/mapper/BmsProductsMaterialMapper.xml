@@ -58,6 +58,30 @@
 		GROUP BY a.products_mark,a.material_type,a.percent
      </select>
      
+    <select id="queyAllPmxMax" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+		select a.products_mark, a.material_type, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
+		inner JOIN (
+			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId} and type='PMX'
+			GROUP BY products_mark, material_type
+		) b
+		on a.products_mark=b.products_mark and a.material_type=b.material_type and a.task_id=b.task_id and a.percent=b.percent
+		where a.task_id =#{taskId} and a.type='PMX'
+		GROUP BY a.products_mark,a.material_type,a.percent
+     </select>
+     
+     <select id="queyAllZxMax" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
+		select a.products_mark, a.material_type, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
+		inner JOIN (
+			SELECT MAX(percent) percent,products_mark,material_type,task_id FROM bms_products_material_account WHERE percent!=1 and task_id =#{taskId} and type='ZX'
+			GROUP BY products_mark, material_type
+		) b
+		on a.products_mark=b.products_mark and a.material_type=b.material_type and a.task_id=b.task_id and a.percent=b.percent
+		where a.task_id =#{taskId} and a.type='ZX'
+		GROUP BY a.products_mark,a.material_type,a.percent
+     </select>
+     
      <select id="queyAllBwxMax" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
         select a.products_mark, a.percent,GROUP_CONCAT(a.material_mark) as material_mark,a.task_id from bms_products_material_account a
@@ -165,6 +189,51 @@
 		pmxzx_mark =m.md,material_type=m.tp 
      </insert>
      
+     <insert id="markPmx" parameterType="java.util.Map">
+     	INSERT INTO bms_marking_products(waybill_no,pmx_mark,pmx_type)
+		select m.waybill_no, m.md, m.tp from
+		(SELECT waybill_no, md, tp
+		FROM(
+				SELECT waybill_no, tp,
+						MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as md,
+		GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)
+				FROM (
+						SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time,
+								SUBSTR(consumer_material_code, 1, LOCATE('-', consumer_material_code) - 1) as tp
+						FROM biz_outstock_packmaterial_temp where batchNum=#{batchNum}
+								AND consumer_material_code LIKE '%PMX%'
+				) a
+				GROUP BY waybill_no, tp
+		) b
+		GROUP BY waybill_no
+		HAVING COUNT(tp) = 1) m
+		ON DUPLICATE KEY UPDATE
+		pmxzx_mark =m.md,material_type=m.tp 
+     </insert>
+     
+     <insert id="markZx" parameterType="java.util.Map">
+     	INSERT INTO bms_marking_products(waybill_no,zx_mark,zx_type)
+		select m.waybill_no, m.md, m.tp from
+		(SELECT waybill_no, md, tp
+		FROM(
+				SELECT waybill_no, tp,
+						MD5(GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)) as md,
+		GROUP_CONCAT(CONCAT_WS('*',consumer_material_code, IFNULL(num, 0),customer_id,create_time) ORDER BY consumer_material_code)
+				FROM (
+						SELECT  waybill_no, consumer_material_code, num, customer_id,date_format(create_time,'%Y%m') as create_time,
+								SUBSTR(consumer_material_code, 1, LOCATE('-', consumer_material_code) - 1) as tp
+						FROM biz_outstock_packmaterial_temp where batchNum=#{batchNum}
+								AND consumer_material_code LIKE '%ZX%'
+				) a
+				GROUP BY waybill_no, tp
+		) b
+		GROUP BY waybill_no
+		HAVING COUNT(tp) = 1) m
+		ON DUPLICATE KEY UPDATE
+		pmxzx_mark =m.md,material_type=m.tp 
+     </insert>
+     
+     
      <insert id="markBwd" parameterType="java.util.Map">
      	INSERT INTO bms_marking_products(waybill_no,bwd_mark)
 		select m.waybill_no,m.bwd from
@@ -190,6 +259,22 @@
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
 		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') GROUP BY b.pmxzx_mark,a.consumer_material_code   	
+     </insert>
+     
+     <insert id="saveMarkPmx" parameterType="java.util.Map">
+     	INSERT into bms_material_mark_origin (material_mark,consumer_material_code,consumer_material_name,spec_desc,num)
+		select b.pmx_mark,a.consumer_material_code,a.consumer_material_name,a.spec_desc,a.num from biz_outstock_packmaterial_temp a 
+		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
+		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('泡沫箱') GROUP BY b.pmx_mark,a.consumer_material_code   	
+     </insert>
+     
+     <insert id="saveMarkZx" parameterType="java.util.Map">
+     	INSERT into bms_material_mark_origin (material_mark,consumer_material_code,consumer_material_name,spec_desc,num)
+		select b.zx_mark,a.consumer_material_code,a.consumer_material_name,a.spec_desc,a.num from biz_outstock_packmaterial_temp a 
+		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
+		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('纸箱') GROUP BY b.zx_mark,a.consumer_material_code   	
      </insert>
    
      <insert id="saveMarkBwd" parameterType="java.util.Map">
@@ -255,6 +340,66 @@
 		 on m.products_mark=n.products_mark and m.material_type=n.material_type
      </insert>
      
+      <insert id="savePmx" parameterType="java.util.Map">
+     	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id, type)
+     														    
+     	 select m.products_mark,m.pmx_type,m.pmx_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
+     	 from
+			(select a.products_mark,a.pmx_type,a.pmx_mark,COUNT(a.pmx_mark) as num1 from bms_marking_products a
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
+			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			<if test="(orderList!=null and orderList.size()>0)">
+	        	and b.ordertypeid not in
+	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+	        	 	#{item}
+	        	</foreach>
+	        </if>				
+			GROUP BY a.products_mark,a.pmx_type,a.pmx_mark) m
+		 LEFT JOIN 
+		 	(select a.products_mark,a.pmx_type,a.pmx_mark,COUNT(a.pmx_mark) as num2 from bms_marking_products a 
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
+			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			<if test="(orderList!=null and orderList.size()>0)">
+	        	and b.ordertypeid not in
+	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+	        	 	#{item}
+	        	</foreach>
+	        </if>	
+			GROUP BY a.products_mark,a.pmx_type) n
+		 on m.products_mark=n.products_mark and m.pmx_type=n.pmx_type
+     </insert>
+     
+     
+      <insert id="saveZx" parameterType="java.util.Map">
+     	insert into bms_products_material_account(products_mark, material_type, material_mark, percent, task_id, type)
+     														    
+     	 select m.products_mark,m.zx_type,m.zx_mark,ROUND(m.num1/n.num2,8) as percent,#{taskId},#{type} 
+     	 from
+			(select a.products_mark,a.zx_type,a.zx_mark,COUNT(a.zx_mark) as num1 from bms_marking_products a
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
+			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			<if test="(orderList!=null and orderList.size()>0)">
+	        	and b.ordertypeid not in
+	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+	        	 	#{item}
+	        	</foreach>
+	        </if>				
+			GROUP BY a.products_mark,a.zx_type,a.zx_mark) m
+		 LEFT JOIN 
+		 	(select a.products_mark,a.zx_type,a.zx_mark,COUNT(a.zx_mark) as num2 from bms_marking_products a 
+			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
+			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			<if test="(orderList!=null and orderList.size()>0)">
+	        	and b.ordertypeid not in
+	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+	        	 	#{item}
+	        	</foreach>
+	        </if>	
+			GROUP BY a.products_mark,a.zx_type) n
+		 on m.products_mark=n.products_mark and m.zx_type=n.zx_type
+     </insert>
+     
+     
      <insert id="saveBwd" parameterType="java.util.Map">
 		insert into bms_products_material_account(products_mark, material_mark, percent, task_id, type)
 		select m.products_mark,m.bwd_mark,ROUND(m.num1/n.num2,8) as percent, #{taskId},#{type} 
@@ -284,7 +429,7 @@
      </insert>
      
      <update id="deleteMarkMaterialByWaybillNo" parameterType="java.util.Map">
-     	update bms_marking_products set pmxzx_mark=null,bwd_mark=null,material_type=null,pmxzx_corrected='0',bwd_corrected='0'  where waybill_no in
+     	update bms_marking_products set pmx_mark=null,pmx_type=null,pmx_corrected='0',zx_mark=null,zx_type=null,zx_corrected='0',bwd_mark=null,bwd_corrected='0'  where waybill_no in
      	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
      		#{item}
      	</foreach>

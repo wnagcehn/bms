@@ -44,6 +44,42 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return voList;
 	}
 
+	@Override
+	public List<BmsProductsMaterialAccountVo> queyAllPmxMax(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsProductsMaterialAccountEntity> list=bmsProductsMaterialRepository.queyAllPmxMax(condition);
+		List<BmsProductsMaterialAccountVo> voList = new ArrayList<BmsProductsMaterialAccountVo>();
+    	for(BmsProductsMaterialAccountEntity entity : list) {
+    		BmsProductsMaterialAccountVo vo = new BmsProductsMaterialAccountVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
+
+
+	@Override
+	public List<BmsProductsMaterialAccountVo> queyAllZxMax(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsProductsMaterialAccountEntity> list=bmsProductsMaterialRepository.queyAllZxMax(condition);
+		List<BmsProductsMaterialAccountVo> voList = new ArrayList<BmsProductsMaterialAccountVo>();
+    	for(BmsProductsMaterialAccountEntity entity : list) {
+    		BmsProductsMaterialAccountVo vo = new BmsProductsMaterialAccountVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
 	
 	@Override
 	public List<BmsProductsMaterialAccountVo> queyAllBwxMax(
@@ -142,6 +178,20 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 	}
 
 	@Override
+	public int markPmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.markPmx(condition);
+	}
+
+
+	@Override
+	public int markZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.markZx(condition);
+	}
+	
+	
+	@Override
 	public int markBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		return bmsProductsMaterialRepository.markBwd(condition);
@@ -206,6 +256,20 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return bmsProductsMaterialRepository.saveMaterial(condition);
 	}
 
+	
+	@Override
+	public int savePmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.savePmx(condition);
+	}
+
+
+	@Override
+	public int saveZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.saveZx(condition);
+	}
+	
 	@Override
 	public BmsMarkingMaterialVo queryOneMark(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
@@ -269,6 +333,17 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return bmsProductsMaterialRepository.saveMarkMaterial(condition);
 	}
 
+	@Override
+	public int saveMarkPmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.saveMarkPmx(condition);
+	}
+
+	@Override
+	public int saveMarkZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.saveMarkZx(condition);
+	}
 
 	@Override
 	public int saveMarkBwd(Map<String, Object> condition) {
@@ -288,7 +363,6 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		// TODO Auto-generated method stub
 		return bmsProductsMaterialRepository.updateBwdMark(waybillNoList);
 	}
-
 
 
 }
