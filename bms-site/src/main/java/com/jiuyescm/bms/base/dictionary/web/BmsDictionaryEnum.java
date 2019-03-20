@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.base.dictionary.web;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class BmsDictionaryEnum {
 	private IEwareHouseService elecWareHouseService;
 	@Resource
 	private IPubMaterialInfoService pubMaterialInfoService;
-	
+
 	/**
 	 * 通用数据字典枚举（类型有参数指定）
 	 * @param typeCode 数据类型

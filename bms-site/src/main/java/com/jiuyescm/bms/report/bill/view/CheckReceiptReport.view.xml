@@ -6,6 +6,7 @@
     <DataType name="dtQueryCondition">
       <PropertyDef name="deptName">
         <Property name="label">责任部门</Property>
+        <Property name="defaultValue">销售部</Property>
       </PropertyDef>
       <PropertyDef name="startDate">
         <Property name="label">预计回款日期</Property>
@@ -376,6 +377,10 @@
       <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
       <Property name="dataType">[dtDetailCondition]</Property>
     </DataSet>
+    <DataSet id="dsSystemCodeEntity">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
+      <Property name="dataProvider">checkReceiptReportController#getDeptEnum</Property>
+    </DataSet>
     <ToolBar>
       <DataPilot>
         <Property name="dataSet">dsCheckReceiptEntity</Property>
@@ -483,6 +488,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execu
       <AutoFormElement>
         <Property name="name">deptName</Property>
         <Property name="property">deptName</Property>
+        <Property name="trigger">deptDataSetDropDown</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -616,5 +622,18 @@ jQuery(arg.dom).xCreate({&#xD;
     <DownloadAction id="downloadAction">
       <Property name="fileProvider">checkReceiptReportExportController#asynExport</Property>
     </DownloadAction>
+    <DataSetDropDown id="deptDataSetDropDown">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsQuery&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+data.set({&#xD;
+	deptName:arg.selectedValue.get(&quot;extattr1&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">extattr1</Property>
+      <Property name="dataSet">dsSystemCodeEntity</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>

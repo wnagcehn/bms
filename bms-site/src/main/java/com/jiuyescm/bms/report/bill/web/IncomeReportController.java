@@ -86,6 +86,10 @@ public class IncomeReportController {
 	@DataProvider
 	public void queryDetail(Page<BillCheckInfoEntity> page, Map<String, Object> param) {
 		logger.info("前台传入信息："+param);
+		String startDate = (String) param.get("startDate");
+		String endDate =  (String) param.get("endDate");
+		List<String> list = getMonth(startDate,endDate);
+		param.put("startBizDate", list.get(0));
 		PageInfo<BillCheckInfoEntity> entities =  billCheckInfoService.queryIncomeDetail(param, page.getPageNo(), page.getPageSize());
 		if (entities != null) {
 			page.setEntities(entities.getList());
@@ -110,7 +114,7 @@ public class IncomeReportController {
             dd.setTime(d1);//设置日期起始时间
             while (dd.getTime().before(d2)) {//判断是否到结束日期
                 String str = format.format(dd.getTime());
-                System.out.println(str);//输出日期结果
+        		logger.info("输出日期结果："+str);
                 dd.add(Calendar.MONTH, 1);//进行当前日期月份加1
                 list.add(str);
             }

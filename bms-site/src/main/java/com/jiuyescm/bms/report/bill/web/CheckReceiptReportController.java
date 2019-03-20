@@ -38,6 +38,13 @@ public class CheckReceiptReportController {
 	private ISystemCodeService systemCodeService;
 	@Autowired
 	private IBillCheckInfoService billCheckInfoService;
+	
+	@DataProvider  
+	public List<SystemCodeEntity> getDeptEnum() {  
+		List<SystemCodeEntity> codeList = systemCodeService.queryDeptName();
+		System.out.println("codeList"+codeList.size()+"----"+codeList.toString());
+		return codeList;
+	}
 
 	@DataProvider
 	public void query(Page<CheckReceiptEntity> page, Map<String, Object> parameter) {
