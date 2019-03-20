@@ -70,4 +70,6 @@
 	<dubbo:service interface="com.jiuyescm.bms.correct.service.IBmsMarkingProductsService" ref="bmsMarkingProductsService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" ref="pubMonthFeeCountService"/>
 	
+	
+	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" ref="bmsCalcuTaskService"/>
 </beans>

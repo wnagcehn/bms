@@ -27,7 +27,7 @@ public class BmsCalcuTaskVo implements IEntity {
 	// 业务年月 201901
 	private Integer creMonth;
 	// 任务状态 0-等待 10-处理中 20-成功 30-异常 40-丢弃 50-作废
-	private Long taskStatus;
+	private Integer taskStatus;
 	// 费用总数
 	private Integer feesCount;
 	// 本次任务需要计算的费用总数
@@ -148,7 +148,7 @@ public class BmsCalcuTaskVo implements IEntity {
 	/**
      * 任务状态 0-等待 10-处理中 20-成功 30-异常 40-丢弃 50-作废
      */
-	public Long getTaskStatus() {
+	public Integer getTaskStatus() {
 		return this.taskStatus;
 	}
 
@@ -157,7 +157,7 @@ public class BmsCalcuTaskVo implements IEntity {
      *
      * @param taskStatus
      */
-	public void setTaskStatus(Long taskStatus) {
+	public void setTaskStatus(Integer taskStatus) {
 		this.taskStatus = taskStatus;
 	}
 	

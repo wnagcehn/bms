@@ -30,8 +30,8 @@
 				version="1.0.0" id="pubMaterialSupplierService" timeout="1200000" check="false"/> 
 				
 		<!-- 基于snowflake算法的分布式id接口 -->
-		<!-- <dubbo:reference interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"
-				version="1.0.0" id="snowflakeSequenceService" timeout="1200000" check="false"/> --> 		
+		<dubbo:reference interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"
+				version="1.0.0" id="snowflakeSequenceService" timeout="1200000" check="false"/> 		
 		<dubbo:reference interface="com.jiuyescm.framework.sequence.api.ISequenceService"
 				version="1.0.0" id="sequenceService" timeout="1200000" check="false"/>		
 </beans>
