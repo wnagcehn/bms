@@ -418,8 +418,11 @@ public class CheckReceiptReportExportController{
 		return finish;
 	}
 	
-	static String getFormat (BigDecimal bigDecimal){
+	static Double getFormat (BigDecimal bigDecimal){
 		nformat.setMaximumFractionDigits(2);
-		return nformat.format(bigDecimal);
+		String s = nformat.format(bigDecimal);
+		String repStr = s.replaceAll(",","");
+		Double d = Double.valueOf(repStr).doubleValue();
+		return d;
 	}
 }

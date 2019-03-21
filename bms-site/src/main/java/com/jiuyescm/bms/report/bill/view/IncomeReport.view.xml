@@ -120,8 +120,20 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+var createMonth = &quot;&quot;;&#xD;
+if(month &lt; 10){&#xD;
+	createMonth = year.toString().substring(2,4) + &quot;0&quot; + month;&#xD;
+}else{&#xD;
+	createMonth = year.toString().substring(2,4) + month;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;startDate&quot;,createMonth);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;endDate&quot;,createMonth);</ClientEvent>
     <DataSet id="dsQuery">
-      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtQueryCondition]</Property>
     </DataSet>
     <DataSet id="dsIncomeEntity">
@@ -203,7 +215,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execu
         <Property name="visible">true</Property>
       </ToolBarButton>
     </ToolBar>
-    <AutoForm>
+    <AutoForm id="queryForm">
       <Property name="dataSet">dsQuery</Property>
       <Property name="cols">*,*,*,*</Property>
       <Property name="labelWidth">120</Property>

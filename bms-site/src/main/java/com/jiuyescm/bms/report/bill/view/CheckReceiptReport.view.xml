@@ -481,7 +481,31 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execu
         <Property name="visible">true</Property>
       </ToolBarButton>
     </ToolBar>
-    <AutoForm>
+    <AutoForm id="formCondition">
+      <ClientEvent name="onReady">var today=new Date();&#xD;
+var weekday=today.getDay();&#xD;
+var monday=new Date(1000*60*60*24*(1-weekday) + today.getTime());    &#xD;
+var sunday=new Date(1000*60*60*24*(7-weekday) + today.getTime());&#xD;
+function getDateStr(dd){&#xD;
+    var y = dd.getFullYear();&#xD;
+    var m = dd.getMonth()+1;//获取当前月份的日期&#xD;
+    m=parseInt(m,10);&#xD;
+    if(m&lt;10){&#xD;
+        m=&quot;0&quot;+m;&#xD;
+    }&#xD;
+    var d = dd.getDate();&#xD;
+    d=parseInt(d,10);&#xD;
+    if(d&lt;10){&#xD;
+        d=&quot;0&quot;+d;&#xD;
+    }&#xD;
+    return y+&quot;-&quot;+m+&quot;-&quot;+d;&#xD;
+}&#xD;
+&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set({&#xD;
+		startDate:monday,&#xD;
+		endDate:sunday&#xD;
+	});&#xD;
+</ClientEvent>
       <Property name="dataSet">dsQuery</Property>
       <Property name="cols">*,*,*,*</Property>
       <Property name="labelWidth">120</Property>

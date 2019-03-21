@@ -55,7 +55,13 @@ public class IncomeReportController {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("deptName", deptName);
 		for (int i = 0; i < dateList.size()-1; i++) {
-			condition.put("startBizDate", dateList.get(i));
+			//不考虑1901以前的数据
+			String string = dateList.get(i);
+			Integer integer = Integer.valueOf(string);
+			if(integer<1901){
+				continue;
+			}
+			condition.put("startBizDate", string);
 			//查出新增商家
 			List<BillCheckInfoEntity> bizEntities =  billCheckInfoService.queryIncomeReportBizCus(condition);
 			//如果新增商家为空跳过本次循环
@@ -198,7 +204,6 @@ public class IncomeReportController {
 	public DownloadFile asynExport(Map<String, Object> parameter) {
 		//报表数据list
 		List<BillCheckInfoEntity> reportList = queryReport(parameter);
-		
 		String path =null;
 			try {
 				path = export(reportList);
@@ -262,9 +267,6 @@ public class IncomeReportController {
 	}
 	
 	private List<Map<String, Object>> getData(List<BillCheckInfoEntity> reportList ){
-		// 保留两位小数，个位无数字填充0
-		  NumberFormat nformat = NumberFormat.getNumberInstance();
-		  nformat.setMaximumFractionDigits(2);
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 	        //无数据
 	        if(CollectionUtils.isEmpty(reportList)){
@@ -275,7 +277,7 @@ public class IncomeReportController {
 	        	dataItem.put("createMonth", entity.getCreateMonth());
 	        	dataItem.put("sellerName", entity.getSellerName());
 	        	dataItem.put("area", entity.getArea());
-	        	dataItem.put("confirmAmount", nformat.format(entity.getConfirmAmount()));
+	        	dataItem.put("confirmAmount",  CheckReceiptReportExportController.getFormat(entity.getConfirmAmount()));
 	        	dataList.add(dataItem);
 			}
 		return dataList;

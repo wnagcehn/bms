@@ -94,7 +94,6 @@ public class ExportBase implements IExcelExporter{
         
         font.setFontHeightInPoints((short)12);
         font.setBoldweight(font.BOLDWEIGHT_BOLD);
-        font.setColor(font.COLOR_RED);
         cs.setFont(font);
         cs.setAlignment(cs.ALIGN_CENTER);
         Row r = sheet.createRow(0);
