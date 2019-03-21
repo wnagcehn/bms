@@ -931,7 +931,9 @@ and invoice_name in
     </select>
     
     <select id="queryIncomeReportBizCus" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-SELECT a.invoice_name,a.seller_id FROM (SELECT create_month,invoice_name,seller_id FROM bill_check_info WHERE  del_flag = 0 GROUP BY invoice_name ORDER BY create_month) a WHERE a.create_month =#{startBizDate}
+SELECT a.invoice_name,a.seller_id FROM 
+(SELECT a.create_month,a.invoice_name,a.seller_id FROM (SELECT create_month,invoice_name,seller_id FROM bill_check_info WHERE del_flag = 0 ORDER BY create_month) a GROUP BY a.invoice_name) a
+ WHERE a.create_month =#{startBizDate}
     </select>
     
      <select id="queryIncomeReportCalCus" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
