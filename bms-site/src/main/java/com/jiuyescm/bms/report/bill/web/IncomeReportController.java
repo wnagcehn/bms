@@ -58,7 +58,7 @@ public class IncomeReportController {
 			//不考虑1901以前的数据
 			String string = dateList.get(i);
 			Integer integer = Integer.valueOf(string);
-			if(integer<1901){
+			if(integer<1812){
 				continue;
 			}
 			condition.put("startBizDate", string);
