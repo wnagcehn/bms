@@ -1112,6 +1112,28 @@
 		)
     </delete>
     
+    <delete id="deletePmxFee" parameterType="java.util.Map">
+    	delete from fees_receive_storage where fees_no in(
+			select a.fees_no from biz_outstock_packmaterial a
+			INNER JOIN pub_material_info b on a.consumer_material_code=b.material_code
+			where 1=1 and a.del_flag='0' and b.del_flag='0' and b.material_type_name in ('泡沫箱') and a.waybill_no in 
+			<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+     			#{item}
+     		</foreach>	
+		)
+    </delete>
+    
+    <delete id="deleteZxFee" parameterType="java.util.Map">
+    	delete from fees_receive_storage where fees_no in(
+			select a.fees_no from biz_outstock_packmaterial a
+			INNER JOIN pub_material_info b on a.consumer_material_code=b.material_code
+			where 1=1 and a.del_flag='0' and b.del_flag='0' and b.material_type_name in ('纸箱') and a.waybill_no in 
+			<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+     			#{item}
+     		</foreach>	
+		)
+    </delete>
+    
     <delete id="deleteBwdFee" parameterType="java.util.Map">
     	delete from fees_receive_storage where fees_no in(
 			select a.fees_no from biz_outstock_packmaterial a

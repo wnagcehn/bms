@@ -442,6 +442,19 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 		return delete("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.deleteMaterialFee",parameter);
 	}
 	
+
+	@Override
+	public int deletePmxFee(Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return delete("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.deletePmxFee",parameter);
+	}
+
+	@Override
+	public int deleteZxFee(Map<String, Object> parameter) {
+		// TODO Auto-generated method stub
+		return delete("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.deleteZxFee",parameter);
+	}
+	
 	@Override
 	public int deleteBwdFee(Map<String, Object> parameter) {
 		// TODO Auto-generated method stub
@@ -490,5 +503,6 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 		// TODO Auto-generated method stub
 		return (FeesReceiveStorageEntity) selectOne("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.queryOne", condition);
 	}
+
 
 }

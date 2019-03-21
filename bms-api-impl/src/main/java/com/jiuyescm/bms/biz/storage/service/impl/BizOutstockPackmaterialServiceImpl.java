@@ -281,4 +281,24 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 		return result;
 	}
 
+	@Override
+	public int deleteOldPmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		int result=repository.deleteOldPmx(condition);
+		if(result>0){
+			feesReceiveStorageRepository.deletePmxFee(condition);
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteOldZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		int result=repository.deleteOldZx(condition);
+		if(result>0){
+			feesReceiveStorageRepository.deleteZxFee(condition);
+		}
+		return result;
+	}
+
 }

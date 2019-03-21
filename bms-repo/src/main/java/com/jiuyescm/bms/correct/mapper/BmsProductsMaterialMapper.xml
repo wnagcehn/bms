@@ -133,6 +133,69 @@
         </if>	
     	GROUP BY b.waybill_no
      </select>
+     
+     
+      <select id="queyNotMaxPmx" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+       	select b.* from bms_marking_products a 
+		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+		INNER JOIN biz_dispatch_bill d on a.waybill_no=d.waybill_no
+		where 1=1 and a.products_mark=#{productsMark} and a.pmx_type=#{pmxType} and a.pmx_mark!=#{pmxMark}
+		and b.del_flag='0' and c.material_type_name in ('泡沫箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+		<if test="(orderList!=null and orderList.size()>0)">
+        	and d.ordertypeid not in
+        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+        	 	#{item}
+        	</foreach>
+        </if>		
+    	GROUP BY b.waybill_no
+    	union
+    	select b.* from bms_marking_products a 
+		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+		INNER JOIN biz_dispatch_bill d on a.waybill_no=d.waybill_no
+		where 1=1 and a.products_mark=#{productsMark} and a.pmx_type=#{pmxType} and a.pmx_mark=#{pmxMark} and a.pmx_corrected='1'
+		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+    	<if test="(orderList!=null and orderList.size()>0)">
+        	and d.ordertypeid not in
+        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+        	 	#{item}
+        	</foreach>
+        </if>	
+    	GROUP BY b.waybill_no
+     </select>
+     
+     <select id="queyNotMaxZx" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+       	select b.* from bms_marking_products a 
+		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+		INNER JOIN biz_dispatch_bill d on a.waybill_no=d.waybill_no
+		where 1=1 and a.products_mark=#{productsMark} and a.zx_type=#{zxType} and a.zx_mark!=#{zxMark}
+		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+		<if test="(orderList!=null and orderList.size()>0)">
+        	and d.ordertypeid not in
+        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+        	 	#{item}
+        	</foreach>
+        </if>		
+    	GROUP BY b.waybill_no
+    	union
+    	select b.* from bms_marking_products a 
+		INNER JOIN biz_outstock_packmaterial b on a.waybill_no=b.waybill_no
+		INNER JOIN pub_material_info c on b.consumer_material_code=c.material_code
+		INNER JOIN biz_dispatch_bill d on a.waybill_no=d.waybill_no
+		where 1=1 and a.products_mark=#{productsMark} and a.zx_type=#{zxType} and a.zx_mark=#{zxMark} and a.zx_corrected='1'
+		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+    	<if test="(orderList!=null and orderList.size()>0)">
+        	and d.ordertypeid not in
+        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
+        	 	#{item}
+        	</foreach>
+        </if>	
+    	GROUP BY b.waybill_no
+     </select>
 	
 	 <select id="queryMark" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.correct.BmsMarkingMaterialEntity">
@@ -522,6 +585,22 @@
 	
 	<update id="updatePmxzxMark" parameterType="java.util.Map">
 		update bms_marking_products set pmxzx_corrected='1'
+		where waybill_no in 
+    	<foreach collection="waybillnos" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+	</update>
+	
+	<update id="updatePmxMark" parameterType="java.util.Map">
+		update bms_marking_products set pmx_corrected='1'
+		where waybill_no in 
+    	<foreach collection="waybillnos" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+	</update>
+	
+		<update id="updateZxMark" parameterType="java.util.Map">
+		update bms_marking_products set zx_corrected='1'
 		where waybill_no in 
     	<foreach collection="waybillnos" index="index" item="item" open="(" separator="," close=")">
 				#{item}

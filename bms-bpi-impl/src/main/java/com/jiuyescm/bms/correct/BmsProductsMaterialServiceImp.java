@@ -326,6 +326,20 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		return bmsProductsMaterialRepository.queyNotMaxMaterial(condition);
 	}
 
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxPmx(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.queyNotMaxPmx(condition);
+	}
+
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxZx(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.queyNotMaxZx(condition);
+	}
+	
 
 	@Override
 	public int saveMarkMaterial(Map<String, Object> condition) {
@@ -363,6 +377,21 @@ public class BmsProductsMaterialServiceImp implements IBmsProductsMaterialServic
 		// TODO Auto-generated method stub
 		return bmsProductsMaterialRepository.updateBwdMark(waybillNoList);
 	}
+
+	@Override
+	public int updatePmxMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.updatePmxMark(waybillNoList);
+	}
+
+	@Override
+	public int updateZxMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		return bmsProductsMaterialRepository.updateZxMark(waybillNoList);
+	}
+
+
+
 
 
 }

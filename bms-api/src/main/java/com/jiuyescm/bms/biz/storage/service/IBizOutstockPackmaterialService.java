@@ -126,6 +126,20 @@ public interface IBizOutstockPackmaterialService {
 	public int deleteOldMaterial(Map<String,Object> condition);
 	
 	/**
+	 * 删除运单号对应的泡沫箱
+	 * @param wayList
+	 * @return
+	 */
+	public int deleteOldPmx(Map<String,Object> condition);
+	
+	/**
+	 * 删除运单号对应的纸箱
+	 * @param wayList
+	 * @return
+	 */
+	public int deleteOldZx(Map<String,Object> condition);
+	
+	/**
 	 * 删除运单号对应的保温袋
 	 * @param wayList
 	 * @return

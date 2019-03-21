@@ -66,6 +66,24 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 	}
 	
 	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxPmx(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session=this.getSqlSessionTemplate();
+		List<BizOutstockPackmaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMaxPmx", condition);
+		return list;
+	}
+	@Override
+	public List<BizOutstockPackmaterialEntity> queyNotMaxZx(
+			Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		SqlSession session=this.getSqlSessionTemplate();
+		List<BizOutstockPackmaterialEntity> list=session.selectList("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.queyNotMaxZx", condition);
+		return list;
+	}
+	
+	
+	@Override
 	public List<BizOutstockPackmaterialEntity> queyNotMaxBwd(
 			Map<String, Object> condition) {
 		// TODO Auto-generated method stubo
@@ -263,4 +281,19 @@ public class BmsProductsMaterialRepositoryImpl extends MyBatisDao implements IBm
 		return this.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.updateBwdMark", map);
 	
 	}
+	@Override
+	public int updatePmxMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("waybillnos", waybillNoList);
+		return this.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.updatePmxMark", map);
+	}
+	@Override
+	public int updateZxMark(List<String> waybillNoList) {
+		// TODO Auto-generated method stub
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("waybillnos", waybillNoList);
+		return this.update("com.jiuyescm.bms.correct.mapper.BmsProductsMaterialMapper.updateZxMark", map);
+	}
+
 }

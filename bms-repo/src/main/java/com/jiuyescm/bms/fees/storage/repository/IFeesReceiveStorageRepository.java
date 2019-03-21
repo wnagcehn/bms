@@ -232,6 +232,20 @@ public interface IFeesReceiveStorageRepository {
 	int deleteMaterialFee(Map<String,Object> parameter);
 	
 	/**
+	 * 删除泡沫箱对应得费用
+	 * @param parameter
+	 * @return
+	 */
+	int deletePmxFee(Map<String,Object> parameter);
+	
+	/**
+	 * 删除纸箱对应得费用
+	 * @param parameter
+	 * @return
+	 */
+	int deleteZxFee(Map<String,Object> parameter);
+	
+	/**
 	 * 删除保温袋对应得费用
 	 * @param parameter
 	 * @return

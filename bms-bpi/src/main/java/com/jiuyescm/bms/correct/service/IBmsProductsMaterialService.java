@@ -107,6 +107,12 @@ public interface IBmsProductsMaterialService {
 	//更新打标表
 	int updatePmxzxMark(List<String> waybillNoList);
 	
+	//更新打标表
+	int updatePmxMark(List<String> waybillNoList);
+	
+	//更新打标表
+	int updateZxMark(List<String> waybillNoList);
+	
 	//更新耗材表
 	int updateBwdMark(List<String> waybillNoList);
 }

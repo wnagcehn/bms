@@ -105,7 +105,10 @@ public interface IBmsProductsMaterialRepository {
 	
 	//更新泡沫箱纸箱标
 	int updatePmxzxMark(List<String> waybillNoList);
-	
+	//更新打标表
+	int updatePmxMark(List<String> waybillNoList);	
+	//更新打标表
+	int updateZxMark(List<String> waybillNoList);
 	//更新保温袋标
 	int updateBwdMark(List<String> waybillNoList);
 }

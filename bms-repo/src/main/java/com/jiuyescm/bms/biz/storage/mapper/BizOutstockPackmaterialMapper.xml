@@ -638,6 +638,26 @@
     	</foreach>
     </update>
     
+    <update id="deleteOldPmx" parameterType="java.util.Map">
+	    update biz_outstock_packmaterial a 
+		INNER JOIN pub_material_info b on a.consumer_material_code=b.material_code set a.del_flag='2',a.last_modifier=#{lastModifier},a.last_modify_time=#{lastModifyTime}
+		where 1=1 and b.material_type_name in ('泡沫箱')
+		and a.waybill_no in
+    	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+    		#{item}
+    	</foreach>
+    </update>
+    
+    <update id="deleteOldZx" parameterType="java.util.Map">
+	    update biz_outstock_packmaterial a 
+		INNER JOIN pub_material_info b on a.consumer_material_code=b.material_code set a.del_flag='2',a.last_modifier=#{lastModifier},a.last_modify_time=#{lastModifyTime}
+		where 1=1 and b.material_type_name in ('纸箱')
+		and a.waybill_no in
+    	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
+    		#{item}
+    	</foreach>
+    </update>
+    
     <update id="deleteOldBwd" parameterType="java.util.Map">
 	    update biz_outstock_packmaterial a 
 		INNER JOIN pub_material_info b on a.consumer_material_code=b.material_code set a.del_flag='2',a.last_modifier=#{lastModifier},a.last_modify_time=#{lastModifyTime}

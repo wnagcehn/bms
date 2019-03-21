@@ -324,4 +324,16 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldBwd", condition);
 	}
 
+	@Override
+	public int deleteOldPmx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldPmx", condition);
+	}
+
+	@Override
+	public int deleteOldZx(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldZx", condition);
+	}
+
 }
