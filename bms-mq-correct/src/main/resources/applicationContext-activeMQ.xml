@@ -66,7 +66,7 @@
      <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="1-2">
     	<jms:listener destination="BMS.CORRECT.ASYN.TASK" ref="bmsProductTaskListener"/>
     	<jms:listener destination="BMS.CORRECT.WEIGHT.ASYN.TASK" ref="bmsCorrectWeightTaskListener"/>
-    	<jms:listener destination="BMS.CORRECT.MATERIAL.ASYN.TASK" ref="bmsCorrectMaterialTaskListener"/>
+    	<jms:listener destination="BMS.CORRECT.MATERIAL.ASYN.TASK" ref="bmsCorrectMaterialTaskNewListener"/>
     	<jms:listener destination="BMS.DISCOUNT.ASYN.TASK" ref="bmsReceiveDispatchListener"/>
     </jms:listener-container>
 </beans>

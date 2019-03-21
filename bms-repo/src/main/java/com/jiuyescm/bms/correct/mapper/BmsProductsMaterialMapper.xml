@@ -112,7 +112,7 @@
 		where 1=1 and a.products_mark=#{productsMark} and a.material_type=#{materialType} and a.pmxzx_mark!=#{pmxzxMark}
 		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 		<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -126,7 +126,7 @@
 		where 1=1 and a.products_mark=#{productsMark} and a.material_type=#{materialType} and a.pmxzx_mark=#{pmxzxMark} and a.pmxzx_corrected='1'
 		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
     	<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -144,7 +144,7 @@
 		where 1=1 and a.products_mark=#{productsMark} and a.pmx_type=#{pmxType} and a.pmx_mark!=#{pmxMark}
 		and b.del_flag='0' and c.material_type_name in ('泡沫箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 		<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -158,7 +158,7 @@
 		where 1=1 and a.products_mark=#{productsMark} and a.pmx_type=#{pmxType} and a.pmx_mark=#{pmxMark} and a.pmx_corrected='1'
 		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
     	<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -175,7 +175,7 @@
 		where 1=1 and a.products_mark=#{productsMark} and a.zx_type=#{zxType} and a.zx_mark!=#{zxMark}
 		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 		<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -189,7 +189,7 @@
 		where 1=1 and a.products_mark=#{productsMark} and a.zx_type=#{zxType} and a.zx_mark=#{zxMark} and a.zx_corrected='1'
 		and b.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') and b.customer_id=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
     	<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -271,7 +271,7 @@
 		GROUP BY waybill_no
 		HAVING COUNT(tp) = 1) m
 		ON DUPLICATE KEY UPDATE
-		pmxzx_mark =m.md,material_type=m.tp 
+		pmx_mark =m.md,pmx_type=m.tp 
      </insert>
      
      <insert id="markZx" parameterType="java.util.Map">
@@ -293,7 +293,7 @@
 		GROUP BY waybill_no
 		HAVING COUNT(tp) = 1) m
 		ON DUPLICATE KEY UPDATE
-		pmxzx_mark =m.md,material_type=m.tp 
+		zx_mark =m.md,zx_type=m.tp 
      </insert>
      
      
@@ -383,7 +383,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
 			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -394,7 +394,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
 			where 1=1 and a.pmxzx_mark!='' and a.pmxzx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -412,7 +412,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
 			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -423,7 +423,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
 			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -442,7 +442,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
 			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -453,7 +453,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
 			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -471,7 +471,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
 			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -482,7 +482,7 @@
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
 			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
-	        	and b.ordertypeid not in
+	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
 	        	 	#{item}
 	        	</foreach>
@@ -537,7 +537,7 @@
 		where 1=1 and b.products_mark=#{productsMark} and b.bwd_mark!=#{bwdMark}
 		and a.del_flag='0' and c.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<=#{endTime}]]>
      	<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -550,7 +550,7 @@
 		where 1=1 and b.products_mark=#{productsMark} and b.bwd_mark=#{bwdMark} and b.bwd_corrected='1'
 		and a.del_flag='0' and c.del_flag='0' and c.material_type_name='保温袋' and a.customer_id=#{customerId} and a.create_time>=#{startTime} and a.create_time<![CDATA[<=#{endTime}]]>
    		<if test="(orderList!=null and orderList.size()>0)">
-        	and d.ordertypeid not in
+        	and IFNULL(d.ordertypeid,'') not in
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
@@ -599,7 +599,7 @@
 		</foreach>
 	</update>
 	
-		<update id="updateZxMark" parameterType="java.util.Map">
+	<update id="updateZxMark" parameterType="java.util.Map">
 		update bms_marking_products set zx_corrected='1'
 		where waybill_no in 
     	<foreach collection="waybillnos" index="index" item="item" open="(" separator="," close=")">
