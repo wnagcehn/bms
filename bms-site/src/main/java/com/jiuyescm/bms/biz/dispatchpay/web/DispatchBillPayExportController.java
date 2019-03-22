@@ -281,6 +281,12 @@ public class DispatchBillPayExportController extends BaseController{
 		headInfoList.add(itemMap);
 		
 		itemMap = new HashMap<String, Object>();
+		itemMap.put("title", "出库单号");
+		itemMap.put("columnWidth", 50);
+		itemMap.put("dataKey", "outstockNo");
+		headInfoList.add(itemMap);
+		
+		itemMap = new HashMap<String, Object>();
 		itemMap.put("title", "商家订单号");
 		itemMap.put("columnWidth", 50);
 		itemMap.put("dataKey", "externalNo");
