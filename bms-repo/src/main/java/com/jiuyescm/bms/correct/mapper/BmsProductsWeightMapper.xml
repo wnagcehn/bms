@@ -62,7 +62,7 @@
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
-        </if>	
+        </if>
      </select>
      
      <select id="queryMarkVo" parameterType="java.util.Map"
@@ -70,7 +70,7 @@
         select id, waybill_no as waybillNo, products_mark as productsMark, weight, correct_weight as correctWeight from bms_marking_products where 1=1 and waybill_no=#{waybillNo}
      </select>
      
-     <update id="update" parameterType="com.jiuyescm.bms.correct.BmsMarkkingProductsEntity">
+     <update id="update" parameterType="com.jiuyescm.bms.correct.BmsMarkingProductsEntity">
         update bms_marking_products set correct_weight=#{correctWeight,jdbcType=DECIMAL} where id=#{id}
     </update>
     
