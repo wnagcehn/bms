@@ -4,8 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,24 +14,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Resource;
-
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.data.provider.Page;
 import com.bstek.dorado.uploader.DownloadFile;
 import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
-import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.common.constants.FileConstant;
-import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.excel.write.SXSSFExporter;
-import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
-import com.jiuyescm.bms.report.vo.BizWarehouseNotImportVo;
 import com.jiuyescm.common.tool.ListTool;
-import com.jiuyescm.common.utils.DateUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -46,46 +38,129 @@ public class IncomeReportController {
 
 	@Autowired
 	private IBillCheckInfoService billCheckInfoService;
-
-	@DataProvider
-	public void query(Page<BillCheckInfoEntity> page, Map<String, Object> parameter) {
+	
+	private  List<BillCheckInfoEntity> queryReport(Map<String, Object> parameter){
+		//报表数据list
+		List<BillCheckInfoEntity> reportList = new ArrayList<>();
+		
 		logger.info("前台传入信息："+parameter);
 		String deptName = (String) parameter.get("deptName");
 		String startDate = (String) parameter.get("startDate");
 		String endDate =  (String) parameter.get("endDate");
 		List<String> dateList =  getMonth(startDate,endDate);
-		//报表数据list
-		List<BillCheckInfoEntity> reportList = new ArrayList<>();
+
+		//销售人员不一样时，不应算新增收入
+		//按照月份一次次查询
 		//查询条件
-		Map<String, Object> map = new HashMap<>();
-		map.put("deptName", deptName);
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("deptName", deptName);
 		for (int i = 0; i < dateList.size()-1; i++) {
-			map.put("startBizDate", dateList.get(i));
-			String calculateFeeDate = dateList.get(i+1);
-			map.put("calculateFeeDate",calculateFeeDate );
-			//单月份查出来的数据
-			List<BillCheckInfoEntity> entities =  billCheckInfoService.queryIncomeReport(map);
-//			String year = "20"+calculateFeeDate.substring(0,2);
-			//去掉开头的0
-//			Integer monthString = Integer.valueOf(calculateFeeDate.substring(2,2));
-//			String month = String.valueOf(monthString);
-			//放置到全局list
-			for (BillCheckInfoEntity billCheckInfoEntity : entities) {
-//				billCheckInfoEntity.setBizYear(year);
-//				billCheckInfoEntity.setBizMonth(month);
-				reportList.add(billCheckInfoEntity);
+			//不考虑1901以前的数据
+			String string = dateList.get(i);
+			Integer integer = Integer.valueOf(string);
+			if(integer<1812){
+				continue;
+			}
+			condition.put("startBizDate", string);
+			//查出新增商家
+			List<BillCheckInfoEntity> bizEntities =  billCheckInfoService.queryIncomeReportBizCus(condition);
+			//如果新增商家为空跳过本次循环
+			if(CollectionUtils.isEmpty(bizEntities)){
+				continue;
+			}
+			List<String> bizNameList = new ArrayList<>();
+			//key为开票名称，销售id为值
+			Map<String,String> bizNameMap = new HashMap<>();
+			for (BillCheckInfoEntity entity : bizEntities) {
+				String nameString = entity.getInvoiceName();
+				bizNameList.add(nameString);
+				bizNameMap.put(nameString, entity.getSellerId());
+			}
+			condition.put("nameList", bizNameList);
+			condition.put("calculateFeeDate", dateList.get(i+1));
+			//查出计算费用商家
+			List<BillCheckInfoEntity> calEntities =  billCheckInfoService.queryIncomeReportCalCus(condition);
+			//计算费用的商家
+			List<String> calNameList = new ArrayList<>();
+			
+			for (BillCheckInfoEntity entity : calEntities) {
+				String calName =entity.getInvoiceName();
+				String lastSeller = bizNameMap.get(calName);
+				//比对销售员
+				if(lastSeller.equals(entity.getSellerId())){
+					calNameList.add(calName);
+				}
+			}
+			
+			if(CollectionUtils.isNotEmpty(calNameList)){
+				condition.put("calList", calNameList);
+				//单月份查出来的数据
+				List<BillCheckInfoEntity> entities =  billCheckInfoService.queryIncomeReport(condition);
+				//放置到全局list
+				for (BillCheckInfoEntity billCheckInfoEntity : entities) {
+					reportList.add(billCheckInfoEntity);
+				}
 			}
 		}
+		return reportList;
+	}
+	
+	/**
+	 * 页面查询
+	 */
+	@DataProvider
+	public void query(Page<BillCheckInfoEntity> page, Map<String, Object> parameter) {
+		//报表数据list
+		List<BillCheckInfoEntity> reportList = queryReport(parameter);
         //物理分页
 		List<List<BillCheckInfoEntity>> list = ListTool.split(reportList, page.getPageSize());
 		List<BillCheckInfoEntity> pageList =list.get(page.getPageNo()-1);
 		page.setEntities(pageList);
 		page.setEntityCount(reportList.size());
-		}
+	}
 	
+	/**
+	 * 明细查询
+	 */
 	@DataProvider
 	public void queryDetail(Page<BillCheckInfoEntity> page, Map<String, Object> param) {
 		logger.info("前台传入信息："+param);
+		Integer createMonth = (Integer) param.get("createMonth");
+		String startDate = String.valueOf(createMonth);
+		String endDate =  String.valueOf(createMonth);
+		List<String> list = getMonth(startDate,endDate);
+		
+		//查询条件
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("startBizDate", list.get(0));
+		//查出新增商家
+		List<BillCheckInfoEntity> bizEntities =  billCheckInfoService.queryIncomeReportBizCus(condition);
+		List<String> bizNameList = new ArrayList<>();
+		//key为开票名称，销售id为值
+		Map<String,String> bizNameMap = new HashMap<>();
+		for (BillCheckInfoEntity entity : bizEntities) {
+			String nameString = entity.getInvoiceName();
+			bizNameList.add(nameString);
+			bizNameMap.put(nameString, entity.getSellerId());
+		}
+		condition.put("nameList", bizNameList);
+		condition.put("calculateFeeDate", list.get(1));
+		//查出计算费用商家
+		List<BillCheckInfoEntity> calEntities =  billCheckInfoService.queryIncomeReportCalCus(condition);
+		//计算费用的商家
+		List<String> calNameList = new ArrayList<>();
+		
+		for (BillCheckInfoEntity entity : calEntities) {
+			String calName =entity.getInvoiceName();
+			String lastSeller = bizNameMap.get(calName);
+			//比对销售员
+			if(lastSeller.equals(entity.getSellerId())){
+				calNameList.add(calName);
+			}
+		}
+		
+		param.put("calList", calNameList);
+		//单月份查出来的明细
 		PageInfo<BillCheckInfoEntity> entities =  billCheckInfoService.queryIncomeDetail(param, page.getPageNo(), page.getPageSize());
 		if (entities != null) {
 			page.setEntities(entities.getList());
@@ -110,10 +185,11 @@ public class IncomeReportController {
             dd.setTime(d1);//设置日期起始时间
             while (dd.getTime().before(d2)) {//判断是否到结束日期
                 String str = format.format(dd.getTime());
-                System.out.println(str);//输出日期结果
+        		logger.info("查询日期："+str);
                 dd.add(Calendar.MONTH, 1);//进行当前日期月份加1
                 list.add(str);
             }
+    		logger.info("查询日期："+end);
             list.add(end);
         }catch (Exception e){
             System.out.println("异常"+e.getMessage());
@@ -126,34 +202,8 @@ public class IncomeReportController {
 	 */
 	@FileProvider
 	public DownloadFile asynExport(Map<String, Object> parameter) {
-		logger.info("前台传入信息："+parameter);
-		String deptName = (String) parameter.get("deptName");
-		String startDate = (String) parameter.get("startDate");
-		String endDate =  (String) parameter.get("endDate");
-		List<String> dateList =  getMonth(startDate,endDate);
 		//报表数据list
-		List<BillCheckInfoEntity> reportList = new ArrayList<>();
-		//查询条件
-		Map<String, Object> map = new HashMap<>();
-		map.put("deptName", deptName);
-		for (int i = 0; i < dateList.size()-1; i++) {
-			map.put("startBizDate", dateList.get(i));
-			String calculateFeeDate = dateList.get(i+1);
-			map.put("calculateFeeDate",calculateFeeDate );
-			//单月份查出来的数据
-			List<BillCheckInfoEntity> entities =  billCheckInfoService.queryIncomeReport(map);
-//			String year = "20"+calculateFeeDate.substring(0,2);
-			//去掉开头的0
-//			Integer monthString = Integer.valueOf(calculateFeeDate.substring(2,2));
-//			String month = String.valueOf(monthString);
-			//放置到全局list
-			for (BillCheckInfoEntity billCheckInfoEntity : entities) {
-//				billCheckInfoEntity.setBizYear(year);
-//				billCheckInfoEntity.setBizMonth(month);
-				reportList.add(billCheckInfoEntity);
-			}
-		}
-		
+		List<BillCheckInfoEntity> reportList = queryReport(parameter);
 		String path =null;
 			try {
 				path = export(reportList);
@@ -227,7 +277,7 @@ public class IncomeReportController {
 	        	dataItem.put("createMonth", entity.getCreateMonth());
 	        	dataItem.put("sellerName", entity.getSellerName());
 	        	dataItem.put("area", entity.getArea());
-	        	dataItem.put("confirmAmount", entity.getConfirmAmount());
+	        	dataItem.put("confirmAmount",  CheckReceiptReportExportController.getFormat(entity.getConfirmAmount()));
 	        	dataList.add(dataItem);
 			}
 		return dataList;

@@ -6,11 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +21,8 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +55,8 @@ public class CheckReceiptReportExportController{
 	private IBillCheckInfoService billCheckInfoService;
 	@Autowired 
 	private StorageClient storageClient;
+	 // 保留两位小数，个位无数字填充0
+	private static NumberFormat nformat = NumberFormat.getNumberInstance();
 	/**
 	 * 导出
 	 */
@@ -183,6 +189,7 @@ public class CheckReceiptReportExportController{
 		List<Map<String, Object>> dataDetailList = getData(dateList,codeEntities,reportMap);
 		exporter.writeContent(sheet, dataDetailList);
 		
+		//合并单元格
 		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
 		int regions = dataDetailList.size()/4;
 		for(int i =0;i<regions;i++){
@@ -231,6 +238,7 @@ public class CheckReceiptReportExportController{
 	
 	private List<Map<String, Object>> getData(List<String> dateList,List<SystemCodeEntity> codeEntities,
 			Map<String,CheckReceiptEntity> reportMap){
+		
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
 	        //无区域
@@ -238,7 +246,7 @@ public class CheckReceiptReportExportController{
 	    		return dataList;
 	        }
 	        //初始化列合计
-        	Map<String,Object> totalColumnMap = new HashMap<String, Object>();
+        	Map<String,BigDecimal> totalColumnMap = new HashMap<>();
         	for (String date : dateList){
         		totalColumnMap.put(getKey("expect", date), new BigDecimal(0));
         		totalColumnMap.put(getKey("finish", date), new BigDecimal(0));
@@ -247,7 +255,7 @@ public class CheckReceiptReportExportController{
 	        for (SystemCodeEntity areaEntities : codeEntities) {
 	        	String area = areaEntities.getCodeName();
 	        	//初始化行合计map（回款目标合计，实际完成合计）
-	        	Map<String,Object> totalMap = new HashMap<String, Object>();
+	        	Map<String,BigDecimal> totalMap = new HashMap<>();
 	        	totalMap.put("totalExpect", new BigDecimal(0));
 	        	totalMap.put("totalFinish", new BigDecimal(0));
 				for(int i = 0	;i<4;i++){
@@ -261,40 +269,48 @@ public class CheckReceiptReportExportController{
 			        	for (String date : dateList) {
 							String key = getKey(area, date);
 							BigDecimal expectAmount = reportMap.get(key).getExpectAmount();
-				        	dataItem.put(date,expectAmount);
+							
+				        	dataItem.put(date, getFormat(expectAmount)  );
 				        	//计算行合计
 				        	BigDecimal lastTotal = (BigDecimal) totalMap.get("totalExpect");
 							BigDecimal total = expectAmount.add(lastTotal);
-							totalMap.put("totalExpect", total);
+							
+							totalMap.put("totalExpect",  total);
 							//计算列合计
 							String keyString =getKey("expect", date);
 							BigDecimal lastColumnTotal =(BigDecimal) totalColumnMap.get(keyString);
 							BigDecimal totalColumn = expectAmount.add(lastColumnTotal);
-							totalColumnMap.put(keyString,totalColumn);
+							
+							totalColumnMap.put(keyString, totalColumn);
 						}
 			        	//合计列
-			        	dataItem.put("total",(BigDecimal) totalMap.get("totalExpect"));
+			        	dataItem.put("total", getFormat((BigDecimal) totalMap.get("totalExpect")));
 					}else if(i==1) {
 			        	dataItem.put("summary","实际完成");
 			        	for (String date : dateList) {
 							String key = getKey(area, date);
 							BigDecimal finishAmount = reportMap.get(key).getFinishAmount();
-				        	dataItem.put(date,finishAmount);
+							
+				        	dataItem.put(date, getFormat(finishAmount) );
 				        	//计算行合计
 				        	BigDecimal lastTotal = (BigDecimal) totalMap.get("totalFinish");
 							BigDecimal total = finishAmount.add(lastTotal);
-							totalMap.put("totalFinish", total);
+							
+							totalMap.put("totalFinish", total );
 							//计算列合计
 							String keyString =getKey("finish", date);
 							BigDecimal lastColumnTotal =(BigDecimal) totalColumnMap.get(keyString);
 							BigDecimal totalColumn = finishAmount.add(lastColumnTotal);
+							
 							totalColumnMap.put(keyString,totalColumn);
 						}
-			        	dataItem.put("total",(BigDecimal) totalMap.get("totalFinish"));
+			        	
+			        	dataItem.put("total",getFormat((BigDecimal) totalMap.get("totalFinish")));
 					}else if(i==2) {
 			        	dataItem.put("summary", "完成率");
 			        	for (String date : dateList) {
 							String key = getKey(area, date);
+							 
 				        	dataItem.put(date,reportMap.get(key).getFinishRate());
 						}
 			        	dataItem.put("total",getFinishRate((BigDecimal) totalMap.get("totalExpect"),(BigDecimal) totalMap.get("totalFinish")));
@@ -311,7 +327,7 @@ public class CheckReceiptReportExportController{
 	        
 	        //插入合计行
         	//初始化行合计map（回款目标合计，实际完成合计）
-        	Map<String,Object> totalMap = new HashMap<>();
+        	Map<String,BigDecimal> totalMap = new HashMap<>();
         	totalMap.put("totalExpect", new BigDecimal(0));
         	totalMap.put("totalFinish", new BigDecimal(0));
         	//存放合计的每一行数据map
@@ -326,26 +342,26 @@ public class CheckReceiptReportExportController{
 		        	for (String date : dateList) {
 						String key = getKey("expect", date);
 						BigDecimal expectAmount = (BigDecimal) totalColumnMap.get(key);
-			        	dataItem.put(date,expectAmount);
+			        	dataItem.put(date, getFormat(expectAmount) );
 			        	//计算行合计
 			        	BigDecimal lastTotal = (BigDecimal) totalMap.get("totalExpect");
 						BigDecimal total = expectAmount.add(lastTotal);
-						totalMap.put("totalExpect", total);
+						totalMap.put("totalExpect",total );
 					}
 		        	//合计列
-		        	dataItem.put("total",(BigDecimal) totalMap.get("totalExpect"));
+		        	dataItem.put("total", getFormat((BigDecimal) totalMap.get("totalExpect")));
 				}else if(i==1) {
 		        	dataItem.put("summary","实际完成");
 		        	for (String date : dateList) {
 						String key = getKey("finish", date);
 						BigDecimal finishAmount = (BigDecimal) totalColumnMap.get(key);
-			        	dataItem.put(date,finishAmount);
+			        	dataItem.put(date,getFormat(finishAmount));
 			        	//计算行合计
 			        	BigDecimal lastTotal = (BigDecimal) totalMap.get("totalFinish");
 						BigDecimal total = finishAmount.add(lastTotal);
 						totalMap.put("totalFinish", total);
 					}
-		        	dataItem.put("total",(BigDecimal) totalMap.get("totalFinish"));
+		        	dataItem.put("total",getFormat( (BigDecimal) totalMap.get("totalFinish")) );
 				}else if(i==2) {
 		        	dataItem.put("summary", "完成率");
 		        	for (String date : dateList) {
@@ -389,16 +405,24 @@ public class CheckReceiptReportExportController{
 	static String getFinishRate(BigDecimal expectBigDecimal, BigDecimal receiptBigDecimal) {
 		String finish ="";
 		if(expectBigDecimal.equals(BigDecimal.ZERO)){
-			finish = "100%";
+			finish = "100.00%";
 		}else if(receiptBigDecimal.equals(BigDecimal.ZERO)) {
-			finish = "0%";
+			finish = "0.00%";
 		}else {
-			BigDecimal div = receiptBigDecimal.divide(expectBigDecimal,6, RoundingMode.HALF_UP);
+			BigDecimal div = receiptBigDecimal.divide(expectBigDecimal,4, RoundingMode.HALF_UP);
 			BigDecimal mul = div.multiply(new BigDecimal(100));
 			String num = mul.toString();
 			String numString = num.substring(0,num.length()-2);
 			finish = numString+"%";
 		}
 		return finish;
+	}
+	
+	static Double getFormat (BigDecimal bigDecimal){
+		nformat.setMaximumFractionDigits(2);
+		String s = nformat.format(bigDecimal);
+		String repStr = s.replaceAll(",","");
+		Double d = Double.valueOf(repStr).doubleValue();
+		return d;
 	}
 }

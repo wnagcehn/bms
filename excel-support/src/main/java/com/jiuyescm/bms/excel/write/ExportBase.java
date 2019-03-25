@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -85,8 +86,12 @@ public class ExportBase implements IExcelExporter{
      */
 	@SuppressWarnings("static-access")
 	private void writeHeader(Sheet sheet ,List<Map<String, Object>> headInfoList){
+		
+		
+		
         CellStyle cs = workbook.createCellStyle();
         Font font = workbook.createFont();
+        
         font.setFontHeightInPoints((short)12);
         font.setBoldweight(font.BOLDWEIGHT_BOLD);
         cs.setFont(font);
@@ -226,4 +231,9 @@ public class ExportBase implements IExcelExporter{
     	List<Map<String, Object>> dataList =ExcelAnnotionUtil.getDataList(list);
     	writeContent(sheet,dataList);
     }
+
+	@Override
+	public Workbook getWorkBook() {
+		return workbook;
+	}
 }

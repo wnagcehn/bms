@@ -197,4 +197,10 @@ public interface IBillCheckInfoRepository {
 
 	PageInfo<BillCheckInfoEntity> queryIncomeDetail(
 			Map<String, Object> condition, int pageNo, int pageSize);
+
+	List<BillCheckInfoEntity> queryIncomeReportBizCus(
+			Map<String, Object> condition);
+
+	List<BillCheckInfoEntity> queryIncomeReportCalCus(
+			Map<String, Object> condition);
 }

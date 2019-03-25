@@ -112,4 +112,9 @@ public class SystemCodeServiceImpl implements ISystemCodeService {
     public List<SystemCodeEntity> queryExtattr1(Map<String, Object> condition) {
         return systemCodeRepository.queryExtattr1(condition);
     }
+    
+    @Override
+    public List<SystemCodeEntity> queryDeptName() {
+        return systemCodeRepository.queryDeptName();
+    }
 }

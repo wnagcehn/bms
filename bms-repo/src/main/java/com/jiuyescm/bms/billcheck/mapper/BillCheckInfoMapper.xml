@@ -909,7 +909,10 @@
 SELECT sum(confirm_amount) confirmAmount,seller_id sellerId,seller_name sellerName,area,create_month createMonth,dept_name deptName
 FROM bill_check_info 
 WHERE del_flag = 0 AND create_month =#{calculateFeeDate} AND dept_name =#{deptName}
-AND invoice_name in (SELECT a.invoice_name FROM (SELECT create_month,invoice_name FROM bill_check_info WHERE create_month >= 1901 AND del_flag = 0 GROUP BY invoice_name ORDER BY create_month) a WHERE a.create_month =#{startBizDate}) 
+and invoice_name in 
+		 <foreach collection="calList" index="index" item="item" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
 GROUP BY seller_id,area
     </select>
     
@@ -921,5 +924,23 @@ bill_start_time billStartTime,
 bill_status billStatus
 FROM bill_check_info WHERE seller_id = #{sellerId}  AND create_month = #{createMonth}
 AND area = #{area} and dept_name = #{deptName} and del_flag=0
+and invoice_name in 
+		 <foreach collection="calList" index="index" item="item" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
     </select>
-</mapper> 
+    
+    <select id="queryIncomeReportBizCus" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT a.invoice_name,a.seller_id FROM 
+(SELECT a.create_month,a.invoice_name,a.seller_id FROM (SELECT create_month,invoice_name,seller_id FROM bill_check_info WHERE del_flag = 0 ORDER BY create_month) a GROUP BY a.invoice_name) a
+ WHERE a.create_month =#{startBizDate}
+    </select>
+    
+     <select id="queryIncomeReportCalCus" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT invoice_name,seller_id FROM bill_check_info  WHERE del_flag=0 and create_month =#{calculateFeeDate} 
+and invoice_name in 
+		 <foreach collection="nameList" index="index" item="item" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+    </select>
+</mapper>

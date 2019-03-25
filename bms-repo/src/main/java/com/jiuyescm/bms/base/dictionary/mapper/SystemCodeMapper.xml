@@ -241,4 +241,8 @@
 		<include refid="baseSelectColumns" />
 		order by sort_no
     </select>
+    
+   <select id="queryDeptName" resultType="com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity">
+        select DISTINCT(extattr1) as extattr1 from system_code where type_code = "SALE_AREA" and status=0
+    </select>
 </mapper>

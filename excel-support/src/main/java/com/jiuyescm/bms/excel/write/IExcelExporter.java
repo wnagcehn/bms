@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import com.jiuyescm.bms.excel.exception.ExcelHandlerException;
 
@@ -61,5 +62,7 @@ public interface IExcelExporter {
 	 * 注解类写入内容
 	 */
     public void writeContentByAnno(Sheet sheet, List list);
+    
+    public Workbook getWorkBook();
 	
 }

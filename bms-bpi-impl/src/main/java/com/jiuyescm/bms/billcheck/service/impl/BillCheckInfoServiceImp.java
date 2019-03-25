@@ -827,4 +827,14 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 	public PageInfo<BillCheckInfoEntity> queryIncomeDetail(Map<String, Object> condition,int pageNo,int pageSize) {
 		return billCheckInfoRepository.queryIncomeDetail(condition, pageNo, pageSize);
 	}
+	
+	@Override
+	public List<BillCheckInfoEntity> queryIncomeReportBizCus(Map<String, Object> condition) {
+		return billCheckInfoRepository.queryIncomeReportBizCus(condition);
+	}
+	
+	@Override
+	public List<BillCheckInfoEntity> queryIncomeReportCalCus(Map<String, Object> condition) {
+		return billCheckInfoRepository.queryIncomeReportCalCus(condition);
+	}
 }

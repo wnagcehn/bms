@@ -77,4 +77,6 @@ public interface ISystemCodeService {
 	List<SystemCodeEntity> queryBySortNo(Map<String, Object> param);
 
 	List<SystemCodeEntity> queryExtattr1(Map<String, Object> condition);
+
+	List<SystemCodeEntity> queryDeptName();
 }

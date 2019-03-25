@@ -33,6 +33,7 @@
     <DataType name="dtQueryCondition">
       <PropertyDef name="deptName">
         <Property name="label">责任部门</Property>
+        <Property name="defaultValue">销售部</Property>
       </PropertyDef>
       <PropertyDef name="startDate">
         <Property name="label">业务月份</Property>
@@ -119,8 +120,20 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+var createMonth = &quot;&quot;;&#xD;
+if(month &lt; 10){&#xD;
+	createMonth = year.toString().substring(2,4) + &quot;0&quot; + month;&#xD;
+}else{&#xD;
+	createMonth = year.toString().substring(2,4) + month;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;startDate&quot;,createMonth);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;endDate&quot;,createMonth);</ClientEvent>
     <DataSet id="dsQuery">
-      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtQueryCondition]</Property>
     </DataSet>
     <DataSet id="dsIncomeEntity">
@@ -138,6 +151,10 @@
     <DataSet id="dsDetailCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
       <Property name="dataType">[dtDetailCondition]</Property>
+    </DataSet>
+    <DataSet id="dsSystemCodeEntity">
+      <ClientEvent name="onCreate">view.get(&quot;#dsQuery&quot;).insert();</ClientEvent>
+      <Property name="dataProvider">checkReceiptReportController#getDeptEnum</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -198,13 +215,14 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,parameter).execu
         <Property name="visible">true</Property>
       </ToolBarButton>
     </ToolBar>
-    <AutoForm>
+    <AutoForm id="queryForm">
       <Property name="dataSet">dsQuery</Property>
       <Property name="cols">*,*,*,*</Property>
       <Property name="labelWidth">120</Property>
       <AutoFormElement>
         <Property name="name">deptName</Property>
         <Property name="property">deptName</Property>
+        <Property name="trigger">deptDataSetDropDown</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -242,6 +260,10 @@ jQuery(arg.dom).xCreate({&#xD;
 	content:&quot;明细&quot;,&#xD;
 	onclick:function(){&#xD;
 		var entity=view.get(&quot;#dsIncomeEntity.data&quot;).current;&#xD;
+		var confirmAmount = entity.get(&quot;confirmAmount&quot;);&#xD;
+		if(confirmAmount &lt;=0){&#xD;
+			return;&#xD;
+		}&#xD;
 		var deptName = entity.get(&quot;deptName&quot;);&#xD;
 		var area = entity.get(&quot;area&quot;);&#xD;
 		var sellerId = entity.get(&quot;sellerId&quot;);&#xD;
@@ -251,6 +273,7 @@ jQuery(arg.dom).xCreate({&#xD;
 			area:area,&#xD;
 			sellerId:sellerId,&#xD;
 			createMonth:createMonth,&#xD;
+			confirmAmount:confirmAmount,&#xD;
 		};&#xD;
 		with (view.get(&quot;#dsBillCheckInfo&quot;)){&#xD;
 			set(&quot;parameter&quot;, parameter);&#xD;
@@ -347,5 +370,18 @@ jQuery(arg.dom).xCreate({&#xD;
     <DownloadAction id="downloadAction">
       <Property name="fileProvider">incomeReportController#asynExport</Property>
     </DownloadAction>
+    <DataSetDropDown id="deptDataSetDropDown">
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsQuery&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+data.set({&#xD;
+	deptName:arg.selectedValue.get(&quot;extattr1&quot;)&#xD;
+});&#xD;
+arg.processDefault = false;</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">extattr1</Property>
+      <Property name="dataSet">dsSystemCodeEntity</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>
