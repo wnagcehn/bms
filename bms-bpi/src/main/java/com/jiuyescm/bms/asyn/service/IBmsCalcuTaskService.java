@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.asyn.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -24,5 +25,7 @@ public interface IBmsCalcuTaskService {
 	void updateRate(String taskId,Integer taskRate) throws Exception;
 	
 	void saveTask(BmsCalcuTaskVo vo);
+	
+	List<BmsCalcuTaskVo> queryByMap(Map<String, Object> condition);
 	
 }

@@ -125,4 +125,17 @@
 		<include refid="baseSelectColumns" />
     </select>
     
+    <select id="queryByMap" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+    	select customer_id as customerId,subject_code as subjectCode,DATE_FORMAT(create_time,'%Y%m') as creMonth,COUNT(0) as uncalcuCount from fees_receive_storage
+    	where is_calculated=#{isCalculated}
+    	<if test="(subjectList != null and subjectList!='')">
+			and subject_code in
+			<foreach collection="subjectList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>  	
+		GROUP BY customer_id,subject_code,DATE_FORMAT(create_time,'%Y%m');  
+    </select>
+    
 </mapper>

@@ -25,4 +25,5 @@ public interface IBmsAsynCalcuTaskRepository {
     
     List<BmsAsynCalcuTaskEntity> queryUnfinish(Map<String, Object> condition);
     
+    List<BmsAsynCalcuTaskEntity> queryByMap(Map<String, Object> condition);
 }

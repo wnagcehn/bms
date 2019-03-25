@@ -23,6 +23,8 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
+import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.MD5Util;
 import com.jiuyescm.exception.BizException;
@@ -187,5 +189,24 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 			throw new BizException("查询计算任务异常");
 		}    
 	}
+
+	@Override
+	public List<BmsCalcuTaskVo> queryByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.query(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+    	for(BmsAsynCalcuTaskEntity entity : list) {
+    		BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
+
+
 
 }
