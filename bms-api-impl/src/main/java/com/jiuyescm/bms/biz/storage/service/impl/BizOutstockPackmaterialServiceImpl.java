@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,6 +26,7 @@ import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 
 @Service("bizOutstockPackmaterialService")
 public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmaterialService{
+	private static final Logger logger = Logger.getLogger(BizOutstockPackmaterialServiceImpl.class.getName());
 
 	@Autowired
 	private IBizOutstockPackmaterialRepository repository;
@@ -248,25 +252,53 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 	}
 
 	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public int deleteOldMaterial(Map<String,Object> condition) {
 		// TODO Auto-generated method stub
-		int result=repository.deleteOldMaterial(condition);
-		if(result>0){
-			feesReceiveStorageRepository.deleteMaterialFee(condition);
+		//根据运单号查出所有的费用编号
+		List<String> materialList=new ArrayList<String>();
+		materialList.add("泡沫箱");
+		materialList.add("纸箱");
+		condition.put("materialList", materialList);
+		List<String> feeNos=repository.queryFeeNo(condition);
+		if(feeNos.size()>0){
+			condition.put("feeNos", feeNos);
+			int result=repository.deleteOldMaterial(condition);
+			logger.info("删除泡沫箱纸箱"+JSONObject.fromObject(condition));
+			if(result>0){
+				feesReceiveStorageRepository.deleteMaterialFee(condition);
+				logger.info("删除泡沫箱费用纸箱"+JSONObject.fromObject(condition));
+			}
+			return result;
+		}else{
+			logger.info("未查询到费用编号"+JSONObject.fromObject(condition));
+			return 0;
 		}
-		return result;
+		
 	}
 
 	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public int deleteOldBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		int result=repository.deleteOldBwd(condition);
-		if(result>0){
-			feesReceiveStorageRepository.deleteBwdFee(condition);
+		//根据运单号查出所有的费用编号
+		List<String> materialList=new ArrayList<String>();
+		materialList.add("保温袋");
+		condition.put("materialList", materialList);
+		List<String> feeNos=repository.queryFeeNo(condition);
+		if(feeNos.size()>0){
+			condition.put("feeNos", feeNos);
+			int result=repository.deleteOldBwd(condition);
+			logger.info("删除保温袋"+JSONObject.fromObject(condition));
+			if(result>0){
+				feesReceiveStorageRepository.deleteBwdFee(condition);
+				logger.info("删除保温袋费用"+JSONObject.fromObject(condition));
+
+			}
+			return result;
+		}else{
+			logger.info("未查询到费用编号"+JSONObject.fromObject(condition));
+			return 0;
 		}
-		return result;
+		
 	}
 
 }
