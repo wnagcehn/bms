@@ -239,6 +239,7 @@ public class BmsCorrectMaterialTaskListener implements MessageListener{
 						condition.put("lastModifier", taskVo.getCreator());
 						condition.put("lastModifyTime", JAppContext.currentTimestamp());
 						start = System.currentTimeMillis();
+						logger.info("删除老耗材的条件"+JSONObject.fromObject(condition));
 						int resultDelete=bizOutstockPackmaterialService.deleteOldMaterial(condition);
 						end = System.currentTimeMillis();
 						delTimeTotal = delTimeTotal + (end-start);						
