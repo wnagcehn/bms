@@ -51,6 +51,13 @@ public interface IBizPalletInfoRepository {
 	 * @return
 	 */
 	int updatePalletNumBatch(List<BizPalletInfoEntity> list);
+	
+	/**
+	 * 重算（新）
+	 * @param list
+	 * @return
+	 */
+	int retryCalculate(List<BizPalletInfoEntity> list);
 
 
 

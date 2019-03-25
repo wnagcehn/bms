@@ -1474,6 +1474,7 @@ if(index==3){&#xD;
             <Property name="showFooter">true</Property>
             <Property name="selectionMode">multiRows</Property>
             <Property name="filterMode">clientSide</Property>
+            <Property name="highlightCurrentRow">true</Property>
             <RowSelectorColumn/>
             <RowNumColumn/>
             <DataColumn name="createMonth">
@@ -1876,14 +1877,20 @@ if(isNullOrEmpty(entity.get(&quot;invoiceDate&quot;))){&#xD;
 }&#xD;
 &#xD;
 view.id(&quot;updateInvoiceAction&quot;).execute(function(result){&#xD;
+	var dataList=view.get(&quot;#dsBillCheckInfo.data&quot;);&#xD;
 	dorado.MessageBox.alert(result);&#xD;
 	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
 	var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
 	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
 	&#xD;
-	var subData=view.get(&quot;#dsBillCheckInvoice.data&quot;);&#xD;
-	subData.clear();&#xD;
-	view.id(&quot;dialogInvoiceEdit&quot;).hide();&#xD;
+	dataList.each(function(item){&#xD;
+	    if (item.get(&quot;id&quot;) == entity.get(&quot;billCheckId&quot;)) {&#xD;
+			console.log(dataList);&#xD;
+			dataList.setCurrent(item);&#xD;
+			view.id(&quot;dialogInvoiceEdit&quot;).hide();&#xD;
+		}&#xD;
+	});&#xD;
+	&#xD;
 });</ClientEvent>
                       <Property name="caption">保存</Property>
                     </Button>
