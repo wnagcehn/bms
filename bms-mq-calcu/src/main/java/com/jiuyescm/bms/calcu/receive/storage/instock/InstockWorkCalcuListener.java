@@ -8,11 +8,11 @@ import com.jiuyescm.bms.calcu.base.CalcuServiceStoBase;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveStorageVo;
 
 /**
- * 入库费用计算
+ * 入库操作费计算
  * @author caojianwei
  *
  */
-@Service("instockWorkCalcuListener")
+@Service("whInstockWorkCalcuListener")
 public class InstockWorkCalcuListener extends InstockCalcuBase{
 
 	private static final Logger logger = Logger.getLogger(InstockWorkCalcuListener.class.getName());

@@ -1,10 +1,10 @@
 package com.jiuyescm.bms.biz.storage.vo;
 
 /**
- * 托数业务对象
+ * 增值业务对象
  * @author caojianwei
  *
  */
-public class StoBizPalletVo {
+public class StoValueaddVo {
 
 }

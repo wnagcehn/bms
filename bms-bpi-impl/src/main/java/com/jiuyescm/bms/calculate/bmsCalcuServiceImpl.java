@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.repo.IBmsCalcuRepository;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
@@ -15,6 +17,8 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 
 
 	@Autowired IBmsCalcuRepository bmsCalcuServiceImpl;
+	
+	@Autowired ICustomerDictService customerDictService;
 	
 	@Override
 	public BmsFeesQtyVo queryFeesQtyForSto(String customerId, String subjectCode,Integer creMonth) {
@@ -106,6 +110,22 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 			}
 		}
 		return vo;
+	}
+
+	@Override
+	public String queryContractAttr(String customerId) {
+		PubCustomerVo vo = customerDictService.queryById(customerId);
+		if(vo == null){
+			return null;
+		}
+		String contractAttr = null;
+		if(vo.getContractAttr() == 1){
+			contractAttr = "BMS";
+		}
+		else{
+			contractAttr = "CONTRACT";
+		}
+		return contractAttr;
 	}
 
 }
