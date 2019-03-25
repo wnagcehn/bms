@@ -9,6 +9,7 @@
 	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
 	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
 	    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+	    <result column="fees_type" property="feesType" jdbcType="VARCHAR" />
 	    <result column="cre_month" property="creMonth" jdbcType="INTEGER" />
 	    <result column="task_status" property="taskStatus" jdbcType="TINYINT" />
 	    <result column="fees_count" property="feesCount" jdbcType="INTEGER" />
@@ -30,7 +31,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, customer_id,customer_name, subject_code,subject_name, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time, remark
+        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time, remark
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -81,11 +82,12 @@
 
     <insert id="save" parameterType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
         insert into bms_asyn_calcu_task
-        (task_id, customer_id, subject_code, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
+        (task_id, customer_id, subject_code,fees_type, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
         values (
 			#{taskId,jdbcType=VARCHAR}, 
 			#{customerId,jdbcType=VARCHAR}, 
 			#{subjectCode,jdbcType=VARCHAR}, 
+			#{feesType,jdbcType=VARCHAR}, 
 			#{creMonth,jdbcType=INTEGER}, 
 			#{taskStatus,jdbcType=TINYINT}, 
 			#{crePerson,jdbcType=VARCHAR}, 

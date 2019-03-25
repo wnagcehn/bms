@@ -23,15 +23,9 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
-import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
-import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
+import com.jiuyescm.bms.common.enumtype.MQSubjectEnum;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.MD5Util;
 import com.jiuyescm.exception.BizException;
-import com.jiuyescm.framework.lock.Lock;
-import com.jiuyescm.framework.lock.LockCallback;
-import com.jiuyescm.framework.lock.LockCantObtainException;
-import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCalcuTaskService")
@@ -40,7 +34,6 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	private Logger logger = LoggerFactory.getLogger(BmsCalcuTaskServiceImpl.class);
 
 	@Autowired IBmsAsynCalcuTaskRepository bmsAsynCalcuTaskRepositoryimpl;
-	@Autowired private Lock lock;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private JmsTemplate jmsQueueTemplate;
 	
@@ -78,65 +71,24 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		map.put("customerId", customerId);
 		map.put("subjectCode", subjectCode);
 		map.put("creMonth", creMonth);
-		//使用validate
-		String lockString = MD5Util.getMd5("BMS_CALCU_MQ"+customerId+subjectCode+creMonth);
-		final Map<String, Object> handMap = new HashMap<>();
-		handMap.put("success", "fail");
-		handMap.put("remark", "");
-		//使用分布式锁 防止并发情况下生产多条同样的计费请求
-		lock.lock(lockString, 5, new LockCallback<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> handleObtainLock() {
-				
-				List<BmsAsynCalcuTaskEntity> list = bmsAsynCalcuTaskRepositoryimpl.queryUnfinish(map);
-				//查询表中是否存在未完成的任务
-				if(list==null || list.size()==0){
-					handMap.put("success", "success");
-				}
-				else{
-					handMap.put("success", "fail");
-					handMap.put("remark", "已存在计算的任务");
-				}
-				return handMap;
-			}
-
-			@Override
-			public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
-				//未拿到锁 丢弃->同一时间不允许 相同商家，相同科目，相同年月同时计算
-				handMap.put("success", "fail");
-				handMap.put("remark", "请求过于频繁,丢弃");
-				return handMap;
-			}
-
-			@Override
-			public Map<String, Object> handleException(LockInsideExecutedException e) throws LockInsideExecutedException {
-				handMap.put("success", "fail");
-				handMap.put("remark", "请求异常,丢弃");
-				return handMap;
-			}
-		});
-		String succ = handMap.get("success").toString();
 		String taskId = "CT"+snowflakeSequenceService.nextStringId();//任务ID
 		vo.setTaskId(taskId);
 		vo.setCreTime(JAppContext.currentTimestamp());
-		//请求通过 保存数据
-		if("success".equals(succ)){
-			//请求成功 发送mq消息
-			vo.setTaskStatus(0);
-			saveTask(vo);
-			jmsQueueTemplate.send("BMS.QUEUE.CALCU.WORK", new MessageCreator() {
-				@Override
-				public Message createMessage(Session session) throws JMSException {
-					return session.createTextMessage(vo.getTaskId());
-				}
-			});
+		vo.setTaskStatus(0);
+		saveTask(vo);
+		String mqQueue = null;
+		if("wh_product_storage".equals(subjectCode) && "item".equals(vo.getFeesType())){
+			mqQueue = MQSubjectEnum.getDesc(subjectCode+"_item");
 		}
 		else{
-			vo.setTaskStatus(40);//请求不成功,直接丢弃 不发送mq
-			vo.setRemark(handMap.get("remark").toString());
-			saveTask(vo);
-			throw new BizException(vo.getRemark());
+			mqQueue = MQSubjectEnum.getDesc(subjectCode);
 		}
+		jmsQueueTemplate.send(mqQueue, new MessageCreator() {
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				return session.createTextMessage(vo.getTaskId());
+			}
+		});
 		return vo;
 	}
 	
@@ -160,8 +112,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		}catch(Exception e){
 			logger.error("更新计算任务异常",e);
 			throw new BizException("更新计算任务异常");
-		}    
-		
+		}
 	}
 
 	@Override

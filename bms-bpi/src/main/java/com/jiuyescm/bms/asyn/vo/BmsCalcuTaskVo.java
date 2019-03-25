@@ -32,6 +32,9 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	private Timestamp finishTime;
 	// 备注
 	private String remark;
+	
+	//费用类型
+	private String feesType;
 
 	public BmsCalcuTaskVo() {
 
@@ -198,6 +201,22 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
      */
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	/**
+	 * 费用类型  商品按件存储-item
+	 * @return
+	 */
+	public String getFeesType() {
+		return feesType;
+	}
+
+	/**
+	 * 费用类型  商品按件存储-item
+	 * @param feesType
+	 */
+	public void setFeesType(String feesType) {
+		this.feesType = feesType;
 	}
 	
     
