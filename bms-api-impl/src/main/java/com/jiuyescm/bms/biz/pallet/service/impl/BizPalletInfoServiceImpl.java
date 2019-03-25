@@ -101,6 +101,16 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
 		return bizPalletInfoRepository.reCalculate(list);
 	}
 	
+    /**
+     * 重算（新）
+     * @param param
+     * @return
+     */
+	@Override
+	public int retryCalculate(List<BizPalletInfoEntity> list) {
+		return bizPalletInfoRepository.retryCalculate(list);
+	}
+	
 	/**
 	 * 分组统计
 	 * @param condition

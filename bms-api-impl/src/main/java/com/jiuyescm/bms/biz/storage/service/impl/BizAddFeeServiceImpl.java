@@ -150,6 +150,10 @@ public class BizAddFeeServiceImpl implements IBizAddFeeService {
 		return bizAddFeeRepository.updateByMap(condition);
 	}
 
-
+	@Override
+	public int retryCalcu(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return bizAddFeeRepository.retryCalcu(condition);
+	}
 	
 }

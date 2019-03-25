@@ -126,7 +126,12 @@
 	  
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-        select a.*, s.cost as cost, s.unit_price as unitPrice from biz_add_fee a
+        select a.id,a.wms_id, a.operation_time, a.warehouse_code, a.warehouse_name, 
+		a.customerid, a.customer_name, a.num, a.fees_no, a.fees_type,a.fees_type_name, 
+		a.fees_unit, a.item, s.is_calculated, a.creator, a.create_time, a.last_modifier, 
+		a.last_modify_time, a.del_flag, a.calculate_time, a.write_time, a.adjust_num, s.calcu_msg as remark, 
+		a.external_no,a.service_content,a.remark_content, 
+		s.cost as cost, s.unit_price as unitPrice from biz_add_fee a
 		LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no and s.del_flag='0'
 		WHERE 1=1
 		<if test="(id != null and id !='')" >
@@ -163,7 +168,7 @@
 				and a.item = #{item}
 		</if>
 		<if test="(isCalculated != null and isCalculated !='')" >
-				and a.is_calculated = #{isCalculated}
+				and s.is_calculated = #{isCalculated}
 		</if>
 		<if test="(creator != null and creator !='')" >
 				and a.creator = #{creator}
@@ -381,4 +386,29 @@
 		GROUP BY a.customer_name, s.is_calculated, a.fees_type_name
 		ORDER BY totalNum DESC
     </select>
+    
+    <update id="retryCalcu" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    	update fees_receive_storage set is_calculated='99'
+		WHERE fees_no in (
+			select a.fees_no from biz_add_fee a
+			LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no and s.del_flag='0'
+			WHERE 1=1
+			and a.del_flag='0'
+			<if test="(customerid != null and customerid !='')" >
+				and a.customerid = #{customerid}
+			</if>
+			<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+			</if>
+			<if test="(createTime != null and createTime !='')" >
+			    and a.create_time >= #{createTime} add <![CDATA[a.create_time <= #{createTime}]]>
+			</if>
+			<if test="(feesType != null and feesType !='')" >
+				and a.fees_type = #{feesType}
+			</if>
+			<if test="(isCalculated != null and isCalculated !='')" >
+				and s.is_calculated = #{isCalculated}
+			</if>
+		)
+    </update>
 </mapper>

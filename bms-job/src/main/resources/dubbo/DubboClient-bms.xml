@@ -42,7 +42,10 @@
 		 <dubbo:reference id="pubMonthFeeCountService" interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" 
 		 version="1.0.0"/>		 
 		 <!-- 基于snowflake算法的分布式id接口 -->
-		<!-- <dubbo:reference id="snowflakeSequenceService" interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"  /> -->
+		 <dubbo:reference id="snowflakeSequenceService" interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService" version="1.0.0"/>
+		 
+		 <dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" version="1.0.0"/>
+		 <dubbo:reference id="bmsSubjectInfoService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" version="1.0.0"/>
 		
 		<dubbo:reference id="sequenceService1" interface="com.jiuyescm.framework.sequence.api.ISequenceService"  />
 </beans>							

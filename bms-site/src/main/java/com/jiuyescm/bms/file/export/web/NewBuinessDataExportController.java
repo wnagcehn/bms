@@ -1364,9 +1364,9 @@ public class NewBuinessDataExportController extends BaseController {
 			for (FeesReceiveStorageEntity entity : itemsList) {
 				conIndex++;
 				if (!set.contains(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()))) {
-					if(cusList.contains(entity.getCustomerId())){
-						set.add(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()));
-					}
+					
+					set.add(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()));
+					
 				}
 			}
 			
@@ -1748,34 +1748,34 @@ public class NewBuinessDataExportController extends BaseController {
 				//商品存储费（按件）
 				for (FeesReceiveStorageEntity entity : itemsList) {
 					if ((entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime())).equals(timestampKey)) {						
-						if (newIndex > 0) {
-							//商家名称
-							Cell cell40=row.createCell(0);
-							cell40.setCellValue(entity.getCustomerName());		
-							//仓库名称
-							Cell cell41=row.createCell(1);
-							cell41.setCellValue(entity.getWarehouseName());	
-							//时间
-							Cell cell42=row.createCell(2);
-							cell42.setCellValue(timestampKey.substring(0, timestampKey.indexOf("&")));
-							//库存件数
-							double productCost=0d;
-							if(cusList.contains(entity.getCustomerId())){
-								productCost = entity.getCost().doubleValue();
-							}
-
-							//不是当月的时间，则是上月结余，上月结余的不显示金额
-							if(!entity.getCreateTime().before(startTime)){
-								//存储费按件小计
-								Cell cell61 = row.createCell(18);
-								cell61.setCellValue(productCost+cCost);
-								//累加行
-								cCost = cCost + productCost;
-								rowProCost = rowProCost + productCost;
-								//累加列
-								ccfcost = ccfcost+productCost;
-							}	
+						
+						//商家名称
+						Cell cell40=row.createCell(0);
+						cell40.setCellValue(entity.getCustomerName());		
+						//仓库名称
+						Cell cell41=row.createCell(1);
+						cell41.setCellValue(entity.getWarehouseName());	
+						//时间
+						Cell cell42=row.createCell(2);
+						cell42.setCellValue(timestampKey.substring(timestampKey.indexOf("&")+1));
+						//库存件数
+						double productCost=0d;
+						if(cusList.contains(entity.getCustomerId())){
+							productCost = entity.getCost().doubleValue();
 						}
+
+						//不是当月的时间，则是上月结余，上月结余的不显示金额
+						if(!entity.getCreateTime().before(startTime) && newIndex > 0){
+							//存储费按件小计
+							Cell cell61 = row.createCell(18);
+							cell61.setCellValue(productCost+cCost);
+							//累加行
+							cCost = cCost + productCost;
+							rowProCost = rowProCost + productCost;
+							//累加列
+							ccfcost = ccfcost+productCost;
+						}	
+						
 						
 						Cell cell60 = row.createCell(9);
 						cell60.setCellValue(entity.getQuantity()+qty);

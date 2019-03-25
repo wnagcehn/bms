@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
@@ -134,5 +135,20 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
 		return new PageInfo<BizAddFeeEntity>(list);
 	}
 
+	   /**
+     * 重算(新)
+     * @param param
+     * @return
+     */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int retryCalcu(Map<String, Object> condition) {
+		try {
+			return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.retryCalcu",condition);
+		} catch (Exception ex) {
+			logger.error("批量更新主表异常"+ex.getMessage());
+		}	
+		return 0;
+	}
 
 }

@@ -55,4 +55,11 @@ public interface IBizAddFeeRepository {
 	PageInfo<BizAddFeeEntity> groupCount(Map<String, Object> condition, int pageNo, int pageSize);
 	
 	int updateByMap(Map<String, Object> condition);
+
+	/**
+	 * 重算（新）
+	 * @param condition
+	 * @return
+	 */
+	int retryCalcu(Map<String, Object> condition);
 }

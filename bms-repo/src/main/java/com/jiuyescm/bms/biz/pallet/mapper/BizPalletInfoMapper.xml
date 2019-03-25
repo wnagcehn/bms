@@ -50,7 +50,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		p.customer_id, p.customer_name, p.temperature_type_code, p.charge_source,
 		p.sys_pallet_num, p.pallet_num, (p.sys_pallet_num-p.pallet_num) as diffPalletNum, p.adjust_pallet_num, p.fees_no, p.creator, p.creator_id, 
 		p.create_time, p.last_modifier, p.last_modifier_id, p.last_modify_time, 
-		p.is_calculated, p.calculate_time, p.write_time, p.del_flag, p.remark,
+		s.is_calculated, p.calculate_time, p.write_time, p.del_flag, s.calcu_msg as remark,
 		s.cost as cost, s.subject_code as subjectCode
 		from biz_pallet_info p
 		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
@@ -77,7 +77,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
 			</if>
         	<if test=" isCalculated != null and isCalculated !='' ">
-				and p.is_calculated = #{isCalculated}
+				and s.is_calculated = #{isCalculated}
 			</if>
 			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 				and s.subject_code = #{subjectCode}
@@ -225,5 +225,39 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         where id = #{id}
     </delete>
    
+   <!-- 新重算 -->
+   <update id="retryForCalcuNew" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+   		update fees_receive_storage set is_calculated='99'
+		WHERE fees_no in (
+			select p.fees_no from biz_pallet_info p
+			LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
+			WHERE 1=1
+			and p.del_flag='0'
+			<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
+				and p.biz_type = #{bizType}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and p.warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and p.customer_id = #{customerId}
+			</if>
+			<if test="createTime != null and createTime !=''" >
+				and p.create_time <![CDATA[ >= ]]> #{createTime}
+			</if>
+			<if test="createEndTime != null and createEndTime !=''" >
+				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
+				and s.subject_code = #{subjectCode}
+			</if>
+			<if test=" chargeSource != null and chargeSource !='' and chargeSource !='ALL' ">
+				and p.charge_source = #{chargeSource}
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				and s.is_calculated = #{isCalculated}
+			</if>
+		)
+   </update>
     
 </mapper>

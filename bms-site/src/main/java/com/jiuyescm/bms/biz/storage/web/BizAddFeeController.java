@@ -610,32 +610,12 @@ public class BizAddFeeController {
 	@Expose
 	public String reCalculate(Map<String, Object> param){
 		
-         int result=bizAddFeeService.updateByMap(param);
+         int result=bizAddFeeService.retryCalcu(param);
          if(result>0){
         	 return "操作成功! 正在重算...";
 		 }else{
 			 return "未查询到要重算的数据...";
 		 }	
-		 
-		/* if(null!=list&&list.size()>0){
-			 new Thread(){
-					public void run() {
-						try {
-							createFeebill(list);
-						} catch (Exception e) {
-							
-							logger.error("base", e);
-							//写入日志
-							BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-							bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
-						}
-					};
-				}.start();
-				
-				return "操作成功! 正在重算...";
-		 }else{
-			 return "未查询到要重算的数据...";
-		 }	 */
 	}
 	
 	/**

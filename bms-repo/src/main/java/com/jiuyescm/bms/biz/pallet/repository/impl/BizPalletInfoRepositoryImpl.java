@@ -92,6 +92,23 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 		}
 	}
 	
+    /**
+     * 重算(新)
+     * @param param
+     * @return
+     */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int retryCalculate(List<BizPalletInfoEntity> list) {
+		try{
+			updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.retryForCalcuNew", list);
+			return 1;
+		}
+		catch(Exception ex){
+			return 0;
+		}
+	}
+	
 	/**
 	 * 批量更新
 	 * @param entity
