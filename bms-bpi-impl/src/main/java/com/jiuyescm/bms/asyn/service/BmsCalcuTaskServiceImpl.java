@@ -193,7 +193,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	@Override
 	public List<BmsCalcuTaskVo> queryByMap(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.query(condition);
+		List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.queryByMap(condition);
 		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
     	for(BmsAsynCalcuTaskEntity entity : list) {
     		BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
