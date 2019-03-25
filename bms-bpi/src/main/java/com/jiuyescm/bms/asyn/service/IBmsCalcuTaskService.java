@@ -23,4 +23,6 @@ public interface IBmsCalcuTaskService {
 	
 	void updateRate(String taskId,Integer taskRate) throws Exception;
 	
+	void saveTask(BmsCalcuTaskVo vo);
+	
 }

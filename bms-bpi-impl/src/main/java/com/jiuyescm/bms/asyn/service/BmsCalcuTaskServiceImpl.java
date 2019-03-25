@@ -138,7 +138,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		return vo;
 	}
 	
-	private void saveTask(BmsCalcuTaskVo vo) {
+	@Override
+	public void saveTask(BmsCalcuTaskVo vo) {
 		BmsAsynCalcuTaskEntity calcuTask=new BmsAsynCalcuTaskEntity();
 		try {
 			PropertyUtils.copyProperties(calcuTask,vo);

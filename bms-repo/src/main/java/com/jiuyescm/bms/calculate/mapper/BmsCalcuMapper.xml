@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.calculate.BmsCalcuMapper" >
+    <resultMap id="baseResultMap" type="com.jiuyescm.bms.calculate.BmsFeesQtyEntity" >
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+	    <result column="cre_month" property="creMonth" jdbcType="INTEGER" />
+	    <result column="fees_count" property="feesCount" jdbcType="INTEGER" />
+	    <result column="uncalcu_count" property="uncalcuCount" jdbcType="INTEGER" />
+	    <result column="calcu_count" property="calcuCount" jdbcType="INTEGER" />
+	    <result column="begin_count" property="beginCount" jdbcType="INTEGER" />
+	    <result column="finish_count" property="finishCount" jdbcType="INTEGER" />
+	    <result column="sys_error_count" property="sysErrorCount" jdbcType="INTEGER" />
+	    <result column="contract_miss_count" property="contractMissCount" jdbcType="INTEGER" />
+	    <result column="quote_miss_count" property="quoteMissCount" jdbcType="INTEGER" />
+	    <result column="no_exe_count" property="noExeCount" jdbcType="INTEGER" />
+	     <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+    </resultMap>
+	
+	
+	<!-- 仓储费用： 查询指定商家，指定时间范围，指定科目 的所有费用总数  仅返回一条 -->
+    <select id="queryTotalFeesQtyForSto" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+       select customer_id,subject_code,count(*) as fees_count 
+       from fees_receive_storage 
+			where customer_id = #{customerId} and 
+			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+			and del_flag = '0' and subject_code = #{subjectCode}
+	   group by customer_id,subject_code
+    </select>
+    
+    <!-- 仓储费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
+    <select id="queryStatusFeesQtyForSto" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+       select customer_id,subject_code,is_calculated,count(*) as fees_count 
+       from fees_receive_storage 
+			where customer_id = #{customerId} and 
+			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+			and del_flag = '0' and subject_code = #{subjectCode}
+		group by customer_id,subject_code,is_calculated
+    </select>
+    
+    <!-- 配送费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
+    <select id="queryStatusFeesQtyForDis" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+       select customerid as customer_id,subject_code,is_calculated,count(*) as fees_count 
+       from fees_receive_dispatch 
+			where customer_id = #{customerId} and 
+			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+			and del_flag = '0' and subject_code = #{subjectCode}
+		group by customer_id,subject_code
+    </select>
+    
+    <!-- 配送费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
+    <select id="queryStatusFeesQtyForDis" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+       select customerid as customer_id,subject_code,is_calculated,count(*) as fees_count 
+       from fees_receive_dispatch 
+			where customer_id = #{customerId} and 
+			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
+			and del_flag = '0' and subject_code = #{subjectCode}
+		group by customer_id,subject_code,is_calculated
+    </select>
+    
+    
+</mapper>

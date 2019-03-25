@@ -30,8 +30,7 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 @Service("customerDictService")
 public class CustomerDictService implements ICustomerDictService {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(CustomerDictService.class);
+	private static Logger logger = LoggerFactory.getLogger(CustomerDictService.class);
 
 	@Autowired
 	ICustomerService customerService;
@@ -294,6 +293,23 @@ public class CustomerDictService implements ICustomerDictService {
 	@Override
 	public List<PubCustomerEntity> queryAllCus(Map<String, Object> condition){
 		return pubCustomerRepository.query(condition);
+	}
+
+	@Override
+	public PubCustomerVo queryById(String customerId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("customerId", customerId);
+		List<PubCustomerEntity> list = pubCustomerRepository.query(map);
+		if(list == null || list.size() == 0){
+			return null;
+		}
+		PubCustomerVo vo = new PubCustomerVo();
+		try {
+			PropertyUtils.copyProperties(list.get(0), vo);
+		} catch (Exception ex) {
+			logger.info("转换失败 ", ex);
+		}
+		return vo;
 	}
 
 }

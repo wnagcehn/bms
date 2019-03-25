@@ -84,4 +84,11 @@ public interface ICustomerDictService {
 	 * @return
 	 */
 	List<PubCustomerEntity> queryAllCus(Map<String, Object> condition);
+	
+	/**
+	 * 根据商家ID 查询商家信息
+	 * @param customerId
+	 * @return
+	 */
+	PubCustomerVo queryById(String customerId);
 }
