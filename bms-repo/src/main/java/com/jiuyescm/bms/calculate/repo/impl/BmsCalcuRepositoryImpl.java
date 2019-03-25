@@ -48,7 +48,7 @@ public class BmsCalcuRepositoryImpl extends MyBatisDao<BmsFeesQtyEntity> impleme
 		map.put("subjectCode", subjectCode);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
-		BmsFeesQtyEntity entity = (BmsFeesQtyEntity) selectOne("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryStatusFeesQtyForDis", map);
+		BmsFeesQtyEntity entity = (BmsFeesQtyEntity) selectOne("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalFeesQtyForDis", map);
         return entity;
 	}
 
