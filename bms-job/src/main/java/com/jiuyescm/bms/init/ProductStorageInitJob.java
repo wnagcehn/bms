@@ -179,9 +179,9 @@ public class ProductStorageInitJob extends IJobHandler {
 		// 对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
+			String taskId = "STO" + snowflakeSequenceService.nextStringId();
 			vo.setTaskId(taskId);
-			vo.setCrePerson("系统");
+			vo.setCrePerson("system");
 			vo.setCrePersonId("system");
 			vo.setCreTime(JAppContext.currentTimestamp());
 			// 为了区分商品按件存储费和商品按托存储费
