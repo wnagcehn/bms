@@ -116,7 +116,7 @@
    		  from (
 			select m1.products_mark,m1.weight,count(m1.weight) as num1 from bms_marking_products m1
 			INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
-			where 1=1 and m1.weight!='' and m1.weight is not null and n1.del_flag='0' and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<=#{endTime}]]>				
+			where 1=1 and m1.weight!=null and m1.weight!=''  and n1.del_flag='0' and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<=#{endTime}]]>				
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(n1.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -128,7 +128,7 @@
 			LEFT JOIN (
 			select m1.products_mark,COUNT(m1.weight) as num2 from bms_marking_products m1
 			INNER JOIN biz_dispatch_bill n1 on m1.waybill_no=n1.waybill_no 
-			where 1=1 and m1.weight!='' and m1.weight is not null and n1.del_flag='0' and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and m1.weight!=null and m1.weight!=''  and n1.del_flag='0' and n1.customerid=#{customerId} and n1.create_time>=#{startTime} and n1.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(n1.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
