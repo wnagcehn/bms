@@ -276,4 +276,14 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
         where fees_no=#{feesNo}
     </update> 
     
+        <update id="updatebizInstockInfoById" parameterType ="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+    	update biz_instock_info
+    	<set >
+			<if test="isCalculated != null" >is_calculated=1,</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="bizCalculateTime != null" >calculate_time=#{bizCalculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{bId}
+    </update> 
+    
 </mapper>
