@@ -78,7 +78,7 @@ public class InstockFeeInitJob extends IJobHandler{
 			bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
 			//只要有业务数据，就进行初始化和更新写入操作
 			if( CollectionUtils.isNotEmpty(bizList) ){
-				XxlJobLogger.log("【增值】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
+				XxlJobLogger.log("【业务数据】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
 				//初始化费用
 				initFees(bizList, feesList);
 				//批量更新业务数据&批量写入费用表
@@ -176,7 +176,6 @@ public class InstockFeeInitJob extends IJobHandler{
 	private void sendTask(List<FeesReceiveStorageEntity> feesList) throws Exception {
 		//对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);
-		
 		for (BmsCalcuTaskVo vo : list) {
 			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
 			vo.setTaskId(taskId);
@@ -184,6 +183,7 @@ public class InstockFeeInitJob extends IJobHandler{
 			vo.setCrePersonId("system");
 			vo.setCreTime(JAppContext.currentTimestamp());
 			bmsCalcuTaskService.sendTask(vo);
+			XxlJobLogger.log("mq发送，taskId为----{0}", taskId);
 		}
 	}
 
