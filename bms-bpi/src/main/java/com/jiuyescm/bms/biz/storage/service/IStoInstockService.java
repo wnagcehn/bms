@@ -33,7 +33,7 @@ public interface IStoInstockService {
 	List<StoInstockVo> queryUnExeBiz(Map<String, Object> map);
 	
 	/**
-	 * 更新费用
+	 * 更新费用 用于费用计算
 	 * @param vos 费用集合
 	 */
 	void updateFee(List<StoInstockVo> vos);

@@ -1,12 +1,10 @@
-package com.jiuyescm.bms.biz.storage.vo;
+package com.jiuyescm.bms.biz.storage.entity;
 
 import java.math.BigDecimal;
 import java.security.Timestamp;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
 
-
-public class StoFeeGeneralVo{
+public class StoFeeGeneralEntity{
 
 	
 	//费用科目
@@ -43,7 +41,6 @@ public class StoFeeGeneralVo{
 	
 	//金额
 	private BigDecimal chargeAmount;
-	
 	//折扣金额
 	private BigDecimal derateAmount;
 	
@@ -54,7 +51,7 @@ public class StoFeeGeneralVo{
 	//计费时间
 	private Timestamp chargeCalculateTime;
 	//计费异常描述
-	private String calcuMsg;
+	private String calcu_msg;
 	
 	/**
 	 * 费用科目编码
@@ -365,15 +362,15 @@ public class StoFeeGeneralVo{
 	 * @return
 	 */
 	public String getCalcu_msg() {
-		return calcuMsg;
+		return calcu_msg;
 	}
 	
 	/**
 	 * 计费描述
 	 * @param calcu_msg
 	 */
-	public void setCalcu_msg(String calcuMsg) {
-		this.calcuMsg = calcuMsg;
+	public void setCalcu_msg(String calcu_msg) {
+		this.calcu_msg = calcu_msg;
 	}
 
 	/**
