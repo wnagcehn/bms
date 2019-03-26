@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.biz.storage.entity;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 
 public class StoFeeGeneralEntity{
