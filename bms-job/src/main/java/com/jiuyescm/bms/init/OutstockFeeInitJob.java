@@ -245,12 +245,15 @@ public class OutstockFeeInitJob extends IJobHandler{
 		map.put("subjectList", subjectList);	
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(map);		
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
-			vo.setTaskId(taskId);
 			vo.setCrePerson("系统");
-			vo.setCrePersonId("system");
-			vo.setCreTime(JAppContext.currentTimestamp());
-			bmsCalcuTaskService.sendTask(vo);
+			vo.setCrePersonId("system");		
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+			} catch (Exception e) {
+				// TODO: handle exception
+				XxlJobLogger.log("发送mq消息失败 ",e);
+			}
+			
 		}
 	}
 
