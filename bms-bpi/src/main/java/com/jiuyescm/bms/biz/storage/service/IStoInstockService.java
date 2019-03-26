@@ -1,17 +1,16 @@
 package com.jiuyescm.bms.biz.storage.service;
 
-import java.security.Timestamp;
 import java.util.List;
+import java.util.Map;
 
-import com.jiuyescm.bms.biz.storage.vo.StoBizInstockVo;
-import com.jiuyescm.bms.biz.storage.vo.StoFeeInstockVo;
+import com.jiuyescm.bms.biz.storage.vo.StoInstockVo;
 
 /**
  * 仓储出库服务
  * @author caojianwei
  *
  */
-public interface StoInstockService {
+public interface IStoInstockService {
 
 	/**
 	 * 入库单业务数据查询
@@ -24,19 +23,19 @@ public interface StoInstockService {
 	PageInfo<StoBizInstockVo> queryBiz(Map<String, Object> condition,int pageNo, int pageSize) throws Exception;*/
 	
 	/**
-	 * 查询未计算的入库数据 最多返回1000行
+	 * 查询未计算的入库数据 最多返回1000行  用于费用计算
 	 * @param customerId  商家ID
 	 * @param subjectCode 科目编码
 	 * @param startTime	      开始时间
 	 * @param endTime     结束时间
 	 * @return
 	 */
-	List<StoBizInstockVo> queryUnExeBiz(String customerId,String subjectCode,Timestamp startTime,Timestamp endTime);
+	List<StoInstockVo> queryUnExeBiz(Map<String, Object> map);
 	
 	/**
-	 * 更新费用
+	 * 更新费用 用于费用计算
 	 * @param vos 费用集合
 	 */
-	void updateFee(List<StoFeeInstockVo> vos);
+	void updateFee(List<StoInstockVo> vos);
 	
 }

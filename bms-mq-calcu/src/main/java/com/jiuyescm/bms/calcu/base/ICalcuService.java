@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 
-public interface ICalcuService<T,F> {
+public interface ICalcuService<T> {
 
 	/**
 	 * 单量统计
@@ -27,19 +27,19 @@ public interface ICalcuService<T,F> {
 	 * 费用计算
 	 * @return
 	 */
-	void updateFees(List<F> list);
+	void updateFees(List<T> list);
 	
 	/**
 	 * 合同在线计算
 	 * @return
 	 */
-	F contractCalcu(T t);
+	T contractCalcu(T t);
 	
 	/**
 	 * BMS计算
 	 * @return
 	 */
-	F bmsCalcu(T t);
+	T bmsCalcu(T t);
 	
 	/**
 	 * 是否计算费用
@@ -53,7 +53,7 @@ public interface ICalcuService<T,F> {
 	 * @param t 业务数据对象
 	 * @return 费用数据对象
 	 */
-	abstract F initChargeParam(T t);
+	T initChargeParam(T t);
 	
 	
 	

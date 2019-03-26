@@ -25,4 +25,12 @@ public interface IBmsCalcuService {
 	
 	BmsFeesQtyVo queryFeesQtyForDis(String customerId,String subjectCode,Integer creMonth);
 	
+	/**
+	 * 根据商家ID 查询合同归属
+	 * @param customerId
+	 * @return BMS-合同归属BMS  CONTRACT-合同归属合同在线
+	 */
+	String queryContractAttr(String customerId);
+	
+	
 }

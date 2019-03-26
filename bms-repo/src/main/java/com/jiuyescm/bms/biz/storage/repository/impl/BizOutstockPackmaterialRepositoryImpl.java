@@ -335,5 +335,11 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		// TODO Auto-generated method stub
 		return this.update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOldZx", condition);
 	}
+	
+	@Override
+	public List<String> queryFeeNo(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryFeeNo", condition);
+	}
 
 }

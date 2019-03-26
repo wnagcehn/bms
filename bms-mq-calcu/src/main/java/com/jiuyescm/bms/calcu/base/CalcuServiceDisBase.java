@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 
-public class CalcuServiceDisBase<T, F> extends CalcuServiceBase<T, F> {
+public class CalcuServiceDisBase<T> extends CalcuServiceBase<T> {
 
 	@Autowired IBmsCalcuService bmsCalcuService;
 	
@@ -25,19 +25,19 @@ public class CalcuServiceDisBase<T, F> extends CalcuServiceBase<T, F> {
 	}
 
 	@Override
-	public void updateFees(List<F> list) {
+	public void updateFees(List<T> list) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public F contractCalcu(T t) {
+	public T contractCalcu(T t) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public F bmsCalcu(T t) {
+	public T bmsCalcu(T t) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -49,7 +49,7 @@ public class CalcuServiceDisBase<T, F> extends CalcuServiceBase<T, F> {
 	}
 
 	@Override
-	public F initChargeParam(T t) {
+	public T initChargeParam(T t) {
 		// TODO Auto-generated method stub
 		return null;
 	}

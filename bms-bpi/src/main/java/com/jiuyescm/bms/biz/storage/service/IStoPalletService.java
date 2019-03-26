@@ -3,15 +3,15 @@ package com.jiuyescm.bms.biz.storage.service;
 import java.security.Timestamp;
 import java.util.List;
 
-import com.jiuyescm.bms.biz.storage.vo.StoBizOutstockVo;
-import com.jiuyescm.bms.biz.storage.vo.StoFeeOutstockVo;
+import com.jiuyescm.bms.biz.storage.vo.StoPalletVo;
+import com.jiuyescm.bms.biz.storage.vo.StoFeePalletVo;
 
 /**
- * 出库费用服务
+ * 托数计费服务
  * @author caojianwei
  *
  */
-public interface StoOutstockService {
+public interface IStoPalletService {
 
 	/**
 	 * 查询未计算的入库数据 最多返回1000行
@@ -21,11 +21,11 @@ public interface StoOutstockService {
 	 * @param endTime     结束时间
 	 * @return
 	 */
-	List<StoBizOutstockVo> queryUnExeBiz(String customerId,String subjectCode,Timestamp startTime,Timestamp endTime);
+	List<StoPalletVo> queryUnExeBiz(String customerId,String subjectCode,Timestamp startTime,Timestamp endTime);
 	
 	/**
 	 * 更新费用
 	 * @param vos 费用集合
 	 */
-	void updateFee(List<StoFeeOutstockVo> vos);
+	void updateFee(List<StoFeePalletVo> vos);
 }

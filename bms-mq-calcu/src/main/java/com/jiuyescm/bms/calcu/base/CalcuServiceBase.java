@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.calcu.base;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,33 +7,29 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.MessageCreator;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
-import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
-import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
+import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.MD5Util;
-import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
 
-public abstract class CalcuServiceBase<T,F> implements MessageListener,ICalcuService<T, F> {
+public abstract class CalcuServiceBase<T> implements MessageListener,ICalcuService<T> {
 	
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
-	@Autowired ICustomerDictService customerDictService;
+	@Autowired IBmsCalcuService bmsCalcuService;
 	@Autowired private Lock lock;
 	
 	private final int handerCount = 1000; //单次查询费用数据
@@ -122,7 +117,7 @@ public abstract class CalcuServiceBase<T,F> implements MessageListener,ICalcuSer
 			taskVo.setTaskRate(99);
 			bmsCalcuTaskService.saveTask(taskVo);
 		}
-		logger.info("计算任务处理结束 taskId={} 耗时【{}】ms",taskVo.getTaskId(),(System.currentTimeMillis()-start));
+		logger.info("taskId={} 计算任务处理结束 耗时【{}】ms",taskVo.getTaskId(),(System.currentTimeMillis()-start));
 		
 	}
 	
@@ -137,10 +132,17 @@ public abstract class CalcuServiceBase<T,F> implements MessageListener,ICalcuSer
 			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount());//设置本次待计算的费用数
 			bmsCalcuTaskService.update(taskVo);
 			//查询合同归属
-			String contractAttr = queryContractAttr(taskVo.getCustomerId());
+			String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
+			logger.info("taskId={} msg=合同归属:{}",taskVo.getTaskId(),contractAttr);
+			if(contractAttr == null){
+				taskVo.setTaskRate(99);
+				taskVo.setTaskStatus(40);
+				bmsCalcuTaskService.update(taskVo);
+				return;
+			}
 			//费用计算
 			calcuJob(taskVo,contractAttr);
-			//最终统计
+			//统计计算状态
 			feesQtyVo = feesCountReport(taskVo.getCustomerId(),taskVo.getSubjectCode(),taskVo.getCreMonth());
 			taskVo.setFinishTime(JAppContext.currentTimestamp());
 			taskVo.setFeesCount(feesQtyVo.getFeesCount());
@@ -159,27 +161,24 @@ public abstract class CalcuServiceBase<T,F> implements MessageListener,ICalcuSer
 		}
 	}
 	
-	//
+	//计算
 	protected void calcuJob(BmsCalcuTaskVo taskVo,String contractAttr){
 		//业务数据对象集合
 		Map<String, Object> map = getQueryMap(taskVo);
 		List<T> bizList = queryBizList(map);	
-		List<F> feeList = new ArrayList<>();	//费用数据对象集合
 		if(bizList!=null){
 			for (T t : bizList) {
 				if("BMS".equals(contractAttr)){
 					//合同归属于BMS，走bms计算逻辑
-					F f = bmsCalcu(t);
-					feeList.add(f);
+					bmsCalcu(t);
 				}
 				else{
 					//合同归属于合同在线，走合同在线计算逻辑
-					F f = contractCalcu(t);
-					feeList.add(f);
+					contractCalcu(t);
 				}
 			}
 		}
-		updateFees(feeList);//更新费用表
+		updateFees(bizList);//更新费用表
 		
 		if(bizList.size()==handerCount){
 			calcuJob(taskVo,contractAttr);
@@ -187,25 +186,10 @@ public abstract class CalcuServiceBase<T,F> implements MessageListener,ICalcuSer
 	}
 	
 	/**
-	 * 判定合同归属
-	 * @param t 业务数据对象
-	 * @return CONTRACT-合同在线   BMS-bms
+	 * 业务数据查询参数
+	 * @param taskVo
+	 * @return
 	 */
-	String queryContractAttr(String customerId){
-		PubCustomerVo vo = customerDictService.queryById(customerId);
-		if(vo == null){
-			return null;
-		}
-		String contractAttr = null;
-		if(vo.getContractAttr() == 1){
-			contractAttr = "BMS";
-		}
-		else{
-			contractAttr = "CONTRACT";
-		}
-		return contractAttr;
-	}
-	
 	private Map<String, Object> getQueryMap(BmsCalcuTaskVo taskVo){
 		String creMonth = taskVo.getCreMonth().toString();
 		int startYear = Integer.parseInt(creMonth.substring(0, 4));

@@ -1,10 +1,9 @@
 package com.jiuyescm.bms.biz.storage.vo;
 
 /**
- * 出库单业务对象
+ * 商品库存业务对象
  * @author caojianwei
- *
  */
-public class StoBizOutstockVo {
+public class StoProductVo {
 
 }

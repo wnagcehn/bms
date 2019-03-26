@@ -3,7 +3,7 @@ package com.jiuyescm.bms.biz.storage.service;
 import java.security.Timestamp;
 import java.util.List;
 
-import com.jiuyescm.bms.biz.storage.vo.StoBizMaterialVo;
+import com.jiuyescm.bms.biz.storage.vo.StoMaterialVo;
 import com.jiuyescm.bms.biz.storage.vo.StoFeeMaterialVo;
 
 /**
@@ -11,7 +11,7 @@ import com.jiuyescm.bms.biz.storage.vo.StoFeeMaterialVo;
  * @author caojianwei
  *
  */
-public interface StoMaterialService {
+public interface IStoMaterialService {
 
 	/**
 	 * 查询未计算的入库数据 最多返回1000行
@@ -21,7 +21,7 @@ public interface StoMaterialService {
 	 * @param endTime     结束时间
 	 * @return
 	 */
-	List<StoBizMaterialVo> queryUnExeBiz(String customerId,String subjectCode,Timestamp startTime,Timestamp endTime);
+	List<StoMaterialVo> queryUnExeBiz(String customerId,String subjectCode,Timestamp startTime,Timestamp endTime);
 	
 	/**
 	 * 更新费用
