@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,8 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 
 	
 	Map<String,PubMaterialInfoVo> materialMap = null;
+	Map<String, String> temMap = null;
+
 
 	protected void initConf(){
 		materialMap=queryAllMaterial();
@@ -111,27 +114,25 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 		try {
 			XxlJobLogger.log("materialUseFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizOutstockPackmaterialService.query(map);
-			if(bizList!=null && bizList.size() > 0){
+			//只要有业务数据，就进行初始化和更新写入操作
+			if( CollectionUtils.isNotEmpty(bizList) ){
 				XxlJobLogger.log("【耗材】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
 				//初始化费用
 				initFees(bizList, feesList);
-			}else {
-				XxlJobLogger.log("未查询到任何业务数据");
-				return ReturnT.SUCCESS;
+				//批量更新业务数据&批量写入费用表
+				updateAndInsertBatch(bizList,feesList);
+			}
+			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
+			if( CollectionUtils.isEmpty(bizList)||bizList.size()<num){
+				try {
+					sendTask(feesList);
+				} catch (Exception e) {
+					XxlJobLogger.log("mq发送失败{0}", e);
+				}
 			}
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
 			return ReturnT.FAIL;
-		}
-		
-		//批量更新业务数据&批量写入费用表
-		updateAndInsertBatch(bizList,feesList);
-		
-		//发送MQ
-		try {
-			sendTask(feesList);
-		} catch (Exception e) {
-			XxlJobLogger.log("mq发送失败{0}", e);
 		}
 		
 		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
