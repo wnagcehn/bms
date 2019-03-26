@@ -86,15 +86,11 @@ public class ProductStorageInitJob extends IJobHandler {
 				// 初始化费用
 				initFees(bizList, feesList);
 				// 批量更新业务数据&批量写入费用表
-				updateAndInsertBatch(bizList, feesList);
+				updateAndInsertBatch(feesList);
 			}
 			// 只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
 			if (CollectionUtils.isEmpty(bizList) || bizList.size() < num) {
-				try {
-					sendTask(feesList);
-				} catch (Exception e) {
-					XxlJobLogger.log("mq发送失败{0}", e);
-				}
+				sendTask(feesList);
 			}
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒",
@@ -111,12 +107,11 @@ public class ProductStorageInitJob extends IJobHandler {
 	private void initFees(List<BizProductStorageEntity> bizList,
 			List<FeesReceiveStorageEntity> feesList) {
 		for (BizProductStorageEntity entity : bizList) {
-			feesList.add(initFeesEntity(FEE_1, entity));
+			feesList.add(initFeesEntity(entity));
 		}
 	}
 
-	private FeesReceiveStorageEntity initFeesEntity(String code,
-			BizProductStorageEntity entity) {
+	private FeesReceiveStorageEntity initFeesEntity(BizProductStorageEntity entity) {
 		entity.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		storageFeeEntity.setIsCalculated("99");
@@ -133,7 +128,7 @@ public class ProductStorageInitJob extends IJobHandler {
 															// FEE_TYPE_GENEARL-通用
 															// FEE_TYPE_MATERIAL-耗材
 															// FEE_TYPE_ADD-增值
-		storageFeeEntity.setSubjectCode(FEE_1); // 费用科目 todo
+		storageFeeEntity.setSubjectCode(FEE_1); // 费用科目
 		storageFeeEntity.setOtherSubjectCode(FEE_1);
 		storageFeeEntity.setProductType(""); // 商品类型
 		if (entity.getAqty() != null) {
@@ -148,17 +143,17 @@ public class ProductStorageInitJob extends IJobHandler {
 		storageFeeEntity.setBizId(String.valueOf(entity.getId())); // 业务数据主键
 		storageFeeEntity.setCost(new BigDecimal(0)); // 入仓金额
 		storageFeeEntity.setUnitPrice(0d);
-		storageFeeEntity.setFeesNo(entity.getFeesNo());
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setDelFlag("0");
+		storageFeeEntity.setbId(entity.getId());
+		storageFeeEntity.setBizCalculateTime(JAppContext.currentTimestamp());
 		return storageFeeEntity;
 	}
 
-	public void updateAndInsertBatch(List<BizProductStorageEntity> ts,
-			List<FeesReceiveStorageEntity> fs) {
+	public void updateAndInsertBatch(List<FeesReceiveStorageEntity> fs) {
 		long start = System.currentTimeMillis();// 系统开始时间
 		long current = 0l;// 当前系统时间
-		bizProductStorageService.updateBatch(ts);
+		bizProductStorageService.updateProductStorageById(fs);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒", (current - start));
 		start = System.currentTimeMillis();// 系统开始时间
@@ -179,15 +174,17 @@ public class ProductStorageInitJob extends IJobHandler {
 		// 对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "STO" + snowflakeSequenceService.nextStringId();
-			vo.setTaskId(taskId);
 			vo.setCrePerson("system");
 			vo.setCrePersonId("system");
 			vo.setCreTime(JAppContext.currentTimestamp());
 			// 为了区分商品按件存储费和商品按托存储费
 			vo.setFeesType("item");
-			bmsCalcuTaskService.sendTask(vo);
-			XxlJobLogger.log("mq发送，taskId为----{0}", taskId);
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				XxlJobLogger.log("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+			} catch (Exception e) {
+				XxlJobLogger.log("mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
+			}
 		}
 	}
 

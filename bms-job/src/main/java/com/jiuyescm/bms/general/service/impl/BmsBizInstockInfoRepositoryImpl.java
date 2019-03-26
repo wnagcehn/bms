@@ -142,4 +142,9 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
 		this.updateBatch("com.jiuyescm.bms.general.mapper.BmsBizInstockInfoMapper.updatebizInstockInfoByFees", entities);
 	}
 	
+	@Override
+	public void updatebizInstockInfoById(List<FeesReceiveStorageEntity> entities) {
+		this.updateBatch("com.jiuyescm.bms.general.mapper.BmsBizInstockInfoMapper.updatebizInstockInfoById", entities);
+	}
+	
 }
