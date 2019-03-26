@@ -3,10 +3,12 @@ package com.jiuyescm.bms.init;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,6 @@ public class AddFeeInitJob extends IJobHandler{
 	@Autowired private IBizAddFeeService bizAddFeeService;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
-	@Autowired private IBmsSubjectInfoService bmsSubjectInfoService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
 
 	@Override
@@ -73,27 +74,25 @@ public class AddFeeInitJob extends IJobHandler{
 		try {
 			XxlJobLogger.log("addFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizAddFeeService.querybizAddFee(map);
-			if(bizList!=null && bizList.size() > 0){
+			if(CollectionUtils.isNotEmpty(bizList)){
 				XxlJobLogger.log("【增值】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
 				//初始化费用
 				initFees(bizList, feesList);
-			}else {
-				XxlJobLogger.log("未查询到任何业务数据");
-				return ReturnT.SUCCESS;
+				//批量更新业务数据&批量写入费用表
+				updateAndInsertBatch(bizList,feesList);
+			}
+			
+			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
+			if(CollectionUtils.isEmpty(bizList)||bizList.size()<num){
+				try {
+					sendTask(feesList);
+				} catch (Exception e) {
+					XxlJobLogger.log("mq发送失败{0}", e);
+				}
 			}
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
 			return ReturnT.FAIL;
-		}
-		
-		//批量更新业务数据&批量写入费用表
-		updateAndInsertBatch(bizList,feesList);
-		
-		//发送MQ
-		try {
-			sendTask(feesList);
-		} catch (Exception e) {
-			XxlJobLogger.log("mq发送失败{0}", e);
 		}
 		
 		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
@@ -152,19 +151,24 @@ public class AddFeeInitJob extends IJobHandler{
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 	}
+	
+	private static final List<String> subjectList= Arrays.asList("wh_value_add_subject");
+	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+	static{
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", subjectList);
+	}
 
 	private void sendTask(List<FeesReceiveStorageEntity> feesList) throws Exception {
-		for (FeesReceiveStorageEntity feesEntity : feesList) {
-			BmsCalcuTaskVo calVo = new BmsCalcuTaskVo();
-			calVo.setCustomerId(feesEntity.getCustomerId());
-			calVo.setCustomerName(feesEntity.getCustomerName());
-			//大科目or小科目？
-			calVo.setSubjectCode(feesEntity.getSubjectCode());
-			calVo.setSubjectName("");
-			calVo.setCreMonth(Integer.valueOf(feesEntity.getParam2()));
-			calVo.setCrePerson("系统");
-			calVo.setCrePersonId("system");
-			bmsCalcuTaskService.sendTask(calVo);
+		//对这些费用按照商家、科目、时间排序
+		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
+		for (BmsCalcuTaskVo vo : list) {
+			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
+			vo.setTaskId(taskId);
+			vo.setCrePerson("系统");
+			vo.setCrePersonId("system");
+			vo.setCreTime(JAppContext.currentTimestamp());
+			bmsCalcuTaskService.sendTask(vo);
 		}
 	}
 }
