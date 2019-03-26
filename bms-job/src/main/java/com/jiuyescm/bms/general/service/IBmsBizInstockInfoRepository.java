@@ -67,4 +67,6 @@ public interface IBmsBizInstockInfoRepository {
 	 */
 	void updateInstockBatchByFees(List<FeesReceiveStorageEntity> entities);
 
+	void updatebizInstockInfoById(List<FeesReceiveStorageEntity> entities);
+
 }

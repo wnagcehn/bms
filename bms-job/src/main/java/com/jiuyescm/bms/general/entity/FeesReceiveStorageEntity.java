@@ -112,6 +112,27 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private Double continueNum;
 	// 续价
 	private Double continuePrice;
+	
+	// 业务数据费用计算时间
+	private Timestamp bizCalculateTime;
+	// 业务数据主键id
+	private Long bId;
+
+	public Long getbId() {
+		return bId;
+	}
+
+	public void setbId(Long bId) {
+		this.bId = bId;
+	}
+
+	public Timestamp getBizCalculateTime() {
+		return bizCalculateTime;
+	}
+
+	public void setBizCalculateTime(Timestamp bizCalculateTime) {
+		this.bizCalculateTime = bizCalculateTime;
+	}
 
 	public String getBizId() {
 		return bizId;

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
 
@@ -51,6 +52,15 @@ public class BizProductStorageServiceImpl extends MyBatisDao implements IBizProd
 		}
 	}
 	
+	@Override
+	public void updateProductStorageById(List<FeesReceiveStorageEntity> list) {
+		try{
+			this.updateBatch("com.jiuyescm.bms.receivable.storage.BizProductStorageMapper.updateProductStorageById", list);
+		}
+		catch(Exception ex){
+			logger.error("【商品存储费任务】批量更新主表异常"+ex.getMessage());
+		}
+	}
 	
 	
 }
