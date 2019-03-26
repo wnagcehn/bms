@@ -152,6 +152,11 @@ public class OutstockFeeInitJob extends IJobHandler{
 	private FeesReceiveStorageEntity initFeesEntity(String subjectId,BizOutstockMasterEntity outstock) {
 		outstock.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
+		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+		outstock.setFeesNo(feesNo);
+		outstock.setIsCalculated("1");
+		outstock.setCalculateTime(JAppContext.currentTimestamp());
+		storageFeeEntity.setFeesNo(feesNo);
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(outstock.getCreateTime());
 		storageFeeEntity.setCustomerId(outstock.getCustomerid());		//商家ID
@@ -211,6 +216,7 @@ public class OutstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setDelFlag("0");
 		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 		storageFeeEntity.setLastModifyTime(JAppContext.currentTimestamp());
+		storageFeeEntity.setIsCalculated("99");
 		
 		return storageFeeEntity;
 	}
