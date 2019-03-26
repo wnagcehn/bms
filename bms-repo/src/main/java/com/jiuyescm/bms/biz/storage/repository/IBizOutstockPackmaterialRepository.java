@@ -141,4 +141,7 @@ public interface IBizOutstockPackmaterialRepository {
 	 * @return
 	 */
 	public int deleteOldBwd(Map<String,Object> condition);
+	
+	
+	public List<String> queryFeeNo(Map<String,Object> condition);
 }
