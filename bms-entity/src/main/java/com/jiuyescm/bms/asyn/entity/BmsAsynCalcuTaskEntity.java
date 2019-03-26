@@ -60,6 +60,8 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	private Timestamp finishTime;
 	// 备注
 	private String remark;
+	
+	private String feesType;
 
 	public BmsAsynCalcuTaskEntity() {
 
@@ -431,6 +433,14 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
+	}
+
+	public String getFeesType() {
+		return feesType;
+	}
+
+	public void setFeesType(String feesType) {
+		this.feesType = feesType;
 	}
     
 }
