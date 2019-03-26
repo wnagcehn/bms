@@ -1,9 +1,7 @@
 package com.jiuyescm.bms.biz.storage.vo;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
-
-import org.omg.CORBA.PRIVATE_MEMBER;
+import java.sql.Timestamp;
 
 
 public class StoFeeGeneralVo{
@@ -55,6 +53,12 @@ public class StoFeeGeneralVo{
 	private Timestamp chargeCalculateTime;
 	//计费异常描述
 	private String calcuMsg;
+	
+	//查询开始时间 对应业务数据的create_time
+	private Timestamp startTime;
+	
+	//查询结束时间 对应业务数据的 create_time
+	private Timestamp endTime;
 	
 	/**
 	 * 费用科目编码
@@ -390,5 +394,37 @@ public class StoFeeGeneralVo{
 	 */
 	public void setDerateAmount(BigDecimal derateAmount) {
 		this.derateAmount = derateAmount;
+	}
+
+	/**
+	 * 查询开始时间 对应业务数据的create_time
+	 * @return
+	 */
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * 查询开始时间 对应业务数据的create_time
+	 * @param startTime
+	 */
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * 查询结束时间 对应业务数据的create_time
+	 * @return
+	 */
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * 查询结束时间 对应业务数据的create_time
+	 * @param endTime
+	 */
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 }

@@ -72,4 +72,5 @@
 	
 	
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" ref="bmsCalcuTaskService"/>
+	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IStoInstockService" ref="stoInstockService"/>
 </beans>

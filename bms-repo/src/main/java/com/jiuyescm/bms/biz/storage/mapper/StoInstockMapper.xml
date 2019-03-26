@@ -86,8 +86,8 @@
 		<if test="(warehouseCode != null and warehouseCode !='')" >
 				and a.warehouse_code = #{warehouseCode}
 		</if>
-		<if test="(customerid != null and customerid !='')" >
-				and a.customerid = #{customerid}
+		<if test="(customerId != null and customerId !='')" >
+				and a.customer_id = #{customerId}
 		</if>
 		<if test="(feesNo != null and feesNo !='')" >
 				and a.fees_no = #{feesNo}
@@ -141,7 +141,7 @@
 		<include refid="feeSelectColumns" />
     </select>
 
-    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.StoInstockEntity">
+    <update id="updateStoFee" parameterType="com.jiuyescm.bms.biz.storage.entity.StoInstockEntity">
         update fees_receive_storage 
 		<set >
 			<if test="tempreture_type != null" >tempreture_type=#{chargeTempCode,jdbcType=VARCHAR},</if>
@@ -164,118 +164,5 @@
 			<if test="calcu_msg != null" >calcu_msg=#{calcuMsg,jdbcType=DECIMAL},</if>
 		</set>
         where fees_no = #{feesNo,jdbcType=VARCHAR}
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Integer">
-        delete from biz_add_fee where
-        id=#{id}
-    </delete>
-    
-    <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-        update biz_add_fee
-		<set>
-		<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
-        <if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
-        <if test="adjustNum != null" >adjust_num=#{adjustNum,jdbcType=DOUBLE},</if>
-        <if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
-        <if test="feesUnit != null" >fees_unit=#{feesUnit,jdbcType=VARCHAR},</if>
-        <if test="remark!=null">remark=#{remark}</if>
-		<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
-		</set>
-        where  id=#{id}
-    </update>
-    
-    <select id="selectOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-        select <include refid="baseColumns" />  
-        from  biz_add_fee 
-        where 1=1 and del_flag='0'
-        and operation_time=#{operationTime,jdbcType=TIMESTAMP}  
-        and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
-        and customerid=#{customerid,jdbcType=VARCHAR}
-        and fees_type=#{feesType,jdbcType=VARCHAR}
-        <if test="externalNo != null" > and external_no=#{externalNo,jdbcType=VARCHAR}</if> 
-        limit 1
-    </select>
-    
-    <select id="queryWms" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-    	select <include refid="baseColumns" />  from  biz_add_fee where wms_id=#{wmsId,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="querybizAddFee" parameterType="java.util.Map" resultMap="baseResultMap">
-    	select a.id, a.wms_id, a.operation_time, a.warehouse_code,
-		a.warehouse_name, a.customerid, a.customer_name,a.num, a.fees_no,
-		a.fees_type, a.fees_unit, a.item, a.is_calculated, a.creator,
-		a.create_time, a.last_modifier, a.last_modify_time, a.del_flag,
-		a.calculate_time, a.write_time, a.adjust_num, a.fees_type_name, a.remark,
-		a.external_no
-		from biz_add_fee a
-		where a.del_flag = 0 
-		<if test="(customerId != null and customerId !='')" >
-			and customerid = #{customerId,jdbcType=VARCHAR}
-		</if>
-		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
-		</if>
-		<if test="(id != null and id !='')" >
-			and id = #{id,jdbcType=BIGINT}
-		</if>
-		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = concat(${isCalculated})
-		</if>
-		LIMIT #{num}
-    </select>
-    
-    <select id="groupCount" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-    	select a.customer_name, a.fees_type_name, 
-		s.is_calculated, COUNT(*) as totalNum
-		from fees_receive_storage s
-		LEFT JOIN biz_add_fee a on a.fees_no=s.fees_no and a.del_flag='0'
-		WHERE 1=1
-		<if test=" warehouseCode != null and warehouseCode !='' ">
-			and a.warehouse_code = #{warehouseCode}
-		</if>
-       	<if test=" customerid != null and customerid !='' ">
-			and a.customerid = #{customerid}
-		</if>
-		<if test="startTime != null and startTime !='' " >
-			and <![CDATA[a.create_time >= #{startTime}]]>
-		</if>
-		<if test="endTime != null and endTime !='' " >
-			and <![CDATA[a.create_time <= #{endTime}]]>
-		</if>
-		<if test=" isCalculated != null and isCalculated !='' ">
-			and s.is_calculated = #{isCalculated}
-		</if>
-		<if test=" feesType != null and feesType !='' ">
-			and a.fees_type = #{feesType}
-		</if>
-		GROUP BY a.customer_name, s.is_calculated, a.fees_type_name
-		ORDER BY totalNum DESC
-    </select>
-    
-    <update id="retryCalcu" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-    	update fees_receive_storage set is_calculated='99'
-		WHERE fees_no in (
-			select a.fees_no from biz_add_fee a
-			LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no and s.del_flag='0'
-			WHERE 1=1
-			and a.del_flag='0'
-			<if test="(customerid != null and customerid !='')" >
-				and a.customerid = #{customerid}
-			</if>
-			<if test="(warehouseCode != null and warehouseCode !='')" >
-				and a.warehouse_code = #{warehouseCode}
-			</if>
-			<if test="(createTime != null and createTime !='')" >
-			    and a.create_time >= #{createTime} add <![CDATA[a.create_time <= #{createTime}]]>
-			</if>
-			<if test="(feesType != null and feesType !='')" >
-				and a.fees_type = #{feesType}
-			</if>
-			<if test="(isCalculated != null and isCalculated !='')" >
-				and s.is_calculated = #{isCalculated}
-			</if>
-		)
     </update>
 </mapper>

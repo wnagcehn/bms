@@ -1,6 +1,6 @@
 package com.jiuyescm.bms.biz.storage.service;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.jiuyescm.bms.biz.storage.vo.StoMaterialVo;

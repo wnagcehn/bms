@@ -17,6 +17,7 @@ public class InstockWorkCalcuListener extends InstockCalcuBase{
 
 	private static final Logger logger = Logger.getLogger(InstockWorkCalcuListener.class.getName());
 	
+	private final String subjectCode = "";
 	
 
 }

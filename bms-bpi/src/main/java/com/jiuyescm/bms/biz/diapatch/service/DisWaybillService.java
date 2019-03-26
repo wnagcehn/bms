@@ -1,11 +1,10 @@
 package com.jiuyescm.bms.biz.diapatch.service;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.jiuyescm.bms.biz.diapatch.vo.DisBizWaybillVo;
 import com.jiuyescm.bms.biz.diapatch.vo.DisFeeWaybillVo;
-import com.jiuyescm.bms.biz.storage.vo.StoMaterialVo;
 
 /**
  * 配送运单服务
