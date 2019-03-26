@@ -569,7 +569,7 @@ public class BizPalletInfoController {
 		if (null == list || list.size() == 0) {
 			return "没有数据重算";
 		}
-		if(bizPalletInfoService.retryCalculate(list) <= 0){
+		if(bizPalletInfoService.reCalculate(list) <= 0){
 			return "重算异常";
 		}
 		return "操作成功! 正在重算...";

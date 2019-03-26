@@ -134,9 +134,9 @@ public class InstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setCustomerName(instock.getCustomerName());	//商家名称
 		storageFeeEntity.setWarehouseCode(instock.getWarehouseCode());	//仓库ID
 		storageFeeEntity.setWarehouseName(instock.getWarehouseName());	//仓库名称
-		storageFeeEntity.setOrderType(instock.getInstockType());		//订单类型
+		/*storageFeeEntity.setOrderType(instock.getInstockType());		//订单类型
 		storageFeeEntity.setOrderNo(instock.getInstockNo());			//oms订单号
-		storageFeeEntity.setProductType("");							//商品类型
+*/		storageFeeEntity.setProductType("");							//商品类型
 		storageFeeEntity.setStatus("0");								//状态
 		storageFeeEntity.setOperateTime(instock.getCreateTime());		//操作时间
 		storageFeeEntity.setCostType("FEE_TYPE_GENEARL");
@@ -146,7 +146,7 @@ public class InstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setUnitPrice(0d);
 		storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
 		storageFeeEntity.setFeesNo(instock.getFeesNo());
-		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
+		/*storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());*/
 		storageFeeEntity.setDelFlag("0");
 		return storageFeeEntity;
 	}
@@ -177,9 +177,9 @@ public class InstockFeeInitJob extends IJobHandler{
 		//对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
+			String taskId = "STO" + snowflakeSequenceService.nextStringId();
 			vo.setTaskId(taskId);
-			vo.setCrePerson("系统");
+			vo.setCrePerson("system");
 			vo.setCrePersonId("system");
 			vo.setCreTime(JAppContext.currentTimestamp());
 			bmsCalcuTaskService.sendTask(vo);
