@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
@@ -36,16 +38,16 @@ import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
-import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizInStockService;
 import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
 import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockRecordService;
-import com.jiuyescm.bms.biz.storage.service.impl.BmsBizInstockRecordServiceImpl;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
@@ -61,25 +63,17 @@ import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
 import com.jiuyescm.bms.common.web.HttpCommanExport;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
-import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.common.utils.upload.InstockInfoTemplateDataType;
-import com.jiuyescm.common.utils.upload.MaterialTemplateDataType;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
-import com.jiuyescm.mdm.carrier.vo.CarrierVo;
-import com.jiuyescm.mdm.customer.vo.RegionVo;
-import com.jiuyescm.mdm.deliver.vo.DeliverVo;
-import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
-
-import groovy.ui.view.MacOSXDefaults;
 
 /**
  * ..Controller
@@ -109,8 +103,12 @@ public class BmsBizInstockInfoController {
 	private IBizInStockService service;
 	@Resource 
 	private SequenceService sequenceService;
-	
+	@Autowired
+	private IBmsCalcuTaskService bmsCalcuTaskService;
 
+	private static final String FEE_1 = "wh_instock_work";
+	private static final String FEE_2 = "wh_b2c_handwork";
+	
 	/**
 	 * 分页查询
 	 * @param page
@@ -142,11 +140,13 @@ public class BmsBizInstockInfoController {
 			entity.setCreateTime(currentTime);
 			bmsBizInstockInfoService.save(entity);
 		} else {
-			entity.setIsCalculated("99");
 			entity.setLastModifier(username);
 			entity.setLastModifierId(userId);
 			entity.setLastModifyTime(currentTime);
 			bmsBizInstockInfoService.update(entity);
+			List<String> subjectList = new ArrayList<>();
+			subjectList.add(entity.getSubjectCode());
+			sendMq(subjectList);
 		}
 	}
 
@@ -272,6 +272,8 @@ public class BmsBizInstockInfoController {
 		
 		List<BmsBizInstockInfoEntity> infoLists = new ArrayList<BmsBizInstockInfoEntity>();
 		Map<String, Object> dataMap = new HashMap<>();
+		//重算（修改费用）List
+		List<BmsBizInstockInfoEntity> feeList = new ArrayList<>();
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
         	Map<String, Object> condition = new HashMap<>();
         	Map<String,Object> map0 = new HashMap<String,Object>();
@@ -366,7 +368,16 @@ public class BmsBizInstockInfoController {
 			//组装数据
 			condition.put("instockNo", instockNo);
 			List<BmsBizInstockInfoEntity> lists = bmsBizInstockInfoService.query(condition);
-			//entity.setFeesNo(lists.get(0).getFeesNo());
+			
+			//校验入库单号
+			if(CollectionUtils.isEmpty(lists)){
+				setMessage(infoList, rowNum+1,"入库单号不存在："+instockNo);
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}
+			
+			BmsBizInstockInfoEntity infoEntity = lists.get(0);
+			
 			entity.setInstockNo(instockNo);
 			if (StringUtils.isBlank(adjustBox)) {
 				entity.setAdjustBox(0d);
@@ -384,13 +395,23 @@ public class BmsBizInstockInfoController {
 				entity.setAdjustWeight(Double.valueOf(adjustWeight));
 			}
 			entity.setIsCalculated("99");
-			entity.setDelFlag(lists.get(0).getDelFlag());
-			entity.setCalculateTime(lists.get(0).getCalculateTime());
-			entity.setRemark(lists.get(0).getRemark());
+			entity.setDelFlag(infoEntity.getDelFlag());
+			entity.setCalculateTime(infoEntity.getCalculateTime());
+			entity.setRemark(infoEntity.getRemark());
 			entity.setLastModifier(username);
 			entity.setLastModifierId(userid);
 			entity.setLastModifyTime(nowdate);
 			infoLists.add(entity);
+			
+			//重算的费用
+			BmsBizInstockInfoEntity fee1 = new BmsBizInstockInfoEntity();
+			fee1.setFeesNo(infoEntity.getFeesNo());
+			fee1.setSubjectCode("wh_instock_work");
+			BmsBizInstockInfoEntity fee2 = new BmsBizInstockInfoEntity();
+			fee2.setFeesNo(infoEntity.getFeesNo());
+			fee2.setSubjectCode("wh_b2c_handwork");
+			feeList.add(fee1);
+			feeList.add(fee2);
         }
         if (map.size() != 0) {
 			return map;
@@ -400,7 +421,15 @@ public class BmsBizInstockInfoController {
         int num = 0;
         String message = null;
         try {
+        	//更新业务表
 			num = bmsBizInstockInfoService.updateBatch(list);
+	        //修改费用表
+	        bmsBizInstockInfoService.reCalculate(feeList);
+	        //发送MQ
+			List<String> subjectList = new ArrayList<String>();
+			subjectList.add(FEE_1);
+			subjectList.add(FEE_2);
+			sendMq(subjectList);
 		} catch (Exception e) {
 		     message = e.getMessage();
 		     logger.error(e.getMessage(), e);
@@ -432,6 +461,7 @@ public class BmsBizInstockInfoController {
 			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
 			return map;
         }
+        
 	}
 	
 	/**
@@ -504,7 +534,6 @@ public class BmsBizInstockInfoController {
 		}catch(Exception e){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
 			throw e;
 		}
 		
@@ -581,14 +610,6 @@ public class BmsBizInstockInfoController {
 		}
 		
         try {
-        	//校验该费用是否已生成Excel文件
-//        	Map<String, Object> queryEntity = new HashMap<String, Object>();
-//        	queryEntity.put("taskType", FileTaskTypeEnum.BIZ_INSTOCK_INFO.getCode());
-//        	String existDel = fileExportTaskService.isExistDeleteTask(queryEntity);
-//        	if (StringUtils.isNotEmpty(existDel)) {
-//        		return existDel;
-//        	}
-        	
         	String taskid = sequenceService.getBillNoOne(FileExportTaskEntity.class.getName(), "FT", "0000000000");
     		if (StringUtils.isBlank(taskid)) {
     			throw new Exception("生成导出文件编号失败,请稍后重试!");
@@ -653,7 +674,6 @@ public class BmsBizInstockInfoController {
 	 * @param code
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	public SystemCodeEntity getSystemCode(String typeCode, String code){
 		if (StringUtils.isNotEmpty(typeCode) && StringUtils.isNotEmpty(code)) {
 			SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode(typeCode, code);
@@ -910,12 +930,21 @@ public class BmsBizInstockInfoController {
 	@Expose
 	public String reCalculate(Map<String, Object> param){
 		List<BmsBizInstockInfoEntity> list = bmsBizInstockInfoService.query(param);
-		if (null == list || list.size() == 0) {
+		if (CollectionUtils.isEmpty(list)) {
 			return "没有数据重算";
 		}
+		//更改费用计算状态为99
 		if(bmsBizInstockInfoService.reCalculate(list) == 0){
 			return "重算异常";
 		}
+		List<String> subjectList = new ArrayList<String>();
+		if(param.containsKey("subjectCode")){
+			subjectList.add((String) param.get("subjectCode"));
+		}else{
+			subjectList.add("wh_instock_work");
+			subjectList.add("wh_b2c_handwork");
+		}
+		sendMq(subjectList);
 		return "操作成功! 正在重算...";
 	}
 	
@@ -930,6 +959,25 @@ public class BmsBizInstockInfoController {
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
+		}
+	}
+	
+	private void  sendMq(List<String> subjectList) {
+		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", subjectList);
+		// 对这些费用按照商家、科目、时间排序
+		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
+		for (BmsCalcuTaskVo vo : list) {
+			vo.setCrePerson(JAppContext.currentUserName());
+			vo.setCrePersonId(JAppContext.currentUserID());
+			vo.setCreTime(JAppContext.currentTimestamp());
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.info("mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
+			}
 		}
 	}
 }
