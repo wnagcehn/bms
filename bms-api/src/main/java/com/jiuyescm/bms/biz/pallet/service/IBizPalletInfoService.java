@@ -19,7 +19,7 @@ public interface IBizPalletInfoService {
 
     BizPalletInfoEntity save(BizPalletInfoEntity entity);
 
-    BizPalletInfoEntity update(BizPalletInfoEntity entity);
+    int update(BizPalletInfoEntity entity);
     
 	int delete(List<BizPalletInfoEntity> list);
 	

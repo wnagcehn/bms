@@ -55,10 +55,8 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
-import com.jiuyescm.bms.common.enumtype.mq.BmsPackmaterialTaskTypeNewEnum;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
 import com.jiuyescm.bms.common.enumtype.type.ExeclOperateTypeEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
@@ -71,7 +69,6 @@ import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.bs.util.ExportUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
-import com.jiuyescm.common.utils.upload.DiscountQuoteTemplateDataType;
 import com.jiuyescm.common.utils.upload.PalletDataType;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.constants.MQConstants;
@@ -87,7 +84,6 @@ import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * ..Controller
@@ -147,6 +143,7 @@ public class BizPalletInfoController {
 			return strArray;
 		}
 	}
+	
 
 	/**
 	 * 分页查询
@@ -192,11 +189,31 @@ public class BizPalletInfoController {
 			entity.setLastModifier(username);
 			entity.setLastModifierId(userid);
 			entity.setLastModifyTime(currentTime);
-			entity.setIsCalculated("99");
-			try {
-				bizPalletInfoService.update(entity);
-			} catch (Exception e) {
-				logger.error("更新异常", e);
+			int k = bizPalletInfoService.update(entity);
+			if (k == 0) {
+				throw new BizException("更新失败！");
+			}
+			subjects = initSubjects();
+			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+			sendTaskMap.put("isCalculated", "99");
+			sendTaskMap.put("subjectList", Arrays.asList(subjects));
+			//对这些费用按照商家、科目、时间排序
+			List<SystemCodeEntity> sysList = systemCodeService.findEnumList("PALLET_CAL_FEE");
+			Map<String, String> sysMap = new HashMap<String, String>();
+			for (SystemCodeEntity systemCodeEntity : sysList) {
+				sysMap.put(systemCodeEntity.getCode(), systemCodeEntity.getCodeName());
+			}
+			List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
+			for (BmsCalcuTaskVo vo : list) {
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				vo.setSubjectName(sysMap.get(vo.getSubjectCode()));
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
 			}
 		}
 	}
@@ -365,7 +382,6 @@ public class BizPalletInfoController {
 			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
 		}
-		XSSFFormulaEvaluator  evaluator = new XSSFFormulaEvaluator(xssfWorkbook); 
 		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
 		
 		if(xssfSheet==null)
@@ -389,12 +405,9 @@ public class BizPalletInfoController {
 		String userid=JAppContext.currentLoginName();
 		String username = JAppContext.currentUserName();
 		
-		List<BizPalletInfoEntity> infoLists = new ArrayList<BizPalletInfoEntity>();
 		Map<String, Object> dataMap = new HashMap<>();
         for (int rowNum = 1;  rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
-        	Map<String, Object> condition = new HashMap<>();
         	Map<String,Object> map0 = new HashMap<String,Object>();
-        	BizPalletInfoEntity entity = new BizPalletInfoEntity();
         	
 			XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 			if(xssfRow==null){
@@ -478,7 +491,7 @@ public class BizPalletInfoController {
 			map0.put("warehouseCode", wareHouseMap.get(warehouseName));
 			map0.put("temperatureTypeCode", temperatureMap.get(temperatureType));
 			map0.put("bizType", bizTypeMap.get(bizType));
-			map0.put("isCalculated", "99");
+			//map0.put("isCalculated", "99");
 			map0.put("lastModifier", username);
 			map0.put("lastModifierId", userid);
 			map0.put("lastModifyTime", nowdate);
@@ -611,7 +624,7 @@ public class BizPalletInfoController {
 				vo.setCrePersonId("system");
 				try {
 					bmsCalcuTaskService.sendTask(vo);
-					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+					logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
 				} catch (Exception e) {
 					logger.error("mq发送失败:", e);
 				}	

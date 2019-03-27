@@ -1139,4 +1139,13 @@
    		</foreach>	
     </delete>
     
+    <update id="updateQuantityByFeesNo" parameterType="java.util.Map">
+    	update fees_receive_storage
+    	set quantity=#{quantity},is_calculated='99'
+    	where 1=1
+    	<if test="feesNo !=null and feesNo != ''">
+    		and fees_no = #{feesNo}
+    	</if>
+    </update>
+    
 </mapper>

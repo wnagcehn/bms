@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,11 +19,12 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -36,8 +38,11 @@ import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+import com.jiuyescm.bms.biz.pallet.controller.BizPalletInfoController;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -69,7 +74,7 @@ import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 @Controller("bizAddFeeController")
 public class BizAddFeeController {
 
-	private static final Logger logger = Logger.getLogger(BizAddFeeController.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(BizAddFeeController.class.getName());
 
 	@Resource
 	private IBizAddFeeService bizAddFeeService;
@@ -100,6 +105,9 @@ public class BizAddFeeController {
 	
 	@Resource
 	private Lock lock;
+	
+	@Autowired 
+	private IBmsCalcuTaskService bmsCalcuTaskService;
 
 	@DataProvider
 	public BizAddFeeEntity findById(Long id) throws Exception {
@@ -606,16 +614,32 @@ public class BizAddFeeController {
 		return fee;
     }
     
+    private static final List<String> subjectList= Arrays.asList("wh_value_add_subject");
+	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+	static{
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", subjectList);
+	}
     
 	@Expose
 	public String reCalculate(Map<String, Object> param){
-		
-         int result=bizAddFeeService.retryCalcu(param);
-         if(result>0){
-        	 return "操作成功! 正在重算...";
-		 }else{
-			 return "未查询到要重算的数据...";
-		 }	
+		int result=bizAddFeeService.retryCalcu(param);
+		if(result>0){
+			List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
+			for (BmsCalcuTaskVo vo : list) {
+     			vo.setCrePerson("系统");
+     			vo.setCrePersonId("system");
+     			try {
+     				bmsCalcuTaskService.sendTask(vo);
+     				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+     			} catch (Exception e) {
+     				logger.error("mq发送失败:", e);
+     			}	
+			}
+			return "操作成功! 正在重算...";
+		}else{
+			return "未查询到要重算的数据...";
+		}	
 	}
 	
 	/**
