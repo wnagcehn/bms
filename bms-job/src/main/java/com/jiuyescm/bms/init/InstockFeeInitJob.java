@@ -110,13 +110,15 @@ public class InstockFeeInitJob extends IJobHandler {
 	private void initFees(List<BmsBizInstockInfoEntity> bizList,
 			List<FeesReceiveStorageEntity> feesList) {
 		for (BmsBizInstockInfoEntity entity : bizList) {
-			feesList.add(initFeesEntity(FEE_1, entity));
-			feesList.add(initFeesEntity(FEE_2, entity));
+			//一条业务数据对应的两个科目的费用编号是一样的
+			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+			feesList.add(initFeesEntity(FEE_1, entity,feesNo));
+			feesList.add(initFeesEntity(FEE_2, entity,feesNo));
 		}
 	}
 
 	private FeesReceiveStorageEntity initFeesEntity(String code,
-			BmsBizInstockInfoEntity instock) {
+			BmsBizInstockInfoEntity instock,String feesNo) {
 		instock.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 
@@ -137,7 +139,6 @@ public class InstockFeeInitJob extends IJobHandler {
 			storageFeeEntity.setBox(box.intValue());
 		}
 		storageFeeEntity.setIsCalculated("99");
-		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
 		storageFeeEntity.setFeesNo(feesNo);
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(instock.getCreateTime());
