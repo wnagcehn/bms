@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
+import org.kie.internal.task.api.TaskIdentityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -201,12 +203,14 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		cond.put("quotationNo", contractItem.getTemplateId());
 		PriceGeneralQuotationEntity quoTemplete = priceGeneralQuotationRepository.query(cond);
 		if(quoTemplete == null){
+			logger.info("taskId={} 报价模板缺失",vo.getTaskId());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", "报价模板缺失");
 			return;
 		}
 		errorMap.put("QuoModelInfo", quoTemplete);
+		logger.info("taskId={} 报价模板编号:",quoTemplete.getQuotationNo());
 	}
 	
 	@Override
@@ -254,5 +258,18 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		return queryVo;
 
 	}
+
+	@Override
+	protected void printLog(BmsCalcuTaskVo vo,BmsBizInstockInfoEntity t,FeesReceiveStorageEntity f,String descrip,Object obj,String nodeName) {
+		if(StringUtil.isEmpty(nodeName)){
+			logger.info("taskId={} feesNo={} subjectName={} {} {}",vo.getTaskId(),t.getFeesNo(),vo.getSubjectName(),descrip,JSONObject.fromObject(obj));
+		}
+		else {
+			logger.info("taskId={} feesNo={} subjectName={} nameNode={} msg={}",vo.getTaskId(),t.getFeesNo(),vo.getSubjectName(),nodeName,JSONObject.fromObject(obj));
+		}
+		
+	}
+
+
 	
 }

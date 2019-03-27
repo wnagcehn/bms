@@ -53,6 +53,9 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
 	
+	protected String subjectCode = "";
+	protected String subjectName = "";
+	
 	private Logger logger = LoggerFactory.getLogger(CalcuTaskListener.class);
 
 	@Override
@@ -61,7 +64,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		String taskId = null;
 		try {
 			taskId = ((TextMessage)message).getText();
-			logger.info("正在处理计算任务  taskId={}",taskId);
+			logger.info("taskId={} 正在处理计算任务 ",taskId);
 		} catch (JMSException e1) {
 			logger.info("取出消息失败");
 			return;
@@ -74,19 +77,22 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		try{
 			taskVo= bmsCalcuTaskService.queryCalcuTask(taskId);
 			if(taskVo != null){
+				subjectCode = taskVo.getSubjectCode();
+				subjectName = taskVo.getSubjectName();
+				logger.info("taskId={} 任务消息明细：{}",taskId,JSONObject.fromObject(taskVo));
 				processCalcuJob(taskVo);
 			}
 			else{
-				logger.warn("未查询到任务 taskId={}",taskId);
+				logger.warn("taskId={} 未查询到任务 ",taskId);
 			}
 		}catch(Exception ex){
-			logger.warn("查询计算任务异常 taskId={}",taskId,ex.getMessage());
+			logger.warn("taskId={} 查询计算任务异常",taskId,ex.getMessage());
 		}
 		finally{
 			try {
 				message.acknowledge();
 			} catch (JMSException e) {
-				logger.info("消息应答失败 taskId={}",taskId);
+				logger.info("taskId={} 消息应答失败 ",taskId);
 			}
 		}
 		
@@ -103,10 +109,12 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		final Map<String, Object> handMap = new HashMap<>();
 		handMap.put("success", "fail");
 		handMap.put("remark", "");
+		logger.info("taskId={} 加锁处理",taskVo.getTaskId());
 		lock.lock(lockString, 5, new LockCallback<Map<String, Object>>() {
 
 			@Override
 			public Map<String, Object> handleObtainLock() {
+				logger.info("taskId={} 成功得到锁 ",taskVo.getTaskId());
 				calcuJob(taskVo);
 				handMap.put("success", "success");
 				return handMap;
@@ -114,6 +122,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 
 			@Override
 			public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
+				logger.info("taskId={} 未得到锁 ",taskVo.getTaskId());
 				handMap.put("success", "fail");
 				handMap.put("remark", "已存在计费请求,丢弃");
 				return handMap;
@@ -121,23 +130,26 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 
 			@Override
 			public Map<String, Object> handleException(LockInsideExecutedException e) throws LockInsideExecutedException {
+				logger.info("taskId={} 获取锁异常 ",taskVo.getTaskId());
 				handMap.put("success", "fail");
-				handMap.put("remark", "请求异常,丢弃");
+				handMap.put("remark", "获取锁异常,任务丢弃");
 				return handMap;
 			}
 		});
 		String succ = handMap.get("success").toString();
+		if(!"success".equals(succ)){
+			logger.info("taskId={} {}",taskVo.getTaskId(),handMap.get("remark").toString());
+			taskVo.setTaskStatus(40);//未获得锁，不处理，丢弃
+			taskVo.setRemark(handMap.get("remark").toString());
+			taskVo.setTaskRate(99);
+			bmsCalcuTaskService.saveTask(taskVo);
+			return;
+		}
 		if("success".equals(succ)){
 			//请求成功 发送mq消息
 			taskVo.setTaskStatus(20);
 			taskVo.setTaskRate(100);
 			taskVo.setFinishTime(JAppContext.currentTimestamp());
-			bmsCalcuTaskService.saveTask(taskVo);
-		}
-		else{
-			taskVo.setTaskStatus(40);//未获得锁，处不理，丢弃
-			taskVo.setRemark(handMap.get("remark").toString());
-			taskVo.setTaskRate(99);
 			bmsCalcuTaskService.saveTask(taskVo);
 		}
 		logger.info("taskId={} 计算任务处理结束 耗时【{}】ms",taskVo.getTaskId(),(System.currentTimeMillis()-start));
@@ -150,16 +162,22 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			taskVo.setTaskStatus(10); //计算状态设为 处理中
 			taskVo.setProcessTime(JAppContext.currentTimestamp()); //设置开始处理时间
 			//总单量统计，计算单量统计
+			logger.info("taskId={} 总单量统计",taskVo.getTaskId());
 			BmsFeesQtyVo feesQtyVo = feesCountReport(taskVo.getCustomerId(),taskVo.getSubjectCode(),taskVo.getCreMonth());
+			logger.info("taskId={} 总单量统计明细",taskVo.getTaskId(),JSONObject.fromObject(feesQtyVo));
+			
 			taskVo.setFeesCount(feesQtyVo.getFeesCount()); 		//设置总的费用数
 			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount());//设置本次待计算的费用数
 			bmsCalcuTaskService.update(taskVo);
+			
 			//查询合同归属
 			String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
-			logger.info("taskId={} msg=合同归属:{}",taskVo.getTaskId(),contractAttr);
+			logger.info("taskId={} contractAttr=",taskVo.getTaskId(),contractAttr);
 			if(contractAttr == null){
+				logger.info("taskId={} 合同归属不明确",taskVo.getTaskId());
 				taskVo.setTaskRate(99);
 				taskVo.setTaskStatus(40);
+				taskVo.setRemark("合同归属不明确");
 				bmsCalcuTaskService.update(taskVo);
 				return;
 			}
@@ -167,6 +185,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			//费用计算
 			Map<String, Object> errorMap = new HashMap<String, Object>();
 			Map<String, Object> cond = getQueryMap(taskVo);
+			logger.info("taskId={} 数据查询条件",taskVo.getTaskId(),JSONObject.fromObject(cond));
 			if("BMS".equals(contractAttr)){
 				//查询bms 合同（ContractInfo），签约服务(ContractInfoItem)，报价模板(QuoModelInfo)等
 				//success; is_calculated; msg
@@ -188,7 +207,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			bmsCalcuTaskService.update(taskVo);
 			
 		} catch (Exception e1) {
-			logger.error("计算任务执行异常 taskId={}",taskVo.getTaskId(),e1);
+			logger.error("taskId={} 计算任务执行异常",taskVo.getTaskId(),e1);
 			return;
 		}
 	}
@@ -234,18 +253,21 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		cond.put("contractTypeCode", "CUSTOMER_CONTRACT");
 		PriceContractInfoEntity contractEntity = jobPriceContractInfoService.queryContractByCustomer(cond);
 		if(contractEntity==null){
+			logger.info("taskId={} bms合同缺失",vo.getTaskId());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", "bms合同缺失");
 			return;
 	    }
 		errorMap.put("ContractInfo", contractEntity);
+		logger.info("taskId={} bms合同编号：{}",vo.getTaskId(),contractEntity.getContractCode());
 		
 		Map<String,Object> contractItems_map=new HashMap<String,Object>();
 		contractItems_map.put("contractCode", contractEntity.getContractCode());
 		contractItems_map.put("subjectId", vo.getSubjectCode());
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
+			logger.info("taskId={} bms合同未签约服务",vo.getTaskId());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", "bms合同未签约服务");
@@ -257,20 +279,20 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	
 	protected void calcuForContract(T t, F f, BmsCalcuTaskVo vo, Map<String, Object> errorMap){
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(vo,t);
-		logger.info("查询合同在线参数【{0}】",JSONObject.fromObject(queryVo));
-		queryCtForContract(t,f,queryVo,errorMap);
+		printLog(vo, t, f, "合同在线合同查询参数：", queryVo, "");
+		queryCtForContract(vo,t,f,queryVo,errorMap);
 		calcuForContract(f, errorMap);
 		
 	}
 	
-	protected void queryCtForContract(T t, F f,ContractQuoteQueryInfoVo queryVo,Map<String, Object> errorMap){
+	protected void queryCtForContract(BmsCalcuTaskVo vo,T t, F f,ContractQuoteQueryInfoVo queryVo,Map<String, Object> errorMap){
 		ContractQuoteInfoVo cqVo = null;
 		try{
 			cqVo = contractQuoteInfoService.queryUniqueColumns(queryVo);
-			logger.info("查询出的合同在线结果【{0}】",JSONObject.fromObject(cqVo));
+			printLog(vo, t, f, "合同在线合同明细：", cqVo, "");
 		}
 		catch(BizException ex){
-			logger.info("合同在线无此合同 {1}", ex.getMessage());
+			printLog(vo, t, f, "合同在线合同缺失：", ex.getMessage(), "");
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", "合同在线合同缺失");
@@ -280,7 +302,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			return;
 		}
 		if(StringUtil.isEmpty(cqVo.getRuleCode())){
-			logger.info("合同在线规则未绑定 ");
+			printLog(vo, t, f, "合同在线规则未绑定", "" , "");
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
 			errorMap.put("msg", "合同在线规则未绑定");
@@ -292,7 +314,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			if (null == ruleEntity) {
 				String msg = "规则【"+cqVo.getRuleCode()+"】不存在";
-				logger.info(msg);
+				printLog(vo, t, f, msg, "" , "");
 				errorMap.put("success", "fail");
 				errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
 				errorMap.put("msg", msg);
@@ -301,12 +323,12 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			//获取合同在线查询条件
 			Map<String, Object> cond = new HashMap<String, Object>();
 			feesCalcuService.ContractCalcuService(t, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
-			logger.info("获取报价参数{}",cond);
+			printLog(vo, t, f, "获取合同在线报价参数：", cond , "");
 			ContractQuoteInfoVo rtnQuoteInfoVo = null;
 			
 			try {
 			    if(cond == null || cond.size() == 0){
-					logger.info("规则引擎拼接条件异常");
+			    	printLog(vo, t, f, "规则引擎拼接条件异常：", "", "");
 					errorMap.put("success", "fail");
 					errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
 					errorMap.put("msg", "规则引擎拼接条件异常");
@@ -316,17 +338,17 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			} catch (BizException e) {
 				// TODO: handle exception
 				String msg = "获取合同在线报价异常:"+e.getMessage();
-				logger.info("msg");
+				printLog(vo, t, f, msg, "", "");
 				errorMap.put("success", "fail");
 				errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
 				errorMap.put("msg", msg);
 				return;
 			}
 			
-			logger.info("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
+			/*logger.info("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));*/
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				int i = rtnQuoteInfoVo.getQuoteMaps().indexOf(map);
-				logger.info("合同在线报价信息 [{}]:{}",i,map);
+				printLog(vo, t, f, "合同在线报价信息["+i+"]", map, "");
 			}
 			//调用规则计算费用
 			feesCalcuService.ContractCalcuService(f, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
@@ -356,7 +378,6 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		cond.put("isCalculated", "99");
 		return cond;
 	}
-	
 	
 	//主流程控制
 	/*protected abstract void calcu(BmsCalcuTaskVo vo, Map<String, Object> errorMap,Map<String, Object> cond);
@@ -396,6 +417,8 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	
 	//统计商家维度各状态计算单量
 	protected abstract BmsFeesQtyVo feesCountReport(String customerId, String subjectCode,Integer creMonth);
+	
+	protected abstract void printLog(BmsCalcuTaskVo vo,T t,F f,String descrip,Object obj,String nodeName);
 	
 	/*//查询合同在线合同
 	protected abstract ContractQuoteInfoVo queryCtForContract(BmsCalcuTaskVo vo,T t,Map<String, Object> errorMap);

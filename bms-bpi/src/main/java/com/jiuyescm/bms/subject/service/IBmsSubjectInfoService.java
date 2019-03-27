@@ -35,5 +35,6 @@ public interface IBmsSubjectInfoService {
 	 */
 	BmsSubjectInfoVo querySubjectByName(String inOutTypecode,String bizType,String subjectName);
 	
+	BmsSubjectInfoVo queryReceiveByCode(String subjectCode);
 	
 }

@@ -23,7 +23,11 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.common.enumtype.MQSubjectEnum;
+import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
+import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
+import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.MD5Util;
 import com.jiuyescm.exception.BizException;
@@ -42,6 +46,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private JmsTemplate jmsQueueTemplate;
 	@Autowired private Lock lock;
+	@Autowired private ICustomerDictService customerDictService;
+	@Autowired private IBmsSubjectInfoService bmsSubjectService;
 	
 	
 	@Override
@@ -70,6 +76,23 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	@Override
 	public BmsCalcuTaskVo sendTask(final BmsCalcuTaskVo vo) throws Exception {
 		logger.info("请求参数：",JSONObject.fromObject(vo));
+		
+		if(StringUtil.isEmpty(vo.getSubjectCode()) || 
+				StringUtil.isEmpty(vo.getCustomerId()) || vo.getCreMonth() == null){
+			throw new BizException("商家ID,科目编码,业务年月必填");
+		}
+		
+		String customerName = customerDictService.getCustomerNameByCode(vo.getCustomerId());
+		if(StringUtil.isEmpty(customerName)){
+			throw new BizException("商家【"+vo.getCustomerId()+"】不存在");
+		}
+		
+		BmsSubjectInfoVo subjectVo = bmsSubjectService.queryReceiveByCode(vo.getSubjectCode());
+		if(subjectVo == null || StringUtil.isEmpty(vo.getSubjectName())){
+			throw new BizException("科目【"+vo.getSubjectCode()+"】不存在");
+		}
+		vo.setCustomerName(customerName);
+		vo.setSubjectName(subjectVo.getSubjectName());
 		String customerId = vo.getCustomerId();
 		String subjectCode = vo.getSubjectCode();
 		String creMonth = vo.getCreMonth().toString();
@@ -77,6 +100,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		final Map<String, Object> handMap = new HashMap<>();
 		handMap.put("success", "fail");
 		handMap.put("remark", "");
+		
+		
 		
 		try{
 			String taskId = "CT"+snowflakeSequenceService.nextStringId();//任务ID
