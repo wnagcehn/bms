@@ -527,7 +527,7 @@ if(isNullOrEmpty(datas.get(&quot;customerId&quot;)) &amp;&amp; isNullOrEmpty(dat
 &#xD;
 retryAction.set(&quot;parameter&quot;,datas);&#xD;
 &#xD;
-dorado.MessageBox.confirm(retMap.value+&quot; 是否确定重算?&quot;,function(){&#xD;
+dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
 	retryAction.execute(function(result){&#xD;
 		dorado.MessageBox.alert(result);&#xD;
 		with (view.get(&quot;#dsMaterialList&quot;)){&#xD;
