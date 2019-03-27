@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.PackCostReportMapper" >
+	<resultMap type="com.jiuyescm.bms.general.entity.PackCostReportEntity" id="baseMap">
+ 		<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="warehouse_no" property="warehouseNo" jdbcType="VARCHAR" />
+	    <result column="year" property="year" jdbcType="INTEGER" />
+	    <result column="month_num" property="monthNum" jdbcType="INTEGER" />
+	    <result column="date_type" property="dateType" jdbcType="VARCHAR" />
+	    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+	    <result column="material_no" property="materialNo" jdbcType="VARCHAR" />
+	    <result column="material_name" property="materialName" jdbcType="VARCHAR" />
+	    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+	    <result column="material_type" property="materialType" jdbcType="VARCHAR" />
+	    <result column="material_type_name" property="materialTypeName" jdbcType="VARCHAR" />
+	    <result column="unit" property="unit" jdbcType="VARCHAR" />
+	    <result column="init_qty" property="initQty" jdbcType="DECIMAL" />
+	    <result column="in_qty" property="inQty" jdbcType="DECIMAL" />
+	    <result column="init_cost" property="initCost" jdbcType="DECIMAL" />
+	    <result column="cost" property="cost" jdbcType="DECIMAL" />
+	    <result column="init_money" property="initMoney" jdbcType="DECIMAL" />
+	    <result column="in_money" property="inMoney" jdbcType="DECIMAL" />
+	    <result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+	    <result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+	    <result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		id,warehouse_no,`year`,month_num,date_type,start_date,end_date,
+		material_no,material_name,barcode,material_type,material_type_name,unit,init_qty,
+		in_qty,init_cost,cost,init_money,in_money,cre_person,cre_person_id,cre_time
+	</sql>
+	<select id="queryAllByYearMonth" resultMap="baseMap">
+		select warehouse_no,year,month_num,material_no,material_name,barcode,unit,cost
+		from pack_cost_report where year=#{year} and month_num=#{month}
+	</select>
+	<select id="queryAllByYearAndMonthArea" resultType="com.jiuyescm.bms.general.entity.PackCostReportEntity">
+		select warehouse_no,year,month_num,material_no,material_name,barcode,unit,cost
+		from pack_cost_report where year=#{year} and month_num between #{startMonth}
+		and #{endMonth}
+	</select>
+	
+	
+	<select id="queryPackCostEntity" resultType="com.jiuyescm.bms.general.entity.PackCostReportEntity">
+		select warehouse_no,year,month_num,material_no,material_name,barcode,unit,cost
+		from pack_cost_report where 1=1 
+		<if test="(warehouseNo != null and warehouseNo !='')" >
+				and warehouse_no = #{warehouseNo}
+		</if>
+		<if test="(year != null and year !='')" >
+				and year = #{year}
+		</if>
+		<if test="(monthNum != null and monthNum !='')" >
+				and month_num = #{monthNum}
+		</if>
+		<if test="(materialNo != null and materialNo !='')" >
+				and material_no = #{materialNo}
+		</if>
+	</select>
+	
+</mapper>

@@ -6,9 +6,7 @@
         http://code.alibabatech.com/schema/dubbo
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 		<dubbo:application name="bms-mq-calcu" />
-		
- 		<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}"/>
-		<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" id = "bms"/>
-	
-		
+
+		<dubbo:reference interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService"
+				version="1.0.0" id="bmsCalcuTaskService" timeout="1200000" check="false"/>	
 </beans> 

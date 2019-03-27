@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.FeesPayDispatchMapper" >
+	<resultMap id="baseResult_FeesPayDispatchMapper" type="com.jiuyescm.bms.general.entity.FeesPayDispatchEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="carrierid" property="carrierid" jdbcType="VARCHAR" />
+	    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	    <result column="deliveryid" property="deliveryid" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="unpacking" property="unpacking" jdbcType="VARCHAR" />
+	    <result column="unpack_num" property="unpackNum" jdbcType="TINYINT" />
+	    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	    <result column="temperature_type" property="temperatureType" jdbcType="VARCHAR" />
+	    <result column="bill_type" property="billType" jdbcType="VARCHAR" />
+	    <result column="b2b_flag" property="b2bFlag" jdbcType="VARCHAR" />
+	    <result column="total_weight" property="totalWeight" jdbcType="DOUBLE" />
+	    <result column="total_quantity" property="totalQuantity" jdbcType="DOUBLE" />
+	    <result column="total_varieties" property="totalVarieties" jdbcType="DOUBLE" />
+	    <result column="split_single" property="splitSingle" jdbcType="VARCHAR" />
+	    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+	    <result column="price_id" property="priceId" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="DOUBLE" />
+	    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+	    <result column="rule_no" property="ruleNo" jdbcType="VARCHAR" />
+	    <result column="to_province_name" property="toProvinceName" jdbcType="VARCHAR" />
+	    <result column="to_district_name" property="toDistrictName" jdbcType="VARCHAR" />
+	    <result column="to_city_name" property="toCityName" jdbcType="VARCHAR" />
+	    <result column="charged_weight" property="chargedWeight" jdbcType="DOUBLE" />
+	    <result column="weight_limit" property="weightLimit" jdbcType="DOUBLE" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+	    <result column="head_weight" property="headWeight" jdbcType="DOUBLE" />
+	    <result column="continued_weight" property="continuedWeight" jdbcType="DOUBLE" />
+	    <result column="head_price" property="headPrice" jdbcType="DOUBLE" />
+	    <result column="continued_price" property="continuedPrice" jdbcType="DOUBLE" />
+	    <result column="accept_time" property="acceptTime" jdbcType="TIMESTAMP" />
+	    <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+	    <result column="subject_type" property="subjectType" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+	    <result column="bigstatus" property="bigstatus" jdbcType="VARCHAR" />
+	    <result column="smallstatus" property="smallstatus" jdbcType="VARCHAR" />
+	    <result column="param1" property="param1" jdbcType="VARCHAR" />
+	    <result column="param2" property="param2" jdbcType="VARCHAR" />
+	    <result column="param3" property="param3" jdbcType="VARCHAR" />
+	    <result column="param4" property="param4" jdbcType="VARCHAR" />
+	    <result column="param5" property="param5" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL"/>
+    </resultMap>
+
+	<sql id="Base_Column_List" >
+     id, fees_no, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name,
+     customerid, customer_name, carrierid, carrier_name, deliveryid, deliver_name,
+     unpacking, unpack_num, operate_time, temperature_type, bill_type, b2b_flag, 
+     total_weight, total_quantity, total_varieties, split_single, template_id, price_id,
+     amount, bill_no, rule_no, to_province_name, to_district_name, to_city_name, charged_weight,
+     weight_limit, unit_price, head_weight, continued_weight, head_price, continued_price,
+     accept_time, sign_time, subject_type, subject_code,other_subject_code,biz_type, bigstatus, smallstatus,param1, param2, param3, param4, param5, status,
+     creator, create_time, last_modifier, last_modify_time, del_flag,derate_amount
+   </sql>
+  
+   <insert id="insert" parameterType="com.jiuyescm.bms.general.entity.FeesPayDispatchEntity">
+       insert into fees_pay_dispatch(
+    		fees_no, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name, customerid, customer_name,
+    		carrierid, carrier_name, deliveryid, deliver_name, unpacking, unpack_num, operate_time, temperature_type,
+    		bill_type, b2b_flag, total_weight, total_quantity, total_varieties, split_single, template_id,
+    		price_id, amount, bill_no, rule_no, to_province_name, to_district_name, to_city_name, charged_weight,
+    		weight_limit, unit_price, head_weight, continued_weight, head_price, continued_price, accept_time,
+    		sign_time, subject_type, subject_code,other_subject_code,biz_type, bigstatus, smallstatus,is_calculated, calculate_time, param1, param2, param3, param4, param5, status,
+    		creator, create_time, last_modifier, last_modify_time, del_flag,derate_amount)
+        values (
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{outstockNo,jdbcType=VARCHAR}, 
+			#{externalNo,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{carrierid,jdbcType=VARCHAR}, 
+			#{carrierName,jdbcType=VARCHAR}, 
+			#{deliveryid,jdbcType=VARCHAR}, 
+			#{deliverName,jdbcType=VARCHAR}, 
+			#{unpacking,jdbcType=VARCHAR}, 
+			#{unpackNum,jdbcType=TINYINT}, 
+			#{operateTime,jdbcType=TIMESTAMP}, 
+			#{temperatureType,jdbcType=VARCHAR}, 
+			#{billType,jdbcType=VARCHAR}, 
+			#{b2bFlag,jdbcType=VARCHAR}, 
+			#{totalWeight,jdbcType=DOUBLE}, 
+			#{totalQuantity,jdbcType=DOUBLE}, 
+			#{totalVarieties,jdbcType=DOUBLE}, 
+			#{splitSingle,jdbcType=VARCHAR}, 
+			#{templateId,jdbcType=VARCHAR}, 
+			#{priceId,jdbcType=VARCHAR}, 
+			#{amount,jdbcType=DOUBLE}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{ruleNo,jdbcType=VARCHAR}, 
+			#{toProvinceName,jdbcType=VARCHAR}, 
+			#{toDistrictName,jdbcType=VARCHAR}, 
+			#{toCityName,jdbcType=VARCHAR}, 
+			#{chargedWeight,jdbcType=DOUBLE}, 
+			#{weightLimit,jdbcType=DOUBLE}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{headWeight,jdbcType=DOUBLE}, 
+			#{continuedWeight,jdbcType=DOUBLE}, 
+			#{headPrice,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{acceptTime,jdbcType=TIMESTAMP}, 
+			#{signTime,jdbcType=TIMESTAMP},
+			#{subjectType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{otherSubjectCode,jdbcType=VARCHAR}, 
+			#{bizType,jdbcType=VARCHAR},
+			#{bigstatus,jdbcType=VARCHAR}, 
+			#{smallstatus,jdbcType=VARCHAR},
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP},  
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param5,jdbcType=VARCHAR}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR},
+			#{derateAmount}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="com.jiuyescm.bms.general.entity.FeesPayDispatchEntity">
+        delete from fees_pay_dispatch where
+        waybill_no = #{waybillNo}
+    </delete>
+    
+    <!-- 查询单个的费用 -->
+    <select id="selectOne" resultMap="baseResult_FeesPayDispatchMapper" parameterType="java.util.Map">
+    	select * from fees_pay_dispatch
+        where 1=1
+        <if test="(feesNo != null and feesNo !='')" >
+			and fees_no = #{feesNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and waybill_no = #{waybillNo}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and outstock_no = #{outstockNo}
+		</if>
+		and del_flag = 0 limit 1
+    </select>
+    
+    <!-- 更新单个费用 -->  
+    <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesPayDispatchEntity">
+        update fees_pay_dispatch 
+		<set >
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
+			<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
+			<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
+			<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
+			<if test="carrierid != null" >carrierid=#{carrierid,jdbcType=VARCHAR},</if>
+			<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
+			<if test="deliveryid != null" >deliveryid=#{deliveryid,jdbcType=VARCHAR},</if>
+			<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
+			<if test="unpacking != null" >unpacking=#{unpacking,jdbcType=VARCHAR},</if>
+			<if test="unpackNum != null" >unpack_num=#{unpackNum,jdbcType=TINYINT},</if>
+			<if test="operateTime != null" >operate_time=#{operateTime,jdbcType=TIMESTAMP},</if>
+			<if test="temperatureType != null" >temperature_type=#{temperatureType,jdbcType=VARCHAR},</if>
+			<if test="billType != null" >bill_type=#{billType,jdbcType=VARCHAR},</if>
+			<if test="b2bFlag != null" >b2b_flag=#{b2bFlag,jdbcType=VARCHAR},</if>
+			<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DOUBLE},</if>
+			<if test="totalQuantity != null" >total_quantity=#{totalQuantity,jdbcType=DOUBLE},</if>
+			<if test="totalVarieties != null" >total_varieties=#{totalVarieties,jdbcType=DOUBLE},</if>
+			<if test="splitSingle != null" >split_single=#{splitSingle,jdbcType=VARCHAR},</if>
+			<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
+			<if test="priceId != null" >price_id=#{priceId,jdbcType=VARCHAR},</if>
+			<if test="amount != null" >amount=#{amount,jdbcType=DOUBLE},</if>
+			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="toProvinceName != null" >to_province_name=#{toProvinceName,jdbcType=VARCHAR},</if>
+			<if test="toDistrictName != null" >to_district_name=#{toDistrictName,jdbcType=VARCHAR},</if>
+			<if test="toCityName != null" >to_city_name=#{toCityName,jdbcType=VARCHAR},</if>
+			<if test="chargedWeight != null" >charged_weight=#{chargedWeight,jdbcType=DOUBLE},</if>
+			weight_limit=#{weightLimit,jdbcType=DOUBLE},
+			unit_price=#{unitPrice,jdbcType=DOUBLE},
+			head_weight=#{headWeight,jdbcType=DOUBLE},
+			continued_weight=#{continuedWeight,jdbcType=DOUBLE},
+			head_price=#{headPrice,jdbcType=DOUBLE},
+			continued_price=#{continuedPrice,jdbcType=DOUBLE},
+			<if test="acceptTime != null" >accept_time=#{acceptTime,jdbcType=TIMESTAMP},</if>
+			<if test="signTime != null" >sign_time=#{signTime,jdbcType=TIMESTAMP},</if>
+			<if test="subjectType != null" >subject_type=#{subjectType,jdbcType=VARCHAR},</if>
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
+			<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if>
+			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
+			<if test="bigstatus != null" >bigstatus=#{bigstatus,jdbcType=VARCHAR},</if>
+			<if test="smallstatus != null" >smallstatus=#{smallstatus,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param5 != null" >param5=#{param5,jdbcType=VARCHAR},</if>
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="derateAmount!=null">derate_amount=#{derateAmount}</if>
+		</set>
+        where fees_no=#{feesNo}
+    </update>
+   <delete id="deleteBatch" parameterType="java.util.Map">
+    	delete from fees_pay_dispatch  where fees_no in
+    	<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+		</foreach>
+    </delete>
+</mapper>

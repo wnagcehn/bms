@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.storage.MaterialReportMapper" >
+	<!-- <insert id="insertBmsMaterailTemp" parameterType="java.util.Map">
+	INSERT INTO bms_material_report_temp(warehouse_code,warehouse_name,
+	customerid,customer_name,consumer_material_code,consumer_material_name,num)
+	(select warehouse_code,warehouse_name,customer_id,customer_name,consumer_material_code,consumer_material_name,sum(adjust_num) from biz_outstock_packmaterial
+	where 1=1 and create_time like '${time}%' GROUP BY warehouse_code,warehouse_name,customer_id,customer_name,consumer_material_code,consumer_material_name
+	)
+	</insert>
+	 -->
+	
+	<insert id="insertBmsMaterailTemp" parameterType="java.util.Map">
+	INSERT INTO bms_material_report_temp(warehouse_code,
+	customerid,consumer_material_code,num)
+	(
+	select a.warehouse_code,a.customer_id,a.consumer_material_code,sum(a.adjust_num) from biz_outstock_packmaterial a
+	LEFT JOIN biz_outstock_master b on a.waybill_no=b.waybill_no
+	where 1=1 and b.b2b_flag='0' and <![CDATA[a.create_time >= #{startTime}]]> and <![CDATA[a.create_time < #{endTime}]]>
+	GROUP BY a.warehouse_code,a.customer_id,a.consumer_material_code
+	)
+	</insert>
+	
+	
+	<insert id="insertWmsMaterailTemp" parameterType="java.util.Map">	
+	INSERT INTO bms_material_wms_report_temp(warehouse_code,
+	customerid,consumer_material_code,num)
+	(
+	select a.warehouse_no,a.customer_id,a.consumer_material_code,sum(a.num) from biz_wms_outstock_packmaterial a
+	LEFT JOIN biz_outstock_master b on a.waybill_no=b.waybill_no
+	where 1=1 and b.b2b_flag='0' and <![CDATA[a.create_time >= #{startTime}]]> and <![CDATA[a.create_time < #{endTime}]]>
+	GROUP BY a.warehouse_no,a.customer_id,a.consumer_material_code
+	)
+	</insert>
+	
+	
+	<delete id="deleteBmsMaterailTemp">
+		delete from bms_material_report_temp
+	</delete>
+	
+	<!-- <insert id="insertWmsMaterailTemp" parameterType="java.util.Map">	
+	INSERT INTO bms_material_wms_report_temp(warehouse_code,warehouse_name,
+	customerid,customer_name,consumer_material_code,consumer_material_name,num)
+	(select warehouse_no,warehouse_name,customer_id,customer_name,consumer_material_code,consumer_material_name,sum(num) from biz_wms_outstock_packmaterial
+	where 1=1 and create_time like '${time}%' GROUP BY warehouse_no,warehouse_name,customer_id,customer_name,consumer_material_code,consumer_material_name
+	)
+	</insert> -->
+	
+	<delete id="deleteWmsMaterailTemp">
+		delete from bms_material_wms_report_temp
+	</delete>
+	
+	<update id="updateMaterialReport" parameterType="java.util.Map">
+		update bms_material_report set del_flag='1' where 1=1 and report_year=#{year} and report_month=#{month}
+	</update>
+	
+	<select id="queryMaterialReportList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.report.month.entity.BmsMaterialReportEntity">
+		select a.warehouse_code as warehouseCode,a.warehouse_name as warehouseName,a.customerid as customerid,a.customer_name as customerName,a.consumer_material_code as consumerMaterialCode,a.consumer_material_name as consumerMaterialName,a.num as bmsNum,b.num as wmsNum,(b.num-a.num) as differentNum 
+		from bms_material_report_temp a LEFT JOIN
+		bms_material_wms_report_temp b on a.warehouse_code=b.warehouse_code and a.customerid=b.customerid and a.consumer_material_code=b.consumer_material_code
+	</select>
+	
+	<insert id="insertMaterialReport" parameterType="com.jiuyescm.bms.report.month.entity.BmsMaterialReportEntity">
+        insert into bms_material_report(warehouse_code, warehouse_name, customerid, customer_name, consumer_material_code, consumer_material_name, consumer_material_type, unit, bms_num, wms_num, different_num, report_year, report_month, report_time, del_flag)
+        values (
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{consumerMaterialCode,jdbcType=VARCHAR}, 
+			#{consumerMaterialName,jdbcType=VARCHAR}, 
+			#{consumerMaterialType,jdbcType=VARCHAR}, 
+			#{unit,jdbcType=VARCHAR}, 
+			#{bmsNum,jdbcType=DECIMAL}, 
+			#{wmsNum,jdbcType=DECIMAL}, 
+			#{differentNum,jdbcType=DECIMAL}, 
+			#{reportYear,jdbcType=VARCHAR}, 
+			#{reportMonth,jdbcType=VARCHAR}, 
+			#{reportTime,jdbcType=DATE}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	
+	<!-- 查询bms耗材临时表数据 -->
+	<select id="queryBmsMaterialReportTempList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.report.month.entity.BmsMaterialReportEntity">
+		select a.warehouse_code as warehouseCode,a.customerid as customerid,
+		a.consumer_material_code as consumerMaterialCode,
+		sum(IFNULL(a.num,0)) as bmsNum,0 as wmsNum
+		from bms_material_report_temp a 
+		GROUP BY warehouse_code,customerid,consumer_material_code
+	</select>
+	
+	<!-- 查询bms耗材临时表数据 -->
+	<select id="queryWmsMaterialReportTempList" parameterType="java.util.Map" resultType="com.jiuyescm.bms.report.month.entity.BmsMaterialReportEntity">
+		select a.warehouse_code as warehouseCode,a.customerid as customerid,
+		a.consumer_material_code as consumerMaterialCode,
+		sum(IFNULL(a.num,0)) as wmsNum,0 as bmsNum
+		from bms_material_wms_report_temp a 
+		GROUP BY warehouse_code,customerid,consumer_material_code
+	</select>
+	
+</mapper>

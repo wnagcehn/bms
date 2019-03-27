@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper" >
+    <resultMap id="bizOutstockMeterialMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="wms_id" property="wmsId" jdbcType="VARCHAR" />
+	    <result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="consumer_material_code" property="consumerMaterialCode" jdbcType="VARCHAR" />
+	    <result column="consumer_material_name" property="consumerMaterialName" jdbcType="VARCHAR" />
+	    <result column="num" property="num" jdbcType="DOUBLE" />
+	    <result column="adjust_num" property="adjustNum" jdbcType="DOUBLE" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="spec_desc" property="specDesc" jdbcType="VARCHAR" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="cost_calculate_time" property="costCalculateTime" jdbcType="TIMESTAMP" />
+	    <result column="cost_is_calculated" property="costIsCalculated" jdbcType="VARCHAR" />
+	    <result column="cost_fees_no" property="costFeesNo" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <select id="querybizOutstockMeterial" parameterType="java.util.Map" resultMap="bizOutstockMeterialMap">
+        select 
+        id, wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, 
+        consumer_material_name, IFNULL(num,0) as num, IFNULL(adjust_num,0) as adjust_num, fees_no, dbname, is_calculated, 
+        creator, create_time, last_modifier, last_modify_time, del_flag,warehouse_code,warehouse_name,IFNULL(weight,0) as weight,spec_desc, extattr1, extattr2, extattr3, extattr4, extattr5,
+        cost_calculate_time,cost_is_calculated,cost_fees_no
+        from biz_outstock_packmaterial
+        where del_flag = 0 
+		<if test="(customerId != null and customerId !='')" >
+			and customer_id = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated =concat(${isCalculated})
+		</if>
+		<if test="(beginTime != null and beginTime !='')" >
+			 and  <![CDATA[create_time >= #{beginTime}]]>
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			 and  <![CDATA[create_time <= #{endTime}]]>
+		</if>
+		LIMIT #{num}
+    </select>
+	 <select id="querybizOutstockMeterialCost" parameterType="java.util.Map" resultMap="bizOutstockMeterialMap">
+	        select 
+	        id, wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, 
+	        consumer_material_name, IFNULL(num,0) as num, IFNULL(adjust_num,0) as adjust_num, fees_no, dbname, is_calculated, 
+	        creator, create_time, last_modifier, last_modify_time, del_flag,warehouse_code,warehouse_name,IFNULL(weight,0) as weight,spec_desc, extattr1, extattr2, extattr3, extattr4,
+	         extattr5, cost_calculate_time,cost_is_calculated,cost_fees_no
+	        from biz_outstock_packmaterial
+	        where del_flag = 0 
+	      	<if test="startTime!=null">
+	      		and <![CDATA[create_time>=#{startTime}]]>
+	      	</if>
+	      	<if test="endTime!=null">
+	      		and <![CDATA[create_time<#{endTime}]]>
+	      	</if>
+			<if test="(isCalculated != null and isCalculated !='')" >
+				and  cost_is_calculated =concat(${isCalculated})
+			</if>
+			<if test="(id != null and id !='')" >
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			LIMIT #{num}
+	</select>
+  
+
+    <update id="updatebizOutstockMeterial" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+		update biz_outstock_packmaterial 
+		<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="costCalculateTime!=null">cost_calculate_time=#{costCalculateTime},</if>
+			<if test="costIsCalculated!=null">cost_is_calculated=#{costIsCalculated},</if>
+			<if test="costFeesNo!=null">cost_fees_no=#{costFeesNo},</if>
+			<if test="costRemark!=null">cost_remark=#{costRemark}</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>
