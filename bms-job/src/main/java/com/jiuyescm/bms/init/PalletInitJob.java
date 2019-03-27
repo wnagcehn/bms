@@ -90,11 +90,11 @@ public class PalletInitJob extends IJobHandler{
 		List<BizPalletInfoEntity> bizList = null;
 		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
 		try {
+			subjects = initSubjects();
 			XxlJobLogger.log("palletInitJob查询条件map:【{0}】  ",map);
 			bizList = bizPalletInfoService.querybizPallet(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
 				XxlJobLogger.log("【托数】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));			
-				subjects = initSubjects();
 				//初始化费用
 				initFees(bizList, feesList);	
 				//批量更新业务数据&批量写入费用表
@@ -102,8 +102,10 @@ public class PalletInitJob extends IJobHandler{
 			}
 			
 			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
-			sendTask();
-			
+			if(CollectionUtils.isEmpty(bizList)||bizList.size()<num){
+				sendTask();
+			}
+
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
 			return ReturnT.FAIL;
@@ -234,7 +236,7 @@ public class PalletInitJob extends IJobHandler{
 		}
 	}
 	
-	private void sendTask() throws Exception {	
+	private void sendTask() throws Exception {
 		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
 		sendTaskMap.put("isCalculated", "99");
 		sendTaskMap.put("subjectList", Arrays.asList(subjects));

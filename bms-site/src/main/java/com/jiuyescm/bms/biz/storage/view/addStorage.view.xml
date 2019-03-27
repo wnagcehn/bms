@@ -458,7 +458,9 @@ if(data.get(&quot;startTime&quot;)==&quot;&quot;||data.get(&quot;startTime&quot;
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnUpdateCalculate">
-        <ClientEvent name="onClick">var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
+        <ClientEvent name="onClick">var palletStorageDataSet=view.get(&quot;#dataSetProductPalletStorage&quot;);&#xD;
+var queryForm=view.get(&quot;#queryFormProductPalletStorage&quot;);&#xD;
+var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
 var datas = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
 if(datas.get(&quot;customerid&quot;)==&quot;&quot;||datas.get(&quot;customerid&quot;)==null)&#xD;
 {&#xD;
@@ -470,8 +472,8 @@ retryAction.set(&quot;parameter&quot;,datas);&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
 				retryAction.execute(function(result){&#xD;
-					dorado.MessageBox.alert(result);&#xD;
-					&#xD;
+					dorado.MessageBox.alert(result);		&#xD;
+					palletStorageDataSet.set(&quot;parameter&quot;, queryForm.get(&quot;entity&quot;)).flushAsync();&#xD;
 				});&#xD;
 			});</ClientEvent>
         <Property name="caption">重算</Property>

@@ -192,7 +192,7 @@
 			a.throw_weight,a.system_weight,a.product_detail,a.deliver_name,	a.month_fee_count,a.expresstype,a.receive_name,a.receive_province_id,a.receive_city_id,a.receive_district_id,a.adjust_province_id,a.adjust_city_id,a.adjust_district_id,a.create_time,a.accept_time,a.sign_time,
 			a.carrier_id,a.carrier_name,a.origin_carrier_id,a.origin_carrier_name,a.adjust_carrier_id,a.adjust_carrier_name,a.fees_no,a.temperature_type_code,
 			b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,c.head_price as headPrice,c.continued_price as continuedPrice,a.send_province_id,a.send_city_id,
-			d.b2b_flag,d.resize_num,d.total_varieties,d.boxnum,d.adjust_boxnum,c.amount as dsAmount,a.is_calculated as dsIsCalculated,a.remark as dsRemark,e.cost as orderAmount,d.is_calculated as orderIsCalculated,d.remark as orderRemark,ifnull(f.correct_weight,0) as correctWeight,
+			d.b2b_flag,d.resize_num,d.total_varieties,d.boxnum,d.adjust_boxnum,c.amount as dsAmount,c.is_calculated as dsIsCalculated,c.calcu_msg as dsRemark,e.cost as orderAmount,d.is_calculated as orderIsCalculated,d.remark as orderRemark,ifnull(f.correct_weight,0) as correctWeight,
 			a.origin_weight as originWeight, (c.amount-c.derate_amount) as discountAmount,
 			a.order_status as orderStatus, a.correct_throw_weight as correctThrowWeight, a.adjust_service_type_code as adjustServiceTypeCode,a.service_type_code as serviceTypeCode,
 			(e.cost-IFNULL(e.derate_amount,0)) as operateAmount,a.shop_name,a.carrier_weight
@@ -203,7 +203,45 @@
 		LEFT JOIN fees_receive_storage e on e.fees_no=d.fees_no and e.del_flag='0' and e.subject_code='wh_b2c_work'
 		LEFT JOIN bms_marking_products f on a.waybill_no=f.waybill_no
         where a.del_flag = '0'
-		<include refid="baseSelectColumns" />
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(merchantId != null and merchantId !='')" >
+				and a.customerid = #{merchantId}
+		</if>
+		<if test="(logistics != null and logistics !='')" >
+				and a.carrier_id = #{logistics}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(accountState != null and accountState !='')" >
+				and c.is_calculated =#{accountState}
+		</if>
+		<if test="(wareHousename != null and wareHousename !='')" >
+				and a.warehouse_code = #{wareHousename}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and a.create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[a.create_time <= #{endTime} ]]>
+		</if>
+		<if test="(zexpressnum != null and zexpressnum !='')" >
+				and a.zexpressnum = #{zexpressnum}
+		</if>
+		<if test="(bigstatus != null and bigstatus !='')" >
+				and a.bigstatus = #{bigstatus}
+		</if>
+		<if test="(smallstatus != null and smallstatus !='')" >
+				and a.smallstatus = #{smallstatus}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
 		<if test="(dutyType != null and dutyType !='')" >
 				and b.duty_type = #{dutyType}
 		</if>
@@ -330,12 +368,6 @@
 		<include refid="baseSelectColumns" />
 		LIMIT 1
     </select>
-	
-	<update id="retryForCalcu" parameterType="java.util.Map">
-        update biz_dispatch_bill a set a.is_calculated = 99 where a.del_flag = '0'
-        <include refid="baseSelectColumns" />
-    </update>
-    
     
     <insert id="insertBizList" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
         insert into biz_dispatch_bill(outstock_no, external_no, waybill_no, fees_no, waybill_num, waybill_list, warehouse_code, warehouse_name, customerid, customer_name, carrier_id, carrier_name, deliverid, deliver_name, total_weight, adjust_weight, total_volume, service_type_code, dispatch_type_code, collect_money, month_fee_count, send_name, send_province_id, send_city_id, send_district_id, send_street, send_detail_address, receive_name, receive_province_id, receive_city_id, receive_district_id, receive_street, receive_detail_address, account_state, sign_time, accept_time, receive_time, is_calculated, creator, create_time, last_modifier, last_modify_time, write_time, calculate_time, del_flag, temperature_type_code, temperature_type_name, remark, zexpressnum, bigstatus, smallstatus, system_weight, totalqty, product_detail, expresstype, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_deliver_id, adjust_deliver_name, adjust_carrier_id, adjust_carrier_name)
@@ -522,58 +554,56 @@
     </select>
     
     <!-- 新重算 -->
-    <update id="retryCalcu" parameterType="java.util.Map">
-    	update fees_receive_dispatch set is_calculated='99'
-		WHERE fees_no in (
-			select a.fees_no from biz_dispatch_bill a
-			LEFT JOIN fees_receive_dispatch s on a.fees_no=s.fees_no and s.del_flag='0'
-			WHERE 1=1
-			and a.del_flag='0'
-			<if test="(outstockNo != null and outstockNo !='')" >
-				and a.outstock_no = #{outstockNo}
-			</if>
-			<if test="(merchantId != null and merchantId !='')" >
-					and a.customerid = #{merchantId}
-			</if>
-			<if test="(logistics != null and logistics !='')" >
-					and a.carrier_id = #{logistics}
-			</if>
-			<if test="(waybillNo != null and waybillNo !='')" >
-					and a.waybill_no = #{waybillNo}
-			</if>
-			<if test="(accountState != null and accountState !='')" >
-					and c.is_calculated =#{accountState}
-			</if>
-			<if test="(wareHousename != null and wareHousename !='')" >
-					and a.warehouse_code = #{wareHousename}
-			</if>
-			<if test="(feesNo != null and feesNo !='')" >
-					and a.fees_no = #{feesNo}
-			</if>
-			<if test="(createTime != null and createTime !='')" >
-				    and a.create_time>= #{createTime}
-			</if>
-			<if test="(endTime != null and endTime !='')" >
-				    and <![CDATA[a.create_time <= #{endTime} ]]>
-			</if>
-			<if test="(zexpressnum != null and zexpressnum !='')" >
-					and a.zexpressnum = #{zexpressnum}
-			</if>
-			<if test="(bigstatus != null and bigstatus !='')" >
-					and a.bigstatus = #{bigstatus}
-			</if>
-			<if test="(smallstatus != null and smallstatus !='')" >
-					and a.smallstatus = #{smallstatus}
-			</if>
-			<if test="(extattr1 != null and extattr1 !='')" >
-					and a.extattr1 = #{extattr1}
-			</if>
-			<if test="(dutyType != null and dutyType !='')" >
-					and b.duty_type = #{dutyType}
-			</if>
-			<if test="(orderStatus != null and orderStatus !='')" >
-					and a.order_status = #{orderStatus}
-			</if>
-		)
+    <update id="retryForCalcu" parameterType="java.util.Map">
+    	UPDATE fees_receive_dispatch s
+		LEFT JOIN biz_dispatch_bill a on s.fees_no=a.fees_no and a.del_flag='0'
+		LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
+		SET s.is_calculated='99'
+		WHERE 1=1 and s.del_flag='0';
+		<if test="(outstockNo != null and outstockNo !='')" >
+			and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(merchantId != null and merchantId !='')" >
+			and a.customerid = #{merchantId}
+		</if>
+		<if test="(logistics != null and logistics !='')" >
+			and a.carrier_id = #{logistics}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+			and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(accountState != null and accountState !='')" >
+			and s.is_calculated =#{accountState}
+		</if>
+		<if test="(wareHousename != null and wareHousename !='')" >
+			and a.warehouse_code = #{wareHousename}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+			and a.fees_no = #{feesNo}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			and a.create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and <![CDATA[a.create_time <= #{endTime} ]]>
+		</if>
+		<if test="(zexpressnum != null and zexpressnum !='')" >
+			and a.zexpressnum = #{zexpressnum}
+		</if>
+		<if test="(bigstatus != null and bigstatus !='')" >
+			and a.bigstatus = #{bigstatus}
+		</if>
+		<if test="(smallstatus != null and smallstatus !='')" >
+			and a.smallstatus = #{smallstatus}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+			and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(dutyType != null and dutyType !='')" >
+			and b.duty_type = #{dutyType}
+		</if>
+		<if test="(orderStatus != null and orderStatus !='')" >
+			and a.order_status = #{orderStatus}
+		</if>
 	</update>
 </mapper>
