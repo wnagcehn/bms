@@ -254,7 +254,5 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		return queryVo;
 
 	}
-
-	
 	
 }

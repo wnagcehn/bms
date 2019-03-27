@@ -77,16 +77,16 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 				processCalcuJob(taskVo);
 			}
 			else{
-				logger.warn("taskId={} msg=未查询到任务",taskId);
+				logger.warn("未查询到任务 taskId={}",taskId);
 			}
 		}catch(Exception ex){
-			logger.warn("taskId={} msg=未查询到任务 ex={}",taskId,ex.getMessage());
+			logger.warn("查询计算任务异常 taskId={}",taskId,ex.getMessage());
 		}
 		finally{
 			try {
 				message.acknowledge();
 			} catch (JMSException e) {
-				logger.info("taskId={} msg=消息应答失败",taskId);
+				logger.info("消息应答失败 taskId={}",taskId);
 			}
 		}
 		
@@ -356,6 +356,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		cond.put("isCalculated", "99");
 		return cond;
 	}
+	
 	
 	//主流程控制
 	/*protected abstract void calcu(BmsCalcuTaskVo vo, Map<String, Object> errorMap,Map<String, Object> cond);

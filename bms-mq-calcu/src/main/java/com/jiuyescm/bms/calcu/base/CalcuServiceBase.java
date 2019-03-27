@@ -36,13 +36,14 @@ public abstract class CalcuServiceBase<T> implements MessageListener,ICalcuServi
 	
 	private Logger logger = LoggerFactory.getLogger(CalcuServiceBase.class);
 	
+	
 	@Override
 	public void onMessage(Message message) {
 		
 		String taskId = null;
 		try {
 			taskId = ((TextMessage)message).getText();
-			logger.info("正在处理计算任务  taskId={}",taskId);
+			logger.info("taskId={} subject={} descrip=正在处理计算任务  ");
 		} catch (JMSException e1) {
 			logger.info("取出消息失败");
 			return;

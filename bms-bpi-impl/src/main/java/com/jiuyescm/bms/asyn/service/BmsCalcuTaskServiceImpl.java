@@ -25,7 +25,12 @@ import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.common.enumtype.MQSubjectEnum;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.MD5Util;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.framework.lock.Lock;
+import com.jiuyescm.framework.lock.LockCallback;
+import com.jiuyescm.framework.lock.LockCantObtainException;
+import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCalcuTaskService")
@@ -36,6 +41,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	@Autowired IBmsAsynCalcuTaskRepository bmsAsynCalcuTaskRepositoryimpl;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private JmsTemplate jmsQueueTemplate;
+	@Autowired private Lock lock;
 	
 	
 	@Override
@@ -67,15 +73,56 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		String customerId = vo.getCustomerId();
 		String subjectCode = vo.getSubjectCode();
 		String creMonth = vo.getCreMonth().toString();
-		final Map<String, Object> map = new HashMap<String, Object>();
-		map.put("customerId", customerId);
-		map.put("subjectCode", subjectCode);
-		map.put("creMonth", creMonth);
-		String taskId = "CT"+snowflakeSequenceService.nextStringId();//任务ID
-		vo.setTaskId(taskId);
-		vo.setCreTime(JAppContext.currentTimestamp());
-		vo.setTaskStatus(0);
-		saveTask(vo);
+		String lockString = MD5Util.getMd5("BMS_CALCU_MQ"+customerId+subjectCode+creMonth);
+		final Map<String, Object> handMap = new HashMap<>();
+		handMap.put("success", "fail");
+		handMap.put("remark", "");
+		
+		try{
+			String taskId = "CT"+snowflakeSequenceService.nextStringId();//任务ID
+			vo.setTaskId(taskId);
+			vo.setCreTime(JAppContext.currentTimestamp());
+			vo.setTaskStatus(0);
+			
+			lock.lock(lockString, 5, new LockCallback<Map<String, Object>>() {
+				@Override
+				public Map<String, Object> handleObtainLock() {
+					sendMq(vo);
+					handMap.put("success", "success");
+					return handMap;
+				}
+
+				@Override
+				public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
+					handMap.put("success", "fail");
+					handMap.put("remark", "已存在计费请求,丢弃");
+					vo.setTaskStatus(0);
+					vo.setRemark("已存在计费请求,丢弃");
+					saveTask(vo);
+					return handMap;
+				}
+
+				@Override
+				public Map<String, Object> handleException(LockInsideExecutedException e) throws LockInsideExecutedException {
+					handMap.put("success", "fail");
+					handMap.put("remark", "请求异常,丢弃");
+					vo.setTaskStatus(0);
+					vo.setRemark("请求异常,丢弃");
+					saveTask(vo);
+					return handMap;
+				}
+			});
+		}
+		catch(Exception ex){
+			logger.error("系统异常",ex);
+			vo.setTaskStatus(0);
+			vo.setRemark("系统异常");
+		}
+		return vo;
+	}
+	
+	private void sendMq(final BmsCalcuTaskVo vo){
+		String subjectCode = vo.getSubjectCode();
 		String mqQueue = null;
 		if("wh_product_storage".equals(subjectCode) && "item".equals(vo.getFeesType())){
 			mqQueue = MQSubjectEnum.getDesc(subjectCode+"_item");
@@ -89,7 +136,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 				return session.createTextMessage(vo.getTaskId());
 			}
 		});
-		return vo;
+		saveTask(vo);
 	}
 	
 	@Override
@@ -133,6 +180,9 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
 		try{
 			BmsAsynCalcuTaskEntity calcuTask = bmsAsynCalcuTaskRepositoryimpl.queryOne(taskId);
+			if(calcuTask == null){
+				return null;
+			}
 			PropertyUtils.copyProperties(vo, calcuTask);
 			return vo;
 		}catch(Exception e){
@@ -146,6 +196,9 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		// TODO Auto-generated method stub
 		List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.queryByMap(condition);
 		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if(list == null){
+			return null;
+		}
     	for(BmsAsynCalcuTaskEntity entity : list) {
     		BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
     		try {
