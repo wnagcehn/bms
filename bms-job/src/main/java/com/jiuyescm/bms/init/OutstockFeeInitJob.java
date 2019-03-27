@@ -133,30 +133,30 @@ public class OutstockFeeInitJob extends IJobHandler{
 	
 	private void initFees(List<BizOutstockMasterEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
 
-		for (String SubjectId : subjects) {
-			for(BizOutstockMasterEntity entity:bizList){
+		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+		for(BizOutstockMasterEntity entity:bizList){
+			entity.setFeesNo(feesNo);
+			for (String SubjectId : subjects) {
+				FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
+				storageFeeEntity.setFeesNo(feesNo);
 				//如果是【B2B订单操作费】 或【出库装车费】,并且是B2B出库单   ( B2bFlag 0-B2C  1-B2B)
 				if(("wh_b2b_work".equals(SubjectId) ||"wh_b2b_handwork".equals(SubjectId)) 
 						&& "1".equals(entity.getB2bFlag())){
-					FeesReceiveStorageEntity b2bFee=initFeesEntity(SubjectId, entity);
-					feesList.add(b2bFee);
+					initFeesEntity(SubjectId, entity,storageFeeEntity);
+					feesList.add(storageFeeEntity);
 				}
 				else if("wh_b2c_work".equals(SubjectId) && "0".equals(entity.getB2bFlag())){
-					FeesReceiveStorageEntity b2cFee=initFeesEntity(SubjectId, entity);
-					feesList.add(b2cFee);
+					initFeesEntity(SubjectId, entity,storageFeeEntity);
+					feesList.add(storageFeeEntity);
 				}
 			}
 		}
 	}
 	
-	private FeesReceiveStorageEntity initFeesEntity(String subjectId,BizOutstockMasterEntity outstock) {
+	private FeesReceiveStorageEntity initFeesEntity(String subjectId,BizOutstockMasterEntity outstock,FeesReceiveStorageEntity storageFeeEntity) {
 		outstock.setRemark("");
-		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
-		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
-		outstock.setFeesNo(feesNo);
 		outstock.setIsCalculated("1");
 		outstock.setCalculateTime(JAppContext.currentTimestamp());
-		storageFeeEntity.setFeesNo(feesNo);
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(outstock.getCreateTime());
 		storageFeeEntity.setCustomerId(outstock.getCustomerid());		//商家ID
