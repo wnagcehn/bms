@@ -17,6 +17,7 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.common.JobParameterHandler;
@@ -50,9 +51,11 @@ public class PalletInitJob extends IJobHandler{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private ISystemCodeService systemCodeService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	
 	List<String> cusNames = null;
 	Map<String, SystemCodeEntity> sysMap = null;
+	String[] subjects = null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -91,6 +94,7 @@ public class PalletInitJob extends IJobHandler{
 			bizList = bizPalletInfoService.querybizPallet(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
 				XxlJobLogger.log("【托数】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));			
+				subjects = initSubjects();
 				//初始化费用
 				initFees(bizList, feesList);	
 				//批量更新业务数据&批量写入费用表
@@ -212,14 +216,28 @@ public class PalletInitJob extends IJobHandler{
 		}	
 	}
 	
-	private static final List<String> subjectList= Arrays.asList("wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm");
-	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-	static{
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
+	private String[] initSubjects() {
+		//这里的科目应该在科目组中配置,动态查询
+		//wh_disposal(处置费)
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_pallet");
+		if(map.size() == 0){
+			String[] strs = {"wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm"};
+			return strs;
+		}else{
+			List<String> strs = new ArrayList<String>();
+			for(String value:map.keySet()){
+				strs.add(value);
+			}
+			strs.add("outstock_pallet_vm");
+			String[] strArray = strs.toArray(new String[strs.size()]);	
+			return strArray;
+		}
 	}
 	
-	private void sendTask() throws Exception {		
+	private void sendTask() throws Exception {	
+		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", Arrays.asList(subjects));
 		//对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
 		for (BmsCalcuTaskVo vo : list) {

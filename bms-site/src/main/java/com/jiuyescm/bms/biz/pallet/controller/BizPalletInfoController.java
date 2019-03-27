@@ -52,6 +52,7 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
@@ -122,15 +123,29 @@ public class BizPalletInfoController {
 	private SequenceService sequenceService;
 	@Autowired 
 	private IBmsCalcuTaskService bmsCalcuTaskService;
+	@Autowired 
+	private IBmsGroupSubjectService bmsGroupSubjectService;
 
 	String sessionId=JAppContext.currentUserID()+"_import_PalletStorage";
 	final String nameSpace="com.jiuyescm.bms.biz.pallet.controller.BizPalletInfoController";
+	String[] subjects = null;
 	
-	private static final List<String> subjectList= Arrays.asList("wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm");
-	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-	static{
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
+	private String[] initSubjects() {
+		//这里的科目应该在科目组中配置,动态查询
+		//wh_disposal(处置费)
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_pallet");
+		if(map.size() == 0){
+			String[] strs = {"wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm"};
+			return strs;
+		}else{
+			List<String> strs = new ArrayList<String>();
+			for(String value:map.keySet()){
+				strs.add(value);
+			}
+			strs.add("outstock_pallet_vm");
+			String[] strArray = strs.toArray(new String[strs.size()]);	
+			return strArray;
+		}
 	}
 
 	/**
@@ -577,6 +592,7 @@ public class BizPalletInfoController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
+		subjects = initSubjects();
 		List<BizPalletInfoEntity> list = bizPalletInfoService.query(param);
 		if (null == list || list.size() == 0) {
 			return "没有数据重算";
@@ -585,6 +601,9 @@ public class BizPalletInfoController {
 		if(bizPalletInfoService.retryCalculate(list) <= 0){
 			return "重算异常";
 		}else {
+			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+			sendTaskMap.put("isCalculated", "99");
+			sendTaskMap.put("subjectList", Arrays.asList(subjects));
 			//对这些费用按照商家、科目、时间排序
 			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
 			for (BmsCalcuTaskVo vo : calList) {
