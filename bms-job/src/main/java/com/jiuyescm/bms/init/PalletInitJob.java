@@ -17,6 +17,7 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.common.JobParameterHandler;
@@ -50,9 +51,11 @@ public class PalletInitJob extends IJobHandler{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private ISystemCodeService systemCodeService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	
 	List<String> cusNames = null;
 	Map<String, SystemCodeEntity> sysMap = null;
+	String[] subjects = null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -91,6 +94,7 @@ public class PalletInitJob extends IJobHandler{
 			bizList = bizPalletInfoService.querybizPallet(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
 				XxlJobLogger.log("【托数】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));			
+				subjects = initSubjects();
 				//初始化费用
 				initFees(bizList, feesList);	
 				//批量更新业务数据&批量写入费用表
@@ -98,13 +102,8 @@ public class PalletInitJob extends IJobHandler{
 			}
 			
 			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
-			if(CollectionUtils.isEmpty(bizList)||bizList.size()<num){
-				try {
-					sendTask(feesList);
-				} catch (Exception e) {
-					XxlJobLogger.log("mq发送失败{0}", e);
-				}
-			}
+			sendTask();
+			
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
 			return ReturnT.FAIL;
@@ -142,9 +141,10 @@ public class PalletInitJob extends IJobHandler{
 			FeesReceiveStorageEntity feesEntity = new FeesReceiveStorageEntity();
 			String subjectId = "";
 			String feesNo = "STO"+snowflakeSequenceService.nextStringId();
+			entity.setFeesNo(feesNo);
 			
 			//更改业务数据状态
-			entity.setIsCalculated("99");
+			entity.setIsCalculated("1");
 			
 			feesEntity.setCreator("system");
 			feesEntity.setCreateTime(entity.getCreateTime());
@@ -165,7 +165,7 @@ public class PalletInitJob extends IJobHandler{
 			}else if ("outstock".equals(entity.getBizType())) {
 				subjectId = "outstock_pallet_vm";
 			}
-			feesEntity.setSubjectCode(subjectId);			
+			feesEntity.setSubjectCode(subjectId);
 			feesEntity.setOtherSubjectCode(subjectId);
 			//如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
 			//如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
@@ -216,23 +216,40 @@ public class PalletInitJob extends IJobHandler{
 		}	
 	}
 	
-	private static final List<String> subjectList= Arrays.asList("wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm");
-	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-	static{
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
+	private String[] initSubjects() {
+		//这里的科目应该在科目组中配置,动态查询
+		//wh_disposal(处置费)
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_pallet");
+		if(map.size() == 0){
+			String[] strs = {"wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm"};
+			return strs;
+		}else{
+			List<String> strs = new ArrayList<String>();
+			for(String value:map.keySet()){
+				strs.add(value);
+			}
+			strs.add("outstock_pallet_vm");
+			String[] strArray = strs.toArray(new String[strs.size()]);	
+			return strArray;
+		}
 	}
 	
-	private void sendTask(List<FeesReceiveStorageEntity> feesList) throws Exception {		
+	private void sendTask() throws Exception {	
+		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", Arrays.asList(subjects));
 		//对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
-			vo.setTaskId(taskId);
 			vo.setCrePerson("系统");
 			vo.setCrePersonId("system");
-			vo.setCreTime(JAppContext.currentTimestamp());
-			bmsCalcuTaskService.sendTask(vo);
+			vo.setSubjectName(sysMap.get(vo.getSubjectCode()).getCodeName());
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+			} catch (Exception e) {
+				XxlJobLogger.log("mq发送失败{0}", e);
+			}	
 		}
 	}
 	

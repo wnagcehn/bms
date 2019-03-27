@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.asyn.entity;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
 /**
@@ -17,8 +18,12 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	private String taskId;
 	// 商家id
 	private String customerId;
+	// 商家名称
+	private String customerName;
 	// 费用科目
 	private String subjectCode;
+	// 科目名称
+	private String subjectName;
 	// 业务年月 201901
 	private Integer creMonth;
 	// 任务状态 0-等待 10-处理中 20-成功 30-异常 40-丢弃 50-作废
@@ -55,6 +60,8 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	private Timestamp finishTime;
 	// 备注
 	private String remark;
+	
+	private String feesType;
 
 	public BmsAsynCalcuTaskEntity() {
 
@@ -410,6 +417,30 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
      */
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	public String getFeesType() {
+		return feesType;
+	}
+
+	public void setFeesType(String feesType) {
+		this.feesType = feesType;
 	}
     
 }

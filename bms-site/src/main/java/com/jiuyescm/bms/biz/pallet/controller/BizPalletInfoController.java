@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,10 +46,13 @@ import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
@@ -117,9 +121,32 @@ public class BizPalletInfoController {
 	private StorageClient storageClient;
 	@Resource 
 	private SequenceService sequenceService;
+	@Autowired 
+	private IBmsCalcuTaskService bmsCalcuTaskService;
+	@Autowired 
+	private IBmsGroupSubjectService bmsGroupSubjectService;
 
 	String sessionId=JAppContext.currentUserID()+"_import_PalletStorage";
 	final String nameSpace="com.jiuyescm.bms.biz.pallet.controller.BizPalletInfoController";
+	String[] subjects = null;
+	
+	private String[] initSubjects() {
+		//这里的科目应该在科目组中配置,动态查询
+		//wh_disposal(处置费)
+		Map<String,String> map=bmsGroupSubjectService.getSubject("job_subject_pallet");
+		if(map.size() == 0){
+			String[] strs = {"wh_disposal","wh_product_storage","wh_material_storage","outstock_pallet_vm"};
+			return strs;
+		}else{
+			List<String> strs = new ArrayList<String>();
+			for(String value:map.keySet()){
+				strs.add(value);
+			}
+			strs.add("outstock_pallet_vm");
+			String[] strArray = strs.toArray(new String[strs.size()]);	
+			return strArray;
+		}
+	}
 
 	/**
 	 * 分页查询
@@ -565,12 +592,30 @@ public class BizPalletInfoController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
+		subjects = initSubjects();
 		List<BizPalletInfoEntity> list = bizPalletInfoService.query(param);
 		if (null == list || list.size() == 0) {
 			return "没有数据重算";
 		}
-		if(bizPalletInfoService.reCalculate(list) <= 0){
+		
+		if(bizPalletInfoService.retryCalculate(list) <= 0){
 			return "重算异常";
+		}else {
+			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+			sendTaskMap.put("isCalculated", "99");
+			sendTaskMap.put("subjectList", Arrays.asList(subjects));
+			//对这些费用按照商家、科目、时间排序
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
+			for (BmsCalcuTaskVo vo : calList) {
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
+			}
 		}
 		return "操作成功! 正在重算...";
 	}

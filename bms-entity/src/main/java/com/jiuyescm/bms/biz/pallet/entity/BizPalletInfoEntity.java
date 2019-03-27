@@ -43,6 +43,8 @@ public class BizPalletInfoEntity implements IEntity {
 	private String creatorId;
 	// 创建时间
 	private Timestamp createTime;
+	
+	private Timestamp createEndTime;
 	// 修改者
 	private String lastModifier;
 	// 修改者id
@@ -308,6 +310,14 @@ public class BizPalletInfoEntity implements IEntity {
 
 	public void setDiffPalletNum(Double diffPalletNum) {
 		this.diffPalletNum = diffPalletNum;
+	}
+
+	public Timestamp getCreateEndTime() {
+		return createEndTime;
+	}
+
+	public void setCreateEndTime(Timestamp createEndTime) {
+		this.createEndTime = createEndTime;
 	}
     
 }

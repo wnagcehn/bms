@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -19,7 +21,7 @@ import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
  */
 @Repository("bizPalletInfoRepository")
 public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalletInfoRepository {
-
+	private static final Logger logger = LoggerFactory.getLogger(BizPalletInfoRepositoryImpl.class.getName());
 	
 	/**
 	 * 分页查询
@@ -88,6 +90,7 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 			return 1;
 		}
 		catch(Exception ex){
+			logger.error("重算异常:", ex);
 			return 0;
 		}
 	}
@@ -105,6 +108,7 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 			return 1;
 		}
 		catch(Exception ex){
+			logger.error("重算异常:", ex);
 			return 0;
 		}
 	}

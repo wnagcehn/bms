@@ -144,6 +144,7 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			entity.setRemark("");
 			FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
 			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+			entity.setFeesNo(feesNo);
 			storageFeeEntity.setFeesNo(feesNo);
 			storageFeeEntity.setCreator("system");
 			storageFeeEntity.setCreateTime(entity.getCreateTime());
@@ -172,12 +173,12 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			storageFeeEntity.setOrderNo(entity.getOutstockNo());
 			storageFeeEntity.setBizId(String.valueOf(entity.getId()));						//业务数据主键
 			storageFeeEntity.setWeight(entity.getWeight());					//设置重量
-			entity.setCalculateTime(JAppContext.currentTimestamp());
-			storageFeeEntity.setCalculateTime(JAppContext.currentTimestamp());
 			storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
 			storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 			storageFeeEntity.setDelFlag("0");
 			storageFeeEntity.setIsCalculated("99");
+			entity.setIsCalculated("1");
+			entity.setCalculateTime(JAppContext.currentTimestamp());
 			feesList.add(storageFeeEntity);
 		}	
 	}
@@ -205,12 +206,14 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(map);
 		
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
-			vo.setTaskId(taskId);
 			vo.setCrePerson("系统");
 			vo.setCrePersonId("system");
-			vo.setCreTime(JAppContext.currentTimestamp());
-			bmsCalcuTaskService.sendTask(vo);
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+			} catch (Exception e) {
+				// TODO: handle exception
+				XxlJobLogger.log("发送mq消息失败 ",e);
+			}
 		}
 	}
 	

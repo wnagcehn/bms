@@ -3,7 +3,6 @@ package com.jiuyescm.bms.receivable.storage.service;
 import java.util.List;
 import java.util.Map;
 
-import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 
 /**
@@ -18,4 +17,7 @@ public interface IBizProductStorageService {
     public void update(BizProductStorageEntity entity);
 
     public void updateBatch(List<BizProductStorageEntity> list);
+
+	void updateProductStorageById(
+			List<com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity> list);
 }
