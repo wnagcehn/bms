@@ -86,7 +86,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
         insert into biz_instock_record(
 			instock_no, adjust_qty, adjust_box, adjust_weight, 
 			last_modifier_id, last_modifier, last_modify_time, 
-			mod_reason, del_flag, calculate_time, remark
+			mod_reason, del_flag, is_calculated, calculate_time, remark
     	)
         values (
 
@@ -99,6 +99,7 @@ fees_no, adjust_qty, adjust_box, adjust_weight, last_modifier_id, last_modifier,
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
 			#{modReason,jdbcType=VARCHAR}, 
 			#{delFlag,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
 			#{calculateTime,jdbcType=TIMESTAMP}, 
 			#{remark,jdbcType=VARCHAR}
         )
