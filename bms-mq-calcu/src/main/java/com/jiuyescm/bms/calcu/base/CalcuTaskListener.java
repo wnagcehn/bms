@@ -145,13 +145,13 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			bmsCalcuTaskService.saveTask(taskVo);
 			return;
 		}
-		if("success".equals(succ)){
+		/*if("success".equals(succ)){
 			//请求成功 发送mq消息
 			taskVo.setTaskStatus(20);
 			taskVo.setTaskRate(100);
 			taskVo.setFinishTime(JAppContext.currentTimestamp());
 			bmsCalcuTaskService.saveTask(taskVo);
-		}
+		}*/
 		logger.info("taskId={} 计算任务处理结束 耗时【{}】ms",taskVo.getTaskId(),(System.currentTimeMillis()-start));
 		
 	}	

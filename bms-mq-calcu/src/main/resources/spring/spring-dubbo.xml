@@ -12,6 +12,7 @@
 	<dubbo:registry protocol="zookeeper" address="${dubbo.registry}" />
 	
 	<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" />
+	
 	<import resource="classpath:dubbo/DubboClient-bms.xml" />
 	<import resource="classpath:dubbo/DubboClient-contract.xml" />
 	<import resource="classpath:dubbo/DubboClient-mdm.xml" />
