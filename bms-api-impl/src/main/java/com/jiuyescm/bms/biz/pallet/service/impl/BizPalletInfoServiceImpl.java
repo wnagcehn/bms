@@ -1,14 +1,21 @@
 package com.jiuyescm.bms.biz.pallet.service.impl;
 
-import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
+import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
 
 /**
  * ..ServiceImpl
@@ -17,9 +24,13 @@ import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
  */
 @Service("bizPalletInfoService")
 public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BizPalletInfoServiceImpl.class.getName());
 
 	@Autowired
     private IBizPalletInfoRepository bizPalletInfoRepository;
+	@Autowired
+	private IFeesReceiveStorageRepository feesReceiveStorageRepository;
 	
 	/**
 	 * 分页查询
@@ -57,9 +68,20 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
 	 * @param entity
 	 * @return
 	 */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
-    public BizPalletInfoEntity update(BizPalletInfoEntity entity) {
-        return bizPalletInfoRepository.update(entity);
+    public int update(BizPalletInfoEntity entity) {
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("feesNo", entity.getFeesNo());
+    	map.put("quantity", entity.getAdjustPalletNum());
+    	try {
+    		bizPalletInfoRepository.update(entity);
+        	feesReceiveStorageRepository.updateQuantityByFeesNo(map);
+		} catch (Exception e) {
+			logger.error("更新异常!", e);
+			return 0;
+		}
+    	return 1;
     }
 
 	/**

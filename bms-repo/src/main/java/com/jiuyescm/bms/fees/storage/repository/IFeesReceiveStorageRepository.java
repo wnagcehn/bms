@@ -251,4 +251,11 @@ public interface IFeesReceiveStorageRepository {
 	 * @return
 	 */
 	int deleteBwdFee(Map<String,Object> parameter);
+	
+	/**
+	 * 根据费用编号修改费用的数量
+	 * @param map
+	 * @return
+	 */
+	int updateQuantityByFeesNo(Map<String, Object> map);
 }
