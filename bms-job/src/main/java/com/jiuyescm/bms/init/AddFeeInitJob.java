@@ -84,11 +84,7 @@ public class AddFeeInitJob extends IJobHandler{
 			
 			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
 			if(CollectionUtils.isEmpty(bizList)||bizList.size()<num){
-				try {
-					sendTask(feesList);
-				} catch (Exception e) {
-					XxlJobLogger.log("mq发送失败{0}", e);
-				}
+				sendTask();
 			}
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
@@ -103,8 +99,10 @@ public class AddFeeInitJob extends IJobHandler{
 		for (BizAddFeeEntity entity : bizList) {
 			FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
 			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+			entity.setFeesNo(feesNo);
+			
 			//更改业务数据状态
-			entity.setIsCalculated("99");
+			entity.setIsCalculated("1");
 		
 	    	fee.setFeesNo(feesNo);
 	    	if(entity.getPrice()!=null){
@@ -159,16 +157,18 @@ public class AddFeeInitJob extends IJobHandler{
 		sendTaskMap.put("subjectList", subjectList);
 	}
 
-	private void sendTask(List<FeesReceiveStorageEntity> feesList) throws Exception {
+	private void sendTask() throws Exception {
 		//对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
 		for (BmsCalcuTaskVo vo : list) {
-			String taskId = "CAL" + snowflakeSequenceService.nextStringId();
-			vo.setTaskId(taskId);
 			vo.setCrePerson("系统");
 			vo.setCrePersonId("system");
-			vo.setCreTime(JAppContext.currentTimestamp());
-			bmsCalcuTaskService.sendTask(vo);
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+			} catch (Exception e) {
+				XxlJobLogger.log("mq发送失败{0}", e);
+			}	
 		}
 	}
 }
