@@ -164,26 +164,25 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			//总单量统计，计算单量统计
 			logger.info("taskId={} 总单量统计",taskVo.getTaskId());
 			BmsFeesQtyVo feesQtyVo = feesCountReport(taskVo.getCustomerId(),taskVo.getSubjectCode(),taskVo.getCreMonth());
-			logger.info("taskId={} 总单量统计明细",taskVo.getTaskId(),JSONObject.fromObject(feesQtyVo));
+			logger.info("taskId={} 总单量【{}】 本次计算单量【{}】",taskVo.getTaskId(),feesQtyVo.getFeesCount(),feesQtyVo.getUncalcuCount());
 			
 			taskVo.setFeesCount(feesQtyVo.getFeesCount()); 		//设置总的费用数
 			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount());//设置本次待计算的费用数
 			bmsCalcuTaskService.update(taskVo);
 			
+			Map<String, Object> errorMap = new HashMap<String, Object>();
+			errorMap.put("success", "succ");
 			//查询合同归属
 			String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
 			logger.info("taskId={} contractAttr=",taskVo.getTaskId(),contractAttr);
 			if(contractAttr == null){
-				logger.info("taskId={} 合同归属不明确",taskVo.getTaskId());
-				taskVo.setTaskRate(99);
-				taskVo.setTaskStatus(40);
-				taskVo.setRemark("合同归属不明确");
-				bmsCalcuTaskService.update(taskVo);
-				return;
+				logger.info("taskId={} 未发现商家合同归属",taskVo.getTaskId());
+				errorMap.put("success", "fail");
+				errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+				errorMap.put("msg", "未发现商家合同归属");
 			}
-			
 			//费用计算
-			Map<String, Object> errorMap = new HashMap<String, Object>();
+			
 			Map<String, Object> cond = getQueryMap(taskVo);
 			logger.info("taskId={} 数据查询条件",taskVo.getTaskId(),JSONObject.fromObject(cond));
 			if("BMS".equals(contractAttr)){
@@ -213,7 +212,6 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	}
 	
 	
-	
 	protected void generalCalcu(BmsCalcuTaskVo taskVo,String contractAttr,Map<String, Object> cond,Map<String, Object> errorMap){
 
 		List<T> list = queryBillList(cond);
@@ -222,7 +220,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			errorMap.put("success", "succ");
 			F f = initFeeEntity(t); //初始化计费参数
 			fees.add(f);
-			if(isNoExe(t, f)){
+			if(isNoExe(t, f,errorMap)){
 				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 			}
 			if("BMS".equals(contractAttr)){
@@ -410,7 +408,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	protected abstract F initFeeEntity(T t);
 	
 	//是否不计费 true-不计费  false-计费   如果不计算，需要设置费用的状态
-	protected abstract boolean isNoExe(T t,F f);
+	protected abstract boolean isNoExe(T t,F f,Map<String, Object> errorMap);
 	
 	//批量更新费用
 	protected abstract void updateBatch(List<F> ts);

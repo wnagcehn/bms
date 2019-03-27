@@ -242,8 +242,12 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 
 
 	@Override
-	protected boolean isNoExe(BmsBizInstockInfoEntity t,FeesReceiveStorageEntity f) {
-		
+	protected boolean isNoExe(BmsBizInstockInfoEntity t,FeesReceiveStorageEntity f,Map<String, Object> errorMap) {
+		if(!"succ".equals(errorMap.get("success"))){
+			f.setIsCalculated(errorMap.get("is_calculated").toString());
+			f.setCalcuMsg(errorMap.get("msg").toString());
+			return true;
+		}
 		return false;
 	}
 
