@@ -41,7 +41,18 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 
 	@Override
 	public int update(BizOutstockPackmaterialEntity entity) {
-		return repository.update(entity);
+		int result=0;
+		Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("feesNo", entity.getFeesNo());
+    	map.put("quantity", entity.getAdjustNum());
+    	try {
+    		result=repository.update(entity);
+        	feesReceiveStorageRepository.updateQuantityByFeesNo(map);
+		} catch (Exception e) {
+			logger.error("更新异常!", e);
+			return result;
+		}
+    	return result;
 	}
 
 	@Override

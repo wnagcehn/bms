@@ -115,7 +115,7 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 	@Override
 	public String queryContractAttr(String customerId) {
 		PubCustomerVo vo = customerDictService.queryById(customerId);
-		if(vo == null){
+		if(vo == null || vo.getContractAttr() == null){
 			return null;
 		}
 		String contractAttr = null;

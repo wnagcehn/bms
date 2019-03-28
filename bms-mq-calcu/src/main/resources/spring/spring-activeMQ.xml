@@ -59,9 +59,9 @@
 	但是在activemq补充了一个自定义的ACK模式:
 	INDIVIDUAL_ACKNOWLEDGE = 4：单条消息确认 -->
     
-     <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="1-2">
-    	<jms:listener destination="BMS.CALCU.INSTOCK.WORK" ref="instockWorkCalcuListener"/>
-    	
+     <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-5">
+    	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.INSTOCKWORK" ref="whInstockWorkCalcuListener"/>
+    	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.B2CHANDWORK" ref="whInstockB2BCalcuListener"/>
     </jms:listener-container>
 </beans>
  
