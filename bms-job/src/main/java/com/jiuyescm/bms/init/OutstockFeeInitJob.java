@@ -255,9 +255,10 @@ public class OutstockFeeInitJob extends IJobHandler{
 			vo.setCrePersonId("system");		
 			try {
 				bmsCalcuTaskService.sendTask(vo);
+				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
 			} catch (Exception e) {
 				// TODO: handle exception
-				XxlJobLogger.log("发送mq消息失败 ",e);
+				XxlJobLogger.log("发送mq消息失败 {0}",e);
 			}
 			
 		}
