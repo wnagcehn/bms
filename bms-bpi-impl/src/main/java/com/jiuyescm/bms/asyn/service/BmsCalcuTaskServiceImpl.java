@@ -236,6 +236,4 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		return voList;
 	}
 
-
-
 }

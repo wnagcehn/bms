@@ -9,10 +9,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +20,6 @@ import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
-import com.jiuyescm.bms.general.service.IPriceContractInfoService;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
-import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -47,8 +39,8 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired IBmsCalcuService bmsCalcuService;
 	@Autowired private Lock lock;
-	@Autowired private IPriceContractItemRepository priceContractItemRepository;
-	@Autowired private IPriceContractInfoService jobPriceContractInfoService;
+	
+	
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
@@ -79,7 +71,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			if(taskVo != null){
 				subjectCode = taskVo.getSubjectCode();
 				subjectName = taskVo.getSubjectName();
-				logger.info("taskId={} 任务消息明细：{}",taskId,JSONObject.fromObject(taskVo));
+				logger.info("taskId={} customerName={} subjectName={} creMonth={}",taskId,taskVo.getCustomerName(),subjectName,taskVo.getCreMonth());
 				processCalcuJob(taskVo);
 			}
 			else{
@@ -145,15 +137,14 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			bmsCalcuTaskService.saveTask(taskVo);
 			return;
 		}
-		/*if("success".equals(succ)){
+		if("success".equals(succ)){
 			//请求成功 发送mq消息
 			taskVo.setTaskStatus(20);
 			taskVo.setTaskRate(100);
 			taskVo.setFinishTime(JAppContext.currentTimestamp());
 			bmsCalcuTaskService.saveTask(taskVo);
-		}*/
+		}
 		logger.info("taskId={} 计算任务处理结束 耗时【{}】ms",taskVo.getTaskId(),(System.currentTimeMillis()-start));
-		
 	}	
 	
 	protected void calcuJob(BmsCalcuTaskVo taskVo){
@@ -170,51 +161,69 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount());//设置本次待计算的费用数
 			bmsCalcuTaskService.update(taskVo);
 			
-			Map<String, Object> errorMap = new HashMap<String, Object>();
-			errorMap.put("success", "succ");
 			//查询合同归属
 			String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
 			logger.info("taskId={} contractAttr=",taskVo.getTaskId(),contractAttr);
-			if(contractAttr == null){
-				logger.info("taskId={} 未发现商家合同归属",taskVo.getTaskId());
-				errorMap.put("success", "fail");
-				errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
-				errorMap.put("msg", "未发现商家合同归属");
+			if(StringUtil.isEmpty(contractAttr)){
+				taskVo.setTaskStatus(40);//合同归属不存在，任务丢弃
+				taskVo.setTaskRate(99);
+				taskVo.setRemark("合同归属不存在，任务丢弃");
+				taskCountReport(taskVo);
+				logger.info("taskId={} 合同归属不存在，任务丢弃",taskVo.getTaskId());
+				return;
 			}
-			//费用计算
 			
+			//费用计算
 			Map<String, Object> cond = getQueryMap(taskVo);
-			logger.info("taskId={} 数据查询条件",taskVo.getTaskId(),JSONObject.fromObject(cond));
-			if("BMS".equals(contractAttr)){
+			logger.info("taskId={} 数据查询条件{}",taskVo.getTaskId(),cond);
+			Map<String, Object> bmsMap = new HashMap<String, Object>();
+			/*if("BMS".equals(contractAttr)){
 				//查询bms 合同（ContractInfo），签约服务(ContractInfoItem)，报价模板(QuoModelInfo)等
 				//success; is_calculated; msg
-				getBmsContract(taskVo,errorMap); 
-			}
-			generalCalcu(taskVo, contractAttr,cond,errorMap);
-			
-			//统计计算状态
-			feesQtyVo = feesCountReport(taskVo.getCustomerId(),taskVo.getSubjectCode(),taskVo.getCreMonth());
-			taskVo.setFinishTime(JAppContext.currentTimestamp());
-			taskVo.setFeesCount(feesQtyVo.getFeesCount());
-			taskVo.setBeginCount(feesQtyVo.getBeginCount());
-			taskVo.setFinishCount(feesQtyVo.getFinishCount());
-			taskVo.setSysErrorCount(feesQtyVo.getSysErrorCount());
-			taskVo.setContractMissCount(feesQtyVo.getContractMissCount());
-			taskVo.setQuoteMissCount(feesQtyVo.getQuoteMissCount());
-			taskVo.setNoExeCount(feesQtyVo.getNoExeCount());
-			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount());
-			bmsCalcuTaskService.update(taskVo);
-			
+				bmsMap.put("success", "succ");		//校验是否通过
+				bmsMap.put("ContractNo", ""); 		//合同编号
+				bmsMap.put("QuoModelNo", "");		//报价模板编号
+				bmsMap.put("msg", "");				//描述信息
+				getBmsContract(taskVo,bmsMap); 
+			}*/
+			generalCalcu(taskVo, contractAttr,cond,bmsMap);
+			taskCountReport(taskVo);
 		} catch (Exception e1) {
 			logger.error("taskId={} 计算任务执行异常",taskVo.getTaskId(),e1);
 			return;
 		}
 	}
 	
+	protected void taskCountReport(BmsCalcuTaskVo taskVo){
+		//统计计算状态
+		BmsFeesQtyVo feesQtyVo = feesCountReport(taskVo.getCustomerId(),taskVo.getSubjectCode(),taskVo.getCreMonth());
+		taskVo.setFinishTime(JAppContext.currentTimestamp());
+		taskVo.setFeesCount(feesQtyVo.getFeesCount());
+		taskVo.setBeginCount(feesQtyVo.getBeginCount());
+		taskVo.setFinishCount(feesQtyVo.getFinishCount());
+		taskVo.setSysErrorCount(feesQtyVo.getSysErrorCount());
+		taskVo.setContractMissCount(feesQtyVo.getContractMissCount());
+		taskVo.setQuoteMissCount(feesQtyVo.getQuoteMissCount());
+		taskVo.setNoExeCount(feesQtyVo.getNoExeCount());
+		taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount());
+		taskVo.setTaskRate(100);
+		try{
+			bmsCalcuTaskService.update(taskVo);
+		}catch(Exception ex){
+			logger.error("计算任务更新异常",ex);
+		}
+		
+	}
 	
-	protected void generalCalcu(BmsCalcuTaskVo taskVo,String contractAttr,Map<String, Object> cond,Map<String, Object> errorMap){
+	
+	protected void generalCalcu(BmsCalcuTaskVo taskVo,String contractAttr,Map<String, Object> cond,Map<String, Object> bmsMap){
 
+		Map<String, Object> errorMap = new HashMap<String, Object>();
 		List<T> list = queryBillList(cond);
+		if(list == null || list.size()==0){
+			return;
+		}
+		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),list.size());
 		List<F> fees = new ArrayList<>();
 		for (T t : list) {
 			errorMap.put("success", "succ");
@@ -224,15 +233,19 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 			}
 			if("BMS".equals(contractAttr)){
-				calcuForBms(t,f, errorMap);
+				calcuForBms(taskVo,t,f);
 			}
 			else {
 				calcuForContract(t, f, taskVo, errorMap);
 			}
 		}
-		
 		updateBatch(fees);
-		
+		taskVo.setCalcuCount(taskVo.getCalcuCount()+list.size());
+		try{
+			bmsCalcuTaskService.update(taskVo);
+		}catch(Exception ex){
+			logger.info("计算任务更新异常",ex);
+		}
 		if(list!=null && list.size() == 1000){
 			generalCalcu(taskVo, contractAttr, cond,errorMap);
 		}
@@ -244,7 +257,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	 * @param vo
 	 * @param errorMap
 	 */
-	protected void getBmsContract(BmsCalcuTaskVo vo,Map<String, Object> errorMap){
+	/*protected void getBmsContract(BmsCalcuTaskVo vo,Map<String, Object> bmsMap){
 		
 		Map<String, Object> cond = new HashMap<>();
 		cond.put("customerid", vo.getCustomerId());
@@ -252,12 +265,12 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		PriceContractInfoEntity contractEntity = jobPriceContractInfoService.queryContractByCustomer(cond);
 		if(contractEntity==null){
 			logger.info("taskId={} bms合同缺失",vo.getTaskId());
-			errorMap.put("success", "fail");
-			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
-			errorMap.put("msg", "bms合同缺失");
+			bmsMap.put("success", "fail");
+			bmsMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
+			bmsMap.put("msg", "bms合同缺失");
 			return;
 	    }
-		errorMap.put("ContractInfo", contractEntity);
+		bmsMap.put("Contract", contractEntity.getContractCode());
 		logger.info("taskId={} bms合同编号：{}",vo.getTaskId(),contractEntity.getContractCode());
 		
 		Map<String,Object> contractItems_map=new HashMap<String,Object>();
@@ -266,14 +279,14 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
 			logger.info("taskId={} bms合同未签约服务",vo.getTaskId());
-			errorMap.put("success", "fail");
-			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
-			errorMap.put("msg", "bms合同未签约服务");
+			bmsMap.put("success", "fail");
+			bmsMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
+			bmsMap.put("msg", "bms合同未签约服务");
 			return;
 		}
-		errorMap.put("ContractInfoItem", contractItems.get(0));
-		queryQuoModel(vo,errorMap);
-	}
+		bmsMap.put("ContractInfoItem", contractItems.get(0).getTemplateId());
+		queryQuoModel(vo,bmsMap);
+	}*/
 	
 	protected void calcuForContract(T t, F f, BmsCalcuTaskVo vo, Map<String, Object> errorMap){
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(vo,t);
@@ -374,6 +387,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		cond.put("endTime", endTime);
 		cond.put("num", 1000);
 		cond.put("isCalculated", "99");
+		cond.put("subjectCode", vo.getSubjectCode());
 		return cond;
 	}
 	
@@ -384,7 +398,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	protected abstract List<T> queryBillList(Map<String,Object> map);
 	
 	//bms费用计算
-	protected abstract void calcuForBms(T t,F f,Map<String, Object> queryCond);
+	protected abstract void calcuForBms(BmsCalcuTaskVo vo,T t,F f);
 	
 	/**
 	 * 合同在线费用计算

@@ -22,7 +22,7 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifier, last_modify_time, del_flag, linkman, tel, mobile, address, write_time
+        id, mk_id, customer_id, customer_name, short_name, creator, create_time, last_modifier, last_modify_time, del_flag, linkman, tel, mobile, address, write_time,contract_attr
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
