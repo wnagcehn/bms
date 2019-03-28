@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.BizDispatchCarrierChangeMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="customerid" property="customerid" jdbcType="VARCHAR" />
+		   	<result column="old_carrier_id" property="oldCarrierId" jdbcType="VARCHAR" />
+		   	<result column="new_carrier_id" property="newCarrierId" jdbcType="VARCHAR" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="update_reason_type_code" property="updateReasonTypeCode" jdbcType="VARCHAR" />
+		   	<result column="update_reason_type" property="updateReasonType" jdbcType="VARCHAR" />
+		   	<result column="update_reason_detail_code" property="updateReasonDetailCode" jdbcType="VARCHAR" />
+		   	<result column="update_reason_detail" property="updateReasonDetail" jdbcType="VARCHAR" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="duty_type" property="dutyType" jdbcType="VARCHAR" />
+		   	<result column="old_update_reason" property="oldUpdateReason" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, warehouse_code, customerid, old_carrier_id, new_carrier_id, waybill_no, update_reason_type_code, update_reason_type, update_reason_detail_code, update_reason_detail, remark, write_time, duty_type, old_update_reason
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+warehouse_code, customerid, old_carrier_id, new_carrier_id, waybill_no, update_reason_type_code, update_reason_type, update_reason_detail_code, update_reason_detail, remark, write_time, duty_type, old_update_reason
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_dispatch_carrier_change
+        where id = #{id}
+    </select>
+    
+	<!-- 根据运单号查询 -->
+	<select id="findByWaybillNo" parameterType="java.lang.String"
+		resultType="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity">
+        select
+        id, warehouse_code as warehouseCode, customerid, old_carrier_id as oldCarrierId,
+        new_carrier_id as newCarrierId, waybill_no as waybillNo, update_reason_type_code as updateReasonTypeCode, 
+        update_reason_type as updateReasonType, update_reason_detail_code as updateReasonDetailCode, 
+        update_reason_detail as updateReasonDetail, remark, write_time as writeTime, duty_type as dutyType,
+        old_update_reason as oldUpdateReason
+        from biz_dispatch_carrier_change
+        where waybill_no = #{waybillNo}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_dispatch_carrier_change
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" customerid != null and customerid !='' ">
+				and customerid = #{customerid}
+			</if>
+        	<if test=" oldCarrierId != null and oldCarrierId !='' ">
+				and old_carrier_id = #{oldCarrierId}
+			</if>
+        	<if test=" newCarrierId != null and newCarrierId !='' ">
+				and new_carrier_id = #{newCarrierId}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" updateReasonTypeCode != null and updateReasonTypeCode !='' ">
+				and update_reason_type_code = #{updateReasonTypeCode}
+			</if>
+        	<if test=" updateReasonType != null and updateReasonType !='' ">
+				and update_reason_type = #{updateReasonType}
+			</if>
+        	<if test=" updateReasonDetailCode != null and updateReasonDetailCode !='' ">
+				and update_reason_detail_code = #{updateReasonDetailCode}
+			</if>
+        	<if test=" updateReasonDetail != null and updateReasonDetail !='' ">
+				and update_reason_detail = #{updateReasonDetail}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+        	<if test=" dutyType != null and dutyType !='' ">
+				and duty_type = #{dutyType}
+			</if>
+        	<if test=" oldUpdateReason != null and oldUpdateReason !='' ">
+				and old_update_reason = #{oldUpdateReason}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity">
+        insert into biz_dispatch_carrier_change(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{oldCarrierId,jdbcType=VARCHAR}, 
+			#{newCarrierId,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{updateReasonTypeCode,jdbcType=VARCHAR}, 
+			#{updateReasonType,jdbcType=VARCHAR}, 
+			#{updateReasonDetailCode,jdbcType=VARCHAR}, 
+			#{updateReasonDetail,jdbcType=VARCHAR}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{dutyType,jdbcType=VARCHAR}, 
+			#{oldUpdateReason,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity">
+        update biz_dispatch_carrier_change
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerid != null and customerid !='' ">
+				customerid = #{customerid,jdbcType=VARCHAR},
+			</if>
+			<if test=" oldCarrierId != null and oldCarrierId !='' ">
+				old_carrier_id = #{oldCarrierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" newCarrierId != null and newCarrierId !='' ">
+				new_carrier_id = #{newCarrierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" updateReasonTypeCode != null and updateReasonTypeCode !='' ">
+				update_reason_type_code = #{updateReasonTypeCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" updateReasonType != null and updateReasonType !='' ">
+				update_reason_type = #{updateReasonType,jdbcType=VARCHAR},
+			</if>
+			<if test=" updateReasonDetailCode != null and updateReasonDetailCode !='' ">
+				update_reason_detail_code = #{updateReasonDetailCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" updateReasonDetail != null and updateReasonDetail !='' ">
+				update_reason_detail = #{updateReasonDetail,jdbcType=VARCHAR},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" dutyType != null and dutyType !='' ">
+				duty_type = #{dutyType,jdbcType=VARCHAR},
+			</if>
+			<if test=" oldUpdateReason != null and oldUpdateReason !='' ">
+				old_update_reason = #{oldUpdateReason,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+	<!-- 更新状态 -->
+    <update id="updateIsCalculated" parameterType="java.lang.String">
+        update biz_dispatch_bill set is_calculated = '99' 
+        where waybill_no = #{waybillNo}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_dispatch_carrier_change 
+        where id = #{id}
+    </delete>
+</mapper>

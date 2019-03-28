@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.entity.FeesReceiveTransportMapper" >
+   
+   <resultMap id="BaseResultMap" type="com.jiuyescm.bms.general.entity.FeesReceiveTransportEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="operationtime" property="operationtime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="cost_type" property="costType" jdbcType="VARCHAR" />
+	    <result column="subject_code" property="subjectCode" jdbcType="VARCHAR" />
+	    <result column="other_subject_code" property="otherSubjectCode" jdbcType="VARCHAR" />
+	    <result column="linename" property="linename" jdbcType="VARCHAR" />
+	    <result column="orderno" property="orderno" jdbcType="VARCHAR" />
+	    <result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	    <result column="originatingcity" property="originatingcity" jdbcType="VARCHAR" />
+	    <result column="originatingdistrict" property="originatingdistrict" jdbcType="VARCHAR" />
+	    <result column="targetwarehouse" property="targetwarehouse" jdbcType="VARCHAR" />
+	    <result column="targetcity" property="targetcity" jdbcType="VARCHAR" />
+	    <result column="targetdistrict" property="targetdistrict" jdbcType="VARCHAR" />
+	    <result column="temperaturetype" property="temperaturetype" jdbcType="VARCHAR" />
+	    <result column="category" property="category" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DOUBLE" />
+	    <result column="volume" property="volume" jdbcType="DOUBLE" />
+	    <result column="kilometers" property="kilometers" jdbcType="DOUBLE" />
+	    <result column="spendtime" property="spendtime" jdbcType="DOUBLE" />
+	    <result column="carmodel" property="carmodel" jdbcType="VARCHAR" />
+	    <result column="templatenum" property="templatenum" jdbcType="VARCHAR" />
+	    <result column="islight" property="islight" jdbcType="TINYINT" />
+	    <result column="unitprice" property="unitprice" jdbcType="DOUBLE" />
+	    <result column="totleprice" property="totleprice" jdbcType="DOUBLE" />
+	    <result column="accepttime" property="accepttime" jdbcType="TIMESTAMP" />
+	    <result column="signtime" property="signtime" jdbcType="TIMESTAMP" />
+	    <result column="billno" property="billno" jdbcType="VARCHAR" />
+	    <result column="ruleno" property="ruleno" jdbcType="VARCHAR" />
+	    <result column="state" property="state" jdbcType="VARCHAR" />
+	    <result column="creperson" property="creperson" jdbcType="VARCHAR" />
+	    <result column="crepersonname" property="crepersonname" jdbcType="VARCHAR" />
+	    <result column="cretime" property="cretime" jdbcType="TIMESTAMP" />
+	    <result column="modperson" property="modperson" jdbcType="VARCHAR" />
+	    <result column="modpersonname" property="modpersonname" jdbcType="VARCHAR" />
+	    <result column="modtime" property="modtime" jdbcType="TIMESTAMP" />
+	    <result column="extarr1" property="extarr1" jdbcType="VARCHAR" />
+	    <result column="extarr2" property="extarr2" jdbcType="VARCHAR" />
+	    <result column="extarr3" property="extarr3" jdbcType="VARCHAR" />
+	    <result column="extarr4" property="extarr4" jdbcType="VARCHAR" />
+	    <result column="extarr5" property="extarr5" jdbcType="VARCHAR" />
+	    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+	    <result column="derate_amount" property="derateAmount" jdbcType="DECIMAL"/> 
+    </resultMap>
+    
+   <insert id="save" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveTransportEntity">
+        insert into fees_receive_transport(fees_no, operationtime, warehouse_code, warehouse_name, customerid, customer_name, cost_type, subject_code, other_subject_code, linename, orderno, waybill_no, originatingcity, originatingdistrict, targetwarehouse, targetcity, targetdistrict, temperaturetype, category, weight, volume, kilometers, spendtime, carmodel, templatenum, islight, unitprice, totleprice, accepttime, signtime, billno, ruleno, state, creperson, crepersonname, cretime, modperson, modpersonname, modtime, status,is_calculated, calculate_time, extarr1, extarr2, extarr3, extarr4, extarr5, quantity,derate_amount,del_flag)
+        values (
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{operationtime,jdbcType=TIMESTAMP}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{customerid,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{costType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR}, 
+			#{otherSubjectCode,jdbcType=VARCHAR}, 
+			#{linename,jdbcType=VARCHAR}, 
+			#{orderno,jdbcType=VARCHAR}, 
+			#{waybillNo,jdbcType=VARCHAR}, 
+			#{originatingcity,jdbcType=VARCHAR}, 
+			#{originatingdistrict,jdbcType=VARCHAR}, 
+			#{targetwarehouse,jdbcType=VARCHAR}, 
+			#{targetcity,jdbcType=VARCHAR}, 
+			#{targetdistrict,jdbcType=VARCHAR}, 
+			#{temperaturetype,jdbcType=VARCHAR}, 
+			#{category,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DOUBLE}, 
+			#{volume,jdbcType=DOUBLE}, 
+			#{kilometers,jdbcType=DOUBLE}, 
+			#{spendtime,jdbcType=DOUBLE}, 
+			#{carmodel,jdbcType=VARCHAR}, 
+			#{templatenum,jdbcType=VARCHAR}, 
+			#{islight,jdbcType=TINYINT}, 
+			#{unitprice,jdbcType=DOUBLE}, 
+			#{totleprice,jdbcType=DOUBLE}, 
+			#{accepttime,jdbcType=TIMESTAMP}, 
+			#{signtime,jdbcType=TIMESTAMP}, 
+			#{billno,jdbcType=VARCHAR}, 
+			#{ruleno,jdbcType=VARCHAR}, 
+			#{state,jdbcType=VARCHAR}, 
+			#{creperson,jdbcType=VARCHAR}, 
+			#{crepersonname,jdbcType=VARCHAR}, 
+			#{cretime,jdbcType=TIMESTAMP}, 
+			#{modperson,jdbcType=VARCHAR}, 
+			#{modpersonname,jdbcType=VARCHAR}, 
+			#{modtime,jdbcType=TIMESTAMP}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP},
+			#{extarr1,jdbcType=VARCHAR}, 
+			#{extarr2,jdbcType=VARCHAR}, 
+			#{extarr3,jdbcType=VARCHAR}, 
+			#{extarr4,jdbcType=VARCHAR}, 
+			#{extarr5,jdbcType=VARCHAR}, 
+			#{quantity,jdbcType=INTEGER},
+			#{derateAmount},
+			#{delFlag}
+        )
+    </insert>
+    
+    
+        <update id="update" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveTransportEntity">
+        update fees_receive_transport
+        <set >
+			<if test="operationtime != null" >operationtime=#{operationtime,jdbcType=TIMESTAMP},</if> 
+			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if> 
+			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if> 
+			<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if> 
+			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if> 
+			<if test="costType != null" >cost_type=#{costType,jdbcType=VARCHAR},</if> 
+			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if> 
+			<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if> 
+			<if test="linename != null" >linename=#{linename,jdbcType=VARCHAR},</if> 
+			<if test="orderno != null" >orderno=#{orderno,jdbcType=VARCHAR},</if> 
+			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if> 
+			<if test="originatingcity != null" >originatingcity=#{originatingcity,jdbcType=VARCHAR},</if> 
+			<if test="originatingdistrict != null" >originatingdistrict=#{originatingdistrict,jdbcType=VARCHAR},</if> 
+			<if test="targetwarehouse != null" >targetwarehouse=#{targetwarehouse,jdbcType=VARCHAR},</if> 
+			<if test="targetcity != null" >targetcity=#{targetcity,jdbcType=VARCHAR},</if> 
+			<if test="targetdistrict != null" >targetdistrict=#{targetdistrict,jdbcType=VARCHAR},</if> 
+			<if test="temperaturetype != null" >temperaturetype=#{temperaturetype,jdbcType=VARCHAR},</if> 
+			<if test="category != null" >category=#{category,jdbcType=VARCHAR},</if> 
+			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if> 
+			<if test="volume != null" >volume=#{volume,jdbcType=DOUBLE},</if> 
+			<if test="kilometers != null" >kilometers=#{kilometers,jdbcType=DOUBLE},</if> 
+			<if test="spendtime != null" >spendtime=#{spendtime,jdbcType=DOUBLE},</if> 
+			<if test="carmodel != null" >carmodel=#{carmodel,jdbcType=VARCHAR},</if> 
+			<if test="templatenum != null" >templatenum=#{templatenum,jdbcType=VARCHAR},</if> 
+			<if test="islight != null" >islight=#{islight,jdbcType=TINYINT},</if> 
+			<if test="unitprice != null" >unitprice=#{unitprice,jdbcType=DOUBLE},</if> 
+			<if test="totleprice != null" >totleprice=#{totleprice,jdbcType=DOUBLE},</if> 
+			<if test="accepttime != null" >accepttime=#{accepttime,jdbcType=TIMESTAMP},</if> 
+			<if test="signtime != null" >signtime=#{signtime,jdbcType=TIMESTAMP},</if> 
+			<if test="billno != null" >billno=#{billno,jdbcType=VARCHAR},</if> 
+			<if test="ruleno != null" >ruleno=#{ruleno,jdbcType=VARCHAR},</if> 
+			<if test="state != null" >state=#{state,jdbcType=VARCHAR},</if> 
+			<if test="creperson != null" >creperson=#{creperson,jdbcType=VARCHAR},</if> 
+			<if test="crepersonname != null" >crepersonname=#{crepersonname,jdbcType=VARCHAR},</if> 
+			<if test="cretime != null" >cretime=#{cretime,jdbcType=TIMESTAMP},</if> 
+			<if test="modperson != null" >modperson=#{modperson,jdbcType=VARCHAR},</if> 
+			<if test="modpersonname != null" >modpersonname=#{modpersonname,jdbcType=VARCHAR},</if> 
+			<if test="modtime != null" >modtime=#{modtime,jdbcType=TIMESTAMP},</if> 
+			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="extarr1 != null" >extarr1=#{extarr1,jdbcType=VARCHAR},</if> 
+			<if test="extarr2 != null" >extarr2=#{extarr2,jdbcType=VARCHAR},</if> 
+			<if test="extarr3 != null" >extarr3=#{extarr3,jdbcType=VARCHAR},</if> 
+			<if test="extarr4 != null" >extarr4=#{extarr4,jdbcType=VARCHAR},</if> 
+			<if test="extarr5 != null" >extarr5=#{extarr5,jdbcType=VARCHAR},</if> 
+			<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER}</if>
+			<if test="derateAmount!=null">derate_amount=#{derateAmount}</if>
+			<if test="delFlag!=null">del_flag=#{delFlag}</if>
+		</set>
+        where fees_no=#{feesNo}
+    </update>
+
+    <delete id="delete" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveTransportEntity">
+        delete from fees_receive_transport where
+        orderno = #{orderno,jdbcType=VARCHAR}
+    </delete>
+    
+    <sql id="baseColumns">
+		frt.fees_no,frt.customerid,frt.warehouse_code,frt.operationtime,
+		frt.subject_code,frt.other_subject_code,frt.cost_type,frt.linename,
+		frt.orderno,frt.waybill_no, frt.originatingcity,
+		frt.originatingdistrict,frt.targetwarehouse,frt.targetcity,frt.targetdistrict,
+		frt.temperaturetype,frt.category,frt.weight,frt.volume,frt.kilometers,
+		frt.spendtime,frt.carmodel,frt.templatenum,frt.islight,frt.unitprice,
+		frt.totleprice,frt.accepttime,frt.signtime,frt.billno,frt.ruleno,
+		frt.state,frt.creperson,frt.crepersonname,frt.cretime,frt.modperson,frt.modpersonname,
+		frt.modtime,frt.extarr1,frt.extarr2,frt.extarr3,frt.extarr4,frt.extarr5,frt.quantity,
+		frt.derate_amount,frt.del_flag
+	</sql>
+	<sql id="baseSelectColumns">
+		<if test="(feesNo != null and feesNo !='')" >
+				and frt.fees_no = #{feesNo}
+		</if>
+		<if test="(costType != null and costType !='')" >
+				and frt.cost_type = #{costType}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+				and frt.subject_code = #{subjectCode}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and frt.customerid = #{customerid}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and frt.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(orderno != null and orderno !='')" >
+				and frt.orderno = #{orderno}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and frt.waybill_no = #{waybillNo}
+		</if>
+		<if test="(state != null and state !='')" >
+				and frt.state = #{state}
+		</if>
+		<if test="(billno != null and billno !='')" >
+				and frt.billno = #{billno}
+		</if>
+		<if test="(ruleno != null and ruleno !='')" >
+				and frt.ruleno = #{ruleno}
+		</if>
+		<if test="(crestime != null and crestime !='')" >
+			    and frt.cretime >= #{crestime}
+		</if>
+		<if test="(creetime != null and creetime !='')" >
+			    and <![CDATA[frt.cretime <= #{creetime}]]>
+		</if>
+	</sql>
+	
+	<select id="query" parameterType="com.jiuyescm.bms.fees.entity.FeesReceiveDeliverQueryEntity" resultType="com.jiuyescm.bms.general.entity.FeesReceiveTransportEntity">
+        select
+        <include refid="baseColumns" />,
+        sc.code_name as feessubjectname
+        from fees_receive_transport frt
+        left join system_code sc on sc.code=frt.subject_code and sc.status=0
+        where ifnull(frt.del_flag,'0')='0'
+        <include refid="baseSelectColumns" />
+    </select>
+    
+    <!-- 统计日收入 -->
+    <select id="queryDailyFees" parameterType="java.util.Map" 
+    	resultType="com.jiuyescm.bms.general.entity.FeesReceiveTransportEntity">
+        select customerid, other_subject_code as otherSubjectCode, 
+        	   SUM(IFNULL(totleprice,0) - IFNULL(derate_amount,0)) as totleprice
+        from fees_receive_transport
+        where cretime <![CDATA[>=]]> #{startTime} and cretime <![CDATA[<=]]> #{endTime}
+        group by customerid, other_subject_code
+    </select>
+</mapper>

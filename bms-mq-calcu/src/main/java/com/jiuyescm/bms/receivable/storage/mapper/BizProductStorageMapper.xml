@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.storage.BizProductStorageMapper" >
+
+    <resultMap id="bizProductStorageMap" type="com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="id" property="id" jdbcType="BIGINT" />
+	    <result column="wms_id" property="wmsId" jdbcType="VARCHAR" />
+	    <result column="data_num" property="dataNum" jdbcType="VARCHAR" />
+	    <result column="cur_day" property="curDay" jdbcType="VARCHAR" />
+	    <result column="cur_time" property="curTime" jdbcType="TIMESTAMP" />
+	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	    <result column="customerid" property="customerid" jdbcType="VARCHAR" />
+	    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="stock_place_code" property="stockPlaceCode" jdbcType="VARCHAR" />
+	    <result column="stock_place" property="stockPlace" jdbcType="VARCHAR" />
+	    <result column="batch_code" property="batchCode" jdbcType="VARCHAR" />
+	    <result column="aqty" property="aqty" jdbcType="DOUBLE" />
+	    <result column="product_date" property="productDate" jdbcType="TIMESTAMP" />
+	    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
+	    <result column="in_time" property="inTime" jdbcType="TIMESTAMP" />
+	    <result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+	    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+	    <result column="temperature" property="temperature" jdbcType="VARCHAR" />
+	    <result column="weight" property="weight" jdbcType="DOUBLE" />
+	    <result column="volume" property="volume" jdbcType="DOUBLE" />
+	    <result column="pallet_num" property="palletNum" jdbcType="DOUBLE" />
+	    <result column="piece_num" property="pieceNum" jdbcType="DOUBLE" />
+	    <result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
+	    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="extattr1" property="extattr1" jdbcType="VARCHAR" />
+	    <result column="extattr2" property="extattr2" jdbcType="VARCHAR" />
+	    <result column="extattr3" property="extattr3" jdbcType="VARCHAR" />
+	    <result column="extattr4" property="extattr4" jdbcType="VARCHAR" />
+	    <result column="extattr5" property="extattr5" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <select id="queryProductStorage" parameterType="java.util.Map" resultMap="bizProductStorageMap">
+        select
+        id, wms_id, data_num, cur_day, cur_time, warehouse_code, warehouse_name, customerid, 
+        customer_name, product_id, product_name, stock_place_code, stock_place, batch_code, 
+        aqty, product_date, expiry_date, in_time, fees_no, dbname, temperature, weight, volume, 
+        pallet_num, piece_num, is_calculated, remark, creator, create_time, last_modifier, 
+        last_modify_time, del_flag, extattr1, extattr2, extattr3, extattr4, extattr5
+        from biz_product_storage
+        where del_flag = 0
+        <if test="(beginTime != null and beginTime !='')" >
+			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+			and customerid = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(id != null and id !='')" >
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and is_calculated = concat(${isCalculated})
+		</if>
+		LIMIT #{num}
+    </select>
+
+    <update id="updateProductStorage" parameterType="com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity">
+		update biz_product_storage 
+		<set >
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+		</set>
+        where id=#{id}
+    </update>
+</mapper>
