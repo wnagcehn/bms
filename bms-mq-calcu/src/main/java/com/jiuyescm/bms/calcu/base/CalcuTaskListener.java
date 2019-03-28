@@ -300,10 +300,9 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		ContractQuoteInfoVo cqVo = null;
 		try{
 			cqVo = contractQuoteInfoService.queryUniqueColumns(queryVo);
-			printLog(vo, t, f, "合同在线合同明细：", cqVo, "");
 		}
 		catch(BizException ex){
-			printLog(vo, t, f, "合同在线合同缺失：", ex.getMessage(), "");
+			logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", "合同在线合同缺失");
@@ -325,7 +324,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
 			if (null == ruleEntity) {
 				String msg = "规则【"+cqVo.getRuleCode()+"】不存在";
-				printLog(vo, t, f, msg, "" , "");
+				//printLog(vo, t, f, msg, "" , "");
 				errorMap.put("success", "fail");
 				errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
 				errorMap.put("msg", msg);
@@ -339,7 +338,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			
 			try {
 			    if(cond == null || cond.size() == 0){
-			    	printLog(vo, t, f, "规则引擎拼接条件异常：", "", "");
+			    	//printLog(vo, t, f, "规则引擎拼接条件异常：", "", "");
 					errorMap.put("success", "fail");
 					errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
 					errorMap.put("msg", "规则引擎拼接条件异常");
@@ -349,7 +348,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			} catch (BizException e) {
 				// TODO: handle exception
 				String msg = "获取合同在线报价异常:"+e.getMessage();
-				printLog(vo, t, f, msg, "", "");
+				//printLog(vo, t, f, msg, "", "");
 				errorMap.put("success", "fail");
 				errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
 				errorMap.put("msg", msg);
@@ -430,6 +429,15 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	//统计商家维度各状态计算单量
 	protected abstract BmsFeesQtyVo feesCountReport(String customerId, String subjectCode,Integer creMonth);
 	
+	/**
+	 * 
+	 * @param vo
+	 * @param t
+	 * @param f
+	 * @param descrip
+	 * @param obj
+	 * @param nodeName
+	 */
 	protected abstract void printLog(BmsCalcuTaskVo vo,T t,F f,String descrip,Object obj,String nodeName);
 	
 	/*//查询合同在线合同

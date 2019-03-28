@@ -1,16 +1,13 @@
 package com.jiuyescm.bms.calcu.receive.storage.instock;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.kie.internal.task.api.TaskIdentityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
-import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
@@ -35,7 +31,6 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
-import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -136,33 +131,37 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		String priceType = quoTemplete.getPriceType();
 		String unit = quoTemplete.getFeeUnitCode();//计费单位 
 		double num = feeEntity.getQuantity();
-		double weight = 0d;
-		if ((double)feeEntity.getWeight()/1000 < 1) {
-			weight = 1d;
-		}else {
-			weight = (double)feeEntity.getWeight()/1000;
+		
+		switch (unit) {
+		case "ITEMS":
+			num = feeEntity.getQuantity();
+			break;
+		case "CARTON":
+			num = feeEntity.getBox();
+			break;
+		case "TONS":
+			double weight = 0d;
+			if ((double)feeEntity.getWeight()/1000 < 1) {
+				weight = 1d;
+			}else {
+				weight = (double)feeEntity.getWeight()/1000;
+			}
+			num = weight;
+			break;
+		case "KILOGRAM":
+			num = feeEntity.getWeight();
+			break;
+		default:
+			break;
 		}
+		
 		//计算方法
 		double amount=0d;
 		switch(priceType){
 		case "PRICE_TYPE_NORMAL"://一口价				
-            //如果计费单位是 件 -> 费用 = 商品数量*模板单价
-			//如果计费单位是 箱 -> 费用 = 商品箱数*模板单价
-			//如果计费单位是 吨 -> 费用 = 商品重量*模板单价/1000
-			//如果计费单位是 千克 -> 费用 = 商品重量*模板单价
-			if ("ITEMS".equals(unit)) {
-				amount=feeEntity.getQuantity()*quoTemplete.getUnitPrice();
-			}else if ("CARTON".equals(unit)) {
-				amount=feeEntity.getBox()*quoTemplete.getUnitPrice();
-			}else if ("TONS".equals(unit)) {
-				feeEntity.setWeight(weight);
-				amount = weight*quoTemplete.getUnitPrice();					
-			}else if ("KILOGRAM".equals(unit)) {
-				amount=feeEntity.getWeight()*quoTemplete.getUnitPrice();
-			}
+			amount=num*quoTemplete.getUnitPrice();
 			feeEntity.setUnitPrice(quoTemplete.getUnitPrice());
 			feeEntity.setParam3(quoTemplete.getId().toString());
-			break;
 		case "PRICE_TYPE_STEP"://阶梯价						
 			map.clear();
 			map.put("quotationId", quoTemplete.getId());
@@ -190,28 +189,11 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 			}
 			logger.info("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
 			
-            // 如果计费单位是 件
-			if ("ITEMS".equals(unit)) {//按件
-				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-					amount=num*stepQuoEntity.getUnitPrice();
-				}else{
-					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-				}
-			}else if ("TONS".equals(unit)) {//按吨
-				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					amount=weight * stepQuoEntity.getUnitPrice();
-					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				}else{
-					amount=(double)(stepQuoEntity.getFirstNum()<weight?stepQuoEntity.getFirstPrice()+(weight-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice());
-				}		
-			}else if("CARTON".equals(unit)){//按箱
-				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					amount=feeEntity.getBox()*stepQuoEntity.getUnitPrice();
-					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				}else{
-					amount=stepQuoEntity.getFirstNum()<feeEntity.getBox()?stepQuoEntity.getFirstPrice()+(feeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-				}
+			if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+				feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+				amount=num*stepQuoEntity.getUnitPrice();
+			}else{
+				amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 			}
 			//判断封顶价
 			if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
