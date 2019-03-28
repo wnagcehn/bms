@@ -82,11 +82,13 @@
 
     <insert id="save" parameterType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
         insert into bms_asyn_calcu_task
-        (task_id, customer_id, subject_code, fees_type, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
+        (task_id, customer_id, customer_name,subject_code,subject_name, fees_type, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
         values (
 			#{taskId,jdbcType=VARCHAR}, 
 			#{customerId,jdbcType=VARCHAR}, 
-			#{subjectCode,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{subjectName,jdbcType=VARCHAR}, 
 			#{feesType,jdbcType=VARCHAR}, 
 			#{creMonth,jdbcType=INTEGER}, 
 			#{taskStatus,jdbcType=TINYINT}, 
