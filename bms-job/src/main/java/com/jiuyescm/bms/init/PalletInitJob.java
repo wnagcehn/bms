@@ -58,12 +58,9 @@ public class PalletInitJob extends IJobHandler {
 	@Autowired
 	private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired
-	private ISystemCodeService systemCodeService;
-	@Autowired
 	private IBmsGroupSubjectService bmsGroupSubjectService;
 
 	List<String> cusNames = null;
-	Map<String, SystemCodeEntity> sysMap = null;
 	String[] subjects = null;
 
 	@Override
@@ -145,8 +142,6 @@ public class PalletInitJob extends IJobHandler {
 			}
 		}
 
-		// 费用科目code=>entity
-		sysMap = systemCodeService.querySysCodesMap("PALLET_CAL_FEE");
 	}
 
 	private void initFees(List<BizPalletInfoEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
@@ -180,7 +175,9 @@ public class PalletInitJob extends IJobHandler {
 			} else if ("instock".equals(entity.getBizType())) {
 				subjectId = "wh_disposal";
 			} else if ("outstock".equals(entity.getBizType())) {
+				//如果是出库托数,生成费用为0,不发MQ
 				subjectId = "outstock_pallet_vm";
+				entity.setIsCalculated("5");
 			}
 			feesEntity.setSubjectCode(subjectId);
 			feesEntity.setOtherSubjectCode(subjectId);
@@ -260,7 +257,6 @@ public class PalletInitJob extends IJobHandler {
 		for (BmsCalcuTaskVo vo : list) {
 			vo.setCrePerson("系统");
 			vo.setCrePersonId("system");
-			vo.setSubjectName(sysMap.get(vo.getSubjectCode()).getCodeName());
 			try {
 				bmsCalcuTaskService.sendTask(vo);
 				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(), vo.getCreMonth(),
