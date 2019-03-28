@@ -174,12 +174,29 @@ public class BizOutstockPackmaterialController {
 		BizOutstockPackmaterialEntity updateEntity = new BizOutstockPackmaterialEntity();
 		updateEntity.setId(entity.getId());
 		updateEntity.setAdjustNum(entity.getAdjustNum());
-		updateEntity.setIsCalculated("0");//如果没有过账的话,就允许调整重量,且调整完后,状态重置为未计算,定时任务重新扫描到并重新生成应收费用.
 		updateEntity.setLastModifier(operatorName);
 		updateEntity.setLastModifyTime(operatorTime);
 		int updateNum = service.update(updateEntity);
 		if(updateNum > 0){
 			result.setCode("SUCCESS");
+			List<String> subjectList=new ArrayList<>();
+			subjectList.add("wh_material_use");
+			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+			sendTaskMap.put("isCalculated", "99");
+			sendTaskMap.put("subjectList", subjectList);
+			//对这些费用按照商家、科目、时间排序
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
+			for (BmsCalcuTaskVo vo : calList) {
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
+			}
+			
 		}else{
 			result.setCode("fail");
 			result.setData("更新失败");

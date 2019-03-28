@@ -200,7 +200,7 @@ public class BmsSubjectInfoServiceImpl implements IBmsSubjectInfoService{
 	public BmsSubjectInfoVo queryReceiveByCode(String subjectCode) {
 		BmsSubjectInfoVo vo = new BmsSubjectInfoVo();
 		vo.setInOutTypecode("INPUT");
-		vo.setSubjectName(subjectCode);
+		vo.setSubjectCode(subjectCode);
 		List<BmsSubjectInfoVo> vos = querySubject(vo);
 		if(vos == null || vos.size() == 0){
 			return null;

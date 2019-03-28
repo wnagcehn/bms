@@ -88,7 +88,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		}
 		
 		BmsSubjectInfoVo subjectVo = bmsSubjectService.queryReceiveByCode(vo.getSubjectCode());
-		if(subjectVo == null || StringUtil.isEmpty(vo.getSubjectName())){
+		if(subjectVo == null || StringUtil.isEmpty(subjectVo.getSubjectName())){
 			throw new BizException("科目【"+vo.getSubjectCode()+"】不存在");
 		}
 		vo.setCustomerName(customerName);
