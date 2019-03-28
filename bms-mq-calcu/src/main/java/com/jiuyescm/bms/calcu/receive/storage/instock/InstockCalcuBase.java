@@ -16,6 +16,8 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
+import com.jiuyescm.bms.calculate.vo.CalcuContractVo;
+import com.jiuyescm.bms.calculate.vo.CalcuInfoVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
@@ -63,7 +65,7 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	
 	@Override
 	protected void calcuForBms(BmsCalcuTaskVo vo,BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity feeEntity){
-		
+		feeEntity.setSubjectCode(vo.getSubjectCode());
 		PriceContractInfoEntity contractEntity = null;
 		PriceGeneralQuotationEntity quoTemplete = null;
 		
@@ -75,19 +77,24 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		map.put("customerid", customerId);
 		map.put("contractTypeCode", "CUSTOMER_CONTRACT");
 		contractEntity = jobPriceContractInfoService.queryContractByCustomer(map);
+		
+		CalcuContractVo cVo = new CalcuContractVo();
+		cVo.setContractAttr("BMS");
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
-			logger.info("bms合同缺失");
+			//打印合同归属
+			printLog(vo.getTaskId(), "contractInfo", entity.getFeesNo(), vo.getSubjectName(), "bms合同缺失", cVo);
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setCalcuMsg("bms合同缺失");
 			return;
 		}
+		cVo.setContractNo(contractEntity.getContractCode());
 		//验证签约服务
 		Map<String,Object> contractItems_map=new HashMap<String,Object>();
 		contractItems_map.put("contractCode", contractEntity.getContractCode());
 		contractItems_map.put("subjectId", SubjectId);
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
-			logger.info("未签约服务");
+			printLog(vo.getTaskId(), "contractInfo", entity.getFeesNo(), vo.getSubjectName(), "未签约服务", cVo);
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setCalcuMsg("未签约服务");
 			return;
@@ -99,12 +106,12 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		map.put("quotationNo", contractItems.get(0).getTemplateId());
 		quoTemplete = priceGeneralQuotationRepository.query(map);
 		if(quoTemplete==null){
-			logger.info("报价模板缺失");
+			printLog(vo.getTaskId(), "contractInfo", entity.getFeesNo(), vo.getSubjectName(), "报价模板缺失", cVo);
 			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			feeEntity.setCalcuMsg("报价模板缺失");
 			return;
 		}
-		logger.info("合同信息");
+		printLog(vo.getTaskId(), "contractInfo", entity.getFeesNo(), vo.getSubjectName(), "合同存在", cVo);
 		String contractNo = contractEntity.getContractCode();
 		String quoModelNo = quoTemplete.getQuotationNo();
 		//1：业务数据查询
@@ -123,15 +130,12 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		//7：节点-费用计算
 		//任务ID,费用编号，科目名称，计算公式
 		
-		logger.info("taskId={} feesNo={} subjectCode={} contractNo={} quoModelNo={} descrip={}",
-				vo.getTaskId(),entity.getFeesNo(),vo.getSubjectCode(),contractNo,quoModelNo,"");
-		
-		
-		
 		String priceType = quoTemplete.getPriceType();
 		String unit = quoTemplete.getFeeUnitCode();//计费单位 
 		double num = feeEntity.getQuantity();
-		
+		CalcuInfoVo civo = new CalcuInfoVo();
+		civo.setRuleNo("");
+		civo.setChargeUnit(unit);
 		switch (unit) {
 		case "ITEMS":
 			num = feeEntity.getQuantity();
@@ -158,53 +162,54 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		//计算方法
 		double amount=0d;
 		switch(priceType){
-		case "PRICE_TYPE_NORMAL"://一口价				
-			amount=num*quoTemplete.getUnitPrice();
-			feeEntity.setUnitPrice(quoTemplete.getUnitPrice());
-			feeEntity.setParam3(quoTemplete.getId().toString());
-		case "PRICE_TYPE_STEP"://阶梯价						
-			map.clear();
-			map.put("quotationId", quoTemplete.getId());
-			map.put("num", feeEntity.getQuantity());//根据报价单位判断			
-			//查询出的所有子报价
-			List<PriceStepQuotationEntity> list=repository.queryPriceStepByQuatationId(map);
-			
-			if(list==null || list.size() == 0){
-				logger.info(entity.getId()+"阶梯报价未配置");
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				feeEntity.setCalcuMsg("阶梯报价未配置");
-				return;
-			}
-			
-			//封装数据的仓库和温度
-			map.clear();
-			map.put("warehouse_code", entity.getWarehouseCode());
-			PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);			
-			
-			if(stepQuoEntity==null){
-				logger.info("阶梯报价未配置");
-				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				feeEntity.setCalcuMsg("阶梯报价未配置");
-				return;
-			}
-			logger.info("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
-			
-			if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-				feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				amount=num*stepQuoEntity.getUnitPrice();
-			}else{
-				amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-			}
-			//判断封顶价
-			if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
-				if(stepQuoEntity.getCapPrice()<amount){
-					amount=stepQuoEntity.getCapPrice();
+			case "PRICE_TYPE_NORMAL"://一口价				
+				amount=num*quoTemplete.getUnitPrice();
+				feeEntity.setUnitPrice(quoTemplete.getUnitPrice());
+				feeEntity.setParam3(quoTemplete.getId().toString());
+				break;
+			case "PRICE_TYPE_STEP"://阶梯价						
+				map.clear();
+				map.put("quotationId", quoTemplete.getId());
+				map.put("num", feeEntity.getQuantity());//根据报价单位判断			
+				//查询出的所有子报价
+				List<PriceStepQuotationEntity> list=repository.queryPriceStepByQuatationId(map);
+				
+				if(list==null || list.size() == 0){
+					logger.info(entity.getId()+"阶梯报价未配置");
+					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					feeEntity.setCalcuMsg("阶梯报价未配置");
+					return;
 				}
-			}
-			feeEntity.setParam3(stepQuoEntity.getId()+"");
-			break;
-		default:
-			break;
+				
+				//封装数据的仓库和温度
+				map.clear();
+				map.put("warehouse_code", entity.getWarehouseCode());
+				PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);			
+				
+				if(stepQuoEntity==null){
+					logger.info("阶梯报价未配置");
+					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+					feeEntity.setCalcuMsg("阶梯报价未配置");
+					return;
+				}
+				logger.info("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+				
+				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+					amount=num*stepQuoEntity.getUnitPrice();
+				}else{
+					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
+				}
+				//判断封顶价
+				if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
+					if(stepQuoEntity.getCapPrice()<amount){
+						amount=stepQuoEntity.getCapPrice();
+					}
+				}
+				feeEntity.setParam3(stepQuoEntity.getId()+"");
+				break;
+			default:
+				break;
 		}
 		feeEntity.setCost(BigDecimal.valueOf(amount));
 		feeEntity.setParam4(priceType);
@@ -265,9 +270,12 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		logger.info("taskId={} 报价模板编号:",quoTemplete.getQuotationNo());
 	}
 	
+	
+	
 	@Override
-	protected FeesReceiveStorageEntity initFeeEntity(BmsBizInstockInfoEntity instock) {
-		
+	protected FeesReceiveStorageEntity initFeeEntity(BmsCalcuTaskVo vo,BmsBizInstockInfoEntity instock) {
+		//打印业务数据日志
+		printLog(vo.getTaskId(), "bizInfo", instock.getFeesNo(), vo.getSubjectName(), "", instock);
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
 		double num=DoubleUtil.isBlank(instock.getAdjustQty())?instock.getTotalQty():instock.getAdjustQty();
 		if(!DoubleUtil.isBlank(num)){
@@ -288,6 +296,7 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		storageFeeEntity.setDelFlag("0");
 		storageFeeEntity.setFeesNo(instock.getFeesNo());
 		storageFeeEntity.setCalculateTime(JAppContext.currentTimestamp());
+		printLog(vo.getTaskId(), "chargeInfo", instock.getFeesNo(), vo.getSubjectName(), "", storageFeeEntity);
 		return storageFeeEntity;
 	}
 
@@ -315,7 +324,7 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 
 	}
 
-	@Override
+	/*@Override
 	protected void printLog(BmsCalcuTaskVo vo,BmsBizInstockInfoEntity t,FeesReceiveStorageEntity f,String descrip,Object obj,String nodeName) {
 		if(StringUtil.isEmpty(nodeName)){
 			logger.info("taskId={} feesNo={} subjectName={} {} {}",vo.getTaskId(),t.getFeesNo(),vo.getSubjectName(),descrip,JSONObject.fromObject(obj));
@@ -324,14 +333,7 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 			logger.info("taskId={} feesNo={} subjectName={} nameNode={} msg={}",vo.getTaskId(),t.getFeesNo(),vo.getSubjectName(),nodeName,JSONObject.fromObject(obj));
 		}
 		
-	}
-	
-	protected boolean validateData(BmsCalcuTaskVo vo,BizAddFeeEntity entity,FeesReceiveStorageEntity storageFeeEntity) {
-		
-		
-		return true;
-	}
-
+	}*/
 
 	
 }
