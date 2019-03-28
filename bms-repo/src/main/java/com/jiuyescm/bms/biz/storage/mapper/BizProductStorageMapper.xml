@@ -153,14 +153,125 @@
 				and extattr1 = #{extattr1}
 		</if>
     </sql>
-	  
+    
+    <sql id="baseSelectColumnsJoin">
+    		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(wmsId != null and wmsId !='')" >
+				and a.wms_id = #{wmsId}
+		</if>
+		<if test="(dataNum != null and dataNum !='')" >
+				and a.data_num = #{dataNum}
+		</if>
+		<if test="(curDay != null and curDay !='')" >
+				and a.cur_day = #{curDay}
+		</if>
+		<if test="(curTime != null and curTime !='')" >
+			    and a.cur_time >= #{curTime} add <![CDATA[a.cur_time <= #{curTime}]]>
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and a.warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and a.customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and a.customer_name = #{customerName}
+		</if>
+		<if test="(productId != null and productId !='')" >
+				and a.product_id = #{productId}
+		</if>
+		<if test="(productName != null and productName !='')" >
+				and a.product_name = #{productName}
+		</if>
+		<if test="(stockPlaceCode != null and stockPlaceCode !='')" >
+				and a.stock_place_code = #{stockPlaceCode}
+		</if>
+		<if test="(stockPlace != null and stockPlace !='')" >
+				and a.stock_place = #{stockPlace}
+		</if>
+		<if test="(batchCode != null and batchCode !='')" >
+				and a.batch_code = #{batchCode}
+		</if>
+		<if test="(aqty != null and aqty !='')" >
+				and a.aqty = #{aqty}
+		</if>
+		<if test="(productDate != null and productDate !='')" >
+			    and a.product_date >= #{productDate} add <![CDATA[a.product_date <= #{productDate}]]>
+		</if>
+		<if test="(expiryDate != null and expiryDate !='')" >
+			    and a.expiry_date >= #{expiryDate} add <![CDATA[a.expiry_date <= #{expiryDate}]]>
+		</if>
+		<if test="(inTime != null and inTime !='')" >
+			    and a.in_time >= #{inTime} add <![CDATA[a.in_time <= #{inTime}]]>
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(dbname != null and dbname !='')" >
+				and a.dbname = #{dbname}
+		</if>
+		<if test="(temperature != null and temperature !='')" >
+				and a.temperature = #{temperature}
+		</if>
+		<if test="(weight != null and weight !='')" >
+				and a.weight = #{weight}
+		</if>
+		<if test="(volume != null and volume !='')" >
+				and a.volume = #{volume}
+		</if>
+		<if test="(palletNum != null and palletNum !='')" >
+				and a.pallet_num = #{palletNum}
+		</if>
+		<if test="(pieceNum != null and pieceNum !='')" >
+				and a.piece_num = #{pieceNum}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and b.is_calculated = #{isCalculated}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and a.remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and a.creator = #{creator}
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and a.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(delFlag != null and delFlag !='')" >
+				and a.del_flag = #{delFlag}
+		</if>
+		<if test="(startTime != null and startTime !='') " >
+			    and <![CDATA[a.cur_time >= #{startTime}]]> 
+		</if>
+		
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[a.cur_time <= #{endTime}]]>
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+    </sql>
+    
+
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity">
-        select
-        <include refid="baseColumns" />
-        from biz_product_storage
-        where 1=1
-		<include refid="baseSelectColumns" />
+         select
+a.id, a.wms_id, a.data_num, a.cur_day, a.cur_time, a.warehouse_code, a.warehouse_name, a.customerid, a.customer_name, a.product_id, a.product_name, 
+a.stock_place_code, a.stock_place, a.batch_code, a.aqty, a.product_date, a.expiry_date, a.in_time, a.fees_no, a.dbname, a.temperature, a.weight, a.volume, 
+a.pallet_num, a.piece_num, a.remark, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,a.calculate_time, a.del_flag, a.extattr1, 
+a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
+        from biz_product_storage a
+        left join fees_receive_storage b on a.fees_no = b.fees_no
+        where 1=1 
+        <include refid="baseSelectColumnsJoin" />
     </select>
 
     <select id="findById" resultType="com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity">
@@ -310,7 +421,22 @@
     </select>
     
      <update id="retryForCalcu" parameterType="java.util.Map">
-        update biz_product_storage set is_calculated = 99 where del_flag = 0
-        <include refid="baseSelectColumns" />
+        update fees_receive_storage set is_calculated = 99 where fees_no in
+           <foreach collection="feeList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
+    
+        <select id="queryList" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity">
+         select
+a.id, a.wms_id, a.data_num, a.cur_day, a.cur_time, a.warehouse_code, a.warehouse_name, a.customerid, a.customer_name, a.product_id, a.product_name, 
+a.stock_place_code, a.stock_place, a.batch_code, a.aqty, a.product_date, a.expiry_date, a.in_time, a.fees_no, a.dbname, a.temperature, a.weight, a.volume, 
+a.pallet_num, a.piece_num, a.remark, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,a.calculate_time, a.del_flag, a.extattr1, 
+a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
+        from biz_product_storage a
+        left join fees_receive_storage b on a.fees_no = b.fees_no
+        where a.is_calculated =1
+        <include refid="baseSelectColumnsJoin" />
+    </select>
 </mapper>
