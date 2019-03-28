@@ -158,6 +158,21 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		return voList;
 	}
 
-
+	@Override
+	public List<BmsCalcuTaskVo> queryDisByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.queryDisByMap(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+    	for(BmsAsynCalcuTaskEntity entity : list) {
+    		BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+    		try {
+                PropertyUtils.copyProperties(vo, entity);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+    		voList.add(vo);
+    	}
+		return voList;
+	}
 
 }
