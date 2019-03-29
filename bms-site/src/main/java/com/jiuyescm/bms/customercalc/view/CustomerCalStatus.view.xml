@@ -12,7 +12,23 @@
         <Property></Property>
         <Property name="label">商家</Property>
       </PropertyDef>
-      <PropertyDef name="calcStatus">
+      <PropertyDef name="createYear">
+        <Property name="label">年份</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;omsEnumPR#getReportMonthForYear&quot;).getResult()}</Property>
+        </Property>
+        <Property name="readOnly">true</Property>
+      </PropertyDef>
+      <PropertyDef name="createMonth">
+        <Property name="label">月份</Property>
+        <Property name="required">true</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="readOnly">true</Property>
+      </PropertyDef>
+      <PropertyDef name="customerStatus">
         <Property></Property>
         <Property name="label">计算状态</Property>
         <Property name="mapping">
@@ -23,11 +39,15 @@
                 <Property name="value">全部</Property>
               </Entity>
               <Entity>
-                <Property name="key">SUCCESS</Property>
+                <Property name="key">1</Property>
                 <Property name="value">成功</Property>
               </Entity>
               <Entity>
-                <Property name="key">FAIL</Property>
+                <Property name="key">2</Property>
+                <Property name="value">计算中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
                 <Property name="value">不成功</Property>
               </Entity>
             </Collection>
@@ -37,8 +57,8 @@
       </PropertyDef>
     </DataType>
     <DataType name="dtCustomerCalStatus">
-      <Property name="creationType">com.jiuyescm.bms.customercalc.vo.CustomerCalcStatusVo</Property>
-      <PropertyDef name="calcDate">
+      <Property name="creationType">com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo</Property>
+      <PropertyDef name="creMonth">
         <Property></Property>
         <Property name="label">日期</Property>
       </PropertyDef>
@@ -50,18 +70,22 @@
         <Property></Property>
         <Property name="label">商家名称</Property>
       </PropertyDef>
-      <PropertyDef name="calcStatus">
+      <PropertyDef name="customerStatus">
         <Property></Property>
         <Property name="label">计算状态</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
               <Entity>
-                <Property name="key">SUCCESS</Property>
+                <Property name="key">1</Property>
                 <Property name="value">成功</Property>
               </Entity>
               <Entity>
-                <Property name="key">FAIL</Property>
+                <Property name="key">2</Property>
+                <Property name="value">计算中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
                 <Property name="value">不成功</Property>
               </Entity>
             </Collection>
@@ -71,10 +95,11 @@
       <PropertyDef name="subjectNum">
         <Property></Property>
         <Property name="label">科目数</Property>
+        <Property name="dataType">Integer</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCustomerSubjectStatus">
-      <Property name="creationType">com.jiuyescm.bms.customercalc.CustomerSubjectStatusEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo</Property>
       <PropertyDef name="subjectCode">
         <Property></Property>
       </PropertyDef>
@@ -82,18 +107,22 @@
         <Property></Property>
         <Property name="label">科目</Property>
       </PropertyDef>
-      <PropertyDef name="calcStatus">
+      <PropertyDef name="customerStatus">
         <Property></Property>
-        <Property name="label">状态</Property>
+        <Property name="label">计算状态</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
               <Entity>
-                <Property name="key">SUCCESS</Property>
+                <Property name="key">1</Property>
                 <Property name="value">成功</Property>
               </Entity>
               <Entity>
-                <Property name="key">FAIL</Property>
+                <Property name="key">2</Property>
+                <Property name="value">计算中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
                 <Property name="value">不成功</Property>
               </Entity>
             </Collection>
@@ -118,15 +147,15 @@
       </PropertyDef>
       <PropertyDef name="noExeCount">
         <Property name="dataType">Integer</Property>
-        <Property name="label">不计算</Property>
+        <Property name="label">未计算</Property>
       </PropertyDef>
       <PropertyDef name="sysErrorCount">
         <Property name="dataType">Integer</Property>
         <Property name="label">系统错误</Property>
       </PropertyDef>
-      <PropertyDef name="beginCount">
+      <PropertyDef name="uncalcuCount">
         <Property name="dataType">Integer</Property>
-        <Property name="label">未计算</Property>
+        <Property name="label">不计算</Property>
       </PropertyDef>
       <PropertyDef name="feesType">
         <Property name="label">单位</Property>
@@ -134,15 +163,29 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	month=12;&#xD;
+	year=year-1;&#xD;
+}&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;createYear&quot;,year);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;createMonth&quot;,month);</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
+      <Property name="pageSize">20</Property>
     </DataSet>
     <DataSet id="dsCustomerCalStatus">
       <Property name="dataType">[dtCustomerCalStatus]</Property>
+      <Property name="dataProvider">bmsAsynCalcuTaskController#query</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <DataSet id="dsCustomerSubjectStatus">
       <Property name="dataType">[dtCustomerSubjectStatus]</Property>
+      <Property name="dataProvider">bmsAsynCalcuTaskController#queryDetail</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -172,8 +215,18 @@ with (view.get(&quot;#dsCustomerCalStatus&quot;)){&#xD;
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
-          <Property name="name">calcStatus</Property>
-          <Property name="property">calcStatus</Property>
+          <Property name="name">createYear</Property>
+          <Property name="property">createYear</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">createMonth</Property>
+          <Property name="property">createMonth</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerStatus</Property>
+          <Property name="property">customerStatus</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -184,18 +237,6 @@ with (view.get(&quot;#dsCustomerCalStatus&quot;)){&#xD;
       <MainControl>
         <Container>
           <DataGrid id="dataGridDetail">
-            <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsReportCalcuStatusEntity&quot;).getData();&#xD;
-with (view.get(&quot;#dsReportCalcuStatusDetailEntity&quot;)){&#xD;
-	//定义查询条件json结构&#xD;
-	var queryJson={&#xD;
-		createYear:data.current.get(&quot;createYear&quot;),&#xD;
-		createMonth:data.current.get(&quot;createMonth&quot;),&#xD;
-		customerName:data.current.get(&quot;customerName&quot;)&#xD;
-	};&#xD;
-	set(&quot;parameter&quot;, queryJson);&#xD;
-	flushAsync();&#xD;
-}&#xD;
-</ClientEvent>
             <Property name="dataSet">dsCustomerSubjectStatus</Property>
             <Property name="stretchColumnsMode">auto</Property>
             <Property name="readOnly">true</Property>
@@ -208,10 +249,10 @@ with (view.get(&quot;#dsReportCalcuStatusDetailEntity&quot;)){&#xD;
               <Property name="name">feesType</Property>
               <Property name="property">feesType</Property>
             </DataColumn>
-            <DataColumn name="calcStatus">
-              <ClientEvent name="onRenderCell">var calcStatus=arg.data.get(&quot;calcStatus&quot;);&#xD;
-if(!isNullOrEmpty(calcStatus)){&#xD;
-	if(calcStatus==&quot;FAIL&quot;){&#xD;
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var customerStatus=arg.data.get(&quot;customerStatus&quot;);&#xD;
+if(!isNullOrEmpty(customerStatus)){&#xD;
+	if(customerStatus==&quot;3&quot;){&#xD;
 		arg.dom.style.color = &quot;red&quot;;&#xD;
 	}	&#xD;
 }&#xD;
@@ -219,29 +260,77 @@ if(!isNullOrEmpty(calcStatus)){&#xD;
 arg.processDefault = true;&#xD;
 &#xD;
 &#xD;
-arg.dom.style.color = (arg.data.get(&quot;calcStatus&quot;)==&quot;FAIL&quot;) ? &quot;red&quot; : &quot;green&quot;;</ClientEvent>
-              <Property name="property">calcStatus</Property>
+if(customerStatus==&quot;3&quot;){&#xD;
+	arg.dom.style.color = &quot;red&quot;;&#xD;
+}&#xD;
+if(customerStatus==&quot;1&quot;){&#xD;
+	arg.dom.style.color = &quot;green&quot;;&#xD;
+}&#xD;
+if(customerStatus==&quot;2&quot;){&#xD;
+	arg.dom.style.color = &quot;yellow&quot;;&#xD;
+}</ClientEvent>
+              <Property name="property">customerStatus</Property>
+              <Property name="name">customerStatus</Property>
             </DataColumn>
             <DataColumn name="feesCount">
               <Property name="property">feesCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
             <DataColumn name="finishCount">
               <Property name="property">finishCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
             <DataColumn name="contractMissCount">
+              <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#&quot;,&#xD;
+	//content:&quot;纠正&quot;,&#xD;
+	onclick:function(){&#xD;
+		//数据字典查询科目对应界面的URL&#xD;
+		var subjectUrlAction = view.get(&quot;#subjectUrlAction&quot;);&#xD;
+		//主的与明细的当前行&#xD;
+		var dataMain = view.get(&quot;#dsCustomerCalStatus.data&quot;).current;&#xD;
+		var dataDetail = view.get(&quot;#dsCustomerSubjectStatus.data&quot;).current;&#xD;
+		var param=&quot;?customerId=&quot;+data.get(&quot;customerId&quot;)+&quot;&amp;creMonth=&quot;+creMonth+&quot;&amp;subjectCode=&quot;+dataDetail.get(&quot;subjectCode&quot;)+&quot;&amp;isCalculated=&quot;+&quot;3&quot;;&#xD;
+		var data = {&#xD;
+			code:dataDetail.get(&quot;subjectCode&quot;)&#xD;
+		};&#xD;
+		&#xD;
+		//商品存储费单独判断，其余的费用科目走数据字典配置&#xD;
+		if(&quot;wh_product_storage&quot; == dataDetail.get(&quot;subjectCode&quot;) &amp;&amp; &quot;ITEMS&quot; == dataDetail.get(&quot;feesType&quot;)){&#xD;
+			window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.storage.view.productsRepertory.d&quot;+param, &quot;商品库存_件&quot;, &quot;&quot;, true);&#xD;
+		}else if(&quot;wh_product_storage&quot; == dataDetail.get(&quot;subjectCode&quot;) &amp;&amp; &quot;PALLETS&quot; == dataDetail.get(&quot;feesType&quot;)){&#xD;
+			window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.pallet.view.BizPalletInfo.d.d&quot;+param, &quot;托数管理&quot;, &quot;&quot;, true);&#xD;
+		}else{&#xD;
+			subjectUrlAction.set(&quot;parameter&quot;,data).execute(function(result){&#xD;
+				console.log(result);&#xD;
+				window.top.openUrlInFrameTab(result+param, &quot;&quot;, &quot;&quot;, true);&#xD;
+			});&#xD;
+		}&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
               <Property name="property">contractMissCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
             <DataColumn name="quoteMissCount">
               <Property name="property">quoteMissCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
-            <DataColumn name="noExeCount">
-              <Property name="property">noExeCount</Property>
+            <DataColumn>
+              <Property name="property">uncalcuCount</Property>
+              <Property name="name">uncalcuCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
             <DataColumn name="sysErrorCount">
               <Property name="property">sysErrorCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
-            <DataColumn name="beginCount">
-              <Property name="property">beginCount</Property>
+            <DataColumn>
+              <Property name="property">noExeCount</Property>
+              <Property name="name">noExeCount</Property>
+              <Property name="align">right</Property>
             </DataColumn>
           </DataGrid>
         </Container>
@@ -249,24 +338,37 @@ arg.dom.style.color = (arg.data.get(&quot;calcStatus&quot;)==&quot;FAIL&quot;) ?
       <SideControl>
         <Container>
           <DataGrid id="dataGridMain">
+            <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsCustomerCalStatus&quot;).getData();&#xD;
+&#xD;
+with (view.get(&quot;#dsCustomerSubjectStatus&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		creMonth:data.current.get(&quot;creMonth&quot;),&#xD;
+		customerName:data.current.get(&quot;customerName&quot;)&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
             <Property name="dataSet">dsCustomerCalStatus</Property>
             <Property name="stretchColumnsMode">auto</Property>
             <Property name="readOnly">true</Property>
             <IndicatorColumn/>
             <RowNumColumn/>
-            <DataColumn name="calcDate">
-              <Property name="property">calcDate</Property>
+            <DataColumn>
+              <Property name="property">creMonth</Property>
+              <Property name="name">creMonth</Property>
             </DataColumn>
             <DataColumn name="customerName">
               <Property name="property">customerName</Property>
             </DataColumn>
-            <DataColumn name="calcStatus">
-              <ClientEvent name="onRenderCell">var calcStatus=arg.data.get(&quot;calcStatus&quot;);&#xD;
-if(!isNullOrEmpty(calcStatus)){&#xD;
-	if(calcStatus==&quot;FAIL&quot;){&#xD;
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var customerStatus=arg.data.get(&quot;customerStatus&quot;);&#xD;
+if(!isNullOrEmpty(customerStatus)){&#xD;
+	if(customerStatus==&quot;3&quot;){&#xD;
 		arg.dom.style.color = &quot;red&quot;;&#xD;
 	}&#xD;
-	if(calcStatus==&quot;SUCCESS&quot;){&#xD;
+	if(calcStatus==&quot;1&quot;){&#xD;
 		arg.dom.style.color = &quot;green&quot;;&#xD;
 	}		&#xD;
 }&#xD;
@@ -274,10 +376,19 @@ if(!isNullOrEmpty(calcStatus)){&#xD;
 arg.processDefault = true;&#xD;
 &#xD;
 &#xD;
-arg.dom.style.color = (arg.data.get(&quot;calcStatus&quot;)==&quot;FAIL&quot;) ? &quot;red&quot; : &quot;green&quot;;&#xD;
+if(customerStatus==&quot;3&quot;){&#xD;
+	arg.dom.style.color = &quot;red&quot;;&#xD;
+}&#xD;
+if(customerStatus==&quot;1&quot;){&#xD;
+	arg.dom.style.color = &quot;green&quot;;&#xD;
+}&#xD;
+if(customerStatus==&quot;2&quot;){&#xD;
+	arg.dom.style.color = &quot;yellow&quot;;&#xD;
+}&#xD;
 &#xD;
 </ClientEvent>
-              <Property name="property">calcStatus</Property>
+              <Property name="property">customerStatus</Property>
+              <Property name="name">customerStatus</Property>
             </DataColumn>
             <DataColumn name="subjectNum">
               <Property name="property">subjectNum</Property>
@@ -314,5 +425,8 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <AjaxAction id="subjectUrlAction">
+      <Property name="service">bmsAsynCalcuTaskController#findUrlBySubjectCode</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

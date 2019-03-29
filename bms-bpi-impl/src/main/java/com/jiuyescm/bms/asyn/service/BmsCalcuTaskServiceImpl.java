@@ -9,9 +9,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,8 @@ import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
+import net.sf.json.JSONObject;
+
 @Service("bmsCalcuTaskService")
 public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	
@@ -52,17 +53,37 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	
 	@Override
 	public PageInfo<BmsCalcuTaskVo> query(Map<String, Object> condition,int pageNo, int pageSize) throws BizException {
-		
+		List<String> customerIds = new ArrayList<String>();
+		//日期拼接
+		String creMonth = "";
+		if (Integer.valueOf(condition.get("createMonth").toString()) < 10) {
+			creMonth = condition.get("createYear").toString() + "0" + condition.get("createMonth");
+		}else {
+			creMonth = condition.get("createYear").toString() + condition.get("createMonth");
+		}
+		condition.put("creMonth", creMonth);
 		PageInfo<BmsCalcuTaskVo> pageVoInfo= new PageInfo<BmsCalcuTaskVo>();
 		try{
-			PageInfo<BmsAsynCalcuTaskEntity> pageInfo=bmsAsynCalcuTaskRepositoryimpl.query(condition, pageNo, pageSize);
+			PageInfo<BmsAsynCalcuTaskEntity> pageInfo=bmsAsynCalcuTaskRepositoryimpl.queryMain(condition, pageNo, pageSize);
 			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
 			if(pageInfo!=null&&pageInfo.getList().size()>0){
+				for(BmsAsynCalcuTaskEntity entity:pageInfo.getList()){
+					customerIds.add(entity.getCustomerId());
+				}
+				condition.put("customerIds", customerIds);
+				List<BmsAsynCalcuTaskEntity> taskList = bmsAsynCalcuTaskRepositoryimpl.queryInfoByCustomerId(condition);
 				List<BmsCalcuTaskVo> list=new ArrayList<BmsCalcuTaskVo>();
 				for(BmsAsynCalcuTaskEntity entity:pageInfo.getList()){
 					BmsCalcuTaskVo voEntity=new BmsCalcuTaskVo();
 					PropertyUtils.copyProperties(voEntity, entity);
-					list.add(voEntity);
+					for (BmsAsynCalcuTaskEntity vo : taskList) {
+						if (voEntity.getCustomerId().equals(vo.getCustomerId())&&voEntity.getCreMonth()==vo.getCreMonth()) {
+							voEntity.setCustomerStatus(vo.getCustomerStatus());
+							voEntity.setSubjectNum(vo.getSubjectNum());
+							list.add(voEntity);
+							break;
+						}
+					}		
 				}
 				pageVoInfo.setList(list);
 			}
@@ -71,6 +92,25 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 			throw new BizException("查询计算任务异常");
 		}
 		return pageVoInfo;
+	}
+	
+	@Override
+	public List<BmsCalcuTaskVo> queryDetail(Map<String, Object> map) throws BizException {
+		List<BmsCalcuTaskVo> list = new ArrayList<BmsCalcuTaskVo>();
+		try {
+			List<BmsAsynCalcuTaskEntity> entities = bmsAsynCalcuTaskRepositoryimpl.queryDetail(map);
+			if (CollectionUtils.isNotEmpty(entities)) {
+				for (BmsAsynCalcuTaskEntity taskEntity : entities) {
+					BmsCalcuTaskVo taskVo = new BmsCalcuTaskVo();
+					PropertyUtils.copyProperties(taskVo, taskEntity);
+					list.add(taskVo);
+				}	
+			}
+		} catch (Exception e) {
+			logger.error("查询计算任务明细异常",e);
+			throw new BizException("查询计算任务明细异常");
+		}
+		return list;
 	}
 
 	@Override
