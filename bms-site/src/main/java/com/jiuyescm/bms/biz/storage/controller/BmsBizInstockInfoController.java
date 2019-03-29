@@ -143,9 +143,22 @@ public class BmsBizInstockInfoController {
 			entity.setLastModifier(username);
 			entity.setLastModifierId(userId);
 			entity.setLastModifyTime(currentTime);
+			//更新业务数据
 			bmsBizInstockInfoService.update(entity);
+			List<BmsBizInstockInfoEntity> feeList = new ArrayList<>();
+			//重算的费用(只要修改一条业务数据，就需要发两个mq)
+			BmsBizInstockInfoEntity fee1 = new BmsBizInstockInfoEntity();
+			fee1.setFeesNo(entity.getFeesNo());
+			fee1.setSubjectCode(FEE_1);
+			BmsBizInstockInfoEntity fee2 = new BmsBizInstockInfoEntity();
+			fee2.setFeesNo(entity.getFeesNo());
+			fee2.setSubjectCode(FEE_2);
+			feeList.add(fee1);
+			feeList.add(fee2);
+	        bmsBizInstockInfoService.reCalculate(feeList);
 			List<String> subjectList = new ArrayList<>();
-			subjectList.add(entity.getSubjectCode());
+			subjectList.add(FEE_1);
+			subjectList.add(FEE_2);
 			sendMq(subjectList);
 		}
 	}
@@ -406,10 +419,10 @@ public class BmsBizInstockInfoController {
 			//重算的费用
 			BmsBizInstockInfoEntity fee1 = new BmsBizInstockInfoEntity();
 			fee1.setFeesNo(infoEntity.getFeesNo());
-			fee1.setSubjectCode("wh_instock_work");
+			fee1.setSubjectCode(FEE_1);
 			BmsBizInstockInfoEntity fee2 = new BmsBizInstockInfoEntity();
 			fee2.setFeesNo(infoEntity.getFeesNo());
-			fee2.setSubjectCode("wh_b2c_handwork");
+			fee2.setSubjectCode(FEE_2);
 			feeList.add(fee1);
 			feeList.add(fee2);
         }
