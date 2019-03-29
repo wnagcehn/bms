@@ -996,6 +996,7 @@ if (data != null) {&#xD;
       <Property name="dataResolver">dispatchBillController#editEntity</Property>
       <UpdateItem>
         <Property name="dataSet">dsBizDispatchBillEntity</Property>
+        <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
     <Dialog id="dialogBillEdit">

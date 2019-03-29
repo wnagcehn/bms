@@ -266,6 +266,7 @@
 		<if test="sendProvinceId != null" >send_province_id=#{sendProvinceId,jdbcType=VARCHAR},</if>
 		<if test="sendCityId != null" >send_city_id=#{sendCityId,jdbcType=VARCHAR},</if>
 		<if test="adjustServiceTypeCode != null" >adjust_service_type_code=#{adjustServiceTypeCode,jdbcType=VARCHAR},</if>
+		<if test="carrierWeight != null" >carrier_weight=#{carrierWeight,jdbcType=DOUBLE},</if>
 		</set>
 		where
         <if test="(id !=null and id!='')">
@@ -606,4 +607,23 @@
 			and a.order_status = #{orderStatus}
 		</if>
 	</update>
+	
+	<update id="updateIsCalcuByFeesNo" parameterType="java.util.Map">
+    	update fees_receive_dispatch
+    	set is_calculated='99'
+    	where 1=1
+    	<if test="feesNo !=null and feesNo != ''">
+    		and fees_no = #{feesNo}
+    	</if>
+    </update>
+    
+    <update id="updateIsCalcuByWaybillNo" parameterType="java.util.Map">
+    	update fees_receive_dispatch a
+		LEFT JOIN biz_dispatch_bill b on a.fees_no=b.fees_no and b.del_flag='0' 
+		SET a.is_calculated='99'
+		WHERE 1=1
+    	<if test="waybillNo !=null and waybillNo != ''">
+    		and a.waybill_no = #{waybillNo}
+    	</if>
+    </update>
 </mapper>

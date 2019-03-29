@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
-import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -26,8 +25,6 @@ import com.jiuyescm.bms.general.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBizPalletInfoRepository;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
-import com.jiuyescm.bms.general.service.ISystemCodeService;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -208,10 +205,8 @@ public class PalletInitJob extends IJobHandler {
 			feesEntity.setBizType(entity.getBizType()); // 托数类型
 			feesEntity.setFeesNo(feesNo);
 			feesEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
-			feesEntity.setParam2(new SimpleDateFormat("yyyyMM").format(entity.getCreateTime()));
 			feesEntity.setDelFlag("0");
 			feesEntity.setIsCalculated("99");
-			feesEntity.setCalcuMsg("");
 			feesList.add(feesEntity);
 		}
 	}

@@ -191,47 +191,21 @@ public class DispatchBillController{
 	}
 	
 	@DataResolver
-	public String editEntity(Collection<BizDispatchBillEntity> datas){
+	public String editEntity(BizDispatchBillEntity entity){
 		if(Session.isMissing()){
 			return "长时间未操作，用户已失效，请重新登录再试！";
 		}
 		try{
 			Timestamp nowdate = JAppContext.currentTimestamp();
 			String userid=JAppContext.currentUserName();
-			for(BizDispatchBillEntity temp:datas){
-				//判断是否生成费用，判断费用的状态是否为未过账
-				String feeid=temp.getFeesNo();
-				if(StringUtils.isNotBlank(feeid)){
-					Map<String,Object> aCondition=new HashMap<>();
-					aCondition.put("feesNo", feeid);
-					FeesReceiveDispatchEntity feesReceiveDispatchEntity = service.queryOne(aCondition);
-					if (null != feesReceiveDispatchEntity) {
-						//获取此时的费用状态
-						String status=String.valueOf(feesReceiveDispatchEntity.getStatus());
-						if("1".equals(status)){
-							return "该费用已过账，无法调整重量";
-						}
-					}
-				}
-				//此为修改业务数据  
-				//业务数据有生成过费用，且没有过账的话,则允许调整重量,且调整完后,状态重置为未计算
-				//如果没有过账的话,就允许调整重量,且调整完后,状态重置为未计算,定时任务重新扫描到并重新生成应收费用.
-				temp.setIsCalculated("99");
-				temp.setLastModifier(userid);
-				temp.setLastModifyTime(nowdate);
-				bizDispatchBillService.adjustBillEntity(temp);
-				
-				//根据waybillNo查询，判断
-				Map<String, String> condition = new HashMap<String, String>();
-				condition.put("waybillNo", temp.getWaybillNo());
-				BizDispatchBillEntity bizDispatchBillEntity = bizDispatchBillService.queryByWayNo(condition);
-				//更新物流商重量
-				if(null!=bizDispatchBillEntity){
-					bizDispatchBillEntity.setCarrierWeight(temp.getCarrierWeight());
-					bizDispatchBillService.updateBillEntity(bizDispatchBillEntity);
-				}
+			
+			entity.setLastModifier(userid);
+			entity.setLastModifyTime(nowdate);
+			int k = bizDispatchBillService.adjustBillEntity(entity);
+			if (k == 1) {
+				return "更新成功";
 			}
-			return "更新成功";
+			return "更新失败";
 		}catch(Exception e){
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
 			bmsErrorLogInfoEntity.setClassName("DispatchBillController");
@@ -976,7 +950,7 @@ public class DispatchBillController{
 			XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 			if(xssfRow==null){
 				int lieshu = rowNum + 1;
-				setMessage(infoList, rowNum+1,"第"+lieshu+"列空行！");
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行空行！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
 			}
@@ -999,14 +973,26 @@ public class DispatchBillController{
 					break;
 				}
 			}
+			
 			// 运单号（必填）
 			if(StringUtils.isEmpty(waybillNo)) {
 				int lieshu = rowNum + 1;
-				setMessage(infoList, rowNum+1,"第"+lieshu+"列运单号为空值！");
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行运单号为空值！");
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 				return map;
 			}
-				
+			
+			//运单号不存在库中
+/*			Map<String, String> cond = new HashMap<String, String>();
+			cond.put("waybillNo", waybillNo);
+			BizDispatchBillEntity bizEntity = bizDispatchBillService.queryByWayNo(cond);
+			if (null == bizEntity) {
+				int lieshu = rowNum + 1;
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行运单在库中不存在,请检查运单号是否正确");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+				return map;
+			}*/
+			
 			//调整省市区、调整重量、物流商、宅配商、物流产品类型都为空
 			if(StringUtils.isBlank(adjustProvince) && 
 					StringUtils.isBlank(adjustCity) && 
@@ -1046,7 +1032,7 @@ public class DispatchBillController{
 					boolean isNumber = ExportUtil.isNumber(adjustWeight);
 					if(!isNumber) {
 						int lieshu = rowNum + 1;
-						setMessage(infoList, rowNum+1,"第"+lieshu+"列非数字类型数据！");
+						setMessage(infoList, rowNum+1,"第"+lieshu+"行非数字类型数据！");
 						map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 						return map;
 					}else{
@@ -1150,7 +1136,6 @@ public class DispatchBillController{
 				return map;
 			}else{
 				map0.put("waybillNo", ExportUtil.replaceBlank(waybillNo));
-				map0.put("isCalculated", "99");
 				map0.put("lastModifier", userid);
 				map0.put("lastModifyTime", nowdate);
 				list.add(map0);

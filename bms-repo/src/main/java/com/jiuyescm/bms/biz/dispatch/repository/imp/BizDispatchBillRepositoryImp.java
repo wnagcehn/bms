@@ -163,6 +163,11 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	public int updateBatchWeight(List<Map<String, Object>> list) {
 		return updateBatch("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.updateWeight", list);
 	}
+	
+	@Override
+	public int updateIsCalcuByWaybillNo(List<Map<String, Object>> list) {
+		return updateBatch("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.updateIsCalcuByWaybillNo", list);
+	}
 
 	@Override
 	public int adjustBillEntity(BizDispatchBillEntity temp) {
@@ -197,5 +202,11 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	public List<BizDispatchBillEntity> queryBizCustomerid(Map<String, Object> condition) {
 		List<BizDispatchBillEntity> list = this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryBizCustomerid", condition);
 		return list;
+	}
+	
+	@Override
+	public int updateIsCalcuByFeesNo(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.updateIsCalcuByFeesNo", condition);
 	}
 }
