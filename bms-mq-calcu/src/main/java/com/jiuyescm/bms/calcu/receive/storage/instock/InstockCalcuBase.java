@@ -162,12 +162,18 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		//计算方法
 		double amount=0d;
 		switch(priceType){
-			case "PRICE_TYPE_NORMAL"://一口价				
+			case "PRICE_TYPE_NORMAL"://一口价		
+				//打印报价
+				printLog(vo.getTaskId(), "quoteInfo", entity.getFeesNo(), vo.getSubjectName(), "", quoTemplete);
+				civo.setChargeType("unitPrice");
+				civo.setChargeDescrip("金额=单价*数量");
 				amount=num*quoTemplete.getUnitPrice();
 				feeEntity.setUnitPrice(quoTemplete.getUnitPrice());
 				feeEntity.setParam3(quoTemplete.getId().toString());
+				printLog(vo.getTaskId(), "ruleInfo", entity.getFeesNo(), vo.getSubjectName(), "", civo);
 				break;
-			case "PRICE_TYPE_STEP"://阶梯价						
+			case "PRICE_TYPE_STEP"://阶梯价	
+				civo.setChargeType("stepPrice");
 				map.clear();
 				map.put("quotationId", quoTemplete.getId());
 				map.put("num", feeEntity.getQuantity());//根据报价单位判断			
@@ -187,25 +193,32 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 				PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);			
 				
 				if(stepQuoEntity==null){
-					logger.info("阶梯报价未配置");
+					printLog(vo.getTaskId(), "quoteInfo", entity.getFeesNo(), vo.getSubjectName(), "阶梯报价未配置", null);
 					feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					feeEntity.setCalcuMsg("阶梯报价未配置");
 					return;
 				}
-				logger.info("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
+				printLog(vo.getTaskId(), "quoteInfo", entity.getFeesNo(), vo.getSubjectName(), "", stepQuoEntity);
 				
 				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+					civo.setChargeType("unitPrice");
+					civo.setChargeDescrip("金额=单价*数量");
 					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
 					amount=num*stepQuoEntity.getUnitPrice();
 				}else{
+					civo.setChargeType("stepPrice");
+					civo.setChargeDescrip("金额=首量价/首量价+续价");
 					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 				}
 				//判断封顶价
 				if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
 					if(stepQuoEntity.getCapPrice()<amount){
+						civo.setChargeType("topPrice");
 						amount=stepQuoEntity.getCapPrice();
 					}
 				}
+				//打印计费规则
+				printLog(vo.getTaskId(), "ruleInfo", entity.getFeesNo(), vo.getSubjectName(), "", civo);
 				feeEntity.setParam3(stepQuoEntity.getId()+"");
 				break;
 			default:

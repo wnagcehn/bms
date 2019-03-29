@@ -446,7 +446,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		}
 		
 		logger.info("taskId={} nodeName={} feesNo={} subjectCode={} calcuMsg={} data={},"
-				+ taskId,nodeName,feesNo,subjectCode,calcuMsg,dataJson);
+				,taskId,nodeName,feesNo,subjectCode,calcuMsg,dataJson);
 	}
 	
 }

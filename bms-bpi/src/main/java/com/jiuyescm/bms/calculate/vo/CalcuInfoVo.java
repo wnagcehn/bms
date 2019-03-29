@@ -3,7 +3,7 @@ package com.jiuyescm.bms.calculate.vo;
 public class CalcuInfoVo {
 
 	private String ruleNo; 		//规则编号
-	private String chargeType;	//计费方式  一口价  单价  首续价
+	private String chargeType;	//计费方式  一口价  单价  首续价 封顶价
 	private String chargeUnit;	//计费单位 吨 ,箱数...
 	private String chargeDescrip;//计费描述
 	
