@@ -16,6 +16,7 @@ import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
 import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
+import com.jiuyescm.exception.BizException;
 
 /**
  * ..ServiceImpl
@@ -94,13 +95,22 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
     }
     
     /**
-     * 批量更新
+     * 批量更新业务表调整托数
+     * 批量更新费用表计算状态为99并且更新调整托数
      * @param list
      * @return
      */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
     public int updateBatch(List<Map<String, Object>> list){
-    	return bizPalletInfoRepository.updateBatch(list);
+    	try {
+    		bizPalletInfoRepository.updateBatch(list);
+        	bizPalletInfoRepository.updateBatchFees(list);
+		} catch (Exception e) {
+			logger.error("更新异常!", e);
+			throw new BizException("更新异常!",e);
+		}
+    	return 1;
     }
     
     /**

@@ -299,13 +299,14 @@ public class CustomerDictService implements ICustomerDictService {
 	public PubCustomerVo queryById(String customerId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("customerId", customerId);
+		map.put("delFlag", "0");
 		List<PubCustomerEntity> list = pubCustomerRepository.query(map);
 		if(list == null || list.size() == 0){
 			return null;
 		}
 		PubCustomerVo vo = new PubCustomerVo();
 		try {
-			PropertyUtils.copyProperties(list.get(0), vo);
+			PropertyUtils.copyProperties(vo,list.get(0));
 		} catch (Exception ex) {
 			logger.info("转换失败 ", ex);
 		}

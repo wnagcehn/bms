@@ -132,8 +132,9 @@
 			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
 			<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
 			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>
 		</set>
-        where fees_no=#{feesNo}
+        where fees_no=#{feesNo} and subject_code = #{subjectCode}
     </update>
     
     <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">

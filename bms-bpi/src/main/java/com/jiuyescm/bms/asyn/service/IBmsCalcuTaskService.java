@@ -28,4 +28,11 @@ public interface IBmsCalcuTaskService {
 	
 	List<BmsCalcuTaskVo> queryByMap(Map<String, Object> condition);
 	
+	/**
+	 * 汇总配送费用要发的MQ
+	 * @param condition
+	 * @return
+	 */
+	List<BmsCalcuTaskVo> queryDisByMap(Map<String, Object> condition);
+	
 }

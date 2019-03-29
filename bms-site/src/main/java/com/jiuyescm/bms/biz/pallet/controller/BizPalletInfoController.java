@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,7 +20,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -193,28 +196,7 @@ public class BizPalletInfoController {
 			if (k == 0) {
 				throw new BizException("更新失败！");
 			}
-			subjects = initSubjects();
-			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-			sendTaskMap.put("isCalculated", "99");
-			sendTaskMap.put("subjectList", Arrays.asList(subjects));
-			//对这些费用按照商家、科目、时间排序
-			List<SystemCodeEntity> sysList = systemCodeService.findEnumList("PALLET_CAL_FEE");
-			Map<String, String> sysMap = new HashMap<String, String>();
-			for (SystemCodeEntity systemCodeEntity : sysList) {
-				sysMap.put(systemCodeEntity.getCode(), systemCodeEntity.getCodeName());
-			}
-			List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
-			for (BmsCalcuTaskVo vo : list) {
-				vo.setCrePerson("系统");
-				vo.setCrePersonId("system");
-				vo.setSubjectName(sysMap.get(vo.getSubjectCode()));
-				try {
-					bmsCalcuTaskService.sendTask(vo);
-					logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
-				} catch (Exception e) {
-					logger.error("mq发送失败:", e);
-				}	
-			}
+			sendTasks();
 		}
 	}
 
@@ -382,6 +364,7 @@ public class BizPalletInfoController {
 			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
 		}
+		XSSFFormulaEvaluator  evaluator = new XSSFFormulaEvaluator(xssfWorkbook); 
 		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
 		
 		if(xssfSheet==null)
@@ -453,6 +436,23 @@ public class BizPalletInfoController {
 				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
 			}
 			
+			//查看此行是否在库中已存在
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = HSSFDateUtil.getJavaDate(Double.valueOf(curTime));
+			curTime = sdf.format(date);
+			Map<String, Object> cond = new HashMap<String, Object>();
+			cond.put("curTime", curTime);
+			cond.put("customerId", customerMap.get(customerName));
+			cond.put("warehouseCode", wareHouseMap.get(warehouseName));
+			cond.put("temperatureTypeCode", temperatureMap.get(temperatureType));
+			cond.put("bizType", bizTypeMap.get(bizType));
+			List<BizPalletInfoEntity> palletList = bizPalletInfoService.query(cond);
+			if (CollectionUtils.isEmpty(palletList)) {
+				int lieshu = rowNum + 1;
+				setMessage(infoList, rowNum+1,"第"+lieshu+"行不存在库中！");
+				map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
+			}
+			
 			//入库单号重复性校验
 			if (dataMap.containsKey(curTime+customerName+warehouseName+bizType+temperatureType)) {
 				setMessage(infoList, rowNum+1,"第"+(rowNum+1)+"行数据重复！");
@@ -484,14 +484,11 @@ public class BizPalletInfoController {
 				continue;
 			}
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-			map0.put("curTime", sdf.parse(curTime));
+			map0.put("curTime", curTime);
 			map0.put("customerId", customerMap.get(customerName));
 			map0.put("warehouseCode", wareHouseMap.get(warehouseName));
 			map0.put("temperatureTypeCode", temperatureMap.get(temperatureType));
 			map0.put("bizType", bizTypeMap.get(bizType));
-			//map0.put("isCalculated", "99");
 			map0.put("lastModifier", username);
 			map0.put("lastModifierId", userid);
 			map0.put("lastModifyTime", nowdate);
@@ -504,22 +501,22 @@ public class BizPalletInfoController {
         DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 800);
         
         int num = 0;
-        String message = null;
-        try {
+		String message = null;
+		try {
 			num = bizPalletInfoService.updateBatch(list);
 		} catch (Exception e) {
-		     message = e.getMessage();
-		     logger.error(e.getMessage(), e);
-		     //写入日志
-		     BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-			 bmsErrorLogInfoEntity.setClassName("bizPalletInfoController");
-			 bmsErrorLogInfoEntity.setMethodName("importUpdateWeightLock");
-			 bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-			 bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-			 bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);	
+			message = e.getMessage();
+			logger.error(e.getMessage(), e);
+			// 写入日志
+			BmsErrorLogInfoEntity bmsErrorLogInfoEntity = new BmsErrorLogInfoEntity();
+			bmsErrorLogInfoEntity.setClassName("bizPalletInfoController");
+			bmsErrorLogInfoEntity.setMethodName("importUpdateWeightLock");
+			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
+			bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
+			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
 		}
-        if(num==0){
-        	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
+		if (num == 0) {
+			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 			errorVo = new ErrorMessageVo();
 			if(message!=null){
 				errorVo.setMsg(message);
@@ -532,6 +529,8 @@ public class BizPalletInfoController {
 			
 			return map;
         }else {
+        	//更新业务表和费用表成功,发送MQ
+        	sendTasks();
         	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
 			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
 			return map;
@@ -605,7 +604,6 @@ public class BizPalletInfoController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
-		subjects = initSubjects();
 		List<BizPalletInfoEntity> list = bizPalletInfoService.query(param);
 		if (null == list || list.size() == 0) {
 			return "没有数据重算";
@@ -614,21 +612,7 @@ public class BizPalletInfoController {
 		if(bizPalletInfoService.retryCalculate(list) <= 0){
 			return "重算异常";
 		}else {
-			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-			sendTaskMap.put("isCalculated", "99");
-			sendTaskMap.put("subjectList", Arrays.asList(subjects));
-			//对这些费用按照商家、科目、时间排序
-			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
-			for (BmsCalcuTaskVo vo : calList) {
-				vo.setCrePerson("系统");
-				vo.setCrePersonId("system");
-				try {
-					bmsCalcuTaskService.sendTask(vo);
-					logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
-				} catch (Exception e) {
-					logger.error("mq发送失败:", e);
-				}	
-			}
+			sendTasks();
 		}
 		return "操作成功! 正在重算...";
 	}
@@ -900,6 +884,31 @@ public class BizPalletInfoController {
 			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
 		}
 		return mapValue;
+	}
+	
+	/**
+	 * 发送MQ公用方法
+	 */
+	private void sendTasks() {
+		//初始化费用科目
+		subjects = initSubjects();
+		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", Arrays.asList(subjects));
+		//对这些费用按照商家、科目、时间排序
+		List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
+		Map<String, String> sysMap = getEnumList("PALLET_CAL_FEE");
+		for (BmsCalcuTaskVo vo : calList) {
+			vo.setCrePerson("系统");
+			vo.setCrePersonId("system");
+			vo.setSubjectName(sysMap.get(vo.getSubjectCode()));
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.error("mq发送失败:", e);
+			}	
+		}
 	}
 	
 }

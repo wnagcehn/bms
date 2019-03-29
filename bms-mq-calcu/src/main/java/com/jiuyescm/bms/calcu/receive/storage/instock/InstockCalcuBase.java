@@ -7,7 +7,7 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
-import org.kie.internal.task.api.TaskIdentityService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,21 @@ import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
+import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
+import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
+import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.contract.entity.PriceContractItemEntity;
+import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
 import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
+import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
@@ -45,6 +50,10 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
 	@Autowired IBmsCalcuService bmsCalcuService;
+	@Autowired private IPriceContractInfoService jobPriceContractInfoService;
+	@Autowired private IPriceContractItemRepository priceContractItemRepository;
+	@Autowired private IGenericTemplateRepository genericTemplateRepository;
+	
 	
 	@Override
 	protected List<BmsBizInstockInfoEntity> queryBillList(Map<String, Object> map) {
@@ -53,55 +62,116 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	}
 	
 	@Override
-	protected void calcuForBms(BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity feeEntity,Map<String, Object> errorMap){
+	protected void calcuForBms(BmsCalcuTaskVo vo,BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity feeEntity){
 		
-		//报价模板
-		PriceGeneralQuotationEntity generalEntity=(PriceGeneralQuotationEntity) errorMap.get("QuoModelInfo");
-		String priceType=generalEntity.getPriceType();
-		//计费单位 
-		String unit=generalEntity.getFeeUnitCode();
-		//数量
-		double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
-				
-		double weight = 0d;
-		if ((double)feeEntity.getWeight()/1000 < 1) {
-			weight = 1d;
-		}else {
-			weight = (double)feeEntity.getWeight()/1000;
+		PriceContractInfoEntity contractEntity = null;
+		PriceGeneralQuotationEntity quoTemplete = null;
+		
+		//查询合同
+		String customerId=entity.getCustomerId();
+		String SubjectId = vo.getSubjectCode();
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.clear();
+		map.put("customerid", customerId);
+		map.put("contractTypeCode", "CUSTOMER_CONTRACT");
+		contractEntity = jobPriceContractInfoService.queryContractByCustomer(map);
+		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
+			logger.info("bms合同缺失");
+			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
+			feeEntity.setCalcuMsg("bms合同缺失");
+			return;
 		}
+		//验证签约服务
+		Map<String,Object> contractItems_map=new HashMap<String,Object>();
+		contractItems_map.put("contractCode", contractEntity.getContractCode());
+		contractItems_map.put("subjectId", SubjectId);
+		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
+		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
+			logger.info("未签约服务");
+			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
+			feeEntity.setCalcuMsg("未签约服务");
+			return;
+		}
+		
+		/*验证报价 报价*/
+		map.clear();
+		map.put("subjectId",SubjectId);
+		map.put("quotationNo", contractItems.get(0).getTemplateId());
+		quoTemplete = priceGeneralQuotationRepository.query(map);
+		if(quoTemplete==null){
+			logger.info("报价模板缺失");
+			feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			feeEntity.setCalcuMsg("报价模板缺失");
+			return;
+		}
+		logger.info("合同信息");
+		String contractNo = contractEntity.getContractCode();
+		String quoModelNo = quoTemplete.getQuotationNo();
+		//1：业务数据查询
+		//任务ID,费用编号，科目名称，节点-业务数据（商家名称，仓库名称，原始数量，调整数量，业务时间）
+		//2：计费数据
+		//任务ID,费用编号，科目名称，节点-计费数据（商家名称，仓库名称，计费数量，业务时间）
+		//3:不计算
+		//任务ID,费用编号，科目名称，不计算原因
+		//4：节点-合同查询
+		//任务ID,费用编号，科目名称，节点-合同信息查询（合同归属，合同编号，报价模板编号，报价类型，计费单位，计费单价，节点描述）
+		//5：节点-报价查询
+		//任务ID,费用编号，科目名称，节点-报价信息（报价列表）
+		//6:节点-报价帅选
+		
+		//任务ID,费用编号，科目名称，节点-报价信息（报价类型，计费单位，计费单价）
+		//7：节点-费用计算
+		//任务ID,费用编号，科目名称，计算公式
+		
+		logger.info("taskId={} feesNo={} subjectCode={} contractNo={} quoModelNo={} descrip={}",
+				vo.getTaskId(),entity.getFeesNo(),vo.getSubjectCode(),contractNo,quoModelNo,"");
+		
+		
+		
+		String priceType = quoTemplete.getPriceType();
+		String unit = quoTemplete.getFeeUnitCode();//计费单位 
+		double num = feeEntity.getQuantity();
+		
+		switch (unit) {
+		case "ITEMS":
+			num = feeEntity.getQuantity();
+			break;
+		case "CARTON":
+			num = feeEntity.getBox();
+			break;
+		case "TONS":
+			double weight = 0d;
+			if ((double)feeEntity.getWeight()/1000 < 1) {
+				weight = 1d;
+			}else {
+				weight = (double)feeEntity.getWeight()/1000;
+			}
+			num = weight;
+			break;
+		case "KILOGRAM":
+			num = feeEntity.getWeight();
+			break;
+		default:
+			break;
+		}
+		
 		//计算方法
 		double amount=0d;
 		switch(priceType){
 		case "PRICE_TYPE_NORMAL"://一口价				
-            //如果计费单位是 件 -> 费用 = 商品数量*模板单价
-			//如果计费单位是 箱 -> 费用 = 商品箱数*模板单价
-			//如果计费单位是 吨 -> 费用 = 商品重量*模板单价/1000
-			//如果计费单位是 千克 -> 费用 = 商品重量*模板单价
-			if ("ITEMS".equals(unit)) {
-				amount=num*generalEntity.getUnitPrice();
-			}else if ("CARTON".equals(unit)) {
-				amount=feeEntity.getBox()*generalEntity.getUnitPrice();
-			}else if ("TONS".equals(unit)) {
-				amount=weight*generalEntity.getUnitPrice();					
-			}else if ("KILOGRAM".equals(unit)) {
-				amount=feeEntity.getWeight()*generalEntity.getUnitPrice();
-			}
-			feeEntity.setUnitPrice(generalEntity.getUnitPrice());
-			feeEntity.setParam3(generalEntity.getId()+"");
-			break;
+			amount=num*quoTemplete.getUnitPrice();
+			feeEntity.setUnitPrice(quoTemplete.getUnitPrice());
+			feeEntity.setParam3(quoTemplete.getId().toString());
 		case "PRICE_TYPE_STEP"://阶梯价						
-			Map<String,Object> map=new HashMap<String,Object>();
-			map.put("quotationId", generalEntity.getId());
-			//根据报价单位判断
-			map.put("num", num);			
+			map.clear();
+			map.put("quotationId", quoTemplete.getId());
+			map.put("num", feeEntity.getQuantity());//根据报价单位判断			
 			//查询出的所有子报价
 			List<PriceStepQuotationEntity> list=repository.queryPriceStepByQuatationId(map);
 			
 			if(list==null || list.size() == 0){
 				logger.info(entity.getId()+"阶梯报价未配置");
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(entity.getRemark()+"阶梯报价未配置;");
 				feeEntity.setCalcuMsg("阶梯报价未配置");
 				return;
 			}
@@ -112,38 +182,18 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 			PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);			
 			
 			if(stepQuoEntity==null){
-				logger.info("-->"+entity.getId()+"阶梯报价未配置");
-				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				logger.info("阶梯报价未配置");
 				feeEntity.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				entity.setRemark(entity.getRemark()+"阶梯报价未配置;");
 				feeEntity.setCalcuMsg("阶梯报价未配置");
 				return;
 			}
-			
 			logger.info("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
 			
-            // 如果计费单位是 件
-			if ("ITEMS".equals(unit)) {//按件
-				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-					amount=num*stepQuoEntity.getUnitPrice();
-				}else{
-					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-				}
-			}else if ("TONS".equals(unit)) {//按吨
-				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					amount=weight*generalEntity.getUnitPrice();
-					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				}else{
-					amount=(double)(stepQuoEntity.getFirstNum()<weight?stepQuoEntity.getFirstPrice()+(weight-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice());
-				}		
-			}else if("CARTON".equals(unit)){//按箱
-				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-					amount=feeEntity.getBox()*stepQuoEntity.getUnitPrice();
-					feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-				}else{
-					amount=stepQuoEntity.getFirstNum()<feeEntity.getBox()?stepQuoEntity.getFirstPrice()+(feeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-				}
+			if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+				feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+				amount=num*stepQuoEntity.getUnitPrice();
+			}else{
+				amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 			}
 			//判断封顶价
 			if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
@@ -174,6 +224,7 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 			else{
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 				logger.info("计算不成功，费用【{}】",fee.getCost());
+				fee.setCalcuMsg("未计算出金额");
 			}
 		}
 		else{
@@ -196,20 +247,21 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	}
 
 	@Override
-	protected void queryQuoModel(BmsCalcuTaskVo vo, Map<String, Object> errorMap) {
-		PriceContractItemEntity contractItem = (PriceContractItemEntity) errorMap.get("ContractInfoItem");
+	protected void queryQuoModel(BmsCalcuTaskVo vo, Map<String, Object> bmsMap) {
+		PriceContractItemEntity contractItem = (PriceContractItemEntity) bmsMap.get("ContractInfoItem");
 		Map<String, Object> cond = new HashMap<String, Object>();
 		cond.put("subjectId",vo.getSubjectCode());
 		cond.put("quotationNo", contractItem.getTemplateId());
 		PriceGeneralQuotationEntity quoTemplete = priceGeneralQuotationRepository.query(cond);
 		if(quoTemplete == null){
 			logger.info("taskId={} 报价模板缺失",vo.getTaskId());
-			errorMap.put("success", "fail");
-			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
-			errorMap.put("msg", "报价模板缺失");
+			bmsMap.put("success", "fail");
+			bmsMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
+			bmsMap.put("msg", "报价模板缺失");
 			return;
 		}
-		errorMap.put("QuoModelInfo", quoTemplete);
+		bmsMap.put("QuoModelInfo", quoTemplete);
+		bmsMap.put("QuoModelNo", quoTemplete.getQuotationNo());
 		logger.info("taskId={} 报价模板编号:",quoTemplete.getQuotationNo());
 	}
 	
@@ -243,11 +295,11 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 
 	@Override
 	protected boolean isNoExe(BmsBizInstockInfoEntity t,FeesReceiveStorageEntity f,Map<String, Object> errorMap) {
-		if(!"succ".equals(errorMap.get("success"))){
+		/*if(!"succ".equals(errorMap.get("success"))){
 			f.setIsCalculated(errorMap.get("is_calculated").toString());
 			f.setCalcuMsg(errorMap.get("msg").toString());
 			return true;
-		}
+		}*/
 		return false;
 	}
 
@@ -272,6 +324,12 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 			logger.info("taskId={} feesNo={} subjectName={} nameNode={} msg={}",vo.getTaskId(),t.getFeesNo(),vo.getSubjectName(),nodeName,JSONObject.fromObject(obj));
 		}
 		
+	}
+	
+	protected boolean validateData(BmsCalcuTaskVo vo,BizAddFeeEntity entity,FeesReceiveStorageEntity storageFeeEntity) {
+		
+		
+		return true;
 	}
 
 

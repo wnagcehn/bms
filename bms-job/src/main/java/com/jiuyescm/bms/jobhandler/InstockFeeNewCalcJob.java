@@ -240,40 +240,43 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 					priceType=generalEntity.getPriceType();
 					//计费单位 
 					String unit=generalEntity.getFeeUnitCode();
-					//数量
-					double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
-							
-					double weight = 0d;
-					if ((double)feeEntity.getWeight()/1000 < 1) {
-						weight = 1d;
-					}else {
-						weight = (double)feeEntity.getWeight()/1000;
+					//计费数量
+					double num = 0;
+					switch (unit) {
+					case "ITEMS":
+						num = feeEntity.getQuantity();
+						break;
+					case "CARTON":
+						num = feeEntity.getBox();
+						break;
+					case "TONS":
+						double weight = 0d;
+						if ((double)feeEntity.getWeight()/1000 < 1) {
+							weight = 1d;
+						}else {
+							weight = (double)feeEntity.getWeight()/1000;
+						}
+						num = weight;
+						break;
+					case "KILOGRAM":
+						num = feeEntity.getWeight();
+						break;
+					default:
+						break;
 					}
+					
 					//计算方法
 					double amount=0d;
 					switch(priceType){
-					case "PRICE_TYPE_NORMAL"://一口价				
-			            //如果计费单位是 件 -> 费用 = 商品数量*模板单价
-						//如果计费单位是 箱 -> 费用 = 商品箱数*模板单价
-						//如果计费单位是 吨 -> 费用 = 商品重量*模板单价/1000
-						//如果计费单位是 千克 -> 费用 = 商品重量*模板单价
-						if ("ITEMS".equals(unit)) {
-							amount=num*generalEntity.getUnitPrice();
-						}else if ("CARTON".equals(unit)) {
-							amount=feeEntity.getBox()*generalEntity.getUnitPrice();
-						}else if ("TONS".equals(unit)) {
-							amount=weight*generalEntity.getUnitPrice();					
-						}else if ("KILOGRAM".equals(unit)) {
-							amount=feeEntity.getWeight()*generalEntity.getUnitPrice();
-						}
+					case "PRICE_TYPE_NORMAL"://一口价		
+						amount=num*generalEntity.getUnitPrice();
 						feeEntity.setUnitPrice(generalEntity.getUnitPrice());
 						feeEntity.setParam3(generalEntity.getId()+"");
 						break;
 					case "PRICE_TYPE_STEP"://阶梯价						
 						Map<String,Object> map=new HashMap<String,Object>();
 						map.put("quotationId", generalEntity.getId());
-						//根据报价单位判断
-						map.put("num", num);			
+						map.put("num", num);//根据报价单位判断		
 						//查询出的所有子报价
 						List<PriceStepQuotationEntity> list=repository.queryPriceStepByQuatationId(map);
 						
@@ -302,37 +305,19 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 						
 						XxlJobLogger.log("筛选后得到的报价结果【{0}】",JSONObject.fromObject(stepQuoEntity));
 						
-		                // 如果计费单位是 件
-						if ("ITEMS".equals(unit)) {//按件
-							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-								amount=num*stepQuoEntity.getUnitPrice();
-							}else{
-								amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-							}
-						}else if ("TONS".equals(unit)) {//按吨
-							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-								amount=weight*generalEntity.getUnitPrice();
-								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-							}else{
-								amount=(double)(stepQuoEntity.getFirstNum()<weight?stepQuoEntity.getFirstPrice()+(weight-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice());
-							}		
-						}else if("CARTON".equals(unit)){//按箱
-							if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
-								amount=feeEntity.getBox()*stepQuoEntity.getUnitPrice();
-								feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
-							}else{
-								amount=stepQuoEntity.getFirstNum()<feeEntity.getBox()?stepQuoEntity.getFirstPrice()+(feeEntity.getBox()-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
-							}
+						if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
+							feeEntity.setUnitPrice(stepQuoEntity.getUnitPrice());
+							amount=num*stepQuoEntity.getUnitPrice();
+						}else{
+							amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 						}
 						//判断封顶价
 						if(!DoubleUtil.isBlank(stepQuoEntity.getCapPrice())){
 							if(stepQuoEntity.getCapPrice()<amount){
 								amount=stepQuoEntity.getCapPrice();
 							}
-						}				
-						
-						feeEntity.setParam3(stepQuoEntity.getId()+"");
+						}
+						feeEntity.setParam3(stepQuoEntity.getId().toString());
 						break;
 					default:
 						break;
