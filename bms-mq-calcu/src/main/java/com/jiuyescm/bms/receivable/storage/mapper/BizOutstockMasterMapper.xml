@@ -77,42 +77,44 @@
     </resultMap>
 	  
     <select id="queryCalculate" parameterType="java.util.Map" resultMap="baseMasterResultMap">
-         select  id,outstock_no,warehouse_code,warehouse_name,customerid,customer_name,temperature_type_code,temperature_type_name,waybill_no,
-				bill_type_code,bill_type_name,b2b_flag,fees_no,
-				total_weight,
-				resize_weight,
-				total_quantity,
-				resize_num,
-				total_varieties,
-				resize_varieties,
-				boxnum,
-				adjust_boxnum,
-				create_time,product_detail, extattr1, extattr2, extattr3, extattr4, extattr5,
-				carrier_id,carrier_name,deliver_id,deliver_name
-		from biz_outstock_master where del_flag = 0 
+         select a.id,a.outstock_no,a.warehouse_code,a.warehouse_name,a.customerid,a.customer_name,a.temperature_type_code,a.temperature_type_name,a.waybill_no,
+				a.bill_type_code,a.bill_type_name,a.b2b_flag,a.fees_no,
+				a.total_weight,
+				a.resize_weight,
+				a.total_quantity,
+				a.resize_num,
+				a.total_varieties,
+				a.resize_varieties,
+				a.boxnum,
+				a.adjust_boxnum,
+				a.create_time,a.product_detail, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,
+				a.carrier_id,a.carrier_name,a.deliver_id,a.deliver_name
+		from biz_outstock_master a 
+	    INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no  
+	    where a.del_flag = '0' and b.del_flag='0' 
 		<if test="(beginTime != null and beginTime !='')" >
-			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
-			and customerid = #{customerId,jdbcType=VARCHAR}
+			and a.customerid = #{customerId,jdbcType=VARCHAR}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="(carrierId != null and carrierId !='')" >
-			and carrier_id = #{carrierId,jdbcType=VARCHAR}
+			and a.carrier_id = #{carrierId,jdbcType=VARCHAR}
 		</if>
 		<if test="(deliveryId != null and deliveryId !='')" >
-			and deliver_id = #{deliveryId,jdbcType=VARCHAR}
+			and a.deliver_id = #{deliveryId,jdbcType=VARCHAR}
 		</if>
 		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = concat(${isCalculated})
+			and b.is_calculated = concat(${isCalculated})
 		</if>
-		<if test="(id != null and id !='')" >
-			and id = #{id,jdbcType=BIGINT}
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and b.subject_code = #{subjectCode,jdbcType=VARCHAR}
 		</if>
 		LIMIT #{num}
     </select>

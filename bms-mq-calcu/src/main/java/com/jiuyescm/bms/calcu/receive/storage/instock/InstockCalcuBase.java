@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,6 @@ import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.calculate.vo.CalcuContractVo;
 import com.jiuyescm.bms.calculate.vo.CalcuInfoVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
-import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
@@ -34,7 +31,6 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
-import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -56,6 +52,11 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	@Autowired private IPriceContractItemRepository priceContractItemRepository;
 	@Autowired private IGenericTemplateRepository genericTemplateRepository;
 	
+	@Override
+	protected void initDict() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	@Override
 	protected List<BmsBizInstockInfoEntity> queryBillList(Map<String, Object> map) {
@@ -263,26 +264,6 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		BmsFeesQtyVo vo = bmsCalcuService.queryFeesQtyForSto(customerId, subjectCode, creMonth);
 		return vo;
 	}
-
-	@Override
-	protected void queryQuoModel(BmsCalcuTaskVo vo, Map<String, Object> bmsMap) {
-		PriceContractItemEntity contractItem = (PriceContractItemEntity) bmsMap.get("ContractInfoItem");
-		Map<String, Object> cond = new HashMap<String, Object>();
-		cond.put("subjectId",vo.getSubjectCode());
-		cond.put("quotationNo", contractItem.getTemplateId());
-		PriceGeneralQuotationEntity quoTemplete = priceGeneralQuotationRepository.query(cond);
-		if(quoTemplete == null){
-			logger.info("taskId={} 报价模板缺失",vo.getTaskId());
-			bmsMap.put("success", "fail");
-			bmsMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
-			bmsMap.put("msg", "报价模板缺失");
-			return;
-		}
-		bmsMap.put("QuoModelInfo", quoTemplete);
-		bmsMap.put("QuoModelNo", quoTemplete.getQuotationNo());
-		logger.info("taskId={} 报价模板编号:",quoTemplete.getQuotationNo());
-	}
-	
 	
 	
 	@Override

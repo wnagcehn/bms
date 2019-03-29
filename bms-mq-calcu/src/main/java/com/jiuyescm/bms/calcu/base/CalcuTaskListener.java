@@ -16,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
@@ -112,6 +110,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			@Override
 			public Map<String, Object> handleObtainLock() {
 				logger.info("taskId={} 成功得到锁 ",taskVo.getTaskId());
+				initDict();
 				calcuJob(taskVo);
 				handMap.put("success", "success");
 				return handMap;
@@ -395,6 +394,9 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	//查询业务数据 （业务数据关联费用数据查询）
 	protected abstract List<T> queryBillList(Map<String,Object> map);
 	
+	//初始化费用对象
+	protected abstract void initDict();
+	
 	//bms费用计算
 	protected abstract void calcuForBms(BmsCalcuTaskVo vo,T t,F f);
 	
@@ -404,9 +406,6 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	 * @param errorMap
 	 */
 	protected abstract void calcuForContract(F f,Map<String, Object> errorMap);
-	
-	//查询bms报价模板
-	protected abstract void queryQuoModel(BmsCalcuTaskVo vo,Map<String, Object> errorMap);
 	
 	/**
 	 * 获取合同在线合同查询条件
