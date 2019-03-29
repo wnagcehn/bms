@@ -95,5 +95,15 @@ public class BizOutstockMasterServiceImpl implements IBizOutstockMasterService {
 	public int updateBatch(List<BizOutstockMasterEntity> list) {
 		// TODO Auto-generated method stub
 		return bizOutstockMasterRepository.updateBatch(list);
-	}	
+	}
+	
+	@Override
+	public List<BizOutstockMasterEntity> queryNewList(Map<String, Object> condition) {
+		return bizOutstockMasterRepository.queryNewList(condition);
+	}
+	
+	@Override
+	public void retryForCalcuFee(Map<String, Object> param) {
+		bizOutstockMasterRepository.retryForCalcuFee(param);
+	}
 }

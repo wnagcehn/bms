@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +18,16 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,6 +41,8 @@ import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.system.BaseController;
@@ -73,8 +79,9 @@ import com.jiuyescm.framework.lock.Lock;
  */
 @Controller("bizOutstockMasterController")
 public class BizOutstockMasterController extends BaseController {
-
-	private static final Logger logger = Logger
+	@Autowired
+	private IBmsCalcuTaskService bmsCalcuTaskService;
+	private static final Logger logger = LoggerFactory
 			.getLogger(BizOutstockMasterController.class.getName());
 
 	@Resource
@@ -209,7 +216,6 @@ public class BizOutstockMasterController extends BaseController {
 				}
 			}
 		}
-
 		// 此为修改业务数据
 		// 根据名字查出对应的id
 		entity.setLastModifier(userid);
@@ -224,7 +230,17 @@ public class BizOutstockMasterController extends BaseController {
 			result.setCode("fail");
 			result.setData("更新失败");
 		}
-
+		// 修改费用数据并发送mq
+		List<String> feeList = new ArrayList<>();
+		feeList.add(feesNo);
+		Map<String, Object> conMap = new HashMap<String, Object>();
+		conMap.put("feeList", feeList);
+		String subjectCode = entity.getSubjectCode();
+		conMap.put("subjectCode", subjectCode);
+		// 更改费用计算状态为99
+		bizOutstockMasterService.retryForCalcuFee(conMap);
+		List<String> subjectList = Arrays.asList(subjectCode);
+		sendTask(subjectList);
 		return result;
 	}
 
@@ -413,10 +429,63 @@ public class BizOutstockMasterController extends BaseController {
 
 	@Expose
 	public String reCalculate(Map<String, Object> param) {
-		if (bizOutstockMasterService.reCalculate(param) == 0) {
-			return "重算异常";
+		// 只查询计算状态为1的业务数据，这样的业务数据一定有费用编号
+		List<BizOutstockMasterEntity> outstockMasterEntities = bizOutstockMasterService
+				.queryNewList(param);
+		if (CollectionUtils.isNotEmpty(outstockMasterEntities)) {
+			List<String> feeList = new ArrayList<>();
+			for (BizOutstockMasterEntity bizOutstockMasterEntity : outstockMasterEntities) {
+				feeList.add(bizOutstockMasterEntity.getFeesNo());
+			}
+			Map<String, Object> conMap = new HashMap<String, Object>();
+			conMap.put("feeList", feeList);
+			if (param.containsKey("subjectCode")) {
+				String subjectCode = (String) param.get("subjectCode");
+				conMap.put("subjectCode", subjectCode);
+			}
+			// 更改费用计算状态为99
+			bizOutstockMasterService.retryForCalcuFee(conMap);
+			// 如果界面指定了费用科目，则按指定费用科目重算，否则全部重算
+			if (param.containsKey("subjectCode")) {
+				String subjectCode = (String) param.get("subjectCode");
+				List<String> subjectList = Arrays.asList(subjectCode);
+				sendTask(subjectList);
+			} else {
+				sendTask(subjectList3);
+			}
 		}
 		return "操作成功! 正在重算...";
+	}
+
+	// wh_b2c_work(B2C订单操作费 ) wh_b2b_work(B2B订单操作费) wh_b2b_handwork(出库装车费)
+	private static final String FEE_1 = "wh_b2c_work";
+	private static final String FEE_2 = "wh_b2b_work";
+	private static final String FEE_3 = "wh_b2b_handwork";
+	private static final List<String> subjectList3 = Arrays.asList(FEE_1,
+			FEE_2, FEE_3);
+
+	private void sendTask(List<String> subjectList) {
+		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+		sendTaskMap.put("isCalculated", "99");
+		sendTaskMap.put("subjectList", subjectList);
+		// 对这些费用按照商家、科目、时间排序
+		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
+		for (BmsCalcuTaskVo vo : list) {
+			vo.setCrePerson(JAppContext.currentUserName());
+			vo.setCrePersonId(JAppContext.currentUserID());
+			vo.setCreTime(JAppContext.currentTimestamp());
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}",
+						vo.getCustomerId(), vo.getCreMonth(),
+						vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.info(
+						"mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}",
+						vo.getCustomerId(), vo.getCreMonth(),
+						vo.getSubjectCode(), e);
+			}
+		}
 	}
 
 	/**
@@ -869,54 +938,8 @@ public class BizOutstockMasterController extends BaseController {
 	@FileResolver
 	public Map<String, Object> importUpdate(final UploadFile file,
 			final Map<String, Object> parameter) throws Exception {
-		// String deliver=(String)parameter.get("deliver");
 		Map<String, Object> remap = new HashMap<String, Object>();
-		// 校验信息（报错提示）
-		/*
-		 * final List<ErrorMessageVo> infoList = new
-		 * ArrayList<ErrorMessageVo>();
-		 * 
-		 * String
-		 * lockString=Tools.getMd5("BMS_QUO_IMPORT_INSTOCK_UPDATE"+JAppContext
-		 * .currentUserName()); remap=lock.lock(lockString, 300, new
-		 * LockCallback<Map<String, Object>>() {
-		 * 
-		 * @Override public Map<String, Object> handleObtainLock() { Map<String,
-		 * Object> map=new HashMap<String, Object>(); try {
-		 */
 		remap = importUpdateWeightLock(file, parameter);
-		/*
-		 * } catch (Exception e) { ErrorMessageVo errorVo = new
-		 * ErrorMessageVo(); errorVo.setMsg("系统错误:"+e.getMessage()); //写入日志
-		 * BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new
-		 * BmsErrorLogInfoEntity();
-		 * bmsErrorLogInfoEntity.setClassName("BmsBizInstockInfoController");
-		 * bmsErrorLogInfoEntity.setMethodName("importUpdate");
-		 * bmsErrorLogInfoEntity.setIdentify("进入锁之前异常");
-		 * bmsErrorLogInfoEntity.setErrorMsg(e.toString());
-		 * bmsErrorLogInfoEntity.setCreateTime(JAppContext.currentTimestamp());
-		 * bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
-		 * infoList.add(errorVo);
-		 * map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList); }
-		 * return map; }
-		 * 
-		 * @Override public Map<String, Object> handleNotObtainLock() throws
-		 * LockCantObtainException { Map<String, Object> map=new HashMap<String,
-		 * Object>(); ErrorMessageVo errorVo = new ErrorMessageVo();
-		 * errorVo.setMsg("出库单导入功能已被其他用户占用，请稍后重试；"); infoList.add(errorVo);
-		 * map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		 * return map; }
-		 * 
-		 * @Override public Map<String, Object> handleException(
-		 * LockInsideExecutedException e) throws LockInsideExecutedException {
-		 * Map<String, Object> map=new HashMap<String, Object>(); ErrorMessageVo
-		 * errorVo = new ErrorMessageVo(); errorVo.setMsg("系统异常，请稍后重试!");
-		 * infoList.add(errorVo);
-		 * map.put(ConstantInterface.ImportExcelStatus.IMP_ERROR, infoList);
-		 * return map; }
-		 * 
-		 * });
-		 */
 		return remap;
 	}
 
@@ -968,7 +991,8 @@ public class BizOutstockMasterController extends BaseController {
 		List<BizOutstockMasterEntity> infoLists = new ArrayList<BizOutstockMasterEntity>();
 
 		Map<String, Integer> checkMap = new HashMap<>();
-
+		//所有运单
+		List<String> waybillNoList = new ArrayList<>();
 		for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 			BizOutstockMasterEntity entity = new BizOutstockMasterEntity();
 
@@ -1064,6 +1088,7 @@ public class BizOutstockMasterController extends BaseController {
 			entity.setWaybillNo(waybillNo);
 			entity.setIsCalculated("99");
 			infoLists.add(entity);
+			waybillNoList.add(waybillNo);
 		}
 
 		// 如果有错误信息
@@ -1082,6 +1107,22 @@ public class BizOutstockMasterController extends BaseController {
 			message = e.getMessage();
 			logger.error("更新失败", e);
 		}
+		//通过运单获取所有修改的业务数据
+		Map<String,Object> condition = new HashMap<>();
+		condition.put("waybillNoList",waybillNoList);
+		List<BizOutstockMasterEntity> bizOutstockMasterEntityList = bizOutstockMasterService.queryNewList(condition);
+		//获取费用编号
+		List<String> feeList = new ArrayList<String>();
+		for (BizOutstockMasterEntity entity : bizOutstockMasterEntityList) {
+			feeList.add(entity.getFeesNo());
+		}
+		Map<String,Object> conditionFee = new HashMap<>();
+		conditionFee.put("feeList", feeList);
+		//更新费用计算状态
+		bizOutstockMasterService.retryForCalcuFee(conditionFee);
+		//发送mq
+		sendTask(subjectList3);
+
 		if (num == 0) {
 			DoradoContext.getAttachedRequest().getSession()
 					.setAttribute("progressFlag", 999);
