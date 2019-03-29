@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtCondition">
+      <PropertyDef name="customerId">
+        <Property/>
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="calcStatus">
+        <Property/>
+        <Property name="label">计算状态</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCustomerCalStatus">
+      <Property name="creationType">com.jiuyescm.bms.customercalc.vo.CustomerCalcStatusVo</Property>
+      <PropertyDef name="calcDate">
+        <Property/>
+        <Property name="label">日期</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property/>
+        <Property name="label">商家Id</Property>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+        <Property name="label">商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="calcStatus">
+        <Property/>
+        <Property name="label">计算状态</Property>
+      </PropertyDef>
+      <PropertyDef name="subjectNum">
+        <Property/>
+        <Property name="label">科目数</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtCustomerSubjectStatus">
+      <Property name="creationType">com.jiuyescm.bms.customercalc.CustomerSubjectStatusEntity</Property>
+      <PropertyDef name="subjectCode">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="subjectName">
+        <Property/>
+        <Property name="label">科目</Property>
+      </PropertyDef>
+      <PropertyDef name="calcStatus">
+        <Property/>
+        <Property name="label">状态</Property>
+      </PropertyDef>
+      <PropertyDef name="feesCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">费用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="finishCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">计算成功</Property>
+      </PropertyDef>
+      <PropertyDef name="contractMissCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">合同缺失</Property>
+      </PropertyDef>
+      <PropertyDef name="quoteMissCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">报价缺失</Property>
+      </PropertyDef>
+      <PropertyDef name="noExeCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">不计算</Property>
+      </PropertyDef>
+      <PropertyDef name="sysErrorCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">系统错误</Property>
+      </PropertyDef>
+      <PropertyDef name="beginCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">未计算</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtCondition]</Property>
+    </DataSet>
+    <DataSet id="dsCustomerCalStatus">
+      <Property name="dataType">[dtCustomerCalStatus]</Property>
+    </DataSet>
+    <DataSet id="dsCustomerSubjectStatus">
+      <Property name="dataType">[dtCustomerSubjectStatus]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsCustomerCalStatus</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+with (view.get(&quot;#dsCustomerCalStatus&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <Container>
+      <AutoForm id="queryForm">
+        <Property name="createPrivateDataSet">true</Property>
+        <Property name="cols">*,*,*,*</Property>
+        <Property name="labelWidth">65</Property>
+        <Property name="dataSet">dsCondition</Property>
+        <AutoFormElement>
+          <Property name="name">customerName</Property>
+          <Property name="property">customerName</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">calcStatus</Property>
+          <Property name="property">calcStatus</Property>
+          <Editor/>
+        </AutoFormElement>
+      </AutoForm>
+    </Container>
+    <SplitPanel>
+      <Property name="direction">top</Property>
+      <Property name="position">280</Property>
+      <MainControl>
+        <Container>
+          <DataGrid id="dataGridDetail">
+            <ClientEvent name="onDataRowClick">var data = view.get(&quot;#dsReportCalcuStatusEntity&quot;).getData();&#xD;
+with (view.get(&quot;#dsReportCalcuStatusDetailEntity&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		createYear:data.current.get(&quot;createYear&quot;),&#xD;
+		createMonth:data.current.get(&quot;createMonth&quot;),&#xD;
+		customerName:data.current.get(&quot;customerName&quot;)&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="dataSet">dsCustomerSubjectStatus</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="subjectName">
+              <Property name="property">subjectName</Property>
+            </DataColumn>
+            <DataColumn name="calcStatus">
+              <Property name="property">calcStatus</Property>
+            </DataColumn>
+            <DataColumn name="feesCount">
+              <Property name="property">feesCount</Property>
+            </DataColumn>
+            <DataColumn name="finishCount">
+              <Property name="property">finishCount</Property>
+            </DataColumn>
+            <DataColumn name="contractMissCount">
+              <Property name="property">contractMissCount</Property>
+            </DataColumn>
+            <DataColumn name="quoteMissCount">
+              <Property name="property">quoteMissCount</Property>
+            </DataColumn>
+            <DataColumn name="noExeCount">
+              <Property name="property">noExeCount</Property>
+            </DataColumn>
+            <DataColumn name="sysErrorCount">
+              <Property name="property">sysErrorCount</Property>
+            </DataColumn>
+            <DataColumn name="beginCount">
+              <Property name="property">beginCount</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <DataGrid id="dataGridMain">
+            <Property name="dataSet">dsCustomerCalStatus</Property>
+            <Property name="stretchColumnsMode">auto</Property>
+            <Property name="readOnly">true</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="calcDate">
+              <Property name="property">calcDate</Property>
+            </DataColumn>
+            <DataColumn name="customerName">
+              <Property name="property">customerName</Property>
+            </DataColumn>
+            <DataColumn name="calcStatus">
+              <Property name="property">calcStatus</Property>
+            </DataColumn>
+            <DataColumn name="subjectNum">
+              <Property name="property">subjectNum</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Trigger id="triggerCustomer">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+    entity.set({&#xD;
+        customerId:data.get(&quot;customerid&quot;),&#xD;
+		customerName:data.get(&quot;customername&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

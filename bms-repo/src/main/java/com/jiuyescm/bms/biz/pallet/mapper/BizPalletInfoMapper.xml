@@ -166,7 +166,10 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			</if>
         </trim>
         where cur_time=#{curTime} and customer_id=#{customerId}
-        and warehouse_code=#{warehouseCode} and temperature_type_code=#{temperatureTypeCode}
+        and warehouse_code=#{warehouseCode} 
+        <if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+        	and temperature_type_code=#{temperatureTypeCode}
+        </if>
         and biz_type=#{bizType}
     </update>
     
@@ -229,16 +232,24 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
    <update id="retryForCalcuNew" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
    		UPDATE fees_receive_storage s
 		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0'
-		SET s.is_calculated='99'
+		<trim prefix="set" suffixOverrides=",">
+			s.is_calculated='99',
+		</trim>
 		WHERE 1=1 and s.del_flag='0'
 		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
 			and p.biz_type = #{bizType}
+		</if>
+		<if test=" curTime != null and curTime !='' ">
+			and p.cur_time = #{curTime}
 		</if>
        	<if test=" warehouseCode != null and warehouseCode !='' ">
 			and p.warehouse_code = #{warehouseCode}
 		</if>
        	<if test=" customerId != null and customerId !='' ">
 			and p.customer_id = #{customerId}
+		</if>
+       	<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+			and p.temperature_type_code = #{temperatureTypeCode}
 		</if>
 		<if test="createTime != null and createTime !=''" >
 			and p.create_time <![CDATA[ >= ]]> #{createTime}
@@ -254,6 +265,33 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		</if>
 		<if test=" isCalculated != null and isCalculated !='' ">
 			and s.is_calculated = #{isCalculated}
+		</if>
+   </update>
+   
+   <update id="updateBatchFees" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
+   		UPDATE fees_receive_storage s
+		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0'
+		<trim prefix="set" suffixOverrides=",">
+			s.is_calculated='99',
+			<if test=" adjustPalletNum != null and adjustPalletNum !='' ">
+				s.quantity = #{adjustPalletNum,jdbcType=DECIMAL},
+			</if>
+		</trim>
+		WHERE 1=1 and s.del_flag='0'
+		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
+			and p.biz_type = #{bizType}
+		</if>
+		<if test=" curTime != null and curTime !='' ">
+			and p.cur_time = #{curTime}
+		</if>
+       	<if test=" warehouseCode != null and warehouseCode !='' ">
+			and p.warehouse_code = #{warehouseCode}
+		</if>
+       	<if test=" customerId != null and customerId !='' ">
+			and p.customer_id = #{customerId}
+		</if>
+       	<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+			and p.temperature_type_code = #{temperatureTypeCode}
 		</if>
    </update>
     

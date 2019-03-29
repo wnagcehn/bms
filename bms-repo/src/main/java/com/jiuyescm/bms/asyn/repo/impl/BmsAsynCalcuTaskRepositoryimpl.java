@@ -58,5 +58,12 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
 		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryByMap", condition);
 		return list;
 	}
+	
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryDisByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryDisByMap", condition);
+		return list;
+	}
 
 }
