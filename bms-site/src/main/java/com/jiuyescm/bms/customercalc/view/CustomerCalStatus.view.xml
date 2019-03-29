@@ -5,53 +5,100 @@
   <Model>
     <DataType name="dtCondition">
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家Id</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
-        <Property name="label">商家名称</Property>
+        <Property></Property>
+        <Property name="label">商家</Property>
       </PropertyDef>
       <PropertyDef name="calcStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">ALL</Property>
+                <Property name="value">全部</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">SUCCESS</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">FAIL</Property>
+                <Property name="value">不成功</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">ALL</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCustomerCalStatus">
       <Property name="creationType">com.jiuyescm.bms.customercalc.vo.CustomerCalcStatusVo</Property>
       <PropertyDef name="calcDate">
-        <Property/>
+        <Property></Property>
         <Property name="label">日期</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家Id</Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="calcStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">计算状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">SUCCESS</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">FAIL</Property>
+                <Property name="value">不成功</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="subjectNum">
-        <Property/>
+        <Property></Property>
         <Property name="label">科目数</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCustomerSubjectStatus">
       <Property name="creationType">com.jiuyescm.bms.customercalc.CustomerSubjectStatusEntity</Property>
       <PropertyDef name="subjectCode">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="subjectName">
-        <Property/>
+        <Property></Property>
         <Property name="label">科目</Property>
       </PropertyDef>
       <PropertyDef name="calcStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">SUCCESS</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">FAIL</Property>
+                <Property name="value">不成功</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="feesCount">
         <Property name="dataType">Integer</Property>
@@ -80,6 +127,9 @@
       <PropertyDef name="beginCount">
         <Property name="dataType">Integer</Property>
         <Property name="label">未计算</Property>
+      </PropertyDef>
+      <PropertyDef name="feesType">
+        <Property name="label">单位</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -116,8 +166,9 @@ with (view.get(&quot;#dsCustomerCalStatus&quot;)){&#xD;
         <Property name="labelWidth">65</Property>
         <Property name="dataSet">dsCondition</Property>
         <AutoFormElement>
-          <Property name="name">customerName</Property>
-          <Property name="property">customerName</Property>
+          <Property name="name">customerId</Property>
+          <Property name="property">customerId</Property>
+          <Property name="trigger">triggerCustomer</Property>
           <Editor/>
         </AutoFormElement>
         <AutoFormElement>
@@ -153,7 +204,22 @@ with (view.get(&quot;#dsReportCalcuStatusDetailEntity&quot;)){&#xD;
             <DataColumn name="subjectName">
               <Property name="property">subjectName</Property>
             </DataColumn>
+            <DataColumn>
+              <Property name="name">feesType</Property>
+              <Property name="property">feesType</Property>
+            </DataColumn>
             <DataColumn name="calcStatus">
+              <ClientEvent name="onRenderCell">var calcStatus=arg.data.get(&quot;calcStatus&quot;);&#xD;
+if(!isNullOrEmpty(calcStatus)){&#xD;
+	if(calcStatus==&quot;FAIL&quot;){&#xD;
+		arg.dom.style.color = &quot;red&quot;;&#xD;
+	}	&#xD;
+}&#xD;
+&#xD;
+arg.processDefault = true;&#xD;
+&#xD;
+&#xD;
+arg.dom.style.color = (arg.data.get(&quot;calcStatus&quot;)==&quot;FAIL&quot;) ? &quot;red&quot; : &quot;green&quot;;</ClientEvent>
               <Property name="property">calcStatus</Property>
             </DataColumn>
             <DataColumn name="feesCount">
@@ -195,6 +261,22 @@ with (view.get(&quot;#dsReportCalcuStatusDetailEntity&quot;)){&#xD;
               <Property name="property">customerName</Property>
             </DataColumn>
             <DataColumn name="calcStatus">
+              <ClientEvent name="onRenderCell">var calcStatus=arg.data.get(&quot;calcStatus&quot;);&#xD;
+if(!isNullOrEmpty(calcStatus)){&#xD;
+	if(calcStatus==&quot;FAIL&quot;){&#xD;
+		arg.dom.style.color = &quot;red&quot;;&#xD;
+	}&#xD;
+	if(calcStatus==&quot;SUCCESS&quot;){&#xD;
+		arg.dom.style.color = &quot;green&quot;;&#xD;
+	}		&#xD;
+}&#xD;
+&#xD;
+arg.processDefault = true;&#xD;
+&#xD;
+&#xD;
+arg.dom.style.color = (arg.data.get(&quot;calcStatus&quot;)==&quot;FAIL&quot;) ? &quot;red&quot; : &quot;green&quot;;&#xD;
+&#xD;
+</ClientEvent>
               <Property name="property">calcStatus</Property>
             </DataColumn>
             <DataColumn name="subjectNum">
