@@ -505,9 +505,9 @@ public class FeesReceiveStorageRepositoryImpl extends MyBatisDao implements IFee
 	}
 
 	@Override
-	public int updateQuantityByFeesNo(Map<String, Object> condition) {
+	public int updateIsCalcuByFeesNo(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		return update("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.updateQuantityByFeesNo", condition);
+		return update("com.jiuyescm.bms.fees.storage.FeesReceiveStorageEntityMapper.updateIsCalcuByFeesNo", condition);
 	}
 
 }

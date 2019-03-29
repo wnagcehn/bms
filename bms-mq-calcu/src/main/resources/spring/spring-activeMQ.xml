@@ -62,6 +62,9 @@
      <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-5">
     	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.INSTOCKWORK" ref="whInstockWorkCalcuListener"/>
     	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.B2CHANDWORK" ref="whInstockB2BCalcuListener"/>
+	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BHANDWORK" ref="outstockB2BHandWorkCalcuListener"/>
+	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BWORK" ref="outstockB2BWorkCalcuListener"/>
+	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2CWORK" ref="outstockB2CWorkCalcuListener"/>
     </jms:listener-container>
 </beans>
  

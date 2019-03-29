@@ -257,5 +257,5 @@ public interface IFeesReceiveStorageRepository {
 	 * @param map
 	 * @return
 	 */
-	int updateQuantityByFeesNo(Map<String, Object> map);
+	int updateIsCalcuByFeesNo(Map<String, Object> condition);
 }

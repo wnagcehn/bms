@@ -1,6 +1,7 @@
 
 package com.jiuyescm.bms.biz.dispatch.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -18,11 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
+import com.jiuyescm.bms.biz.dispatch.repository.imp.BizDispatchBillRepositoryImp;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 import com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity;
 import com.jiuyescm.bms.biz.repo.IOutstockRecordRepository;
 import com.jiuyescm.bms.biz.service.impl.OutstockInfoServiceImpl;
+import com.jiuyescm.bms.fees.dispatch.repository.IFeesReceiveDispatchRepository;
 import com.jiuyescm.exception.BizException;
 
 @Service("bizDispatchBillService")
@@ -128,9 +131,17 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 		return bizRepository.queryDispatch(param);
 	}
 
+	@Transactional(readOnly = false, propagation=Propagation.REQUIRED)
 	@Override
 	public int updateBatchWeight(List<Map<String, Object>> list) {
-		return bizRepository.updateBatchWeight(list);
+		try {
+			bizRepository.updateBatchWeight(list);
+			bizRepository.updateIsCalcuByWaybillNo(list);
+		} catch (Exception e) {
+			logger.error("更新异常!", e);
+			throw new BizException("更新异常!", e);
+		}
+		return 1;
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { BizException.class })
@@ -151,8 +162,17 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 		} catch (Exception e) {
 			logger.error("转换为记录实体类失败:{0}",e);
 		}
-		//2:更新到主表
-		return bizRepository.adjustBillEntity(temp);
+		//2:更新主表和费用表
+		Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("feesNo", temp.getFeesNo());
+    	try {
+    		bizRepository.adjustBillEntity(temp);
+    		bizRepository.updateIsCalcuByFeesNo(map);
+		} catch (Exception e) {
+			logger.error("更新失败!", e);
+			return 0;
+		}
+		return 1;	
 	}
 
 	@Override

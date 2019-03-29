@@ -273,9 +273,6 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0'
 		<trim prefix="set" suffixOverrides=",">
 			s.is_calculated='99',
-			<if test=" adjustPalletNum != null and adjustPalletNum !='' ">
-				s.quantity = #{adjustPalletNum,jdbcType=DECIMAL},
-			</if>
 		</trim>
 		WHERE 1=1 and s.del_flag='0'
 		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">

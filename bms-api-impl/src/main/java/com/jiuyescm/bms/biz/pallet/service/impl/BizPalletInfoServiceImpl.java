@@ -74,10 +74,9 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
     public int update(BizPalletInfoEntity entity) {
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("feesNo", entity.getFeesNo());
-    	map.put("quantity", entity.getAdjustPalletNum());
     	try {
     		bizPalletInfoRepository.update(entity);
-        	feesReceiveStorageRepository.updateQuantityByFeesNo(map);
+        	feesReceiveStorageRepository.updateIsCalcuByFeesNo(map);
 		} catch (Exception e) {
 			logger.error("更新异常!", e);
 			return 0;
