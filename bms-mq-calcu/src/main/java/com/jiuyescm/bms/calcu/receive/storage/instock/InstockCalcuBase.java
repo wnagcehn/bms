@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.calcu.CalcuLog;
 import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
+import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
 import com.jiuyescm.bms.calculate.vo.CalcuContractVo;
 import com.jiuyescm.bms.calculate.vo.CalcuInfoVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
@@ -65,6 +67,7 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	
 	@Override
 	protected void calcuForBms(BmsCalcuTaskVo vo,BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity feeEntity){
+		CalcuBaseInfoVo cbvo = new CalcuBaseInfoVo(vo.getTaskId(),"Contract",entity.getFeesNo(),vo.getSubjectCode(),feeEntity.getCalculateTime());
 		feeEntity.setSubjectCode(vo.getSubjectCode());
 		PriceContractInfoEntity contractEntity = null;
 		PriceGeneralQuotationEntity quoTemplete = null;
@@ -82,12 +85,17 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		cVo.setContractAttr("BMS");
 		if(contractEntity == null || StringUtils.isEmpty(contractEntity.getContractCode())){
 			//打印合同归属
+			cbvo.setNode("contractInfo");
+			cbvo.setData(cVo);
+			CalcuLog.printLog(cbvo);
 			printLog(vo.getTaskId(), "contractInfo", entity.getFeesNo(), vo.getSubjectName(), "bms合同缺失", cVo);
 			feeEntity.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			feeEntity.setCalcuMsg("bms合同缺失");
 			return;
 		}
+		cbvo.setData(cVo);
 		cVo.setContractNo(contractEntity.getContractCode());
+		CalcuLog.printLog(cbvo);
 		//验证签约服务
 		Map<String,Object> contractItems_map=new HashMap<String,Object>();
 		contractItems_map.put("contractCode", contractEntity.getContractCode());
