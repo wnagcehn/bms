@@ -163,7 +163,7 @@
 			 a.resize_weight,
 			 a.product_detail,
 		     b.subject_code,
-		     a.is_calculated,
+		     b.is_calculated,
 		     b.calcu_msg,
 		     b.calculate_time,
 		     b.unit,b.cost
