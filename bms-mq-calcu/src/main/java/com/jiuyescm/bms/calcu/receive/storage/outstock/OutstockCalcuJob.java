@@ -67,14 +67,13 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Autowired private CommonService commonService;
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	
-	
-	private String quoTempleteCode = null;
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
 	
 	public void process(BmsCalcuTaskVo taskVo, String contractAttr) {
 		super.process(taskVo, contractAttr);
 		serviceSubjectCode = subjectCode;
+		getQuoTemplete();
 		errorMap = new HashMap<String, Object>();
 		initConf();
 	}

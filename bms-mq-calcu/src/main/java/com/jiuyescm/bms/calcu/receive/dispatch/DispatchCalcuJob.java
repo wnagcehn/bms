@@ -72,7 +72,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	
 	
-	private String quoTempleteCode = null;
+	//private String quoTempleteCode = null;
 	private Map<String, Object> errorMap = null;
 	private Map<String, String> dispatchSubjectMap = null; 	//物流商与配送科目映射
 	private Map<String, String> deliverNoCalcuMap = null;	//不计费宅配商列表

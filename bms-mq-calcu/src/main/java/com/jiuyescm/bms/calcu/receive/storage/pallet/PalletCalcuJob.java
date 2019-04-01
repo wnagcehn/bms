@@ -65,7 +65,6 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	@Autowired private CommonService commonService;
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	
-	private String quoTempleteCode = null;
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
 	
@@ -76,6 +75,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		super.process(taskVo, contractAttr);
 		logger.info("合同信息{}",contractInfo.getContractNo());
 		serviceSubjectCode = subjectCode;
+		getQuoTemplete();
 		errorMap = new HashMap<String, Object>();
 		initConf();
 	}

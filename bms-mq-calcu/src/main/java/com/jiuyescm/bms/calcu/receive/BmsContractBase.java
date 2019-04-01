@@ -43,7 +43,13 @@ public class BmsContractBase {
 		this.contractAttr = contractAttr;
 		subjectCode = taskVo.getSubjectCode();
 		cbiVo = new CalcuBaseInfoVo(taskVo.getTaskId(),CalcuNodeEnum.BIZ.toString(),"",taskVo.getSubjectCode(),JAppContext.currentTimestamp());
-		unCalcuCount = taskVo.getUncalcuCount();
+		
+		if(taskVo.getUncalcuCount() == null){
+			unCalcuCount = 0;
+		}
+		else{
+			unCalcuCount = taskVo.getUncalcuCount();
+		}
 		getBmsContractInfo(taskVo);
 	}
 	

@@ -73,7 +73,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 	@Autowired private CommonService commonService;
 
 
-	private String quoTempleteCode = null;					//签约服务中的模板编号
+	//private String quoTempleteCode = null;					//签约服务中的模板编号
 	private PriceGeneralQuotationEntity quoTemplete = null;	//报价模板对象
 	private Map<String, Object> errorMap = null;			//用户合同在线计算
 	List<String> cusList=null; 								//按重量算商品存储费的商家
@@ -81,6 +81,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		serviceSubjectCode = subjectCode;
+		getQuoTemplete();
 		errorMap = new HashMap<String, Object>();//用户合同在线计算
 		initConf();
 	}

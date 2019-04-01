@@ -36,7 +36,7 @@ import com.jiuyescm.constants.CalcuNodeEnum;
 import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 
-@Component("InstockCalcuJob")
+@Component("instockCalcuJob")
 @Scope("prototype")
 public class InstockCalcuJob extends BmsContractBase implements ICalcuService<BmsBizInstockInfoEntity,FeesReceiveStorageEntity> {
 
@@ -52,13 +52,14 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 
 
-	private String quoTempleteCode = null;
+	//private String quoTempleteCode = null;
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		logger.info("合同信息{}",contractInfo.getContractNo());
+		getQuoTemplete();
 		serviceSubjectCode = subjectCode;
 		errorMap = new HashMap<String, Object>();
 		initConf();
