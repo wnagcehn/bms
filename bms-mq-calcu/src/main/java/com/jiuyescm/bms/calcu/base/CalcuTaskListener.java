@@ -89,7 +89,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		handMap.put("success", "fail");
 		handMap.put("remark", "");
 		logger.info("taskId={} 加锁处理",taskVo.getTaskId());
-		lock.lock(lockString, 7200, new LockCallback<Map<String, Object>>() {
+		lock.lock(lockString, 100, new LockCallback<Map<String, Object>>() {
 
 			@Override
 			public Map<String, Object> handleObtainLock() {
@@ -162,8 +162,21 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			
 			generalCalcu(taskVo, contractAttr,cond);
 			
+			
+			//总单量统计，计算单量统计
+			BmsFeesQtyVo feesQtyVoFinish = feesCountReport(taskVo);
+			
+			taskVo.setUncalcuCount(feesQtyVoFinish.getUncalcuCount()==null?0:feesQtyVoFinish.getUncalcuCount());//本次待计算的费用数
+			taskVo.setCalcuCount(feesQtyVo.getUncalcuCount()==null?0:feesQtyVo.getUncalcuCount());//计算完成的费用总数    
+			taskVo.setBeginCount(feesQtyVoFinish.getBeginCount()==null?0:feesQtyVoFinish.getBeginCount());//未计算费用总数
+			taskVo.setFinishCount(feesQtyVo.getFinishCount()==null?0:feesQtyVoFinish.getFinishCount());//计算成功总数
+			taskVo.setSysErrorCount(feesQtyVoFinish.getSysErrorCount()==null?0:feesQtyVoFinish.getSysErrorCount());//系统错误用总数
+			taskVo.setContractMissCount(feesQtyVoFinish.getContractMissCount()==null?0:feesQtyVoFinish.getContractMissCount());//合同缺失总数
+			taskVo.setQuoteMissCount(feesQtyVoFinish.getQuoteMissCount()==null?0:feesQtyVoFinish.getQuoteMissCount());//报价缺失总数
+			taskVo.setNoExeCount(feesQtyVoFinish.getNoExeCount()==null?0:feesQtyVoFinish.getNoExeCount());//不计算费用总数
 			taskVo.setTaskStatus(20);//合同归属不存在，计算异常
 			taskVo.setTaskRate(100);
+			taskVo.setFinishTime(JAppContext.currentTimestamp());//计算完成时间
 			bmsCalcuTaskService.update(taskVo);
 			
 		} catch (Exception e1) {

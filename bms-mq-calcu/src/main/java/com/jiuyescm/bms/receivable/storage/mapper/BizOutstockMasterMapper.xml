@@ -78,7 +78,7 @@
 	  
     <select id="queryCalculate" parameterType="java.util.Map" resultMap="baseMasterResultMap">
          select a.id,a.warehouse_code,a.warehouse_name,a.customerid,a.customer_name,a.create_time,
-				a.temperature_type_code,
+				a.temperature_type_code,a.temperature_type_name,
 				a.bill_type_code,a.b2b_flag,a.fees_no,
 				a.total_weight,a.resize_weight,
 				a.total_quantity,a.resize_num,
