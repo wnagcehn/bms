@@ -20,6 +20,8 @@ public interface IBmsAsynCalcuTaskRepository {
     public BmsAsynCalcuTaskEntity save(BmsAsynCalcuTaskEntity entity);
 
     public BmsAsynCalcuTaskEntity update(BmsAsynCalcuTaskEntity entity);
+    
+    public int updateBatch(List<BmsAsynCalcuTaskEntity> list);
 
     BmsAsynCalcuTaskEntity queryOne(String taskId);
     

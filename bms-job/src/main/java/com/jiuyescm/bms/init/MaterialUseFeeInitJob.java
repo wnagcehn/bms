@@ -21,7 +21,6 @@ import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
@@ -132,19 +131,11 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			//根据测试的建议 吧耗材编码设置成商品编号和商品名称 zhangzw
 			storageFeeEntity.setProductNo(entity.getConsumerMaterialCode());
 			storageFeeEntity.setProductName(entity.getConsumerMaterialName());
-			storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费数量
-			if(materialMap!=null && materialMap.containsKey(entity.getConsumerMaterialCode())){
-				String materialType=materialMap.get(entity.getConsumerMaterialCode()).getMaterialType();
-				if("干冰".equals(materialType)){
-					storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getWeight():entity.getAdjustNum());//计费数量
-				}else{
-					storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费重量
-				}
-			}
+			storageFeeEntity.setQuantity(0d);//计费数量
 			storageFeeEntity.setStatus("0");								//状态
 			storageFeeEntity.setOrderNo(entity.getOutstockNo());
 			storageFeeEntity.setBizId(String.valueOf(entity.getId()));						//业务数据主键
-			storageFeeEntity.setWeight(entity.getWeight());					//设置重量
+			storageFeeEntity.setWeight(0d);					//设置重量
 			storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
 			storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 			storageFeeEntity.setDelFlag("0");

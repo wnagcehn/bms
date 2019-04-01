@@ -65,6 +65,8 @@
 	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BHANDWORK" ref="outstockB2BHandWorkCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BWORK" ref="outstockB2BWorkCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2CWORK" ref="outstockB2CWorkCalcuListener"/>
+	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
+	    <jms:listener destination="BMS.QUEUE.CALCU.VALUE.VALUEADD" ref="addUseCalcuListener"/>    
     </jms:listener-container>
 </beans>
  
