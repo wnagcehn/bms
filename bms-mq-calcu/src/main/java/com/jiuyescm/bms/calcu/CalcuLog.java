@@ -4,10 +4,6 @@ import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
-import com.baidu.disconf.core.common.utils.GsonUtils;
-import com.google.gson.Gson;
 import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
 
 public class CalcuLog {
@@ -17,14 +13,24 @@ public class CalcuLog {
 	public static void printLog(CalcuBaseInfoVo t){
 		try{
 			String jsonString = JSONObject.fromObject(t).toString();
-			String jsonString1 = GsonUtils.toJson(t);
-			String jsonString2 = JSON.toJSONString(t);
 			logger.info("{}",jsonString);
-			logger.info("{}",jsonString1);
-			logger.info("{}",jsonString2);
 		}catch(Exception ex){
 			
 		}
+	}
+	
+	/**
+	 * 日志打印
+	 * @param node    日志节点
+	 * @param descrip 异常描述
+	 * @param data	     实体对象
+	 * @param t		     日志对象
+	 */
+	public static void printLog(String node,String descrip,Object data,CalcuBaseInfoVo t){
+		t.setNode(node);
+		t.setDescrip(descrip);
+		t.setData(data);
+		printLog(t);
 	}
 	
 }

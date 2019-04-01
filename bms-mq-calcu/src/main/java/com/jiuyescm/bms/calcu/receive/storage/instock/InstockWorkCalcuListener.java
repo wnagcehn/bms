@@ -1,13 +1,6 @@
 package com.jiuyescm.bms.calcu.receive.storage.instock;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-
-import com.jiuyescm.bms.biz.storage.vo.BizInstockMasterVo;
-import com.jiuyescm.bms.calcu.base.CalcuServiceStoBase;
-import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
-import com.jiuyescm.bms.fees.storage.vo.FeesReceiveStorageVo;
-
 /**
  * 入库操作费计算
  * @author caojianwei

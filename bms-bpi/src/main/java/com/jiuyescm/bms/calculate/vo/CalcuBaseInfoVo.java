@@ -4,14 +4,16 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class CalcuBaseInfoVo<T> {
+public class CalcuBaseInfoVo {
 
+	
 	private String taskId;
 	private String feesNo;
 	private String node;
 	private String subjectCode;
 	private String calcuTime;
-	private T data;
+	private String descrip;
+	private Object data;
 	
 	/**
 	 * 
@@ -28,7 +30,7 @@ public class CalcuBaseInfoVo<T> {
 		this.subjectCode = subjectCode;
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String tsStr = sdf.format(calcuTime);
-		this.setCalcuTime(tsStr);
+		this.calcuTime = tsStr;
 	}
 	
 	public String getTaskId() {
@@ -57,7 +59,7 @@ public class CalcuBaseInfoVo<T> {
 	}
 	
 	//业务参数
-	public T getData() {
+	public Object getData() {
 		return data;
 	}
 	
@@ -65,7 +67,7 @@ public class CalcuBaseInfoVo<T> {
 	 * 业务参数
 	 * @param t
 	 */
-	public void setData(T data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 
@@ -73,8 +75,18 @@ public class CalcuBaseInfoVo<T> {
 		return calcuTime;
 	}
 
-	public void setCalcuTime(String calcuTime) {
-		this.calcuTime = calcuTime;
+	public void setCalcuTime(Timestamp calcuTime) {
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String tsStr = sdf.format(calcuTime);
+		this.calcuTime = tsStr;
+	}
+
+	public String getDescrip() {
+		return descrip;
+	}
+
+	public void setDescrip(String descrip) {
+		this.descrip = descrip;
 	}
 	
 	

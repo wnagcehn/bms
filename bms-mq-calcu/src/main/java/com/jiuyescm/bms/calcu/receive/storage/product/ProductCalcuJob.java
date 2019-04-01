@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.calcu.receive.storage.instock;
+package com.jiuyescm.bms.calcu.receive.storage.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,53 +14,74 @@ import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
-import com.jiuyescm.bms.calcu.CalcuLog;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupService;
+import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
+import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
+import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
 import com.jiuyescm.bms.calcu.receive.CommonService;
 import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
 import com.jiuyescm.bms.calcu.receive.BmsContractBase;
 import com.jiuyescm.bms.calculate.vo.CalcuInfoVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
-import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
+import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
+import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
-import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
+import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
+import com.jiuyescm.bms.general.service.ISystemCodeService;
+import com.jiuyescm.bms.general.service.SequenceService;
+import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
 import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
+import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
+import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
-import com.jiuyescm.constants.CalcuNodeEnum;
+import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
 import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 
-@Component("InstockCalcuJob")
+@Component("productCalcuJob")
 @Scope("prototype")
-public class InstockCalcuJob extends BmsContractBase implements ICalcuService<BmsBizInstockInfoEntity,FeesReceiveStorageEntity> {
+public class ProductCalcuJob extends BmsContractBase implements ICalcuService<BizProductStorageEntity,FeesReceiveStorageEntity> {
 
-	private Logger logger = LoggerFactory.getLogger(InstockCalcuJob.class);
+	private Logger logger = LoggerFactory.getLogger(ProductCalcuJob.class);
 		
-	@Autowired private IBmsBizInstockInfoRepository bmsBizInstockInfoRepository;
-	@Autowired private IPriceStepQuotationRepository repository;
-	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
+	
+	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
+	@Autowired private IBizProductStorageService bizProductStorageService;
+	@Autowired private IFeesCalcuService feesCalcuService;
+	@Autowired private IPriceContractInfoService jobPriceContractInfoService;
+	@Autowired private SequenceService sequenceService;
 	@Autowired private IPriceGeneralQuotationRepository priceGeneralQuotationRepository;
+	@Autowired private IPriceStepQuotationRepository  repository;
+	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
+	@Autowired private IPriceContractItemRepository priceContractItemRepository;
+	@Autowired private IBmsGroupService bmsGroupService;
+	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
+	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
+	@Autowired private ISystemCodeService systemCodeService;
+	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private ContractCalcuService contractCalcuService;
 	@Autowired private CommonService commonService;
-	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 
 
-	private String quoTempleteCode = null;
-	private PriceGeneralQuotationEntity quoTemplete = null;
-	private Map<String, Object> errorMap = null;
+	private String quoTempleteCode = null;					//签约服务中的模板编号
+	private PriceGeneralQuotationEntity quoTemplete = null;	//报价模板对象
+	private Map<String, Object> errorMap = null;			//用户合同在线计算
+	List<String> cusList=null; 								//按重量算商品存储费的商家
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		serviceSubjectCode = subjectCode;
-		errorMap = new HashMap<String, Object>();
+		errorMap = new HashMap<String, Object>();//用户合同在线计算
 		initConf();
 	}
 	
@@ -76,20 +97,27 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	
 	@Override
 	public void initConf(){
-		
+		//查询按重量算商品存储费的商家
+		Map<String,Object> map= new HashMap<String, Object>();
+		map.put("groupCode", "customer_unit");
+		map.put("bizType", "group_customer");
+		BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+		if(bmsGroup!=null){
+			cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
+		}
 	}
 	
 	@Override
 	public void calcu(Map<String, Object> map){
 		
-		List<BmsBizInstockInfoEntity> bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
+		List<BizProductStorageEntity> bizList = bizProductStorageService.query(map);
 		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
-		for (BmsBizInstockInfoEntity entity : bizList) {
+		for (BizProductStorageEntity entity : bizList) {
 			FeesReceiveStorageEntity fee = initFee(entity);
 			fees.add(fee);
 			if(isNoExe(entity, fee)){
@@ -118,67 +146,75 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	}
 	
 	@Override
-	public FeesReceiveStorageEntity initFee(BmsBizInstockInfoEntity entity){
-		//打印业务数据日志
-		CalcuLog.printLog(CalcuNodeEnum.BIZ.getCode().toString(), "", entity, cbiVo);
-		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
-		double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
-		if(!DoubleUtil.isBlank(num)){
-			fee.setQuantity(num);//商品数量
-		}
-		//重量
-		Double weight = DoubleUtil.isBlank(entity.getAdjustWeight())?entity.getTotalWeight():entity.getAdjustWeight();
-		fee.setWeight(weight);
+	public FeesReceiveStorageEntity initFee(BizProductStorageEntity entity){
 		
-		//箱数
-		Double box=DoubleUtil.isBlank(entity.getAdjustBox())?entity.getTotalBox():entity.getTotalBox();
-		if(!DoubleUtil.isBlank(box)){
-			fee.setBox(box.intValue());
-		}
-		fee.setCostType("FEE_TYPE_GENEARL");
-		fee.setUnitPrice(0d);
-		fee.setCost(new BigDecimal(0));	
-		fee.setDelFlag("0");
-		fee.setFeesNo(entity.getFeesNo());
-		fee.setSubjectCode(subjectCode);
+		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();	
 		fee.setCalculateTime(JAppContext.currentTimestamp());
-		CalcuLog.printLog(CalcuNodeEnum.CHARGE.getCode().toString(), "", fee, cbiVo);
+		if(entity.getAqty()!=null){
+			fee.setQuantity(Double.valueOf(0));
+		}else{
+			fee.setQuantity(entity.getAqty());             //商品数量
+		}
+		if(entity.getWeight() == null){
+			fee.setWeight(Double.valueOf(0));
+		}else{
+			fee.setWeight(entity.getWeight());
+		}
+		fee.setStatus("0");		//状态
+		fee.setTempretureType(entity.getTemperature());		//温度类型
+		fee.setProductNo(entity.getProductId());			//商品编码
+		fee.setProductName(entity.getProductName());		//商品名称
+		fee.setBizId(String.valueOf(entity.getId()));      	//业务数据主键
+		fee.setCost(new BigDecimal(0));						//入仓金额
+		fee.setUnitPrice(0d);
+		fee.setFeesNo(entity.getFeesNo());	
+		fee.setSubjectCode(subjectCode);
+		fee.setParam1(TemplateTypeEnum.COMMON.getCode());
+		fee.setDelFlag("0");
+		fee.setTempretureType(entity.getTemperature());
+		/*if(StringUtils.isNotBlank(entity.getTemperature())){
+			entity.setTemperature(temMap.get(entity.getTemperature()));
+		}*/
 		return fee;
-		
 	}
 	
 	@Override
-	public boolean isNoExe(BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity fee){
-		return false;
+	public boolean isNoExe(BizProductStorageEntity entity,FeesReceiveStorageEntity fee){
+		//只有按件商家才计算
+		if(cusList.size()==0 || !cusList.contains(entity.getCustomerid())){
+			fee.setIsCalculated(CalculateState.No_Exe.getCode());
+			fee.setCalcuMsg("只有按件商家收取按件存储费,其他不计费");
+			return true;
+		}
+		return false;		
 	}
 	
 	@Override
-	public void calcuForBms(BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity fee){
+	public void calcuForBms(BizProductStorageEntity entity,FeesReceiveStorageEntity fee){
 		//合同校验
 		if(contractInfo == null){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "bms合同缺失", null, cbiVo);
 			return;
 		}
-		
+		//签约服务校验
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			fee.setCalcuMsg("未签约服务");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contractInfo, cbiVo);
 			return;
 		}
-		
+		//报价模板校验
 		if(quoTemplete == null){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			fee.setCalcuMsg("报价模板缺失");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "报价模板缺失", contractInfo, cbiVo);
 			return;
 		}
 		
-		String priceType = quoTemplete.getPriceType();
-		String unit = quoTemplete.getFeeUnitCode();//计费单位 
-		double num = fee.getQuantity();
+		//报价类型 一口价 or 阶梯价
+		String priceType = quoTemplete.getPriceType(); 
+		String unit = quoTemplete.getFeeUnitCode();		//计费单位  数量/重量...
+		fee.setUnit(unit);//赋值计费单位
+		double num = 0;
 		CalcuInfoVo civo = new CalcuInfoVo();
 		civo.setRuleNo("");
 		civo.setChargeUnit(unit);
@@ -186,37 +222,24 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		case "ITEMS":
 			num = fee.getQuantity();
 			break;
-		case "CARTON":
-			num = fee.getBox();
-			break;
-		case "TONS":
-			double weight = 0d;
-			if ((double)fee.getWeight()/1000 < 1) {
-				weight = 1d;
-			}else {
-				weight = (double)fee.getWeight()/1000;
-			}
-			num = weight;
-			break;
 		case "KILOGRAM":
-			num = fee.getWeight();
+			//如果报价模板时计费单位是 千克，计费数量为 件数*重量
+			num = fee.getWeight()*fee.getQuantity();
 			break;
 		default:
-			break;
+			logger.info("不支持计费单位【{}】",priceType);
+			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+			fee.setCalcuMsg("不支持计费单位【"+priceType+"】");
+			return;
 		}
 		
 		//计算方法
-		double amount=0d;
+		double amount=0d; //金额
 		switch(priceType){
-			case "PRICE_TYPE_NORMAL"://一口价		
-				//打印报价
-				//printLog(taskVo.getTaskId(), "quoteInfo", entity.getFeesNo(), taskVo.getSubjectName(), "", quoTemplete);
-				civo.setChargeType("unitPrice");
-				civo.setChargeDescrip("金额=单价*数量");
+			case "PRICE_TYPE_NORMAL"://一口价	
 				amount=num*quoTemplete.getUnitPrice();
 				fee.setUnitPrice(quoTemplete.getUnitPrice());
 				fee.setParam3(quoTemplete.getId().toString());
-				//printLog(vo.getTaskId(), "ruleInfo", entity.getFeesNo(), vo.getSubjectName(), "", civo);
 				break;
 			case "PRICE_TYPE_STEP"://阶梯价	
 				civo.setChargeType("stepPrice");
@@ -238,14 +261,10 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 				map.put("warehouse_code", entity.getWarehouseCode());
 				PriceStepQuotationEntity stepQuoEntity=storageQuoteFilterService.quoteFilter(list, map);			
 				
-				if(stepQuoEntity==null){
-					//printLog(vo.getTaskId(), "quoteInfo", entity.getFeesNo(), vo.getSubjectName(), "阶梯报价未配置", null);
-					fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				if(stepQuoEntity==null){fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					fee.setCalcuMsg("阶梯报价未配置");
 					return;
 				}
-				//printLog(vo.getTaskId(), "quoteInfo", entity.getFeesNo(), vo.getSubjectName(), "", stepQuoEntity);
-				
 				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){
 					civo.setChargeType("unitPrice");
 					civo.setChargeDescrip("金额=单价*数量");
@@ -253,7 +272,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 					amount=num*stepQuoEntity.getUnitPrice();
 				}else{
 					civo.setChargeType("stepPrice");
-					civo.setChargeDescrip("金额=首量价/首量价+续价");
+					civo.setChargeDescrip("金额=首量价/(首量价+续价)");
 					amount=stepQuoEntity.getFirstNum()<num?stepQuoEntity.getFirstPrice()+(num-stepQuoEntity.getFirstNum())/stepQuoEntity.getContinuedItem()*stepQuoEntity.getContinuedPrice():stepQuoEntity.getFirstPrice();
 				}
 				//判断封顶价
@@ -263,8 +282,6 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 						amount=stepQuoEntity.getCapPrice();
 					}
 				}
-				//打印计费规则
-				//printLog(vo.getTaskId(), "ruleInfo", entity.getFeesNo(), vo.getSubjectName(), "", civo);
 				fee.setParam3(stepQuoEntity.getId()+"");
 				break;
 			default:
@@ -272,19 +289,18 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		}
 		fee.setCost(BigDecimal.valueOf(amount));
 		fee.setParam4(priceType);
-		entity.setRemark(entity.getRemark()+"计算成功;");
-		entity.setIsCalculated(CalculateState.Finish.getCode());
 		fee.setCalcuMsg("计算成功");
 		fee.setIsCalculated(CalculateState.Finish.getCode());
 	}
 	
 	@Override
-	public void calcuForContract(BmsBizInstockInfoEntity entity,FeesReceiveStorageEntity fee){
+	public void calcuForContract(BizProductStorageEntity entity,FeesReceiveStorageEntity fee){
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo);
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
+				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
@@ -300,9 +316,9 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	}
 	
 	@Override
-	public ContractQuoteQueryInfoVo getCtConditon(BmsBizInstockInfoEntity entity) {
+	public ContractQuoteQueryInfoVo getCtConditon(BizProductStorageEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
-		queryVo.setCustomerId(entity.getCustomerId());
+		queryVo.setCustomerId(entity.getCustomerid());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
 		queryVo.setSubjectCode(subjectCode);
 		queryVo.setCurrentTime(entity.getCreateTime());
@@ -312,13 +328,8 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	}
 	
 	@Override
-	public void updateBatch(List<BmsBizInstockInfoEntity> bizList,List<FeesReceiveStorageEntity> feeList) {
+	public void updateBatch(List<BizProductStorageEntity> bizList,List<FeesReceiveStorageEntity> feeList) {
 		feesReceiveStorageService.updateBatch(feeList);
 	}
-
-
-	
-
-	
 	
 }

@@ -6,10 +6,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import net.sf.json.JSONObject;
 
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
@@ -20,34 +22,32 @@ import com.jiuyescm.contract.quote.vo.ContractQuoteInfoVo;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 import com.jiuyescm.exception.BizException;
 
-public abstract class ContractCalcuBase<T,F> {
+/**
+ * 合同在线计算服务
+ * @author caojianwei
+ *
+ */
+@Component("contractCalcuService")
+public class ContractCalcuService {
 
-	private Logger logger = LoggerFactory.getLogger(ContractCalcuBase.class);
+	private Logger logger = LoggerFactory.getLogger(ContractCalcuService.class);
 	
 	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
 	
-	
-	protected abstract ContractQuoteQueryInfoVo getCtConditon(BmsCalcuTaskVo vo,T t);
-	
-	protected abstract void calcuForContract(F f,Map<String, Object> errorMap);
-	
-	protected void calcuForContract(T t, F f, BmsCalcuTaskVo vo, Map<String, Object> errorMap){
-		ContractQuoteQueryInfoVo queryVo = getCtConditon(vo,t);
-		logger.info("taskId={} 合同在线查询参数：",vo.getTaskId(),JSONObject.fromObject(queryVo));
-		queryCtForContract(vo,t,f,queryVo,errorMap);
-		calcuForContract(f, errorMap);
-		
+	public void calcuForContract(Object entity, Object fee, BmsCalcuTaskVo vo, Map<String, Object> errorMap,ContractQuoteQueryInfoVo queryVo,CalcuBaseInfoVo cbiVo){
+		//logger.info("taskId={} 合同在线查询参数：",vo.getTaskId(),JSONObject.fromObject(queryVo));
+		queryCtForContract(vo,entity,fee,queryVo,errorMap,cbiVo);
 	}
 	
-	protected void queryCtForContract(BmsCalcuTaskVo vo,T t, F f,ContractQuoteQueryInfoVo queryVo,Map<String, Object> errorMap){
+	private void queryCtForContract(BmsCalcuTaskVo vo,Object entity, Object fee,ContractQuoteQueryInfoVo queryVo,Map<String, Object> errorMap,CalcuBaseInfoVo cbiVo){
 		ContractQuoteInfoVo cqVo = null;
 		try{
 			cqVo = contractQuoteInfoService.queryUniqueColumns(queryVo);
 		}
 		catch(BizException ex){
-			logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
+			//logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", "合同在线合同缺失");
@@ -56,11 +56,12 @@ public abstract class ContractCalcuBase<T,F> {
 		if(cqVo == null){
 			return;
 		}
+		
 		Map<String, String> contractMap = new HashMap<>();
 		contractMap.put("contractNo", cqVo.getQuoteVo().getContractNo());//合同编号
-		contractMap.put("serviceOrderNo", cqVo.getQuoteVo().getServiceOrderNo());//合同编号
-		contractMap.put("version", cqVo.getQuoteVo().getVersion());//合同编号
-		contractMap.put("ruleCode", cqVo.getQuoteVo().getRuleCode());//合同编号
+		contractMap.put("serviceOrderNo", cqVo.getQuoteVo().getServiceOrderNo());//订购号
+		contractMap.put("version", cqVo.getQuoteVo().getVersion());//合同版本
+		contractMap.put("ruleCode", cqVo.getQuoteVo().getRuleCode());//规则编号
 		
 		logger.info("taskId={} contractInfo={}",vo.getTaskId(),contractMap);
 		if(StringUtil.isEmpty(cqVo.getRuleCode())){
@@ -84,7 +85,7 @@ public abstract class ContractCalcuBase<T,F> {
 			}
 			//获取合同在线查询条件
 			Map<String, Object> cond = new HashMap<String, Object>();
-			feesCalcuService.ContractCalcuService(t, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			logger.info("taskId={} 获取合同在线报价参数：{}",vo.getTaskId(),cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = null;
 			
@@ -111,7 +112,7 @@ public abstract class ContractCalcuBase<T,F> {
 				int i = rtnQuoteInfoVo.getQuoteMaps().indexOf(map);
 			}
 			//调用规则计算费用
-			feesCalcuService.ContractCalcuService(f, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
+			feesCalcuService.ContractCalcuService(fee, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
 			
 		}
 		catch(Exception ex){

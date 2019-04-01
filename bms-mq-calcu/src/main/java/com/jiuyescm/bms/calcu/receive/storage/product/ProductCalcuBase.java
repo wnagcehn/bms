@@ -1,4 +1,4 @@
-package com.jiuyescm.bms.calcu.receive.storage.instock;
+package com.jiuyescm.bms.calcu.receive.storage.product;
 
 
 import java.util.Map;
@@ -16,17 +16,17 @@ import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 
-public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,FeesReceiveStorageEntity>{
+public class ProductCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,FeesReceiveStorageEntity>{
 	
 	@Autowired IBmsCalcuService bmsCalcuService;
 	
-	private Logger logger = LoggerFactory.getLogger(InstockCalcuBase.class);
+	private Logger logger = LoggerFactory.getLogger(ProductCalcuBase.class);
 	
 	@Override
 	protected void generalCalcu(BmsCalcuTaskVo taskVo, String contractAttr,Map<String, Object> map) {
 		WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext(); 
 		try {
-			InstockCalcuJob instockCalcuJob = (InstockCalcuJob) ctx.getBean("instockCalcuJob");
+			ProductCalcuJob instockCalcuJob = (ProductCalcuJob) ctx.getBean("instockCalcuJob");
 			instockCalcuJob.process(taskVo, contractAttr);
 			instockCalcuJob.calcu(map);
 		} catch (Exception e) {
@@ -39,4 +39,6 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForSto(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
+
+	
 }

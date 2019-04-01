@@ -1,11 +1,12 @@
 package com.jiuyescm.bms.calcu.base;
 
-import org.apache.poi.ss.formula.functions.T;
+import java.util.List;
+import java.util.Map;
 
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 
 
-public interface ICalcuService1 {
+public interface ICalcuService<T,F> {
 
 	/**
 	 * 查询bms报价模板
@@ -15,12 +16,8 @@ public interface ICalcuService1 {
 	/**
 	 * 费用计算
 	 */
-	public void calcu();
+	public void calcu(Map<String, Object> map);
 	
-	/**
-	 * 查询业务数据
-	 */
-	public void queryBillList();
 	
 	/**
 	 * 缓存参数
@@ -30,11 +27,15 @@ public interface ICalcuService1 {
 	/**
 	 * 初始化费用
 	 */
-	public void initFee();
+	public F initFee(T entity);
 	
-	public void bmsCalcu();
+	public boolean isNoExe(T entity,F fee);
 	
-	public void contractCalcu();
+	public void calcuForBms(T entity,F fee);
 	
-	public ContractQuoteQueryInfoVo getCtConditon(T t);
+	public void calcuForContract(T entity,F fee);
+	
+	public ContractQuoteQueryInfoVo getCtConditon(T entity);
+	
+	public void updateBatch(List<T> bizList,List<F> feeList);
 }

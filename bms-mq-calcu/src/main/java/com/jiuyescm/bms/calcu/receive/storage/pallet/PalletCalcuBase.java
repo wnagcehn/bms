@@ -1,5 +1,4 @@
-package com.jiuyescm.bms.calcu.receive.storage.instock;
-
+package com.jiuyescm.bms.calcu.receive.storage.pallet;
 
 import java.util.Map;
 
@@ -13,25 +12,29 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
-import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
+import com.jiuyescm.bms.general.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 
-public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,FeesReceiveStorageEntity>{
+public class PalletCalcuBase extends CalcuTaskListener<BizPalletInfoEntity,FeesReceiveStorageEntity>{
+
+	private static final Logger logger = LoggerFactory.getLogger(PalletCalcuBase.class);
+	
+	protected String bizType;
 	
 	@Autowired IBmsCalcuService bmsCalcuService;
 	
-	private Logger logger = LoggerFactory.getLogger(InstockCalcuBase.class);
-	
 	@Override
 	protected void generalCalcu(BmsCalcuTaskVo taskVo, String contractAttr,Map<String, Object> map) {
+		map.put("bizType", bizType);
 		WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext(); 
 		try {
-			InstockCalcuJob instockCalcuJob = (InstockCalcuJob) ctx.getBean("instockCalcuJob");
-			instockCalcuJob.process(taskVo, contractAttr);
-			instockCalcuJob.calcu(map);
+			PalletCalcuJob palletCalcuJob = (PalletCalcuJob) ctx.getBean("palletCalcuJob");
+			palletCalcuJob.process(taskVo, contractAttr);
+			palletCalcuJob.calcu(map);
 		} catch (Exception e) {
 			logger.error("spring 获取bean异常",e);
 		}
+		
 	}
 
 	@Override
@@ -39,4 +42,5 @@ public class InstockCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForSto(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
+
 }
