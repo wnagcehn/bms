@@ -159,7 +159,13 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			//费用计算
 			Map<String, Object> cond = getQueryMap(taskVo);
 			logger.info("taskId={} 数据查询条件{}",taskVo.getTaskId(),cond);
+			
 			generalCalcu(taskVo, contractAttr,cond);
+			
+			taskVo.setTaskStatus(20);//合同归属不存在，计算异常
+			taskVo.setTaskRate(100);
+			bmsCalcuTaskService.update(taskVo);
+			
 		} catch (Exception e1) {
 			logger.error("taskId={} 计算任务执行异常",taskVo.getTaskId(),e1);
 			taskVo.setTaskStatus(30);
