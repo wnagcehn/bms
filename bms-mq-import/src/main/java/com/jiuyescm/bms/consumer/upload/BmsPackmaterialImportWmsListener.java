@@ -317,43 +317,52 @@ public class BmsPackmaterialImportWmsListener implements MessageListener{
 			if(k>0){
 				logger.info("任务ID【{}】 -> 保存数据到正式表成功 耗时【{}】",taskId,System.currentTimeMillis()-start);
 				bmsMaterialImportTaskCommon.setTaskProcess(taskId, 90);
-				// 耗材打标
-				Map<String,Object> condition = Maps.newHashMap();
-				condition.put("batchNum", taskId);
-				condition.put("taskId", taskId);
-				logger.info("任务ID【{}】 -> 进行耗材和保温袋打标操作",taskId);
-				start = System.currentTimeMillis();
-				//耗材打标
-				int materialResult=bmsProductsMaterialService.markMaterial(condition);
-				if(materialResult>0){
-					//保存标对应得耗材明细
-					bmsProductsMaterialService.saveMarkMaterial(condition);
-				}
-				//保温袋打标
-				int bwdResult=bmsProductsMaterialService.markBwd(condition);
-				if(bwdResult>0){
-					//保存标对应得保温袋明细
-					bmsProductsMaterialService.saveMarkBwd(condition);
-				}
 				//bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
 				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
 				bmsFileAsynTaskService.update(updateEntity);
-				logger.info("任务ID【{}】 -> 耗材和保温袋打标成功,耗时【{}】",taskId,System.currentTimeMillis()-start);
+				newList.clear();
 			}else{
 				logger.error("任务ID【{}】 -> 未从临时表中保存数据到业务表",taskId);
 				bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskId+"】,任务编号【"+taskId+"】");
 				bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
+				newList.clear();
+				return;
 			}
-//			errList.clear();
-//			mapData.clear();
-//			allList.clear();
-			newList.clear();
 		}catch(Exception e){
 			logger.error("任务ID【{}】 -> 异步导入异常{}",taskId,e);
 			bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.EXCEPTION.getCode(),"从临时表中保存数据到业务表异常");
 			bizOutstockPackmaterialTempService.deleteBybatchNum(taskId);
+			return;
 		}
-		return;	
+		
+		try{
+			// 耗材打标
+			Map<String,Object> condition = Maps.newHashMap();
+			condition.put("batchNum", taskId);
+			condition.put("taskId", taskId);
+			logger.info("任务ID【{}】 -> 进行耗材和保温袋打标操作",taskId);
+			start = System.currentTimeMillis();
+			//耗材打标
+			int materialResult=bmsProductsMaterialService.markMaterial(condition);
+			if(materialResult>0){
+				logger.info("任务ID【{}】 -> 耗材打标成功",taskId);
+				//保存标对应得耗材明细
+				bmsProductsMaterialService.saveMarkMaterial(condition);
+				logger.info("任务ID【{}】 -> 耗材保存原始数据成功",taskId);
+			}
+			//保温袋打标
+			int bwdResult=bmsProductsMaterialService.markBwd(condition);
+			if(bwdResult>0){
+				logger.info("任务ID【{}】 -> 保温袋打标成功",taskId);
+				//保存标对应得保温袋明细
+				bmsProductsMaterialService.saveMarkBwd(condition);
+				logger.info("任务ID【{}】 -> 保温袋保存原始数据成功",taskId);
+			}
+		}catch(Exception e){
+			logger.error("任务ID【{}】 -> 异步导入成功，打标异常{}",taskId,e);
+			BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "异步导入成功，打标异常");
+			bmsFileAsynTaskService.update(updateEntity);
+		}
 	}
 
 	
