@@ -24,7 +24,6 @@ import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -164,23 +163,14 @@ public class OutstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setWarehouseCode(outstock.getWarehouseCode());	//仓库ID
 		storageFeeEntity.setWarehouseName(outstock.getWarehouseName());	//仓库名称
 		storageFeeEntity.setOrderType(outstock.getBillTypeName());		//订单类型
-		
-		
 		//塞品种数
-		Double varieties=DoubleUtil.isBlank(outstock.getResizeVarieties())?outstock.getTotalVarieties():outstock.getResizeVarieties();
-		if(!DoubleUtil.isBlank(varieties)){
-			storageFeeEntity.setVarieties(varieties.intValue());
-		}
-		
+		storageFeeEntity.setVarieties(0);	
 		//塞件数
-		Double charge_qty = DoubleUtil.isBlank(outstock.getResizeNum())?outstock.getTotalQuantity():outstock.getResizeNum();
-		storageFeeEntity.setQuantity(charge_qty);
+		storageFeeEntity.setQuantity(0d);
 		//塞重量
-		
-		Double charge_weight = DoubleUtil.isBlank(outstock.getResizeWeight())?outstock.getTotalWeight():outstock.getResizeWeight();
-		storageFeeEntity.setWeight(charge_weight);
+		storageFeeEntity.setWeight(0d);
 		//塞箱数
-		storageFeeEntity.setBox(isBlank(outstock.getAdjustBoxnum())?outstock.getBoxnum():outstock.getAdjustBoxnum());
+		storageFeeEntity.setBox(0);
 		
 		storageFeeEntity.setOrderNo(outstock.getOutstockNo());			//oms订单号
 		storageFeeEntity.setProductType("");							//商品类型		
@@ -195,7 +185,6 @@ public class OutstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setFeesNo(outstock.getFeesNo());
 		
 		XxlJobLogger.log("-->"+outstock.getId()+"温度类型的map【{0}】",temMap);
-
 		
 		if(StringUtils.isEmpty(outstock.getTemperatureTypeCode())){
 			outstock.setTemperatureTypeCode("LD");

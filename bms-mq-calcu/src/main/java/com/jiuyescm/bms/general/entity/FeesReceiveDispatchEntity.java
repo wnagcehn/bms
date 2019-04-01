@@ -134,6 +134,9 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	
 	//减免金额
 	private Double derateAmount;
+	
+	private String calcuMsg;
+	
 	public FeesReceiveDispatchEntity() {
 
 	}
@@ -1024,6 +1027,14 @@ public class FeesReceiveDispatchEntity implements IEntity {
 
 	public void setServiceTypeCode(String serviceTypeCode) {
 		this.serviceTypeCode = serviceTypeCode;
+	}
+
+	public String getCalcuMsg() {
+		return calcuMsg;
+	}
+
+	public void setCalcuMsg(String calcuMsg) {
+		this.calcuMsg = calcuMsg;
 	}
 
 	

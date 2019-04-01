@@ -3,59 +3,39 @@ package com.jiuyescm.bms.calcu.base;
 import java.util.List;
 import java.util.Map;
 
-import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
+import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 
-public interface ICalcuService<T> {
+
+public interface ICalcuService<T,F> {
 
 	/**
-	 * 单量统计
-	 * @param customerId
-	 * @param subjectCode
-	 * @param creMonth
-	 * @return
+	 * 查询bms报价模板
 	 */
-	BmsFeesQtyVo feesCountReport(String customerId, String subjectCode,Integer creMonth);
-	
-	/**
-	 * 查询业务数据
-	 * @param map
-	 * @return
-	 */
-	List<T> queryBizList(Map<String, Object> map);
+	public void getQuoTemplete();
 	
 	/**
 	 * 费用计算
-	 * @return
 	 */
-	void updateFees(List<T> list);
+	public void calcu(Map<String, Object> map);
+	
 	
 	/**
-	 * 合同在线计算
-	 * @return
+	 * 缓存参数
 	 */
-	T contractCalcu(T t);
+	public void initConf();
 	
 	/**
-	 * BMS计算
-	 * @return
+	 * 初始化费用
 	 */
-	T bmsCalcu(T t);
+	public F initFee(T entity);
 	
-	/**
-	 * 是否计算费用
-	 * @param t 业务数据对象
-	 * @return true-计算费用  false-不计算你费用 状态未不计算，金额至0
-	 */
-	boolean isCalcu(T t);
+	public boolean isNoExe(T entity,F fee);
 	
-	/**
-	 * 筛选计费参数
-	 * @param t 业务数据对象
-	 * @return 费用数据对象
-	 */
-	T initChargeParam(T t);
+	public void calcuForBms(T entity,F fee);
 	
+	public void calcuForContract(T entity,F fee);
 	
+	public ContractQuoteQueryInfoVo getCtConditon(T entity);
 	
-	
+	public void updateBatch(List<T> bizList,List<F> feeList);
 }

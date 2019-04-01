@@ -551,9 +551,10 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	 * @return
 	 */
 	public Map<String,PubMaterialInfoVo> queryAllMaterial(){
+		Map<String,PubMaterialInfoVo> map=Maps.newLinkedHashMap();
 		Map<String,Object> condition=Maps.newHashMap();
 		List<PubMaterialInfoVo> tmscodels = pubMaterialInfoService.queryList(condition);
-		Map<String,PubMaterialInfoVo> map=Maps.newLinkedHashMap();
+		
 		for(PubMaterialInfoVo materialVo:tmscodels){
 			if(!StringUtils.isBlank(materialVo.getBarcode())){
 				map.put(materialVo.getBarcode().trim(),materialVo);

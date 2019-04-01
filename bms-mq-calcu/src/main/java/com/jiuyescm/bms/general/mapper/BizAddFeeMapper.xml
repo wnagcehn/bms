@@ -281,29 +281,30 @@
     <select id="querybizAddFee" parameterType="java.util.Map" resultMap="baseResultMap">
     	select a.id, a.wms_id, a.operation_time, a.warehouse_code,
 		a.warehouse_name, a.customerid, a.customer_name,a.num, a.fees_no,
-		a.fees_type, a.fees_unit, a.item, a.is_calculated, a.creator,
+		a.fees_type, a.fees_unit, a.item, b.is_calculated, a.creator,
 		a.create_time, a.last_modifier, a.last_modify_time, a.del_flag,
 		a.calculate_time, a.write_time, a.adjust_num, a.fees_type_name, '' as remark,
 		a.external_no
 		from biz_add_fee a
+		INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no
 		where a.del_flag = 0 
 		<if test="(customerId != null and customerId !='')" >
-			and customerid = #{customerId,jdbcType=VARCHAR}
+			and a.customerid = #{customerId,jdbcType=VARCHAR}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
-		</if>
-		<if test="(id != null and id !='')" >
-			and id = #{id,jdbcType=BIGINT}
-		</if>
-		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = concat(${isCalculated})
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="(beginTime != null and beginTime !='')" >
-			 and  <![CDATA[create_time >= #{beginTime}]]>
+			 and  <![CDATA[a.create_time >= #{beginTime}]]>
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			 and  <![CDATA[create_time <= #{endTime}]]>
+			 and  <![CDATA[a.create_time <= #{endTime}]]>
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and b.is_calculated = concat(${isCalculated})
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and b.subject_code = #{subjectCode,jdbcType=VARCHAR}
 		</if>
 		LIMIT #{num}
     </select>
