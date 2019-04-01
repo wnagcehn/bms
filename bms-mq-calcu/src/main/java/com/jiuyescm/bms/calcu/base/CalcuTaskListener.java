@@ -89,7 +89,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		handMap.put("success", "fail");
 		handMap.put("remark", "");
 		logger.info("taskId={} 加锁处理",taskVo.getTaskId());
-		lock.lock(lockString, 5, new LockCallback<Map<String, Object>>() {
+		lock.lock(lockString, 7200, new LockCallback<Map<String, Object>>() {
 
 			@Override
 			public Map<String, Object> handleObtainLock() {
