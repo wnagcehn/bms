@@ -177,6 +177,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
     <update id="updatePalletNumBatch" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
         update biz_pallet_info
         <trim prefix="set" suffixOverrides=",">
+        	is_calculated = '99',
 			pallet_num = #{palletNum,jdbcType=DECIMAL},
         </trim>
         where id=#{id}
