@@ -168,6 +168,7 @@
 		<if test="(customerId != null and customerId!='')">
 			and customer_id = #{customerId}	
 		</if>
+		group by customer_id,customer_name
     </select>
     
     <select id="queryInfoByCustomerId" parameterType="java.util.Map"
