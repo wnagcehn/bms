@@ -175,7 +175,9 @@
 		select b.pmxzx_mark,a.consumer_material_code,a.consumer_material_name,a.spec_desc,a.num from biz_outstock_packmaterial_temp a 
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
-		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱') GROUP BY b.pmxzx_mark,a.consumer_material_code   	
+		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('泡沫箱','纸箱')
+		and b.pmxzx_mark is not null and b.pmxzx_mark !=''
+		GROUP BY b.pmxzx_mark,a.consumer_material_code 	
      </insert>
    
      <insert id="saveMarkBwd" parameterType="java.util.Map">
@@ -183,7 +185,9 @@
 		select b.bwd_mark,a.consumer_material_code,a.consumer_material_name,a.spec_desc,a.num from biz_outstock_packmaterial_temp a 
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
 		INNER JOIN pub_material_info c on a.consumer_material_code=c.material_code
-		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('保温袋') GROUP BY b.bwd_mark
+		where a.batchNum=#{batchNum} and c.del_flag='0' and c.material_type_name in ('保温袋')
+		and b.bwd_mark is not null and b.bwd_mark !=''
+		GROUP BY b.bwd_mark
      </insert>
      
      <select id="queyMaterialCount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.correct.BmsProductsMaterialAccountEntity">
