@@ -97,7 +97,7 @@ public class BmsContractBase {
 		contractItems_map.put("subjectId", subjectCode);
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
-			quoTempleteCode = null;
+			quoTempleteCode = "fail";
 		}
 		else{
 			quoTempleteCode = contractItems.get(0).getTemplateId();
