@@ -63,9 +63,8 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 	 * @return
 	 */
     @Override
-    public BizPalletInfoEntity update(BizPalletInfoEntity entity) {
-        update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.update", entity);
-        return entity;
+    public int update(BizPalletInfoEntity entity) {
+    	return update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.update", entity);
     }
 
 	/**
@@ -121,6 +120,16 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
     @Override
     public int updateBatch(List<Map<String, Object>> list) {
        return updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.updateBatch", list);
+    }
+    
+    /**
+     * 批量更新（新）
+     * @param list
+     * @return
+     */
+    @Override
+    public int updateBatchFees(List<Map<String, Object>> list){
+    	return updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.updateBatchFees", list);
     }
     
 	/**

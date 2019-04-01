@@ -53,9 +53,13 @@ public class BmsMarkingProductsController {
 		if ("BWD".equals(param.get("type"))) {
 			param.put("bwdMark", param.get("materialMark"));
 		}
-		if ("PMXZX".equals(param.get("type"))) {
-			param.put("pmxzxMark", param.get("materialMark"));
+		if ("PMX".equals(param.get("type"))) {
+			param.put("pmxMark", param.get("materialMark"));
 		}
+		if ("ZX".equals(param.get("type"))){
+			param.put("zxMark", param.get("materialMark"));
+		}
+		
 		PageInfo<BmsMarkingProductsVo> pageInfo = bmsMarkingProductsService.queryByMaterial(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());

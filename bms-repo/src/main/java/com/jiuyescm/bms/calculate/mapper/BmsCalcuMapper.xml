@@ -23,8 +23,8 @@
 	<!-- 仓储费用： 查询指定商家，指定时间范围，指定科目 的所有费用总数  仅返回一条 -->
     <select id="queryTotalFeesQtyForSto" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
        select customer_id,subject_code,count(*) as fees_count 
-       from fees_receive_storage 
-			where customer_id = #{customerId} and 
+       from fees_receive_storage
+			where customer_id = #{customerId}
 			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
 			and del_flag = '0' and subject_code = #{subjectCode}
 	   group by customer_id,subject_code
@@ -33,8 +33,8 @@
     <!-- 仓储费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryStatusFeesQtyForSto" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
        select customer_id,subject_code,is_calculated,count(*) as fees_count 
-       from fees_receive_storage 
-			where customer_id = #{customerId} and 
+       from fees_receive_storage
+			where customer_id = #{customerId}
 			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
 			and del_flag = '0' and subject_code = #{subjectCode}
 		group by customer_id,subject_code,is_calculated
@@ -43,21 +43,21 @@
     <!-- 配送费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryTotalFeesQtyForDis" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
        select customerid as customer_id,subject_code,is_calculated,count(*) as fees_count 
-       from fees_receive_dispatch 
-			where customer_id = #{customerId} and 
+       from fees_receive_dispatch
+			where customerid = #{customerId}
 			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
 			and del_flag = '0' and subject_code = #{subjectCode}
-		group by customer_id,subject_code
+		group by customerid,subject_code
     </select>
     
     <!-- 配送费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryStatusFeesQtyForDis" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
        select customerid as customer_id,subject_code,is_calculated,count(*) as fees_count 
-       from fees_receive_dispatch 
-			where customer_id = #{customerId} and 
+       from fees_receive_dispatch
+			where customerid = #{customerId}
 			and create_time >= #{startTime} and <![CDATA[create_time <= #{endTime}]]>
 			and del_flag = '0' and subject_code = #{subjectCode}
-		group by customer_id,subject_code,is_calculated
+		group by customerid,subject_code,is_calculated
     </select>
     
     

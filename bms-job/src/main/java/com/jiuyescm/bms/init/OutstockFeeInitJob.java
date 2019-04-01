@@ -24,7 +24,6 @@ import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockMasterService;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -133,30 +132,30 @@ public class OutstockFeeInitJob extends IJobHandler{
 	
 	private void initFees(List<BizOutstockMasterEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
 
-		for (String SubjectId : subjects) {
-			for(BizOutstockMasterEntity entity:bizList){
+		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+		for(BizOutstockMasterEntity entity:bizList){
+			entity.setFeesNo(feesNo);
+			for (String SubjectId : subjects) {
+				FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
+				storageFeeEntity.setFeesNo(feesNo);
 				//如果是【B2B订单操作费】 或【出库装车费】,并且是B2B出库单   ( B2bFlag 0-B2C  1-B2B)
 				if(("wh_b2b_work".equals(SubjectId) ||"wh_b2b_handwork".equals(SubjectId)) 
 						&& "1".equals(entity.getB2bFlag())){
-					FeesReceiveStorageEntity b2bFee=initFeesEntity(SubjectId, entity);
-					feesList.add(b2bFee);
+					initFeesEntity(SubjectId, entity,storageFeeEntity);
+					feesList.add(storageFeeEntity);
 				}
 				else if("wh_b2c_work".equals(SubjectId) && "0".equals(entity.getB2bFlag())){
-					FeesReceiveStorageEntity b2cFee=initFeesEntity(SubjectId, entity);
-					feesList.add(b2cFee);
+					initFeesEntity(SubjectId, entity,storageFeeEntity);
+					feesList.add(storageFeeEntity);
 				}
 			}
 		}
 	}
 	
-	private FeesReceiveStorageEntity initFeesEntity(String subjectId,BizOutstockMasterEntity outstock) {
+	private FeesReceiveStorageEntity initFeesEntity(String subjectId,BizOutstockMasterEntity outstock,FeesReceiveStorageEntity storageFeeEntity) {
 		outstock.setRemark("");
-		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
-		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
-		outstock.setFeesNo(feesNo);
 		outstock.setIsCalculated("1");
 		outstock.setCalculateTime(JAppContext.currentTimestamp());
-		storageFeeEntity.setFeesNo(feesNo);
 		storageFeeEntity.setCreator("system");
 		storageFeeEntity.setCreateTime(outstock.getCreateTime());
 		storageFeeEntity.setCustomerId(outstock.getCustomerid());		//商家ID
@@ -164,23 +163,14 @@ public class OutstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setWarehouseCode(outstock.getWarehouseCode());	//仓库ID
 		storageFeeEntity.setWarehouseName(outstock.getWarehouseName());	//仓库名称
 		storageFeeEntity.setOrderType(outstock.getBillTypeName());		//订单类型
-		
-		
 		//塞品种数
-		Double varieties=DoubleUtil.isBlank(outstock.getResizeVarieties())?outstock.getTotalVarieties():outstock.getResizeVarieties();
-		if(!DoubleUtil.isBlank(varieties)){
-			storageFeeEntity.setVarieties(varieties.intValue());
-		}
-		
+		storageFeeEntity.setVarieties(0);	
 		//塞件数
-		Double charge_qty = DoubleUtil.isBlank(outstock.getResizeNum())?outstock.getTotalQuantity():outstock.getResizeNum();
-		storageFeeEntity.setQuantity(charge_qty);
+		storageFeeEntity.setQuantity(0d);
 		//塞重量
-		
-		Double charge_weight = DoubleUtil.isBlank(outstock.getResizeWeight())?outstock.getTotalWeight():outstock.getResizeWeight();
-		storageFeeEntity.setWeight(charge_weight);
+		storageFeeEntity.setWeight(0d);
 		//塞箱数
-		storageFeeEntity.setBox(isBlank(outstock.getAdjustBoxnum())?outstock.getBoxnum():outstock.getAdjustBoxnum());
+		storageFeeEntity.setBox(0);
 		
 		storageFeeEntity.setOrderNo(outstock.getOutstockNo());			//oms订单号
 		storageFeeEntity.setProductType("");							//商品类型		
@@ -195,7 +185,6 @@ public class OutstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setFeesNo(outstock.getFeesNo());
 		
 		XxlJobLogger.log("-->"+outstock.getId()+"温度类型的map【{0}】",temMap);
-
 		
 		if(StringUtils.isEmpty(outstock.getTemperatureTypeCode())){
 			outstock.setTemperatureTypeCode("LD");
@@ -255,9 +244,10 @@ public class OutstockFeeInitJob extends IJobHandler{
 			vo.setCrePersonId("system");		
 			try {
 				bmsCalcuTaskService.sendTask(vo);
+				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
 			} catch (Exception e) {
 				// TODO: handle exception
-				XxlJobLogger.log("发送mq消息失败 ",e);
+				XxlJobLogger.log("发送mq消息失败 {0}",e);
 			}
 			
 		}

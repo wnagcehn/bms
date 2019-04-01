@@ -82,10 +82,49 @@
    <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         select
-        <include refid="Base_Column_List" />
+        a.id, a.wms_id, a.outstock_no, a.waybill_no, a.customer_id, a.customer_name, a.consumer_material_code,
+	    a.consumer_material_name, a.warehouse_code, a.warehouse_name, a.num, a.adjust_num, a.fees_no, a.dbname, 
+	    b.is_calculated, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,a.calculate_time, a.del_flag, a.remark,a.weight,
+	    a.spec_desc, a.extattr1,a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.cost_fees_no,a.cost_calculate_time,a.cost_is_calculated,a.cost_remark
         from  biz_outstock_packmaterial a
-        where del_flag = 0 
-        <include refid="baseSelectColumns" />
+        left join fees_receive_storage b on a.fees_no=b.fees_no
+		where a.del_flag='0' and b.del_flag='0'
+        <if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and a.customer_id = #{customerId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and a.consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			    and a.creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(costFeesNo!=null and costFeesNo!='')">
+				and a.cost_fees_no=#{costFeesNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and b.is_calculated = #{isCalculated}
+		</if>
 	</select>
 	<update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         update biz_outstock_packmaterial 
@@ -271,8 +310,42 @@
     </select>
 	
 	<update id="retryForCalcu" parameterType="java.util.Map">
-        update biz_outstock_packmaterial a set a.is_calculated = 99 where a.del_flag = 0
-        <include refid="baseSelectColumns" />
+		update fees_receive_storage s 
+		INNER JOIN biz_outstock_packmaterial a on s.fees_no=a.fees_no set s.is_calculated='99'
+		where s.del_flag='0' and a.del_flag='0'
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and a.customer_id = #{customerId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and a.consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			    and a.creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and s.is_calculated = #{isCalculated}
+		</if>
     </update>
     
      <select id="queryDelete" parameterType="java.util.Map"

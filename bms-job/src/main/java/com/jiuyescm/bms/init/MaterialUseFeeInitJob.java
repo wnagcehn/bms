@@ -14,28 +14,13 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
-import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
-import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
-import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
-import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
-import com.jiuyescm.bms.general.service.IPriceContractInfoService;
-import com.jiuyescm.bms.general.service.IStorageQuoteFilterService;
-import com.jiuyescm.bms.general.service.SequenceService;
-import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractDao;
-import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
-import com.jiuyescm.bms.quotation.storage.repository.IPriceMaterialQuotationRepository;
-import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
-import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
-import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.DoubleUtil;
-import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
@@ -54,22 +39,8 @@ import com.xxl.job.core.log.XxlJobLogger;
 public class MaterialUseFeeInitJob extends IJobHandler{
 	
 	@Autowired private IBizOutstockPackmaterialService bizOutstockPackmaterialService;
-	@Autowired private IContractQuoteInfoService contractQuoteInfoService;
-	@Autowired private IBizDispatchBillService bizDispatchBillService;
-	@Autowired private IFeesCalcuService feesCalcuService;
-	@Autowired private IReceiveRuleRepository receiveRuleRepository;
-	@Autowired private IPriceContractDao priceContractService;
-	@Autowired private IPriceContractInfoService jobPriceContractInfoService;
-	@Autowired private IPriceContractItemRepository priceContractItemRepository;
-	@Autowired private IPriceMaterialQuotationRepository priceMaterialQuotationRepository;
-	@Autowired private IGenericTemplateRepository genericTemplateRepository;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
-	@Autowired private SequenceService sequenceService;
-	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
-	@Autowired private IStorageQuoteFilterService storageQuoteFilterService;
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
-	@Autowired private ISystemCodeRepository systemCodeRepository;
-	@Autowired private IMaterialDictService materialDictService;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 
@@ -160,19 +131,11 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			//根据测试的建议 吧耗材编码设置成商品编号和商品名称 zhangzw
 			storageFeeEntity.setProductNo(entity.getConsumerMaterialCode());
 			storageFeeEntity.setProductName(entity.getConsumerMaterialName());
-			storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费数量
-			if(materialMap!=null && materialMap.containsKey(entity.getConsumerMaterialCode())){
-				String materialType=materialMap.get(entity.getConsumerMaterialCode()).getMaterialType();
-				if("干冰".equals(materialType)){
-					storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getWeight():entity.getAdjustNum());//计费数量
-				}else{
-					storageFeeEntity.setQuantity(DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum());//计费重量
-				}
-			}
+			storageFeeEntity.setQuantity(0d);//计费数量
 			storageFeeEntity.setStatus("0");								//状态
 			storageFeeEntity.setOrderNo(entity.getOutstockNo());
 			storageFeeEntity.setBizId(String.valueOf(entity.getId()));						//业务数据主键
-			storageFeeEntity.setWeight(entity.getWeight());					//设置重量
+			storageFeeEntity.setWeight(0d);					//设置重量
 			storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
 			storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 			storageFeeEntity.setDelFlag("0");
@@ -210,9 +173,10 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			vo.setCrePersonId("system");
 			try {
 				bmsCalcuTaskService.sendTask(vo);
+				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
 			} catch (Exception e) {
 				// TODO: handle exception
-				XxlJobLogger.log("发送mq消息失败 ",e);
+				XxlJobLogger.log("发送mq消息失败 {0} ",e);
 			}
 		}
 	}

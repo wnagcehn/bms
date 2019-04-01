@@ -20,7 +20,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
@@ -36,6 +35,8 @@ import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,6 +52,8 @@ import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
@@ -84,13 +87,11 @@ import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 
 @Controller("bizOutstockPackmaterialController")
 public class BizOutstockPackmaterialController {
-	
-	private static final Logger logger = Logger.getLogger(BizOutstockPackmaterialController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BizOutstockPackmaterialController.class.getName());
 	
 	@Autowired
 	private IBizOutstockPackmaterialService service;
@@ -117,6 +118,8 @@ public class BizOutstockPackmaterialController {
 	
 	@Resource 
 	private IBmsProductsMaterialService bmsProductsMaterialService;
+	@Autowired 
+	private IBmsCalcuTaskService bmsCalcuTaskService;
 
 	
 	@DataProvider
@@ -171,12 +174,29 @@ public class BizOutstockPackmaterialController {
 		BizOutstockPackmaterialEntity updateEntity = new BizOutstockPackmaterialEntity();
 		updateEntity.setId(entity.getId());
 		updateEntity.setAdjustNum(entity.getAdjustNum());
-		updateEntity.setIsCalculated("0");//如果没有过账的话,就允许调整重量,且调整完后,状态重置为未计算,定时任务重新扫描到并重新生成应收费用.
 		updateEntity.setLastModifier(operatorName);
 		updateEntity.setLastModifyTime(operatorTime);
 		int updateNum = service.update(updateEntity);
 		if(updateNum > 0){
 			result.setCode("SUCCESS");
+			List<String> subjectList=new ArrayList<>();
+			subjectList.add("wh_material_use");
+			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+			sendTaskMap.put("isCalculated", "99");
+			sendTaskMap.put("subjectList", subjectList);
+			//对这些费用按照商家、科目、时间排序
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
+			for (BmsCalcuTaskVo vo : calList) {
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
+			}
+			
 		}else{
 			result.setCode("fail");
 			result.setData("更新失败");
@@ -799,8 +819,26 @@ public class BizOutstockPackmaterialController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
-		if(service.reCalculate(param) == 0){
+		if(service.reCalculate(param) <= 0){
 			return "重算异常";
+		}else{
+			List<String> subjectList=new ArrayList<>();
+			subjectList.add("wh_material_use");
+			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+			sendTaskMap.put("isCalculated", "99");
+			sendTaskMap.put("subjectList", subjectList);
+			//对这些费用按照商家、科目、时间排序
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
+			for (BmsCalcuTaskVo vo : calList) {
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
+			}
 		}
 		return "操作成功! 正在重算...";
 	}

@@ -75,18 +75,20 @@
         select
         <include refid="baseColumns" />
         from bms_asyn_calcu_task
-        where 1=1 and task_id={taskId} limit 1
+        where 1=1 and task_id= #{taskId} limit 1
 		
     </select>
 
 
     <insert id="save" parameterType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
         insert into bms_asyn_calcu_task
-        (task_id, customer_id, subject_code, fees_type, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
+        (task_id, customer_id, customer_name,subject_code,subject_name, fees_type, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
         values (
 			#{taskId,jdbcType=VARCHAR}, 
 			#{customerId,jdbcType=VARCHAR}, 
-			#{subjectCode,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{subjectName,jdbcType=VARCHAR}, 
 			#{feesType,jdbcType=VARCHAR}, 
 			#{creMonth,jdbcType=INTEGER}, 
 			#{taskStatus,jdbcType=TINYINT}, 
@@ -129,17 +131,31 @@
     
     <select id="queryByMap" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
-        select a.customer_id as customerId,a.customer_name as customerName,a.subject_code as subjectCode,b.subject_name as subjectName, DATE_FORMAT(a.create_time,'%Y%m') as creMonth
-		from fees_receive_storage a 
-    	LEFT JOIN bms_subject_info b on a.subject_code=b.subject_code and b.in_out_typecode='INPUT' and b.del_flag='0'
-   		where a.is_calculated=#{isCalculated}
+        select customer_id as customerId,subject_code as subjectCode, DATE_FORMAT(create_time,'%Y%m') as creMonth
+		from fees_receive_storage 
+   		where del_flag='0' and is_calculated=#{isCalculated}
     	<if test="(subjectList != null and subjectList!='')">
-			and a.subject_code in
+			and subject_code in
 			<foreach collection="subjectList" index="index" item="item" open="(" separator="," close=")">
 				#{item}
 		    </foreach>
 		</if>  	
-		GROUP BY a.customer_id,a.subject_code,DATE_FORMAT(a.create_time,'%Y%m');  
+		GROUP BY customer_id,subject_code,DATE_FORMAT(create_time,'%Y%m');  
+    </select>
+    
+    <select id="queryDisByMap" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+        select customerid as customerId,subject_code as subjectCode,DATE_FORMAT(create_time,'%Y%m') as creMonth
+		from fees_receive_dispatch
+		where is_calculated=#{isCalculated}
+		and del_flag='0'
+    	<if test="(subjectList != null and subjectList!='')">
+			and subject_code in
+			<foreach collection="subjectList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>  	
+		GROUP BY customerid,subject_code,DATE_FORMAT(create_time,'%Y%m');  
     </select>
     
 </mapper>

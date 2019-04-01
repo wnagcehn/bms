@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.storage.vo.BizInstockMasterVo;
 import com.jiuyescm.bms.calcu.base.CalcuServiceStoBase;
+import com.jiuyescm.bms.calcu.base.CalcuTaskListener;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveStorageVo;
 
 /**
@@ -14,10 +15,6 @@ import com.jiuyescm.bms.fees.storage.vo.FeesReceiveStorageVo;
  */
 @Service("whInstockWorkCalcuListener")
 public class InstockWorkCalcuListener extends InstockCalcuBase{
-
-	private static final Logger logger = Logger.getLogger(InstockWorkCalcuListener.class.getName());
-	
-	private final String subjectCode = "";
 	
 
 }

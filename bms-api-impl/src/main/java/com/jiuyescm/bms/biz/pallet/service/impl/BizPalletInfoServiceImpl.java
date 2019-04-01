@@ -1,14 +1,22 @@
 package com.jiuyescm.bms.biz.pallet.service.impl;
 
-import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
 import com.jiuyescm.bms.biz.pallet.service.IBizPalletInfoService;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
+import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
+import com.jiuyescm.exception.BizException;
 
 /**
  * ..ServiceImpl
@@ -17,9 +25,13 @@ import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
  */
 @Service("bizPalletInfoService")
 public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BizPalletInfoServiceImpl.class.getName());
 
 	@Autowired
     private IBizPalletInfoRepository bizPalletInfoRepository;
+	@Autowired
+	private IFeesReceiveStorageRepository feesReceiveStorageRepository;
 	
 	/**
 	 * 分页查询
@@ -57,9 +69,19 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
 	 * @param entity
 	 * @return
 	 */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
-    public BizPalletInfoEntity update(BizPalletInfoEntity entity) {
-        return bizPalletInfoRepository.update(entity);
+    public int update(BizPalletInfoEntity entity) {
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("feesNo", entity.getFeesNo());
+    	try {
+    		bizPalletInfoRepository.update(entity);
+        	feesReceiveStorageRepository.updateIsCalcuByFeesNo(map);
+		} catch (Exception e) {
+			logger.error("更新异常!", e);
+			return 0;
+		}
+    	return 1;
     }
 
 	/**
@@ -72,13 +94,22 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
     }
     
     /**
-     * 批量更新
+     * 批量更新业务表调整托数
+     * 批量更新费用表计算状态为99并且更新调整托数
      * @param list
      * @return
      */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
     public int updateBatch(List<Map<String, Object>> list){
-    	return bizPalletInfoRepository.updateBatch(list);
+    	try {
+    		bizPalletInfoRepository.updateBatch(list);
+        	bizPalletInfoRepository.updateBatchFees(list);
+		} catch (Exception e) {
+			logger.error("更新异常!", e);
+			throw new BizException("更新异常!",e);
+		}
+    	return 1;
     }
     
     /**

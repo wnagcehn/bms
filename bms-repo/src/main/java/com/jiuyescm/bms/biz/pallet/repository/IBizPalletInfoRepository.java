@@ -19,7 +19,7 @@ public interface IBizPalletInfoRepository {
 
     BizPalletInfoEntity save(BizPalletInfoEntity entity);
 
-    BizPalletInfoEntity update(BizPalletInfoEntity entity);
+    int update(BizPalletInfoEntity entity);
 
 	int delete(List<BizPalletInfoEntity> lists);	
 	/**
@@ -58,6 +58,13 @@ public interface IBizPalletInfoRepository {
 	 * @return
 	 */
 	int retryCalculate(List<BizPalletInfoEntity> list);
+	
+	/**
+	 * 批量更新费用表计算状态(99)和调整数量
+	 * @param list
+	 * @return
+	 */
+	int updateBatchFees(List<Map<String, Object>> list);
 
 
 

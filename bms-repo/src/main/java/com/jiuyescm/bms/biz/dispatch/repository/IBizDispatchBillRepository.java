@@ -112,5 +112,19 @@ public interface IBizDispatchBillRepository{
 	 * @return
 	 */
 	List<BizDispatchBillEntity> queryBizCustomerid(Map<String, Object> condition);
+	
+	/**
+	 * 通过费用编号改费用表计算状态为99
+	 * @param condition
+	 * @return
+	 */
+	int updateIsCalcuByFeesNo(Map<String, Object> condition);
+	
+	/**
+	 * 通过批量导入的运单号去更新费用表计算状态
+	 * @param list
+	 * @return
+	 */
+	int updateIsCalcuByWaybillNo(List<Map<String, Object>> list);
 
 }

@@ -800,40 +800,15 @@ view.get(&quot;#dialogCount&quot;).show();</ClientEvent>
 var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
 var datas = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
 &#xD;
-//var merchantId=datas.get(&quot;merchantId&quot;);&#xD;
-//if(merchantId=='' || merchantId==undefined){&#xD;
-//	dorado.MessageBox.alert(&quot;商家不能为空!&quot;);&#xD;
-//	return;&#xD;
-//}&#xD;
-&#xD;
-validRetryAction.set(&quot;parameter&quot;,datas);&#xD;
 retryAction.set(&quot;parameter&quot;,datas);&#xD;
-validRetryAction.execute(function(retMap){&#xD;
-		if(retMap.key == &quot;Over&quot;){&#xD;
-			dorado.MessageBox.alert(retMap.value);&#xD;
-			return;&#xD;
+dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
+	retryAction.execute(function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+		with (view.get(&quot;#dsBizDispatchBillEntity&quot;)){&#xD;
+			flushAsync();&#xD;
 		}&#xD;
-		if(retMap.key == &quot;Billed&quot;){&#xD;
-			dorado.MessageBox.alert(retMap.value);&#xD;
-			return;&#xD;
-		}&#xD;
-		if(retMap.key == &quot;Error&quot;){&#xD;
-			dorado.MessageBox.alert(retMap.value);&#xD;
-			return;&#xD;
-		}&#xD;
-		if(retMap.key == &quot;Calculated&quot; || retMap.key == &quot;OK&quot;){&#xD;
-			dorado.MessageBox.confirm(retMap.value+&quot; 是否确定重算?&quot;,function(){&#xD;
-				retryAction.execute(function(result){&#xD;
-					dorado.MessageBox.alert(result);&#xD;
-					with (view.get(&quot;#dsBizDispatchBillEntity&quot;)){&#xD;
-						flushAsync();&#xD;
-					}&#xD;
-				});&#xD;
-			});&#xD;
-			return;&#xD;
-		}&#xD;
-});&#xD;
-</ClientEvent>
+	});&#xD;
+});</ClientEvent>
         <Property name="caption">重算</Property>
         <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
         <Property name="visible">true</Property>
@@ -1021,6 +996,7 @@ if (data != null) {&#xD;
       <Property name="dataResolver">dispatchBillController#editEntity</Property>
       <UpdateItem>
         <Property name="dataSet">dsBizDispatchBillEntity</Property>
+        <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
     <Dialog id="dialogBillEdit">

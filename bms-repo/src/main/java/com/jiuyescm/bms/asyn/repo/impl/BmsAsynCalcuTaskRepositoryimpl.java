@@ -41,6 +41,12 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
 	}
 
 	@Override
+	public int updateBatch(List<BmsAsynCalcuTaskEntity> list) {
+		// TODO Auto-generated method stub
+		return updateBatch("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.update", list);
+	}
+	
+	@Override
 	public List<BmsAsynCalcuTaskEntity> query(Map<String, Object> condition) {
 		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.query", condition);
 		return list;
@@ -58,5 +64,14 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
 		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryByMap", condition);
 		return list;
 	}
+	
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryDisByMap(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryDisByMap", condition);
+		return list;
+	}
+
+
 
 }

@@ -584,7 +584,7 @@ public class DateUtil {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date);
 			calendar.set(Calendar.DAY_OF_MONTH,1);
-			calendar.add(Calendar.MONTH, 0);
+			calendar.add(Calendar.MONTH, Month);
 			return sdf.format(calendar.getTime());
 		} 
 		catch (ParseException e) {
