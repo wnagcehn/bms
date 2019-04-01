@@ -112,7 +112,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 			lock.lock(lockString, 5, new LockCallback<Map<String, Object>>() {
 				@Override
 				public Map<String, Object> handleObtainLock() {
-					sendMq(vo);
+					//状态判断
+					validate(vo);
 					handMap.put("success", "success");
 					return handMap;
 				}
@@ -254,6 +255,35 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
     		voList.add(vo);
     	}
 		return voList;
+	}
+
+	public void validate(BmsCalcuTaskVo vo){
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("customerId", vo.getCustomerId());
+		map.put("subjectCode", vo.getSubjectCode());
+		map.put("creMonth", vo.getCreMonth());
+		List<BmsAsynCalcuTaskEntity> calList=bmsAsynCalcuTaskRepositoryimpl.query(map);
+		//状态0和10的新的直接丢弃，不处理
+		for(BmsAsynCalcuTaskEntity entity:calList){
+			if(entity.getTaskStatus()==0 ||entity.getTaskStatus()==10){
+				//不处理，不发送mq
+				return;
+			}
+		}
+		//状态20和30的将原来的置为丢弃40，新的插入
+		//40的老的不处理，新的插入
+		List<BmsAsynCalcuTaskEntity> updateList=new ArrayList<BmsAsynCalcuTaskEntity>();
+		for(BmsAsynCalcuTaskEntity entity:calList){
+			if(entity.getTaskStatus()==20 ||entity.getTaskStatus()==30){
+				entity.setTaskStatus(40);
+				updateList.add(entity);
+			}
+		}
+		if(updateList.size()>0){
+			//更新历史的
+			bmsAsynCalcuTaskRepositoryimpl.updateBatch(updateList);
+		}		
+		sendMq(vo);		
 	}
 
 }

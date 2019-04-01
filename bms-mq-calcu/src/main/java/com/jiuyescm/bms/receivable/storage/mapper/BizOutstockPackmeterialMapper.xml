@@ -35,29 +35,30 @@
   
     <select id="querybizOutstockMeterial" parameterType="java.util.Map" resultMap="bizOutstockMeterialMap">
         select 
-        id, wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, 
-        consumer_material_name, IFNULL(num,0) as num, IFNULL(adjust_num,0) as adjust_num, fees_no, dbname, is_calculated, 
-        creator, create_time, last_modifier, last_modify_time, del_flag,warehouse_code,warehouse_name,IFNULL(weight,0) as weight,spec_desc, extattr1, extattr2, extattr3, extattr4, extattr5,
-        cost_calculate_time,cost_is_calculated,cost_fees_no
-        from biz_outstock_packmaterial
-        where del_flag = 0 
+        a.id, a.wms_id, a.outstock_no, a.waybill_no, a.customer_id, a.customer_name, a.consumer_material_code, 
+        a.consumer_material_name, IFNULL(a.num,0) as num, IFNULL(a.adjust_num,0) as adjust_num, a.fees_no, a.dbname, b.is_calculated, 
+        a.creator, a.create_time, a.last_modifier, a.last_modify_time, a.del_flag,a.warehouse_code,a.warehouse_name,IFNULL(a.weight,0) as weight,a.spec_desc, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,
+        a.cost_calculate_time,a.cost_is_calculated,a.cost_fees_no
+        from biz_outstock_packmaterial a
+        INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no  
+        where a.del_flag = '0' and b.del_flag='0'
 		<if test="(customerId != null and customerId !='')" >
-			and customer_id = #{customerId,jdbcType=VARCHAR}
+			and a.customer_id = #{customerId,jdbcType=VARCHAR}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
-		</if>
-		<if test="(id != null and id !='')" >
-			and id = #{id,jdbcType=BIGINT}
-		</if>
-		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated =concat(${isCalculated})
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="(beginTime != null and beginTime !='')" >
-			 and  <![CDATA[create_time >= #{beginTime}]]>
+			and  <![CDATA[a.create_time >= #{beginTime}]]>
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			 and  <![CDATA[create_time <= #{endTime}]]>
+			and  <![CDATA[a.create_time <= #{endTime}]]>
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+			and b.is_calculated =concat(${isCalculated})
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and b.subject_code = #{subjectCode,jdbcType=VARCHAR}
 		</if>
 		LIMIT #{num}
     </select>

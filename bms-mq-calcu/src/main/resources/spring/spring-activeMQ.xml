@@ -75,7 +75,10 @@
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.DISPOSAL" ref="palletDisposalCalcuListener"/>
 	    
 	    <jms:listener destination="BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE" ref="productItemCalcuListener"/>
-
+	    
+		<jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
+		
+		<jms:listener destination="BMS.QUEUE.CALCU.VALUE.VALUEADD" ref="addUseCalcuListener"/>    
     </jms:listener-container>
 </beans>
  
