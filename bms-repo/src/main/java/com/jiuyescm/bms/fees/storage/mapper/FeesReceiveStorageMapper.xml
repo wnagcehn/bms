@@ -898,7 +898,7 @@
         resultType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
         select pi.create_time as createTime, pi.biz_type as bizType, pi.customer_id as customerId, pi.customer_name as customerName, 
 		pi.warehouse_code as warehouseCode, pi.temperature_type_code as tempretureType,pi.warehouse_name as warehouseName,
-		pi.pallet_num as quantity, pi.adjust_pallet_num as adjustNum, frs.unit, frs.unit_price as unitPrice,
+		frs.quantity, pi.adjust_pallet_num as adjustNum, frs.unit, frs.unit_price as unitPrice,
 		ifnull(frs.cost, 0) as cost, ifnull(frs.derate_amount,0) as derateAmount, 
 		ifnull(frs.cost,0)-ifnull(frs.derate_amount,0) as receiptAmount
 		FROM biz_pallet_info pi

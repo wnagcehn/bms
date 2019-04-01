@@ -216,6 +216,162 @@
 				and bill_no like '%${billNo}%'
 		</if>
     </sql>
+    
+    <sql id="queryColumns">
+		<if test="(id != null and id !='')" >
+				and b.id = #{id}
+		</if>
+		<if test="(createMonth != null and createMonth !='')" >
+				and b.create_month = #{createMonth}
+		</if>
+		<if test="(createMonthStart != null and createMonthStart !='')" >
+				and b.create_month >= #{createMonthStart}
+		</if>
+		<if test="(createMonthEnd != null and createMonthEnd !='')" >
+				and b.create_month <![CDATA[<= #{createMonthEnd}]]>
+		</if>
+		<if test="(invoiceName != null and invoiceName !='')" >
+				and b.invoice_name  like '%${invoiceName}%'
+		</if>
+		<if test="(billName != null and billName !='')" >
+				and b.bill_name like '%${billName}%'
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and b.customer_name = #{customerName}
+		</if>
+		<if test="(billStartTime != null and billStartTime !='')" >
+				and b.bill_start_time = #{billStartTime}
+		</if>
+		<if test="(firstClassName != null and firstClassName !='')" >
+				and b.first_class_name = #{firstClassName}
+		</if>
+		<if test="(bizTypeName != null and bizTypeName !='')" >
+				and b.biz_type_name = #{bizTypeName}
+		</if>
+		<if test="(projectName != null and projectName !='')" >
+				and b.project_name = #{projectName}
+		</if>
+		<if test="(sellerId != null and sellerId !='')" >
+				and b.seller_id = #{sellerId}
+		</if>
+		<if test="(sellerIds != null and sellerIds!='')">
+			and b.seller_id in
+			<foreach collection="sellerIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>
+		<if test="(sellerName != null and sellerName !='')" >
+				and b.seller_name like '%${sellerName}%'
+		</if>
+		<if test="(deptName != null and deptName !='')" >
+				and b.dept_name like '%${deptName}%'
+		</if>
+		<if test="(deptCode != null and deptCode !='')" >
+				and b.dept_code = #{deptCode}
+		</if>
+		<if test="(projectManagerId != null and projectManagerId !='')" >
+				and b.project_manager_id = #{projectManagerId}
+		</if>
+		<if test="(projectManagerIds != null and projectManagerIds!='')">
+			and b.project_manager_id in
+			<foreach collection="projectManagerIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>
+		<if test="(projectManagerName != null and projectManagerName !='')" >
+				and b.project_manager_name = #{projectManagerName}
+		</if>
+		<if test="(balanceIds != null and balanceIds!='')">
+			and b.balance_id in
+			<foreach collection="balanceIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+		</if>
+		<if test="(balanceId != null and balanceId !='')" >
+				and b.balance_id = #{balanceId}
+		</if>
+		<if test="(balanceName != null and balanceName !='')" >
+				and b.balance_name = #{balanceName}
+		</if>
+		<if test="(billStatus != null and billStatus !='')" >
+				and b.bill_status = #{billStatus}
+		</if>
+		<if test="(billCheckStatus != null and billCheckStatus !='')" >
+				and b.bill_check_status = #{billCheckStatus}
+		</if>
+		<if test="(billConfirmDate != null and billConfirmDate !='')" >
+				and b.bill_confirm_date = #{billConfirmDate}
+		</if>
+		<if test="(invoiceStatus != null and invoiceStatus !='')" >
+				and b.invoice_status = #{invoiceStatus}
+		</if>
+		<if test="(expectAmount != null and expectAmount !='')" >
+				and b.expect_amount = #{expectAmount}
+		</if>
+		<if test="(confirmAmount != null and confirmAmount !='')" >
+				and b.confirm_amount = #{confirmAmount}
+		</if>
+		<if test="(invoiceAmount != null and invoiceAmount !='')" >
+				and b.invoice_amount = #{invoiceAmount}
+		</if>
+		<if test="(invoiceDate != null and invoiceDate !='')" >
+				and b.invoice_date = #{invoiceDate}
+		</if>
+		<if test="(expectReceiptDate != null and expectReceiptDate !='')" >
+				and b.expect_receipt_date = #{expectReceiptDate}
+		</if>
+		<if test="(expectReceiptDateStart != null and expectReceiptDateStart !='')" >
+				and b.expect_receipt_date >= #{expectReceiptDateStart}
+		</if>
+		<if test="(expectReceiptDateEnd != null and expectReceiptDateEnd !='')" >
+				and b.expect_receipt_date <![CDATA[<= #{expectReceiptDateEnd}]]>
+		</if>
+		<if test="(unReceiptAmount != null and unReceiptAmount !='')" >
+				and b.un_receipt_amount = #{unReceiptAmount}
+		</if>
+		<if test="(invoiceUnReceiptAmount != null and invoiceUnReceiptAmount !='')" >
+				and b.invoice_un_receipt_amount = #{invoiceUnReceiptAmount}
+		</if>
+		<if test="(receiptAmount != null and receiptAmount !='')" >
+				and b.receipt_amount = #{receiptAmount}
+		</if>
+		<if test="(receiptDate != null and receiptDate !='')" >
+				and b.receipt_date = #{receiptDate}
+		</if>
+		<if test="(receiptStatus != null and receiptStatus !='')" >
+				and b.receipt_status = #{receiptStatus}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and b.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and b.create_time >= #{createTime} add <![CDATA[create_time <= #{createTime}]]>
+		</if>
+		<if test="(lastModifier != null and lastModifier !='')" >
+				and b.last_modifier = #{lastModifier}
+		</if>
+		<if test="(lastModifyTime != null and lastModifyTime !='')" >
+			    and b.last_modify_time >= #{lastModifyTime} add <![CDATA[last_modify_time <= #{lastModifyTime}]]>
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and b.remark = #{remark}
+		</if>
+		<if test="(billExcelUrl != null and billExcelUrl !='')" >
+				and b.bill_excel_url = #{billExcelUrl}
+		</if>
+		<if test="(userIds != null and userIds!='')">
+			and CONCAT(b.seller_id,'|',b.project_manager_id,'|',b.balance_id) regexp '${userIds}'
+		</if>
+		<if test="(isapplyBad != null and isapplyBad !='')" >
+				and b.isapply_bad = #{isapplyBad}
+		</if>
+		<if test="(area != null and area !='')" >
+				and b.area like '%${area}%'
+		</if>
+		<if test="(billNo != null and billNo !='')" >
+				and b.bill_no like '%${billNo}%'
+		</if>
+    </sql>
 	  
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
@@ -232,7 +388,7 @@
 		GROUP_CONCAT(DISTINCT i.mk_invoice_name) as mkInvoiceName from bill_check_info b
 		LEFT JOIN bill_check_invoice i on b.id=i.bill_check_id and i.del_flag='0'
         where 1=1 and b.del_flag='0'
-		<include refid="baseSelectColumns" />
+		<include refid="queryColumns" />
 		GROUP BY b.id
     </select>
     

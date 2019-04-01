@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
+import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
 import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity;
 import com.jiuyescm.common.ConstantInterface;
 /**
@@ -48,7 +49,11 @@ public class CommonComparePR <T>{
 						importValue2+=objToString(importMap2.get(key));
 					}
 					if(importValue1.equals(importValue2)){
-						setMessage(infoList, lineNo,"Excel中第"+lineNo+"行数据重复");
+						if(listimport.get(0) instanceof PriceMaterialQuotationEntity){
+							setMessage(infoList, Integer.valueOf(importMap2.get("line").toString()),"Excel中第"+Integer.valueOf(importMap2.get("line").toString())+"行数据重复");
+						}else {
+							setMessage(infoList, lineNo,"Excel中第"+lineNo+"行数据重复");	
+						}
 						break;
 					}
 				}	
@@ -79,7 +84,11 @@ public class CommonComparePR <T>{
 					orgValueString+=objToString(orgMap.get(key));
 				}
 				if(importValue.equals(orgValueString)){
-					setMessage(infoList, lineNextNo,"与表中数据重复");
+					if(listimport.get(0) instanceof PriceMaterialQuotationEntity){
+						setMessage(infoList, Integer.valueOf(orgMap.get("line").toString()),"与表中数据重复");
+					}else {
+						setMessage(infoList, lineNextNo,"与表中数据重复");
+					}
 				}
 			}
 		}

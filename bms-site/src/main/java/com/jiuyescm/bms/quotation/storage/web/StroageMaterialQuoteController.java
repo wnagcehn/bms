@@ -493,7 +493,10 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			
 			//非泡沫箱
 			List<PriceMaterialQuotationEntity> noPmxList = new ArrayList<PriceMaterialQuotationEntity>();
+			int line = 1;
 			for (PriceMaterialQuotationEntity teEntity : teList) {
+				line += 1;
+				teEntity.setLine(line);
 				if (!"PLATIC_BOX".equals(teEntity.getMaterialType())) {
 					noPmxList.add(teEntity);
 				}
