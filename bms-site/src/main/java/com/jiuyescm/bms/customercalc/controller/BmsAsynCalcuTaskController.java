@@ -69,7 +69,9 @@ public class BmsAsynCalcuTaskController {
 		if (null == sysEntity) {
 			throw new BizException("请先去数据字典配置对应的路径！");
 		}
-		map.put(sysEntity.getCodeName(), sysEntity.getExtattr1());
+		map.put("name", sysEntity.getCodeName());
+		map.put("url", sysEntity.getExtattr1());
+		map.put("icon",sysEntity.getExtattr2());
 		return map;
 	}
 }

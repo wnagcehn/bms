@@ -10,7 +10,6 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
@@ -77,7 +77,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 					BmsCalcuTaskVo voEntity=new BmsCalcuTaskVo();
 					PropertyUtils.copyProperties(voEntity, entity);
 					for (BmsAsynCalcuTaskEntity vo : taskList) {
-						if (voEntity.getCustomerId().equals(vo.getCustomerId())&&voEntity.getCreMonth()==vo.getCreMonth()) {
+						if (voEntity.getCustomerId().equals(vo.getCustomerId())&&(voEntity.getCreMonth().intValue()==vo.getCreMonth().intValue())) {
 							voEntity.setCustomerStatus(vo.getCustomerStatus());
 							voEntity.setSubjectNum(vo.getSubjectNum());
 							list.add(voEntity);
