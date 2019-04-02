@@ -185,6 +185,7 @@ public class PalletInitJob extends IJobHandler {
 			feesEntity.setFeesNo(feesNo);
 			feesEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
 			feesEntity.setIsCalculated("99");
+			feesEntity.setDelFlag("0");
 			// 费用科目
 			if ("product".equals(entity.getBizType())) {
 				subjectId = "wh_product_storage";

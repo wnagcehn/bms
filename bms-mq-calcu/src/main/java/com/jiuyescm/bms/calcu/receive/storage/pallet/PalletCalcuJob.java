@@ -77,7 +77,6 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		serviceSubjectCode = subjectCode;
 		getQuoTemplete();
 		errorMap = new HashMap<String, Object>();
@@ -207,9 +206,8 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		if ("product".equals(entity.getBizType())) {
 			//如果商家已经按件收取存储费，则按托存储不计费
 			if(cusList.size()>0 && cusList.contains(entity.getCustomerId())){
-				//logger.info("taskId商家已经按件收取存储费,按托存储不计费");
 				fee.setIsCalculated(CalculateState.No_Exe.getCode());
-				fee.setCalcuMsg(entity.getRemark()==null?"":entity.getRemark()+"商家已经按件收取存储费,按托存储不计费;");
+				fee.setCalcuMsg("商家已经按件收取存储费,按托存储不计费");
 				return true;
 			}
 		}
@@ -225,6 +223,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 			fee.setCalcuMsg("bms合同缺失");
 			return;
 		}
+		logger.info("合同信息{}",contractInfo.getContractNo());
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -302,6 +301,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
+				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
