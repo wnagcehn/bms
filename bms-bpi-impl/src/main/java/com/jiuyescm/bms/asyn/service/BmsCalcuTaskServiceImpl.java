@@ -366,4 +366,26 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		}
 		return result;
 	}
+	
+	@Override
+	public PageInfo<BmsCalcuTaskVo> queryPage(Map<String, Object> condition,int pageNo, int pageSize) {
+		PageInfo<BmsCalcuTaskVo> pageVoInfo= new PageInfo<BmsCalcuTaskVo>();
+		List<BmsCalcuTaskVo> result= new ArrayList<>();
+		try{
+			PageInfo<BmsAsynCalcuTaskEntity> pageInfo=bmsAsynCalcuTaskRepositoryimpl.query(condition,pageNo, pageSize);
+			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
+			List<BmsAsynCalcuTaskEntity> list = pageInfo.getList();
+			if(null !=list&&list.size()>0){
+				for(BmsAsynCalcuTaskEntity entity:list){
+					BmsCalcuTaskVo voEntity=new BmsCalcuTaskVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					result.add(voEntity);
+				}
+			}
+		}catch(Exception e){
+			logger.error("查询计算任务异常",e);
+		}
+		pageVoInfo.setList(result);
+		return pageVoInfo;
+	}
 }

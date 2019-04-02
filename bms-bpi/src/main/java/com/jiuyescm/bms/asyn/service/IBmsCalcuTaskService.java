@@ -55,5 +55,8 @@ public interface IBmsCalcuTaskService {
 	 * @throws BizException
 	 */
 	List<BmsCalcuTaskVo> queryDetail(Map<String, Object> map) throws Exception ;
+
+	PageInfo<BmsCalcuTaskVo> queryPage(Map<String, Object> condition,
+			int pageNo, int pageSize);
 	
 }
