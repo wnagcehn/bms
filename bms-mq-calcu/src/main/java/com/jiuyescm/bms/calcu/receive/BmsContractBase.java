@@ -102,7 +102,7 @@ public class BmsContractBase {
 		else{
 			quoTempleteCode = contractItems.get(0).getTemplateId();
 			if(StringUtils.isEmpty(quoTempleteCode)){
-				quoTempleteCode = null;
+				quoTempleteCode = "fail";
 			}
 			else{
 				contractInfo.setModelNo(quoTempleteCode);

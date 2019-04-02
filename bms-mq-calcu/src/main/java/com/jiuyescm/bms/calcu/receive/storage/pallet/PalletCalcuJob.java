@@ -9,6 +9,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
@@ -43,6 +45,8 @@ import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
 import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 
+@Component("palletCalcuJob")
+@Scope("prototype")
 public class PalletCalcuJob extends BmsContractBase implements ICalcuService<BizPalletInfoEntity,FeesReceiveStorageEntity> {
 
 	private Logger logger = LoggerFactory.getLogger(PalletCalcuJob.class);
@@ -123,9 +127,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		} catch (Exception e) {
 			logger.error("更新任务进度异常",e);
 		}
-		if(bizList!=null && bizList.size() == 1000){
-			calcu(map);
-		}
+		calcu(map);
 		
 	}
 

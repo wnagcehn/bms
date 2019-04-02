@@ -544,6 +544,34 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var merchantId = GetQueryString(&quot;customerId&quot;);&#xD;
+var createTime = GetQueryString(&quot;createTime&quot;);&#xD;
+var endTime = GetQueryString(&quot;createEndTime&quot;);&#xD;
+var accountState = GetQueryString(&quot;isCalculated&quot;);&#xD;
+&#xD;
+if(merchantId == undefined || merchantId == null){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+data.set(&quot;merchantId&quot;,merchantId);&#xD;
+data.set(&quot;createTime&quot;,createTime);&#xD;
+data.set(&quot;endTime&quot;,endTime);&#xD;
+data.set(&quot;accountState&quot;,accountState);&#xD;
+&#xD;
+var dsBizDispatchBillEntity= view.get(&quot;#dsBizDispatchBillEntity&quot;);&#xD;
+with (dsBizDispatchBillEntity) {&#xD;
+	dsBizDispatchBillEntity.clear();&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+} &#xD;
+&#xD;
+&#xD;
+function GetQueryString(name){&#xD;
+    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;); &#xD;
+    var r = window.location.search.substr(1).match(reg);&#xD;
+    if(r!=null)return  unescape(r[2]); return null;&#xD;
+}</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>
