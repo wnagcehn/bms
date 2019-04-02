@@ -6,15 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
-import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
@@ -137,13 +136,14 @@ public class DispatchBillInitJob extends IJobHandler {
 			feeEntity.setSignTime(entity.getSignTime()); // 签收时间
 			feeEntity.setBigstatus(entity.getBigstatus());
 			feeEntity.setSmallstatus(entity.getSmallstatus());
+			feeEntity.setDeliveryDate(entity.getCreateTime());
 			feeEntity.setIsCalculated("99");
 			feeEntity.setCreator("system");
 			feeEntity.setCreateTime(entity.getCreateTime());// 费用表的创建时间应为业务表的创建时间
 			feeEntity.setDelFlag("0");
 			feeEntity.setStatus("0");
 			feeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
-
+			
 			feesList.add(feeEntity);
 		}
 	}

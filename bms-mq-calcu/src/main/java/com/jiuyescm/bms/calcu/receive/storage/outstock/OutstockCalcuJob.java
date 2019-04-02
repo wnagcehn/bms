@@ -118,7 +118,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		updateBatch(bizList,fees);
 		calceCount += bizList.size();
-		int taskRate = (int)Math.floor((calceCount*100)/unCalcuCount);
+		int taskRate = (int)Math.floor((calceCount*10)/unCalcuCount);
 		try {
 			if(unCalcuCount!=0){
 				bmsCalcuTaskService.updateRate(taskVo.getTaskId(), taskRate);
@@ -126,9 +126,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		} catch (Exception e) {
 			logger.error("更新任务进度异常",e);
 		}
-		if(bizList!=null && bizList.size() == 1000){
-			calcu(map);
-		}
+		calcu(map);
 	}
 	
 	@Override
@@ -339,6 +337,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
 				logger.info("计算成功，费用【{}】",fee.getCost());
+				fee.setCalcuMsg("计算成功");
 			}
 			else{
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());

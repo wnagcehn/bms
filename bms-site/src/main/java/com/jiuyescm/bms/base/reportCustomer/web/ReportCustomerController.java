@@ -333,9 +333,9 @@ public class ReportCustomerController {
 			}else{
 				//判断仓库id是否在仓库表中维护 并将此仓库返回,将id回填			
 				for(WarehouseVo vo:wareHouselist){
-					if(vo.getWarehousename().equals(warehouseName)){
+					if(vo.getWarehousename().equals(warehouseName.trim())){
 						entity.setWarehouseCode(vo.getWarehouseid());
-						entity.setWarehouseName(warehouseName);
+						entity.setWarehouseName(warehouseName.trim());
 						break;
 					}
 				}
@@ -352,13 +352,13 @@ public class ReportCustomerController {
 			}else{
 				//=======================校验商家名称开始=======================
 				for(CustomerVo vo:customerList){
-					if(vo.getCustomername().equals(customerName)){
+					if(vo.getCustomername().equals(customerName.trim())){
 						entity.setCustomerId(vo.getCustomerid());
-						entity.setCustomerName(customerName);
+						entity.setCustomerName(customerName.trim());
 						break;
 					}
 				}
-				if(StringUtils.isBlank(entity.getWarehouseCode())){
+				if(StringUtils.isBlank(entity.getCustomerName())){
 					setMessage(infoList, rowNum+1,"商家名称"+customerName+"没有在商家表中维护!");
 				}
 			}

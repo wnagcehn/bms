@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.asyn.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,17 +14,18 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
-import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
+import com.jiuyescm.cfm.common.JAppContext;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller("calAsynTaskController")
 public class CalAsynTaskController {
-	private static final Logger logger = Logger.getLogger(CalAsynTaskController.class.getName());
-
+	private static final Logger logger = LoggerFactory
+			.getLogger(CalAsynTaskController.class.getName());
 	@Autowired
 	private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired
@@ -40,7 +40,7 @@ public class CalAsynTaskController {
 	public void query(Page<BmsCalcuTaskVo> page, Map<String, Object> parameter) {
 		PageInfo<BmsCalcuTaskVo> pageInfo = null;
 		try {
-			pageInfo = bmsCalcuTaskService.query(parameter, page.getPageNo(),
+			pageInfo = bmsCalcuTaskService.queryPage(parameter, page.getPageNo(),
 					page.getPageSize());
 		} catch (Exception e) {
 			logger.error("查询计算任务异常",e);
@@ -73,31 +73,53 @@ public class CalAsynTaskController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param) {
-/*		// 查询任务数据
+		// 查询任务数据
 		List<BmsCalcuTaskVo> taskList =  bmsCalcuTaskService.query(param);
 		if (CollectionUtils.isNotEmpty(taskList)) {
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			List<String> feeNoList = new ArrayList<>();
-			for (BizProductStorageEntity bizProductStorageEntity : taskList) {
-				feeNoList.add(bizProductStorageEntity.getFeesNo());
+			// 对这些任务按照商家、时间、科目、费用类型排序
+			Map<String,BmsCalcuTaskVo> groupMap = new HashMap<>();
+			for (BmsCalcuTaskVo bmsCalcuTaskVo : taskList) {
+				StringBuilder stringBuilder = new StringBuilder(bmsCalcuTaskVo.getCustomerId());
+				stringBuilder.append("-").append(bmsCalcuTaskVo.getCreMonth()).append("-").append(bmsCalcuTaskVo.getSubjectCode()).append("-").append(bmsCalcuTaskVo.getFeesType());
+				groupMap.put(stringBuilder.toString(), bmsCalcuTaskVo);
 			}
-			Map<String, Object> feeMap = new HashMap<String, Object>();
-			feeMap.put("feeList", feeNoList);
-			// 修改费用数据计算状态
-			if (bizProductStorageService.reCalculate(feeMap) == 0) {
-				return "重算异常";
+			//遍历map中的值
+			for(BmsCalcuTaskVo vo:groupMap.values()){
+				BmsCalcuTaskVo bmsCalcuTaskVo = new BmsCalcuTaskVo();
+				bmsCalcuTaskVo.setCrePerson(JAppContext.currentUserName());
+				bmsCalcuTaskVo.setCrePersonId(JAppContext.currentUserName());
+				bmsCalcuTaskVo.setCustomerId(vo.getCustomerId());
+				bmsCalcuTaskVo.setCreMonth(vo.getCreMonth());
+				bmsCalcuTaskVo.setSubjectCode(vo.getSubjectCode());
+				bmsCalcuTaskVo.setFeesType(vo.getFeesType());
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.info("mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
+				}
 			}
 		}
-		// 发送MQ
-		sendTask();*/
 		return "操作成功! 正在重算...";
+	}
+	
+	@DataProvider
+	public Map<String, String> getFeesType() {
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("item", "商品按件");
+		mapValue.put("pallet", "商品按托");
+		return mapValue;
+	}
+	
+	@DataProvider
+	public Map<String, String> getTaskStatus() {
+		Map<String, String> mapValue = new LinkedHashMap<String, String>();
+		mapValue.put("0", "等待");
+		mapValue.put("10", "处理中");
+		mapValue.put("20", "成功");
+		mapValue.put("30", "异常");
+		mapValue.put("40", "丢弃");
+		mapValue.put("50", "作废");
+		return mapValue;
 	}
 }

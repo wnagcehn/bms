@@ -3,18 +3,19 @@ package com.jiuyescm.bms.calcu.receive;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import net.sf.json.JSONObject;
 
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -50,7 +51,7 @@ public class ContractCalcuService {
 			//logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
-			errorMap.put("msg", "合同在线合同缺失");
+			errorMap.put("msg", ex.getMessage());
 			return;
 		}
 		if(cqVo == null){
@@ -113,8 +114,8 @@ public class ContractCalcuService {
 				int i = rtnQuoteInfoVo.getQuoteMaps().indexOf(map);
 			}
 			//调用规则计算费用
-			feesCalcuService.ContractCalcuService(fee, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());
-			
+			feesCalcuService.ContractCalcuService(fee, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());			
+			errorMap.put("success", "succ");
 		}
 		catch(Exception ex){
 			logger.info("系统异常",ex);
