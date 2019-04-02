@@ -138,9 +138,10 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		//判断商品按件
 		if("wh_product_storage".equals(subjectCode) && "item".equals(vo.getFeesType())){
 			vo.setFeesType(FEES_TYPE_ITEM);
-		}
-		else{
+		}else if("wh_product_storage".equals(subjectCode)){
 			vo.setFeesType(FEES_TYPE_PALLET);
+		}else{
+			vo.setFeesType("");
 		}
 		//发送mq标记
 		String mq = null;
