@@ -153,7 +153,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 				@Override
 				public Map<String, Object> handleObtainLock() {
 					//状态判断
-					validate(vo);
+					sendMq(vo);
 					handMap.put("success", "success");
 					return handMap;
 				}

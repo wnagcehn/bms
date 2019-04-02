@@ -127,9 +127,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		} catch (Exception e) {
 			logger.error("更新任务进度异常",e);
 		}
-		if(bizList!=null && bizList.size() == 1000){
-			calcu(map);
-		}
+		calcu(map);
 		
 	}
 

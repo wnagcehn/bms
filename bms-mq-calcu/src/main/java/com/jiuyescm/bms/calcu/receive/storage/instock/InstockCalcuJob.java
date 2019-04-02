@@ -58,7 +58,6 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		getQuoTemplete();
 		serviceSubjectCode = subjectCode;
 		errorMap = new HashMap<String, Object>();
@@ -113,9 +112,8 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		} catch (Exception e) {
 			logger.error("更新任务进度异常",e);
 		}
-		if(bizList!=null && bizList.size() == 1000){
-			calcu(map);
-		}
+		calcu(map);
+		
 	}
 	
 	@Override
@@ -162,6 +160,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "bms合同缺失", null, cbiVo);
 			return;
 		}
+		logger.info("合同信息{}",contractInfo.getContractNo());
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
