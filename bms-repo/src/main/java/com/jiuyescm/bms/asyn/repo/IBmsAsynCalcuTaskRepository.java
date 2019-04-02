@@ -61,5 +61,7 @@ public interface IBmsAsynCalcuTaskRepository {
 	 * @return
 	 */
 	List<BmsAsynCalcuTaskEntity> queryDetail(Map<String, Object> map);
+
+	BmsAsynCalcuTaskEntity updateByTaskId(BmsAsynCalcuTaskEntity entity);
 	
 }

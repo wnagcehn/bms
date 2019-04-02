@@ -241,4 +241,26 @@
 			and customer_id = #{customerId}
 		</if>
     </select>
+    
+        <update id="updateByTaskId" parameterType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+        update bms_asyn_calcu_task 
+		<set >
+			<if test="taskStatus != null" >task_status=#{taskStatus,jdbcType=TINYINT},</if>
+			<if test="feesCount != null" >fees_count=#{feesCount,jdbcType=INTEGER},</if>
+			<if test="uncalcuCount != null" >uncalcu_count=#{uncalcuCount,jdbcType=INTEGER},</if>
+			<if test="calcuCount != null" >calcu_count=#{calcuCount,jdbcType=INTEGER},</if>
+			<if test="beginCount != null" >begin_count=#{beginCount,jdbcType=INTEGER},</if>
+			<if test="finishCount != null" >finish_count=#{finishCount,jdbcType=INTEGER},</if>
+			<if test="sysErrorCount != null" >sys_error_count=#{sysErrorCount,jdbcType=INTEGER},</if>
+			<if test="contractMissCount != null" >contract_miss_count=#{contractMissCount,jdbcType=INTEGER},</if>
+			<if test="quoteMissCount != null" >quote_miss_count=#{quoteMissCount,jdbcType=INTEGER},</if>
+			<if test="noExeCount != null" >no_exe_count=#{noExeCount,jdbcType=INTEGER},</if>
+			<if test="taskRate != null" >task_rate=#{taskRate,jdbcType=INTEGER},</if>
+			<if test="processTime != null" >process_time=#{processTime,jdbcType=TIMESTAMP},</if>
+			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
+		</set>
+        where task_id=#{taskId}
+    </update>
 </mapper>
