@@ -36,7 +36,7 @@ public class AddCalcuBase extends CalcuTaskListener<BizAddFeeEntity,FeesReceiveS
 
 	@Override
 	protected BmsFeesQtyVo feesCountReport(BmsCalcuTaskVo taskVo) {
-		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForSto(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoAdd(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
 

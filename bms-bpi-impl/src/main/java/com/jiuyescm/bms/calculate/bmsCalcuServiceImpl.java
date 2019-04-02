@@ -136,4 +136,181 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 		return contractAttr;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public BmsFeesQtyVo queryFeesQtyForStoInstock(String customerId,
+			String subjectCode, Integer creMonth) {
+		// TODO Auto-generated method stub
+		BmsFeesQtyVo vo = new BmsFeesQtyVo();
+		try {
+			int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+			int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+			String startTime = startYear+"-"+startMonth+"-01";
+			String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+					
+			List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoInstock(customerId, subjectCode, startTime, endTime);
+			tongji(statusList,vo);
+
+			return vo;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("查询异常",e);
+		}
+		return vo;
+	}
+
+	@Override
+	public BmsFeesQtyVo queryFeesQtyForStoOutstock(String customerId,
+			String subjectCode, Integer creMonth) {
+		// TODO Auto-generated method stub
+		BmsFeesQtyVo vo = new BmsFeesQtyVo();
+		try {
+			int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+			int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+			String startTime = startYear+"-"+startMonth+"-01";
+			String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+					
+			List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoOutstock(customerId, subjectCode, startTime, endTime);
+			tongji(statusList,vo);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("查询异常",e);
+		}
+		return vo;
+	}
+
+	@Override
+	public BmsFeesQtyVo queryFeesQtyForStoMaterial(String customerId,
+			String subjectCode, Integer creMonth) {
+		// TODO Auto-generated method stub
+		BmsFeesQtyVo vo = new BmsFeesQtyVo();
+		try {
+			int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+			int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+			String startTime = startYear+"-"+startMonth+"-01";
+			String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+				
+			List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoMaterial(customerId, subjectCode, startTime, endTime);
+			tongji(statusList,vo);
+
+			return vo;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("查询异常",e);
+		}
+		return vo;
+	}
+
+	@Override
+	public BmsFeesQtyVo queryFeesQtyForStoProductItem(String customerId,
+			String subjectCode, Integer creMonth) {
+		// TODO Auto-generated method stub
+		BmsFeesQtyVo vo = new BmsFeesQtyVo();
+		try {
+			int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+			int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+			String startTime = startYear+"-"+startMonth+"-01";
+			String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+					
+			List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoProductItem(customerId, subjectCode, startTime, endTime);
+			tongji(statusList,vo);
+
+			return vo;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("查询异常",e);
+		}
+		return vo;
+	}
+
+	@Override
+	public BmsFeesQtyVo queryFeesQtyForStoAdd(String customerId,
+			String subjectCode, Integer creMonth) {
+		// TODO Auto-generated method stub
+		BmsFeesQtyVo vo = new BmsFeesQtyVo();
+		try {
+			int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+			int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+			String startTime = startYear+"-"+startMonth+"-01";
+			String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+
+			List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoAdd(customerId, subjectCode, startTime, endTime);
+			tongji(statusList,vo);
+
+			return vo;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("查询异常",e);
+		}
+		return vo;
+	}
+
+	@Override
+	public BmsFeesQtyVo queryFeesQtyForStoPallet(String customerId,
+			String subjectCode, Integer creMonth) {
+		// TODO Auto-generated method stub
+		BmsFeesQtyVo vo = new BmsFeesQtyVo();
+		try {
+			int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+			int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+			String startTime = startYear+"-"+startMonth+"-01";
+			String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+		
+			
+			List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoPallet(customerId, subjectCode, startTime, endTime);
+			tongji(statusList,vo);
+			return vo;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("查询异常",e);
+		}
+		return vo;
+	}
+
+	private void tongji(List<BmsFeesQtyEntity> statusList,BmsFeesQtyVo vo){
+		int entityTotal=0;
+		if(statusList != null && statusList.size()>0){
+			for (BmsFeesQtyEntity entity : statusList) {
+				switch (entity.getIsCalculated()) {
+				case "0":
+					vo.setBeginCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				case "1":
+					vo.setFinishCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				case "2":
+					vo.setSysErrorCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				case "3":
+					vo.setContractMissCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				case "4":
+					vo.setQuoteMissCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				case "5":
+					vo.setNoExeCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				case "99":
+					vo.setUncalcuCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				default:
+					vo.setSysErrorCount(entity.getFeesCount());
+					entityTotal++;
+					break;
+				}
+			}
+		}
+		
+		
+		
+		vo.setFeesCount(entityTotal);
+	}
 }

@@ -23,6 +23,8 @@ public interface IBmsCalcuService {
 	 */
 	BmsFeesQtyVo queryFeesQtyForSto(String customerId,String subjectCode,Integer creMonth);
 	
+	
+	
 	BmsFeesQtyVo queryFeesQtyForDis(String customerId,String subjectCode,Integer creMonth);
 	
 	/**
@@ -32,5 +34,59 @@ public interface IBmsCalcuService {
 	 */
 	String queryContractAttr(String customerId);
 	
+	/**
+	 * 入库
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	BmsFeesQtyVo queryFeesQtyForStoInstock(String customerId,String subjectCode,Integer creMonth);
 	
+	/**
+	 * 出库
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	BmsFeesQtyVo queryFeesQtyForStoOutstock(String customerId,String subjectCode,Integer creMonth);
+
+	/**
+	 * 耗材
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	BmsFeesQtyVo queryFeesQtyForStoMaterial(String customerId,String subjectCode,Integer creMonth);
+	
+
+	/**
+	 * 商品按件
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	BmsFeesQtyVo queryFeesQtyForStoProductItem(String customerId,String subjectCode,Integer creMonth);
+	
+	/**
+	 * 增值
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	BmsFeesQtyVo queryFeesQtyForStoAdd(String customerId,String subjectCode,Integer creMonth);
+	
+	/**
+	 * 托数
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	BmsFeesQtyVo queryFeesQtyForStoPallet(String customerId,String subjectCode,Integer creMonth);
+
 }

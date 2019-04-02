@@ -276,6 +276,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		entity.setIsCalculated(CalculateState.Finish.getCode());
 		fee.setCalcuMsg("计算成功");
 		fee.setIsCalculated(CalculateState.Finish.getCode());
+		fee.setCalculateTime(JAppContext.currentTimestamp());
 	}
 	
 	@Override

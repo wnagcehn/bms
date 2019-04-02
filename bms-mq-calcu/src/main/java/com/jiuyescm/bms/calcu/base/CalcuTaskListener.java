@@ -8,6 +8,8 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +167,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			
 			//总单量统计，计算单量统计
 			BmsFeesQtyVo feesQtyVoFinish = feesCountReport(taskVo);
+			logger.info("taskId={} 计算完成后统计单量{}",taskVo.getTaskId(),JSONObject.fromObject(feesQtyVoFinish));
 			
 			taskVo.setUncalcuCount(feesQtyVoFinish.getUncalcuCount()==null?0:feesQtyVoFinish.getUncalcuCount());//本次待计算的费用数
 			taskVo.setCalcuCount(feesQtyVo.getUncalcuCount()==null?0:feesQtyVo.getUncalcuCount());//计算完成的费用总数    

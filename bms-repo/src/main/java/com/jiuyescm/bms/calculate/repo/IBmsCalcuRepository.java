@@ -49,5 +49,58 @@ public interface IBmsCalcuRepository {
 	 */
 	List<BmsFeesQtyEntity> queryStatusFeesQtyForDis(String customerId,String subjectCode, String startTime,String endTime);
 	
+	/**
+	 * 入库
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	List<BmsFeesQtyEntity> queryFeesQtyForStoInstock(String customerId,String subjectCode, String startTime,String endTime);
+	
+	/**
+	 * 出库
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	List<BmsFeesQtyEntity> queryFeesQtyForStoOutstock(String customerId,String subjectCode, String startTime,String endTime);
+
+	/**
+	 * 耗材
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	List<BmsFeesQtyEntity> queryFeesQtyForStoMaterial(String customerId,String subjectCode, String startTime,String endTime);
+	
+	/**
+	 * 商品按件
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	List<BmsFeesQtyEntity> queryFeesQtyForStoProductItem(String customerId,String subjectCode, String startTime,String endTime);
+	
+	/**
+	 * 增值
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	List<BmsFeesQtyEntity> queryFeesQtyForStoAdd(String customerId,String subjectCode, String startTime,String endTime);
+	
+	/**
+	 * 托数
+	 * @param customerId
+	 * @param subjectCode
+	 * @param creMonth
+	 * @return
+	 */
+	List<BmsFeesQtyEntity> queryFeesQtyForStoPallet(String customerId,String subjectCode, String startTime,String endTime);
 	
 }

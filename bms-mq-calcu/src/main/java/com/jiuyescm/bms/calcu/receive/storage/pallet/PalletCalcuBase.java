@@ -39,7 +39,7 @@ public class PalletCalcuBase extends CalcuTaskListener<BizPalletInfoEntity,FeesR
 
 	@Override
 	protected BmsFeesQtyVo feesCountReport(BmsCalcuTaskVo taskVo) {
-		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForSto(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoPallet(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
 

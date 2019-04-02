@@ -36,7 +36,7 @@ public class ProductCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 
 	@Override
 	protected BmsFeesQtyVo feesCountReport(BmsCalcuTaskVo taskVo) {
-		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForSto(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoProductItem(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
 
