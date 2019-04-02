@@ -59,6 +59,9 @@
 		<if test="(creTime != null and creTime !='')" >
 			    and cre_time >= #{creTime} and <![CDATA[cre_time <= #{creTime}]]>
 		</if>
+		<if test="(feesType != null and feesType !='')" >
+				and fees_type = #{feesType}
+		</if>
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
@@ -68,6 +71,9 @@
         from bms_asyn_calcu_task
         where 1=1
 		<include refid="baseSelectColumns" />
+		<if test="(queryCus != null and queryCus !='')" >
+				group by customer_id
+		</if>
     </select>
     
     <select id="queryOne" parameterType="java.lang.String"
@@ -158,4 +164,23 @@
 		GROUP BY customerid,subject_code,DATE_FORMAT(create_time,'%Y%m');  
     </select>
     
+    
+        <insert id="saveLog" parameterType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+        insert into bms_asyn_calcu_task_log
+        (task_id, customer_id, customer_name,subject_code,subject_name, fees_type, cre_month, task_status, cre_person, cre_person_id, cre_time,remark)
+        values (
+			#{taskId,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{subjectName,jdbcType=VARCHAR}, 
+			#{feesType,jdbcType=VARCHAR}, 
+			#{creMonth,jdbcType=INTEGER}, 
+			#{taskStatus,jdbcType=TINYINT}, 
+			#{crePerson,jdbcType=VARCHAR}, 
+			#{crePersonId,jdbcType=VARCHAR}, 
+			#{creTime,jdbcType=TIMESTAMP},  
+			#{remark,jdbcType=VARCHAR}
+        )
+    </insert>
 </mapper>

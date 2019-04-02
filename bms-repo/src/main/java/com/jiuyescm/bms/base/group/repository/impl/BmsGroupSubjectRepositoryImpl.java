@@ -74,4 +74,12 @@ public class BmsGroupSubjectRepositoryImpl extends MyBatisDao<BmsGroupSubjectEnt
 		return obj;
 	}
 
+	@Override
+	public List<BmsGroupSubEntity> queryGroupSubjectList(
+			BmsGroupSubjectEntity queryCondition) {
+		SqlSession session=this.getSqlSessionTemplate();
+		List<BmsGroupSubEntity> list = session.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupSubjectMapper.queryGroupSubject", 
+				queryCondition);
+		return list;
+	}
 }

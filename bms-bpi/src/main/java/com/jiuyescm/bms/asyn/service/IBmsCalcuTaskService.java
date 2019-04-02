@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.exception.BizException;
 
 public interface IBmsCalcuTaskService {
 
@@ -24,7 +25,7 @@ public interface IBmsCalcuTaskService {
 	
 	void updateRate(String taskId,Integer taskRate) throws Exception;
 	
-	void saveTask(BmsCalcuTaskVo vo);
+	void saveTask(BmsCalcuTaskVo vo) throws Exception;
 	
 	List<BmsCalcuTaskVo> queryByMap(Map<String, Object> condition);
 	
@@ -34,5 +35,9 @@ public interface IBmsCalcuTaskService {
 	 * @return
 	 */
 	List<BmsCalcuTaskVo> queryDisByMap(Map<String, Object> condition);
+
+	void saveTaskLog(BmsCalcuTaskVo vo) throws Exception;
+
+	List<BmsCalcuTaskVo> query(Map<String, Object> condition);
 	
 }

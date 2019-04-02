@@ -28,4 +28,6 @@ public interface IBmsGroupSubjectRepository {
 
 	List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId();
 
+	List<BmsGroupSubEntity> queryGroupSubjectList(BmsGroupSubjectEntity queryCondition);
+
 }

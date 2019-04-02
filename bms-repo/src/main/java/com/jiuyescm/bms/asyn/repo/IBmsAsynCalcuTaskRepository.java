@@ -35,4 +35,6 @@ public interface IBmsAsynCalcuTaskRepository {
      * @return
      */
 	List<BmsAsynCalcuTaskEntity> queryDisByMap(Map<String, Object> condition);
+
+	BmsAsynCalcuTaskEntity saveLog(BmsAsynCalcuTaskEntity entity);
 }
