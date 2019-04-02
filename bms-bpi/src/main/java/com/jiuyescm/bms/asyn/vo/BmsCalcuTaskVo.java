@@ -93,9 +93,7 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	public void setTaskStatus(Integer taskStatus) {
 		this.taskStatus = taskStatus;
 	}
-	
-	
-	
+
 	/**
      * 计算进度
      */

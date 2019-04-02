@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.common.JobParameterHandler;
-import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
@@ -184,8 +183,7 @@ public class InstockFeeInitJob extends IJobHandler {
 		sendTaskMap.put("subjectList", subjectList);
 	}
 
-	private void sendTask(List<FeesReceiveStorageEntity> feesList)
-			throws Exception {
+	private void sendTask(List<FeesReceiveStorageEntity> feesList){
 		// 对这些费用按照商家、科目、时间排序
 		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
 		for (BmsCalcuTaskVo vo : list) {

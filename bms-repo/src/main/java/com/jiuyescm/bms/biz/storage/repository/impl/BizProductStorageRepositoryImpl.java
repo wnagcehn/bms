@@ -116,4 +116,9 @@ public class BizProductStorageRepositoryImpl extends MyBatisDao implements IBizP
 		}
 	}
 
+	@Override
+    public List<BizProductStorageEntity> queryList(Map<String, Object> condition) {
+        List<BizProductStorageEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.queryList", condition);
+        return list;
+    }
 }

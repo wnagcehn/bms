@@ -27,6 +27,7 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 	private IBmsGroupRepository bmsGroupRepository;
 	@Autowired
 	private IBmsGroupSubjectRepository bmsGroupSubjectRepository;
+	
 	@Override
 	public List<BmsGroupSubjectVo> queryAllByGroupId(int groupId) throws Exception {
 		List<BmsGroupSubjectVo> voList=null;
@@ -243,5 +244,29 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 			logger.error("getSubject:",e);
 		}
 		return resultMap;
+	}
+	
+	@Override
+	public List<BmsGroupSubjectVo> queryGroupSubjectList()  {
+		List<BmsGroupSubjectVo> result = new ArrayList<>();
+		//查询bms计费科目
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupCode", "bmsCalcuSubject");
+		map.put("bizType", "bms_subject");
+		BmsGroupEntity bmsGroupEntity = bmsGroupRepository.queryOne(map);
+		//查询所有费用
+		BmsGroupSubjectEntity queryEntity = new BmsGroupSubjectEntity();
+		try{
+			queryEntity.setGroupId(bmsGroupEntity.getId());
+			 List<BmsGroupSubEntity> list=bmsGroupSubjectRepository.queryGroupSubjectList(queryEntity);
+				for(BmsGroupSubEntity entity:list){
+					BmsGroupSubjectVo voEntity=new BmsGroupSubjectVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					result.add(voEntity);
+				}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

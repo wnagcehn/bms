@@ -10,6 +10,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
@@ -28,12 +28,8 @@ import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
 import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.common.utils.MD5Util;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.Lock;
-import com.jiuyescm.framework.lock.LockCallback;
-import com.jiuyescm.framework.lock.LockCantObtainException;
-import com.jiuyescm.framework.lock.LockInsideExecutedException;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 import net.sf.json.JSONObject;
@@ -49,8 +45,10 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 	@Autowired private Lock lock;
 	@Autowired private ICustomerDictService customerDictService;
 	@Autowired private IBmsSubjectInfoService bmsSubjectService;
-	
-	
+	private static final String FEES_TYPE_ITEM ="item";
+	private static final String FEES_TYPE_PALLET ="pallet";
+	private static final String SEND_MQ ="TRUE";
+	private static final String NOT_SEND_MQ ="FALSE";
 	@Override
 	public PageInfo<BmsCalcuTaskVo> query(Map<String, Object> condition,int pageNo, int pageSize) throws BizException {
 		List<String> customerIds = new ArrayList<String>();
@@ -133,56 +131,70 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		}
 		vo.setCustomerName(customerName);
 		vo.setSubjectName(subjectVo.getSubjectName());
+		vo.setCreTime(JAppContext.currentTimestamp());
 		String customerId = vo.getCustomerId();
 		String subjectCode = vo.getSubjectCode();
 		String creMonth = vo.getCreMonth().toString();
-		String lockString = MD5Util.getMd5("BMS_CALCU_MQ"+customerId+subjectCode+creMonth);
-		final Map<String, Object> handMap = new HashMap<>();
-		handMap.put("success", "fail");
-		handMap.put("remark", "");
-		
-		
-		
+		//判断商品按件
+		if("wh_product_storage".equals(subjectCode) && "item".equals(vo.getFeesType())){
+			vo.setFeesType(FEES_TYPE_ITEM);
+		}
+		else{
+			vo.setFeesType(FEES_TYPE_PALLET);
+		}
+		//发送mq标记
+		String mq = null;
 		try{
+			//查询计算任务表数据
+			Map<String,Object> taskMap=new HashMap<String,Object>();
+			taskMap.put("customerId", customerId);
+			taskMap.put("subjectCode", subjectCode);
+			taskMap.put("creMonth", creMonth);
+			taskMap.put("feesType", vo.getFeesType());
+			List<BmsAsynCalcuTaskEntity> calList=bmsAsynCalcuTaskRepositoryimpl.query(taskMap);
+			//此次任务ID
 			String taskId = "CT"+snowflakeSequenceService.nextStringId();//任务ID
 			vo.setTaskId(taskId);
-			vo.setCreTime(JAppContext.currentTimestamp());
-			vo.setTaskStatus(0);
-			
-			lock.lock(lockString, 5, new LockCallback<Map<String, Object>>() {
-				@Override
-				public Map<String, Object> handleObtainLock() {
-					//状态判断
-					sendMq(vo);
-					handMap.put("success", "success");
-					return handMap;
-				}
 
-				@Override
-				public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
-					handMap.put("success", "fail");
-					handMap.put("remark", "已存在计费请求,丢弃");
+			//如果不存在，计算任务表新增
+			if(CollectionUtils.isEmpty(calList)){
+				vo.setTaskStatus(0);
+				//新增计算任务表
+				saveTask(vo);
+				//写入日志表
+				saveTaskLog(vo);
+				//发送mq
+				mq=SEND_MQ;
+			}else{
+				BmsAsynCalcuTaskEntity calEntity = calList.get(0);
+				Integer calTaskStatus = calEntity.getTaskStatus();
+				//如果状态为处理中（0,10），写入日志表
+				if(0==calTaskStatus||10==calTaskStatus){
+					//写入日志表
+					saveTaskLog(vo);
+					//不发mq
+					mq=NOT_SEND_MQ;
+					//如果状态为结束，写入日志表，更新状态为0,task_id改变，发mq
+				}else if(20==calTaskStatus||30==calTaskStatus||50==calTaskStatus) {
+					//保存任务：更新状态为0,task_id改变
 					vo.setTaskStatus(0);
-					vo.setRemark("已存在计费请求,丢弃");
 					saveTask(vo);
-					return handMap;
+					//写入日志表
+					saveTaskLog(vo);
+					//发送mq
+					mq=SEND_MQ;
 				}
-
-				@Override
-				public Map<String, Object> handleException(LockInsideExecutedException e) throws LockInsideExecutedException {
-					handMap.put("success", "fail");
-					handMap.put("remark", "请求异常,丢弃");
-					vo.setTaskStatus(0);
-					vo.setRemark("请求异常,丢弃");
-					saveTask(vo);
-					return handMap;
-				}
-			});
-		}
-		catch(Exception ex){
+			}
+		}catch(Exception ex){
 			logger.error("系统异常",ex);
 			vo.setTaskStatus(0);
 			vo.setRemark("系统异常");
+			//不发mq
+			mq=NOT_SEND_MQ;
+		}
+		//判断发送mq
+		if(SEND_MQ.equals(mq)){
+			sendMq(vo);
 		}
 		return vo;
 	}
@@ -202,20 +214,32 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 				return session.createTextMessage(vo.getTaskId());
 			}
 		});
-		saveTask(vo);
 	}
 	
 	@Override
-	public void saveTask(BmsCalcuTaskVo vo) {
+	public void saveTask(BmsCalcuTaskVo vo) throws Exception {
 		BmsAsynCalcuTaskEntity calcuTask=new BmsAsynCalcuTaskEntity();
 		try {
 			PropertyUtils.copyProperties(calcuTask,vo);
 			bmsAsynCalcuTaskRepositoryimpl.save(calcuTask);
 		} catch (Exception e) {
 			logger.error("保存任务异常",e);
+			throw e;
 		}
 	}
 
+	@Override
+	public void saveTaskLog(BmsCalcuTaskVo vo) throws Exception {
+		BmsAsynCalcuTaskEntity calcuTask=new BmsAsynCalcuTaskEntity();
+		try {
+			PropertyUtils.copyProperties(calcuTask,vo);
+			bmsAsynCalcuTaskRepositoryimpl.saveLog(calcuTask);
+		} catch (Exception e) {
+			logger.error("保存任务日志异常",e);
+			throw e;
+		}
+	}
+	
 	@Override
 	public void update(BmsCalcuTaskVo taskVo) throws Exception {
 		try{
@@ -259,7 +283,6 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 
 	@Override
 	public List<BmsCalcuTaskVo> queryByMap(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
 		List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.queryByMap(condition);
 		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
 		if(list == null){
@@ -326,4 +349,21 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService{
 		sendMq(vo);		
 	}
 
+	@Override
+	public List<BmsCalcuTaskVo> query(Map<String, Object> condition) {
+		List<BmsCalcuTaskVo> result= new ArrayList<>();
+		try{
+			List<BmsAsynCalcuTaskEntity> list=bmsAsynCalcuTaskRepositoryimpl.query(condition);
+			if(null !=list&&list.size()>0){
+				for(BmsAsynCalcuTaskEntity entity:list){
+					BmsCalcuTaskVo voEntity=new BmsCalcuTaskVo();
+					PropertyUtils.copyProperties(voEntity, entity);
+					result.add(voEntity);
+				}
+			}
+		}catch(Exception e){
+			logger.error("查询计算任务异常",e);
+		}
+		return result;
+	}
 }
