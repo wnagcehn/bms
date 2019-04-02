@@ -67,4 +67,11 @@ public interface IBizPalletInfoTempService {
 	 */
 	int saveData(List<BizPalletInfoTempEntity> insertList, List<BizPalletInfoTempEntity> updateList);
 	
+	/**
+	 * 校验唯一性，无limit
+	 * @param taskId
+	 * @return
+	 */
+	List<BizPalletInfoTempEntity> queryInBizNotLimit(String taskId);
+	
 }

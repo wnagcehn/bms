@@ -40,6 +40,18 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
 		where 1=1 and b.del_flag=0 and a.task_id=#{taskId} limit #{errorNum}
     </select>
     
+    <select id="queryInBizNotLimit" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
+        select a.cur_time, a.warehouse_code, a.warehouse_name, 
+		a.customer_name, a.customer_id,a.temperature_type_code,a.rowExcelNo,a.rowExcelName,
+		a.biz_type,b.pallet_num as oldPalletNum,b.sys_pallet_num as oldSysPalletNum,
+		a.pallet_num as palletNum,a.sys_pallet_num as sysPalletNum
+		from biz_pallet_info_temp a 
+		inner join biz_pallet_info b on a.customer_id = b.customer_id 
+		and a.cur_time = b.cur_time and a.warehouse_code = b.warehouse_code 
+		and IFNULL(a.temperature_type_code,'') = IFNULL(b.temperature_type_code,'')
+		where 1=1 and b.del_flag=0 and a.task_id=#{taskId}
+    </select>
+    
     <select id="queryNeedInsert" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
     	select
     	<include refid="BASE_COLUMNS_ALL" /> 

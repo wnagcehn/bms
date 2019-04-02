@@ -46,8 +46,19 @@ public class BizPalletInfoTempRepositoryImpl extends MyBatisDao<BizPalletInfoTem
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
 		map.put("errorNum", errorNum);
-		return this.selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.queryInBiz", map);
-		
+		return this.selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.queryInBiz", map);	
+	}
+	
+    /**
+     * 校验唯一性
+     * @param taskId
+     * @return
+     */
+	@Override
+	public List<BizPalletInfoTempEntity> queryInBizNotLimit(String taskId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskId", taskId);
+		return this.selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoTempMapper.queryInBizNotLimit", map);	
 	}
 	
 	/**

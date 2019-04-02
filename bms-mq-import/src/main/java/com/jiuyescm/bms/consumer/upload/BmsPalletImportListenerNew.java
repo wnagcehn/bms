@@ -588,7 +588,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		tranTemperature.put("LC", "冷藏");
 		tranTemperature.put("CW", "常温");
 		tranTemperature.put("HW", "恒温");
-		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBiz(taskEntity.getTaskId(), 1000);
+		List<BizPalletInfoTempEntity> palletlist = bizPalletInfoTempService.queryInBizNotLimit(taskEntity.getTaskId());
 		if(null == palletlist || palletlist.size() <= 0){
 			return true;
 		}
