@@ -97,6 +97,7 @@ public class ContractCalcuService {
 					errorMap.put("msg", "规则引擎拼接条件异常");
 					return;
 				}
+			    logger.info("查询参数"+JSONObject.fromObject(cqVo));
 				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(cqVo, cond);
 			} catch (BizException e) {
 				String msg = "获取合同在线报价异常:"+e.getMessage();
