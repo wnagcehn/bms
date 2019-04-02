@@ -104,45 +104,43 @@
   
     <select id="querybizDispatchBillMap" parameterType="java.util.Map" resultMap="bizDispatchBillMap">
         select
-        id, outstock_no, customerid,customer_name, carrier_id,carrier_name, deliverid, deliver_name, waybill_no, waybill_num, waybill_list, 
-        IFNULL(total_weight,0) as total_weight,IFNULL(adjust_weight,0) as adjust_weight, warehouse_code,warehouse_name, dispatch_type_code, 
-        collect_money, month_fee_count, is_calculated, send_name, send_province_id, 
-        send_city_id, send_district_id, send_street, send_detail_address, 
-        receive_name, receive_province_id, receive_city_id, receive_district_id, 
-        receive_street, receive_detail_address, receive_time, fees_no, account_state,external_no,sign_time,accept_time, 
-        del_flag, total_volume,create_time,temperature_type_code,temperature_type_name,remark,zexpressnum, bigstatus, smallstatus, system_weight, totalqty, product_detail, 
-		ifnull(expresstype,service_type_code) as expresstype,ifnull(service_type_code,expresstype) as service_type_code, sku_num, extattr1, extattr2, extattr3, extattr4, extattr5,adjust_deliver_id,
-        adjust_deliver_name, adjust_carrier_id, adjust_carrier_name,adjust_province_id,adjust_city_id,
-        adjust_district_id,origin_carrier_id,origin_carrier_name,IFNULL(throw_weight,0) as throw_weight,order_status,origin_weight,
-        adjust_service_type_code as adjustServiceTypeCode,IFNULL(carrier_weight,0) as carrier_weight
-        from biz_dispatch_bill
-        where del_flag = 0
+        a.id, a.outstock_no, a.customerid,a.customer_name, a.carrier_id,a.carrier_name, a.deliverid, a.deliver_name, a.waybill_no, 
+        IFNULL(a.total_weight,0) as total_weight,IFNULL(a.adjust_weight,0) as adjust_weight, a.warehouse_code,a.warehouse_name, a.dispatch_type_code, 
+        a.month_fee_count, a.receive_name, a.receive_province_id, a.receive_city_id, a.receive_district_id, a.receive_time, a.fees_no,
+        a.temperature_type_code,a.temperature_type_name,a.remark, a.system_weight, a.totalqty, a.product_detail, 
+		ifnull(a.expresstype,a.service_type_code) as expresstype,ifnull(a.service_type_code,a.expresstype) as service_type_code, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.adjust_deliver_id,
+        a.adjust_deliver_name, a.adjust_carrier_id, a.adjust_carrier_name,a.adjust_province_id,a.adjust_city_id,
+        a.adjust_district_id,a.origin_carrier_id,a.origin_carrier_name,IFNULL(a.throw_weight,0) as throw_weight,a.order_status,a.origin_weight,
+        a.adjust_service_type_code as adjustServiceTypeCode,IFNULL(a.carrier_weight,0) as carrier_weight
+        from biz_dispatch_bill a 
+		LEFT JOIN fees_receive_dispatch b on a.waybill_no=b.waybill_no
+        where a.del_flag='0' and b.del_flag='0'
         <if test="(beginTime != null and beginTime !='')" >
-			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
-			and customerid = #{customerId,jdbcType=VARCHAR}
+			and a.customerid = #{customerId,jdbcType=VARCHAR}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="(carrierId != null and carrierId !='')" >
-			and carrier_id = #{carrierId,jdbcType=VARCHAR}
+			and a.carrier_id = #{carrierId,jdbcType=VARCHAR}
 		</if>
 		<if test="(deliveryId != null and deliveryId !='')" >
-			and deliverid = #{deliveryId,jdbcType=VARCHAR}
-		</if>
-		<if test="(id != null and id !='')" >
-			and id = #{id,jdbcType=BIGINT}
+			and a.deliverid = #{deliveryId,jdbcType=VARCHAR}
 		</if>
 		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = concat(${isCalculated})
+			and b.is_calculated = concat(${isCalculated})
 		</if>
 		<if test="(waybillNo != null and waybillNo !='')" >
-			and waybill_no = #{waybillNo,jdbcType=VARCHAR}
+			and a.waybill_no = #{waybillNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(subjectCode != null and subjectCode !='')" >
+			and b.subject_code = #{subjectCode,jdbcType=VARCHAR}
 		</if>
 		LIMIT #{num}
     </select>

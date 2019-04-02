@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
@@ -33,6 +33,7 @@ import com.jiuyescm.bms.correct.BmsMarkingProductsEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
+import com.jiuyescm.bms.general.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
 import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
@@ -49,7 +50,7 @@ import com.jiuyescm.mdm.customer.vo.RegionVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
-@Component("dispatchCalcuJob")
+@Service("dispatchCalcuJob")
 @Scope("prototype")
 public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<BizDispatchBillEntity,FeesReceiveDispatchEntity> {
 
@@ -71,6 +72,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	@Autowired private ContractCalcuService contractCalcuService;
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	
+	@Autowired private IFeesReceiveDispatchService feesReceiveDispatchService;
 	
 	//private String quoTempleteCode = null;
 	private Map<String, Object> errorMap = null;
@@ -87,7 +89,6 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		serviceSubjectCode = subjectCode;//配送签约服务初始化
 		errorMap = new HashMap<String, Object>();
 		initConf();
@@ -214,231 +215,237 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 
 	@Override
 	public FeesReceiveDispatchEntity initFee(BizDispatchBillEntity entity) {
-		
 		FeesReceiveDispatchEntity fee = new FeesReceiveDispatchEntity();
-		//计费参数获取
-        //1)***********************获取计费物流商******************************
-		String subject = dispatchSubjectMap.get(getCarrierId(entity));
-		String carrierId=entity.getChargeCarrierId();
-		//2)***********************获取新泡重************************
-		//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
-		double newThrowWeight=getNewThrowWeight(entity);
-		//将新泡重赋值
-		entity.setCorrectThrowWeight(newThrowWeight);	
-		//3)***********************获取省市区和计费重量***********************
-		String provinceId="";
-		String cityId="";
-		String districtId="";
-		//调整省市区不为空 优先取调整省市区
-		if(StringUtils.isNotBlank(entity.getAdjustProvinceId())||StringUtils.isNotBlank(entity.getAdjustCityId())||StringUtils.isNotBlank(entity.getAdjustDistrictId())){
-			provinceId=entity.getAdjustProvinceId();
-			cityId=entity.getAdjustCityId();
-			districtId=entity.getAdjustDistrictId();
-		}else{
-			provinceId=entity.getReceiveProvinceId();
-			cityId=entity.getReceiveCityId();
-			districtId=entity.getReceiveDistrictId();
-		}
-		
-		//如果是顺丰配送 匹配标准地址
-		if(throwWeightMap.containsKey(carrierId)){
-			RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
-			RegionVo matchVo = omsAddressService.queryNameByAlias(vo);
-			if ((StringUtils.isNotBlank(provinceId) && StringUtils.isBlank(matchVo.getProvince())) ||
-					StringUtils.isNotBlank(cityId) && StringUtils.isBlank(matchVo.getCity()) ||
-					StringUtils.isNotBlank(districtId) && StringUtils.isBlank(matchVo.getDistrict())) 
-			{
-				//XxlJobLogger.log("-->"+entity.getId()+"收件人地址存在空值  省【{0}】市【{1}】区【{2}】 运单号【{3}】:"+ provinceId,cityId,districtId,entity.getWaybillNo());
+
+		try {
+			//计费参数获取
+	        //1)***********************获取计费物流商******************************
+			String subject = dispatchSubjectMap.get(getCarrierId(entity));
+			String carrierId=entity.getChargeCarrierId();
+			//2)***********************获取新泡重************************
+			//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
+			double newThrowWeight=getNewThrowWeight(entity);
+			//将新泡重赋值
+			entity.setCorrectThrowWeight(newThrowWeight);	
+			//3)***********************获取省市区和计费重量***********************
+			String provinceId="";
+			String cityId="";
+			String districtId="";
+			//调整省市区不为空 优先取调整省市区
+			if(StringUtils.isNotBlank(entity.getAdjustProvinceId())||StringUtils.isNotBlank(entity.getAdjustCityId())||StringUtils.isNotBlank(entity.getAdjustDistrictId())){
+				provinceId=entity.getAdjustProvinceId();
+				cityId=entity.getAdjustCityId();
+				districtId=entity.getAdjustDistrictId();
 			}else{
-				entity.setReceiveProvinceId(matchVo.getProvince());
-				entity.setReceiveCityId(matchVo.getCity());
-				entity.setReceiveDistrictId(matchVo.getDistrict());
-				fee.setToProvinceName(matchVo.getProvince());
-				fee.setToCityName(matchVo.getCity());
-				fee.setToDistrictName(matchVo.getDistrict());
+				provinceId=entity.getReceiveProvinceId();
+				cityId=entity.getReceiveCityId();
+				districtId=entity.getReceiveDistrictId();
 			}
 			
-			//如果存在调整重量，优先取
-			if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
-				double dd = getResult(entity.getAdjustWeight(),carrierId);
-				entity.setWeight(dd);
-				entity.setTotalWeight(entity.getAdjustWeight());
-			}
-			else{
-				//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
-				boolean hasCorrect = false;
-				double correctWeight = 0.0;
-				Map<String,Object> condition=new HashMap<String,Object>();
-				condition.put("waybillNo", entity.getWaybillNo());
-				BmsMarkingProductsEntity markEntity=bmsProductsWeightRepository.queryMarkVo(condition);
-				if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
-					hasCorrect = true;
-					correctWeight = markEntity.getCorrectWeight().doubleValue();
-				}
-						
-				//纠正泡重不存在
-				if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
-					if (hasCorrect) {
-						//有纠正重量时，直接比较纠正重量和物流商重量
-						if(entity.getCarrierWeight()>=correctWeight){
-							//物流商重量大于等于纠正重量
-							double dd = getResult(entity.getCarrierWeight(),carrierId);
-							entity.setWeight(dd);
-							entity.setTotalWeight(entity.getCarrierWeight());
-						}else{
-							//物流商重量小于纠正重量
-							double dd = getResult(correctWeight,carrierId);
-							entity.setWeight(dd);
-							double resultWeight = compareWeight(entity.getTotalWeight(), 
-									getResult(entity.getTotalWeight(),carrierId), correctWeight);
-							entity.setTotalWeight(resultWeight);
-						}
-					}else {
-						//没有纠正重量，物流商重量和运单重量比较
-						if(entity.getCarrierWeight()>=entity.getTotalWeight()){
-							//物流商重量大于等于运单重量
-							double dd = getResult(entity.getCarrierWeight(),carrierId);
-							entity.setWeight(dd);
-							entity.setTotalWeight(entity.getCarrierWeight());
-						}else{
-							//物流商重量小于重量
-							double dd = getResult(entity.getTotalWeight(),carrierId);
-							entity.setWeight(dd);
-							entity.setTotalWeight(entity.getTotalWeight());
-						}
-					}
-					
+			//如果是顺丰配送 匹配标准地址
+			if(throwWeightMap.containsKey(carrierId)){
+				RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
+				RegionVo matchVo = omsAddressService.queryNameByAlias(vo);
+				if ((StringUtils.isNotBlank(provinceId) && StringUtils.isBlank(matchVo.getProvince())) ||
+						StringUtils.isNotBlank(cityId) && StringUtils.isBlank(matchVo.getCity()) ||
+						StringUtils.isNotBlank(districtId) && StringUtils.isBlank(matchVo.getDistrict())) 
+				{
+					//XxlJobLogger.log("-->"+entity.getId()+"收件人地址存在空值  省【{0}】市【{1}】区【{2}】 运单号【{3}】:"+ provinceId,cityId,districtId,entity.getWaybillNo());
 				}else{
-					//泡重存在时
-					if (hasCorrect) {
-						// 有纠正重量时比较 泡重和 纠正重量
-						if(correctWeight >= entity.getCorrectThrowWeight()){
-							// 纠正重量大于抛重重量，按纠正重量算
-							double dd = getResult(correctWeight,carrierId);
-							entity.setWeight(dd);
-							// 有纠正重量，比较纠正重量和运单重量是否相等
-							double resultWeight = compareWeight(entity.getTotalWeight(), 
-									getResult(entity.getTotalWeight(),carrierId), correctWeight);
-							entity.setTotalWeight(resultWeight);
-						}else if(correctWeight < entity.getCorrectThrowWeight()){
-							// 纠正重量小于抛重时，按抛重算
-							double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
-							entity.setWeight(dd);//计费重量
-							entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
-						}
-					}else {
-						if(!DoubleUtil.isBlank(entity.getTotalWeight())){
-							// 没有纠正重量时比较 泡重和 实际重量
-							if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
-								// 运单重量大于抛重时，按运单重量算
+					entity.setReceiveProvinceId(matchVo.getProvince());
+					entity.setReceiveCityId(matchVo.getCity());
+					entity.setReceiveDistrictId(matchVo.getDistrict());
+					fee.setToProvinceName(matchVo.getProvince());
+					fee.setToCityName(matchVo.getCity());
+					fee.setToDistrictName(matchVo.getDistrict());
+				}
+				
+				//如果存在调整重量，优先取
+				if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
+					double dd = getResult(entity.getAdjustWeight(),carrierId);
+					entity.setWeight(dd);
+					entity.setTotalWeight(entity.getAdjustWeight());
+				}
+				else{
+					//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
+					boolean hasCorrect = false;
+					double correctWeight = 0.0;
+					Map<String,Object> condition=new HashMap<String,Object>();
+					condition.put("waybillNo", entity.getWaybillNo());
+					BmsMarkingProductsEntity markEntity=bmsProductsWeightRepository.queryMarkVo(condition);
+					if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
+						hasCorrect = true;
+						correctWeight = markEntity.getCorrectWeight().doubleValue();
+					}
+							
+					//纠正泡重不存在
+					if(DoubleUtil.isBlank(entity.getCorrectThrowWeight())){
+						if (hasCorrect) {
+							//有纠正重量时，直接比较纠正重量和物流商重量
+							if(entity.getCarrierWeight()>=correctWeight){
+								//物流商重量大于等于纠正重量
+								double dd = getResult(entity.getCarrierWeight(),carrierId);
+								entity.setWeight(dd);
+								entity.setTotalWeight(entity.getCarrierWeight());
+							}else{
+								//物流商重量小于纠正重量
+								double dd = getResult(correctWeight,carrierId);
+								entity.setWeight(dd);
+								double resultWeight = compareWeight(entity.getTotalWeight(), 
+										getResult(entity.getTotalWeight(),carrierId), correctWeight);
+								entity.setTotalWeight(resultWeight);
+							}
+						}else {
+							//没有纠正重量，物流商重量和运单重量比较
+							if(entity.getCarrierWeight()>=entity.getTotalWeight()){
+								//物流商重量大于等于运单重量
+								double dd = getResult(entity.getCarrierWeight(),carrierId);
+								entity.setWeight(dd);
+								entity.setTotalWeight(entity.getCarrierWeight());
+							}else{
+								//物流商重量小于重量
 								double dd = getResult(entity.getTotalWeight(),carrierId);
 								entity.setWeight(dd);
 								entity.setTotalWeight(entity.getTotalWeight());
-							}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
-								// 运单重量小于抛重时，按抛重算
+							}
+						}
+						
+					}else{
+						//泡重存在时
+						if (hasCorrect) {
+							// 有纠正重量时比较 泡重和 纠正重量
+							if(correctWeight >= entity.getCorrectThrowWeight()){
+								// 纠正重量大于抛重重量，按纠正重量算
+								double dd = getResult(correctWeight,carrierId);
+								entity.setWeight(dd);
+								// 有纠正重量，比较纠正重量和运单重量是否相等
+								double resultWeight = compareWeight(entity.getTotalWeight(), 
+										getResult(entity.getTotalWeight(),carrierId), correctWeight);
+								entity.setTotalWeight(resultWeight);
+							}else if(correctWeight < entity.getCorrectThrowWeight()){
+								// 纠正重量小于抛重时，按抛重算
 								double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
 								entity.setWeight(dd);//计费重量
 								entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
 							}
-						}else{
-							//实际重量为空时，直接取泡重
-							double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
-							entity.setWeight(dd);
-							entity.setTotalWeight(entity.getCorrectThrowWeight());
+						}else {
+							if(!DoubleUtil.isBlank(entity.getTotalWeight())){
+								// 没有纠正重量时比较 泡重和 实际重量
+								if(entity.getTotalWeight() >= entity.getCorrectThrowWeight()){
+									// 运单重量大于抛重时，按运单重量算
+									double dd = getResult(entity.getTotalWeight(),carrierId);
+									entity.setWeight(dd);
+									entity.setTotalWeight(entity.getTotalWeight());
+								}else if(entity.getTotalWeight() < entity.getCorrectThrowWeight()){
+									// 运单重量小于抛重时，按抛重算
+									double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
+									entity.setWeight(dd);//计费重量
+									entity.setTotalWeight(entity.getCorrectThrowWeight()); //实际重量 eg:5.1
+								}
+							}else{
+								//实际重量为空时，直接取泡重
+								double dd = getResult(entity.getCorrectThrowWeight(),carrierId);
+								entity.setWeight(dd);
+								entity.setTotalWeight(entity.getCorrectThrowWeight());
+							}
 						}
-					}
-				}	
-			}
-		}else{
-			RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
-			RegionVo matchVo = omsAddressService.queryNameByAlias(vo);
-			if ((StringUtils.isNotBlank(provinceId) && StringUtils.isBlank(matchVo.getProvince())) ||
-					StringUtils.isNotBlank(cityId) && StringUtils.isBlank(matchVo.getCity())) {
-				//XxlJobLogger.log("-->"+entity.getId()+"收件人地址存在空值  省【{0}】市【{1}】区【{2}】 运单号【{3}】:"+ provinceId,cityId,districtId,entity.getWaybillNo());
-			}else{
-				if(StringUtils.isNotBlank(entity.getAdjustProvinceId())||
-						StringUtils.isNotBlank(entity.getAdjustCityId())||
-						StringUtils.isNotBlank(entity.getAdjustDistrictId())){
-					entity.setAdjustProvinceId(matchVo.getProvince());
-					entity.setAdjustCityId(matchVo.getCity());
-					entity.setReceiveProvinceId(matchVo.getProvince());
-					entity.setReceiveCityId(matchVo.getCity());
-				}else{
-					entity.setReceiveProvinceId(matchVo.getProvince());
-					entity.setReceiveCityId(matchVo.getCity());
+					}	
 				}
-				fee.setToProvinceName(matchVo.getProvince());
-				fee.setToCityName(matchVo.getCity());
+			}else{
+				RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
+				RegionVo matchVo = omsAddressService.queryNameByAlias(vo);
+				if ((StringUtils.isNotBlank(provinceId) && StringUtils.isBlank(matchVo.getProvince())) ||
+						StringUtils.isNotBlank(cityId) && StringUtils.isBlank(matchVo.getCity())) {
+					//XxlJobLogger.log("-->"+entity.getId()+"收件人地址存在空值  省【{0}】市【{1}】区【{2}】 运单号【{3}】:"+ provinceId,cityId,districtId,entity.getWaybillNo());
+				}else{
+					if(StringUtils.isNotBlank(entity.getAdjustProvinceId())||
+							StringUtils.isNotBlank(entity.getAdjustCityId())||
+							StringUtils.isNotBlank(entity.getAdjustDistrictId())){
+						entity.setAdjustProvinceId(matchVo.getProvince());
+						entity.setAdjustCityId(matchVo.getCity());
+						entity.setReceiveProvinceId(matchVo.getProvince());
+						entity.setReceiveCityId(matchVo.getCity());
+					}else{
+						entity.setReceiveProvinceId(matchVo.getProvince());
+						entity.setReceiveCityId(matchVo.getCity());
+					}
+					fee.setToProvinceName(matchVo.getProvince());
+					fee.setToCityName(matchVo.getCity());
+				}
+				
+				if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
+					entity.setWeight(Math.ceil(entity.getAdjustWeight())); //计费重量 : 6
+					entity.setTotalWeight(entity.getAdjustWeight()); //实际重量 eg:5.1
+				}
+				else{
+					//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
+					Map<String,Object> condition=new HashMap<String,Object>();
+					condition.put("waybillNo", entity.getWaybillNo());
+					BmsMarkingProductsEntity markEntity=bmsProductsWeightRepository.queryMarkVo(condition);
+					if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
+						double weight=markEntity.getCorrectWeight().doubleValue();
+						entity.setWeight(Math.ceil(weight));//计费重量 : 6
+						// 比较重量
+						double resultWeight = compareWeight(entity.getTotalWeight(), 
+								Math.ceil(entity.getTotalWeight()), weight);
+						entity.setTotalWeight(resultWeight);//实际重量 eg:5.1
+					}else{
+						entity.setWeight(Math.ceil(entity.getTotalWeight()));//计费重量 : 6
+						entity.setTotalWeight(entity.getTotalWeight());//实际重量 eg:5.1
+					}
+	
+				}
 			}
 			
-			if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
-				entity.setWeight(Math.ceil(entity.getAdjustWeight())); //计费重量 : 6
-				entity.setTotalWeight(entity.getAdjustWeight()); //实际重量 eg:5.1
-			}
-			else{
-				//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
-				Map<String,Object> condition=new HashMap<String,Object>();
-				condition.put("waybillNo", entity.getWaybillNo());
-				BmsMarkingProductsEntity markEntity=bmsProductsWeightRepository.queryMarkVo(condition);
-				if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
-					double weight=markEntity.getCorrectWeight().doubleValue();
-					entity.setWeight(Math.ceil(weight));//计费重量 : 6
-					// 比较重量
-					double resultWeight = compareWeight(entity.getTotalWeight(), 
-							Math.ceil(entity.getTotalWeight()), weight);
-					entity.setTotalWeight(resultWeight);//实际重量 eg:5.1
-				}else{
-					entity.setWeight(Math.ceil(entity.getTotalWeight()));//计费重量 : 6
-					entity.setTotalWeight(entity.getTotalWeight());//实际重量 eg:5.1
-				}
-
-			}
+			//此时费用写入计费重量
+			fee.setChargedWeight(entity.getWeight());
+			
+			//费用初始化
+			fee.setCreator("system");
+			fee.setCreateTime(entity.getCreateTime());//费用表的创建时间应为业务表的创建时间
+			fee.setOutstockNo(entity.getOutstockNo());		// 出库单号
+			fee.setWarehouseCode(entity.getWarehouseCode());	// 仓库ID
+			fee.setWarehouseName(entity.getWarehouseName());  // 仓库名称
+			fee.setCustomerid(entity.getCustomerid());		// 商家ID
+			fee.setCustomerName(entity.getCustomerName());	// 商家名称
+			fee.setDeliveryid(entity.getDeliverid());         // 物流商ID
+			fee.setDeliverName(entity.getDeliverName());		// 物流商名称
+			fee.setCarrierid(entity.getChargeCarrierId());
+			fee.setCarrierName(carrierMap.get(entity.getChargeCarrierId()));
+	        fee.setWaybillNo(entity.getWaybillNo());			// 运单号
+			fee.setTotalWeight(entity.getTotalWeight());//实际重量
+			fee.setSubjectCode(subjectCode);
+			fee.setOtherSubjectCode(subjectCode);
+			fee.setToProvinceName(provinceId);// 目的省
+			fee.setToCityName(cityId);			// 目的市			
+			fee.setToDistrictName(districtId);// 目的区	
+			fee.setExternalNo(entity.getExternalNo());        //外部单号
+			fee.setAcceptTime(entity.getAcceptTime());        //揽收时间
+			fee.setSignTime(entity.getSignTime());
+			fee.setStatus("0");
+			fee.setDelFlag("0");
+			fee.setAmount(0.0d);					//入仓金额
+			fee.setTemperatureType(entity.getTemperatureTypeCode());//温度
+			fee.setFeesNo(entity.getFeesNo());
+			fee.setParam1(TemplateTypeEnum.COMMON.getCode());
+			fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
+			fee.setWeightLimit(0.0d);
+			fee.setUnitPrice(0.0d);
+			fee.setHeadWeight(0.0d);
+			fee.setHeadPrice(0.0d);
+			fee.setContinuedWeight(0.0d);
+			fee.setContinuedPrice(0.0d);
+			fee.setPriceId("");
+			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
+			fee.setCalcuMsg("");
+			return fee;
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("初始化费用失败【{}】",e);
 		}
-		
-		//此时费用写入计费重量
-		fee.setChargedWeight(entity.getWeight());
-		
-		//费用初始化
-		fee.setCreator("system");
-		fee.setCreateTime(entity.getCreateTime());//费用表的创建时间应为业务表的创建时间
-		fee.setDeliveryDate(entity.getCreateTime());
-		fee.setOutstockNo(entity.getOutstockNo());		// 出库单号
-		fee.setWarehouseCode(entity.getWarehouseCode());	// 仓库ID
-		fee.setWarehouseName(entity.getWarehouseName());  // 仓库名称
-		fee.setCustomerid(entity.getCustomerid());		// 商家ID
-		fee.setCustomerName(entity.getCustomerName());	// 商家名称
-		fee.setDeliveryid(entity.getDeliverid());         // 物流商ID
-		fee.setDeliverName(entity.getDeliverName());		// 物流商名称
-		fee.setCarrierid(entity.getChargeCarrierId());
-		fee.setCarrierName(carrierMap.get(entity.getChargeCarrierId()));
-        fee.setWaybillNo(entity.getWaybillNo());			// 运单号
-		fee.setTotalWeight(entity.getTotalWeight());//实际重量
-		fee.setSubjectCode(subjectCode);
-		fee.setOtherSubjectCode(subjectCode);
-		fee.setToProvinceName(provinceId);// 目的省
-		fee.setToCityName(cityId);			// 目的市			
-		fee.setToDistrictName(districtId);// 目的区	
-		fee.setExternalNo(entity.getExternalNo());        //外部单号
-		fee.setAcceptTime(entity.getAcceptTime());        //揽收时间
-		fee.setSignTime(entity.getSignTime());
-		fee.setStatus("0");
-		fee.setDelFlag("0");
-		fee.setAmount(0.0d);					//入仓金额
-		fee.setTemperatureType(entity.getTemperatureTypeCode());//温度
-		fee.setFeesNo(entity.getFeesNo());
-		fee.setParam1(TemplateTypeEnum.COMMON.getCode());
-		fee.setBigstatus(entity.getBigstatus());
-		fee.setSmallstatus(entity.getSmallstatus());
-		fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
-		fee.setWeightLimit(0.0d);
-		fee.setUnitPrice(0.0d);
-		fee.setHeadWeight(0.0d);
-		fee.setHeadPrice(0.0d);
-		fee.setContinuedWeight(0.0d);
-		fee.setContinuedPrice(0.0d);
-		fee.setPriceId("");
-		fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 		return fee;
+		
 	}
 
 	@Override
@@ -461,37 +468,38 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setTotalWeight(getBizTotalWeight(entity));
 			fee.setChargedWeight(0d);
 			fee.setIsCalculated(CalculateState.No_Exe.getCode());
+			fee.setCalcuMsg("不计费的宅配商");
 			return true;
         }
 	
 		//********************************九曳自己的顺丰月结账号才计算费用*********************************
-		boolean ismouthCount= false;
-		String feeCountKey=fee.getCarrierid()+"&"+entity.getMonthFeeCount();//获取月结账号
-		
-		if(monthCountList.contains(feeCountKey)){
-			ismouthCount = true;//false-此单参与计算费用
-			//XxlJobLogger.log("-->"+entity.getId()+entity.getRemark());
-		}
-		
-		if(!ismouthCount){
-			entity.setRemark("该运单不是九曳的月结账号，金额置0");
-			fee.setAmount(0.0d);
-			fee.setTotalWeight(getBizTotalWeight(entity));
-			fee.setChargedWeight(0d);
-			fee.setIsCalculated(CalculateState.No_Exe.getCode());
-			return true;
-		}
-		
-		
+        if(StringUtils.isNotBlank(entity.getMonthFeeCount())){
+        	 boolean ismouthCount= false;
+     		String feeCountKey=fee.getCarrierid()+"&"+entity.getMonthFeeCount();//获取月结账号
+     		
+     		if(monthCountList.contains(feeCountKey)){
+     			ismouthCount = true;//false-此单参与计算费用
+     			//XxlJobLogger.log("-->"+entity.getId()+entity.getRemark());
+     		}
+     		
+     		if(!ismouthCount){
+     			fee.setAmount(0.0d);
+     			fee.setTotalWeight(getBizTotalWeight(entity));
+     			fee.setChargedWeight(0d);
+     			fee.setIsCalculated(CalculateState.No_Exe.getCode());
+     			fee.setCalcuMsg("该运单不是九曳的月结账号，金额置0");
+     			return true;
+     		}
+        }
+       
 		//=*******************************判断取消的单子是否继续计算*******************************
 		//指定需要计算取消状态单子的商家
 		if(StringUtils.isNotBlank(entity.getOrderStatus()) && "CLOSE".equals(entity.getOrderStatus())){
 			if(cancelCusList.contains(entity.getCustomerid())){ // 在cancelCusList中存在，不计费
-				entity.setRemark("该运单是不需要计算的商家取消运单，金额置0");
+				fee.setCalcuMsg("该运单是不需要计算的商家取消运单，金额置0");
 				fee.setAmount(0.0d);
 				fee.setTotalWeight(getBizTotalWeight(entity));
 				fee.setChargedWeight(0d);
-				entity.setIsCalculated(CalculateState.No_Exe.getCode());
 				fee.setIsCalculated(CalculateState.No_Exe.getCode());
 				return true;
 			}
@@ -565,8 +573,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setBizType(entity.getExtattr1());//判断是否是遗漏数据
 			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 			fee.setIsCalculated(CalculateState.Finish.getCode());
-			entity.setIsCalculated(CalculateState.Finish.getCode());
-			entity.setRemark("计算成功");
+			fee.setCalcuMsg("计算成功");
 		}catch(Exception ex){
 			
 		}
@@ -610,7 +617,20 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	public void updateBatch(List<BizDispatchBillEntity> bizList,
 			List<FeesReceiveDispatchEntity> feeList) {
 		// TODO Auto-generated method stub
-		
+		try {
+			long start = System.currentTimeMillis();// 系统开始时间
+			long current = 0l;// 当前系统时间
+			bizDispatchBillService.newUpdateBatch(bizList);
+			current = System.currentTimeMillis();
+			logger.info("更新业务数据耗时：【{0}】毫秒  ",(current - start));
+			start = System.currentTimeMillis();// 系统开始时间
+			feesReceiveDispatchService.updateBatch(feeList);
+			current = System.currentTimeMillis();
+			logger.info("更新费用数据耗时：【{0}】毫秒 ",(current - start));
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("-->批量保存异常"+e.getMessage());
+		}
 	}
 	
 	

@@ -260,6 +260,8 @@
 			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
 			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
+			<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>	
+			<if test="serviceTypeCode != null" >service_type_code=#{serviceTypeCode,jdbcType=VARCHAR},</if>		
 		</set>
         where fees_no=#{feesNo} and del_flag='0'
     </update>
