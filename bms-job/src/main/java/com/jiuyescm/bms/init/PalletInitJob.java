@@ -1,17 +1,15 @@
 package com.jiuyescm.bms.init;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;

@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;

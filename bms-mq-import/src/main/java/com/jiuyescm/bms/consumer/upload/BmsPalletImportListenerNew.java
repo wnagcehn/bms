@@ -548,6 +548,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 			reader.close();
 		}
 
+    	repeatList.clear();
     	errorMap.clear();
 		String resultFullPath="";	
 		logger.info("上传结果文件到fastDfs");

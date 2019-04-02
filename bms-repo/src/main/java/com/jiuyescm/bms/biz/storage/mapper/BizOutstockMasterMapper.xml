@@ -111,7 +111,7 @@
 				and a.b2b_flag = #{b2bFlag}
 		</if>
 		<if test="(isCalculated != null and isCalculated !='' and isCalculated !='ALL')" >
-				and a.is_calculated = #{isCalculated}
+				and b.is_calculated = #{isCalculated}
 		</if>
 		<if test="(feesNo != null and feesNo !='')" >
 				and a.fees_no = #{feesNo}
@@ -163,12 +163,12 @@
 			 a.resize_weight,
 			 a.product_detail,
 		     b.subject_code,
-		     a.is_calculated,
+		     b.is_calculated,
 		     b.calcu_msg,
 		     b.calculate_time,
 		     b.unit,b.cost
 		     from biz_outstock_master a LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
-		     where a.del_flag='0'
+		     where a.del_flag='0' and a.is_calculated = 1
 	  <include refid="baseSelectColumns" />
 	  <if test="(subjectCode != null and subjectCode !='')" >
 				and b.subject_code = #{subjectCode}
@@ -289,7 +289,6 @@
 <if test="totalQuantity != null" >total_quantity=#{totalQuantity,jdbcType=DOUBLE},</if>
 <if test="totalVarieties != null" >total_varieties=#{totalVarieties,jdbcType=DOUBLE},</if>
 <if test="splitSingle != null" >split_single=#{splitSingle,jdbcType=DOUBLE},</if>
-<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
 <if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
 <if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 <if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
@@ -384,4 +383,59 @@
 		</if>
     	 and is_calculated not in ('1','5') limit 1
     </select>
+    
+       <select id="queryNewList" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
+        select
+             a.id,
+		     a.customer_name,
+		     a.warehouse_name,
+		     a.external_no,
+		     a.outstock_no,
+		     a.waybill_no,
+		     a.fees_no,
+			 a.bill_type_name,
+			 a.creator,
+			 a.create_time,
+			 a.carrier_name,
+			 a.deliver_name,
+			 a.temperature_type_name,
+			 a.b2b_flag,
+			 a.total_quantity,
+			 a.total_varieties,
+			 a.boxnum,
+			 a.total_weight,
+			 a.resize_num,
+			 a.resize_varieties,
+			 a.adjust_boxnum,
+			 a.resize_weight,
+			 a.product_detail,
+		     b.subject_code,
+		     b.is_calculated,
+		     b.calcu_msg,
+		     b.calculate_time,
+		     b.unit,b.cost
+		     from biz_outstock_master a LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
+		     where a.del_flag='0' and a.is_calculated = 1
+	  <include refid="baseSelectColumns" />
+	  <if test="(subjectCode != null and subjectCode !='')" >
+				and b.subject_code = #{subjectCode}
+		</if>
+		 <if test="(waybillNoList != null and waybillNoList !='')" >
+				and a.waybill_no in 
+			<foreach collection="waybillNoList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+		</if>
+    </select>
+    
+         <update id="retryForCalcuFee" parameterType="java.util.Map">
+        update fees_receive_storage set is_calculated = 99 where fees_no in
+           <foreach collection="feeList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="(subjectCode != null and subjectCode !='')" >
+				where subject_code = #{subjectCode}
+		</if>
+    </update>
 </mapper>

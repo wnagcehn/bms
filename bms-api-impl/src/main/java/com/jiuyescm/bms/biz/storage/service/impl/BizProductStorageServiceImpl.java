@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.biz.storage.service.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,5 +72,10 @@ public class BizProductStorageServiceImpl implements IBizProductStorageService {
 	public int reCalculate(Map<String, Object> param) {
 		return bizProductStorageRepository.reCalculate(param);
 	}
+	
+    @Override
+    public List<BizProductStorageEntity> queryList(Map<String, Object> condition) {
+        return bizProductStorageRepository.queryList(condition);
+    }
 	
 }

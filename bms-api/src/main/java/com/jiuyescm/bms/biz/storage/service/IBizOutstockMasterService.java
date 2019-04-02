@@ -49,4 +49,8 @@ public interface IBizOutstockMasterService {
 	 public BizOutstockMasterEntity queryExceptionOne(Map<String,Object> condition);
 
 	List<String> queryAllWarehouseId(Map<String, Object> condition);
+
+	List<BizOutstockMasterEntity> queryNewList(Map<String, Object> condition);
+
+	void retryForCalcuFee(Map<String, Object> param);
 }

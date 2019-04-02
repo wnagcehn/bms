@@ -4,12 +4,12 @@
  */
 package com.jiuyescm.bms.biz.storage.repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
-import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
 
 /**
  * 
@@ -39,4 +39,6 @@ public interface IBizProductStorageRepository {
 	 Properties validRetry(Map<String, Object> param);
 		 
 	int reCalculate(Map<String, Object> param);
+
+	List<BizProductStorageEntity> queryList(Map<String, Object> condition);
 }

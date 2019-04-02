@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.biz.storage.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,4 +40,6 @@ public interface IBizProductStorageService {
 	 Properties validRetry(Map<String, Object> param);
 	 
 	 int reCalculate(Map<String, Object> param);
+
+	List<BizProductStorageEntity> queryList(Map<String, Object> condition);
 }

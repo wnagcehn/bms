@@ -28,5 +28,6 @@ public interface IBmsGroupSubjectService {
 	List<BmsGroupSubjectEntity> queryAllByGroupIdAndBizTypeCode(Map<String, Object> param);
 	
 	List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId();
+	List<BmsGroupSubjectVo> queryGroupSubjectList();
 
 }

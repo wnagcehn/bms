@@ -52,4 +52,9 @@ public interface IBizOutstockMasterRepository {
 	
 	 int updateBatch(List<BizOutstockMasterEntity> list);
 
+	List<BizOutstockMasterEntity> queryNewList(Map<String, Object> condition);
+
+
+	void retryForCalcuFee(Map<String, Object> param);
+
 }
