@@ -21,7 +21,7 @@ public class CommonService {
 	
 	public void taskCountReport(BmsCalcuTaskVo taskVo,String bizType){
 		//统计计算状态
-		BmsFeesQtyVo feesQtyVo = new BmsFeesQtyVo();
+		/*BmsFeesQtyVo feesQtyVo = new BmsFeesQtyVo();
 		switch (bizType) {
 		case "STORAGE":
 			feesQtyVo = bmsCalcuService.queryFeesQtyForSto(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
@@ -46,7 +46,7 @@ public class CommonService {
 			bmsCalcuTaskService.update(taskVo);
 		}catch(Exception ex){
 			logger.error("计算任务更新异常",ex);
-		}
+		}*/
 		
 	}
 }
