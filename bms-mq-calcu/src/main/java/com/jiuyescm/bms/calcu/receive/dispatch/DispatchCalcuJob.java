@@ -403,7 +403,6 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			//费用初始化
 			fee.setCreator("system");
 			fee.setCreateTime(entity.getCreateTime());//费用表的创建时间应为业务表的创建时间
-			fee.setDeliveryDate(entity.getCreateTime());
 			fee.setOutstockNo(entity.getOutstockNo());		// 出库单号
 			fee.setWarehouseCode(entity.getWarehouseCode());	// 仓库ID
 			fee.setWarehouseName(entity.getWarehouseName());  // 仓库名称
@@ -429,8 +428,6 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setTemperatureType(entity.getTemperatureTypeCode());//温度
 			fee.setFeesNo(entity.getFeesNo());
 			fee.setParam1(TemplateTypeEnum.COMMON.getCode());
-			fee.setBigstatus(entity.getBigstatus());
-			fee.setSmallstatus(entity.getSmallstatus());
 			fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
 			fee.setWeightLimit(0.0d);
 			fee.setUnitPrice(0.0d);
@@ -440,6 +437,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setContinuedPrice(0.0d);
 			fee.setPriceId("");
 			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
+			fee.setCalcuMsg("");
 			return fee;
 		
 		} catch (Exception e) {
@@ -575,6 +573,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setBizType(entity.getExtattr1());//判断是否是遗漏数据
 			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 			fee.setIsCalculated(CalculateState.Finish.getCode());
+			fee.setCalcuMsg("计算成功");
 		}catch(Exception ex){
 			
 		}

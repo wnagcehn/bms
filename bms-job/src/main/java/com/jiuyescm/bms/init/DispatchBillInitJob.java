@@ -137,13 +137,14 @@ public class DispatchBillInitJob extends IJobHandler {
 			feeEntity.setSignTime(entity.getSignTime()); // 签收时间
 			feeEntity.setBigstatus(entity.getBigstatus());
 			feeEntity.setSmallstatus(entity.getSmallstatus());
+			feeEntity.setDeliveryDate(entity.getCreateTime());
 			feeEntity.setIsCalculated("99");
 			feeEntity.setCreator("system");
 			feeEntity.setCreateTime(entity.getCreateTime());// 费用表的创建时间应为业务表的创建时间
 			feeEntity.setDelFlag("0");
 			feeEntity.setStatus("0");
 			feeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
-
+			
 			feesList.add(feeEntity);
 		}
 	}

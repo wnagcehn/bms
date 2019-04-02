@@ -106,13 +106,12 @@
         select
         a.id, a.outstock_no, a.customerid,a.customer_name, a.carrier_id,a.carrier_name, a.deliverid, a.deliver_name, a.waybill_no, 
         IFNULL(a.total_weight,0) as total_weight,IFNULL(a.adjust_weight,0) as adjust_weight, a.warehouse_code,a.warehouse_name, a.dispatch_type_code, 
-        a.month_fee_count, a.receive_name, a.receive_province_id, a.receive_city_id, a.receive_district_id, 
-        a.receive_street, a.receive_detail_address, a.receive_time, a.fees_no,a.external_no,a.sign_time,a.accept_time, 
-        a.del_flag, a.temperature_type_code,a.temperature_type_name,a.remark, a.bigstatus, a.smallstatus, a.system_weight, a.totalqty, a.product_detail, 
-		ifnull(a.expresstype,a.service_type_code) as expresstype,ifnull(a.service_type_code,a.expresstype) as service_type_code, a.sku_num, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.adjust_deliver_id,
+        a.month_fee_count, a.receive_name, a.receive_province_id, a.receive_city_id, a.receive_district_id, a.receive_time, a.fees_no,
+        a.temperature_type_code,a.temperature_type_name,a.remark, a.system_weight, a.totalqty, a.product_detail, 
+		ifnull(a.expresstype,a.service_type_code) as expresstype,ifnull(a.service_type_code,a.expresstype) as service_type_code, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.adjust_deliver_id,
         a.adjust_deliver_name, a.adjust_carrier_id, a.adjust_carrier_name,a.adjust_province_id,a.adjust_city_id,
         a.adjust_district_id,a.origin_carrier_id,a.origin_carrier_name,IFNULL(a.throw_weight,0) as throw_weight,a.order_status,a.origin_weight,
-        a.adjust_service_type_code as adjustServiceTypeCode,IFNULL(a.carrier_weight,0) as carrier_weight,b.is_calculated
+        a.adjust_service_type_code as adjustServiceTypeCode,IFNULL(a.carrier_weight,0) as carrier_weight
         from biz_dispatch_bill a 
 		LEFT JOIN fees_receive_dispatch b on a.waybill_no=b.waybill_no
         where a.del_flag='0' and b.del_flag='0'
