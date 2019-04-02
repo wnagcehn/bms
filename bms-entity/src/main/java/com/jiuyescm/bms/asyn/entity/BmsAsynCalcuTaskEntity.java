@@ -63,6 +63,16 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	
 	private String feesType;
 	
+	public String getNewid() {
+		return newid;
+	}
+
+	public void setNewid(String newid) {
+		this.newid = newid;
+	}
+
+	private String newid;
+	
 	//状态
 	private String customerStatus;
 	//科目数
