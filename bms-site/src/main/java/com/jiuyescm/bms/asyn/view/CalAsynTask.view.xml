@@ -162,15 +162,10 @@ if(datas.get(&quot;subjectCode&quot;)==&quot;&quot;||datas.get(&quot;subjectCode
 }&#xD;
 retryAction.set(&quot;parameter&quot;,datas);&#xD;
 dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
-	alert(3)&#xD;
 	retryAction.execute(function(result){&#xD;
-		alert(4)&#xD;
 		dorado.MessageBox.alert(result);&#xD;
-		alert(5)&#xD;
 		with (view.get(&quot;#dsBmsCalcuTaskVo&quot;)){&#xD;
-			alert(6)&#xD;
 			flushAsync();&#xD;
-			alert(7)&#xD;
 		}&#xD;
 	});&#xD;
 });</ClientEvent>
@@ -207,7 +202,7 @@ dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
         <Property name="readOnly">true</Property>
         <DataColumn name="taskId">
           <Property name="property">taskId</Property>
-          <Property name="width">130</Property>
+          <Property name="width">150</Property>
         </DataColumn>
         <DataColumn name="taskStatus">
           <Property name="property">taskStatus</Property>
