@@ -77,7 +77,6 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		serviceSubjectCode = subjectCode;
 		getQuoTemplete();
 		errorMap = new HashMap<String, Object>();
@@ -225,6 +224,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 			fee.setCalcuMsg("bms合同缺失");
 			return;
 		}
+		logger.info("合同信息{}",contractInfo.getContractNo());
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());

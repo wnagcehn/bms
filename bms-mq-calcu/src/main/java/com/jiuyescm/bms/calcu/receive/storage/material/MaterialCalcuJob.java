@@ -93,7 +93,6 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		getQuoTemplete();
 		serviceSubjectCode = subjectCode;
 		errorMap = new HashMap<String, Object>();
@@ -249,6 +248,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "bms合同缺失", null, cbiVo);
 			return;
 		}
+		logger.info("合同信息{}",contractInfo.getContractNo());
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -268,6 +268,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 				//XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+				fee.setCalcuMsg("报价未配置");
 				entity.setRemark(entity.getRemark()+"报价未配置;");
 				return;
 			}
@@ -356,6 +357,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			fee.setParam3(stepQuoEntity.getId()+"");
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
+				fee.setCalcuMsg(CalculateState.Finish.getDesc());
 				entity.setIsCalculated(CalculateState.Finish.getCode());
 				entity.setRemark(entity.getRemark()+CalculateState.Finish.getDesc()+";");
 				//XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",fee.getCost());
@@ -380,6 +382,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
+				fee.setCalcuMsg(CalculateState.Finish.getDesc());
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
