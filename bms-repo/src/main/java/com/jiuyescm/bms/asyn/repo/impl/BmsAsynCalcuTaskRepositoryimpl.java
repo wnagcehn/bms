@@ -98,4 +98,9 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
         return entity;
 	}
 
+	@Override
+	public BmsAsynCalcuTaskEntity updateByTaskId(BmsAsynCalcuTaskEntity entity) {
+		update("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.updateByTaskId", entity);
+        return entity;
+	}
 }

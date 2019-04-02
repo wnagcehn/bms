@@ -118,6 +118,17 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+var createMonth = &quot;&quot;;&#xD;
+if(month &lt; 10){&#xD;
+	createMonth = year.toString() + &quot;0&quot; + month;&#xD;
+}else{&#xD;
+	createMonth = year.toString() + month;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;creMonth&quot;,createMonth);</ClientEvent>
     <DataSet id="dsBmsCalcuTaskVo">
       <Property name="dataType">[dtBmsCalcuTaskVo]</Property>
       <Property name="loadMode">manual</Property>
