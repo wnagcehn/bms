@@ -159,25 +159,7 @@ public class PalletInitJob extends IJobHandler {
 			feesEntity.setCustomerName(entity.getCustomerName()); // 商家名称
 			feesEntity.setWarehouseCode(entity.getWarehouseCode()); // 仓库ID
 			feesEntity.setWarehouseName(entity.getWarehouseName()); // 仓库名称
-			feesEntity.setCostType("FEE_TYPE_GENEARL"); // 费用类别
-														// FEE_TYPE_GENEARL-通用
-														// FEE_TYPE_MATERIAL-耗材
-														// FEE_TYPE_ADD-增值
 			feesEntity.setProductType(""); // 商品类型
-			// 费用科目
-			if ("product".equals(entity.getBizType())) {
-				subjectId = "wh_product_storage";
-			} else if ("material".equals(entity.getBizType())) {
-				subjectId = "wh_material_storage";
-			} else if ("instock".equals(entity.getBizType())) {
-				subjectId = "wh_disposal";
-			} else if ("outstock".equals(entity.getBizType())) {
-				//如果是出库托数,生成费用为0,不发MQ
-				subjectId = "outstock_pallet_vm";
-				entity.setIsCalculated("5");
-			}
-			feesEntity.setSubjectCode(subjectId);
-			feesEntity.setOtherSubjectCode(subjectId);
 			// 如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
 			// 如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 			double num = 0d;
@@ -198,15 +180,28 @@ public class PalletInitJob extends IJobHandler {
 			}
 
 			feesEntity.setQuantity(num); // 数量
-			feesEntity.setUnit("PALLETS"); // 单位
+			feesEntity.setUnit("pallet"); // 单位
 			feesEntity.setTempretureType(entity.getTemperatureTypeCode()); // 设置温度类型
-			feesEntity.setCost(new BigDecimal(0)); // 入仓金额
 			feesEntity.setUnitPrice(0d); // 单价
 			feesEntity.setBizType(entity.getBizType()); // 托数类型
 			feesEntity.setFeesNo(feesNo);
 			feesEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
-			feesEntity.setDelFlag("0");
 			feesEntity.setIsCalculated("99");
+			// 费用科目
+			if ("product".equals(entity.getBizType())) {
+				subjectId = "wh_product_storage";
+			} else if ("material".equals(entity.getBizType())) {
+				subjectId = "wh_material_storage";
+			} else if ("instock".equals(entity.getBizType())) {
+				subjectId = "wh_disposal";
+			} else if ("outstock".equals(entity.getBizType())) {
+				//如果是出库托数,生成费用为0,不发MQ
+				subjectId = "outstock_pallet_vm";
+				entity.setIsCalculated("5");
+				feesEntity.setIsCalculated("5");
+			}
+			feesEntity.setSubjectCode(subjectId);
+			feesEntity.setOtherSubjectCode(subjectId);
 			feesList.add(feesEntity);
 		}
 	}

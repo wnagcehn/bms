@@ -287,6 +287,34 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var customerid = GetQueryString(&quot;customerId&quot;);&#xD;
+var startTime = GetQueryString(&quot;createTime&quot;);&#xD;
+var endTime = GetQueryString(&quot;createEndTime&quot;);&#xD;
+var isCalculated = GetQueryString(&quot;isCalculated&quot;);&#xD;
+&#xD;
+if(customerid == undefined || customerid == null){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+data.set(&quot;customerid&quot;,customerid);&#xD;
+data.set(&quot;startTime&quot;,startTime);&#xD;
+data.set(&quot;endTime&quot;,endTime);&#xD;
+data.set(&quot;isCalculated&quot;,isCalculated);&#xD;
+&#xD;
+var dsQuotaList= view.get(&quot;#dsQuotaList&quot;);&#xD;
+with (dsQuotaList) {&#xD;
+	dsQuotaList.clear();&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+} &#xD;
+&#xD;
+&#xD;
+function GetQueryString(name){&#xD;
+    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;); &#xD;
+    var r = window.location.search.substr(1).match(reg);&#xD;
+    if(r!=null)return  unescape(r[2]); return null;&#xD;
+}</ClientEvent>
     <DataSet id="dsCondition">
       <ClientEvent name="onCreate">view.get(&quot;#dsCondition&quot;).getData().insert();</ClientEvent>
       <Property name="dataType">[dtCondition]</Property>

@@ -31,6 +31,8 @@ import com.jiuyescm.cfm.domain.IEntity;
     private String remark;
     
     private Long id;
+    
+    private Integer line;
     /**
 	 * 创建者
 	 */
@@ -195,6 +197,14 @@ import com.jiuyescm.cfm.domain.IEntity;
 
 	public void setList(List<PriceMaterialQuotationEntity> list) {
 		this.list = list;
+	}
+
+	public Integer getLine() {
+		return line;
+	}
+
+	public void setLine(Integer line) {
+		this.line = line;
 	}
 
    

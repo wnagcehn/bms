@@ -77,21 +77,17 @@
     </resultMap>
 	  
     <select id="queryCalculate" parameterType="java.util.Map" resultMap="baseMasterResultMap">
-         select a.id,a.outstock_no,a.warehouse_code,a.warehouse_name,a.customerid,a.customer_name,a.temperature_type_code,a.temperature_type_name,a.waybill_no,
-				a.bill_type_code,a.bill_type_name,a.b2b_flag,a.fees_no,
-				a.total_weight,
-				a.resize_weight,
-				a.total_quantity,
-				a.resize_num,
-				a.total_varieties,
-				a.resize_varieties,
-				a.boxnum,
-				a.adjust_boxnum,
-				a.create_time,a.product_detail, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,
+         select a.id,a.warehouse_code,a.warehouse_name,a.customerid,a.customer_name,a.create_time,
+				a.temperature_type_code,a.temperature_type_name,
+				a.bill_type_code,a.b2b_flag,a.fees_no,
+				a.total_weight,a.resize_weight,
+				a.total_quantity,a.resize_num,
+				a.total_varieties,a.resize_varieties,
+				a.boxnum,a.adjust_boxnum,
 				a.carrier_id,a.carrier_name,a.deliver_id,a.deliver_name
 		from biz_outstock_master a 
-	    INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no  
-	    where a.del_flag = '0' and b.del_flag='0' 
+	  	INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no  
+	  	where a.del_flag = '0'
 		<if test="(beginTime != null and beginTime !='')" >
 			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
@@ -115,6 +111,9 @@
 		</if>
 		<if test="(subjectCode != null and subjectCode !='')" >
 			and b.subject_code = #{subjectCode,jdbcType=VARCHAR}
+		</if>
+		<if test="(b2bFlag != null and b2bFlag !='')" >
+			and a.b2b_flag = #{b2bFlag,jdbcType=VARCHAR}
 		</if>
 		LIMIT #{num}
     </select>

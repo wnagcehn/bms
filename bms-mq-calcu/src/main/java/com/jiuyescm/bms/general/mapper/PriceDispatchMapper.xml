@@ -148,9 +148,7 @@
 	<select id="queryAllByTemplateId" parameterType="java.util.Map" resultMap="baseResultMap">
 		select * from bms_quote_dispatch_detail
 		where 1=1 and del_flag='0'
-		and template_code=(select concat(b.template_code) from price_contract_item a inner JOIN price_dispatch_template b on a.template_id=b.template_code and b.del_flag=0
-		 	where a.contract_code=#{contractCode} and a.subject_id=#{subjectId} and  a.del_flag='0'
-		)
+		and template_code= #{templateCode}
 		<if test="(wareHouseId!=null and wareHouseId!='')">
 		     and start_warehouse_id=#{wareHouseId}
 		</if>

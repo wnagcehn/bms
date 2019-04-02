@@ -35,6 +35,11 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	
 	//费用类型
 	private String feesType;
+	
+	//状态
+	private String customerStatus;
+	//科目数
+	private Integer subjectNum;
 
 	public BmsCalcuTaskVo() {
 
@@ -215,6 +220,22 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	 */
 	public void setFeesType(String feesType) {
 		this.feesType = feesType;
+	}
+
+	public String getCustomerStatus() {
+		return customerStatus;
+	}
+
+	public void setCustomerStatus(String customerStatus) {
+		this.customerStatus = customerStatus;
+	}
+
+	public Integer getSubjectNum() {
+		return subjectNum;
+	}
+
+	public void setSubjectNum(Integer subjectNum) {
+		this.subjectNum = subjectNum;
 	}
 	
     

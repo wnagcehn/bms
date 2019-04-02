@@ -37,4 +37,29 @@ public interface IBmsAsynCalcuTaskRepository {
 	List<BmsAsynCalcuTaskEntity> queryDisByMap(Map<String, Object> condition);
 
 	BmsAsynCalcuTaskEntity saveLog(BmsAsynCalcuTaskEntity entity);
+
+	
+	/**
+	 * 查询界面（主）
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<BmsAsynCalcuTaskEntity> queryMain(Map<String, Object> condition, int pageNo, int pageSize);
+	
+	/**
+	 * 根据商家和月份查出状态和科目数量（主）
+	 * @param map
+	 * @return
+	 */
+	List<BmsAsynCalcuTaskEntity> queryInfoByCustomerId(Map<String, Object> map);
+	
+	/**
+	 * 明细查询（子）
+	 * @param map
+	 * @return
+	 */
+	List<BmsAsynCalcuTaskEntity> queryDetail(Map<String, Object> map);
+	
 }

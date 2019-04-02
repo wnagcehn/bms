@@ -8,8 +8,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.exception.BizException;
 
 public interface IBmsCalcuTaskService {
-
-	PageInfo<BmsCalcuTaskVo> query(Map<String, Object> condition,int pageNo, int pageSize) throws Exception;
 	
 	BmsCalcuTaskVo queryCalcuTask(String taskId) throws Exception;
 	
@@ -39,5 +37,23 @@ public interface IBmsCalcuTaskService {
 	void saveTaskLog(BmsCalcuTaskVo vo) throws Exception;
 
 	List<BmsCalcuTaskVo> query(Map<String, Object> condition);
+	
+	/**
+	 * 界面查询（主）
+	 * @param condition
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 * @throws Exception
+	 */
+	PageInfo<BmsCalcuTaskVo> query(Map<String, Object> condition,int pageNo, int pageSize) throws Exception;
+	
+	/**
+	 * 界面明细查询（子）
+	 * @param map
+	 * @return
+	 * @throws BizException
+	 */
+	List<BmsCalcuTaskVo> queryDetail(Map<String, Object> map) throws Exception ;
 	
 }

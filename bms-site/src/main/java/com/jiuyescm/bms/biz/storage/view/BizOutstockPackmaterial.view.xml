@@ -419,6 +419,36 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var customerId = GetQueryString(&quot;customerId&quot;);&#xD;
+var startTime = GetQueryString(&quot;createTime&quot;);&#xD;
+var endTime = GetQueryString(&quot;createEndTime&quot;);&#xD;
+//var subjectCode = GetQueryString(&quot;subjectCode&quot;);&#xD;
+var isCalculated = GetQueryString(&quot;isCalculated&quot;);&#xD;
+&#xD;
+if(customerId == undefined || customerId == null){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+data.set(&quot;customerId&quot;,customerId);&#xD;
+data.set(&quot;startTime&quot;,startTime);&#xD;
+data.set(&quot;endTime&quot;,endTime);&#xD;
+//data.set(&quot;subjectCode&quot;,subjectCode);&#xD;
+data.set(&quot;isCalculated&quot;,isCalculated);&#xD;
+&#xD;
+var dsMaterialList= view.get(&quot;#dsMaterialList&quot;);&#xD;
+with (dsMaterialList) {&#xD;
+	dsMaterialList.clear();&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+} &#xD;
+&#xD;
+&#xD;
+function GetQueryString(name){&#xD;
+    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;); &#xD;
+    var r = window.location.search.substr(1).match(reg);&#xD;
+    if(r!=null)return  unescape(r[2]); return null;&#xD;
+}</ClientEvent>
     <DataSet id="dsMaterialList">
       <Property name="dataProvider">bizOutstockPackmaterialController#query</Property>
       <Property name="dataType">[dtMaterialEntity]</Property>

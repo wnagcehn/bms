@@ -232,19 +232,15 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
     
     <select id="querybizInstockInfo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
     	select
-    	a.id, a. fees_no as feesNo, a. adjust_qty as adjustQty, a.adjust_box as adjustBox, 
-		a.adjust_weight as adjustWeight, a.last_modifier_id as lastModifierId, 
-		a.last_modifier as lastModifier, a.last_modify_time as lastModifyTime, 
-		a.del_flag as delFlag, a.is_calculated as isCalculated, 
-		a.calculate_time as calculateTime, a.remark, a.instock_no as instockNo, 
-		a.external_num as externalNum, a.warehouse_code as warehouseCode, 
-		a.warehouse_name as warehouseName, a.customer_id as customerId, 
-		a.customer_name as customerName, a.instock_type as instockType, 
-		a.total_qty as totalQty, a.total_box as totalBox, a.total_weight as totalWeight, 
-		a.receiver, a.creator, a.create_time as createTime, a.write_time as writeTime
+	    	a.id, a.fees_no as feesNo,a.create_time,
+			a.warehouse_code as warehouseCode, a.warehouse_name as warehouseName, 
+			a.customer_id as customerId, a.customer_name as customerName, 
+			a.adjust_qty as adjustQty,a.total_qty as totalQty, 
+			a.adjust_box as adjustBox, a.total_box as totalBox,
+			a.adjust_weight as adjustWeight, a.total_weight as totalWeight
 		from biz_instock_info a 
 		left join fees_receive_storage b on a.fees_no = b.fees_no
-		where a.del_flag = '0'
+		where a.del_flag = '0' 
 		<if test="(beginTime != null and beginTime !='')" >
 			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
