@@ -75,4 +75,5 @@
 		 <dubbo:reference id="bmsDiscountAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsDiscountService" interface="com.jiuyescm.bms.discount.service.IBmsDiscountService" version="1.0.0" registry="bms"/>	 
 		 <dubbo:reference id="bmsQuoteDispatchDetailService" interface="com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" version="1.0.0"  registry="bms"/>
 </beans> 
