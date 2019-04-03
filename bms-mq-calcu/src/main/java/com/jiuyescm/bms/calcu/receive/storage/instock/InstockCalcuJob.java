@@ -121,6 +121,9 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		//打印业务数据日志
 		CalcuLog.printLog(CalcuNodeEnum.BIZ.getCode().toString(), "", entity, cbiVo);
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
+		fee.setQuantity(0d);
+		fee.setWeight(0d);
+		fee.setBox(0);
 		double num=DoubleUtil.isBlank(entity.getAdjustQty())?entity.getTotalQty():entity.getAdjustQty();
 		if(!DoubleUtil.isBlank(num)){
 			fee.setQuantity(num);//商品数量
