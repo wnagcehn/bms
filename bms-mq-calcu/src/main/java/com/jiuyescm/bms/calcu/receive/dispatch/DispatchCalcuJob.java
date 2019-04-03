@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
@@ -614,21 +615,20 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	}
 
 	@Override
-	public void updateBatch(List<BizDispatchBillEntity> bizList,
-			List<FeesReceiveDispatchEntity> feeList) {
-		// TODO Auto-generated method stub
+	public void updateBatch(List<BizDispatchBillEntity> bizList,List<FeesReceiveDispatchEntity> feeList) {
 		try {
-			long start = System.currentTimeMillis();// 系统开始时间
-			long current = 0l;// 当前系统时间
+			StopWatch sw = new StopWatch();
+			sw.start();
 			bizDispatchBillService.newUpdateBatch(bizList);
-			current = System.currentTimeMillis();
-			logger.info("更新业务数据耗时：【{0}】毫秒  ",(current - start));
-			start = System.currentTimeMillis();// 系统开始时间
+			sw.stop();
+			logger.info("taskId={} 更新配送业务数据行数【{}】 耗时【{}】",taskVo.getTaskId(),bizList.size(),sw.getLastTaskTimeMillis());
+			
+			sw.start();
 			feesReceiveDispatchService.updateBatch(feeList);
-			current = System.currentTimeMillis();
-			logger.info("更新费用数据耗时：【{0}】毫秒 ",(current - start));
+			sw.stop();
+			logger.info("taskId={} 更新配送费用数据行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
+			
 		} catch (Exception e) {
-			// TODO: handle exception
 			logger.info("-->批量保存异常"+e.getMessage());
 		}
 	}
