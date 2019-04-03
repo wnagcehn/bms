@@ -120,6 +120,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	@Override
 	public FeesReceiveStorageEntity initFee(BmsBizInstockInfoEntity entity){
 		//打印业务数据日志
+		cbiVo.setFeesNo(entity.getFeesNo());
 		CalcuLog.printLog(CalcuNodeEnum.BIZ.getCode().toString(), "", entity, cbiVo);
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
 		fee.setQuantity(0d);
