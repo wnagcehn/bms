@@ -115,4 +115,5 @@
 		<dubbo:reference id="pubMonthFeeCountService" interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" version="1.0.0" registry="bms"/>
 		
 		<dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" version="1.0.0" registry="bms"/>
+		<dubbo:reference id="bmsUserCustomerListenerService" interface="com.jiuyescm.bms.asyn.service.IBmsUserCustomerListenerService" version="1.0.0" registry="bms"/>
 </beans> 

@@ -248,45 +248,40 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 		if(statusList != null && statusList.size()>0){
 			for (BmsFeesQtyEntity entity : statusList) {	
 				switch (entity.getIsCalculated()) {
-				case "0"://待计算
-					vo.setBeginCount(entity.getFeesCount());
-					entityTotal++;
-					biaoshi=1;
-					break;
 				case "1"://计算成功
 					vo.setFinishCount(entity.getFeesCount());
-					entityTotal++;
+					entityTotal += entity.getFeesCount();
 					biaoshi=3;
 					break;
 				case "2"://系统错误
 					vo.setSysErrorCount(entity.getFeesCount());
-					entityTotal++;
+					entityTotal += entity.getFeesCount();
 					biaoshi=2;
 					break;
 				case "3"://合同缺失
 					vo.setContractMissCount(entity.getFeesCount());
-					entityTotal++;
+					entityTotal += entity.getFeesCount();
 					biaoshi=2;
 					break;
 				case "4"://报价缺失
 					vo.setQuoteMissCount(entity.getFeesCount());
-					entityTotal++;
+					entityTotal += entity.getFeesCount();
 					biaoshi=2;
 					break;
 				case "5"://不计算
 					vo.setNoExeCount(entity.getFeesCount());
-					entityTotal++;
+					entityTotal += entity.getFeesCount();
 					biaoshi=3;
 					break;
 				case "99"://待重算
 					vo.setUncalcuCount(entity.getFeesCount());
-					entityTotal++;
+					entityTotal += entity.getFeesCount();
 					biaoshi=1;
 					break;
 				default://系统错误
-					vo.setSysErrorCount(entity.getFeesCount());
-					entityTotal++;
-					biaoshi=2;
+					/*vo.setSysErrorCount(entity.getFeesCount());
+					entityTotal += entity.getFeesCount();
+					biaoshi=2;*/
 					break;
 				}
 

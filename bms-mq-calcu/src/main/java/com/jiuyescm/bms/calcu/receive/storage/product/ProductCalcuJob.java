@@ -198,6 +198,8 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 			fee.setCalcuMsg("bms合同缺失");
 			return;
 		}
+		logger.info("合同信息{}",contractInfo.getContractNo());
+		
 		//签约服务校验
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());

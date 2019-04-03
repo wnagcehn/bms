@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
@@ -41,6 +42,8 @@ public class BmsAsynCalcuTaskController {
 	@DataProvider
 	public void query(Page<BmsCalcuTaskVo> page, Map<String, Object> param) throws Exception {
 		try {
+			String crePersonId = ContextHolder.getLoginUser().getUsername();
+			param.put("crePersonId", crePersonId);
 			PageInfo<BmsCalcuTaskVo> pageInfo = bmsAsynCalcuTaskService.query(param, page.getPageNo(), page.getPageSize());
 			if (pageInfo != null) {
 				page.setEntities(pageInfo.getList());

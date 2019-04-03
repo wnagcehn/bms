@@ -69,7 +69,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 				logger.warn("taskId={} 未查询到任务 ",taskId);
 			}
 		}catch(Exception ex){
-			logger.warn("taskId={} 查询计算任务异常",taskId,ex.getMessage());
+			logger.warn("taskId={} 查询计算任务异常",taskId,ex);
 		}
 		finally{
 			try {
