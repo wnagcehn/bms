@@ -237,6 +237,5 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	public void setSubjectNum(Integer subjectNum) {
 		this.subjectNum = subjectNum;
 	}
-	
     
 }

@@ -28,6 +28,8 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	private Integer creMonth;
 	// 任务状态 0-等待 10-处理中 20-成功 30-异常 40-丢弃 50-作废
 	private Integer taskStatus;
+	//计算状态
+	private Integer calcuStatus;
 	// 费用总数
 	private Integer feesCount;
 	// 本次任务需要计算的费用总数
@@ -462,6 +464,14 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 
 	public void setSubjectNum(Integer subjectNum) {
 		this.subjectNum = subjectNum;
+	}
+
+	public Integer getCalcuStatus() {
+		return calcuStatus;
+	}
+
+	public void setCalcuStatus(Integer calcuStatus) {
+		this.calcuStatus = calcuStatus;
 	}
     
 }
