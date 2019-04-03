@@ -88,38 +88,8 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 		if(entityTotal == null){
 			return null;
 		}
-		vo.setFeesCount(entityTotal.getFeesCount());
 		List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryStatusFeesQtyForDis(customerId, subjectCode, startTime, endTime);
-		if(statusList != null && statusList.size()>0){
-			for (BmsFeesQtyEntity entity : statusList) {
-				switch (entity.getIsCalculated()) {
-				case "0":
-					vo.setBeginCount(entity.getFeesCount());
-					break;
-				case "1":
-					vo.setFinishCount(entity.getFeesCount());
-					break;
-				case "2":
-					vo.setSysErrorCount(entity.getFeesCount());
-					break;
-				case "3":
-					vo.setContractMissCount(entity.getFeesCount());
-					break;
-				case "4":
-					vo.setQuoteMissCount(entity.getFeesCount());
-					break;
-				case "5":
-					vo.setNoExeCount(entity.getFeesCount());
-					break;
-				case "99":
-					vo.setUncalcuCount(entity.getFeesCount());
-					break;
-				default:
-					vo.setSysErrorCount(entity.getFeesCount());
-					break;
-				}
-			}
-		}
+		tongji(statusList,vo);
 		return vo;
 	}
 

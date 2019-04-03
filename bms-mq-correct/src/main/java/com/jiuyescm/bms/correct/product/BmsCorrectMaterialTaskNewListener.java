@@ -20,7 +20,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
@@ -58,6 +60,8 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	private IBmsCorrectAsynTaskService bmsCorrectAsynTaskService;
 	@Autowired 
 	private ISystemCodeService systemCodeService;
+	@Autowired
+	private IBmsCalcuTaskService bmsCalcuTaskService;
 	
 	/**
 	 * 运单重量调整
@@ -77,24 +81,48 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 		try {
 			StringBuffer errorMessage=new StringBuffer();
 			logger.info(taskId+"正在消费");
+			Map<String,Object> condition=new HashMap<String,Object>();
+			//根据taskId查询商家和时间
+			condition.put("taskId", taskId);
+			List<BmsCorrectAsynTaskVo> taskList=bmsCorrectAsynTaskService.queryList(condition);
+			if(taskList.size()<=0){
+				logger.info(taskId+"没有查询到任务记录;");
+				errorMessage.append("没有查询到任务记录;");
+				return;
+			}
+			BmsCorrectAsynTaskVo taskVo=taskList.get(0);
 			
 			//处理运单泡沫箱统一
 			logger.info(taskId+"正在处理泡沫箱纠正");
 			start = System.currentTimeMillis();
-			handPmxTask(taskId,errorMessage);
+			handPmxTask(taskId,errorMessage,taskVo);
 			logger.info(taskId+"泡沫箱纠正结束 耗时--"+(System.currentTimeMillis()-start));
 			
 			//处理运单纸箱统一
 			logger.info(taskId+"正在处理纸箱纠正");
 			start = System.currentTimeMillis();
-			handZxTask(taskId,errorMessage);
+			handZxTask(taskId,errorMessage,taskVo);
 			logger.info(taskId+"纸箱纠正结束 耗时--"+(System.currentTimeMillis()-start));
 			
 			//处理运单保温袋统一
 			logger.info(taskId+"正在处理保温袋纠正");
 			start = System.currentTimeMillis();
-			handBwdTask(taskId,errorMessage);
+			handBwdTask(taskId,errorMessage,taskVo);
 			logger.info(taskId+"保温袋纠正结束 耗时--"+(System.currentTimeMillis()-start));
+			
+			//发送mq处理重算的运单
+			BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
+			vo.setCustomerId(taskVo.getCustomerId());
+			vo.setSubjectCode("de_delivery_amount");
+			vo.setCreMonth(Integer.valueOf(taskVo.getCreateMonth()));
+			vo.setCrePerson(taskVo.getCreator());
+			vo.setCreTime(JAppContext.currentTimestamp());
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
+			}
 		} catch (Exception e1) {
 			logger.error(taskId+"处理耗材统一失败：{}",e1);
 			return;
@@ -116,17 +144,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	 * @param errorMessage
 	 * @throws Exception
 	 */
-	private void handPmxTask(String taskId,StringBuffer errorMessage) throws Exception{
-		Map<String,Object> condition=new HashMap<String,Object>();
-		//根据taskId查询商家和时间
-		condition.put("taskId", taskId);
-		List<BmsCorrectAsynTaskVo> taskList=bmsCorrectAsynTaskService.queryList(condition);
-		if(taskList.size()<=0){
-			logger.info(taskId+"泡沫箱调整,没有查询到任务记录;");
-			errorMessage.append("泡沫箱调整,没有查询到任务记录;");
-			return;
-		}
-		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
+	private void handPmxTask(String taskId,StringBuffer errorMessage,BmsCorrectAsynTaskVo taskVo) throws Exception{
 		try{
 			handPmx(taskVo,taskId,errorMessage);		
 			taskVo.setTaskRate(30);
@@ -245,7 +263,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 								packEntity.setSpecDesc(entity.getSpecDesc());
 								packEntity.setLastModifier(taskVo.getCreator());
 								packEntity.setLastModifyTime(JAppContext.currentTimestamp());
-								packEntity.setIsCalculated("99");
+								packEntity.setIsCalculated("0");
 								packEntity.setFeesNo("");
 								packEntity.setDelFlag("0");
 								packEntity.setextattr4(taskId);
@@ -303,17 +321,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	 * @param errorMessage
 	 * @throws Exception
 	 */
-	private void handZxTask(String taskId,StringBuffer errorMessage) throws Exception{
-		Map<String,Object> condition=new HashMap<String,Object>();
-		//根据taskId查询商家和时间
-		condition.put("taskId", taskId);
-		List<BmsCorrectAsynTaskVo> taskList=bmsCorrectAsynTaskService.queryList(condition);
-		if(taskList.size()<=0){
-			logger.info(taskId+"纸箱调整,没有查询到任务记录;");
-			errorMessage.append("纸箱调整,没有查询到任务记录;");
-			return;
-		}
-		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
+	private void handZxTask(String taskId,StringBuffer errorMessage,BmsCorrectAsynTaskVo taskVo) throws Exception{
 		try{
 			handZx(taskVo,taskId,errorMessage);		
 			taskVo.setTaskRate(60);
@@ -432,7 +440,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 								packEntity.setSpecDesc(entity.getSpecDesc());
 								packEntity.setLastModifier(taskVo.getCreator());
 								packEntity.setLastModifyTime(JAppContext.currentTimestamp());
-								packEntity.setIsCalculated("99");
+								packEntity.setIsCalculated("0");
 								packEntity.setFeesNo("");
 								packEntity.setDelFlag("0");
 								packEntity.setextattr4(taskId);
@@ -492,17 +500,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	 * @param errorMessage
 	 * @throws Exception
 	 */
-	private void handBwdTask(String taskId,StringBuffer errorMessage) throws Exception{
-		Map<String,Object> condition=new HashMap<String,Object>();
-		//根据taskId查询商家和时间
-		condition.put("taskId", taskId);
-		List<BmsCorrectAsynTaskVo> taskList=bmsCorrectAsynTaskService.queryList(condition);
-		if(taskList.size()<=0){
-			logger.info(taskId+"保温袋纠正,没有查询到任务记录;");
-			errorMessage.append("保温袋纠正,没有查询到任务记录;");
-			return;
-		}
-		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
+	private void handBwdTask(String taskId,StringBuffer errorMessage,BmsCorrectAsynTaskVo taskVo) throws Exception{
 		try{
 			handBwd(taskVo,taskId,errorMessage);		
 			if(errorMessage.indexOf("失败")!=-1 || errorMessage.indexOf("异常")!=-1){
@@ -628,7 +626,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 								entity.setLastModifier(taskVo.getCreator());
 								entity.setLastModifyTime(JAppContext.currentTimestamp());
 								entity.setSpecDesc(markVo.getSpecDesc());
-								entity.setIsCalculated("99");
+								entity.setIsCalculated("0");
 								entity.setDelFlag("0");
 								entity.setFeesNo("");
 								entity.setextattr4(taskId);
