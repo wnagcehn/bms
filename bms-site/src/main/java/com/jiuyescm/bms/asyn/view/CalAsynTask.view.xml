@@ -250,16 +250,6 @@ dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
           <Property name="visible">true</Property>
           <Property name="width">60</Property>
         </DataColumn>
-        <DataColumn name="calcuCount">
-          <Property name="property">calcuCount</Property>
-          <Property name="visible">true</Property>
-          <Property name="width">60</Property>
-        </DataColumn>
-        <DataColumn name="beginCount">
-          <Property name="property">beginCount</Property>
-          <Property name="visible">true</Property>
-          <Property name="width">60</Property>
-        </DataColumn>
         <DataColumn name="finishCount">
           <Property name="property">finishCount</Property>
           <Property name="visible">true</Property>
@@ -309,6 +299,16 @@ dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
           <Property name="property">taskRate</Property>
           <Property name="width">60</Property>
           <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="beginCount">
+          <Property name="property">beginCount</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">60</Property>
+        </DataColumn>
+        <DataColumn name="calcuCount">
+          <Property name="property">calcuCount</Property>
+          <Property name="visible">false</Property>
+          <Property name="width">60</Property>
         </DataColumn>
       </DataGrid>
     </Container>
