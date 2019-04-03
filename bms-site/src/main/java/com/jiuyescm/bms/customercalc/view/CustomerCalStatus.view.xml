@@ -474,7 +474,7 @@ jQuery(arg.dom).empty();&#xD;
 jQuery(arg.dom).xCreate({&#xD;
 	tagName: &quot;A&quot;,&#xD;
 	href: &quot;#&quot;,&#xD;
-	content:dataDetail.get(&quot;uncalcuCount&quot;)+&quot;&quot;,&#xD;
+	content:dataDetail.get(&quot;finishCount&quot;)+&quot;&quot;,&#xD;
 	onclick:function(){&#xD;
 		//数据字典查询科目对应界面的URL&#xD;
 		var subjectUrlAction = view.get(&quot;#subjectUrlAction&quot;);&#xD;
