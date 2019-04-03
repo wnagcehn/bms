@@ -26,9 +26,9 @@ public class ProductCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 	protected void generalCalcu(BmsCalcuTaskVo taskVo, String contractAttr,Map<String, Object> map) {
 		WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext(); 
 		try {
-			ProductCalcuJob instockCalcuJob = (ProductCalcuJob) ctx.getBean("instockCalcuJob");
-			instockCalcuJob.process(taskVo, contractAttr);
-			instockCalcuJob.calcu(map);
+			ProductCalcuJob productCalcuJob = (ProductCalcuJob) ctx.getBean("productCalcuJob");
+			productCalcuJob.process(taskVo, contractAttr);
+			productCalcuJob.calcu(map);
 		} catch (Exception e) {
 			logger.error("spring 获取bean异常",e);
 		}
