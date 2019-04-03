@@ -74,4 +74,5 @@
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" ref="bmsCalcuTaskService"/>
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" ref="bmsCalcuTaskService"/>
 	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsCalcuService" ref="bmsCalcuService"/>
+	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsUserCustomerListenerService" ref="bmsUserCustomerListenerService"/>
 </beans>

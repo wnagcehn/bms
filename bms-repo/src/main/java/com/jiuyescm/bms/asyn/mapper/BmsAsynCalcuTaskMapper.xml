@@ -184,15 +184,15 @@
     </insert>
     <select id="queryMain" parameterType="java.util.Map"
     	resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
-    	select customer_id,customer_name,cre_month
-		from bms_asyn_calcu_task 
-		where cre_month = #{creMonth} 
-		and task_status >=0 
-		and <![CDATA[task_status <= 30]]>
+    	select a.customer_id,a.customer_name,a.cre_month
+		from bms_asyn_calcu_task a
+		LEFT JOIN bms_user_customer_listener b on a.customer_id=b.customer_id and b.del_flag='0'
+		where a.cre_month = #{creMonth}
 		<if test="(customerId != null and customerId!='')">
-			and customer_id = #{customerId}	
-		</if>
-		group by customer_id,customer_name
+			and a.customer_id = #{customerId}
+		</if>	
+		and b.cre_person_id=#{crePersonId}
+		group by a.customer_id,a.customer_name
     </select>
     
     <select id="queryInfoByCustomerId" parameterType="java.util.Map"
@@ -200,15 +200,12 @@
     	select customer_id,customer_name,cre_month,max(subject_status) as customerStatus,count(0) as subjectNum from 
 		(select customer_id,customer_name,cre_month,task_status,
 			case 
-			when task_status = 0 then '2'
-			when task_status = 10 then '2'
-			when task_status = 20 then '1'
-			when task_status = 30 then '3'
+			when calcu_status = 0 then '3'
+			when calcu_status = 1 then '1'
+			when calcu_status = 2 then '2'
 			end subject_status
 			from bms_asyn_calcu_task 
 			where cre_month = #{creMonth}
-			and task_status >=0 
-			and <![CDATA[task_status <= 30]]>
 			<if test="(customerIds != null and customerIds!='')">
 				and customer_id in
 				<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
@@ -228,15 +225,12 @@
 		finish_count,contract_miss_count,quote_miss_count,uncalcu_count,
 		sys_error_count,no_exe_count,
 		case 
-		when task_status = 0 then '2'
-		when task_status = 10 then '2'
-		when task_status = 20 then '1'
-		when task_status = 30 then '3'
+		when calcu_status = 0 then '3'
+		when calcu_status = 1 then '1'
+		when calcu_status = 2 then '2'
 		end customerStatus 
 		from bms_asyn_calcu_task 
 		where cre_month = #{creMonth} 
-		and task_status >=0 
-		and <![CDATA[task_status <= 30]]>
 		<if test="(customerId != null and customerId!='')">
 			and customer_id = #{customerId}
 		</if>
