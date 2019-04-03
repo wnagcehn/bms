@@ -210,6 +210,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 					entity.setSysErrorCount(0);
 					entity.setBeginCount(0);
 					entity.setTaskId(calEntity.getTaskId());
+					entity.setNewid(vo.getTaskId());
 					bmsAsynCalcuTaskRepositoryimpl.updateByTaskId(entity);
 					// 写入日志表
 					saveTaskLog(vo);

@@ -32,6 +32,7 @@ public class CalAsynTaskController {
 	private IBmsGroupService bmsGroupService;
 	@Autowired
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+	private static final String PROCESS = "%";
 	
 	/**
 	 * 页面查询
@@ -47,6 +48,11 @@ public class CalAsynTaskController {
 		}
 		if (pageInfo != null) {
 			List<BmsCalcuTaskVo> voList = pageInfo.getList();
+			//增加%
+			for (BmsCalcuTaskVo bmsCalcuTaskVo : voList) {
+				String taskRate = String.valueOf(bmsCalcuTaskVo.getTaskRate());
+				bmsCalcuTaskVo.setTaskRateProcess(taskRate+PROCESS);
+			}
 			page.setEntities(voList);
 			page.setEntityCount((int) pageInfo.getTotal());
 		}

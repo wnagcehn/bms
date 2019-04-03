@@ -260,7 +260,7 @@
 			<if test="processTime != null" >process_time=#{processTime,jdbcType=TIMESTAMP},</if>
 			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
-			<if test="taskId != null" >task_id=#{taskId,jdbcType=VARCHAR},</if>
+			<if test="newid != null" >task_id=#{newid,jdbcType=VARCHAR},</if>
 		</set>
         where task_id=#{taskId}
     </update>

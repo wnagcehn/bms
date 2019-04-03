@@ -68,7 +68,7 @@
       </PropertyDef>
       <PropertyDef name="uncalcuCount">
         <Property name="dataType">Integer</Property>
-        <Property name="label">本次待计算</Property>
+        <Property name="label">待计算</Property>
       </PropertyDef>
       <PropertyDef name="calcuCount">
         <Property name="dataType">Integer</Property>
@@ -98,11 +98,14 @@
         <Property name="dataType">Integer</Property>
         <Property name="label">不计算</Property>
       </PropertyDef>
+      <PropertyDef name="taskRateProcess">
+        <Property name="label">计算进度</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBmsCalcuTaskVoCondition">
       <PropertyDef name="customerId">
         <Property></Property>
-        <Property name="label">商家编号</Property>
+        <Property name="label">商家ID</Property>
       </PropertyDef>
       <PropertyDef name="subjectCode">
         <Property></Property>
@@ -219,9 +222,10 @@ dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
           <Property name="property">taskStatus</Property>
           <Property name="width">60</Property>
         </DataColumn>
-        <DataColumn name="taskRate">
-          <Property name="property">taskRate</Property>
+        <DataColumn>
+          <Property name="property">taskRateProcess</Property>
           <Property name="width">60</Property>
+          <Property name="name">taskRateProcess</Property>
         </DataColumn>
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
@@ -235,13 +239,14 @@ dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
           <Property name="property">feesType</Property>
           <Property name="width">60</Property>
         </DataColumn>
-        <DataColumn name="calcuCount">
-          <Property name="property">calcuCount</Property>
+        <DataColumn>
+          <Property name="property">feesCount</Property>
           <Property name="visible">true</Property>
           <Property name="width">60</Property>
+          <Property name="name">feesCount</Property>
         </DataColumn>
-        <DataColumn name="beginCount">
-          <Property name="property">beginCount</Property>
+        <DataColumn name="uncalcuCount">
+          <Property name="property">uncalcuCount</Property>
           <Property name="visible">true</Property>
           <Property name="width">60</Property>
         </DataColumn>
@@ -290,13 +295,18 @@ dorado.MessageBox.confirm(&quot; 是否确定重算?&quot;,function(){&#xD;
           <Property name="property">creMonth</Property>
           <Property name="visible">false</Property>
         </DataColumn>
-        <DataColumn name="feesCount">
-          <Property name="property">feesCount</Property>
+        <DataColumn name="taskRate">
+          <Property name="property">taskRate</Property>
+          <Property name="width">60</Property>
+          <Property name="visible">false</Property>
+        </DataColumn>
+        <DataColumn name="beginCount">
+          <Property name="property">beginCount</Property>
           <Property name="visible">false</Property>
           <Property name="width">60</Property>
         </DataColumn>
-        <DataColumn name="uncalcuCount">
-          <Property name="property">uncalcuCount</Property>
+        <DataColumn name="calcuCount">
+          <Property name="property">calcuCount</Property>
           <Property name="visible">false</Property>
           <Property name="width">60</Property>
         </DataColumn>
