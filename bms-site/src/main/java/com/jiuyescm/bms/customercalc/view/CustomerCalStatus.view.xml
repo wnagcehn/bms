@@ -361,7 +361,10 @@ view.get(&quot;#queryForm.entity&quot;).set(&quot;createMonth&quot;,month);</Cli
 with (view.get(&quot;#dsCustomerCalStatus&quot;)){&#xD;
 	set(&quot;parameter&quot;, data);&#xD;
 	flushAsync();&#xD;
-}</ClientEvent>
+}&#xD;
+&#xD;
+//清空子表&#xD;
+view.get(&quot;#dsCustomerSubjectStatus.data&quot;).clear();</ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
