@@ -56,6 +56,16 @@ public class BizPalletInfoTempServiceImpl implements IBizPalletInfoTempService {
 	public List<BizPalletInfoTempEntity> queryInBiz(String taskId, int errorNum) {
 		return bizPalletInfoTempRepository.queryInBiz(taskId, errorNum);
 	}
+	
+    /**
+     * 校验唯一性，无limit
+     * @param taskId
+     * @return
+     */
+	@Override
+	public List<BizPalletInfoTempEntity> queryInBizNotLimit(String taskId) {
+		return bizPalletInfoTempRepository.queryInBizNotLimit(taskId);
+	}
     
      /**
 	 * 查询

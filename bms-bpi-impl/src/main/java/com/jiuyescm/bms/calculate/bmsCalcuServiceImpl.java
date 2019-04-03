@@ -1,7 +1,10 @@
 package com.jiuyescm.bms.calculate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -270,43 +273,72 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 
 	private void tongji(List<BmsFeesQtyEntity> statusList,BmsFeesQtyVo vo){
 		int entityTotal=0;
+		List<Integer> sortList=new ArrayList<Integer>();
+		Integer biaoshi=0;
 		if(statusList != null && statusList.size()>0){
-			for (BmsFeesQtyEntity entity : statusList) {
+			for (BmsFeesQtyEntity entity : statusList) {	
 				switch (entity.getIsCalculated()) {
-				case "0":
+				case "0"://待计算
 					vo.setBeginCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=1;
 					break;
-				case "1":
+				case "1"://计算成功
 					vo.setFinishCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=3;
 					break;
-				case "2":
+				case "2"://系统错误
 					vo.setSysErrorCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=2;
 					break;
-				case "3":
+				case "3"://合同缺失
 					vo.setContractMissCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=2;
 					break;
-				case "4":
+				case "4"://报价缺失
 					vo.setQuoteMissCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=2;
 					break;
-				case "5":
+				case "5"://不计算
 					vo.setNoExeCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=3;
 					break;
-				case "99":
+				case "99"://待重算
 					vo.setUncalcuCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=1;
 					break;
-				default:
+				default://系统错误
 					vo.setSysErrorCount(entity.getFeesCount());
 					entityTotal++;
+					biaoshi=2;
 					break;
 				}
+
+				if(biaoshi!=0){
+					sortList.add(biaoshi);
+				}
 			}
+			
+			if(sortList.size()>0){
+				//进行排序
+				Collections.sort(sortList);
+				//取出最小的计算状态
+				Integer min=sortList.get(0);
+				if(min==1){
+					vo.setCalcuStatus(0);//未计算
+				}else if(min==2){
+					vo.setCalcuStatus(2);//不成功
+				}else if(min==3){
+					vo.setCalcuStatus(1);//成功
+				}
+			}
+			
 		}
 		
 		

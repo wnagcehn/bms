@@ -40,6 +40,15 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	private String customerStatus;
 	//科目数
 	private Integer subjectNum;
+	public String getTaskRateProcess() {
+		return taskRateProcess;
+	}
+
+	public void setTaskRateProcess(String taskRateProcess) {
+		this.taskRateProcess = taskRateProcess;
+	}
+
+	private String taskRateProcess;
 
 	public BmsCalcuTaskVo() {
 
@@ -237,6 +246,5 @@ public class BmsCalcuTaskVo extends BmsFeesQtyVo{
 	public void setSubjectNum(Integer subjectNum) {
 		this.subjectNum = subjectNum;
 	}
-	
     
 }

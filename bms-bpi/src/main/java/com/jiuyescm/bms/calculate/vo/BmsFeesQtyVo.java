@@ -44,7 +44,8 @@ public class BmsFeesQtyVo implements IEntity{
 	private Integer quoteMissCount;
 	// 不计算费用总数
 	private Integer noExeCount;	
-	
+	//计算状态
+	private Integer calcuStatus;
 	
 	/**
      * 商家id
@@ -270,4 +271,14 @@ public class BmsFeesQtyVo implements IEntity{
 		this.subjectName = subjectName;
 	}
 
+	public Integer getCalcuStatus() {
+		return calcuStatus;
+	}
+
+	public void setCalcuStatus(Integer calcuStatus) {
+		this.calcuStatus = calcuStatus;
+	}
+
+
+	
 }

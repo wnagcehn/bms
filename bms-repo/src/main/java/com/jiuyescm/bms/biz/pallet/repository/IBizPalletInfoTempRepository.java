@@ -34,7 +34,7 @@ public interface IBizPalletInfoTempRepository {
 	
 	/**
 	 * 校验唯一性
-	 * @param taskId
+	 * @param taskId，errorNum
 	 * @return
 	 */
 	List<BizPalletInfoTempEntity> queryInBiz(String taskId, int errorNum);
@@ -73,6 +73,14 @@ public interface IBizPalletInfoTempRepository {
 	 * @return
 	 */
 	int importUpdatePalletNumBatch(List<BizPalletInfoTempEntity> list);
+	
+	/**
+	 * 校验唯一性
+	 * @param taskId
+	 * @param taskId
+	 * @return
+	 */
+	List<BizPalletInfoTempEntity> queryInBizNotLimit(String taskId);
 
 
 }
