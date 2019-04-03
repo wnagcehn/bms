@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.asyn.entity;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**
@@ -42,6 +43,8 @@ public class AsynCalcuEntity implements IEntity {
 	private String delFlag;
 	// 备注
 	private String remark;
+	
+	private String taskRateProcess;
 
 	public AsynCalcuEntity() {
 		super();
@@ -157,6 +160,14 @@ public class AsynCalcuEntity implements IEntity {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getTaskRateProcess() {
+		return taskRateProcess;
+	}
+
+	public void setTaskRateProcess(String taskRateProcess) {
+		this.taskRateProcess = taskRateProcess;
 	}
     
 }
