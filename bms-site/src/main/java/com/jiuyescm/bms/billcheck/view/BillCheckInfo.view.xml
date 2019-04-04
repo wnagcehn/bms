@@ -94,6 +94,16 @@
           </Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+        <Property name="label">收款状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInfo">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
@@ -1307,7 +1317,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
     <AutoForm id="formCondition">
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
-      <Property name="cols">210,*,*,*,*,*</Property>
+      <Property name="cols">210,*,*,*,*</Property>
       <Property name="editorWidth">240</Property>
       <Property name="labelWidth">60</Property>
       <AutoFormElement>
@@ -1335,27 +1345,8 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">billCheckStatus</Property>
-        <Property name="property">billCheckStatus</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement id="projectManagerName">
-        <Property name="name">projectManagerName</Property>
-        <Property name="property">projectManagerName</Property>
-        <Property name="trigger">triggerDeptProject</Property>
-        <Property name="hideMode">display</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement id="sellerName">
-        <Property name="name">sellerName</Property>
-        <Property name="property">sellerName</Property>
-        <Property name="trigger">triggerDeptSeller</Property>
-        <Property name="hideMode">display</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">invoiceStatus</Property>
-        <Property name="property">invoiceStatus</Property>
+        <Property name="name">mkInvoiceName</Property>
+        <Property name="property">mkInvoiceName</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -1364,8 +1355,58 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <Property name="name">billCheckStatus</Property>
+        <Property name="property">billCheckStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceStatus</Property>
+        <Property name="property">invoiceStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">receiptStatus</Property>
+        <Property name="property">receiptStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <Button id="more">
+        <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;caption&quot;) == &quot;更多&quot;){&#xD;
+	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;收起&quot;);&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -80px -300px&quot;);&#xD;
+	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#balanceName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#projectManagerName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#sellerName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#overStatus&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#expectReceiptDateStart&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#expectReceiptDateEnd&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#invoiceNo&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#isapplyBad&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#followType&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,50);&#xD;
+}else{&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -60px -300px&quot;);&#xD;
+	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;更多&quot;);&#xD;
+	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#balanceName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#projectManagerName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#sellerName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#overStatus&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#expectReceiptDateStart&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#expectReceiptDateEnd&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#invoiceNo&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#isapplyBad&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#followType&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,10);&#xD;
+}</ClientEvent>
+        <Property name="caption">更多</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -300px</Property>
+      </Button>
+      <AutoFormElement id="deptName">
         <Property name="name">deptName</Property>
         <Property name="property">deptName</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement id="balanceName">
@@ -1373,65 +1414,71 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Property name="property">balanceName</Property>
         <Property name="trigger">triggerDeptUser</Property>
         <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">invoiceNo</Property>
-        <Property name="property">invoiceNo</Property>
+      <AutoFormElement id="projectManagerName">
+        <Property name="name">projectManagerName</Property>
+        <Property name="property">projectManagerName</Property>
+        <Property name="trigger">triggerDeptProject</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="sellerName">
+        <Property name="name">sellerName</Property>
+        <Property name="property">sellerName</Property>
+        <Property name="trigger">triggerDeptSeller</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="overStatus">
+        <Property name="name">overStatus</Property>
+        <Property name="property">overStatus</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="expectReceiptDateStart">
         <Property name="name">expectReceiptDateStart</Property>
         <Property name="property">expectReceiptDateStart</Property>
         <Property name="labelWidth">90</Property>
         <Property name="editorWidth">220</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="expectReceiptDateEnd">
         <Property name="name">expectReceiptDateEnd</Property>
         <Property name="property">expectReceiptDateEnd</Property>
         <Property name="labelWidth">10</Property>
         <Property name="editorWidth">100</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="invoiceNo">
+        <Property name="name">invoiceNo</Property>
+        <Property name="property">invoiceNo</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="isapplyBad">
         <Property name="name">isapplyBad</Property>
         <Property name="property">isapplyBad</Property>
         <Property name="editorWidth">120</Property>
         <Property name="labelWidth">90</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="followType">
         <Property name="name">followType</Property>
         <Property name="property">followType</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">overStatus</Property>
-        <Property name="property">overStatus</Property>
-        <Editor/>
-      </AutoFormElement>
-      <Button id="more">
-        <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;caption&quot;) == &quot;更多&quot;){&#xD;
-	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;收起&quot;);&#xD;
-	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -80px -300px&quot;);&#xD;
-	view.get(&quot;#test&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,110);&#xD;
-}else{&#xD;
-	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -60px -300px&quot;);&#xD;
-	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;更多&quot;);&#xD;
-	view.get(&quot;#test&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,10);&#xD;
-}&#xD;
-</ClientEvent>
-        <Property name="caption">更多</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -60px -300px</Property>
-      </Button>
-      <AutoFormElement id="test">
-        <Property name="name">test</Property>
-        <Property name="property">test</Property>
-        <Property name="hideMode">display</Property>
         <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -1534,6 +1581,11 @@ if(index==3){&#xD;
             <DataColumn name="invoiceStatus">
               <Property name="property">invoiceStatus</Property>
               <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">receiptStatus</Property>
+              <Property name="width">80</Property>
+              <Property name="name">receiptStatus</Property>
             </DataColumn>
             <DataColumn name="overStatus">
               <ClientEvent name="onRenderCell">var overStatus=arg.data.get(&quot;overStatus&quot;);&#xD;
