@@ -95,7 +95,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	private String taskId;
 	private int batchNum = 1000;
 
-	TreeMap<Integer,String> originColumn = new TreeMap<Integer,String>(); //源生表头信息
+	private TreeMap<Integer,String> headerColumn = null; //源生表头信息
 	List<BizPalletInfoTempEntity> newList = new ArrayList<BizPalletInfoTempEntity>();
 	List<BizPalletInfoTempEntity> repeatList = new ArrayList<BizPalletInfoTempEntity>();
 	
@@ -105,6 +105,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	//----------初始化基础数据--------
 	public void initKeyValue() throws Exception{
 		//----------初始化基础数据--------
+		headerColumn = new TreeMap<Integer,String>();
 		wareHouseMap = new HashMap<String, String>();
 		customerMap = new HashMap<String, String>();
 		temperatureMap = new HashMap<String, String>();
@@ -237,7 +238,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 					//源生表头
 					int a = 1;
 					for (String column : columns) {
-						originColumn.put(a, column);
+						headerColumn.put(a, column);
 						a++;
 					}
 					
@@ -403,6 +404,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
 			}
 			newList.clear();
+			headerColumn.clear();
 		}catch(Exception e){
 			logger.error("异步导入异常", e);
 			bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.EXCEPTION.getCode(),"从临时表中保存数据到业务表异常");
@@ -467,7 +469,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		
 		List<String> exportColumns = new ArrayList<String>();
 		
-		for (Map.Entry<Integer, String> map : originColumn.entrySet()) {
+		for (Map.Entry<Integer, String> map : headerColumn.entrySet()) {
 			exportColumns.add(map.getValue());
 		}
 		
@@ -549,6 +551,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		}
 
     	repeatList.clear();
+    	headerColumn.clear();
     	errorMap.clear();
 		String resultFullPath="";	
 		logger.info("上传结果文件到fastDfs");
