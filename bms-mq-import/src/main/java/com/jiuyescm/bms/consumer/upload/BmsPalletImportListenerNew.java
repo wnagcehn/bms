@@ -295,7 +295,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 
 				@Override
 				public void finish() {	
-					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
+					bmsMaterialImportTaskCommon.setTaskProcess(taskId, 75);
 					//保存数据到临时表
 					if(errorMap.size()==0){
 						int result = saveTo();
