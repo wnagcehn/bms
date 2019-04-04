@@ -1414,15 +1414,18 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
       <Button id="more">
         <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;caption&quot;) == &quot;更多&quot;){&#xD;
 	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;收起&quot;);&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -80px -300px&quot;);&#xD;
 	view.get(&quot;#test&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,110);	&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,110);&#xD;
 }else{&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -60px -300px&quot;);&#xD;
 	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;更多&quot;);&#xD;
 	view.get(&quot;#test&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,10);&#xD;
 }&#xD;
 </ClientEvent>
         <Property name="caption">更多</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -300px</Property>
       </Button>
       <AutoFormElement id="test">
         <Property name="name">test</Property>
