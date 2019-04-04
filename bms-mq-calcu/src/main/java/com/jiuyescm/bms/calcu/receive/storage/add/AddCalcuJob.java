@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
@@ -246,7 +247,11 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	
 	@Override
 	public void updateBatch(List<BizAddFeeEntity> bizList,List<FeesReceiveStorageEntity> feeList) {
+		StopWatch sw = new StopWatch();
+		sw.start();
 		feesReceiveStorageService.updateBatch(feeList);
+		sw.stop();
+		logger.info("taskId={} 更新仓储费用行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
 	}
 
 

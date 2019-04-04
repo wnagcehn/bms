@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
@@ -331,8 +332,18 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	@Override
 	public void updateBatch(List<BizPalletInfoEntity> bizList,List<FeesReceiveStorageEntity> feeList) {
 		//业务表更新计费来源
+		
+		StopWatch sw = new StopWatch();
+		
+		sw.start();
 		bizPalletInfoService.updatebizPallet(bizList);
+		sw.stop();
+		logger.info("taskId={} 更新托数业务数据行数【{}】 耗时【{}】",taskVo.getTaskId(),bizList.size(),sw.getLastTaskTimeMillis());
+		
+		sw.start();
 		feesReceiveStorageService.updateBatch(feeList);
+		sw.stop();
+		logger.info("taskId={} 更新仓储费用行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
 		
 	}
 	

@@ -18,7 +18,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
@@ -29,6 +31,7 @@ import com.jiuyescm.bms.correct.service.IBmsProductsMaterialService;
 import com.jiuyescm.bms.correct.service.IBmsProductsWeightService;
 import com.jiuyescm.bms.correct.vo.BmsMarkingProductsVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsWeightAccountVo;
+import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 
@@ -52,6 +55,8 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 	private IBmsCorrectAsynTaskService bmsCorrectAsynTaskService;
 	@Autowired 
 	private ISystemCodeService systemCodeService;
+	@Autowired
+	private IBmsCalcuTaskService bmsCalcuTaskService;
 	
 	/**
 	 * 运单重量调整
@@ -71,11 +76,36 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 		try {
 			StringBuffer errorMessage=new StringBuffer();
 			logger.info(taskId+"正在消费");
+			Map<String,Object> condition=new HashMap<String,Object>();
+			//根据taskId查询商家和时间
+			condition.put("taskId", taskId);
+			List<BmsCorrectAsynTaskVo> taskList=bmsCorrectAsynTaskService.queryList(condition);
+			if(taskList.size()<=0){
+				logger.info(taskId+"没有查询到重量纠正任务记录;");
+				errorMessage.append(taskId+"没有查询到重量纠正任务记录;");
+				return;
+			}
+			BmsCorrectAsynTaskVo taskVo=taskList.get(0);
+			
 			//处理运单重量统一
 			logger.info(taskId+"正在处理运单重量纠正");
 			start = System.currentTimeMillis();
-			handWeightTask(taskId,errorMessage);
+			handWeightTask(taskId,errorMessage,taskVo);
 			logger.info("重量纠正结束 耗时--"+(System.currentTimeMillis()-start));
+			
+			//发送mq
+			BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
+			vo.setCustomerId(taskVo.getCustomerId());
+			vo.setSubjectCode("de_delivery_amount");
+			vo.setCreMonth(Integer.valueOf(taskVo.getCreateMonth()));
+			vo.setCrePerson(taskVo.getCreator());
+			vo.setCreTime(JAppContext.currentTimestamp());
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
+			}
 			
 		} catch (Exception e1) {
 			logger.error(taskId+"处理运单重量失败：{}",e1);
@@ -97,18 +127,7 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 	 * @param taskId
 	 * @throws Exception
 	 */
-	private void handWeightTask(String taskId,StringBuffer errorMessage) throws Exception{
-		
-		Map<String,Object> condition=new HashMap<String,Object>();
-		//根据taskId查询商家和时间
-		condition.put("taskId", taskId);
-		List<BmsCorrectAsynTaskVo> taskList=bmsCorrectAsynTaskService.queryList(condition);
-		if(taskList.size()<=0){
-			logger.info(taskId+"没有查询到重量纠正任务记录;");
-			errorMessage.append(taskId+"没有查询到重量纠正任务记录;");
-			return;
-		}
-		BmsCorrectAsynTaskVo taskVo=taskList.get(0);
+	private void handWeightTask(String taskId,StringBuffer errorMessage,BmsCorrectAsynTaskVo taskVo) throws Exception{
 		
 		taskVo.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
 		bmsCorrectAsynTaskService.update(taskVo);
@@ -225,19 +244,18 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 							logger.info(taskId+"批量更新打标记录 运单数--"+waybillNoList.size());
 							int result=bmsProductsWeightService.updateMark(condition);
 							if(result>0){
-								//去更新运单状态
+								//去更新费用状态
 								start = System.currentTimeMillis();
 								int result2=bizDispatchBillService.retryByWaybillNo(waybillNoList);
 								end = System.currentTimeMillis();
 								logger.info(taskId+"------------------更新运单状态耗时：" + (end-start) + "毫秒------------------");
-								if(result2<=0){						
-									logger.info(taskId+"更新运单失败");
+								if(result2<=0){	
+									logger.info(taskId+"批量更新费用状态失败");
 								}
 							}else{
 								logger.info(taskId+"批量更新重量打标记录失败");
 							}
-						}
-						
+						}					
 					}
 
 				}

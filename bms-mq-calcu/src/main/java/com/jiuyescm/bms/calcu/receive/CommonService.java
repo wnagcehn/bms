@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
-import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
-import com.jiuyescm.cfm.common.JAppContext;
 
 @Component("commonService")
 public class CommonService {

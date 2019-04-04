@@ -232,12 +232,12 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
     
     <select id="querybizInstockInfo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
     	select
-	    	a.id, a.fees_no as feesNo,a.create_time,
-			a.warehouse_code as warehouseCode, a.warehouse_name as warehouseName, 
-			a.customer_id as customerId, a.customer_name as customerName, 
-			a.adjust_qty as adjustQty,a.total_qty as totalQty, 
-			a.adjust_box as adjustBox, a.total_box as totalBox,
-			a.adjust_weight as adjustWeight, a.total_weight as totalWeight
+		a.id, a.fees_no as feesNo,a.create_time,
+		a.warehouse_code as warehouseCode, a.warehouse_name as warehouseName, 
+		a.customer_id as customerId, a.customer_name as customerName, 
+		a.adjust_qty as adjustQty,IFNULL(a.total_qty,0) as totalQty, 
+		a.adjust_box as adjustBox, IFNULL(a.total_box,0) as totalBox,
+		a.adjust_weight as adjustWeight, IFNULL(a.total_weight,0) as totalWeight
 		from biz_instock_info a 
 		left join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.del_flag = '0' 
