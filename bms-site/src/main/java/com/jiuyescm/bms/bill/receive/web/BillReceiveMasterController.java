@@ -931,4 +931,36 @@ public class BillReceiveMasterController {
 		map.put("1", "大于等于5%");
 		return map;
 	}
+	
+	/**
+	 * 对账状态(code)(name)
+	 * 账单跟踪修改中对账状态
+	 * @return
+	 */
+    @DataProvider
+    public List<BillReceiveMasterVo> getBillCheckStatusCode(){
+    	String username = JAppContext.currentUserName();
+    	String userId = JAppContext.currentUserID();
+    	Date date = new Date();
+    	Map<String, String> map = BillCheckStateEnum.getMap();
+    	BillReceiveMasterVo entity = null;
+    	List<BillReceiveMasterVo> list = new ArrayList<BillReceiveMasterVo>();
+    	if (map.keySet() != null && map.keySet().size() > 0) {
+    		for (String code : map.keySet()) {
+    			entity = new BillReceiveMasterVo();
+    			if ("CONFIRMED".equals(code)) {
+					entity.setConfirmMan(username);
+					entity.setConfirmManId(userId);
+					entity.setConfirmDate(date);
+				}
+    			//code
+    			entity.setBillCheckStatus(code);
+    			//name
+    			entity.setRemark(map.get(code));
+    			list.add(entity);
+    		}
+		}
+    	
+    	return list;
+    }
 }

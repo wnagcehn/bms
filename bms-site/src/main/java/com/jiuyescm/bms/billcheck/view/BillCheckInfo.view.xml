@@ -740,6 +740,27 @@
         <Property name="label">消息</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtBillCheckStatus">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
+      <PropertyDef name="billCheckStatus">
+        <Property name="label">对账状态</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+        <Property name="label">确认人id</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+        <Property name="label">确认人</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">确认日期</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">对账状态</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ClientEvent name="onReady">view.get(&quot;#ajaxUserAction&quot;).execute(function(result){&#xD;
@@ -838,6 +859,12 @@
       <Property name="dataProvider">billCheckInfoController#queryAll</Property>
       <Property name="pageSize">20</Property>
       <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckStatusEntity">
+      <Property name="dataProvider">billReceiveMasterController#getBillCheckStatusCode</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="dataType">[dtBillCheckStatus]</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -2374,7 +2401,7 @@ if(confirmDate==null){&#xD;
             <Property name="width">380</Property>
             <Buttons/>
             <Children>
-              <AutoForm>
+              <AutoForm id="AutoForm">
                 <Property name="dataSet">dsBillCheckInfoModify</Property>
                 <Property name="editorWidth">200</Property>
                 <Property name="labelWidth">85</Property>
@@ -2423,6 +2450,7 @@ if(confirmDate==null){&#xD;
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">billCheckStatus</Property>
                   <Property name="property">billCheckStatus</Property>
+                  <Property name="trigger">billCheckStatusDataSetDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
@@ -3709,5 +3737,27 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
+    <DataSetDropDown id="billCheckStatusDataSetDropDown">
+      <ClientEvent name="beforeExecute">var subDropDown = view.get(&quot;#billCheckStatusDataSetDropDown&quot;);&#xD;
+subDropDown.set(&quot;dataSet&quot;,&quot;dsBillCheckStatusEntity&quot;);&#xD;
+view.get(&quot;#dsBillCheckStatusEntity&quot;).flushAsync();</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBillCheckInfoModify&quot;).getData(&quot;#&quot;);&#xD;
+var entity = view.id(&quot;AutoForm&quot;).get(&quot;entity&quot;);&#xD;
+data.set({&#xD;
+	billCheckStatus:arg.selectedValue.get(&quot;billCheckStatus&quot;),&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+&#xD;
+if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
+	entity.set(&quot;confirmDate&quot;,arg.selectedValue.get(&quot;confirmDate&quot;));&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">remark</Property>
+      <Property name="dataSet">dsBillCheckStatusEntity</Property>
+      <Property name="assignmentMap">billCheckStatus=billCheckStatus</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>
