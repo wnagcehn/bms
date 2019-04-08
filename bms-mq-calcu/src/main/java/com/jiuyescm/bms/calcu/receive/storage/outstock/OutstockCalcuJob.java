@@ -19,10 +19,11 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
+import com.jiuyescm.bms.calcu.receive.BmsContractBase;
 import com.jiuyescm.bms.calcu.receive.CommonService;
 import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
-import com.jiuyescm.bms.calcu.receive.BmsContractBase;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
+import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
@@ -126,6 +127,8 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		updateBatch(bizList,fees);
 		calceCount += bizList.size();
+		//更新任务计算各字段
+		updateTask(taskVo,calceCount);	
 		int taskRate = (int)Math.floor((calceCount*10)/unCalcuCount);
 		try {
 			if(unCalcuCount!=0){
@@ -137,10 +140,32 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		calcu(map);
 	}
 	
+	private void updateTask(BmsCalcuTaskVo taskVo,int calcuCount){
+		try {
+			BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoProductItem(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount()==null?0:feesQtyVo.getUncalcuCount());//本次待计算的费用数
+			taskVo.setCalcuCount(calcuCount);
+			taskVo.setBeginCount(feesQtyVo.getBeginCount()==null?0:feesQtyVo.getBeginCount());//未计算费用总数
+			taskVo.setFinishCount(feesQtyVo.getFinishCount()==null?0:feesQtyVo.getFinishCount());//计算成功总数
+			taskVo.setSysErrorCount(feesQtyVo.getSysErrorCount()==null?0:feesQtyVo.getSysErrorCount());//系统错误用总数
+			taskVo.setContractMissCount(feesQtyVo.getContractMissCount()==null?0:feesQtyVo.getContractMissCount());//合同缺失总数
+			taskVo.setQuoteMissCount(feesQtyVo.getQuoteMissCount()==null?0:feesQtyVo.getQuoteMissCount());//报价缺失总数
+			taskVo.setNoExeCount(feesQtyVo.getNoExeCount()==null?0:feesQtyVo.getNoExeCount());//不计算费用总数
+			taskVo.setCalcuStatus(feesQtyVo.getCalcuStatus());
+			bmsCalcuTaskService.update(taskVo);
+		} catch (Exception e) {
+			logger.error("更新任务统计信息异常",e);
+		}
+	}
+	
 	@Override
 	public FeesReceiveStorageEntity initFee(BizOutstockMasterEntity entity){
 		//打印业务数据日志
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
+		fee.setVarieties(0);
+		fee.setQuantity(0d);
+		fee.setWeight(0d);
+		fee.setBox(0);
 		//塞品种数
 		Double varieties=DoubleUtil.isBlank(entity.getResizeVarieties())?entity.getTotalVarieties():entity.getResizeVarieties();
 		if(!DoubleUtil.isBlank(varieties)){
@@ -148,13 +173,19 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		//塞件数
 		Double charge_qty = DoubleUtil.isBlank(entity.getResizeNum())?entity.getTotalQuantity():entity.getResizeNum();
-		fee.setQuantity(charge_qty);
-		//塞重量
-		
+		if(!DoubleUtil.isBlank(charge_qty)){
+			fee.setQuantity(charge_qty);
+		}
+		//塞重量		
 		Double charge_weight = DoubleUtil.isBlank(entity.getResizeWeight())?entity.getTotalWeight():entity.getResizeWeight();
-		fee.setWeight(charge_weight);
+		if(!DoubleUtil.isBlank(charge_weight)){
+			fee.setWeight(charge_weight);
+		}
 		//塞箱数
-		fee.setBox(DoubleUtil.isBlank(entity.getAdjustBoxnum())?entity.getBoxnum():entity.getAdjustBoxnum());
+		Integer box=DoubleUtil.isBlank(entity.getAdjustBoxnum())?entity.getBoxnum():entity.getAdjustBoxnum();
+		if(!DoubleUtil.isBlank(box)){
+			fee.setBox(box);
+		}
 		fee.setStatus("0");								//状态
 		fee.setCostType("FEE_TYPE_GENEARL");
 		fee.setUnitPrice(0d);

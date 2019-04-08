@@ -33,6 +33,8 @@ import com.jiuyescm.bms.calcu.base.ICalcuService;
 import com.jiuyescm.bms.calcu.receive.CommonService;
 import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
 import com.jiuyescm.bms.calcu.receive.BmsContractBase;
+import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
+import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
@@ -85,7 +87,9 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Autowired private ContractCalcuService contractCalcuService;
 	@Autowired private CommonService commonService;
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
+	@Autowired IBmsCalcuService bmsCalcuService;
 
+	
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
 	Map<String,PubMaterialInfoVo> materialMap = null;
@@ -173,6 +177,8 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		updateBatch(bizList,fees);
 		calceCount += bizList.size();
+		//更新任务计算各字段
+		updateTask(taskVo,calceCount);	
 		int taskRate = (int)Math.floor((calceCount*100)/unCalcuCount);
 		try {
 			if(unCalcuCount!=0){
@@ -183,6 +189,24 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		calcu(map);
 		
+	}
+	
+	private void updateTask(BmsCalcuTaskVo taskVo,int calcuCount){
+		try {
+			BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoProductItem(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount()==null?0:feesQtyVo.getUncalcuCount());//本次待计算的费用数
+			taskVo.setCalcuCount(calcuCount);
+			taskVo.setBeginCount(feesQtyVo.getBeginCount()==null?0:feesQtyVo.getBeginCount());//未计算费用总数
+			taskVo.setFinishCount(feesQtyVo.getFinishCount()==null?0:feesQtyVo.getFinishCount());//计算成功总数
+			taskVo.setSysErrorCount(feesQtyVo.getSysErrorCount()==null?0:feesQtyVo.getSysErrorCount());//系统错误用总数
+			taskVo.setContractMissCount(feesQtyVo.getContractMissCount()==null?0:feesQtyVo.getContractMissCount());//合同缺失总数
+			taskVo.setQuoteMissCount(feesQtyVo.getQuoteMissCount()==null?0:feesQtyVo.getQuoteMissCount());//报价缺失总数
+			taskVo.setNoExeCount(feesQtyVo.getNoExeCount()==null?0:feesQtyVo.getNoExeCount());//不计算费用总数
+			taskVo.setCalcuStatus(feesQtyVo.getCalcuStatus());
+			bmsCalcuTaskService.update(taskVo);
+		} catch (Exception e) {
+			logger.error("更新任务统计信息异常",e);
+		}
 	}
 	
 	@Override

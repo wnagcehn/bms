@@ -192,9 +192,9 @@ public class InstockFeeInitJob extends IJobHandler {
 			vo.setCreTime(JAppContext.currentTimestamp());
 			try {
 				bmsCalcuTaskService.sendTask(vo);
-				XxlJobLogger.log("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+				XxlJobLogger.log("mq发送，商家id为----{}，业务年月为----{}，科目id为---{}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
 			} catch (Exception e) {
-				XxlJobLogger.log("mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
+				XxlJobLogger.log("mq任务失败：商家id为----{}，业务年月为----{}，科目id为---{}，错误信息：{}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
 			}
 		}
 	}

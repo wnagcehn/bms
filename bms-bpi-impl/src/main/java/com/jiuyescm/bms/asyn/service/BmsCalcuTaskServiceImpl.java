@@ -200,6 +200,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 						|| 50 == calTaskStatus) {
 					// 保存任务：更新状态为0,task_id改变
 					BmsAsynCalcuTaskEntity entity = new BmsAsynCalcuTaskEntity();
+					entity.setFinishCount(0);
+					entity.setCalcuStatus(0);
 					entity.setTaskRate(0);
 					entity.setTaskStatus(0);
 					entity.setFeesCount(0);

@@ -126,7 +126,7 @@
     
     <select id="queryOne" parameterType="java.util.Map" resultMap="baseResultMap">
         select
-		id, quotation_no, customerId ,customerName,biz_type_code, subject_id, fee_unit_code, IFNULL(unit_price,0), 
+		id, quotation_no, customerId ,customerName,biz_type_code, subject_id, fee_unit_code, IFNULL(unit_price,0) as unit_price, 
 		description,price_type,remark, creator, create_time, last_modifier, last_modify_time, del_flag,
 		template_type,param1
 		from price_general_quotation
