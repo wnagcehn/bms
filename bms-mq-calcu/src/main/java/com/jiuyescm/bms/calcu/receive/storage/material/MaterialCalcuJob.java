@@ -166,6 +166,8 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+				fee.setCalcuMsg("系统异常");
 				logger.error("计算异常",e);
 			}
 		}
