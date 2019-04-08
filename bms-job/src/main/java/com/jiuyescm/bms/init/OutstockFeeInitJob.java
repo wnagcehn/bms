@@ -132,8 +132,8 @@ public class OutstockFeeInitJob extends IJobHandler{
 	
 	private void initFees(List<BizOutstockMasterEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
 
-		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
 		for(BizOutstockMasterEntity entity:bizList){
+			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
 			entity.setFeesNo(feesNo);
 			for (String SubjectId : subjects) {
 				FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
