@@ -96,11 +96,18 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 			if(isNoExe(entity, fee)){
 				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 			}
-			if("BMS".equals(contractAttr)){
-				calcuForBms(entity,fee);
-			}
-			else {
-				calcuForContract(entity,fee);
+			try {
+				if("BMS".equals(contractAttr)){
+					calcuForBms(entity,fee);
+				}
+				else {
+					calcuForContract(entity,fee);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+				fee.setCalcuMsg("系统异常");
+				logger.error("计算异常",e);
 			}
 		}
 		updateBatch(bizList,fees);
@@ -165,7 +172,8 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "bms合同缺失", null, cbiVo);
 			return;
 		}
-		logger.info("合同信息{}",contractInfo.getContractNo());
+		//CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "", contractInfo,cbiVo );
+		//logger.info("合同信息{}",contractInfo.getContractNo());
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -215,13 +223,13 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		switch(priceType){
 			case "PRICE_TYPE_NORMAL"://一口价		
 				//打印报价
-				//printLog(taskVo.getTaskId(), "quoteInfo", entity.getFeesNo(), taskVo.getSubjectName(), "", quoTemplete);
+				CalcuLog.printLog(CalcuNodeEnum.QUOTE.getCode().toString(), "模板报价", quoTemplete, cbiVo);
 				civo.setChargeType("unitPrice");
 				civo.setChargeDescrip("金额=单价*数量");
 				amount=num*quoTemplete.getUnitPrice();
 				fee.setUnitPrice(quoTemplete.getUnitPrice());
 				fee.setParam3(quoTemplete.getId().toString());
-				//printLog(vo.getTaskId(), "ruleInfo", entity.getFeesNo(), vo.getSubjectName(), "", civo);
+				CalcuLog.printLog(CalcuNodeEnum.CALCU.getCode().toString(), "模板单价计算", civo, cbiVo);
 				break;
 			case "PRICE_TYPE_STEP"://阶梯价	
 				civo.setChargeType("stepPrice");

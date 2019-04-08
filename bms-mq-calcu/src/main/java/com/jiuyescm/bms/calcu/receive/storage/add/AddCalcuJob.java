@@ -107,11 +107,18 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 			if(isNoExe(entity, fee)){
 				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 			}
-			if("BMS".equals(contractAttr)){
-				calcuForBms(entity,fee);
-			}
-			else {
-				calcuForContract(entity,fee);
+			try {
+				if("BMS".equals(contractAttr)){
+					calcuForBms(entity,fee);
+				}
+				else {
+					calcuForContract(entity,fee);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+				fee.setCalcuMsg("系统异常");
+				logger.error("计算异常",e);
 			}
 		}
 		updateBatch(bizList,fees);

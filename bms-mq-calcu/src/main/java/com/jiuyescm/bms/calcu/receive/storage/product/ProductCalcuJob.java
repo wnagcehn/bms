@@ -125,12 +125,20 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 			if(isNoExe(entity, fee)){
 				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 			}
-			if("BMS".equals(contractAttr)){
-				calcuForBms(entity,fee);
+			try {
+				if("BMS".equals(contractAttr)){
+					calcuForBms(entity,fee);
+				}
+				else {
+					calcuForContract(entity,fee);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+				fee.setCalcuMsg("系统异常");
+				logger.error("计算异常",e);
 			}
-			else {
-				calcuForContract(entity,fee);
-			}
+			
 		}
 		updateBatch(bizList,fees);
 		calceCount += bizList.size();
@@ -152,7 +160,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 		
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();	
 		fee.setCalculateTime(JAppContext.currentTimestamp());
-		if(entity.getAqty()!=null){
+		if(entity.getAqty() == null){
 			fee.setQuantity(Double.valueOf(0));
 		}else{
 			fee.setQuantity(entity.getAqty());             //商品数量
