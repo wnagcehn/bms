@@ -94,6 +94,16 @@
           </Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
+      <PropertyDef name="receiptStatus">
+        <Property></Property>
+        <Property name="label">收款状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInfo">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo</Property>
@@ -730,6 +740,27 @@
         <Property name="label">消息</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtBillCheckStatus">
+      <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillReceiveMasterVo</Property>
+      <PropertyDef name="billCheckStatus">
+        <Property name="label">对账状态</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmManId">
+        <Property></Property>
+        <Property name="label">确认人id</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmMan">
+        <Property></Property>
+        <Property name="label">确认人</Property>
+      </PropertyDef>
+      <PropertyDef name="confirmDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">确认日期</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">对账状态</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ClientEvent name="onReady">view.get(&quot;#ajaxUserAction&quot;).execute(function(result){&#xD;
@@ -828,6 +859,12 @@
       <Property name="dataProvider">billCheckInfoController#queryAll</Property>
       <Property name="pageSize">20</Property>
       <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dsBillCheckStatusEntity">
+      <Property name="dataProvider">billReceiveMasterController#getBillCheckStatusCode</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="dataType">[dtBillCheckStatus]</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -1307,7 +1344,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
     <AutoForm id="formCondition">
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
-      <Property name="cols">210,*,*,*,*,*</Property>
+      <Property name="cols">210,*,*,*,*</Property>
       <Property name="editorWidth">240</Property>
       <Property name="labelWidth">60</Property>
       <AutoFormElement>
@@ -1335,27 +1372,8 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">billCheckStatus</Property>
-        <Property name="property">billCheckStatus</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement id="projectManagerName">
-        <Property name="name">projectManagerName</Property>
-        <Property name="property">projectManagerName</Property>
-        <Property name="trigger">triggerDeptProject</Property>
-        <Property name="hideMode">display</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement id="sellerName">
-        <Property name="name">sellerName</Property>
-        <Property name="property">sellerName</Property>
-        <Property name="trigger">triggerDeptSeller</Property>
-        <Property name="hideMode">display</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">invoiceStatus</Property>
-        <Property name="property">invoiceStatus</Property>
+        <Property name="name">mkInvoiceName</Property>
+        <Property name="property">mkInvoiceName</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -1364,8 +1382,57 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <Property name="name">billCheckStatus</Property>
+        <Property name="property">billCheckStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">invoiceStatus</Property>
+        <Property name="property">invoiceStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">receiptStatus</Property>
+        <Property name="property">receiptStatus</Property>
+        <Editor/>
+      </AutoFormElement>
+      <Button id="more">
+        <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;icon&quot;) == &quot;url(>skin>common/icons.gif) -60px -300px&quot;){&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -80px -300px&quot;);&#xD;
+	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#balanceName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#projectManagerName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#sellerName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#overStatus&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#expectReceiptDateStart&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#expectReceiptDateEnd&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#invoiceNo&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#isapplyBad&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#followType&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,50);&#xD;
+}else{&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -60px -300px&quot;);&#xD;
+	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#balanceName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#projectManagerName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#sellerName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#overStatus&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#expectReceiptDateStart&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#expectReceiptDateEnd&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#invoiceNo&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#isapplyBad&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#followType&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,10);&#xD;
+}</ClientEvent>
+        <Property name="caption">其他查询条件</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -300px</Property>
+      </Button>
+      <AutoFormElement id="deptName">
         <Property name="name">deptName</Property>
         <Property name="property">deptName</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">210</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement id="balanceName">
@@ -1373,42 +1440,80 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Property name="property">balanceName</Property>
         <Property name="trigger">triggerDeptUser</Property>
         <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">226</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">invoiceNo</Property>
-        <Property name="property">invoiceNo</Property>
+      <AutoFormElement id="projectManagerName">
+        <Property name="name">projectManagerName</Property>
+        <Property name="property">projectManagerName</Property>
+        <Property name="trigger">triggerDeptProject</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">227</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="sellerName">
+        <Property name="name">sellerName</Property>
+        <Property name="property">sellerName</Property>
+        <Property name="trigger">triggerDeptSeller</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">227</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="overStatus">
+        <Property name="name">overStatus</Property>
+        <Property name="property">overStatus</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="width">227</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="expectReceiptDateStart">
         <Property name="name">expectReceiptDateStart</Property>
         <Property name="property">expectReceiptDateStart</Property>
         <Property name="labelWidth">90</Property>
         <Property name="editorWidth">220</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="width">210</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="expectReceiptDateEnd">
         <Property name="name">expectReceiptDateEnd</Property>
         <Property name="property">expectReceiptDateEnd</Property>
         <Property name="labelWidth">10</Property>
         <Property name="editorWidth">100</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">280</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="invoiceNo">
+        <Property name="name">invoiceNo</Property>
+        <Property name="property">invoiceNo</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="width">227</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement id="isapplyBad">
         <Property name="name">isapplyBad</Property>
         <Property name="property">isapplyBad</Property>
         <Property name="editorWidth">120</Property>
         <Property name="labelWidth">90</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="width">227</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="followType">
         <Property name="name">followType</Property>
         <Property name="property">followType</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">overStatus</Property>
-        <Property name="property">overStatus</Property>
+        <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="width">227</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -1511,6 +1616,11 @@ if(index==3){&#xD;
             <DataColumn name="invoiceStatus">
               <Property name="property">invoiceStatus</Property>
               <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">receiptStatus</Property>
+              <Property name="width">80</Property>
+              <Property name="name">receiptStatus</Property>
             </DataColumn>
             <DataColumn name="overStatus">
               <ClientEvent name="onRenderCell">var overStatus=arg.data.get(&quot;overStatus&quot;);&#xD;
@@ -2289,7 +2399,7 @@ if(confirmDate==null){&#xD;
             <Property name="width">380</Property>
             <Buttons/>
             <Children>
-              <AutoForm>
+              <AutoForm id="AutoForm">
                 <Property name="dataSet">dsBillCheckInfoModify</Property>
                 <Property name="editorWidth">200</Property>
                 <Property name="labelWidth">85</Property>
@@ -2338,6 +2448,7 @@ if(confirmDate==null){&#xD;
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">billCheckStatus</Property>
                   <Property name="property">billCheckStatus</Property>
+                  <Property name="trigger">billCheckStatusDataSetDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
@@ -3624,5 +3735,27 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
+    <DataSetDropDown id="billCheckStatusDataSetDropDown">
+      <ClientEvent name="beforeExecute">var subDropDown = view.get(&quot;#billCheckStatusDataSetDropDown&quot;);&#xD;
+subDropDown.set(&quot;dataSet&quot;,&quot;dsBillCheckStatusEntity&quot;);&#xD;
+view.get(&quot;#dsBillCheckStatusEntity&quot;).flushAsync();</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dsBillCheckInfoModify&quot;).getData(&quot;#&quot;);&#xD;
+var entity = view.id(&quot;AutoForm&quot;).get(&quot;entity&quot;);&#xD;
+data.set({&#xD;
+	billCheckStatus:arg.selectedValue.get(&quot;billCheckStatus&quot;),&#xD;
+});&#xD;
+arg.processDefault = false;&#xD;
+&#xD;
+if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
+	entity.set(&quot;confirmDate&quot;,arg.selectedValue.get(&quot;confirmDate&quot;));&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+      <Property name="displayProperty">remark</Property>
+      <Property name="dataSet">dsBillCheckStatusEntity</Property>
+      <Property name="assignmentMap">billCheckStatus=billCheckStatus</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>

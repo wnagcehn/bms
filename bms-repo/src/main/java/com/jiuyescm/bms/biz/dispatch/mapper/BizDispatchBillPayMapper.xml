@@ -191,7 +191,85 @@
 		a.adjust_province_id, a.adjust_city_id, a.adjust_district_id,a.service_type_code,a.carrier_id,
 		a.origin_throw_weight as originThrowWeight from biz_dispatch_pay_bill a
 		where 1=1
-        <include refid="baseSelectColumns" />
+        <if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(merchantId != null and merchantId !='')" >
+				and a.customerid = #{merchantId}
+		</if>
+		<if test="(logistics != null and logistics !='')" >
+				and a.carrier_id = #{logistics}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(accountState != null and accountState !='')" >
+				and a.is_calculated =#{accountState}
+		</if>
+		<if test="(wareHousename != null and wareHousename !='')" >
+				and a.warehouse_code = #{wareHousename}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(remark != null and remark !='')" >
+				and a.remark = #{remark}
+		</if>
+		<if test="(creator != null and creator !='')" >
+				and a.creator = #{creator}
+		</if>
+		<if test="(createTime != null and createTime !='')" >
+			    and a.create_time>= #{createTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[a.create_time < #{endTime} ]]>
+		</if>
+		
+		<if test="(delFlag != null and delFlag !='')" >
+				and a.del_flag = #{delFlag}
+		</if>
+		<if test="(zexpressnum != null and zexpressnum !='')" >
+				and a.zexpressnum = #{zexpressnum}
+		</if>
+		<if test="(bigstatus != null and bigstatus !='')" >
+				and a.bigstatus = #{bigstatus}
+		</if>
+		<if test="(smallstatus != null and smallstatus !='')" >
+				and a.smallstatus = #{smallstatus}
+		</if>
+		<if test="(systemWeight != null and systemWeight !='')" >
+				and a.system_weight = #{systemWeight}
+		</if>
+		<if test="(totalqty != null and totalqty !='')" >
+				and a.totalqty = #{totalqty}
+		</if>
+		<if test="(productDetail != null and productDetail !='')" >
+				and a.product_detail = #{productDetail}
+		</if>
+		<if test="(expresstype != null and expresstype !='')" >
+				and a.expresstype = #{expresstype}
+		</if>
+		<if test="(skuNum != null and skuNum !='')" >
+				and a.sku_num = #{skuNum}
+		</if>
+		<if test="(deliverid != null and deliverid !='')" >
+				and a.deliverid = #{deliverid}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(extattr2 != null and extattr2 !='')" >
+				and a.extattr2 = #{extattr2}
+		</if>
+		<if test="(extattr3 != null and extattr3 !='')" >
+				and a.extattr3 = #{extattr3}
+		</if>
+		<if test="(extattr4 != null and extattr4 !='')" >
+				and a.extattr4 = #{extattr4}
+		</if>
+		<if test="(extattr5 != null and extattr5 !='')" >
+				and a.extattr5 = #{extattr5}
+		</if>
     </select>
     
     <update id="adjustBillPay"  parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity">
