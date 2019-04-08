@@ -100,9 +100,9 @@ public class CalAsynTaskController {
 				bmsCalcuTaskVo.setFeesType(vo.getFeesType());
 				try {
 					bmsCalcuTaskService.sendTask(vo);
-					logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+					logger.info("mq发送，商家id为----{}，业务年月为----{}，科目id为---{}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
 				} catch (Exception e) {
-					logger.info("mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
+					logger.info("mq任务失败：商家id为----{}，业务年月为----{}，科目id为---{}，错误信息：{}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode(),e);
 				}
 			}
 		}
