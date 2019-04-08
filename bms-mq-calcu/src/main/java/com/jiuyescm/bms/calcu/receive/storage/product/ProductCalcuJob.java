@@ -158,7 +158,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 		
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();	
 		fee.setCalculateTime(JAppContext.currentTimestamp());
-		if(entity.getAqty()!=null){
+		if(entity.getAqty() == null){
 			fee.setQuantity(Double.valueOf(0));
 		}else{
 			fee.setQuantity(entity.getAqty());             //商品数量
