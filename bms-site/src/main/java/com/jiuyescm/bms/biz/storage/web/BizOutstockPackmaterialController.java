@@ -176,6 +176,7 @@ public class BizOutstockPackmaterialController {
 		updateEntity.setAdjustNum(entity.getAdjustNum());
 		updateEntity.setLastModifier(operatorName);
 		updateEntity.setLastModifyTime(operatorTime);
+		updateEntity.setFeesNo(entity.getFeesNo());
 		int updateNum = service.update(updateEntity);
 		if(updateNum > 0){
 			result.setCode("SUCCESS");
