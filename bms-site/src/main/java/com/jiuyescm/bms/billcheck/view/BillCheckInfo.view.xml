@@ -1397,8 +1397,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
         <Editor/>
       </AutoFormElement>
       <Button id="more">
-        <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;caption&quot;) == &quot;更多&quot;){&#xD;
-	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;收起&quot;);&#xD;
+        <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;icon&quot;) == &quot;url(>skin>common/icons.gif) -60px -300px&quot;){&#xD;
 	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -80px -300px&quot;);&#xD;
 	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#balanceName&quot;).set(&quot;visible&quot;,true);&#xD;
@@ -1413,7 +1412,6 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
 	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,50);&#xD;
 }else{&#xD;
 	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -60px -300px&quot;);&#xD;
-	view.id(&quot;more&quot;).set(&quot;caption&quot;,&quot;更多&quot;);&#xD;
 	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#balanceName&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#projectManagerName&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -1426,7 +1424,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,entity).execute(
 	view.get(&quot;#followType&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,10);&#xD;
 }</ClientEvent>
-        <Property name="caption">更多</Property>
+        <Property name="caption">其他查询条件</Property>
         <Property name="icon">url(>skin>common/icons.gif) -60px -300px</Property>
       </Button>
       <AutoFormElement id="deptName">
