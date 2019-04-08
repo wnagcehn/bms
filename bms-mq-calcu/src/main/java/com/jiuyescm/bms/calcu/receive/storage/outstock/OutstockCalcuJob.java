@@ -162,6 +162,10 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	public FeesReceiveStorageEntity initFee(BizOutstockMasterEntity entity){
 		//打印业务数据日志
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
+		fee.setVarieties(0);
+		fee.setQuantity(0d);
+		fee.setWeight(0d);
+		fee.setBox(0);
 		//塞品种数
 		Double varieties=DoubleUtil.isBlank(entity.getResizeVarieties())?entity.getTotalVarieties():entity.getResizeVarieties();
 		if(!DoubleUtil.isBlank(varieties)){
@@ -169,13 +173,19 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		//塞件数
 		Double charge_qty = DoubleUtil.isBlank(entity.getResizeNum())?entity.getTotalQuantity():entity.getResizeNum();
-		fee.setQuantity(charge_qty);
-		//塞重量
-		
+		if(!DoubleUtil.isBlank(charge_qty)){
+			fee.setQuantity(charge_qty);
+		}
+		//塞重量		
 		Double charge_weight = DoubleUtil.isBlank(entity.getResizeWeight())?entity.getTotalWeight():entity.getResizeWeight();
-		fee.setWeight(charge_weight);
+		if(!DoubleUtil.isBlank(charge_weight)){
+			fee.setWeight(charge_weight);
+		}
 		//塞箱数
-		fee.setBox(DoubleUtil.isBlank(entity.getAdjustBoxnum())?entity.getBoxnum():entity.getAdjustBoxnum());
+		Integer box=DoubleUtil.isBlank(entity.getAdjustBoxnum())?entity.getBoxnum():entity.getAdjustBoxnum();
+		if(!DoubleUtil.isBlank(box)){
+			fee.setBox(box);
+		}
 		fee.setStatus("0");								//状态
 		fee.setCostType("FEE_TYPE_GENEARL");
 		fee.setUnitPrice(0d);
