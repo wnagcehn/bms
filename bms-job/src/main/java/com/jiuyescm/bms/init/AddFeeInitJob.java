@@ -109,7 +109,6 @@ public class AddFeeInitJob extends IJobHandler{
 	    	}else{
 	    		fee.setCost(new BigDecimal(0));
 	    	}
-	    	fee.setIsCalculated(entity.getIsCalculated());
 	    	fee.setCalculateTime(JAppContext.currentTimestamp());
 			fee.setUnitPrice(entity.getUnitPrice());
 			fee.setSubjectCode("wh_value_add_subject");

@@ -225,7 +225,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 			param.put("subjectId", entity.getFeesType());
 			List<PriceExtraQuotationEntity> extraList= priceExtraQuotationRepository.queryPriceByParam(param);
 			if (extraList == null || extraList.size() <= 0) {
-				fee.setIsCalculated(CalculateState.Other.getCode());
+				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				fee.setCalcuMsg(entity.getRemark()+"没有维护增值费一口价报价;");
 			}else {
 				amount=num*extraList.get(0).getUnitPrice();							
