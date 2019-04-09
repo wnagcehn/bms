@@ -345,22 +345,31 @@ private static final Logger logger = LoggerFactory.getLogger(BmsPackmaterialImpo
 			condition.put("batchNum", taskId);
 			condition.put("taskId", taskId);
 			logger.info("任务ID【{}】 -> 进行耗材和保温袋打标操作",taskId);
-			start = System.currentTimeMillis();
-			//耗材打标
-			int materialResult=bmsProductsMaterialService.markMaterial(condition);
-			if(materialResult>0){
-				logger.info("任务ID【{}】 -> 耗材打标成功",taskId);
-				//保存标对应得耗材明细
-				bmsProductsMaterialService.saveMarkMaterial(condition);
-				logger.info("任务ID【{}】 -> 耗材保存原始数据成功",taskId);
+			//泡沫箱打标
+			int pmxResult=bmsProductsMaterialService.markPmx(condition);
+			if(pmxResult>0){
+				logger.info("任务ID【{}】 -> 泡沫箱打标成功",taskId);
+				bmsProductsMaterialService.saveMarkPmx(condition);
+				logger.info("任务ID【{}】 -> 泡沫箱原始数据成功",taskId);
+
+			}
+			//纸箱打标
+			int zxResult=bmsProductsMaterialService.markZx(condition);
+			if(zxResult>0){
+				//保存标对应得纸箱明细
+				logger.info("任务ID【{}】 -> 纸箱打标成功",taskId);
+				bmsProductsMaterialService.saveMarkZx(condition);
+				logger.info("任务ID【{}】 -> 纸箱原始数据成功",taskId);
+
 			}
 			//保温袋打标
 			int bwdResult=bmsProductsMaterialService.markBwd(condition);
 			if(bwdResult>0){
-				logger.info("任务ID【{}】 -> 保温袋打标成功",taskId);
 				//保存标对应得保温袋明细
+				logger.info("任务ID【{}】 -> 保温袋打标成功",taskId);
 				bmsProductsMaterialService.saveMarkBwd(condition);
-				logger.info("任务ID【{}】 -> 保温袋保存原始数据成功",taskId);
+				logger.info("任务ID【{}】 -> 保温袋原始数据成功",taskId);
+
 			}
 		}catch(Exception e){
 			logger.error("任务ID【{}】 -> 异步导入成功，打标异常{}",taskId,e);
