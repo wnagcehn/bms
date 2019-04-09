@@ -281,6 +281,11 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 				fee.setParam3(quoTemplete.getId()+"");
 				break;
 			case "PRICE_TYPE_STEP"://阶梯价
+				if (DoubleUtil.isBlank(fee.getQuantity())) {
+					fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+					fee.setCalcuMsg("计费数据缺失");
+					return;
+				}
 				Map<String,Object> map=new HashMap<String,Object>();
 				map.put("quotationId", quoTemplete.getId());
 				map.put("num", fee.getQuantity());//根据报价单位判断	
