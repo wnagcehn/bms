@@ -94,18 +94,21 @@ public class BmsCorrectWeightTaskListener implements MessageListener{
 			logger.info("重量纠正结束 耗时--"+(System.currentTimeMillis()-start));
 			
 			//发送mq
-			BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
-			vo.setCustomerId(taskVo.getCustomerId());
-			vo.setSubjectCode("de_delivery_amount");
-			vo.setCreMonth(Integer.valueOf(taskVo.getCreateMonth()));
-			vo.setCrePerson(taskVo.getCreator());
-			vo.setCreTime(JAppContext.currentTimestamp());
-			try {
-				bmsCalcuTaskService.sendTask(vo);
-				logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
-			} catch (Exception e) {
-				logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
-			}
+			//只有纠正成功了，才去重算运单
+			if(errorMessage.indexOf("运单重量调整成功")!=-1){
+				BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
+				vo.setCustomerId(taskVo.getCustomerId());
+				vo.setSubjectCode("de_delivery_amount");
+				vo.setCreMonth(Integer.valueOf(taskVo.getCreateMonth()));
+				vo.setCrePerson(taskVo.getCreator());
+				vo.setCreTime(JAppContext.currentTimestamp());
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
+				}
+			}	
 			
 		} catch (Exception e1) {
 			logger.error(taskId+"处理运单重量失败：{}",e1);

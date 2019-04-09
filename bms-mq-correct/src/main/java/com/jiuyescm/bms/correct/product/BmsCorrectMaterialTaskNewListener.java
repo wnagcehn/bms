@@ -111,18 +111,21 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 			logger.info(taskId+"保温袋纠正结束 耗时--"+(System.currentTimeMillis()-start));
 			
 			//发送mq处理重算的运单
-			BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
-			vo.setCustomerId(taskVo.getCustomerId());
-			vo.setSubjectCode("de_delivery_amount");
-			vo.setCreMonth(Integer.valueOf(taskVo.getCreateMonth()));
-			vo.setCrePerson(taskVo.getCreator());
-			vo.setCreTime(JAppContext.currentTimestamp());
-			try {
-				bmsCalcuTaskService.sendTask(vo);
-				logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
-			} catch (Exception e) {
-				logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
-			}
+			//只要泡沫箱、纸箱有一个纠正成功了，就去重算运单
+			if(errorMessage.indexOf("泡沫箱调整成功")!=-1 || errorMessage.indexOf("纸箱调整成功")!=-1){
+				BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
+				vo.setCustomerId(taskVo.getCustomerId());
+				vo.setSubjectCode("de_delivery_amount");
+				vo.setCreMonth(Integer.valueOf(taskVo.getCreateMonth()));
+				vo.setCrePerson(taskVo.getCreator());
+				vo.setCreTime(JAppContext.currentTimestamp());
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
+				}
+			}			
 		} catch (Exception e1) {
 			logger.error(taskId+"处理耗材统一失败：{}",e1);
 			return;
