@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
@@ -18,6 +20,7 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 
 @Service("priceContractService")
 public class PriceContractServiceImp implements IPriceContractService{
+	private Logger logger = LoggerFactory.getLogger(PriceContractServiceImp.class);
 
 	@Resource
 	private IPriceContractDao priceContractDao;
@@ -51,7 +54,14 @@ public class PriceContractServiceImp implements IPriceContractService{
 	@Override
 	public int createContractItem(List<PriceContractItemEntity> acondition) {
 		// TODO Auto-generated method stub
-		return priceContractDao.createContractItem(acondition);
+		try {
+			 priceContractDao.createContractItem(acondition);
+			 return 1;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("签约服务失败",e);
+			 return 0;
+		}
 	}
 
 	@Override

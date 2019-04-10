@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
@@ -16,6 +18,7 @@ import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 
 @Service("priceContractDiscountService")
 public class PriceContractDiscountServiceImp implements IPriceContractDiscountService{
+	private Logger logger = LoggerFactory.getLogger(PriceContractDiscountServiceImp.class);
 
 	@Resource
 	private IPriceContractDiscountRepository priceContractDiscountRepository;
@@ -29,7 +32,14 @@ public class PriceContractDiscountServiceImp implements IPriceContractDiscountSe
 	@Override
 	public int insertDiscountItem(List<PriceContractDiscountItemEntity> list) {
 		// TODO Auto-generated method stub
-		return priceContractDiscountRepository.insertDiscountItem(list);
+		try {
+			priceContractDiscountRepository.insertDiscountItem(list);
+			return 1;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("签约折扣服务失败",e);
+			return 0;
+		}
 	}
 
 	@Override
