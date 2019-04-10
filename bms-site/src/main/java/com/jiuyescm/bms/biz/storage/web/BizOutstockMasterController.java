@@ -445,11 +445,13 @@ public class BizOutstockMasterController extends BaseController {
 			}
 			// 更改费用计算状态为99
 			bizOutstockMasterService.retryForCalcuFee(conMap);
+			List<BmsCalcuTaskVo> list = null;
 			// 如果界面指定了费用科目，则按指定费用科目重算，否则全部重算
 			if (param.containsKey("subjectCode")) {
 				String subjectCode = (String) param.get("subjectCode");
 				List<String> subjectList = Arrays.asList(subjectCode);
 				sendTask(subjectList);
+				list = bmsCalcuTaskService.queryOutstockTask(param);
 			} else {
 				sendTask(subjectList3);
 			}
