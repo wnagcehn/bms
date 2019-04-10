@@ -731,10 +731,11 @@
     </update>
     
     <update id="deleteOldBwd" parameterType="java.util.Map">
-	    update biz_outstock_packmaterial set del_flag='2',last_modifier=#{lastModifier},last_modify_time=#{lastModifyTime}
-		where 1=1 and del_flag='0'
-		and fees_no in
-    	<foreach collection="feeNos" index="index" item="item" open="(" separator="," close=")">
+	    update biz_outstock_packmaterial a 
+		INNER JOIN pub_material_info b on a.consumer_material_code=b.material_code set a.del_flag='2',a.last_modifier=#{lastModifier},a.last_modify_time=#{lastModifyTime}
+		where 1=1 and b.material_type_name in ('保温袋')
+		and a.waybill_no in
+    	<foreach collection="waybillNoList" index="index" item="item" open="(" separator="," close=")">
     		#{item}
     	</foreach>
     </update>

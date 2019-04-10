@@ -301,70 +301,30 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 	@Override
 	public int deleteOldBwd(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		//根据运单号查出所有的费用编号
-		List<String> materialList=new ArrayList<String>();
-		materialList.add("保温袋");
-		condition.put("materialList", materialList);
-		List<String> feeNos=repository.queryFeeNo(condition);
-		if(feeNos.size()>0){
-			condition.put("feeNos", feeNos);
-			logger.info("删除保温袋"+JSONObject.fromObject(condition));
-			int result=repository.deleteOldBwd(condition);
-			/*if(result>0){
-				feesReceiveStorageRepository.deleteBwdFee(condition);
-				logger.info("删除保温袋费用"+JSONObject.fromObject(condition));
 
-			}*/
-			return result;
-		}else{
-			logger.info("未查询到费用编号"+JSONObject.fromObject(condition));
-			return 0;
-		}
+		logger.info("删除保温袋"+JSONObject.fromObject(condition));
+		int result=repository.deleteOldBwd(condition);
+		
+		return result;
 		
 	}
 
 	@Override
 	public int deleteOldPmx(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		//根据运单号查出所有的费用编号
-		List<String> materialList=new ArrayList<String>();
-		materialList.add("泡沫箱");
-		condition.put("materialList", materialList);
-		List<String> feeNos=repository.queryFeeNo(condition);
-		if(feeNos.size()>0){
-			condition.put("feeNos", feeNos);
-			logger.info("删除泡沫箱"+JSONObject.fromObject(condition));
-			int result=repository.deleteOldMaterial(condition);
-		/*	if(result>0){
-				feesReceiveStorageRepository.deleteMaterialFee(condition);
-			}*/
-			return result;
-		}else{
-			logger.info("未查询到费用编号"+JSONObject.fromObject(condition));
-			return 0;
-		}
+		logger.info("删除泡沫箱"+JSONObject.fromObject(condition));
+		int result=repository.deleteOldPmx(condition);
+		return result;
+		
 	}
 
 	@Override
 	public int deleteOldZx(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
-		//根据运单号查出所有的费用编号
-		List<String> materialList=new ArrayList<String>();
-		materialList.add("纸箱");
-		condition.put("materialList", materialList);
-		List<String> feeNos=repository.queryFeeNo(condition);
-		if(feeNos.size()>0){
-			condition.put("feeNos", feeNos);
-			logger.info("删除纸箱"+JSONObject.fromObject(condition));
-			int result=repository.deleteOldMaterial(condition);
-			/*if(result>0){
-				feesReceiveStorageRepository.deleteMaterialFee(condition);
-			}*/
-			return result;
-		}else{
-			logger.info("未查询到费用编号"+JSONObject.fromObject(condition));
-			return 0;
-		}
+		logger.info("删除纸箱"+JSONObject.fromObject(condition));
+		int result=repository.deleteOldZx(condition);		
+		return result;
+		
 	}
 
 }
