@@ -59,4 +59,7 @@ public interface IBmsCalcuTaskService {
 	PageInfo<BmsCalcuTaskVo> queryPage(Map<String, Object> condition,
 			int pageNo, int pageSize);
 	
+	List<BmsCalcuTaskVo> queryMaterialTask(Map<String, Object> condition);
+	
+	List<BmsCalcuTaskVo> queryDispatchTask(Map<String, Object> condition);
 }

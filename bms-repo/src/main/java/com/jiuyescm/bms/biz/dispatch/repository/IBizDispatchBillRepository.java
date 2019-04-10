@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 
@@ -126,5 +127,7 @@ public interface IBizDispatchBillRepository{
 	 * @return
 	 */
 	int updateIsCalcuByWaybillNo(List<Map<String, Object>> list);
+	
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 
 }
