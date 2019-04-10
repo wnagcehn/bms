@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
@@ -40,6 +41,8 @@ public class AddFeeInitJob extends IJobHandler{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
+	
+	private boolean isSend = false;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -66,74 +69,102 @@ public class AddFeeInitJob extends IJobHandler{
 		}
 		
 		//查询所有状态为0的业务数据
-		long currentTime = System.currentTimeMillis();
 		map.put("isCalculated", "0");
+		
+		Map<String, Object> taskVoMap = new HashMap<>();
+		
+		saveFees(map,taskVoMap);
+		
+		StopWatch watch = new StopWatch();
+		watch.start();
+		
+		watch.stop();
+		
+		
+		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
+        return ReturnT.SUCCESS;
+	}
+	
+	private void saveFees(Map<String, Object> map,Map<String, Object> taskVoMap){
+
+		StopWatch watch = new StopWatch();
+		watch.start();
 		List<BizAddFeeEntity> bizList = null;
 		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
 		try {
 			XxlJobLogger.log("addFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizAddFeeService.querybizAddFee(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
-				XxlJobLogger.log("【增值】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
-				//初始化费用
-				initFees(bizList, feesList);
+				isSend = true;
+				for (BizAddFeeEntity entity : bizList) {
+					FeesReceiveStorageEntity fee = initFees(entity);
+					feesList.add(fee);
+					
+					String customerId = entity.getCustomerid();
+					String subjectCode = "123";
+					String creMonth = "201901";
+					StringBuilder sb1 = new StringBuilder();
+					sb1.append(subjectCode).append("-").append("").append("").append("");
+					taskVoMap.put(sb1.toString(), sb1.toString());
+				}
+				XxlJobLogger.log("【增值】查询行数【{0}】", bizList.size());
+				
 				//批量更新业务数据&批量写入费用表
 				updateAndInsertBatch(bizList,feesList);
 			}
-			
-			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
-			if(CollectionUtils.isEmpty(bizList)||bizList.size()<num){
-				sendTask();
-			}
 		} catch (Exception e) {
-			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
-			return ReturnT.FAIL;
+			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
+			return;
+		}
+		watch.stop();
+		
+		if(bizList== null || bizList.size() == 0){
+			if(isSend){
+				sendTask(taskVoMap);
+			}
+			return;
 		}
 		
-		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
-        return ReturnT.SUCCESS;
 	}
 
-	private void initFees(List<BizAddFeeEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
-		for (BizAddFeeEntity entity : bizList) {
-			FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
-			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
-			entity.setFeesNo(feesNo);
-			
-			//更改业务数据状态
-			entity.setIsCalculated("1");
+	private FeesReceiveStorageEntity initFees(BizAddFeeEntity entity) {
+		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
+		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+		entity.setFeesNo(feesNo);
 		
-	    	fee.setFeesNo(feesNo);
-	    	if(entity.getPrice()!=null){
-	    		fee.setCost(new BigDecimal(entity.getPrice()));
-	    	}else{
-	    		fee.setCost(new BigDecimal(0));
-	    	}
-	    	fee.setCalculateTime(JAppContext.currentTimestamp());
-			fee.setUnitPrice(entity.getUnitPrice());
-			fee.setSubjectCode("wh_value_add_subject");
-			fee.setOtherSubjectCode(entity.getFeesType());
-			fee.setCustomerId(entity.getCustomerid());
-			fee.setCustomerName(entity.getCustomerName());
-			fee.setWarehouseCode(entity.getWarehouseCode());
-			fee.setUnit(entity.getFeesUnit());
-			double num=DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum();
-			if(!DoubleUtil.isBlank(num)){
-				fee.setQuantity(num);
-			}
-	        fee.setParam1(entity.getItem());
-	        fee.setCustomerName(entity.getCustomerName());
-	        fee.setWarehouseName(entity.getWarehouseName());	
-			fee.setCreateTime(entity.getCreateTime());
-			fee.setCreator("system");	
-			fee.setCostType("FEE_TYPE_GENEARL");
-			fee.setDelFlag("0");
-			fee.setStatus("0");
-			fee.setExternalProductNo(entity.getExternalNo());
-			fee.setIsCalculated("99");
-			fee.setParam2(new SimpleDateFormat("yyyyMM").format(entity.getCreateTime()));
-			feesList.add(fee);
-		}	
+		//更改业务数据状态
+		entity.setIsCalculated("1");
+	
+    	fee.setFeesNo(feesNo);
+    	if(entity.getPrice()!=null){
+    		fee.setCost(new BigDecimal(entity.getPrice()));
+    	}else{
+    		fee.setCost(new BigDecimal(0));
+    	}
+    	fee.setCalculateTime(JAppContext.currentTimestamp());
+		fee.setUnitPrice(entity.getUnitPrice());
+		fee.setSubjectCode("wh_value_add_subject");
+		fee.setOtherSubjectCode(entity.getFeesType());
+		fee.setCustomerId(entity.getCustomerid());
+		fee.setCustomerName(entity.getCustomerName());
+		fee.setWarehouseCode(entity.getWarehouseCode());
+		fee.setUnit(entity.getFeesUnit());
+		double num=DoubleUtil.isBlank(entity.getAdjustNum())?entity.getNum():entity.getAdjustNum();
+		if(!DoubleUtil.isBlank(num)){
+			fee.setQuantity(num);
+		}
+        fee.setParam1(entity.getItem());
+        fee.setCustomerName(entity.getCustomerName());
+        fee.setWarehouseName(entity.getWarehouseName());	
+		fee.setCreateTime(entity.getCreateTime());
+		fee.setCreator("system");	
+		fee.setCostType("FEE_TYPE_GENEARL");
+		fee.setDelFlag("0");
+		fee.setStatus("0");
+		fee.setExternalProductNo(entity.getExternalNo());
+		fee.setIsCalculated("99");
+		fee.setParam2(new SimpleDateFormat("yyyyMM").format(entity.getCreateTime()));
+		return fee;
 	}
 	
 	public void updateAndInsertBatch(List<BizAddFeeEntity> ts,List<FeesReceiveStorageEntity> fs) {
@@ -155,18 +186,23 @@ public class AddFeeInitJob extends IJobHandler{
 		sendTaskMap.put("subjectList", subjectList);
 	}
 
-	private void sendTask() throws Exception {
-		//对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
-		for (BmsCalcuTaskVo vo : list) {
-			vo.setCrePerson("系统");
-			vo.setCrePersonId("system");
-			try {
+	private void sendTask(Map<String, Object> taskVos) {
+
+		for (String key : taskVos.keySet()) { 
+			String[] param = key.split("-");
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try{
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				vo.setCustomerId(param[0]);
+				vo.setSubjectCode(param[1]);
+				vo.setCreMonth(Integer.valueOf(param[2]));
 				bmsCalcuTaskService.sendTask(vo);
 				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
-			} catch (Exception e) {
-				XxlJobLogger.log("mq发送失败{0}", e);
-			}	
-		}
+			}
+			catch(Exception ex){
+				XxlJobLogger.log("mq发送失败{0}", ex);
+			}
+		} 
 	}
 }
