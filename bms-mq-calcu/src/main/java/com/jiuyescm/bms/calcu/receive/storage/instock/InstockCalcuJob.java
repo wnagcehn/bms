@@ -95,11 +95,11 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BmsBizInstockInfoEntity entity : bizList) {
 			FeesReceiveStorageEntity fee = initFee(entity);
-			fees.add(fee);
-			if(isNoExe(entity, fee)){
-				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-			}
 			try {
+				fees.add(fee);
+				if(isNoExe(entity, fee)){
+					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
+				}		
 				if("BMS".equals(contractAttr)){
 					calcuForBms(entity,fee);
 				}
@@ -131,7 +131,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	
 	private void updateTask(BmsCalcuTaskVo taskVo,int calcuCount){
 		try {
-			BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoProductItem(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+			BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoInstock(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 			taskVo.setUncalcuCount(feesQtyVo.getUncalcuCount()==null?0:feesQtyVo.getUncalcuCount());//本次待计算的费用数
 			taskVo.setCalcuCount(calcuCount);
 			taskVo.setBeginCount(feesQtyVo.getBeginCount()==null?0:feesQtyVo.getBeginCount());//未计算费用总数

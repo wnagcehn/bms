@@ -124,11 +124,12 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizProductStorageEntity entity : bizList) {
 			FeesReceiveStorageEntity fee = initFee(entity);
-			fees.add(fee);
-			if(isNoExe(entity, fee)){
-				continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-			}
 			try {
+				fees.add(fee);
+				if(isNoExe(entity, fee)){
+					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
+				}
+			
 				if("BMS".equals(contractAttr)){
 					calcuForBms(entity,fee);
 				}
