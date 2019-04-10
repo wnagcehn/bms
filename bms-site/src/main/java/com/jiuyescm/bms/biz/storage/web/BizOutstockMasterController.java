@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -239,8 +241,23 @@ public class BizOutstockMasterController extends BaseController {
 		conMap.put("subjectCode", subjectCode);
 		// 更改费用计算状态为99
 		bizOutstockMasterService.retryForCalcuFee(conMap);
-		List<String> subjectList = Arrays.asList(subjectCode);
-		sendTask(subjectList);
+		
+		
+		String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+		for (String sCode : subjectList3) {
+			try {
+				BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				vo.setCustomerId(entity.getCustomerid());
+				vo.setSubjectCode(sCode);
+				vo.setCreMonth(Integer.valueOf(creMonth));
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.error("mq发送失败:", e);
+			}	
+		}
 		return result;
 	}
 
@@ -445,16 +462,27 @@ public class BizOutstockMasterController extends BaseController {
 			}
 			// 更改费用计算状态为99
 			bizOutstockMasterService.retryForCalcuFee(conMap);
-			List<BmsCalcuTaskVo> list = null;
-			// 如果界面指定了费用科目，则按指定费用科目重算，否则全部重算
-			if (param.containsKey("subjectCode")) {
-				String subjectCode = (String) param.get("subjectCode");
-				List<String> subjectList = Arrays.asList(subjectCode);
-				sendTask(subjectList);
-				list = bmsCalcuTaskService.queryOutstockTask(param);
-			} else {
-				sendTask(subjectList3);
+			//汇总需要发mq的数据
+			List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryOutstockTask(param);
+			for (BmsCalcuTaskVo calcuTaskVo : list) {
+				calcuTaskVo.setCrePerson("系统");
+				calcuTaskVo.setCrePersonId("system");
+				try {
+					bmsCalcuTaskService.sendTask(calcuTaskVo);
+					logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}
 			}
+			// 如果界面指定了费用科目，则按指定费用科目重算，否则全部重算
+//			if (param.containsKey("subjectCode")) {
+//				String subjectCode = (String) param.get("subjectCode");
+//				List<String> subjectList = Arrays.asList(subjectCode);
+//				sendTask(subjectList);
+//				list = bmsCalcuTaskService.queryOutstockTask(param);
+//			} else {
+//				sendTask(subjectList3);
+//			}
 		}
 		return "操作成功! 正在重算...";
 	}
