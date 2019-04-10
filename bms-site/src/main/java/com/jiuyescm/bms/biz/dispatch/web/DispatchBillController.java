@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,9 +41,10 @@ import com.bstek.dorado.web.DoradoContext;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
-import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
 import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
 import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
@@ -145,6 +147,9 @@ public class DispatchBillController{
 	@Autowired
 	private ICarrierProductService carrierProductService;
 	
+	@Autowired 
+	private IBmsCalcuTaskService bmsCalcuTaskService;
+	
 	/**
 	 * 分页查询
 	 * 
@@ -203,6 +208,20 @@ public class DispatchBillController{
 			entity.setLastModifyTime(nowdate);
 			int k = bizDispatchBillService.adjustBillEntity(entity);
 			if (k == 1) {
+				//发送mq消息
+				BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
+				vo.setCustomerId(entity.getCustomerid());
+				vo.setSubjectCode("de_delivery_amount");
+				String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+				vo.setCreMonth(Integer.valueOf(creMonth));
+				vo.setCrePerson(JAppContext.currentUserName());
+				vo.setCrePersonId(userid);
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
 				return "更新成功";
 			}
 			return "更新失败";
@@ -478,6 +497,19 @@ public class DispatchBillController{
 	public String reCalculate(Map<String, Object> param){
 		if(bizDispatchBillService.reCalculate(param) == 0){
 			return "重算异常";
+		}else{
+			//对这些费用按照商家、科目、时间排序
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryMaterialTask(param);
+			for (BmsCalcuTaskVo vo : calList) {
+				vo.setCrePerson(JAppContext.currentUserName());
+				vo.setCrePersonId(JAppContext.currentUserID());
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
+			}
 		}
 		return "操作成功! 正在重算...";
 	}

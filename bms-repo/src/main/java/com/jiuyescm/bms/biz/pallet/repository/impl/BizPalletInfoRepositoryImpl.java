@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
 import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity;
@@ -154,5 +155,13 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 		return new PageInfo<BizPalletInfoEntity>(list);
 	}
 	
-    
+    /**
+     * 查询需要发的任务
+     * @param condition
+     * @return
+     */
+	@Override
+    public List<BmsAsynCalcuTaskEntity> queryPalletTask(Map<String, Object> condition){
+		return selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.queryPalletTask", condition);
+	}
 }

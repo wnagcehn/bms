@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
@@ -340,6 +341,12 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 	public List<String> queryFeeNo(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryFeeNo", condition);
+	}
+
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryTask", condition);
 	}
 
 }

@@ -42,7 +42,6 @@ import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.biz.pallet.controller.BizPalletInfoController;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizAddFeeService;
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
@@ -625,16 +624,17 @@ public class BizAddFeeController {
 	public String reCalculate(Map<String, Object> param){
 		int result=bizAddFeeService.retryCalcu(param);
 		if(result>0){
-			List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(sendTaskMap);		
-			for (BmsCalcuTaskVo vo : list) {
-     			vo.setCrePerson("系统");
-     			vo.setCrePersonId("system");
-     			try {
-     				bmsCalcuTaskService.sendTask(vo);
-     				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
-     			} catch (Exception e) {
-     				logger.error("mq发送失败:", e);
-     			}	
+			//对这些费用按照商家、科目、时间排序
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryAddTask(param);
+			for (BmsCalcuTaskVo vo : calList) {
+				vo.setCrePerson(JAppContext.currentUserName());
+				vo.setCrePersonId(JAppContext.currentUserID());
+				try {
+					bmsCalcuTaskService.sendTask(vo);
+					logger.info("mq发送成功,商家id"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}	
 			}
 			return "操作成功! 正在重算...";
 		}else{

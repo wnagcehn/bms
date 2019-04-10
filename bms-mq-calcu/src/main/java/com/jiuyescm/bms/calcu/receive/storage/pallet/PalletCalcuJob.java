@@ -234,7 +234,12 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 
 	@Override
 	public boolean isNoExe(BizPalletInfoEntity entity,FeesReceiveStorageEntity fee) {
-		
+		//1.出库托数不计算费用
+		if("outstock".equals(entity.getBizType())){
+			fee.setIsCalculated(CalculateState.No_Exe.getCode());
+			fee.setCalcuMsg("出库托数不计算费用;");
+			return true;
+		}
 		//2.商家已经按件收取存储费,按托存储不计费
 		if ("product".equals(entity.getBizType())) {
 			//如果商家已经按件收取存储费，则按托存储不计费

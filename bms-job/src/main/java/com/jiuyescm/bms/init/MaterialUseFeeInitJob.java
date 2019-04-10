@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.init;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.google.common.collect.Maps;
@@ -43,7 +45,6 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
-
 	
 	Map<String,PubMaterialInfoVo> materialMap = null;
 	Map<String, String> temMap = null;
@@ -61,7 +62,8 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 	}
 	
 	private ReturnT<String> CalcJob(String[] params) {
-		long startTime = System.currentTimeMillis();
+		StopWatch watch = new StopWatch();
+		watch.start();
 		int num = 1000;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -69,7 +71,8 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			try {
 				map = JobParameterHandler.handler(params);//处理定时任务参数
 			} catch (Exception e) {
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ (System.currentTimeMillis() - startTime) + "毫秒");
+				watch.stop();
+				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ watch.getTotalTimeSeconds() + "毫秒");
 	            return ReturnT.FAIL;
 			}
 		}else {
@@ -78,72 +81,88 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 		}
 		
 		//查询所有状态为0的业务数据
-		long currentTime = System.currentTimeMillis();
 		map.put("isCalculated", "0");
+		Map<String, Object> taskVoMap = new HashMap<>();
+		
+		saveFees(map,taskVoMap);
+		
+		watch.stop();
+		
+		sendTask(taskVoMap);
+
+		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", watch.getTotalTimeSeconds());
+        return ReturnT.SUCCESS;
+	}
+
+	
+	private void saveFees(Map<String, Object> map,Map<String, Object> taskVoMap){
 		List<BizOutstockPackmaterialEntity> bizList = null;
 		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
 		try {
 			XxlJobLogger.log("materialUseFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizOutstockPackmaterialService.query(map);
-			//只要有业务数据，就进行初始化和更新写入操作
-			if( CollectionUtils.isNotEmpty(bizList) ){
-				XxlJobLogger.log("【耗材】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
-				//初始化费用
-				initFees(bizList, feesList);
+			if(CollectionUtils.isNotEmpty(bizList)){
+				for (BizOutstockPackmaterialEntity entity : bizList) {
+					FeesReceiveStorageEntity fee = initFees(entity);
+					feesList.add(fee);					
+					String customerId = entity.getCustomerId();
+					String subjectCode = fee.getSubjectCode();
+					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+					StringBuilder sb1 = new StringBuilder();
+					sb1.append(customerId).append("-").append(subjectCode).append("-").append(creMonth);
+					taskVoMap.put(sb1.toString(), sb1.toString());
+				}
+				XxlJobLogger.log("【耗材】查询行数【{0}】", bizList.size());
+				
 				//批量更新业务数据&批量写入费用表
 				updateAndInsertBatch(bizList,feesList);
 			}
-			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
-			if( CollectionUtils.isEmpty(bizList)||bizList.size()<num){
-				try {
-					sendTask(feesList);
-				} catch (Exception e) {
-					XxlJobLogger.log("mq发送失败{0}", e);
-				}
-			}
 		} catch (Exception e) {
-			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
-			return ReturnT.FAIL;
+			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
+			return;
 		}
 		
-		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
-        return ReturnT.SUCCESS;
+		if(bizList== null || bizList.size() == 0){
+			return;
+		}else{
+			saveFees(map,taskVoMap);
+		}
+		
 	}
-
-	private void initFees(List<BizOutstockPackmaterialEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
-		for (BizOutstockPackmaterialEntity entity : bizList) {
-			entity.setRemark("");
-			FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
-			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
-			entity.setFeesNo(feesNo);
-			storageFeeEntity.setFeesNo(feesNo);
-			storageFeeEntity.setCreator("system");
-			storageFeeEntity.setCreateTime(entity.getCreateTime());
-			storageFeeEntity.setOperateTime(entity.getCreateTime());
-			storageFeeEntity.setCustomerId(entity.getCustomerId());			//商家ID
-			storageFeeEntity.setCustomerName(entity.getCustomerName());		//商家名称
-			storageFeeEntity.setWarehouseCode(entity.getWarehouseCode());	//仓库ID
-			storageFeeEntity.setWarehouseName(entity.getWarehouseName());	//仓库名称
-			storageFeeEntity.setCostType("FEE_TYPE_MATERIAL");				//费用类别 FEE_TYPE_GENEARL-通用 FEE_TYPE_MATERIAL-耗材 FEE_TYPE_ADD-增值
-			storageFeeEntity.setSubjectCode("wh_material_use");						//费用科目
-			storageFeeEntity.setOtherSubjectCode("wh_material_use");
-			storageFeeEntity.setProductType("");//商品类型
-			//根据测试的建议 吧耗材编码设置成商品编号和商品名称 zhangzw
-			storageFeeEntity.setProductNo(entity.getConsumerMaterialCode());
-			storageFeeEntity.setProductName(entity.getConsumerMaterialName());
-			storageFeeEntity.setQuantity(0d);//计费数量
-			storageFeeEntity.setStatus("0");								//状态
-			storageFeeEntity.setOrderNo(entity.getOutstockNo());
-			storageFeeEntity.setBizId(String.valueOf(entity.getId()));						//业务数据主键
-			storageFeeEntity.setWeight(0d);					//设置重量
-			storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
-			storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
-			storageFeeEntity.setDelFlag("0");
-			storageFeeEntity.setIsCalculated("99");
-			entity.setIsCalculated("1");
-			entity.setCalculateTime(JAppContext.currentTimestamp());
-			feesList.add(storageFeeEntity);
-		}	
+	
+	
+	private FeesReceiveStorageEntity initFees(BizOutstockPackmaterialEntity entity) {
+		entity.setRemark("");
+		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	
+		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+		entity.setFeesNo(feesNo);
+		storageFeeEntity.setFeesNo(feesNo);
+		storageFeeEntity.setCreator("system");
+		storageFeeEntity.setCreateTime(entity.getCreateTime());
+		storageFeeEntity.setOperateTime(entity.getCreateTime());
+		storageFeeEntity.setCustomerId(entity.getCustomerId());			//商家ID
+		storageFeeEntity.setCustomerName(entity.getCustomerName());		//商家名称
+		storageFeeEntity.setWarehouseCode(entity.getWarehouseCode());	//仓库ID
+		storageFeeEntity.setWarehouseName(entity.getWarehouseName());	//仓库名称
+		storageFeeEntity.setCostType("FEE_TYPE_MATERIAL");				//费用类别 FEE_TYPE_GENEARL-通用 FEE_TYPE_MATERIAL-耗材 FEE_TYPE_ADD-增值
+		storageFeeEntity.setSubjectCode("wh_material_use");						//费用科目
+		storageFeeEntity.setOtherSubjectCode("wh_material_use");
+		storageFeeEntity.setProductType("");//商品类型
+		//根据测试的建议 吧耗材编码设置成商品编号和商品名称 zhangzw
+		storageFeeEntity.setProductNo(entity.getConsumerMaterialCode());
+		storageFeeEntity.setProductName(entity.getConsumerMaterialName());
+		storageFeeEntity.setQuantity(0d);//计费数量
+		storageFeeEntity.setStatus("0");								//状态
+		storageFeeEntity.setOrderNo(entity.getOutstockNo());
+		storageFeeEntity.setBizId(String.valueOf(entity.getId()));						//业务数据主键
+		storageFeeEntity.setWeight(0d);					//设置重量
+		storageFeeEntity.setCost(new BigDecimal(0));					//入仓金额
+		storageFeeEntity.setParam1(TemplateTypeEnum.COMMON.getCode());
+		storageFeeEntity.setDelFlag("0");
+		storageFeeEntity.setIsCalculated("99");
+		entity.setIsCalculated("1");
+		entity.setCalculateTime(JAppContext.currentTimestamp());
+		return storageFeeEntity;
 	}
 	
 	public void updateAndInsertBatch(List<BizOutstockPackmaterialEntity> ts,List<FeesReceiveStorageEntity> fs) {
@@ -158,27 +177,24 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 	}
 
-	private void sendTask(List<FeesReceiveStorageEntity> feesList) throws Exception {
-		List<String> subjectList=new ArrayList<>();
-		subjectList.add("wh_material_use");
-		//对这些费用按照商家、科目、时间排序
-		Map<String,Object> map=new HashMap<>();
-		map.put("isCalculated", "99");
-		map.put("subjectList", subjectList);
-		
-		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(map);
-		
-		for (BmsCalcuTaskVo vo : list) {
-			vo.setCrePerson("系统");
-			vo.setCrePersonId("system");
-			try {
+	private void sendTask(Map<String, Object> taskVos) {
+
+		for (String key : taskVos.keySet()) { 
+			String[] param = key.split("-");
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try{
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				vo.setCustomerId(param[0]);
+				vo.setSubjectCode(param[1]);
+				vo.setCreMonth(Integer.valueOf(param[2]));
 				bmsCalcuTaskService.sendTask(vo);
 				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
-			} catch (Exception e) {
-				// TODO: handle exception
-				XxlJobLogger.log("发送mq消息失败 {0} ",e);
 			}
-		}
+			catch(Exception ex){
+				XxlJobLogger.log("mq发送失败{0}", ex);
+			}
+		} 
 	}
 	
 	/**

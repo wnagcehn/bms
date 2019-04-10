@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.init;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
@@ -59,7 +61,8 @@ public class OutstockFeeInitJob extends IJobHandler{
 	}
 	
 	private ReturnT<String> CalcJob(String[] params) {
-		long startTime = System.currentTimeMillis();
+		StopWatch sw = new StopWatch();
+		sw.start();
 		int num = 1000;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -67,7 +70,8 @@ public class OutstockFeeInitJob extends IJobHandler{
 			try {
 				map = JobParameterHandler.handler(params);//处理定时任务参数
 			} catch (Exception e) {
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ (System.currentTimeMillis() - startTime) + "毫秒");
+				sw.stop();
+				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ sw.getTotalTimeMillis() + "毫秒");
 	            return ReturnT.FAIL;
 			}
 		}else {
@@ -79,8 +83,19 @@ public class OutstockFeeInitJob extends IJobHandler{
 		initConf();
 		
 		//查询所有状态为0的业务数据
-		long currentTime = System.currentTimeMillis();
 		map.put("isCalculated", "0");
+		
+		Map<String, Object> taskVoMap = new HashMap<>();
+		saveFees(map,taskVoMap);
+		sw.stop();
+		
+		sendTask(taskVoMap);
+		
+		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", sw.getTotalTimeMillis());
+        return ReturnT.SUCCESS;
+	}
+	
+	private void saveFees(Map<String, Object> map, Map<String, Object> taskVoMap) {
 		//业务数据
 		List<BizOutstockMasterEntity> bizList = null;
 		//费用数据
@@ -89,30 +104,35 @@ public class OutstockFeeInitJob extends IJobHandler{
 			XxlJobLogger.log("outstockFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizOutstockMasterService.query(map);
 			//只要有业务数据，就进行初始化和更新写入操作
-			if( CollectionUtils.isNotEmpty(bizList) ){
-				XxlJobLogger.log("【增值】查询行数【{0}】耗时【{1}】", bizList.size(), (System.currentTimeMillis()-currentTime));
-				//初始化费用
-				initFees(bizList, feesList);
-				//批量更新业务数据&批量写入费用表
-				updateAndInsertBatch(bizList,feesList);
-			}
-			//只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
-			if( CollectionUtils.isEmpty(bizList)||bizList.size()<num){
-				try {
-					sendTask(feesList);
-				} catch (Exception e) {
-					XxlJobLogger.log("mq发送失败{0}", e);
+			if (CollectionUtils.isNotEmpty(bizList)) {
+				for (BizOutstockMasterEntity entity : bizList) {
+					List<FeesReceiveStorageEntity> fees = initFees(entity);
+					feesList.addAll(fees);
+					for (FeesReceiveStorageEntity fee : fees) {
+						//feesList.add(fee);
+						String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+						StringBuilder sb = new StringBuilder();
+						sb.append(entity.getCustomerid()).append("-").append(fee.getSubjectCode()).append("-").append(creMonth);
+						taskVoMap.put(sb.toString(), sb.toString());
+					}
 				}
+				XxlJobLogger.log("【托数】查询行数【{0}】", bizList.size());
+
+				// 批量更新业务数据&批量写入费用表
+				updateAndInsertBatch(bizList, feesList);
 			}
 		} catch (Exception e) {
-			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒", e.getMessage(), ((System.currentTimeMillis() - currentTime)));
-			return ReturnT.FAIL;
+			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
+			return;
 		}
 		
-		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
-        return ReturnT.SUCCESS;
+		if(bizList== null || bizList.size() == 0){
+			return;
+		}else {
+			saveFees(map, taskVoMap);
+		}
 	}
-	
+
 	private void initConf(){
 		//初始化科目
 		subjects=initSubjects();		
@@ -130,26 +150,25 @@ public class OutstockFeeInitJob extends IJobHandler{
 		
 	}
 	
-	private void initFees(List<BizOutstockMasterEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
-
-		for(BizOutstockMasterEntity entity:bizList){
-			String feesNo = "STO" + snowflakeSequenceService.nextStringId();
-			entity.setFeesNo(feesNo);
-			for (String SubjectId : subjects) {
-				FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
-				storageFeeEntity.setFeesNo(feesNo);
-				//如果是【B2B订单操作费】 或【出库装车费】,并且是B2B出库单   ( B2bFlag 0-B2C  1-B2B)
-				if(("wh_b2b_work".equals(SubjectId) ||"wh_b2b_handwork".equals(SubjectId)) 
-						&& "1".equals(entity.getB2bFlag())){
-					initFeesEntity(SubjectId, entity,storageFeeEntity);
-					feesList.add(storageFeeEntity);
-				}
-				else if("wh_b2c_work".equals(SubjectId) && "0".equals(entity.getB2bFlag())){
-					initFeesEntity(SubjectId, entity,storageFeeEntity);
-					feesList.add(storageFeeEntity);
-				}
+	private List<FeesReceiveStorageEntity> initFees(BizOutstockMasterEntity entity) {
+		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
+		String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+		entity.setFeesNo(feesNo);
+		for (String SubjectId : subjects) {
+			FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();
+			storageFeeEntity.setFeesNo(feesNo);
+			//如果是【B2B订单操作费】 或【出库装车费】,并且是B2B出库单   ( B2bFlag 0-B2C  1-B2B)
+			if(("wh_b2b_work".equals(SubjectId) ||"wh_b2b_handwork".equals(SubjectId)) 
+					&& "1".equals(entity.getB2bFlag())){
+				initFeesEntity(SubjectId, entity,storageFeeEntity);
+				feesList.add(storageFeeEntity);
+			}
+			else if("wh_b2c_work".equals(SubjectId) && "0".equals(entity.getB2bFlag())){
+				initFeesEntity(SubjectId, entity,storageFeeEntity);
+				feesList.add(storageFeeEntity);
 			}
 		}
+		return feesList;
 	}
 	
 	private FeesReceiveStorageEntity initFeesEntity(String subjectId,BizOutstockMasterEntity outstock,FeesReceiveStorageEntity storageFeeEntity) {
@@ -228,29 +247,23 @@ public class OutstockFeeInitJob extends IJobHandler{
 	}
 	
 	
-	private void sendTask(List<FeesReceiveStorageEntity> feesList) throws Exception {
-		//对这些费用按照商家、科目、时间排序
-		List<String> subjectList=new ArrayList<>();
-		for(String s:subjects){
-			subjectList.add(s);
-		}
-		//对这些费用按照商家、科目、时间排序
-		Map<String,Object> map=new HashMap<>();
-		map.put("isCalculated", "99");
-		map.put("subjectList", subjectList);	
-		List<BmsCalcuTaskVo> list=bmsCalcuTaskService.queryByMap(map);		
-		for (BmsCalcuTaskVo vo : list) {
-			vo.setCrePerson("系统");
-			vo.setCrePersonId("system");		
-			try {
+	private void sendTask(Map<String, Object> taskVos) {
+		for (String key : taskVos.keySet()) { 
+			String[] param = key.split("-");
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try{
+				vo.setCrePerson("系统");
+				vo.setCrePersonId("system");
+				vo.setCustomerId(param[0]);
+				vo.setSubjectCode(param[1]);
+				vo.setCreMonth(Integer.valueOf(param[2]));
 				bmsCalcuTaskService.sendTask(vo);
 				XxlJobLogger.log("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
-			} catch (Exception e) {
-				// TODO: handle exception
-				XxlJobLogger.log("发送mq消息失败 {0}",e);
 			}
-			
-		}
+			catch(Exception ex){
+				XxlJobLogger.log("mq发送失败{0}", ex);
+			}
+		} 
 	}
 
 	

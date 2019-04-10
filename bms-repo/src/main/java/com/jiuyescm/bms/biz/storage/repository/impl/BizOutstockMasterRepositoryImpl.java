@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockMasterRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
@@ -157,5 +158,10 @@ public class BizOutstockMasterRepositoryImpl extends MyBatisDao implements IBizO
 	@Override
 	public void retryForCalcuFee(Map<String, Object> param) {
 		update("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.retryForCalcuFee", param);
+	}
+	
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryOutstockTask(Map<String, Object> condition) {
+		return selectList("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.queryOutstockTask", condition);
 	}
 }

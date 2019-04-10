@@ -757,4 +757,49 @@
 			</foreach>
 		</if>	
     </select>
+    
+    <select id="queryTask" parameterType="java.util.Map" resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+    	select
+    	a.customer_id as customerId,b.subject_code as subjectCode, DATE_FORMAT(a.create_time,'%Y%m') as creMonth
+        from  biz_outstock_packmaterial a
+        left join fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
+		where a.del_flag='0'
+        <if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(customerId != null and customerId !='')" >
+				and a.customer_id = #{customerId}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time<![CDATA[ <= ]]>#{endTime}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
+				and a.consumer_material_code = #{consumerMaterialCode}
+		</if>
+		<if test="(creator != null and creator !='')" >
+			    and a.creator like '%${creator}%' 
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
+		<if test="(costFeesNo!=null and costFeesNo!='')">
+				and a.cost_fees_no=#{costFeesNo}
+		</if>
+		<if test="(isCalculated != null and isCalculated !='')" >
+				and b.is_calculated = #{isCalculated}
+		</if>
+    	GROUP BY a.customer_id,b.subject_code,DATE_FORMAT(a.create_time,'%Y%m');  
+    </select>
 </mapper>

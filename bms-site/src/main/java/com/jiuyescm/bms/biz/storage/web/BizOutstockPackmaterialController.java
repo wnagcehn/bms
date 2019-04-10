@@ -180,24 +180,19 @@ public class BizOutstockPackmaterialController {
 		int updateNum = service.update(updateEntity);
 		if(updateNum > 0){
 			result.setCode("SUCCESS");
-			List<String> subjectList=new ArrayList<>();
-			subjectList.add("wh_material_use");
-			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-			sendTaskMap.put("isCalculated", "99");
-			sendTaskMap.put("subjectList", subjectList);
-			//对这些费用按照商家、科目、时间排序
-			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
-			for (BmsCalcuTaskVo vo : calList) {
-				vo.setCrePerson("系统");
-				vo.setCrePersonId("system");
-				try {
-					bmsCalcuTaskService.sendTask(vo);
-					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
-				} catch (Exception e) {
-					logger.error("mq发送失败:", e);
-				}	
-			}
-			
+			BmsCalcuTaskVo vo=new BmsCalcuTaskVo();
+			vo.setCustomerId(entity.getCustomerId());
+			vo.setSubjectCode("wh_material_use");
+			String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+			vo.setCreMonth(Integer.valueOf(creMonth));
+			vo.setCrePerson(JAppContext.currentUserName());
+			vo.setCrePersonId(JAppContext.currentUserID());
+			try {
+				bmsCalcuTaskService.sendTask(vo);
+				logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+			} catch (Exception e) {
+				logger.error("mq发送失败:", e);
+			}	
 		}else{
 			result.setCode("fail");
 			result.setData("更新失败");
@@ -823,16 +818,12 @@ public class BizOutstockPackmaterialController {
 		if(service.reCalculate(param) <= 0){
 			return "重算异常";
 		}else{
-			List<String> subjectList=new ArrayList<>();
-			subjectList.add("wh_material_use");
-			Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-			sendTaskMap.put("isCalculated", "99");
-			sendTaskMap.put("subjectList", subjectList);
+
 			//对这些费用按照商家、科目、时间排序
-			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryMaterialTask(param);
 			for (BmsCalcuTaskVo vo : calList) {
-				vo.setCrePerson("系统");
-				vo.setCrePersonId("system");
+				vo.setCrePerson(JAppContext.currentUserName());
+				vo.setCrePersonId(JAppContext.currentUserID());
 				try {
 					bmsCalcuTaskService.sendTask(vo);
 					logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());

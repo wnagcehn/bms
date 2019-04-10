@@ -3,7 +3,6 @@ package com.jiuyescm.bms.init;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +40,6 @@ public class AddFeeInitJob extends IJobHandler{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
-	
-	private boolean isSend = false;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -52,15 +49,17 @@ public class AddFeeInitJob extends IJobHandler{
 	}
 	
 	private ReturnT<String> CalcJob(String[] params) {
-		long startTime = System.currentTimeMillis();
-		int num = 1000;
 		
+		StopWatch watch = new StopWatch();
+		watch.start();
+		int num = 1000;
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(params != null && params.length > 0) {
 			try {
 				map = JobParameterHandler.handler(params);//处理定时任务参数
 			} catch (Exception e) {
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ (System.currentTimeMillis() - startTime) + "毫秒");
+				watch.stop();
+				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ watch.getTotalTimeSeconds() + "毫秒");
 	            return ReturnT.FAIL;
 			}
 		}else {
@@ -69,43 +68,30 @@ public class AddFeeInitJob extends IJobHandler{
 		}
 		
 		//查询所有状态为0的业务数据
-		map.put("isCalculated", "0");
-		
-		Map<String, Object> taskVoMap = new HashMap<>();
-		
-		saveFees(map,taskVoMap);
-		
-		StopWatch watch = new StopWatch();
-		watch.start();
-		
+		map.put("isCalculated", "0");	
+		Map<String, Object> taskVoMap = new HashMap<>();	
+		saveFees(map,taskVoMap);	
 		watch.stop();
-		
-		
-		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
+		sendTask(taskVoMap);
+		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", watch.getTotalTimeMillis());
         return ReturnT.SUCCESS;
 	}
 	
 	private void saveFees(Map<String, Object> map,Map<String, Object> taskVoMap){
 
-		StopWatch watch = new StopWatch();
-		watch.start();
 		List<BizAddFeeEntity> bizList = null;
 		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
 		try {
 			XxlJobLogger.log("addFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizAddFeeService.querybizAddFee(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
-				isSend = true;
 				for (BizAddFeeEntity entity : bizList) {
 					FeesReceiveStorageEntity fee = initFees(entity);
-					feesList.add(fee);
-					
-					String customerId = entity.getCustomerid();
-					String subjectCode = "123";
-					String creMonth = "201901";
-					StringBuilder sb1 = new StringBuilder();
-					sb1.append(subjectCode).append("-").append("").append("").append("");
-					taskVoMap.put(sb1.toString(), sb1.toString());
+					feesList.add(fee);				
+					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+					StringBuilder sb = new StringBuilder();
+					sb.append(entity.getCustomerid()).append("-").append("wh_value_add_subject").append("-").append(creMonth);
+					taskVoMap.put(sb.toString(), sb.toString());
 				}
 				XxlJobLogger.log("【增值】查询行数【{0}】", bizList.size());
 				
@@ -116,15 +102,13 @@ public class AddFeeInitJob extends IJobHandler{
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
 			return;
 		}
-		watch.stop();
 		
 		if(bizList== null || bizList.size() == 0){
-			if(isSend){
-				sendTask(taskVoMap);
-			}
 			return;
 		}
-		
+		else{
+			saveFees(map,taskVoMap);
+		}
 	}
 
 	private FeesReceiveStorageEntity initFees(BizAddFeeEntity entity) {
@@ -179,13 +163,6 @@ public class AddFeeInitJob extends IJobHandler{
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 	}
 	
-	private static final List<String> subjectList= Arrays.asList("wh_value_add_subject");
-	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-	static{
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
-	}
-
 	private void sendTask(Map<String, Object> taskVos) {
 
 		for (String key : taskVos.keySet()) { 
