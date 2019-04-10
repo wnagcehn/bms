@@ -196,7 +196,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 			return;
 		}
 		//CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "", contractInfo,cbiVo );
-		//logger.info("合同信息{}",contractInfo.getContractNo());
+		logger.info("合同信息{}",contractInfo.getContractNo());
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
@@ -254,7 +254,12 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 				fee.setParam3(quoTemplete.getId().toString());
 				CalcuLog.printLog(CalcuNodeEnum.CALCU.getCode().toString(), "模板单价计算", civo, cbiVo);
 				break;
-			case "PRICE_TYPE_STEP"://阶梯价	
+			case "PRICE_TYPE_STEP"://阶梯价
+				if (DoubleUtil.isBlank(num)) {
+					fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+					fee.setCalcuMsg("计费数据缺失");
+					return;
+				}
 				civo.setChargeType("stepPrice");
 				Map<String,Object> map=new HashMap<String,Object>();
 				map.put("quotationId", quoTemplete.getId());
