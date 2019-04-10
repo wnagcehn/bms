@@ -49,15 +49,17 @@ public class AddFeeInitJob extends IJobHandler{
 	}
 	
 	private ReturnT<String> CalcJob(String[] params) {
-		long startTime = System.currentTimeMillis();
-		int num = 1000;
 		
+		StopWatch watch = new StopWatch();
+		watch.start();
+		int num = 1000;
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(params != null && params.length > 0) {
 			try {
 				map = JobParameterHandler.handler(params);//处理定时任务参数
 			} catch (Exception e) {
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ (System.currentTimeMillis() - startTime) + "毫秒");
+				watch.stop();
+				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ watch.getTotalTimeSeconds() + "毫秒");
 	            return ReturnT.FAIL;
 			}
 		}else {
@@ -66,18 +68,12 @@ public class AddFeeInitJob extends IJobHandler{
 		}
 		
 		//查询所有状态为0的业务数据
-		map.put("isCalculated", "0");
-		
-		Map<String, Object> taskVoMap = new HashMap<>();
-		
-		StopWatch sw = new StopWatch();
-		sw.start();
-		saveFees(map,taskVoMap);
-		sw.stop();
-		
+		map.put("isCalculated", "0");	
+		Map<String, Object> taskVoMap = new HashMap<>();	
+		saveFees(map,taskVoMap);	
+		watch.stop();
 		sendTask(taskVoMap);
-	
-		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", sw.getTotalTimeMillis());
+		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", watch.getTotalTimeMillis());
         return ReturnT.SUCCESS;
 	}
 	
@@ -91,8 +87,7 @@ public class AddFeeInitJob extends IJobHandler{
 			if(CollectionUtils.isNotEmpty(bizList)){
 				for (BizAddFeeEntity entity : bizList) {
 					FeesReceiveStorageEntity fee = initFees(entity);
-					feesList.add(fee);
-					
+					feesList.add(fee);				
 					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
 					StringBuilder sb = new StringBuilder();
 					sb.append(entity.getCustomerid()).append("-").append("wh_value_add_subject").append("-").append(creMonth);

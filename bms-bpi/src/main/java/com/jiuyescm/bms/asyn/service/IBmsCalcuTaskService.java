@@ -76,4 +76,6 @@ public interface IBmsCalcuTaskService {
 	List<BmsCalcuTaskVo> queryMaterialTask(Map<String, Object> condition);
 	
 	List<BmsCalcuTaskVo> queryDispatchTask(Map<String, Object> condition);
+	
+	List<BmsCalcuTaskVo> queryAddTask(Map<String, Object> condition);
 }
