@@ -371,7 +371,7 @@ view.get(&quot;#dsCustomerSubjectStatus.data&quot;).clear();</ClientEvent>
       <Separator/>
       <ToolBarButton>
         <ClientEvent name="onClick">view.id(&quot;customerOrder&quot;).show();</ClientEvent>
-        <Property name="caption">订购</Property>
+        <Property name="caption">订阅</Property>
         <Property name="icon">url(>skin>common/icons.gif) -140px -60px</Property>
       </ToolBarButton>
       <ToolBarButton>
@@ -393,7 +393,7 @@ dorado.MessageBox.confirm(&quot;是否取消订购？&quot;, function(){&#xD;
 	view.get(&quot;#dsCustomerSubjectStatus.data&quot;).clear();&#xD;
 })&#xD;
 </ClientEvent>
-        <Property name="caption">取消订购</Property>
+        <Property name="caption">取消订阅</Property>
         <Property name="icon">url(>skin>common/icons.gif) -240px -20px</Property>
       </ToolBarButton>
     </ToolBar>
@@ -918,7 +918,7 @@ action.set(&quot;parameter&quot;, query).execute(function(result){&#xD;
 	}&#xD;
 });&#xD;
 </ClientEvent>
-            <Property name="caption">订购</Property>
+            <Property name="caption">订阅</Property>
             <Property name="icon">url(>skin>common/icons.gif) -140px -60px</Property>
           </ToolBarButton>
         </ToolBar>
