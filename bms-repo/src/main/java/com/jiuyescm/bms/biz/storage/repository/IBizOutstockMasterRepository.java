@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 
@@ -56,5 +57,12 @@ public interface IBizOutstockMasterRepository {
 
 
 	void retryForCalcuFee(Map<String, Object> param);
+
+	/**
+	 * 查询出库需要发的任务
+	 * @param condition
+	 * @return
+	 */
+	List<BmsAsynCalcuTaskEntity> queryOutstockTask(Map<String, Object> condition);
 
 }

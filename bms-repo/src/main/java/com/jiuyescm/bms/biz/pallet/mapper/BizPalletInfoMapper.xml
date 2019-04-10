@@ -292,5 +292,46 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			and p.temperature_type_code = #{temperatureTypeCode}
 		</if>
    </update>
+   
+   <!-- 查询需要发的任务-->
+    <select id="queryPalletTask" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+        select
+		p.customer_id as customerId, s.subject_code as subjectCode, DATE_FORMAT(p.create_time,'%Y%m') as creMonth
+		from biz_pallet_info p
+		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
+		WHERE 1=1 and p.del_flag='0'
+        	<if test=" id != null and id !='' ">
+				and p.id = #{id}
+			</if>
+        	<if test=" curTime != null and curTime !='' ">
+				and p.cur_time = #{curTime}
+			</if>
+        	<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
+				and p.biz_type = #{bizType}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and p.warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and p.customer_id = #{customerId}
+			</if>
+			<if test="createTime != null and createTime !=''" >
+				and p.create_time <![CDATA[ >= ]]> #{createTime}
+			</if>
+			<if test="createEndTime != null and createEndTime !=''" >
+				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
+			</if>
+        	<if test=" isCalculated != null and isCalculated !='' ">
+				and s.is_calculated = #{isCalculated}
+			</if>
+			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
+				and s.subject_code = #{subjectCode}
+			</if>
+			<if test=" chargeSource != null and chargeSource !='' and chargeSource !='ALL' ">
+				and p.charge_source = #{chargeSource}
+			</if>
+			GROUP BY p.customer_id,s.subject_code,DATE_FORMAT(p.create_time,'%Y%m')
+    </select>
     
 </mapper>
