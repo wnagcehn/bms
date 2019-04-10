@@ -73,7 +73,6 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		logger.info("合同信息{}",contractInfo.getContractNo());
 		getQuoTemplete();
 		serviceSubjectCode = subjectCode;
 		errorMap = new HashMap<String, Object>();

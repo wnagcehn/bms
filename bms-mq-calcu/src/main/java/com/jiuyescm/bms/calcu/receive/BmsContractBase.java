@@ -71,6 +71,7 @@ public class BmsContractBase {
 			else{
 				contractInfo = new CalcuContractVo();
 				contractInfo.setContractNo(bmsContractInfo.getContractCode());
+				logger.info("taskId={} 合同编码{}",vo.getTaskId(),contractInfo.getContractNo());
 				//配送单独处理 因为配送科目（de_delivery_amount）对应多个签约服务项
 				if(!"de_delivery_amount".equals(vo.getSubjectCode())){
 					initBmsService();
