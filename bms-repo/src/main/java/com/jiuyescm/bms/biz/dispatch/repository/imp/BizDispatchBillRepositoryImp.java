@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeTypeEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
@@ -208,5 +209,11 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	public int updateIsCalcuByFeesNo(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
 		return update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.updateIsCalcuByFeesNo", condition);
+	}
+	
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryTask", condition);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 
@@ -144,4 +145,6 @@ public interface IBizOutstockPackmaterialRepository {
 	
 	
 	public List<String> queryFeeNo(Map<String,Object> condition);
+	
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 }

@@ -9,6 +9,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +25,10 @@ import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockMasterRepository;
+import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.common.enumtype.MQSubjectEnum;
 import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
 import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
@@ -33,8 +37,6 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
-
-import net.sf.json.JSONObject;
 
 @Service("bmsCalcuTaskService")
 public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
@@ -48,6 +50,11 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired
 	private JmsTemplate jmsQueueTemplate;
+	@Autowired
+	private IBizOutstockPackmaterialRepository bizOutstockPackmaterialRepository;
+	@Autowired
+	private IBizDispatchBillRepository bizDispatchBillRepository;
+	
 	@Autowired
 	private Lock lock;
 	@Autowired
@@ -344,7 +351,49 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		}
 		return voList;
 	}
+	
+	@Override
+	public List<BmsCalcuTaskVo> queryMaterialTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		
+		List<BmsAsynCalcuTaskEntity> list = bizOutstockPackmaterialRepository.queryTask(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if (list == null) {
+			return null;
+		}
+		for (BmsAsynCalcuTaskEntity entity : list) {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try {
+				PropertyUtils.copyProperties(vo, entity);
+			} catch (Exception ex) {
+				logger.error("转换失败");
+			}
+			voList.add(vo);
+		}
+		return voList;
+	}
 
+	@Override
+	public List<BmsCalcuTaskVo> queryDispatchTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list = bizDispatchBillRepository.queryTask(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if (list == null) {
+			return null;
+		}
+		for (BmsAsynCalcuTaskEntity entity : list) {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try {
+				PropertyUtils.copyProperties(vo, entity);
+			} catch (Exception ex) {
+				logger.error("转换失败");
+			}
+			voList.add(vo);
+		}
+		return voList;
+	}
+
+	
 	@Override
 	public List<BmsCalcuTaskVo> queryDisByMap(Map<String, Object> condition) {
 		// TODO Auto-generated method stub
@@ -438,7 +487,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		pageVoInfo.setList(result);
 		return pageVoInfo;
 	}
-	
+
 	@Override
 	public List<BmsCalcuTaskVo> queryPalletTask(Map<String, Object> condition) {
 		List<BmsAsynCalcuTaskEntity> list = bizPalletInfoRepository

@@ -40,8 +40,6 @@ public class AddFeeInitJob extends IJobHandler{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
-	
-	private boolean isSend = false;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -77,6 +75,8 @@ public class AddFeeInitJob extends IJobHandler{
 		saveFees(map,taskVoMap);
 		sw.stop();
 		
+		sendTask(taskVoMap);
+	
 		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", sw.getTotalTimeMillis());
         return ReturnT.SUCCESS;
 	}
@@ -89,7 +89,6 @@ public class AddFeeInitJob extends IJobHandler{
 			XxlJobLogger.log("addFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizAddFeeService.querybizAddFee(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
-				isSend = true;
 				for (BizAddFeeEntity entity : bizList) {
 					FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);
@@ -110,12 +109,11 @@ public class AddFeeInitJob extends IJobHandler{
 		}
 		
 		if(bizList== null || bizList.size() == 0){
-			if(isSend){
-				sendTask(taskVoMap);
-			}
 			return;
 		}
-		
+		else{
+			saveFees(map,taskVoMap);
+		}
 	}
 
 	private FeesReceiveStorageEntity initFees(BizAddFeeEntity entity) {
