@@ -3,6 +3,7 @@ package com.jiuyescm.bms.biz.pallet.repository;
 import java.util.Map;
 import java.util.List;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 
 /**
@@ -65,6 +66,13 @@ public interface IBizPalletInfoRepository {
 	 * @return
 	 */
 	int updateBatchFees(List<Map<String, Object>> list);
+	
+	/**
+	 * 查询托数需要发的任务
+	 * @param condition
+	 * @return
+	 */
+	List<BmsAsynCalcuTaskEntity> queryPalletTask(Map<String, Object> condition);
 
 
 

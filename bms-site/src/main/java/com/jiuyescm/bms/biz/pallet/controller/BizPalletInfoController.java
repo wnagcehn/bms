@@ -196,7 +196,34 @@ public class BizPalletInfoController {
 			if (k == 0) {
 				throw new BizException("更新失败！");
 			}
-			sendTasks();
+			
+			BmsCalcuTaskVo calcuTaskVo = new BmsCalcuTaskVo();
+			Map<String, String> sysMap = getEnumList("PALLET_CAL_FEE");
+			String subjectCode = "";
+			String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+			if ("product".equals(entity.getBizType())) {
+				subjectCode = "wh_product_storage";
+			}else if ("material".equals(entity.getBizType())) {
+				subjectCode = "wh_material_storage";
+			}else if ("instock".equals(entity.getBizType())) {
+				subjectCode = "wh_disposal";
+			}else {
+				subjectCode = "outstock_pallet_vm";
+			}
+			
+			try{
+				calcuTaskVo.setCrePerson("系统");
+				calcuTaskVo.setCrePersonId("system");
+				calcuTaskVo.setCustomerId(entity.getCustomerId());
+				calcuTaskVo.setSubjectCode(subjectCode);
+				calcuTaskVo.setCreMonth(Integer.valueOf(creMonth));
+				calcuTaskVo.setSubjectName(sysMap.get(entity.getSubjectCode()));
+				bmsCalcuTaskService.sendTask(calcuTaskVo);
+				logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
+			}
+			catch(Exception ex){
+				logger.error("mq发送失败:", ex);
+			}
 		}
 	}
 
@@ -605,14 +632,26 @@ public class BizPalletInfoController {
 	@Expose
 	public String reCalculate(Map<String, Object> param){
 		List<BizPalletInfoEntity> list = bizPalletInfoService.query(param);
-		if (null == list || list.size() == 0) {
+		if (CollectionUtils.isEmpty(list)) {
 			return "没有数据重算";
 		}
 		
 		if(bizPalletInfoService.retryCalculate(list) <= 0){
 			return "重算异常";
 		}else {
-			sendTasks();
+			List<BmsCalcuTaskVo> taskVos = bmsCalcuTaskService.queryPalletTask(param);
+			Map<String, String> sysMap = getEnumList("PALLET_CAL_FEE");
+			for (BmsCalcuTaskVo calcuTaskVo : taskVos) {
+				calcuTaskVo.setCrePerson("系统");
+				calcuTaskVo.setCrePersonId("system");
+				calcuTaskVo.setSubjectName(sysMap.get(calcuTaskVo.getSubjectCode()));
+				try {
+					bmsCalcuTaskService.sendTask(calcuTaskVo);
+					logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
+				} catch (Exception e) {
+					logger.error("mq发送失败:", e);
+				}
+			}
 		}
 		return "操作成功! 正在重算...";
 	}

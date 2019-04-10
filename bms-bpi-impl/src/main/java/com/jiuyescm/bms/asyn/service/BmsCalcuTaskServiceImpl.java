@@ -23,6 +23,8 @@ import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.asyn.repo.IBmsAsynCalcuTaskRepository;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
+import com.jiuyescm.bms.biz.storage.repository.IBizOutstockMasterRepository;
 import com.jiuyescm.bms.common.enumtype.MQSubjectEnum;
 import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
 import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
@@ -52,6 +54,11 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	private ICustomerDictService customerDictService;
 	@Autowired
 	private IBmsSubjectInfoService bmsSubjectService;
+	@Autowired
+	IBizPalletInfoRepository bizPalletInfoRepository;
+	@Autowired
+	IBizOutstockMasterRepository bizOutstockMasterRepository;
+	
 	private static final String FEES_TYPE_ITEM = "item";
 	private static final String FEES_TYPE_PALLET = "pallet";
 	private static final String SEND_MQ = "TRUE";
@@ -430,5 +437,45 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		}
 		pageVoInfo.setList(result);
 		return pageVoInfo;
+	}
+	
+	@Override
+	public List<BmsCalcuTaskVo> queryPalletTask(Map<String, Object> condition) {
+		List<BmsAsynCalcuTaskEntity> list = bizPalletInfoRepository
+				.queryPalletTask(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if (list == null) {
+			return null;
+		}
+		for (BmsAsynCalcuTaskEntity entity : list) {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try {
+				PropertyUtils.copyProperties(vo, entity);
+			} catch (Exception ex) {
+				logger.error("转换失败");
+			}
+			voList.add(vo);
+		}
+		return voList;
+	}
+	
+	@Override
+	public List<BmsCalcuTaskVo> queryOutstockTask(Map<String, Object> condition) {
+		List<BmsAsynCalcuTaskEntity> list = bizOutstockMasterRepository
+				.queryOutstockTask(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if (list == null) {
+			return null;
+		}
+		for (BmsAsynCalcuTaskEntity entity : list) {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try {
+				PropertyUtils.copyProperties(vo, entity);
+			} catch (Exception ex) {
+				logger.error("转换失败");
+			}
+			voList.add(vo);
+		}
+		return voList;
 	}
 }

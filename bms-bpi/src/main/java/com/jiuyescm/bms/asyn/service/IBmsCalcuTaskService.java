@@ -58,5 +58,19 @@ public interface IBmsCalcuTaskService {
 
 	PageInfo<BmsCalcuTaskVo> queryPage(Map<String, Object> condition,
 			int pageNo, int pageSize);
+
+	/**
+	 * 查询托数需要发送的任务
+	 * @param condition
+	 * @return
+	 */
+	List<BmsCalcuTaskVo> queryPalletTask(Map<String, Object> condition);
+
+	/**
+	 * 查询出库需要发送的任务
+	 * @param condition
+	 * @return
+	 */
+	List<BmsCalcuTaskVo> queryOutstockTask(Map<String, Object> condition);
 	
 }

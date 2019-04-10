@@ -3,7 +3,6 @@ package com.jiuyescm.bms.init;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,22 +72,17 @@ public class AddFeeInitJob extends IJobHandler{
 		
 		Map<String, Object> taskVoMap = new HashMap<>();
 		
+		StopWatch sw = new StopWatch();
+		sw.start();
 		saveFees(map,taskVoMap);
+		sw.stop();
 		
-		StopWatch watch = new StopWatch();
-		watch.start();
-		
-		watch.stop();
-		
-		
-		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis() - startTime);
+		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", sw.getTotalTimeMillis());
         return ReturnT.SUCCESS;
 	}
 	
 	private void saveFees(Map<String, Object> map,Map<String, Object> taskVoMap){
 
-		StopWatch watch = new StopWatch();
-		watch.start();
 		List<BizAddFeeEntity> bizList = null;
 		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
 		try {
@@ -100,12 +94,10 @@ public class AddFeeInitJob extends IJobHandler{
 					FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);
 					
-					String customerId = entity.getCustomerid();
-					String subjectCode = "123";
-					String creMonth = "201901";
-					StringBuilder sb1 = new StringBuilder();
-					sb1.append(subjectCode).append("-").append("").append("").append("");
-					taskVoMap.put(sb1.toString(), sb1.toString());
+					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+					StringBuilder sb = new StringBuilder();
+					sb.append(entity.getCustomerid()).append("-").append("wh_value_add_subject").append("-").append(creMonth);
+					taskVoMap.put(sb.toString(), sb.toString());
 				}
 				XxlJobLogger.log("【增值】查询行数【{0}】", bizList.size());
 				
@@ -116,7 +108,6 @@ public class AddFeeInitJob extends IJobHandler{
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
 			return;
 		}
-		watch.stop();
 		
 		if(bizList== null || bizList.size() == 0){
 			if(isSend){
@@ -179,13 +170,6 @@ public class AddFeeInitJob extends IJobHandler{
 		XxlJobLogger.log("新增费用数据耗时：【{0}】毫秒  ",(current - start));
 	}
 	
-	private static final List<String> subjectList= Arrays.asList("wh_value_add_subject");
-	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-	static{
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
-	}
-
 	private void sendTask(Map<String, Object> taskVos) {
 
 		for (String key : taskVos.keySet()) { 
