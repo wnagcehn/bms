@@ -122,7 +122,7 @@ public class ContractCalcuService {
 			logger.info("系统异常",ex);
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
-			errorMap.put("msg", "系统异常");
+			errorMap.put("msg", ex.getMessage());
 			return;
 		}
 	}
