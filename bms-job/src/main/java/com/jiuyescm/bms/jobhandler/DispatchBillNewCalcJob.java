@@ -1284,6 +1284,10 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		
 		//温度
 		String bizTemperatureCode = StringUtil.isEmpty(bizEntity.getTemperatureTypeCode())?"":bizEntity.getTemperatureTypeCode();
+		String id = "-->"+bizEntity.getId();
+		if("JY0010067754".equals(bizEntity.getWaybillNo())){
+			XxlJobLogger.log("-->{0} bizCity={1} bizArea={2} bizServiceCode={3} bizServiceCode={4}",id,bizCity,bizArea,bizServiceCode,bizServiceCode);
+		}
 		
 		Map<Long,BmsQuoteDispatchDetailVo> map=new HashMap<>();
 		
@@ -1305,7 +1309,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			String dispatchCityId=mainDispatchEntity.getCityId();
 			//获取报价此时的区ID
 			String dispatchAreaId=mainDispatchEntity.getAreaId();
-					
+				
+			if("JY0010067754".equals(bizEntity.getWaybillNo())){
+				XxlJobLogger.log("-->{0} dispatchCityId={1} dispatchAreaId={2} dispatchServiceCode={3} dispatchTemetureCode={4}"
+						,id,dispatchCityId,dispatchAreaId,dispatchServiceCode,dispatchTemetureCode);
+			}
 			//判断物流产品类型
 			if(StringUtils.isNotBlank(dispatchServiceCode)){
 				if(dispatchServiceCode.equals(bizServiceCode)){
@@ -1361,6 +1369,9 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			}
 		}
 		
+		if("JY0010067754".equals(bizEntity.getWaybillNo())){
+			XxlJobLogger.log("-->{0} ok",id);
+		}
 		
 		Integer minValue=new Integer(0);
 		for(Integer num:newPrice.keySet()){
@@ -1369,10 +1380,17 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			}	
 		}
 		
+		if("JY0010067754".equals(bizEntity.getWaybillNo())){
+			XxlJobLogger.log("-->{0} minValue={1}",id,minValue);
+		}
+		
 		BmsQuoteDispatchDetailVo vo=new BmsQuoteDispatchDetailVo();
 		
 		if(!(minValue+"").contains("3")){
 			String result=newPrice.get(minValue);
+			if("JY0010067754".equals(bizEntity.getWaybillNo())){
+				XxlJobLogger.log("-->{0} result={1}",id,result);
+			}
 			if(StringUtils.isEmpty(result)){
 				return null;
 			}
