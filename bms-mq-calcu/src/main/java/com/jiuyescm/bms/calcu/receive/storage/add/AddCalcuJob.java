@@ -268,7 +268,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
 		queryVo.setCustomerId(entity.getCustomerid());
 		queryVo.setBizTypeCode(ContractBizTypeEnum.STORAGE.getCode());
-		queryVo.setSubjectCode(subjectCode);
+		queryVo.setSubjectCode(entity.getFeesType());
 		queryVo.setCurrentTime(entity.getCreateTime());
 		queryVo.setWarehouseCode(entity.getWarehouseCode());
 		return queryVo;
