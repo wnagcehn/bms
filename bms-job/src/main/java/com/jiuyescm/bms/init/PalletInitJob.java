@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.init;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,9 +116,11 @@ public class PalletInitJob extends IJobHandler {
 					FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);
 					
+					if ("outstock".equals(entity.getBizType())) {
+						continue;
+					}
 					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
-					StringBuilder sb = new StringBuilder();
-					sb.append(entity.getCustomerId()).append("-").append(fee.getSubjectCode()).append("-").append(creMonth);
+					StringBuilder sb = new StringBuilder(entity.getCustomerId()).append("-").append(fee.getSubjectCode()).append("-").append(creMonth);
 					taskVoMap.put(sb.toString(), sb.toString());
 				}
 				XxlJobLogger.log("【托数】查询行数【{0}】", bizList.size());
@@ -169,6 +172,7 @@ public class PalletInitJob extends IJobHandler {
 		// 更改业务数据状态
 		entity.setIsCalculated("1");
 
+		feesEntity.setCost(BigDecimal.ZERO);
 		feesEntity.setCreator("system");
 		feesEntity.setCreateTime(entity.getCreateTime());
 		feesEntity.setOperateTime(entity.getCreateTime());

@@ -8,7 +8,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -196,28 +195,36 @@ public class BizPalletInfoController {
 			if (k == 0) {
 				throw new BizException("更新失败！");
 			}
+			//如果是出库托数，不往下进行，不更新计算状态
+			if ("outstock".equals(entity.getBizType())) {
+				return;
+			}
 			
 			BmsCalcuTaskVo calcuTaskVo = new BmsCalcuTaskVo();
-			Map<String, String> sysMap = getEnumList("PALLET_CAL_FEE");
 			String subjectCode = "";
 			String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
-			if ("product".equals(entity.getBizType())) {
+			
+			switch (entity.getBizType()) {
+			case "product":
 				subjectCode = "wh_product_storage";
-			}else if ("material".equals(entity.getBizType())) {
+				break;
+			case "material":
 				subjectCode = "wh_material_storage";
-			}else if ("instock".equals(entity.getBizType())) {
+				break;
+			case "instock":
 				subjectCode = "wh_disposal";
-			}else {
+				break;
+			default:
 				subjectCode = "outstock_pallet_vm";
+				break;
 			}
 			
 			try{
-				calcuTaskVo.setCrePerson("系统");
-				calcuTaskVo.setCrePersonId("system");
+				calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
+				calcuTaskVo.setCrePersonId(ContextHolder.getLoginUserName());
 				calcuTaskVo.setCustomerId(entity.getCustomerId());
 				calcuTaskVo.setSubjectCode(subjectCode);
 				calcuTaskVo.setCreMonth(Integer.valueOf(creMonth));
-				calcuTaskVo.setSubjectName(sysMap.get(entity.getSubjectCode()));
 				bmsCalcuTaskService.sendTask(calcuTaskVo);
 				logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
 			}
@@ -520,6 +527,11 @@ public class BizPalletInfoController {
 			map0.put("lastModifierId", userid);
 			map0.put("lastModifyTime", nowdate);
 			map0.put("delFlag", "0");
+			if ("outstock".equals(bizTypeMap.get(bizType))) {
+				map0.put("isCalculated", "5");
+			}else {
+				map0.put("isCalculated", "99");
+			}
 			list.add(map0);
         }
         if (map.size() != 0) {
@@ -557,7 +569,48 @@ public class BizPalletInfoController {
 			return map;
         }else {
         	//更新业务表和费用表成功,发送MQ
-        	sendTasks();
+        	Map<String, String> taskMap = new HashMap<>();
+        	for (Map<String, Object> columens : list) {
+        		if ("outstock".equals(columens.get("bizType").toString())) {
+					continue;
+				}
+        		
+        		String creMonth = columens.get("curTime").toString().substring(0, 7).replace("-", "");
+				String subjectCode = "";
+				switch (columens.get("bizType").toString()) {
+				case "product":
+					subjectCode = "wh_product_storage";
+					break;
+				case "material":
+					subjectCode = "wh_material_storage";
+					break;
+				case "instock":
+					subjectCode = "wh_disposal";
+					break;
+				default:
+					subjectCode = "outstock_pallet_vm";
+					break;
+				}
+				StringBuilder sb = new StringBuilder(columens.get("customerId").toString()).append("-").append(subjectCode).append("-").append(creMonth);
+				taskMap.put(sb.toString(), sb.toString());
+			}
+        	for (String key : taskMap.keySet()) {
+        		String[] array = key.split("-");
+    			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+    			try{
+    				vo.setCrePerson(ContextHolder.getLoginUser().getCname());
+    				vo.setCrePersonId(ContextHolder.getLoginUserName());
+    				vo.setCustomerId(array[0]);
+    				vo.setSubjectCode(array[1]);
+    				vo.setCreMonth(Integer.valueOf(array[2]));
+    				bmsCalcuTaskService.sendTask(vo);
+    				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+    			}
+    			catch(Exception ex){
+    				logger.error("mq发送失败:", ex);
+    			}
+			}
+        	
         	DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
 			map.put(ConstantInterface.ImportExcelStatus.IMP_SUCC, "0");
 			return map;
@@ -631,6 +684,9 @@ public class BizPalletInfoController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
+		if ("outstock".equals(param.get("bizType").toString())) {
+			return "出库托数不进行重算";
+		}
 		List<BizPalletInfoEntity> list = bizPalletInfoService.query(param);
 		if (CollectionUtils.isEmpty(list)) {
 			return "没有数据重算";
@@ -640,11 +696,9 @@ public class BizPalletInfoController {
 			return "重算异常";
 		}else {
 			List<BmsCalcuTaskVo> taskVos = bmsCalcuTaskService.queryPalletTask(param);
-			Map<String, String> sysMap = getEnumList("PALLET_CAL_FEE");
 			for (BmsCalcuTaskVo calcuTaskVo : taskVos) {
-				calcuTaskVo.setCrePerson("系统");
-				calcuTaskVo.setCrePersonId("system");
-				calcuTaskVo.setSubjectName(sysMap.get(calcuTaskVo.getSubjectCode()));
+				calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
+				calcuTaskVo.setCrePersonId(ContextHolder.getLoginUserName());
 				try {
 					bmsCalcuTaskService.sendTask(calcuTaskVo);
 					logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
@@ -923,31 +977,6 @@ public class BizPalletInfoController {
 			mapValue.put(SystemCodeEntity.getCode(), SystemCodeEntity.getCodeName());
 		}
 		return mapValue;
-	}
-	
-	/**
-	 * 发送MQ公用方法
-	 */
-	private void sendTasks() {
-		//初始化费用科目
-		subjects = initSubjects();
-		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", Arrays.asList(subjects));
-		//对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryByMap(sendTaskMap);
-		Map<String, String> sysMap = getEnumList("PALLET_CAL_FEE");
-		for (BmsCalcuTaskVo vo : calList) {
-			vo.setCrePerson("系统");
-			vo.setCrePersonId("system");
-			vo.setSubjectName(sysMap.get(vo.getSubjectCode()));
-			try {
-				bmsCalcuTaskService.sendTask(vo);
-				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
-			} catch (Exception e) {
-				logger.error("mq发送失败:", e);
-			}	
-		}
 	}
 	
 }

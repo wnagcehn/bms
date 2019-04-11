@@ -232,7 +232,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
    <!-- 新重算 -->
    <update id="retryForCalcuNew" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
    		UPDATE fees_receive_storage s
-		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0'
+		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0' and p.biz_type != 'outstock'
 		<trim prefix="set" suffixOverrides=",">
 			s.is_calculated='99',
 		</trim>
@@ -273,9 +273,9 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
    		UPDATE fees_receive_storage s
 		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0'
 		<trim prefix="set" suffixOverrides=",">
-			s.is_calculated='99',
+			s.is_calculated=#{isCalculated},
 		</trim>
-		WHERE 1=1 and s.del_flag='0'
+		WHERE 1=1 and s.del_flag='0' and s.subject_code != 'outstock_pallet_vm'
 		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
 			and p.biz_type = #{bizType}
 		</if>
@@ -299,8 +299,8 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         select
 		p.customer_id as customerId, s.subject_code as subjectCode, DATE_FORMAT(p.create_time,'%Y%m') as creMonth
 		from biz_pallet_info p
-		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no and s.del_flag='0'
-		WHERE 1=1 and p.del_flag='0'
+		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no 
+		WHERE 1=1 and p.del_flag='0' and s.del_flag='0'
         	<if test=" id != null and id !='' ">
 				and p.id = #{id}
 			</if>

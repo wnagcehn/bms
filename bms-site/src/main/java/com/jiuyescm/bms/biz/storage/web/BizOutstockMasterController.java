@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
@@ -242,13 +243,12 @@ public class BizOutstockMasterController extends BaseController {
 		// 更改费用计算状态为99
 		bizOutstockMasterService.retryForCalcuFee(conMap);
 		
-		
 		String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
 		for (String sCode : subjectList3) {
 			try {
 				BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
-				vo.setCrePerson("系统");
-				vo.setCrePersonId("system");
+				vo.setCrePerson(ContextHolder.getLoginUser().getCname());
+				vo.setCrePersonId(ContextHolder.getLoginUserName());
 				vo.setCustomerId(entity.getCustomerid());
 				vo.setSubjectCode(sCode);
 				vo.setCreMonth(Integer.valueOf(creMonth));
@@ -465,8 +465,8 @@ public class BizOutstockMasterController extends BaseController {
 			//汇总需要发mq的数据
 			List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryOutstockTask(param);
 			for (BmsCalcuTaskVo calcuTaskVo : list) {
-				calcuTaskVo.setCrePerson("系统");
-				calcuTaskVo.setCrePersonId("system");
+				calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
+				calcuTaskVo.setCrePersonId(ContextHolder.getLoginUserName());
 				try {
 					bmsCalcuTaskService.sendTask(calcuTaskVo);
 					logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
@@ -1138,20 +1138,20 @@ public class BizOutstockMasterController extends BaseController {
 			logger.error("更新失败", e);
 		}
 		//通过运单获取所有修改的业务数据
-		Map<String,Object> condition = new HashMap<>();
-		condition.put("waybillNoList",waybillNoList);
-		List<BizOutstockMasterEntity> bizOutstockMasterEntityList = bizOutstockMasterService.queryNewList(condition);
-		//获取费用编号
-		List<String> feeList = new ArrayList<String>();
-		for (BizOutstockMasterEntity entity : bizOutstockMasterEntityList) {
-			feeList.add(entity.getFeesNo());
-		}
-		Map<String,Object> conditionFee = new HashMap<>();
-		conditionFee.put("feeList", feeList);
-		//更新费用计算状态
-		bizOutstockMasterService.retryForCalcuFee(conditionFee);
-		//发送mq
-		sendTask(subjectList3);
+//		Map<String,Object> condition = new HashMap<>();
+//		condition.put("waybillNoList",waybillNoList);
+//		List<BizOutstockMasterEntity> bizOutstockMasterEntityList = bizOutstockMasterService.queryNewList(condition);
+//		//获取费用编号
+//		List<String> feeList = new ArrayList<String>();
+//		for (BizOutstockMasterEntity entity : bizOutstockMasterEntityList) {
+//			feeList.add(entity.getFeesNo());
+//		}
+//		Map<String,Object> conditionFee = new HashMap<>();
+//		conditionFee.put("feeList", feeList);
+//		//更新费用计算状态
+//		bizOutstockMasterService.retryForCalcuFee(conditionFee);
+//		//发送mq
+//		sendTask(subjectList3);
 
 		if (num == 0) {
 			DoradoContext.getAttachedRequest().getSession()

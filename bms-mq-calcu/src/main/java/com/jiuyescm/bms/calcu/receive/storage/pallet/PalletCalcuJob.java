@@ -307,6 +307,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 					logger.info("阶梯报价未配置");
 					fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 					fee.setCalcuMsg("阶梯报价未配置");
+					return;
 				}
 				
 				if(!DoubleUtil.isBlank(stepQuoEntity.getUnitPrice())){

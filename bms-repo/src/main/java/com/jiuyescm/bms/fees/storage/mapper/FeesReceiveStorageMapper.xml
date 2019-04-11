@@ -1142,7 +1142,7 @@
     <update id="updateIsCalcuByFeesNo" parameterType="java.util.Map">
     	update fees_receive_storage
     	set is_calculated='99'
-    	where 1=1
+    	where 1=1 and subject_code != 'outstock_pallet_vm'
     	<if test="feesNo !=null and feesNo != ''">
     		and fees_no = #{feesNo}
     	</if>

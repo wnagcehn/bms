@@ -229,10 +229,11 @@ task_id, cur_time, biz_type, warehouse_code, warehouse_name, customer_id, custom
     <update id="importUpdatePalletNumBatch" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoTempEntity">
         update biz_pallet_info
         <trim prefix="set" suffixOverrides=",">
-        	is_calculated = '99',
+        	is_calculated = '0',
 			pallet_num = #{palletNum,jdbcType=DECIMAL},
         </trim>
-        where cur_time=#{curTime} 
+        where biz_type != 'outstock'
+        and cur_time=#{curTime} 
         and customer_id=#{customerId}
         and warehouse_code=#{warehouseCode}
         <if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">

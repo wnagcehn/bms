@@ -76,7 +76,10 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
     	map.put("feesNo", entity.getFeesNo());
     	try {
     		bizPalletInfoRepository.update(entity);
-    		feesReceiveStorageRepository.updateIsCalcuByFeesNo(map);
+			//如果是出库托数，不往下进行，不更新计算状态
+			if (!"outstock".equals(entity.getBizType())) {
+				feesReceiveStorageRepository.updateIsCalcuByFeesNo(map);
+			}
 		} catch (Exception e) {
 			logger.error("更新异常!", e);
 			return 0;

@@ -28,9 +28,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
+import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
@@ -78,6 +81,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 	@Autowired private IBmsGroupService bmsGroupService;
 	@Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
 	@Autowired private ICustomerDictService customerDictService;
+	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	
 	private static final String REMARK = "导入数据不规范,请下载查看最后一列说明";
 	BmsFileAsynTaskVo taskEntity = new BmsFileAsynTaskVo();
