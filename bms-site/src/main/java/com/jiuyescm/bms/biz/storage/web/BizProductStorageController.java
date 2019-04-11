@@ -452,9 +452,9 @@ public class BizProductStorageController extends BaseController {
 			if (bizProductStorageService.reCalculate(feeMap) == 0) {
 				return "重算异常";
 			}
+			// 发送MQ
+			sendTask(param);
 		}
-		// 发送MQ
-		sendTask();
 		return "操作成功! 正在重算...";
 	}
 
@@ -466,9 +466,9 @@ public class BizProductStorageController extends BaseController {
 		sendTaskMap.put("subjectList", subjectList);
 	}
 
-	private void sendTask() {
+	private void sendTask(Map<String, Object> param) {
 		// 对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
+		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryProTask(param);
 		for (BmsCalcuTaskVo vo : list) {
 			vo.setCrePerson(JAppContext.currentUserName());
 			vo.setCrePersonId(JAppContext.currentUserID());
