@@ -939,6 +939,12 @@ view.get(&quot;#panelCustomer1&quot;).show();&#xD;
           <Property name="property">cost</Property>
           <Property name="width">100</Property>
         </DataColumn>
+        <DataColumn>
+          <Property name="visible">false</Property>
+          <Property name="name">customerid</Property>
+          <Property name="property">customerid</Property>
+          <Editor/>
+        </DataColumn>
       </DataGrid>
       <Dialog id="updateDialog">
         <ClientEvent name="onClose">view.id(&quot;dsQuotaList&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>

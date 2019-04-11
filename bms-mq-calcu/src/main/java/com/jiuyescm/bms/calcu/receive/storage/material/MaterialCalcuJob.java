@@ -410,7 +410,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Override
 	public void calcuForContract(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity fee){
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
-		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo);
+		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
