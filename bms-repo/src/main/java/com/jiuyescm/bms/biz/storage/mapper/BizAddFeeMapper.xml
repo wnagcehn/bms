@@ -412,8 +412,8 @@
     <select id="queryTask" parameterType="java.util.Map" resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
     	select 
 		a.customerid,s.subject_code as subjectCode, DATE_FORMAT(a.create_time,'%Y%m') as creMonth  from biz_add_fee a
-		LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no and s.del_flag='0';
-		WHERE 1=1
+		LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no  
+		WHERE 1=1 and a.del_flag='0' and s.del_flag='0'
 		<if test="(id != null and id !='')" >
 				and a.id = #{id}
 		</if>
@@ -461,9 +461,6 @@
 		</if>
 		<if test="(lastModifyTime != null and lastModifyTime !='')" >
 			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
-		</if>
-		<if test="(delFlag != null and delFlag !='')" >
-				and a.del_flag = #{delFlag}
 		</if>
 		<if test="(calculateTime != null and calculateTime !='')" >
 			    and a.calculate_time >= #{calculateTime} add <![CDATA[a.calculate_time <= #{calculateTime}]]>

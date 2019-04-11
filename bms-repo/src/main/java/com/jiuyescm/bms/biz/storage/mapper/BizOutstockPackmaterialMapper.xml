@@ -762,8 +762,8 @@
     	select
     	a.customer_id as customerId,b.subject_code as subjectCode, DATE_FORMAT(a.create_time,'%Y%m') as creMonth
         from  biz_outstock_packmaterial a
-        left join fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
-		where a.del_flag='0'
+        left join fees_receive_storage b on a.fees_no=b.fees_no 
+		where a.del_flag='0' and b.del_flag='0' 
         <if test="(feesNo != null and feesNo !='')" >
 				and a.fees_no = #{feesNo}
 		</if>
