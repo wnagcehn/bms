@@ -140,6 +140,7 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
         select
              a.id,
+             a.customerid,
 		     a.customer_name,
 		     a.warehouse_name,
 		     a.external_no,
