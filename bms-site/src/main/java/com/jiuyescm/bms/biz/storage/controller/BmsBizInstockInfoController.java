@@ -156,10 +156,10 @@ public class BmsBizInstockInfoController {
 			feeList.add(fee1);
 			feeList.add(fee2);
 	        bmsBizInstockInfoService.reCalculate(feeList);
-			List<String> subjectList = new ArrayList<>();
-			subjectList.add(FEE_1);
-			subjectList.add(FEE_2);
-			sendMq(subjectList);
+	        //发送mq
+	        Map<String, Object> paramMap = new HashMap<>();
+	        paramMap.put("id", entity.getId());
+			sendMq(paramMap);
 		}
 	}
 
@@ -377,6 +377,7 @@ public class BmsBizInstockInfoController {
 			map0.put("lastModifier", username);
 			map0.put("lastModifierId", userid);
 			map0.put("lastModifyTime", nowdate);
+			map0.put("isCal", "0");
 			list.add(map0);
 			//组装数据
 			condition.put("instockNo", instockNo);
@@ -417,14 +418,14 @@ public class BmsBizInstockInfoController {
 			infoLists.add(entity);
 			
 			//重算的费用
-			BmsBizInstockInfoEntity fee1 = new BmsBizInstockInfoEntity();
+/*			BmsBizInstockInfoEntity fee1 = new BmsBizInstockInfoEntity();
 			fee1.setFeesNo(infoEntity.getFeesNo());
 			fee1.setSubjectCode(FEE_1);
 			BmsBizInstockInfoEntity fee2 = new BmsBizInstockInfoEntity();
 			fee2.setFeesNo(infoEntity.getFeesNo());
 			fee2.setSubjectCode(FEE_2);
 			feeList.add(fee1);
-			feeList.add(fee2);
+			feeList.add(fee2);*/
         }
         if (map.size() != 0) {
 			return map;
@@ -436,13 +437,17 @@ public class BmsBizInstockInfoController {
         try {
         	//更新业务表
 			num = bmsBizInstockInfoService.updateBatch(list);
-	        //修改费用表
+/*	        //修改费用表
 	        bmsBizInstockInfoService.reCalculate(feeList);
 	        //发送MQ
 			List<String> subjectList = new ArrayList<String>();
 			subjectList.add(FEE_1);
 			subjectList.add(FEE_2);
-			sendMq(subjectList);
+			for (BmsBizInstockInfoEntity fee : feeList) {
+				Map<String,Object> param = new HashMap<>();
+				
+			}
+			sendMq(subjectList);*/
 		} catch (Exception e) {
 		     message = e.getMessage();
 		     logger.error(e.getMessage(), e);
@@ -950,14 +955,7 @@ public class BmsBizInstockInfoController {
 		if(bmsBizInstockInfoService.reCalculate(list) == 0){
 			return "重算异常";
 		}
-		List<String> subjectList = new ArrayList<String>();
-		if(param.containsKey("subjectCode")){
-			subjectList.add((String) param.get("subjectCode"));
-		}else{
-			subjectList.add("wh_instock_work");
-			subjectList.add("wh_b2c_handwork");
-		}
-		sendMq(subjectList);
+		sendMq(param);
 		return "操作成功! 正在重算...";
 	}
 	
@@ -975,12 +973,9 @@ public class BmsBizInstockInfoController {
 		}
 	}
 	
-	private void  sendMq(List<String> subjectList) {
-		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
+	private void  sendMq(Map<String, Object> param) {
 		// 对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
+		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryInsTask(param);
 		for (BmsCalcuTaskVo vo : list) {
 			vo.setCrePerson(JAppContext.currentUserName());
 			vo.setCrePersonId(JAppContext.currentUserID());

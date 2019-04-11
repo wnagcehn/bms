@@ -390,6 +390,9 @@
         where 1=1 and b.del_flag='0'
 		<include refid="queryColumns" />
 		GROUP BY b.id
+		<if test="(mkInvoiceName != null and mkInvoiceName !='')" >
+				HAVING mkInvoiceName like '%${mkInvoiceName}%'
+		</if>
     </select>
     
         <select id="queryForOut" parameterType="java.util.Map"
@@ -714,7 +717,7 @@
 <if test="invoiceStatus != null" >invoice_status=#{invoiceStatus,jdbcType=VARCHAR},</if>
 <if test="expectAmount != null" >expect_amount=#{expectAmount,jdbcType=DECIMAL},</if>
 <if test="confirmAmount != null" >confirm_amount=#{confirmAmount,jdbcType=DECIMAL},</if>
-<if test="confirmDate != null" >confirm_date=#{confirmDate,jdbcType=DATE},</if>
+<if test="1 == 1" >confirm_date=#{confirmDate,jdbcType=DATE},</if>
 <if test="confirmManId != null" >confirm_man_id=#{confirmManId,jdbcType=VARCHAR},</if>
 <if test="confirmMan != null" >confirm_man=#{confirmMan,jdbcType=VARCHAR},</if>
 <if test="isneedInvoice != null" >isneed_invoice=#{isneedInvoice,jdbcType=VARCHAR},</if>
