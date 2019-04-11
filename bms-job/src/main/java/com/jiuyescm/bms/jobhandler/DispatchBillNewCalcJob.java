@@ -920,10 +920,10 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			//1.走物流产品类型筛选  2.走温度筛选 3.走地址筛选
 			XxlJobLogger.log("-->"+entity.getId()+"走筛选 筛选前报价条数【{0}】",list.size());
 			list=handNewBizDispatch(list, entity);
-			XxlJobLogger.log("-->"+entity.getId()+"筛选后报价条数【{0}】",list.size());
 			if(null==list||list.size()==0){
 				return list;
 			}
+			XxlJobLogger.log("-->"+entity.getId()+"筛选后报价条数【{0}】",list.size());
 			for (BmsQuoteDispatchDetailVo bmsQuoteDispatchDetailVo : list) {
 				XxlJobLogger.log("-->"+entity.getId()+"筛选后报价明细【{0}】",JSONObject.fromObject(bmsQuoteDispatchDetailVo));
 			}		
@@ -1284,15 +1284,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		
 		//温度
 		String bizTemperatureCode = StringUtil.isEmpty(bizEntity.getTemperatureTypeCode())?"":bizEntity.getTemperatureTypeCode();
-		if("JY0010067754".equals(bizEntity.getWaybillNo())){
-			XxlJobLogger.log("-->"+bizEntity.getId()+"bizCity【{0}】",bizCity);
-			XxlJobLogger.log("-->"+bizEntity.getId()+"bizArea【{0}】",bizArea);
-			XxlJobLogger.log("-->"+bizEntity.getId()+"bizServiceCode【{0}】",bizServiceCode);
-			XxlJobLogger.log("-->"+bizEntity.getId()+"bizTemperatureCode【{0}】",bizTemperatureCode);
-		}
-		
 		Map<Long,BmsQuoteDispatchDetailVo> map=new HashMap<>();
-		
 		Map<Integer,String> newPrice=new HashMap<Integer,String>();
 		
 		//报价形式
@@ -1311,13 +1303,6 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			String dispatchCityId=mainDispatchEntity.getCityId();
 			//获取报价此时的区ID
 			String dispatchAreaId=mainDispatchEntity.getAreaId();
-				
-			if("JY0010067754".equals(bizEntity.getWaybillNo())){
-				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchCityId【{0}】",dispatchCityId);
-				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchAreaId【{0}】",dispatchAreaId);
-				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchServiceCode【{0}】",dispatchServiceCode);
-				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchTemetureCode【{0}】",dispatchTemetureCode);
-			}
 			//判断物流产品类型
 			if(StringUtils.isNotBlank(dispatchServiceCode)){
 				if(dispatchServiceCode.equals(bizServiceCode)){
@@ -1373,10 +1358,6 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			}
 		}
 		
-		if("JY0010067754".equals(bizEntity.getWaybillNo())){
-			XxlJobLogger.log("-->"+bizEntity.getId()+"OK");
-		}
-		
 		Integer minValue=new Integer(0);
 		for(Integer num:newPrice.keySet()){
 			if(minValue==0 || num<minValue){
@@ -1384,17 +1365,10 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			}	
 		}
 		
-		if("JY0010067754".equals(bizEntity.getWaybillNo())){
-			XxlJobLogger.log("-->"+bizEntity.getId()+"minValue={0}",minValue);
-		}
-		
 		BmsQuoteDispatchDetailVo vo=new BmsQuoteDispatchDetailVo();
 		
 		if(!(minValue+"").contains("3")){
 			String result=newPrice.get(minValue);
-			if("JY0010067754".equals(bizEntity.getWaybillNo())){
-				XxlJobLogger.log("-->"+bizEntity.getId()+"result={0}",result);
-			}
 			if(StringUtils.isEmpty(result)){
 				return null;
 			}
@@ -1411,7 +1385,6 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				list.add(vo);			
 			}
 		}
-		XxlJobLogger.log("-->"+bizEntity.getId()+"报价过滤结束");
 		return list;	
 	}
 	
