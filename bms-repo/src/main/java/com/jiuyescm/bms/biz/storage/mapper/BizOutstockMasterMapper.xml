@@ -164,7 +164,7 @@
 			 a.product_detail,
 		     b.subject_code,
 		     b.is_calculated,
-		     b.calcu_msg,
+		     b.calcu_msg as remark,
 		     b.calculate_time,
 		     b.unit,b.cost
 		     from biz_outstock_master a LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'

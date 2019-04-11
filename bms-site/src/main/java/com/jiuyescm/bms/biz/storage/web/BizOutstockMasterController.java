@@ -238,27 +238,37 @@ public class BizOutstockMasterController extends BaseController {
 		feeList.add(feesNo);
 		Map<String, Object> conMap = new HashMap<String, Object>();
 		conMap.put("feeList", feeList);
-		String subjectCode = entity.getSubjectCode();
-		conMap.put("subjectCode", subjectCode);
 		// 更改费用计算状态为99
 		bizOutstockMasterService.retryForCalcuFee(conMap);
-		
+
 		String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
-		for (String sCode : subjectList3) {
-			try {
-				BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
-				vo.setCrePerson(ContextHolder.getLoginUser().getCname());
-				vo.setCrePersonId(ContextHolder.getLoginUserName());
-				vo.setCustomerId(entity.getCustomerid());
-				vo.setSubjectCode(sCode);
-				vo.setCreMonth(Integer.valueOf(creMonth));
-				bmsCalcuTaskService.sendTask(vo);
-				logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
-			} catch (Exception e) {
-				logger.error("mq发送失败:", e);
-			}	
+		//如果是【B2B订单操作费】 或【出库装车费】,并且是B2B出库单   ( B2bFlag 0-B2C  1-B2B)
+		if(("wh_b2b_work".equals(entity.getSubjectCode()) ||"wh_b2b_handwork".equals(entity.getSubjectCode())) 
+				&& "1".equals(entity.getB2bFlag())){
+			for (String sCode : subjectList2) {
+				sendTask(entity, creMonth, sCode);	
+			}
 		}
+		else if("wh_b2c_work".equals(entity.getSubjectCode()) && "0".equals(entity.getB2bFlag())){
+			sendTask(entity, creMonth, "wh_b2c_work");	
+		}
+
 		return result;
+	}
+
+	private void sendTask(BizOutstockMasterEntity entity, String creMonth, String sCode) {
+		try {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			vo.setCrePerson(ContextHolder.getLoginUser().getCname());
+			vo.setCrePersonId(ContextHolder.getLoginUserName());
+			vo.setCustomerId(entity.getCustomerid());
+			vo.setSubjectCode(sCode);
+			vo.setCreMonth(Integer.valueOf(creMonth));
+			bmsCalcuTaskService.sendTask(vo);
+			logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
+		} catch (Exception e) {
+			logger.error("mq发送失败:", e);
+		}
 	}
 
 	@DataResolver
@@ -462,6 +472,7 @@ public class BizOutstockMasterController extends BaseController {
 			}
 			// 更改费用计算状态为99
 			bizOutstockMasterService.retryForCalcuFee(conMap);
+			
 			//汇总需要发mq的数据
 			List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryOutstockTask(param);
 			for (BmsCalcuTaskVo calcuTaskVo : list) {
@@ -488,35 +499,34 @@ public class BizOutstockMasterController extends BaseController {
 	}
 
 	// wh_b2c_work(B2C订单操作费 ) wh_b2b_work(B2B订单操作费) wh_b2b_handwork(出库装车费)
-	private static final String FEE_1 = "wh_b2c_work";
-	private static final String FEE_2 = "wh_b2b_work";
-	private static final String FEE_3 = "wh_b2b_handwork";
-	private static final List<String> subjectList3 = Arrays.asList(FEE_1,
-			FEE_2, FEE_3);
+	private static final String FEE_1 = "wh_b2b_work";
+	private static final String FEE_2 = "wh_b2b_handwork";
+	private static final List<String> subjectList2 = Arrays.asList(FEE_1,
+			FEE_2);
 
-	private void sendTask(List<String> subjectList) {
-		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
-		// 对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
-		for (BmsCalcuTaskVo vo : list) {
-			vo.setCrePerson(JAppContext.currentUserName());
-			vo.setCrePersonId(JAppContext.currentUserID());
-			vo.setCreTime(JAppContext.currentTimestamp());
-			try {
-				bmsCalcuTaskService.sendTask(vo);
-				logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}",
-						vo.getCustomerId(), vo.getCreMonth(),
-						vo.getSubjectCode());
-			} catch (Exception e) {
-				logger.info(
-						"mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}",
-						vo.getCustomerId(), vo.getCreMonth(),
-						vo.getSubjectCode(), e);
-			}
-		}
-	}
+//	private void sendTask(List<String> subjectList) {
+//		Map<String, Object> sendTaskMap = new HashMap<String, Object>();
+//		sendTaskMap.put("isCalculated", "99");
+//		sendTaskMap.put("subjectList", subjectList);
+//		// 对这些费用按照商家、科目、时间排序
+//		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
+//		for (BmsCalcuTaskVo vo : list) {
+//			vo.setCrePerson(JAppContext.currentUserName());
+//			vo.setCrePersonId(JAppContext.currentUserID());
+//			vo.setCreTime(JAppContext.currentTimestamp());
+//			try {
+//				bmsCalcuTaskService.sendTask(vo);
+//				logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}",
+//						vo.getCustomerId(), vo.getCreMonth(),
+//						vo.getSubjectCode());
+//			} catch (Exception e) {
+//				logger.info(
+//						"mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}",
+//						vo.getCustomerId(), vo.getCreMonth(),
+//						vo.getSubjectCode(), e);
+//			}
+//		}
+//	}
 
 	/**
 	 * 导出
