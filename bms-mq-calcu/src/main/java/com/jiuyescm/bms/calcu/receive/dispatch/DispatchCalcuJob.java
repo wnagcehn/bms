@@ -603,6 +603,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getAmount()>0){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
+				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getAmount());
 			}
 			else{
