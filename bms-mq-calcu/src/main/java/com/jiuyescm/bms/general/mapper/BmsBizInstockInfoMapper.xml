@@ -230,9 +230,9 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		order by totalNum desc
     </select>
     
-    <select id="querybizInstockInfo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
+    <select id="querybizInstockInfo" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity">
     	select
-		a.id, a.fees_no as feesNo,a.create_time,
+		a.id, a.fees_no as feesNo,a.create_time as createTime,
 		a.warehouse_code as warehouseCode, a.warehouse_name as warehouseName, 
 		a.customer_id as customerId, a.customer_name as customerName, 
 		a.adjust_qty as adjustQty,IFNULL(a.total_qty,0) as totalQty, 
@@ -245,7 +245,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and a.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
 			and a.customer_id = #{customerId,jdbcType=VARCHAR}

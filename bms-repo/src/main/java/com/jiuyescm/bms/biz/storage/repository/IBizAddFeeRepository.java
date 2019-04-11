@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 
 /**
@@ -62,4 +63,6 @@ public interface IBizAddFeeRepository {
 	 * @return
 	 */
 	int retryCalcu(Map<String, Object> condition);
+	
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 }

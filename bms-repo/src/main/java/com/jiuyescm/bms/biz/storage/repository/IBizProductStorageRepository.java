@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 
 /**
@@ -41,4 +42,6 @@ public interface IBizProductStorageRepository {
 	int reCalculate(Map<String, Object> param);
 
 	List<BizProductStorageEntity> queryList(Map<String, Object> condition);
+
+	List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 }

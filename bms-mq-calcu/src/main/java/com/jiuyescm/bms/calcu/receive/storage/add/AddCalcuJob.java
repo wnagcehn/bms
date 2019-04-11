@@ -248,6 +248,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
+				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{

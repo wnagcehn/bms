@@ -499,7 +499,7 @@ public class DispatchBillController{
 			return "重算异常";
 		}else{
 			//对这些费用按照商家、科目、时间排序
-			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryMaterialTask(param);
+			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryDispatchTask(param);
 			for (BmsCalcuTaskVo vo : calList) {
 				vo.setCrePerson(JAppContext.currentUserName());
 				vo.setCrePersonId(JAppContext.currentUserID());
@@ -1143,7 +1143,7 @@ public class DispatchBillController{
 						return map;
 					}
 				}
-			}
+			} 
 			
 			//物流商重量
 			if(!StringUtils.isEmpty(carrierWeight)){
@@ -1168,6 +1168,7 @@ public class DispatchBillController{
 				return map;
 			}else{
 				map0.put("waybillNo", ExportUtil.replaceBlank(waybillNo));
+				map0.put("isCalculated", "0");
 				map0.put("lastModifier", userid);
 				map0.put("lastModifyTime", nowdate);
 				list.add(map0);
@@ -1179,7 +1180,7 @@ public class DispatchBillController{
         int num = 0;
         String message = null;
         try {
-			num = bizDispatchBillService.updateBatchWeight(list);
+			num = bizDispatchBillService.updateBatchWeight(list);		
 		} catch (Exception e) {
 		     message = e.getMessage();
 		     logger.error(e.getMessage(), e);

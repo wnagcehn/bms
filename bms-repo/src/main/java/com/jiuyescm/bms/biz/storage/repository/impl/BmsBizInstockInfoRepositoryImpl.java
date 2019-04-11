@@ -2,10 +2,13 @@ package com.jiuyescm.bms.biz.storage.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
@@ -124,4 +127,9 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition) {
+		return this.selectList("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.queryTask", condition);
+	}
 }

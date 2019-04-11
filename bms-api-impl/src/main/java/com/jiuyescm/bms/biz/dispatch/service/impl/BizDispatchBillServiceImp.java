@@ -136,7 +136,7 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 	public int updateBatchWeight(List<Map<String, Object>> list) {
 		try {
 			bizRepository.updateBatchWeight(list);
-			bizRepository.updateIsCalcuByWaybillNo(list);
+			//bizRepository.updateIsCalcuByWaybillNo(list);
 		} catch (Exception e) {
 			logger.error("更新异常!", e);
 			throw new BizException("更新异常!", e);

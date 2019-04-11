@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizProductStorageRepository;
 
@@ -121,4 +122,10 @@ public class BizProductStorageRepositoryImpl extends MyBatisDao implements IBizP
         List<BizProductStorageEntity> list = selectList("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.queryList", condition);
         return list;
     }
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition) {
+		return this.selectList("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.queryTask", condition);
+	}
 }

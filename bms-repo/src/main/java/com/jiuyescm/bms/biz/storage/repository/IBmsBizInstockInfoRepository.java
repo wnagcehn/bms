@@ -2,7 +2,9 @@ package com.jiuyescm.bms.biz.storage.repository;
 
 import java.util.Map;
 import java.util.List;
+
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 
@@ -53,5 +55,7 @@ public interface IBmsBizInstockInfoRepository {
 	 * @return
 	 */
 	PageInfo<FeesReceiveStorageEntity> queryForBill(Map<String, Object> condition, int pageNo, int pageSize);
+
+	List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 
 }

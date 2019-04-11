@@ -27,8 +27,11 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
+import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockMasterRepository;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
+import com.jiuyescm.bms.biz.storage.repository.IBizProductStorageRepository;
+import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.common.enumtype.MQSubjectEnum;
 import com.jiuyescm.bms.subject.service.IBmsSubjectInfoService;
 import com.jiuyescm.bms.subject.vo.BmsSubjectInfoVo;
@@ -65,6 +68,12 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	IBizPalletInfoRepository bizPalletInfoRepository;
 	@Autowired
 	IBizOutstockMasterRepository bizOutstockMasterRepository;
+	@Autowired
+	IBizAddFeeRepository bizAddFeeRepository;
+	@Autowired
+	IBizProductStorageRepository bizProductStorageRepository;
+	@Autowired
+	IBmsBizInstockInfoRepository bmsBizInstockInfoRepository;
 	
 	private static final String FEES_TYPE_ITEM = "item";
 	private static final String FEES_TYPE_PALLET = "pallet";
@@ -392,7 +401,24 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		}
 		return voList;
 	}
-
+	@Override
+	public List<BmsCalcuTaskVo> queryAddTask(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list = bizAddFeeRepository.queryTask(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if (list == null) {
+			return null;
+		}
+		for (BmsAsynCalcuTaskEntity entity : list) {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try {
+				PropertyUtils.copyProperties(vo, entity);
+			} catch (Exception ex) {
+				logger.error("转换失败");
+			}
+			voList.add(vo);
+		}
+		return voList;	}
 	
 	@Override
 	public List<BmsCalcuTaskVo> queryDisByMap(Map<String, Object> condition) {
@@ -512,6 +538,35 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	public List<BmsCalcuTaskVo> queryOutstockTask(Map<String, Object> condition) {
 		List<BmsAsynCalcuTaskEntity> list = bizOutstockMasterRepository
 				.queryOutstockTask(condition);
+		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
+		if (list == null) {
+			return null;
+		}
+		for (BmsAsynCalcuTaskEntity entity : list) {
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
+			try {
+				PropertyUtils.copyProperties(vo, entity);
+			} catch (Exception ex) {
+				logger.error("转换失败");
+			}
+			voList.add(vo);
+		}
+		return voList;
+	}
+
+	@Override
+	public List<BmsCalcuTaskVo> queryProTask(Map<String, Object> condition) {
+		List<BmsAsynCalcuTaskEntity> list = bizProductStorageRepository.queryTask(condition);
+		return trans(list);
+	}
+	
+	@Override
+	public List<BmsCalcuTaskVo> queryInsTask(Map<String, Object> condition) {
+		List<BmsAsynCalcuTaskEntity> list = bmsBizInstockInfoRepository.queryTask(condition);
+		return trans(list);
+	}
+	
+	private List<BmsCalcuTaskVo> trans(List<BmsAsynCalcuTaskEntity> list) {
 		List<BmsCalcuTaskVo> voList = new ArrayList<BmsCalcuTaskVo>();
 		if (list == null) {
 			return null;

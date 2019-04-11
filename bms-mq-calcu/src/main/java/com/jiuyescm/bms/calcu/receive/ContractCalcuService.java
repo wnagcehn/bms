@@ -15,7 +15,6 @@ import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
-import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -38,7 +37,7 @@ public class ContractCalcuService {
 	@Autowired private IFeesCalcuService feesCalcuService;
 	
 	public void calcuForContract(Object entity, Object fee, BmsCalcuTaskVo vo, Map<String, Object> errorMap,ContractQuoteQueryInfoVo queryVo,CalcuBaseInfoVo cbiVo){
-		//logger.info("taskId={} 合同在线查询参数：",vo.getTaskId(),JSONObject.fromObject(queryVo));
+		logger.info("taskId={} 合同在线查询参数：",vo.getTaskId(),JSONObject.fromObject(queryVo));
 		queryCtForContract(vo,entity,fee,queryVo,errorMap,cbiVo);
 	}
 	
@@ -46,9 +45,11 @@ public class ContractCalcuService {
 		ContractQuoteInfoVo cqVo = null;
 		try{
 			cqVo = contractQuoteInfoService.queryUniqueColumns(queryVo);
+			logger.info("taskId={} 查询出的合同在线结果【{0}】",vo.getTaskId(),JSONObject.fromObject(cqVo));
+
 		}
 		catch(BizException ex){
-			//logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
+			logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", ex.getMessage());
@@ -109,7 +110,7 @@ public class ContractCalcuService {
 				return;
 			}
 			
-			/*logger.info("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));*/
+			logger.info("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				int i = rtnQuoteInfoVo.getQuoteMaps().indexOf(map);
 			}
@@ -121,7 +122,7 @@ public class ContractCalcuService {
 			logger.info("系统异常",ex);
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
-			errorMap.put("msg", "系统异常");
+			errorMap.put("msg", ex.getMessage());
 			return;
 		}
 	}

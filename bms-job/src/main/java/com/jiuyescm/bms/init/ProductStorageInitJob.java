@@ -1,11 +1,14 @@
 package com.jiuyescm.bms.init;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
+import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
@@ -68,40 +72,52 @@ public class ProductStorageInitJob extends IJobHandler {
 			// 未配置最多执行多少运单
 			map.put("num", num);
 		}
-
 		// 查询所有状态为0的业务数据
 		long currentTime = System.currentTimeMillis();
 		map.put("isCalculated", "0");
-		// 业务数据
-		List<BizProductStorageEntity> bizList = null;
-		// 费用数据
-		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
+		Set<String> taskSet = new HashSet<>();
 		try {
-			XxlJobLogger.log("productStorageInitJob查询条件map:【{0}】  ", map);
-			bizList = bizProductStorageService.query(map);
-			// 只要有业务数据，就进行初始化和更新写入操作
-			if (CollectionUtils.isNotEmpty(bizList)) {
-				XxlJobLogger.log("【业务数据】查询行数【{0}】耗时【{1}】", bizList.size(),
-						(System.currentTimeMillis() - currentTime));
-				// 初始化费用
-				initFees(bizList, feesList);
-				// 批量更新业务数据&批量写入费用表
-				updateAndInsertBatch(feesList);
-			}
-			// 只有业务数据查出来小于1000才发送mq，这时候才代表统计完成，才发送MQ
-			if (CollectionUtils.isEmpty(bizList) || bizList.size() < num) {
-				sendTask(feesList);
-			}
+			saveFees(map, taskSet);
 		} catch (Exception e) {
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0} ,耗时： {1}毫秒",
 					e.getMessage(),
 					((System.currentTimeMillis() - currentTime)));
 			return ReturnT.FAIL;
 		}
-
+		sendTask(taskSet);
 		XxlJobLogger.log("初始化费用总耗时：【{0}】毫秒", System.currentTimeMillis()
 				- startTime);
 		return ReturnT.SUCCESS;
+	}
+
+	private void saveFees(Map<String, Object> map,Set<String> taskSet){
+		// 业务数据
+		List<BizProductStorageEntity> bizList = null;
+		// 费用数据
+		List<FeesReceiveStorageEntity> feesList = new ArrayList<FeesReceiveStorageEntity>();
+		XxlJobLogger.log("productStorageInitJob查询条件map:【{0}】  ", map);
+		bizList = bizProductStorageService.query(map);
+		// 只要有业务数据，就进行初始化和更新写入操作
+		if (CollectionUtils.isNotEmpty(bizList)) {
+			XxlJobLogger.log("【业务数据】查询行数【{0}】", bizList.size());
+			// 初始化费用
+			initFees(bizList, feesList);
+			for (BizProductStorageEntity entity : bizList) {
+				//封装key
+				String customerId = entity.getCustomerid();
+				String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
+				StringBuilder sb1 = new StringBuilder();
+				sb1.append(customerId).append("-").append(creMonth);
+				taskSet.add(sb1.toString());
+			}
+			// 批量更新业务数据&批量写入费用表
+			updateAndInsertBatch(feesList);
+			//继续执行
+			saveFees(map,taskSet);
+		}else {
+			// 没有业务数据被查出来才发送mq，这时候才代表统计完成
+			return;
+		}
 	}
 
 	private void initFees(List<BizProductStorageEntity> bizList,
@@ -169,14 +185,17 @@ public class ProductStorageInitJob extends IJobHandler {
 		sendTaskMap.put("subjectList", subjectList);
 	}
 
-	private void sendTask(List<FeesReceiveStorageEntity> feesList)
-			throws Exception {
+	private void sendTask(Set<String> taskSet) {
 		// 对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryByMap(sendTaskMap);
-		for (BmsCalcuTaskVo vo : list) {
+		for (String key : taskSet) {
+			String[] param = key.split("-");
+			BmsCalcuTaskVo vo = new BmsCalcuTaskVo();
 			vo.setCrePerson("system");
 			vo.setCrePersonId("system");
 			vo.setCreTime(JAppContext.currentTimestamp());
+			vo.setSubjectCode(FEE_1);
+			vo.setCustomerId(param[0]);
+			vo.setCreMonth(Integer.valueOf(param[1]));
 			// 为了区分商品按件存储费和商品按托存储费
 			vo.setFeesType("item");
 			try {
