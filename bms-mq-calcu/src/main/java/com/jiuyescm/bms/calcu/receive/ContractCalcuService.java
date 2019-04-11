@@ -36,20 +36,20 @@ public class ContractCalcuService {
 	@Autowired private IReceiveRuleRepository receiveRuleRepository;
 	@Autowired private IFeesCalcuService feesCalcuService;
 	
-	public void calcuForContract(Object entity, Object fee, BmsCalcuTaskVo vo, Map<String, Object> errorMap,ContractQuoteQueryInfoVo queryVo,CalcuBaseInfoVo cbiVo){
+	public void calcuForContract(Object entity, Object fee, BmsCalcuTaskVo vo, Map<String, Object> errorMap,ContractQuoteQueryInfoVo queryVo,CalcuBaseInfoVo cbiVo,String feesNo){
 		logger.info("taskId={} 合同在线查询参数：",vo.getTaskId(),JSONObject.fromObject(queryVo));
-		queryCtForContract(vo,entity,fee,queryVo,errorMap,cbiVo);
+		queryCtForContract(vo,entity,fee,queryVo,errorMap,cbiVo,feesNo);
 	}
 	
-	private void queryCtForContract(BmsCalcuTaskVo vo,Object entity, Object fee,ContractQuoteQueryInfoVo queryVo,Map<String, Object> errorMap,CalcuBaseInfoVo cbiVo){
+	private void queryCtForContract(BmsCalcuTaskVo vo,Object entity, Object fee,ContractQuoteQueryInfoVo queryVo,Map<String, Object> errorMap,CalcuBaseInfoVo cbiVo,String feesNo){
 		ContractQuoteInfoVo cqVo = null;
 		try{
 			cqVo = contractQuoteInfoService.queryUniqueColumns(queryVo);
-			logger.info("taskId={} 查询出的合同在线结果【{0}】",vo.getTaskId(),JSONObject.fromObject(cqVo));
+			logger.info("taskId={} 费用编号={} 查询出的合同在线结果【{}】",vo.getTaskId(),feesNo,JSONObject.fromObject(cqVo));
 
 		}
 		catch(BizException ex){
-			logger.info("taskId={} 合同在线合同缺失 {}",vo.getTaskId(),ex.getMessage());
+			logger.info("taskId={} 费用编号={} 合同在线合同缺失 {}",vo.getTaskId(),feesNo,ex.getMessage());
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
 			errorMap.put("msg", ex.getMessage());
@@ -67,7 +67,7 @@ public class ContractCalcuService {
 		
 		logger.info("taskId={} contractInfo={}",vo.getTaskId(),contractMap);
 		if(StringUtil.isEmpty(cqVo.getRuleCode())){
-			logger.info("taskId={} 合同在线规则未绑定",vo.getTaskId());
+			logger.info("taskId={} 费用编号={} 合同在线规则未绑定",vo.getTaskId(),feesNo);
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
 			errorMap.put("msg", "合同在线规则未绑定");
@@ -88,29 +88,29 @@ public class ContractCalcuService {
 			//获取合同在线查询条件
 			Map<String, Object> cond = new HashMap<String, Object>();
 			feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
-			logger.info("taskId={} 获取合同在线报价参数：{}",vo.getTaskId(),cond);
+			logger.info("taskId={} 费用编号={} 获取合同在线报价参数：{}",vo.getTaskId(),feesNo,cond);
 			ContractQuoteInfoVo rtnQuoteInfoVo = null;
 			
 			try {
 			    if(cond == null || cond.size() == 0){
-			    	logger.info("taskId={} 规则引擎拼接条件异常",vo.getTaskId());
+			    	logger.info("taskId={} 费用编号={} 规则引擎拼接条件异常",vo.getTaskId(),feesNo);
 					errorMap.put("success", "fail");
 					errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
 					errorMap.put("msg", "规则引擎拼接条件异常");
 					return;
 				}
-			    logger.info("查询参数"+JSONObject.fromObject(cqVo));
+			    logger.info("taskId={} 费用编号={} 查询报价报价参数{}",vo.getTaskId(),feesNo,JSONObject.fromObject(cqVo));
 				rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(cqVo, cond);
 			} catch (BizException e) {
 				String msg = "获取合同在线报价异常:"+e.getMessage();
-				logger.info("taskId={} {}",vo.getTaskId(),msg);
+				logger.info("taskId={}  费用编号={} 获取合同在线报价异常{}",vo.getTaskId(),feesNo,msg);
 				errorMap.put("success", "fail");
 				errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
 				errorMap.put("msg", msg);
 				return;
 			}
 			
-			logger.info("获取合同在线报价结果"+JSONObject.fromObject(rtnQuoteInfoVo));
+			logger.info("taskId={} 费用编号={} 获取合同在线报价结果{}",vo.getTaskId(),feesNo,JSONObject.fromObject(rtnQuoteInfoVo));
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				int i = rtnQuoteInfoVo.getQuoteMaps().indexOf(map);
 			}
@@ -119,7 +119,7 @@ public class ContractCalcuService {
 			errorMap.put("success", "succ");
 		}
 		catch(Exception ex){
-			logger.info("系统异常",ex);
+			logger.info("taskId={} 费用编号={} 系统异常{}",vo.getTaskId(),feesNo,ex);
 			errorMap.put("success", "fail");
 			errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
 			errorMap.put("msg", ex.getMessage());

@@ -599,7 +599,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	@Override
 	public void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity fee) {
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
-		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo);
+		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getAmount()>0){
 				fee.setIsCalculated(CalculateState.Finish.getCode());
