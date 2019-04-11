@@ -1284,9 +1284,11 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		
 		//温度
 		String bizTemperatureCode = StringUtil.isEmpty(bizEntity.getTemperatureTypeCode())?"":bizEntity.getTemperatureTypeCode();
-		String id = "-->"+bizEntity.getId();
 		if("JY0010067754".equals(bizEntity.getWaybillNo())){
-			XxlJobLogger.log("-->{0} bizCity={1} bizArea={2} bizServiceCode={3} bizServiceCode={4}",id,bizCity,bizArea,bizServiceCode,bizServiceCode);
+			XxlJobLogger.log("-->"+bizEntity.getId()+"bizCity【{0}】",bizCity);
+			XxlJobLogger.log("-->"+bizEntity.getId()+"bizArea【{0}】",bizArea);
+			XxlJobLogger.log("-->"+bizEntity.getId()+"bizServiceCode【{0}】",bizServiceCode);
+			XxlJobLogger.log("-->"+bizEntity.getId()+"bizTemperatureCode【{0}】",bizTemperatureCode);
 		}
 		
 		Map<Long,BmsQuoteDispatchDetailVo> map=new HashMap<>();
@@ -1311,8 +1313,10 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 			String dispatchAreaId=mainDispatchEntity.getAreaId();
 				
 			if("JY0010067754".equals(bizEntity.getWaybillNo())){
-				XxlJobLogger.log("-->{0} dispatchCityId={1} dispatchAreaId={2} dispatchServiceCode={3} dispatchTemetureCode={4}"
-						,id,dispatchCityId,dispatchAreaId,dispatchServiceCode,dispatchTemetureCode);
+				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchCityId【{0}】",dispatchCityId);
+				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchAreaId【{0}】",dispatchAreaId);
+				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchServiceCode【{0}】",dispatchServiceCode);
+				XxlJobLogger.log("-->"+bizEntity.getId()+"dispatchTemetureCode【{0}】",dispatchTemetureCode);
 			}
 			//判断物流产品类型
 			if(StringUtils.isNotBlank(dispatchServiceCode)){
@@ -1370,7 +1374,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 		
 		if("JY0010067754".equals(bizEntity.getWaybillNo())){
-			XxlJobLogger.log("-->{0} ok",id);
+			XxlJobLogger.log("-->"+bizEntity.getId()+"OK");
 		}
 		
 		Integer minValue=new Integer(0);
@@ -1381,7 +1385,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 		
 		if("JY0010067754".equals(bizEntity.getWaybillNo())){
-			XxlJobLogger.log("-->{0} minValue={1}",id,minValue);
+			XxlJobLogger.log("-->"+bizEntity.getId()+"minValue={0}",minValue);
 		}
 		
 		BmsQuoteDispatchDetailVo vo=new BmsQuoteDispatchDetailVo();
@@ -1389,7 +1393,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		if(!(minValue+"").contains("3")){
 			String result=newPrice.get(minValue);
 			if("JY0010067754".equals(bizEntity.getWaybillNo())){
-				XxlJobLogger.log("-->{0} result={1}",id,result);
+				XxlJobLogger.log("-->"+bizEntity.getId()+"result={0}",result);
 			}
 			if(StringUtils.isEmpty(result)){
 				return null;
@@ -1407,7 +1411,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 				list.add(vo);			
 			}
 		}
-		
+		XxlJobLogger.log("-->"+bizEntity.getId()+"报价过滤结束");
 		return list;	
 	}
 	
