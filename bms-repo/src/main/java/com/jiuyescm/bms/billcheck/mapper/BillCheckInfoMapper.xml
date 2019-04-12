@@ -660,6 +660,7 @@
 <if test="invoiceUnReceiptAmount != null" >invoice_un_receipt_amount=#{invoiceUnReceiptAmount,jdbcType=DECIMAL},</if>
 <if test="receiptAmount != null" >receipt_amount=#{receiptAmount,jdbcType=DECIMAL},</if>
 <if test="receiptDate != null" >receipt_date=#{receiptDate,jdbcType=DATE},</if>
+<if test="receiptStatus != null" >receipt_status=#{receiptStatus,jdbcType=VARCHAR},</if>
 <if test="area != null" >area=#{area,jdbcType=VARCHAR},</if>
 <if test="creatorId != null" >creator_id=#{creatorId,jdbcType=VARCHAR},</if>
 <if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>

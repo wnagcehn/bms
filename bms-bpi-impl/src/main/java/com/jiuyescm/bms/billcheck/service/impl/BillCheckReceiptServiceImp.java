@@ -211,10 +211,14 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 			if(vo.getReceiptAmount()!=null){
 				receiptMoney=receiptMoney.subtract(vo.getReceiptAmount());
 			}
-			if(receiptMoney.compareTo(billmoney)==0){
+			if(receiptMoney.compareTo(billmoney)>=0){
 				bInfoEntity.setReceiptAmount(receiptMoney);
 				//回款状态
 				bInfoEntity.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());//已回款
+			}else if(receiptMoney.compareTo(BigDecimal.ZERO)==0){
+				bInfoEntity.setReceiptAmount(receiptMoney);
+				//回款状态
+				bInfoEntity.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());//未回款
 			}else{
 				bInfoEntity.setReceiptAmount(receiptMoney);
 				bInfoEntity.setReceiptStatus(BillCheckReceiptStateEnum.PART_RECEIPT.getCode());//部分回款
