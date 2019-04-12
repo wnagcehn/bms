@@ -277,13 +277,13 @@ public class BillCheckReceiptImportController extends HttpNewImport<BillCheckRec
 			/*if(totalReceiptAmount>checkReceiptAmount){
 				throw new Exception("帐单【"+checkVo.getBillName()+"】收账金额大于确认金额,不可导入！");
 			}else */
-			if(totalReceiptAmount.compareTo(checkReceiptAmount)==0){
+			if(totalReceiptAmount.compareTo(checkReceiptAmount)>=0){
 				checkVo.setReceiptAmount(totalReceiptAmount);
 				//回款状态
 				checkVo.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());
 				//账单状态（已回款）
 				/*checkVo.setBillStatus(CheckBillStatusEnum.RECEIPTED.getCode());*/
-			}if(totalReceiptAmount.compareTo(BigDecimal.ZERO)==0){
+			}else if(totalReceiptAmount.compareTo(BigDecimal.ZERO)==0){
 				checkVo.setReceiptAmount(totalReceiptAmount);
 				//回款状态
 				checkVo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());

@@ -244,7 +244,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	@Override
 	public void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
-		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo);
+		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setIsCalculated(CalculateState.Finish.getCode());

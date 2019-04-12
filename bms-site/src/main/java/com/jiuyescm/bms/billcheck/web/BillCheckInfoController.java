@@ -985,7 +985,7 @@ public class BillCheckInfoController{
 	}
 	
 	/**
-	 * 根据发票更新账单耿总
+	 * 根据收款更新账单耿总
 	 * @param temp
 	 */
 	public void updateBillCheckByReceipt(BillCheckReceiptVo temp){
@@ -1019,10 +1019,10 @@ public class BillCheckInfoController{
 			}	
 		}
 
-		if(totalReceiptAmount.compareTo(checkReceiptAmount)==0){	
+		if(totalReceiptAmount.compareTo(checkReceiptAmount)>=0){	
 			//回款状态
 			checkVo.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());
-		}if(totalReceiptAmount.compareTo(BigDecimal.ZERO)==0){
+		}else if(totalReceiptAmount.compareTo(BigDecimal.ZERO)==0){
 			//回款状态
 			checkVo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());
 		}else{

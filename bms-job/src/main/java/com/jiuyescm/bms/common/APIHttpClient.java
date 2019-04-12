@@ -151,7 +151,7 @@ public class APIHttpClient {
                 body = EntityUtils.toString(response.getEntity());  
   
             } catch (IOException e) {  
-            	logger.error("请求异常：{}",e);
+            	logger.error("请求异常：{0}",e);
                 // 网络错误  
                 status = 3;  
             } finally {  

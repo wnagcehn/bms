@@ -56,7 +56,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		s.cost as cost
  		from biz_instock_info i
 		Left JOIN fees_receive_storage s on s.fees_no=i.fees_no
-        where i.is_calculated = 1
+        where 1=1
         	<if test=" id != null and id !='' ">
 				and i.id = #{id}
 			</if>
