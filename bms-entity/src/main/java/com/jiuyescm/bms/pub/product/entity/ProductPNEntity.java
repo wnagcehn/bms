@@ -3,8 +3,8 @@ package com.jiuyescm.bms.pub.product.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jiuyescm.cfm.domain.IEntity;
 import com.jiuyescm.bms.pub.customer.entity.CustomerEntity;
+import com.jiuyescm.cfm.domain.IEntity;
 
 /**
  * 产品PN信息
@@ -287,7 +287,7 @@ public class ProductPNEntity implements IEntity {
 		b.add("a3");
 		a.removeAll(b);
 		for(String d : a){
-			System.out.println(d);
+			//System.out.println(d);
 		}
 	} 
 }

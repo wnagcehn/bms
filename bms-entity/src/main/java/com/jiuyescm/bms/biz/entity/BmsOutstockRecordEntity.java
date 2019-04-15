@@ -4,7 +4,6 @@
  */
 package com.jiuyescm.bms.biz.entity;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;

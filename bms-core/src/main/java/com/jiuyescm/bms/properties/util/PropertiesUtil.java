@@ -26,12 +26,10 @@ public class PropertiesUtil {
 			Enumeration en = pros.propertyNames();// 得到资源文件中的所有key值
 			while (en.hasMoreElements()) {
 				String key = (String) en.nextElement();
-				System.out.println("key=" + key + " value=" + pros.getProperty(key));
 				// 输出资源文件中的key与value值
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("读取资源文件出错");
 		} finally {
 			try {
 				if (null != in) {
@@ -39,7 +37,6 @@ public class PropertiesUtil {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("关闭流失败");
 			}
 		}
 
@@ -56,7 +53,6 @@ public class PropertiesUtil {
 			path=pros.getProperty("omsimpexcelpath");
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("读取资源文件出错");
 		} finally {
 			try {
 				if (null != in) {
@@ -64,7 +60,6 @@ public class PropertiesUtil {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("关闭流失败");
 			}
 		}
 		return path;
@@ -81,7 +76,6 @@ public class PropertiesUtil {
 			path=pros.getProperty(keyname);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("读取资源文件出错");
 		} finally {
 			try {
 				if (null != in) {
@@ -89,7 +83,6 @@ public class PropertiesUtil {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("关闭流失败");
 			}
 		}
 		return path;
@@ -106,7 +99,6 @@ public class PropertiesUtil {
 			serAddress=pros.getProperty("serAddress");
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("读取资源文件出错");
 		} finally {
 			try {
 				if (null != in) {
@@ -114,7 +106,6 @@ public class PropertiesUtil {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("关闭流失败");
 			}
 		}
 		return serAddress;
@@ -136,7 +127,6 @@ public class PropertiesUtil {
 			path=pros.getProperty(keyname);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("读取调用地址资源文件出错");
 		} finally {
 			try {
 				if (null != in) {
@@ -144,7 +134,6 @@ public class PropertiesUtil {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("关闭流失败");
 			}
 		}
 		return path;
@@ -166,7 +155,6 @@ public class PropertiesUtil {
 			path=pros.getProperty(keyname);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("读取调用地址资源文件出错");
 		} finally {
 			try {
 				if (null != in) {
@@ -174,7 +162,6 @@ public class PropertiesUtil {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("关闭流失败");
 			}
 		}
 		return path;
@@ -182,6 +169,5 @@ public class PropertiesUtil {
 	
 	public static void main(String[] args){
 		//PropertiesUtil.readFile();
-		System.out.println(getImpExcelFilePath());
 	}
 }

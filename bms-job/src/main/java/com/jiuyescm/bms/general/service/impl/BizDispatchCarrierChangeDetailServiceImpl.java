@@ -2,14 +2,14 @@ package com.jiuyescm.bms.general.service.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeDetailEntity;
 import com.jiuyescm.bms.general.service.IBizDispatchCarrierChangeDetailService;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 /**
  * ..ServiceImpl
  * @author wangchen

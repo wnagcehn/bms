@@ -397,7 +397,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 		String customerId=entity.getCustomerId();
 		feeEntity.setCalculateTime(JAppContext.currentTimestamp());
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		
 		
@@ -486,7 +486,7 @@ public class ProductPalletStorageNewCalcJob extends CommonJobHandler<BizProductP
 	public void updateBatch(List<BizProductPalletStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizProductPalletStorageService.updateBatch(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
