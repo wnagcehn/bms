@@ -58,7 +58,7 @@ public abstract class CommonCalcJob<T,F> extends IJobHandler {
 	protected ReturnT<String> CalcJob(String[] params){
 		long btime= System.currentTimeMillis();// 系统开始时间
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		int num = 100;
 		
 		Map<String, Object> map = new HashMap<String, Object>();

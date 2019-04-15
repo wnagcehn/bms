@@ -3,12 +3,9 @@ package com.jiuyescm.bms.jobhandler;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
-import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.correct.ElConditionEntity;
 import com.jiuyescm.bms.correct.repository.ElConditionRepository;
-import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
-import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.transport.entity.BizGanxianRoadBillEntity;
-import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
 import com.jiuyescm.bms.biz.transport.repository.IBizGanxianRoadBillRepository;
 import com.jiuyescm.bms.biz.transport.service.IBizGanxianRoadBillService;
 

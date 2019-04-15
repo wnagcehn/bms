@@ -5,6 +5,7 @@
 package com.jiuyescm.bms.base.reportWarehouse;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
 /**

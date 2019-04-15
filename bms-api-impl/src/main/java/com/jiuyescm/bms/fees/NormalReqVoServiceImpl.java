@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.fees;
 
 import java.util.ArrayList;
@@ -130,7 +134,6 @@ public class NormalReqVoServiceImpl<T> implements INormalReqVoService<T> {
 			
 			//实体类
 			entity.setNum(entity.getAdjustNum()==null?entity.getNum():entity.getAdjustNum());
-			System.out.println("数量"+entity.getNum());
 			reqVo.setBizData(entity);
 			//开始进行计算
 			//CalcuResultVo calcuResultVo=feesCalcuService.FeesCalcuService(reqVo);

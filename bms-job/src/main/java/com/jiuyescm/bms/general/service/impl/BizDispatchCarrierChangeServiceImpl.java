@@ -2,17 +2,16 @@ package com.jiuyescm.bms.general.service.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
-import com.jiuyescm.bms.general.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
 import com.jiuyescm.bms.general.service.IBizDispatchCarrierChangeService;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
  * ..ServiceImpl

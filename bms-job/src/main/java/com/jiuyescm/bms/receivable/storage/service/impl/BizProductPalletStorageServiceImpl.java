@@ -4,14 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageEntity;
-import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.receivable.storage.service.IBizProductPalletStorageService;
-import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
  * 商品库存dao层

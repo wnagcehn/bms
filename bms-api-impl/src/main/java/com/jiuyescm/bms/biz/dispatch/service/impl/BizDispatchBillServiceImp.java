@@ -19,13 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
-import com.jiuyescm.bms.biz.dispatch.repository.imp.BizDispatchBillRepositoryImp;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bms.biz.dispatch.vo.BizDispatchBillVo;
 import com.jiuyescm.bms.biz.entity.BmsOutstockRecordEntity;
 import com.jiuyescm.bms.biz.repo.IOutstockRecordRepository;
-import com.jiuyescm.bms.biz.service.impl.OutstockInfoServiceImpl;
-import com.jiuyescm.bms.fees.dispatch.repository.IFeesReceiveDispatchRepository;
 import com.jiuyescm.exception.BizException;
 
 @Service("bizDispatchBillService")

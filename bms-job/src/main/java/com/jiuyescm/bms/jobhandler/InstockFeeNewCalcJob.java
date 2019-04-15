@@ -424,7 +424,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 		String customerId=entity.getCustomerId();
 		feeEntity.setCalculateTime(time);
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		entity.setCalculateTime(JAppContext.currentTimestamp());
 		PriceContractInfoEntity contractEntity =null;
 		if(mapContact.containsKey(customerId)){
@@ -498,7 +498,7 @@ public class InstockFeeNewCalcJob extends CommonJobHandler<BmsBizInstockInfoEnti
 	public void updateBatch(List<BmsBizInstockInfoEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		if (fs.size() > 0) {
 			bmsBizInstockInfoRepository.updateInstockBatchByFees(fs);
 			current = System.currentTimeMillis();

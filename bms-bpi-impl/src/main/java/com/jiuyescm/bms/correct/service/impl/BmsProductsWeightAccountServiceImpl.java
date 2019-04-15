@@ -13,7 +13,6 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.correct.BmsProductsWeightAccountEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightAccountRepository;
 import com.jiuyescm.bms.correct.service.IBmsProductsWeightAccountService;
-import com.jiuyescm.bms.correct.vo.BmsProductsMaterialAccountVo;
 import com.jiuyescm.bms.correct.vo.BmsProductsWeightAccountVo;
 
 /**

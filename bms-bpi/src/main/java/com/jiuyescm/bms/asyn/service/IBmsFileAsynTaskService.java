@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
-import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 
 /**
  * bms文件 异步导入导出服务

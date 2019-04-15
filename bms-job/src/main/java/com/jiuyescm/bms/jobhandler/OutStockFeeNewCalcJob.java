@@ -510,7 +510,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 		//FeesReceiveStorageEntity storageFeeEntity = initFeeEntity(entity);
 		storageFeeEntity.setCalculateTime(JAppContext.currentTimestamp());
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		entity.setCalculateTime(JAppContext.currentTimestamp());
 		
 	/*	//==============判断是否是B2B，B2B暂不计算
@@ -603,7 +603,7 @@ public class OutStockFeeNewCalcJob extends CommonJobHandler<BizOutstockMasterEnt
 	public void updateBatch(List<BizOutstockMasterEntity> billList,List<FeesReceiveStorageEntity> feesList) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		if(feesList.size()>0){
 			bizOutstockMasterService.updateOutstockBatchByFees(feesList);
 			current = System.currentTimeMillis();
