@@ -284,4 +284,9 @@ public class BmsCorrectAsynTaskController {
 		return message;
 	}
 
+	   @DataResolver
+	    public Map<String, String> saveTask(BmsCorrectAsynTaskVo vo) {
+	       String string = bmsCorrectAsynTaskService.saveCorrect(vo);
+	       return null;
+	    }
 }
