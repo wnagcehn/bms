@@ -414,7 +414,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 	public void updateBatch(List<BizProductStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizProductStorageService.updateBatch(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒",(current - start));
@@ -439,7 +439,7 @@ public class ProductStorageNewCalcJob extends CommonJobHandler<BizProductStorage
 		storageFeeEntity.setCalculateTime(JAppContext.currentTimestamp());
 		
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		/*验证商家是否合同存在*/
 		PriceContractInfoEntity contractEntity=null;

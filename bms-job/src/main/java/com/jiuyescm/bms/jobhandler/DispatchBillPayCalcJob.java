@@ -126,7 +126,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		entity.setReceiveDistrictId(entity.getReceiveDistrictId().trim());
 		FeesPayDispatchEntity feePayEntity = initfeeEntity(entity);
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		try{
 			entity.setCalculateTime(JAppContext.currentTimestamp());
 			feePayEntity.setCalculateTime(entity.getCalculateTime());
@@ -247,7 +247,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 	protected void saveBatchData(List<BizDispatchBillPayEntity> billList,
 			List<FeesPayDispatchEntity> feesList) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizDispatchBillPayService.updateBatch(billList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
@@ -291,7 +291,7 @@ public class DispatchBillPayCalcJob extends CommonCalcJob<BizDispatchBillPayEnti
 		FeesPayDispatchEntity feePayEntity = initfeeEntity(entity);
 		feePayEntity.setCalculateTime(time);
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		String subjectID=getSubjectId(entity.getCarrierId());
 		if(StringUtils.isEmpty(subjectID)){
 			XxlJobLogger.log(String.format("运单号【%s】执行失败--原因：物流商【%s】未在数据字段中配置", entity.getWaybillNo(),entity.getCarrierId()));
@@ -746,7 +746,7 @@ public class DispatchBillPayCalcJob extends IJobHandler{
 	
 	private ReturnT<String> CalcJob(String[] params) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		int num = 100;
 		
 		Map<String, Object> cond = new HashMap<String, Object>();

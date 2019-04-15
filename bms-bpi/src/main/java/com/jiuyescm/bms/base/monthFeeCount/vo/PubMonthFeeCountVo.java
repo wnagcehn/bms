@@ -1,6 +1,11 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.base.monthFeeCount.vo;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**

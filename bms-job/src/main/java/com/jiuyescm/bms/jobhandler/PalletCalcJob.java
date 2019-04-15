@@ -8,25 +8,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
-import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
-
-import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
+import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBizPalletInfoRepository;
@@ -42,7 +37,6 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceGeneralQuotationRepository;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceStepQuotationRepository;
-import com.jiuyescm.bms.receivable.storage.service.IBizProductPalletStorageService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -54,6 +48,8 @@ import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
 import com.jiuyescm.exception.BizException;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
+
+import net.sf.json.JSONObject;
 
 @JobHander(value="palletCalcJob")
 @Service
@@ -441,7 +437,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 		String customerId=entity.getCustomerId();
 		feeEntity.setCalculateTime(JAppContext.currentTimestamp());
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		
 		
@@ -551,7 +547,7 @@ public class PalletCalcJob extends CommonJobHandler<BizPalletInfoEntity,FeesRece
 	public void updateBatch(List<BizPalletInfoEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizPalletInfoService.updatebizPallet(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));

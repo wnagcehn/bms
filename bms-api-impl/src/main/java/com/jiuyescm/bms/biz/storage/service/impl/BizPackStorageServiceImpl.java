@@ -22,7 +22,6 @@ import com.jiuyescm.bms.biz.storage.repository.IBizPackStorageRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizPackStorageService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
-import com.jiuyescm.bms.fees.storage.repository.impl.FeesReceiveStorageRepositoryImpl;
 
 /**
  * 

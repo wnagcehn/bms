@@ -11,8 +11,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.jiuyescm.bms.common.DateUtil;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
@@ -24,7 +22,6 @@ import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IFeesReceiveTransportService;
 import com.jiuyescm.bms.general.service.IReportCustomerDailyIncomeService;
 import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerInfoVo;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -59,7 +56,7 @@ public class CustomerDailyIncomeJob extends IJobHandler{
 	
 	private ReturnT<String> CalcJob(String[] params) {
 		long btime= System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		String preDate = DateUtil.getCurrentRandomDate(-1);
 		try {

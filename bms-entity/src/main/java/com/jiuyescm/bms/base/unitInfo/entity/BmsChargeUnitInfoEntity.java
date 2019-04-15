@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.base.unitInfo.entity;
 
 import java.sql.Timestamp;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**

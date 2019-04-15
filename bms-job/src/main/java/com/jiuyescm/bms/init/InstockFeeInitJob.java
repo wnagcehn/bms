@@ -3,7 +3,6 @@ package com.jiuyescm.bms.init;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,13 +11,11 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.common.JobParameterHandler;
-import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBmsBizInstockInfoRepository;
@@ -182,7 +179,7 @@ public class InstockFeeInitJob extends IJobHandler {
 	public void updateAndInsertBatch(List<BmsBizInstockInfoEntity> ts,
 			List<FeesReceiveStorageEntity> fs) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		if (fs.size() > 0) {
 			bmsBizInstockInfoRepository.updatebizInstockInfoById(fs);
 			current = System.currentTimeMillis();

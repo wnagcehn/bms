@@ -112,7 +112,7 @@ public class MaterialCostCalcJob extends CommonCalcJob<BizOutstockPackmaterialEn
 				return;
 			}
 			PackCostReportEntity costEntity=packCostList.get(0);
-			double totalCost=0l;
+			double totalCost=0L;
 			//有重量
 			if(t.getConsumerMaterialCode().endsWith("-GB")){
 				totalCost=t.getWeight()*costEntity.getCost().doubleValue();//重量*单价

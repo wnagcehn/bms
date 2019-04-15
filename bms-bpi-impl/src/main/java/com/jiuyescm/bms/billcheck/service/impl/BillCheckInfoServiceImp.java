@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.dubbo.rpc.Result;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
@@ -38,10 +37,6 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
-import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
-import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
-import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
-import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.exception.BizException;
 
@@ -71,11 +66,11 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService{
 			}
 			
 			PageInfo<BillCheckInfoEntity> pageInfo=new PageInfo<BillCheckInfoEntity>();
-			if(condition!=null && condition.get("invoiceNo")!=null && condition.get("invoiceNo")!=""){
+			if(condition!=null && condition.get("invoiceNo")!=null && !"".equals(condition.get("invoiceNo"))){
 				//发票号不为空时，需要根据发票号去查询子票再查询主表
 				pageInfo=billCheckInfoRepository.queryByInvoiceNo(condition, pageNo, pageSize);
 	
-			}else if(condition!=null  && condition.get("followType")!=null && condition.get("followType")!=""){
+			}else if(condition!=null  && condition.get("followType")!=null && !"".equals(condition.get("followType"))){
 				//跟进类型不为空时，需要根据跟进类型去查询子表再查询主表
 				pageInfo=billCheckInfoRepository.queryByFollowType(condition, pageNo, pageSize);
 			}else{

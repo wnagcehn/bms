@@ -7,12 +7,11 @@ package com.jiuyescm.bms.general.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.general.entity.SnapshotBillReceiptEntity;
 import com.jiuyescm.bms.general.service.ISnapshotBillReceiptService;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 @Service("snapshotBillReceiptServiceImpl")
 public class SnapshotBillReceiptServiceImpl extends MyBatisDao implements ISnapshotBillReceiptService {

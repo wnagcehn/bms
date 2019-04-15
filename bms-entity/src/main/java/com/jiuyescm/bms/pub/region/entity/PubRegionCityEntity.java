@@ -5,7 +5,6 @@
 package com.jiuyescm.bms.pub.region.entity;
 
 import com.jiuyescm.cfm.domain.IEntity;
-import java.math.BigDecimal;
 
 /**
  * 

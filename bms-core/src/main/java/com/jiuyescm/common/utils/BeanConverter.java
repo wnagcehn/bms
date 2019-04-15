@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.jiuyescm.common.tool.JsonPluginsUtil;
-
 /**
  * 转换器 1:将javaBean转换成Map 2:将map转换成Javabean
  * 
@@ -43,7 +41,7 @@ public class BeanConverter {
 					result.put(field, null == value ? "" : value.toString());
 				}
 			} catch (Exception e) {
-				System.out.println("javaBean转换成Map报错！");
+				//System.out.println("javaBean转换成Map报错！");
 				//e.printStackTrace();
 				logger.info(e);
 			}
@@ -70,7 +68,7 @@ public class BeanConverter {
 					method.invoke(javabean, new Object[] { data.get(field) });
 				}
 			} catch (Exception e) {
-				System.out.println("map转换成Javabean报错！");
+				//System.out.println("map转换成Javabean报错！");
 				//e.printStackTrace();
 				logger.info(e);
 			}

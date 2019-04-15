@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.biz.storage.service.impl;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,6 @@ import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockInfoRepository;
 import com.jiuyescm.bms.biz.storage.repository.IBmsBizInstockRecordRepository;
 import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
-import com.jiuyescm.cfm.common.JAppContext;
 
 /**
  * ..ServiceImpl

@@ -1,7 +1,7 @@
 package com.jiuyescm.bms.biz.pallet.entity;
 
 import java.sql.Timestamp;
-import java.math.BigDecimal;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**
