@@ -24,7 +24,6 @@ import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISequenceService;
-import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCorrectAsynTaskService")
 public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService{

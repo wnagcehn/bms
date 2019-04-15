@@ -11,7 +11,6 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.chargerule.payrule.entity.BillRulePayEntity;
-import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 
 
 public interface IPayRuleService{

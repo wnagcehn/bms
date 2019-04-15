@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity;
 import com.jiuyescm.bms.quotation.transport.entity.PriceTransportValueAddedEntity;
 
 /**

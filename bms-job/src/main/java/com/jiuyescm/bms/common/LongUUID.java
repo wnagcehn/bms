@@ -40,18 +40,18 @@ public final class LongUUID {
 	}
 
 	public static void main(String args[]) {
-		System.out.println(String.valueOf(uuidOfAbsLongs()).length());
-		System.out.println(String.valueOf(uuidOfAbsLongs()).length());
-		
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
-		System.out.println(uuidOf36String());
+//		System.out.println(String.valueOf(uuidOfAbsLongs()).length());
+//		System.out.println(String.valueOf(uuidOfAbsLongs()).length());
+//		
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
+//		System.out.println(uuidOf36String());
 	}
 }

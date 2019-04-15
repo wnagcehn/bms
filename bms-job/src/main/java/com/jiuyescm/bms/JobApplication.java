@@ -16,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.xxl.job.core.log.XxlJobLogger;
-
 /**
  * Job 系统启动类
  * @author ningyu

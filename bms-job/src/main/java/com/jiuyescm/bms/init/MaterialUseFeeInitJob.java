@@ -167,7 +167,7 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 	
 	public void updateAndInsertBatch(List<BizOutstockPackmaterialEntity> ts,List<FeesReceiveStorageEntity> fs) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizOutstockPackmaterialService.updateBatch(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒",(current - start));

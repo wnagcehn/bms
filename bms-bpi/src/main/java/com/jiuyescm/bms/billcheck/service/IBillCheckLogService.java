@@ -3,8 +3,6 @@ package com.jiuyescm.bms.billcheck.service;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.bill.check.vo.BillCheckFollowVo;
-import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 
 

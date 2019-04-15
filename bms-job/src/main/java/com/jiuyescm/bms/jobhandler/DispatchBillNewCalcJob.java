@@ -251,7 +251,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	public FeesReceiveDispatchEntity initFeeEntity(BizDispatchBillEntity entity){
 		entity.setRemark("");
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		FeesReceiveDispatchEntity feeEntity = new FeesReceiveDispatchEntity();
 		//计费参数获取
@@ -524,7 +524,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		entity.setCalculateTime(time);
 		Map<String,Object> map=new HashMap<String,Object>();
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		String customerId=entity.getCustomerid();
 		String subject=getSubjectId(entity.getChargeCarrierId());
 		start = System.currentTimeMillis();
@@ -619,7 +619,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		}
 		
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		String subjectId=getSubjectId(getCarrierId(entity));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -723,7 +723,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 		try{
 			if(validateData(entity, feeEntity)){
 				long start = System.currentTimeMillis();// 系统开始时间
-				long current = 0l;// 当前系统时间
+				long current = 0L;// 当前系统时间
 				entity.setCalculateTime(JAppContext.currentTimestamp());
 				feeEntity.setCalculateTime(entity.getCalculateTime());
 				String subjectId=getSubjectId(entity.getChargeCarrierId());
@@ -936,7 +936,7 @@ public class DispatchBillNewCalcJob extends CommonJobHandler<BizDispatchBillEnti
 	public void updateBatch(List<BizDispatchBillEntity> billList,List<FeesReceiveDispatchEntity> feesList) {
 		try {
 			long start = System.currentTimeMillis();// 系统开始时间
-			long current = 0l;// 当前系统时间
+			long current = 0L;// 当前系统时间
 			bizDispatchBillService.newUpdateBatch(billList);
 			current = System.currentTimeMillis();
 			XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));

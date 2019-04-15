@@ -4,7 +4,6 @@ package com.jiuyescm.bms.asyn.service;
 import java.util.List;
 import java.util.Map;
 
-import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsUserCustomerListenerEntity;
 
 /**

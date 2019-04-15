@@ -1,16 +1,15 @@
 package com.jiuyescm.bms.base.group;
 
-import java.util.Map;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupChargeunitRepository;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService;

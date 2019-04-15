@@ -107,7 +107,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 		entity.setCalculateTime(JAppContext.currentTimestamp());
 		transportFeeEntity.setCalculateTime(entity.getCalculateTime());
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		try{
 			//验证报价 验证规则
 			//查询规则
@@ -271,7 +271,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 	@Override
 	protected void saveBatchData(List<BizGanxianWayBillEntity> billList,List<FeesReceiveTransportEntity> feesList) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizGanxianWayBillService.updateBatch(billList);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
@@ -347,7 +347,7 @@ public class GanXianWayBillCalcJob extends CommonCalcJob<BizGanxianWayBillEntity
 	protected boolean validateData(BizGanxianWayBillEntity entity,List<FeesReceiveTransportEntity> feesList) {
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);//更新计算时间
 		String customerId=entity.getCustomerId();

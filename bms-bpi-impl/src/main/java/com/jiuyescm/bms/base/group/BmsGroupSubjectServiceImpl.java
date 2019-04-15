@@ -16,7 +16,6 @@ import com.jiuyescm.bms.base.group.repository.IBmsGroupRepository;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupSubjectRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 @Service("bmsGroupSubjectService")
 public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {

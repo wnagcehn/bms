@@ -2,8 +2,8 @@ package com.jiuyescm.bms.base.servicetype;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.group.BmsGroupChargeunitEntity;
-import com.jiuyescm.bms.base.group.vo.BmsGroupChargeunitVo;
-import com.jiuyescm.bms.base.reportCustomer.vo.ReportWarehouseCustomerVo;
 import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
 import com.jiuyescm.bms.base.servicetype.repository.IPubCarrierServicetypeRepository;
 import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
@@ -22,7 +19,6 @@ import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.constants.RedisCache;
 import com.jiuyescm.framework.redis.callback.GetDataCallBack;
 import com.jiuyescm.framework.redis.client.IRedisClient;
-import com.jiuyescm.mdm.customer.vo.CustomerVo;
 
 /**
  * ..ServiceImpl
@@ -193,9 +189,7 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
 				condition.put("servicecode", servicecode);
 				condition.put("delflag", "0");
 				List<CarrierProductVo> list = new ArrayList<CarrierProductVo>();
-				
-				System.out.println("进入invoke方法");
-				
+								
 				
 				try{
 					list = query(condition);
@@ -236,9 +230,7 @@ public class PubCarrierServicetypeServiceImpl implements ICarrierProductService 
 				condition.put("servicecode", servicecode);
 				condition.put("delflag", "0");
 				List<CarrierProductVo> list = new ArrayList<CarrierProductVo>();
-				
-				System.out.println("进入invoke方法");
-				
+								
 				
 				try{
 					list = query(condition);

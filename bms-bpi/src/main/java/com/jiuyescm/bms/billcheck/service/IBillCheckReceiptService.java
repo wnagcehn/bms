@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
-import com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckReceiptVo;
 
 

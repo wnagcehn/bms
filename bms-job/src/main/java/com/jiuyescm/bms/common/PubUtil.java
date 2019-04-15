@@ -186,9 +186,9 @@ public class PubUtil {
 	
 	public static void main(String[] args){
 		String address="上海市'嘉&定区{3131>创??业园<";
-		System.out.println(StringFilter(address));
+		//System.out.println(StringFilter(address));
 		String city=null;
 		String a=StringFilter(city);
-		System.out.println(a);
+		//System.out.println(a);
 	}
 }

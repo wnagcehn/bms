@@ -19,7 +19,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
-import com.jiuyescm.bms.general.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.receivable.storage.service.IBizProductStorageService;
@@ -168,7 +167,7 @@ public class ProductStorageInitJob extends IJobHandler {
 
 	public void updateAndInsertBatch(List<FeesReceiveStorageEntity> fs) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizProductStorageService.updateProductStorageById(fs);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒", (current - start));

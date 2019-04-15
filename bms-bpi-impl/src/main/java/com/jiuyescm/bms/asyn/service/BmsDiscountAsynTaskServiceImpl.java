@@ -1,8 +1,8 @@
 package com.jiuyescm.bms.asyn.service;
 
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.discount.repository.IBmsDiscountAsynTaskRepository;
-import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 
 /**
  * ..ServiceImpl

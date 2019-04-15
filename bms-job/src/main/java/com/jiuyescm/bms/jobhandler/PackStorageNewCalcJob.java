@@ -345,7 +345,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	@Override
 	public void updateBatch(List<BizPackStorageEntity> ts,List<FeesReceiveStorageEntity> fs) {
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizPackStorageService.updateBatch(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒  ",(current - start));
@@ -360,7 +360,7 @@ public class PackStorageNewCalcJob extends CommonJobHandler<BizPackStorageEntity
 	protected boolean validateData(BizPackStorageEntity entity,FeesReceiveStorageEntity feeEntity) {
 		
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		XxlJobLogger.log("-->"+entity.getId()+"数据主键ID:【{0}】  ",entity.getId());
 		
 		//----验证合同

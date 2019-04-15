@@ -11,11 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
-
-import com.jiuyescm.bms.base.dict.api.ICarrierDictService;
-import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
-import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveDispatchTempEntity;
 import com.jiuyescm.bms.billimport.entity.BillFeesReceiveStorageTempEntity;
 import com.jiuyescm.bms.billimport.service.IBillFeesReceiveDispatchTempService;
