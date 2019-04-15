@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.transport.entity.BizGanxianWayBillEntity;
 
 /**

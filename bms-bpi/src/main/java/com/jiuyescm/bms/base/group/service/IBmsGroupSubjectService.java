@@ -6,7 +6,6 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.BmsGroupSubjectEntity;
 import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity;
 
 public interface IBmsGroupSubjectService {
 

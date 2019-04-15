@@ -109,7 +109,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 			}
 		
 			long start = System.currentTimeMillis();// 系统开始时间
-			long current = 0l;// 当前系统时间
+			long current = 0L;// 当前系统时间
 			//CalcuResultVo resultVo = feesCalcuService.FeesCalcuService(reqVo);
 			CalcuResultVo resultVo = new CalcuResultVo();
 			current = System.currentTimeMillis();
@@ -159,7 +159,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 	protected void saveBatchData(List<BizOutstockPackmaterialEntity> billList,List<FeesSaleReceiveStorageEntity> feesList) {
 		
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizWmsOutstockPackmaterialService.updateBatch(billList);
 		feesSaleReceiveStorageService.insertBatch(feesList);
 		current = System.currentTimeMillis();
@@ -170,7 +170,7 @@ public class MaterialWmsUseCalcJob extends CommonCalcJob<BizOutstockPackmaterial
 	protected boolean validateData(BizOutstockPackmaterialEntity entity,List<FeesSaleReceiveStorageEntity> feesList) {
 		XxlJobLogger.log("数据主键ID:【{0}】  ",entity.getId());
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		Timestamp time=JAppContext.currentTimestamp();
 		entity.setCalculateTime(time);

@@ -2,7 +2,7 @@ package com.jiuyescm.bms.biz.pallet.entity;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.math.BigDecimal;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
  /**

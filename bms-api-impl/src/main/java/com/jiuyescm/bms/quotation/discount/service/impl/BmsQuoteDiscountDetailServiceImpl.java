@@ -1,8 +1,8 @@
 package com.jiuyescm.bms.quotation.discount.service.impl;
 
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.repository.IBmsQuoteDiscountDetailRepository;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountDetailService;
-import com.jiuyescm.bms.quotation.dispatch.entity.BmsQuoteDispatchDetailEntity;
-import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 
 /**
  * ..ServiceImpl

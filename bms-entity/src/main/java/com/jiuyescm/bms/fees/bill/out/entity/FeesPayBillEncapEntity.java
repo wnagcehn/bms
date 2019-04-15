@@ -3,7 +3,6 @@ package com.jiuyescm.bms.fees.bill.out.entity;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
 import com.jiuyescm.bms.fees.abnormal.entity.FeesPayAbnormalEntity;
 import com.jiuyescm.bms.fees.out.dispatch.entity.FeesPayDispatchEntity;
 import com.jiuyescm.bms.fees.out.transport.entity.FeesPayTransportEntity;

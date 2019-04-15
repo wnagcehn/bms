@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.jiuyescm.bms.general.entity.FeesPayDispatchEntity;
-import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
 
 
 public interface IFeesPayDispatchService {

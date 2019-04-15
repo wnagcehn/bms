@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +54,8 @@ import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
+
+import net.sf.json.JSONObject;
 
 @JobHander(value="materialUseNewCalcJob")
 @Service
@@ -484,7 +484,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 		XxlJobLogger.log("-->"+entity.getId()+"数据主键ID:【{0}】  ",entity.getId());
 		entity.setCalculateTime(feeEntity.getCalculateTime());
 		Map<String,Object> map=new HashMap<String,Object>();
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		String customerId = entity.getCustomerId();
 		
 		//验证商家合同
@@ -533,7 +533,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 	public void updateBatch(List<BizOutstockPackmaterialEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		bizOutstockPackmaterialService.updateBatch(ts);
 		current = System.currentTimeMillis();
 		XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒",(current - start));

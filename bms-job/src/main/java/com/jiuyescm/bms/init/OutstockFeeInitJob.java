@@ -234,7 +234,7 @@ public class OutstockFeeInitJob extends IJobHandler{
 	private void updateAndInsertBatch(List<BizOutstockMasterEntity> ts,List<FeesReceiveStorageEntity> fs) {
 
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		if (fs.size() > 0) {
 			bizOutstockMasterService.updateOutstockBatch(ts);
 			current = System.currentTimeMillis();

@@ -164,7 +164,7 @@ public class BeanToMapUtil {
 					Object[] args = new Object[1];
 					Class cls = descriptor.getPropertyType();
 					if (cls.equals(Date.class)) {
-						if (value != null && value!="") {
+						if (value != null && !"".equals(value)) {
 							String[] dataPatterns = new String[] { "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd", "dd-MM月 -yy" };
 							args[0] = DateUtils.parseDate(value.toString(), dataPatterns);
 						}
@@ -173,7 +173,7 @@ public class BeanToMapUtil {
 						args[0] = value == null ? "" : value;
 					} else if (cls.equals(BigDecimal.class)) {
 						// BigDecimal b1 = new BigDecimal(0);
-						if(value!=""){
+						if(!"".equals(value)){
 							args[0] = value == null ? value : new BigDecimal(value.toString());
 						}
 					} else if (cls.equals(Double.class)) {
