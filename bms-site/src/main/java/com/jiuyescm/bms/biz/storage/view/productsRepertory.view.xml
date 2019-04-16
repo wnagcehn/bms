@@ -389,6 +389,7 @@ validRetryAction.execute(function(retMap){&#xD;
 				retryAction.execute(function(result){&#xD;
 					dorado.MessageBox.alert(result);&#xD;
 					with (view.get(&quot;#dsQuotaList&quot;)){&#xD;
+						set(&quot;parameter&quot;, datas);&#xD;
 						flushAsync();&#xD;
 					}&#xD;
 				});&#xD;
