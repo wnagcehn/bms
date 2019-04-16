@@ -111,9 +111,19 @@ public class ContractCalcuService {
 			}
 			
 			logger.info("taskId={} 费用编号={} 获取合同在线报价结果{}",vo.getTaskId(),feesNo,JSONObject.fromObject(rtnQuoteInfoVo));
+			
+			if(rtnQuoteInfoVo.getQuoteMaps().size()>1){
+	            logger.info("taskId={} 费用编号={} 合同在线匹配多条报价，不进行计算，系统错误 ", vo.getTaskId(), feesNo);
+	            errorMap.put("success", "fail");
+	            errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+	            errorMap.put("msg", "合同在线匹配多条报价，不进行计算，系统错误");
+	            return;
+			}
+			
 			for (Map<String, String> map : rtnQuoteInfoVo.getQuoteMaps()) {
 				int i = rtnQuoteInfoVo.getQuoteMaps().indexOf(map);
 			}
+
 			//调用规则计算费用
 			feesCalcuService.ContractCalcuService(fee, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(), ruleEntity.getQuotationNo());			
 			errorMap.put("success", "succ");
