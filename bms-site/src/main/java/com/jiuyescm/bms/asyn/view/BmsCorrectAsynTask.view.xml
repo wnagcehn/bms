@@ -172,7 +172,9 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
         <Property name="icon">url(>skin>common/icons.gif) -260px -20px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnSave">
-        <ClientEvent name="onClick">view.get(&quot;#dialogTask&quot;).show();</ClientEvent>
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogTask&quot;).show();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
         <Property name="caption">创建</Property>
       </ToolBarButton>
@@ -192,7 +194,7 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
     <DataSet id="dsBmsCorrectAsynTaskSaveEntity">
       <Property name="readOnly">false</Property>
       <Property name="dataType">[dtBmsCorrectAsynTaskTypeEntity]</Property>
-      <Property name="loadMode">manual</Property>
+      <Property name="loadMode">lazy</Property>
     </DataSet>
     <AutoForm id="queryForm">
       <Property name="dataSet">dsBmsCorrectAsynTaskQuery</Property>
@@ -374,16 +376,17 @@ jQuery(arg.dom).xCreate({&#xD;
           <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
         </Button>
         <Button>
-          <ClientEvent name="onClick">//view.id(&quot;dsBmsCorrectAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+          <ClientEvent name="onClick">view.id(&quot;dsBmsCorrectAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.id(&quot;dialogTask&quot;).hide();</ClientEvent>
           <Property name="caption">关闭</Property>
           <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
         </Button>
       </Buttons>
       <Children>
-        <AutoForm>
-          <Property name="dataSet">dsBmsCorrectAsynTaskSaveEntity</Property>
+        <AutoForm id="AutoForm">
+          <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
           <Property name="cols">*,*</Property>
+          <Property name="createPrivateDataSet">false</Property>
           <AutoFormElement>
             <Property name="name">year</Property>
             <Property name="property">year</Property>
