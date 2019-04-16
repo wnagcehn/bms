@@ -287,7 +287,14 @@ public class BmsCorrectAsynTaskController {
 
     @DataResolver
     public Map<String, String> saveTask(BmsCorrectAsynTaskVo vo) {
+        vo.setCreator(JAppContext.currentUserName());
         String string = bmsCorrectAsynTaskService.saveCorrect(vo);
-        return null;
+        Map<String, String> map = new HashMap<>();
+        if("纠正成功".equals(string)){
+            map.put("success", string);
+        }else {
+            map.put("fail", string);
+        }
+        return map;
     }
 }
