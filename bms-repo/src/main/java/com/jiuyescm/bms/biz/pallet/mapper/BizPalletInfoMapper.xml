@@ -300,7 +300,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 		p.customer_id as customerId, s.subject_code as subjectCode, DATE_FORMAT(p.create_time,'%Y%m') as creMonth
 		from biz_pallet_info p
 		LEFT JOIN fees_receive_storage s on s.fees_no=p.fees_no 
-		WHERE 1=1 and p.del_flag='0' and s.del_flag='0'
+		WHERE 1=1 and p.del_flag='0' and s.del_flag='0' and s.is_calculated = '99'
         	<if test=" id != null and id !='' ">
 				and p.id = #{id}
 			</if>
@@ -321,9 +321,6 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			</if>
 			<if test="createEndTime != null and createEndTime !=''" >
 				and p.create_time <![CDATA[ <= ]]> #{createEndTime}
-			</if>
-        	<if test=" isCalculated != null and isCalculated !='' ">
-				and s.is_calculated = #{isCalculated}
 			</if>
 			<if test=" subjectCode != null and subjectCode !='' and subjectCode != 'ALL' ">
 				and s.subject_code = #{subjectCode}
