@@ -232,7 +232,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
     	select 
 		i.customer_id as customerid,s.subject_code as subjectCode, DATE_FORMAT(i.create_time,'%Y%m') as creMonth  from biz_instock_info i
 		LEFT JOIN fees_receive_storage s on i.fees_no=s.fees_no
-		WHERE s.del_flag='0' and i.del_flag='0' and i.is_calculated != 0 and and s.is_calculated = '99'
+		WHERE s.del_flag='0' and i.del_flag='0' and i.is_calculated != 0 and s.is_calculated = '99'
         	<if test=" id != null and id !='' ">
 				and i.id = #{id}
 			</if>
