@@ -624,6 +624,7 @@ public class BizAddFeeController {
 	public String reCalculate(Map<String, Object> param){
 		int result=bizAddFeeService.retryCalcu(param);
 		if(result>0){
+		    param.put("isCalculated", "99");
 			//对这些费用按照商家、科目、时间排序
 			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryAddTask(param);
 			for (BmsCalcuTaskVo vo : calList) {

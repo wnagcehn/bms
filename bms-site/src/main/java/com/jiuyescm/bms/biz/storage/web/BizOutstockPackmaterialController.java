@@ -818,7 +818,7 @@ public class BizOutstockPackmaterialController {
 		if(service.reCalculate(param) <= 0){
 			return "重算异常";
 		}else{
-
+		    param.put("isCalculated", "99");	    
 			//对这些费用按照商家、科目、时间排序
 			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryMaterialTask(param);
 			for (BmsCalcuTaskVo vo : calList) {
