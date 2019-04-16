@@ -169,7 +169,7 @@
 		     b.calculate_time,
 		     b.unit,b.cost
 		     from biz_outstock_master a LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
-		     where a.del_flag='0' and a.is_calculated = 1
+		     where a.del_flag='0'
 	  <include refid="baseSelectColumns" />
 	  <if test="(subjectCode != null and subjectCode !='')" >
 				and b.subject_code = #{subjectCode}
@@ -447,8 +447,73 @@
 		a.customerid as customerId, b.subject_code as subjectCode, DATE_FORMAT(a.create_time,'%Y%m') as creMonth
 		from biz_outstock_master a 
 		LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no
-		where a.del_flag='0' and b.del_flag='0'
-	    <include refid="baseSelectColumns" />
+		where a.del_flag='0' and b.del_flag='0' and b.is_calculated = '99'
+		<if test="(id != null and id !='')" >
+				and a.id = #{id}
+		</if>
+		<if test="(outstockNo != null and outstockNo !='')" >
+				and a.outstock_no = #{outstockNo}
+		</if>
+		<if test="(externalNo != null and externalNo !='')" >
+				and a.external_no = #{externalNo}
+		</if>
+		<if test="(warehouseCode != null and warehouseCode !='')" >
+				and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test="(warehouseName != null and warehouseName !='')" >
+				and a.warehouse_name = #{warehouseName}
+		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and a.customerid = #{customerid}
+		</if>
+		<if test="(customerName != null and customerName !='')" >
+				and a.customer_name = #{customerName}
+		</if>
+		<if test="(carrierId != null and carrierId !='')" >
+				and a.carrier_id = #{carrierId}
+		</if>
+		<if test="(carrierName != null and carrierName !='')" >
+				and a.carrier_name = #{carrierName}
+		</if>
+		<if test="(deliverId != null and deliverId !='')" >
+				and a.deliver_id = #{deliverId}
+		</if>
+		<if test="(deliverName != null and deliverName !='')" >
+				and a.deliver_name = #{deliverName}
+		</if>
+		<if test="(waybillNo != null and waybillNo !='')" >
+				and a.waybill_no = #{waybillNo}
+		</if>
+		<if test="(temperatureTypeCode != null and temperatureTypeCode !='')" >
+				and a.temperature_type_code = #{temperatureTypeCode}
+		</if>
+		<if test="(temperatureTypeName != null and temperatureTypeName !='')" >
+				and a.temperature_type_name = #{temperatureTypeName}
+		</if>
+		<if test="(billTypeCode != null and billTypeCode !='')" >
+				and a.bill_type_code = #{billTypeCode}
+		</if>
+		<if test="(billTypeName != null and billTypeName !='' and billTypeNameOther == null )" >
+				and a.bill_type_name = #{billTypeName}
+		</if>
+		<if test="(billTypeNameOther != null and billTypeNameOther !='')" >
+				and (a.bill_type_name = #{str0}  or a.bill_type_name = #{str1})
+		</if>
+		<if test="(b2bFlag != null and b2bFlag !='')" >
+				and a.b2b_flag = #{b2bFlag}
+		</if>
+		<if test="(feesNo != null and feesNo !='')" >
+				and a.fees_no = #{feesNo}
+		</if>
+		<if test="(startTime != null and startTime !='')" >
+			    and a.create_time <![CDATA[>= ]]>#{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and a.create_time <![CDATA[<= ]]>#{endTime}
+		</if>
+		<if test="(extattr1 != null and extattr1 !='')" >
+				and a.extattr1 = #{extattr1}
+		</if>
 	    <if test="(subjectCode != null and subjectCode !='')" >
 			and b.subject_code = #{subjectCode}
 		</if>

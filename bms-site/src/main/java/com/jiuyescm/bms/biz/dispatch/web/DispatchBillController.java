@@ -499,6 +499,7 @@ public class DispatchBillController{
 			return "重算异常";
 		}else{
 			//对这些费用按照商家、科目、时间排序
+		    param.put("accountState", "99");
 			List<BmsCalcuTaskVo> calList=bmsCalcuTaskService.queryDispatchTask(param);
 			for (BmsCalcuTaskVo vo : calList) {
 				vo.setCrePerson(JAppContext.currentUserName());
