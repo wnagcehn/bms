@@ -383,6 +383,7 @@ dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
 	retryAction.execute(function(result){&#xD;
 		dorado.MessageBox.alert(result);&#xD;
 		with (view.get(&quot;#dsBizPalletInfoEntity&quot;)){&#xD;
+			set(&quot;parameter&quot;, datas);&#xD;
 			flushAsync();&#xD;
 		}&#xD;
 	});&#xD;
