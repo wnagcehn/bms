@@ -83,11 +83,13 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	private Map<String, String> dispatchSubjectMap = null; 	//物流商与配送科目映射
 	private Map<String, String> deliverNoCalcuMap = null;	//不计费宅配商列表
 	private List<String> monthCountList=null;
-	private Map<String, String> throwWeightMap=null;
+	//private Map<String, String> throwWeightMap=null;
 	private List<String> changeCusList=null;
 	private List<String> cancelCusList=null;
 	private Map<String, String> carrierMap=null;
 	private Map<String,WarehouseVo> wareMap=null;
+	private List<SystemCodeEntity> throwWeightList=null;
+
 
 	
 	
@@ -124,8 +126,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				
 				if("BMS".equals(contractAttr)){
 					calcuForBms(entity,fee);
-				}
-				else {
+				}else {
 					calcuForContract(entity,fee);
 				}
 			} catch (Exception e) {
@@ -170,8 +171,8 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		deliverNoCalcuMap = new HashMap<>();
 		map.clear();
 		map.put("typeCode", "NO_FEES_DELIVER");
-		List<SystemCodeEntity> no_fees_delivers = systemCodeService.querySysCodes(map);//查询不计算费用的宅配商列表，如客户自提，商家自提等
-		for (SystemCodeEntity systemCodeEntity : no_fees_delivers) {
+		List<SystemCodeEntity> noFeesDelivers = systemCodeService.querySysCodes(map);//查询不计算费用的宅配商列表，如客户自提，商家自提等
+		for (SystemCodeEntity systemCodeEntity : noFeesDelivers) {
 			deliverNoCalcuMap.put(systemCodeEntity.getExtattr1(), systemCodeEntity.getCodeName());
 		}
 		//获取月结账号
@@ -187,13 +188,17 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		}
 		
 		//获取计抛物流商
-		throwWeightMap = new HashMap<>();
+	/*	throwWeightMap = new HashMap<>();
 		map.clear();
 		map.put("typeCode", "THROW_WEIGHT_CARRIER");
 		List<SystemCodeEntity> throwList = systemCodeService.querySysCodes(map);//计抛的物流商
 		for (SystemCodeEntity systemCodeEntity : throwList) {
 			throwWeightMap.put(systemCodeEntity.getCode(), systemCodeEntity.getCodeName());
-		}
+		}*/
+		throwWeightList=new ArrayList<>();
+		map.clear();
+        map.put("typeCode", "THROW_WEIGHT_CARRIER");
+		throwWeightList = systemCodeService.querySysCodes(map);//计抛的物流商
 		
 		//指定的商家
 		map.clear();
@@ -271,7 +276,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			
 			//计费参数获取
 	        //1)***********************获取计费物流商******************************
-			String subject = dispatchSubjectMap.get(getCarrierId(entity));
+			dispatchSubjectMap.get(getCarrierId(entity));
 			String carrierId=entity.getChargeCarrierId();
 			//2)***********************获取新泡重************************
 			//新增逻辑，若要按抛重计算，此时的泡重需要我们自己去计算运单中所有耗材中最大的体积/6000
@@ -293,14 +298,25 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				districtId=entity.getReceiveDistrictId();
 			}
 			
-			//如果是顺丰配送 匹配标准地址
-			if(throwWeightMap.containsKey(carrierId)){
+			boolean isThowCount= false;            
+            for(SystemCodeEntity s:throwWeightList){
+                if(s.getCode().equals(carrierId)){
+                    if(StringUtils.isBlank(s.getExtattr1())){
+                        isThowCount = true;//false-此单参与计算计抛
+                    }else{
+                        if(s.getExtattr1().equals(fee.getServiceTypeCode())){
+                            isThowCount=true;
+                        }
+                    }
+                }
+            }           
+            //是否计抛
+            if(isThowCount){//计抛
 				RegionVo vo = new RegionVo(ReplaceChar(provinceId), ReplaceChar(cityId),ReplaceChar(districtId));
 				RegionVo matchVo = omsAddressService.queryNameByAlias(vo);
 				if ((StringUtils.isNotBlank(provinceId) && StringUtils.isBlank(matchVo.getProvince())) ||
 						StringUtils.isNotBlank(cityId) && StringUtils.isBlank(matchVo.getCity()) ||
-						StringUtils.isNotBlank(districtId) && StringUtils.isBlank(matchVo.getDistrict())) 
-				{
+						StringUtils.isNotBlank(districtId) && StringUtils.isBlank(matchVo.getDistrict())) {
 					//XxlJobLogger.log("-->"+entity.getId()+"收件人地址存在空值  省【{0}】市【{1}】区【{2}】 运单号【{3}】:"+ provinceId,cityId,districtId,entity.getWaybillNo());
 				}else{
 					entity.setReceiveProvinceId(matchVo.getProvince());
@@ -316,8 +332,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 					double dd = getResult(entity.getAdjustWeight(),carrierId);
 					entity.setWeight(dd);
 					entity.setTotalWeight(entity.getAdjustWeight());
-				}
-				else{
+				}else{
 					//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
 					boolean hasCorrect = false;
 					double correctWeight = 0.0;
@@ -427,8 +442,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				if(!DoubleUtil.isBlank(entity.getAdjustWeight())){
 					entity.setWeight(Math.ceil(entity.getAdjustWeight())); //计费重量 : 6
 					entity.setTotalWeight(entity.getAdjustWeight()); //实际重量 eg:5.1
-				}
-				else{
+				}else{
 					//新增逻辑判断，判断是否有修正重量，用运单号去修正表里去查询
 					Map<String,Object> condition=new HashMap<String,Object>();
 					condition.put("waybillNo", entity.getWaybillNo());
@@ -473,7 +487,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		}
 		
 		long start = System.currentTimeMillis();// 系统开始时间
-		long current = 0l;// 当前系统时间
+		long current = 0L;// 当前系统时间
 		
 		String subjectId= dispatchSubjectMap.get(getCarrierId(entity));
 		
