@@ -7,14 +7,15 @@
     http://www.bstek.com/dorado/schema http://www.bstek.com/dorado/schema/spring-dorado-7.0.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<context:component-scan base-package="com.jiuyescm.bms" />
-    <import resource="classpath*:applicationContext-config.xml" />
-	<import resource="classpath*:applicationContext-datasource.xml" />
-	<import resource="classpath:spring/dubbo-provider.xml" /> 
-    <import resource="classpath:spring/dubbo-consumer.xml" />
-    <import resource="classpath*:spring-redis.xml" />
-    <import resource="classpath*:spring-lock.xml" /> 
-    <import resource="classpath:spring/applicationContext-activeMQ.xml" />
-    <import resource="classpath:spring/disconfApp-config.xml" />
+
+	
+
+	<!-- 使用disconf必须添加以下配置 -->
+	<bean id="tenantConfig" class="com.jiuyescm.bms.appconfig.TenantConfig" >
+		<!--九曳租户ID -->
+		<property name="tenantId" value="${tenantId}" />
+		<!--九曳租户名称 -->
+		<property name="tenantName" value="${tenantName}" />
+	</bean>
 
 </beans>

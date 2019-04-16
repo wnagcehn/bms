@@ -34,6 +34,7 @@
 				<value>classpath:/rocketmq.properties</value>
 			    <value>classpath:/rocketmq.operation.flag</value>
 			    <value>classpath:/rocketmq.email.flag</value>
+			    <value>classpath:/tenant.properties</value>
 			</list>
 		</property>
 	</bean>
