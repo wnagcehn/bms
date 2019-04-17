@@ -142,6 +142,13 @@ public class BmsCalcuRepositoryImpl extends MyBatisDao<BmsFeesQtyEntity> impleme
         return entity;
 	}
 
+    @Override
+    public List<BmsFeesQtyEntity> queryFeesQtyForStoStandMaterial(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 
 
