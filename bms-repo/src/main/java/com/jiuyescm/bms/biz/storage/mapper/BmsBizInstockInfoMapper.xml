@@ -41,7 +41,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		i.adjust_box as adjustBox, i.adjust_weight as adjustWeight,
 		i.last_modifier as lastModifier, i.last_modifier_id as lastModifierId,
 		i.del_flag as delFlag,
-		i.calculate_time as calculateTime, i.remark, i.instock_no as instockNo,
+		s.calculate_time as calculateTime, i.remark, i.instock_no as instockNo,
 		i.external_num as externalNum, i.warehouse_code as warehouseCode,
 		i.warehouse_name as warehouseName, i.customer_id as customerId,
 		i.customer_name as customerName, i.instock_type as instockType,
