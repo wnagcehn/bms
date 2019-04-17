@@ -542,6 +542,9 @@ public class NewBuinessDataExportController extends BaseController {
 		map.put("receiveProvinceId", "收件人省");
 		map.put("receiveCityId", "收件人市");
 		map.put("receiveDetailAddress", "收件人地址");
+		map.put("packPlanNo", "包材方案编号");
+		map.put("packPlanName", "包材方案名称");
+		map.put("cost", "包材方案金额");
 
 		// 按序号获取systemCode表中的类别并排序
 		Map<String, Object> param = new HashMap<>();
@@ -759,6 +762,10 @@ public class NewBuinessDataExportController extends BaseController {
 							materialEntity.getReceiveCityId());
 					dataItem.put("receiveDetailAddress",
 							materialEntity.getReceiveDetailAddress());
+					//新增标准包装方案字段
+	                dataItem.put("packPlanNo", materialEntity.getPackPlanNo());
+	                dataItem.put("packPlanName", materialEntity.getPackPlanName());
+	                dataItem.put("cost", materialEntity.getCost());
 					String marterialType = getMaterialType(materialInfoList,
 							materialEntity.getProductNo());
 					dataItem.put(marterialType + "_name",
@@ -935,6 +942,10 @@ public class NewBuinessDataExportController extends BaseController {
 						materialEntity.getReceiveCityId());
 				dataItem.put("receiveDetailAddress",
 						materialEntity.getReceiveDetailAddress());
+				//新增标准包装方案字段
+				dataItem.put("packPlanNo", materialEntity.getPackPlanNo());
+				dataItem.put("packPlanName", materialEntity.getPackPlanName());
+				dataItem.put("cost", materialEntity.getCost());
 				String marterialType = getMaterialType(materialInfoList,
 						materialEntity.getProductNo());
 				dataItem.put(marterialType + "_name",

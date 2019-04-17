@@ -116,4 +116,7 @@
 		
 		<dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" version="1.0.0" registry="bms"/>
 		<dubbo:reference id="bmsUserCustomerListenerService" interface="com.jiuyescm.bms.asyn.service.IBmsUserCustomerListenerService" version="1.0.0" registry="bms"/>
+		
+		<!-- 标准包装方案 -->
+		<dubbo:reference id="bizDispatchPackageService" interface="com.jiuyescm.bms.biz.diapatch.service.IBizDispatchPackageService" version="1.0.0" registry="bms"/>
 </beans> 

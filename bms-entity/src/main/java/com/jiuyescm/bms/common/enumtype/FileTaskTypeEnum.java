@@ -24,6 +24,7 @@ public enum FileTaskTypeEnum {
 	BIZ_PACK("pack", "耗材库存"),
 	BIZ_PRO_OUTSTOCK("pro_outstock", "商品出库单"),
 	BIZ_PACK_OUTSTOCK("pack_outstock", "耗材出库明细"),
+	BIZ_PACKAGE_OUTSTOCK("package_outstock", "标准包装方案"),
 	BIZ_INSTOCK("instock", "入库单"),
 	BIZ_INSTOCK_HANDWORK("instockhandwork", "入库卸货单"),
 	BIZ_OUTSTOCK("outstock","出库数据"),
@@ -80,6 +81,7 @@ public enum FileTaskTypeEnum {
 		maps.put(BIZ_PACK.getCode(), BIZ_PACK.getDesc());
 		maps.put(BIZ_PRO_OUTSTOCK.getCode(), BIZ_PRO_OUTSTOCK.getDesc());
 		maps.put(BIZ_PACK_OUTSTOCK.getCode(), BIZ_PACK_OUTSTOCK.getDesc());
+		maps.put(BIZ_PACKAGE_OUTSTOCK.getCode(), BIZ_PACKAGE_OUTSTOCK.getDesc());
 		maps.put(BIZ_INSTOCK.getCode(), BIZ_INSTOCK.getDesc());
 		maps.put(BIZ_OUTSTOCK.getCode(), BIZ_OUTSTOCK.getDesc());
 		maps.put(BIZ_WAYBILL.getCode(), BIZ_WAYBILL.getDesc());
