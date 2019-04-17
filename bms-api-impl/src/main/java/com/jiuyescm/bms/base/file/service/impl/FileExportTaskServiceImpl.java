@@ -110,6 +110,22 @@ public class FileExportTaskServiceImpl implements IFileExportTaskService {
 		entity.setProgress(process);
 		return fileExportTaskRepository.update(entity);
 	}
+	
+	   /**
+     * 更新进度
+     */
+    @Override
+    public int updateTask(String taskId, String taskState, double process, String filepath) {
+
+        FileExportTaskEntity entity = new FileExportTaskEntity();
+        if (StringUtils.isNotEmpty(taskState)) {
+            entity.setTaskState(taskState);
+        }
+        entity.setFilePath(filepath);
+        entity.setTaskId(taskId);
+        entity.setProgress(process);
+        return fileExportTaskRepository.update(entity);
+    }
 
 	@Override
 	public boolean checkFileHasDownLoad(Map<String, Object> queryEntity) {
