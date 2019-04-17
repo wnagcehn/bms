@@ -216,4 +216,10 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 		// TODO Auto-generated method stub
 		return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryTask", condition);
 	}
+	
+    @Override
+    public List<BizDispatchBillEntity> queryAllWarehouseFromBizData(
+            Map<String, Object> condition) {
+        return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryAllWarehouseFromBizData", condition);
+    }
 }

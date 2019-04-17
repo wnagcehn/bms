@@ -196,4 +196,10 @@ public class BizDispatchBillServiceImp implements IBizDispatchBillService{
 		// TODO Auto-generated method stub
 		return bizRepository.queryNotCalculate(condition);
 	}
+	
+	@Override
+    public List<BizDispatchBillEntity> queryAllWarehouseFromBizData(
+            Map<String, Object> condition) {
+        return bizRepository.queryAllWarehouseFromBizData(condition);
+    }
 }

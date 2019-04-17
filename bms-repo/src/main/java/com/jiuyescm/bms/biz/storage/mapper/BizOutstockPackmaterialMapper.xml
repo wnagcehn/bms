@@ -555,46 +555,50 @@
     
     <select id="queryMaterialFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
     	select  
-			b.warehouse_name, 
-			b.customer_name, 
-			b.waybill_no as waybillNo,
-			b.outstock_no,
-			a.totalqty,
-			a.product_detail,
-			a.external_no,
-			a.carrier_name,
-			a.create_time,
-			a.receive_name,
-			a.receive_province_id,
-			a.receive_city_id, 
-			a.receive_detail_address,
-			b.consumer_material_code as productNo, 
-			b.consumer_material_name as product_name, 
-			b.weight,
-			b.num  as quantity,
-			b.spec_desc as specDesc,
-			c.cost,
-			c.unit_price as unitPrice,
-			d.pack_plan_no,
-			d.pack_plan_name
-        from  biz_dispatch_bill a 
-  		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no
-  		LEFT JOIN fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no
+		a.warehouse_name, 
+		a.customer_name, 
+		a.waybill_no as waybillNo,
+		a.outstock_no,
+		a.totalqty,
+		a.product_detail,
+		a.external_no,
+		a.carrier_name,
+		a.create_time,
+		a.receive_name,
+		a.receive_province_id,
+		a.receive_city_id, 
+		a.receive_detail_address,
+		b.consumer_material_code as productNo, 
+		b.consumer_material_name as product_name, 
+		b.weight,
+		b.num  as quantity,
+		b.spec_desc as specDesc,
+		IFNULL(c.cost,0) as cost,
+		c.unit_price as unitPrice,
+		d.pack_plan_no as packPlanNo,
+		d.pack_plan_name as packPlanName,
+		e.cost as packPlanCost
+		from  biz_dispatch_bill a 
+		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no and b.del_flag='0'
+		LEFT JOIN fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no and c.del_flag='0'
 		LEFT JOIN biz_dispatch_package d on a.waybill_no=d.waybill_no and d.del_flag='0'
-		where b.create_time>=#{startTime} and <![CDATA[b.create_time<#{endTime}]]> and b.del_flag=0
+		LEFT JOIN fees_receive_storage e on  d.fees_no =e.fees_no and e.del_flag='0'
+		where a.create_time>=#{startTime} 
+		and <![CDATA[a.create_time<#{endTime}]]> 
+		and a.del_flag='0'
     	<if test="warehouseCode!=null and warehouseCode!=''">
-    		and b.warehouse_code=#{warehouseCode}
+    		and a.warehouse_code=#{warehouseCode}
     	</if>
-		and a.del_flag=0
 		<if test="(customerId != null and customerId !='')" >
-			and b.customer_id=#{customerId}
+			and a.customerid=#{customerId}
 		</if>
+		and CONCAT(IFNULL(b.consumer_material_code,''),IFNULL(d.pack_plan_no,'')) != ''
 	  	<if test="(customerIds != null and customerIds !='')" >
-	  		and b.customer_id in
+	  		and a.customerid in
 		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
 		 		#{item}
 		 	</foreach>
-		 	order by b.customer_id
+		 	order by a.customerid
 	  	</if>
     </select>
     
