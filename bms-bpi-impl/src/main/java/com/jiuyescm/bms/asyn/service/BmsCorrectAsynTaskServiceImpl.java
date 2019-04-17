@@ -37,7 +37,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 	
 	@Autowired private JmsTemplate jmsQueueTemplate;
 	
-	@Autowired private ISequenceService sequenceService;
+	@Autowired private ISequenceService redisSequenceService;
 
 	@Override
 	public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition,
@@ -177,7 +177,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
 		if(!"SUCCESS".equals(taskStatus)&&!"EXCEPTION".equals(taskStatus)&&!"FAIL".equals(taskStatus))return "此纠正任务的状态不能纠正";
 		//发送MQ消息纠正
 		//String taskId = snowflakeSequenceService.nextStringId();
-		String id = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
+		String id = String.valueOf(redisSequenceService.nextSeq("BMS.CORRECT")) ;
 		String taskId = "CT";
 		for(int i = 1;i<=10-id.length();i++){
 			taskId +="0";
