@@ -27,4 +27,6 @@ public interface IBmsCorrectAsynTaskService {
 
 	String updateCorrect(BmsCorrectAsynTaskVo vo) throws Exception;
 
+    String saveCorrect(BmsCorrectAsynTaskVo vo);
+
 }
