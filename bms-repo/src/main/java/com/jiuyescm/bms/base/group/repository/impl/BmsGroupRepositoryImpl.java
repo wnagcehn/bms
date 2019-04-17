@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.base.group.repository.impl;
 
 import java.util.ArrayList;
@@ -101,5 +105,10 @@ public class BmsGroupRepositoryImpl extends MyBatisDao<BmsGroupEntity> implement
 		List<BmsGroupEntity> list = this.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupMapper.queryIdByBizType", null);
 		return list.size()>0?list.get(0):null;
 	}
+
+    @Override
+    public List<BmsGroupEntity> queryNodesForNode(Map<String, String> param) {
+        return selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupMapper.queryChildGroups", param);
+    }
 
 }

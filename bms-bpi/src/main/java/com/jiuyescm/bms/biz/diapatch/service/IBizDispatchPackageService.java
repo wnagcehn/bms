@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.diapatch.vo.BizDispatchPackageVo;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 
 /**

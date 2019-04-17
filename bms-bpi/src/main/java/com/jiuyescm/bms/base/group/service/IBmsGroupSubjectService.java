@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.base.group.service;
 
 import java.util.List;
@@ -28,5 +32,22 @@ public interface IBmsGroupSubjectService {
 	
 	List<BmsGroupSubjectEntity> queryGroupSubjectByGroupId();
 	List<BmsGroupSubjectVo> queryGroupSubjectList();
+	
+	/**
+     * 获取bms增值一级科目
+     * @author caojianwei
+     * @date 2019年4月17日 下午12:48:44
+     * @return 
+     */
+    Map<String, String> getWmsValueAddSubjectGroups();
+    
+    /**
+     * 根据一级科目组获取bms增值科目明细
+     * @author caojianwei
+     * @date 2019年4月17日 下午1:14:23
+     * @param groupCode 一级科目组编码
+     * @return
+     */
+    Map<String, String> getWmsValueAddSubjectDetails(String groupCode);
 
 }

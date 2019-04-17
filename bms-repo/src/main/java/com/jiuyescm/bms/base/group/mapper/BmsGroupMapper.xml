@@ -89,4 +89,13 @@
 		and biz_type='sale_area'
 	</select>
 	
+	
+	<select id="queryChildGroups" parameterType="Map" resultType="com.jiuyescm.bms.base.group.BmsGroupEntity">
+		select b.group_code,b.group_name 
+		from bms_group a
+		left join bms_group b on a.id = b.parent_id
+		where a.biz_type = #{bizType} and a.group_code = #{groupCode}
+		order by b.group_code asc
+	</select>
+	
 </mapper>

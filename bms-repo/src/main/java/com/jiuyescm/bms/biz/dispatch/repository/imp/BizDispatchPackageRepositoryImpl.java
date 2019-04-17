@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchPackageRepository;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
