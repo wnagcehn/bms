@@ -37,5 +37,7 @@ public interface IFileExportTaskService {
 
 	PageInfo<FileExportTaskEntity> queryBillTask(Map<String, Object> param,
 			int pageNo, int pageSize);
+
+    int updateTask(String taskId, String taskState, double process, String filepath);
     
 }

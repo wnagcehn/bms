@@ -574,10 +574,13 @@
 			b.num  as quantity,
 			b.spec_desc as specDesc,
 			c.cost,
-			c.unit_price as unitPrice
+			c.unit_price as unitPrice,
+			d.pack_plan_no,
+			d.pack_plan_name
         from  biz_dispatch_bill a 
   		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no
-  		LEFT JOIN  fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no
+  		LEFT JOIN fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no
+		LEFT JOIN biz_dispatch_package d on a.waybill_no=d.waybill_no and d.del_flag='0'
 		where b.create_time>=#{startTime} and <![CDATA[b.create_time<#{endTime}]]> and b.del_flag=0
     	<if test="warehouseCode!=null and warehouseCode!=''">
     		and b.warehouse_code=#{warehouseCode}

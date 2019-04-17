@@ -82,4 +82,16 @@ public interface IBmsCalcuTaskService {
 	List<BmsCalcuTaskVo> queryProTask(Map<String, Object> condition);
 
 	List<BmsCalcuTaskVo> queryInsTask(Map<String, Object> condition);
+
+	/**
+	 * 汇总标准包装方案需要发送的任务
+	 * <耗材>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月16日 上午10:59:00
+	 *
+	 * @param condition
+	 * @return
+	 */
+    List<BmsCalcuTaskVo> queryPackageTask(Map<String, Object> condition);
 }
