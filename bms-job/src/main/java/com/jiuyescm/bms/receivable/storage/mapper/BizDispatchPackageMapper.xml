@@ -81,7 +81,7 @@
     </select>
 	
 	<!-- 更新 -->
-    <update id="update" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity">
+    <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity">
         update biz_dispatch_package
         <trim prefix="set" suffixOverrides=",">
 			<if test=" waybillNo != null and waybillNo !='' ">

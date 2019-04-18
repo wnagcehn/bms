@@ -5,6 +5,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
@@ -21,11 +23,11 @@ public class DispatchPackageCalcuBase extends CalcuTaskListener<BizDispatchPacka
 	
 	@Override
 	protected void generalCalcu(BmsCalcuTaskVo taskVo, String contractAttr,Map<String, Object> map) {
-/*		WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext(); 
-*/		try {
-			/*DispatchPackageCalcuJob dispatchPackageCalcuJob = (DispatchPackageCalcuJob) ctx.getBean("dispatchPackageCalcuJob");
+		WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext(); 
+		try {
+			DispatchPackageCalcuJob dispatchPackageCalcuJob = (DispatchPackageCalcuJob) ctx.getBean("dispatchPackageCalcuJob");
 			dispatchPackageCalcuJob.process(taskVo, contractAttr);
-			dispatchPackageCalcuJob.calcu(map);*/
+			dispatchPackageCalcuJob.calcu(map);
 		} catch (Exception e) {
 			logger.error("spring 获取bean异常",e);
 		}
