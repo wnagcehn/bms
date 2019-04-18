@@ -200,7 +200,7 @@ public class MaterialCostCalcJob extends CommonCalcJob<BizOutstockPackmaterialEn
 		model.setDerateAmount(BigDecimal.ZERO);
 		model.setExternalProductNo(entity.getConsumerMaterialCode());
 		model.setFeesNo(entity.getCostFeesNo());
-		model.setIsCalculated(CalculateState.Begin.getCode());
+		//model.setIsCalculated(CalculateState.Begin.getCode());
 		model.setOperateTime(entity.getCreateTime());
 		model.setOrderNo(entity.getOutstockNo());
 		model.setProductNo(entity.getConsumerMaterialCode());
