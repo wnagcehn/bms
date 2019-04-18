@@ -240,6 +240,28 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 		return vo;
 	}
 
+
+    @Override
+    public BmsFeesQtyVo queryFeesQtyForStoStandMaterial(String customerId, String subjectCode, Integer creMonth) {
+        // TODO Auto-generated method stub
+        BmsFeesQtyVo vo = new BmsFeesQtyVo();
+        try {
+            int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+            int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+            String startTime = startYear+"-"+startMonth+"-01";
+            String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+        
+            
+            List<BmsFeesQtyEntity> statusList = bmsCalcuServiceImpl.queryFeesQtyForStoStandMaterial(customerId, subjectCode, startTime, endTime);
+            tongji(statusList,vo);
+            return vo;
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.info("查询异常",e);
+        }
+        return vo;
+    }
+	
 	private void tongji(List<BmsFeesQtyEntity> statusList,BmsFeesQtyVo vo){
 		int entityTotal=0;
 		List<Integer> sortList=new ArrayList<Integer>();
@@ -309,4 +331,5 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 		
 		vo.setFeesCount(entityTotal);
 	}
+
 }

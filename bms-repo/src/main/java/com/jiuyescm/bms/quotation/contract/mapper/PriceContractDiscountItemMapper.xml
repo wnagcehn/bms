@@ -100,8 +100,12 @@
 		select * from bms_quote_discount_detail
 		where 1=1 
 		and template_code=#{templateCode}
-		and start_time <![CDATA[<= #{createTime}]]> and end_time >= #{createTime}
-		and down_limit<![CDATA[<=#{count}]]> and up_limit>#{count}
+		<if test="createTime != null" >
+				and start_time <![CDATA[<= #{createTime}]]> and end_time >= #{createTime}		
+		</if>
+		<if test="count != null" >
+				and down_limit<![CDATA[<=#{count}]]> and up_limit>#{count}				
+		</if>
 		and del_flag=0
     </select>
     

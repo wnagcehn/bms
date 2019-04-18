@@ -56,7 +56,7 @@
 		inner join fees_receive_dispatch b on a.fees_no = b.fees_no
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customerid,b.subject_code,b.is_calculated
     </select>
     
@@ -66,7 +66,7 @@
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.customer_id = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated
     </select>
     
@@ -76,7 +76,7 @@
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated
     </select>
     
@@ -86,7 +86,7 @@
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.customer_id = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated
     </select>
     
@@ -96,7 +96,7 @@
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated
     </select>
     
@@ -106,7 +106,7 @@
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated;
     </select>
     
@@ -116,7 +116,18 @@
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		where a.customer_id = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
-		and a.del_flag = '0' and subject_code = #{subjectCode}
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated
     </select>
+    
+     <!-- 标准耗材： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
+    <select id="queryFeesQtyForStoStandMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+    	select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_dispatch_package a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		where a.customerid = #{customerId}
+		and a.cre_time >= #{startTime} and <![CDATA[a.cre_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code =#{subjectCode}
+		group by b.customer_id,b.subject_code,b.is_calculated
+    </select>
+    
 </mapper>
