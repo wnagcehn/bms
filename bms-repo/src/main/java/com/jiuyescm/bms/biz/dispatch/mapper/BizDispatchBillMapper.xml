@@ -681,4 +681,23 @@
 		</if>
 		GROUP BY a.customerid,c.subject_code,DATE_FORMAT(a.create_time,'%Y%m');  
     </select>
+    
+    <select id="queryAllWarehouseFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
+    	select warehouse_code,warehouse_name 
+    	from biz_dispatch_bill 
+    	where 1=1 
+    	and del_flag='0'	
+    	and <![CDATA[create_time>=#{startTime}]]>
+    	and <![CDATA[create_time<#{endTime}]]> 
+    	<if test="(customerId != null and customerId !='')" >
+			and customerid=#{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and customerid in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+	  	</if>
+    	group by warehouse_code,warehouse_name
+    </select>
 </mapper>

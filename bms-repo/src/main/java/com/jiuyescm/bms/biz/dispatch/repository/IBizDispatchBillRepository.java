@@ -130,4 +130,16 @@ public interface IBizDispatchBillRepository{
 	
 	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 
+	/**
+	 * 汇总耗材需要分仓的仓库
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月17日 下午7:08:55
+	 *
+	 * @param condition
+	 * @return
+	 */
+    List<BizDispatchBillEntity> queryAllWarehouseFromBizData(Map<String, Object> condition);
+
 }
