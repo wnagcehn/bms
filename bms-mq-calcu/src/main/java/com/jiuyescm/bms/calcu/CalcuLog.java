@@ -1,10 +1,11 @@
 package com.jiuyescm.bms.calcu;
 
-import net.sf.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
+
+import net.sf.json.JSONObject;
 
 public class CalcuLog {
 
@@ -12,6 +13,7 @@ public class CalcuLog {
 	
 	public static void printLog(CalcuBaseInfoVo t){
 		try{
+		    t.setUniqueKey(t.getFeesNo() + t.getSubjectCode());
 			String jsonString = JSONObject.fromObject(t).toString();
 			logger.info("{}",jsonString);
 		}catch(Exception ex){
