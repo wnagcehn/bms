@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity" >
+			<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+		   	<result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+		   	<result column="customerid" property="customerid" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+		   	<result column="transport_temperature_type" property="transportTemperatureType" jdbcType="VARCHAR" />
+		   	<result column="holding_time" property="holdingTime" jdbcType="VARCHAR" />
+		   	<result column="pack_operate_type" property="packOperateType" jdbcType="VARCHAR" />
+		   	<result column="season" property="season" jdbcType="VARCHAR" />
+		   	<result column="pack_box_type" property="packBoxType" jdbcType="VARCHAR" />
+		   	<result column="pack_group_no" property="packGroupNo" jdbcType="VARCHAR" />
+		   	<result column="pack_plan_no" property="packPlanNo" jdbcType="VARCHAR" />
+		   	<result column="pack_plan_name" property="packPlanName" jdbcType="VARCHAR" />
+		   	<result column="fees_no" property="feesNo" jdbcType="VARCHAR" />
+		   	<result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="calculate_time" property="calculateTime" jdbcType="TIMESTAMP" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+		   	<result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+		   	<result column="mod_person" property="modPerson" jdbcType="VARCHAR" />
+		   	<result column="mod_person_id" property="modPersonId" jdbcType="VARCHAR" />
+		   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+  
+    <select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select 
+            id, waybill_no, outstock_no, warehouse_code, warehouse_name, customerid, customer_name, transport_type, transport_temperature_type, holding_time, pack_operate_type, season, pack_box_type, pack_group_no, pack_plan_no, pack_plan_name, fees_no, is_calculated, del_flag, write_time, calculate_time, remark, cre_person, cre_person_id, cre_time, mod_person, mod_person_id, mod_time
+        from biz_dispatch_package
+        where del_flag = '0'
+		    <if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" outstockNo != null and outstockNo !='' ">
+				and outstock_no = #{outstockNo}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" customerid != null and customerid !='' ">
+				and customerid = #{customerid}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" feesNo != null and feesNo !='' ">
+				and fees_no = #{feesNo}
+			</if>
+        	<if test=" isCalculated != null and isCalculated !='' ">
+				and is_calculated = #{isCalculated}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+        	<if test=" calculateTime != null and calculateTime !='' ">
+				and calculate_time = #{calculateTime}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+		    LIMIT #{num}
+    </select>
+	
+	<!-- 更新 -->
+    <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity">
+        update biz_dispatch_package
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" outstockNo != null and outstockNo !='' ">
+				outstock_no = #{outstockNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseName != null and warehouseName !='' ">
+				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerid != null and customerid !='' ">
+				customerid = #{customerid,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" transportType != null and transportType !='' ">
+				transport_type = #{transportType,jdbcType=VARCHAR},
+			</if>
+			<if test=" transportTemperatureType != null and transportTemperatureType !='' ">
+				transport_temperature_type = #{transportTemperatureType,jdbcType=VARCHAR},
+			</if>
+			<if test=" holdingTime != null and holdingTime !='' ">
+				holding_time = #{holdingTime,jdbcType=VARCHAR},
+			</if>
+			<if test=" packOperateType != null and packOperateType !='' ">
+				pack_operate_type = #{packOperateType,jdbcType=VARCHAR},
+			</if>
+			<if test=" season != null and season !='' ">
+				season = #{season,jdbcType=VARCHAR},
+			</if>
+			<if test=" packBoxType != null and packBoxType !='' ">
+				pack_box_type = #{packBoxType,jdbcType=VARCHAR},
+			</if>
+			<if test=" packGroupNo != null and packGroupNo !='' ">
+				pack_group_no = #{packGroupNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" packPlanNo != null and packPlanNo !='' ">
+				pack_plan_no = #{packPlanNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" packPlanName != null and packPlanName !='' ">
+				pack_plan_name = #{packPlanName,jdbcType=VARCHAR},
+			</if>
+			<if test=" feesNo != null and feesNo !='' ">
+				fees_no = #{feesNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" calculateTime != null and calculateTime !='' ">
+				calculate_time = #{calculateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" crePerson != null and crePerson !='' ">
+				cre_person = #{crePerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" crePersonId != null and crePersonId !='' ">
+				cre_person_id = #{crePersonId,jdbcType=VARCHAR},
+			</if>
+			<if test=" creTime != null and creTime !='' ">
+				cre_time = #{creTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" modPerson != null and modPerson !='' ">
+				mod_person = #{modPerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" modPersonId != null and modPersonId !='' ">
+				mod_person_id = #{modPersonId,jdbcType=VARCHAR},
+			</if>
+			<if test=" modTime != null and modTime !='' ">
+				mod_time = #{modTime,jdbcType=TIMESTAMP},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+</mapper>

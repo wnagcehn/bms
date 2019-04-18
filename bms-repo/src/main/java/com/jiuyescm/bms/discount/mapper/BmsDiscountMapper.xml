@@ -130,6 +130,12 @@
 			and create_time>= #{startTime} and create_time<![CDATA[<#{endTime}]]>
 			and del_flag='0' 
 			and is_calculated in ('1','5')
+			<if test="serviceList!=null and serviceList.size()>0">
+	    		and service_type_code not in
+	    		<foreach collection="serviceList" index="index" item="item" open="(" separator="," close=")">
+	    			#{item}
+	    		</foreach>
+	    	</if>
     </select>
     
     <select id="queryAccountServiceList" parameterType="java.util.Map"
@@ -141,7 +147,7 @@
 			and create_time>=#{startTime} and create_time<![CDATA[<#{endTime}]]>
 			and del_flag='0' 
 			and is_calculated in ('1','5')
-		GROUP BY service_type_code
+		    GROUP BY service_type_code
     </select>
     
     <select id="queryStorageAccount" parameterType="java.util.Map"
