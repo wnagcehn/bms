@@ -43,6 +43,12 @@
 		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-api-impl</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>drools-support</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>

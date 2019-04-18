@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 
 /**
