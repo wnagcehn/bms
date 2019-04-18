@@ -1104,4 +1104,14 @@ and invoice_name in
         	#{item}
         </foreach>
     </select>
+    
+        <select id="queryMkId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT mk_id FROM pub_customer_base
+ WHERE mk_invoice_name =#{invoiceName}
+    </select>
+    
+     <select id="queryId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+SELECT id FROM bill_check_info
+ WHERE invoice_name =#{invoiceName} and create_month=#{createMonth} and del_flag =0
+    </select>
 </mapper>

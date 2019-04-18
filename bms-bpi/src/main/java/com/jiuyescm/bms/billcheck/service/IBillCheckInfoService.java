@@ -221,4 +221,12 @@ public interface IBillCheckInfoService {
 	List<BillCheckInfoEntity> queryIncomeReportCalCus(
 			Map<String, Object> condition);
 	
+
+	   /**
+     * 保存crm接口
+     * @param vo
+     * @return 
+     */
+    void saveCrm(BillCheckInfoEntity entity); 
+	
 	}
