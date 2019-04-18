@@ -103,4 +103,13 @@ public interface IBmsCalcuRepository {
 	 */
 	List<BmsFeesQtyEntity> queryFeesQtyForStoPallet(String customerId,String subjectCode, String startTime,String endTime);
 	
+	/**
+     * 标准耗材使用费
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    List<BmsFeesQtyEntity> queryFeesQtyForStoStandMaterial(String customerId,String subjectCode, String startTime,String endTime);
+	
 }
