@@ -16,6 +16,7 @@ import org.springframework.util.StopWatch;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
@@ -71,6 +72,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
+    Map<String, String> temMap = null;
 	
 	public void process(BmsCalcuTaskVo taskVo, String contractAttr) {
 		super.process(taskVo, contractAttr);
@@ -92,12 +94,21 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Override
 	public void initConf(){
-		
+	    //初始化温度类型
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("typeCode", "TEMPERATURE_TYPE");
+        List<SystemCodeEntity> systemCodeList = systemCodeService.querySysCodes(map);
+        temMap =new HashMap<String,String>();
+        if(systemCodeList!=null && systemCodeList.size()>0){
+            for(int i=0;i<systemCodeList.size();i++){
+                temMap.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
+            }
+        }
 	}
 	
 	@Override
 	public void calcu(Map<String, Object> map){
-		
+
 		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
 		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
@@ -197,11 +208,16 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		fee.setCalculateTime(JAppContext.currentTimestamp());
 		
 		if(StringUtils.isEmpty(entity.getTemperatureTypeCode())){
-			fee.setTempretureType("LD");
-		}
-		else{
-			fee.setTempretureType(entity.getTemperatureTypeCode());		
-		}
+		    entity.setTemperatureTypeCode("LD");
+            fee.setTempretureType("LD");
+        }
+        else{
+            fee.setTempretureType(entity.getTemperatureTypeCode());
+            entity.setTemperatureTypeName(temMap.get(entity.getTemperatureTypeCode()));
+        }
+        if(StringUtils.isEmpty(entity.getTemperatureTypeName())){
+            entity.setTemperatureTypeName("冷冻");
+        }
 		return fee;	
 	}
 	
