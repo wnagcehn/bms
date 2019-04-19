@@ -1111,7 +1111,9 @@ SELECT mk_id FROM pub_customer_base
     </select>
     
      <select id="queryId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-SELECT id FROM bill_check_info
- WHERE invoice_name =#{invoiceName} and create_month=#{createMonth} and del_flag =0
+SELECT id,create_month createMonth,invoice_name invoiceName,bill_name billName,bill_status billStatus,confirm_amount confirmAmount,
+receipt_amount receiptAmount,un_receipt_amount unReceiptAmount
+FROM bill_check_info
+ WHERE id =#{id}
     </select>
 </mapper>

@@ -847,17 +847,16 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
     @Override
     public void saveCrm(BillCheckInfoEntity entity) {
         try {
-            // 查询id
+            // 根据id获取账单
             Map<String, Object> conditionMap = new HashMap<>();
-            conditionMap.put("invoiceName", entity.getInvoiceName());
-            conditionMap.put("createMonth", entity.getCreateMonth());
+            conditionMap.put("id", entity.getId());
             List<BillCheckInfoEntity> entities = billCheckInfoRepository.queryId(conditionMap);
-            if (CollectionUtils.isEmpty(entities)) {
+            if(CollectionUtils.isEmpty(entities)){
+                logger.info("根据账单ID：" + entity.getId()+"未找到账单");
                 return;
             }
-            Integer id = entities.get(0).getId();
-            String idString = String.valueOf(id);
-            List<FieldDataOpenVO> listFieldDataOpenVO = getFieldDataOpenVOList(entity, idString);
+            List<FieldDataOpenVO> listFieldDataOpenVO = getFieldDataOpenVOList(entities.get(0));
+            //封装CRM参数
             ModuleDataOpenVO moduleVo = new ModuleDataOpenVO();
             moduleVo.setFieldDataVos(listFieldDataOpenVO);
             moduleVo.setUniqueCheckFieldApiKey("id");
@@ -871,7 +870,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         }
     }
 
-    private List<FieldDataOpenVO> getFieldDataOpenVOList(BillCheckInfoEntity entity, String id) {
+    private List<FieldDataOpenVO> getFieldDataOpenVOList(BillCheckInfoEntity entity) {
         // 查询mk_id
         Map<String, Object> mkConditionMap = new HashMap<>();
         String invoiceName = entity.getInvoiceName();
@@ -897,7 +896,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         // 获取业务月份
         FieldDataOpenVO vo7 = getFieldDataOpenVO("create_month", entity.getCreateMonth(), null, null);
         // 获取账单编号
-        FieldDataOpenVO vo8 = getFieldDataOpenVO("id", id, null, null);
+        FieldDataOpenVO vo8 = getFieldDataOpenVO("id", entity.getId(), null, null);
         // 获取账单名称
         FieldDataOpenVO vo9 = getFieldDataOpenVO("bill_name", entity.getBillName(), null, null);
         List<FieldDataOpenVO> list = new ArrayList<FieldDataOpenVO>();
