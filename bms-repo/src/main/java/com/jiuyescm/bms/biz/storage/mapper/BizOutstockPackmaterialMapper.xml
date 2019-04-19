@@ -645,13 +645,20 @@
     </select>
     
     <select id="getMaxVolumByMap" parameterType="java.util.Map" resultType="Double" >
-    	select MAX(c.volumn) from (
+    	select IFNULL(MAX(c.volumn),0) from (
 		select b.material_type_name,sum(b.out_volume*a.adjust_num) volumn from biz_outstock_packmaterial a 
 		left JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
 		where a.del_flag='0' and a.waybill_no=#{waybillNo} and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
 		GROUP BY b.material_type_name) c
     </select>
-  	
+    
+    <select id="getStandVolumByMap" parameterType="java.util.Map" resultType="Double" >
+    	SELECT IFNULL(c.out_volume,0) from biz_dispatch_package a 
+		INNER JOIN system_code b ON a.pack_box_type=b.`code` and b.type_code='PLATIC_BOX_TYPE'
+		INNER JOIN pub_material_info c on b.extattr1=c.material_code
+		where a.del_flag='0' and b.`status`='0' and c.del_flag='0' and a.waybill_no=#{waybillNo}
+    </select>
+    
   	<select id="getMaxVolum" parameterType="java.util.Map" resultType="Double" >
     	select max(c.volumn) from 
 		(select a.material_mark,b.material_type_name,SUM(b.out_volume*a.num) volumn FROM

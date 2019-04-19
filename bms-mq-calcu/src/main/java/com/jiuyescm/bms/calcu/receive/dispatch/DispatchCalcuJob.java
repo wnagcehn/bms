@@ -815,16 +815,28 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		public double getNewThrowWeight(BizDispatchBillEntity entity){
 			double throwWeight=0d;
 			try{
-				//验证是否存在签约服务
+			    Double maxVolumn=0d;
 				Map<String,Object> condition=new HashMap<String,Object>();
 				condition.put("waybillNo", entity.getWaybillNo());
+				//获取耗材明细表里的最高体积
 				Double volumn=bizOutstockPackmaterialRepository.getMaxVolumByMap(condition);
-				if(!DoubleUtil.isBlank(volumn)){
-					throwWeight=(double)volumn/6000;
+				//判断是否使用了标准包装方案
+				if(StringUtils.isNotBlank(entity.getPackPlanNo())){
+				    Double standVolumn=bizOutstockPackmaterialRepository.getStandVolumByMap(condition);
+				    if(volumn>=standVolumn){
+				        maxVolumn=volumn;
+				    }else{
+				        maxVolumn=standVolumn; 
+				    }
+				}else{
+				    maxVolumn=volumn;
+				}
+				if(!DoubleUtil.isBlank(maxVolumn)){
+					throwWeight=(double)maxVolumn/6000;
 					throwWeight=(double)Math.round(throwWeight*100)/100;
 				}			
 			}catch(Exception ex){ 
-				//XxlJobLogger.log("-->"+entity.getId()+"获取泡重失败:{1}",ex.getMessage());
+				logger.error("-->"+entity.getId()+"获取泡重失败:{1}",ex.getMessage());
 			}
 			return throwWeight;
 		}
