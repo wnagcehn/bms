@@ -31,6 +31,8 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
@@ -70,7 +72,8 @@ public class BmsDiscountAsynTaskController {
 	private JmsTemplate jmsQueueTemplate;
 	@Resource
 	private IContractDiscountService contractDiscountService;
-	
+	@Autowired 
+	ICustomerDictService customerDictService;
 	@Resource
 	private ISystemCodeService systemCodeService;
 
@@ -129,7 +132,8 @@ public class BmsDiscountAsynTaskController {
 	 * @throws Exception 
 	 */
 	@DataResolver
-	public Map<String, String> save(BmsDiscountAsynTaskEntity entity) throws Exception {
+	public Map<String, String> save(BmsDiscountAsynTaskEntity entity) throws Exception {    
+	    
 		String taskId = "";
 		Map<String, String> result = new HashMap<>();
 		// 时间转换
@@ -193,24 +197,30 @@ public class BmsDiscountAsynTaskController {
 		
 		// 2.发送商家下业务类型下所有费用科目的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isNotEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();		
-			try {
-				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId(entity.getCustomerId());
-				queryVo.setSettlementTime(entity.getCreateMonth());
-				queryVo.setBizTypeCode(entity.getBizTypecode());
-				if("DISPATCH".equals(entity.getBizTypecode())){
-					queryVo.setBizTypeCode("DISTRIBUTION");
-				}
-				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
-				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
-				if(disCountVo.size()>0){
-					newList=getContractList(disCountVo, entity, month);
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-				logger.error("查询合同在线折扣异常", e);
+			List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();	
+		    //判断合同归属  1 "BMS" 2 "CONTRACT";
+			PubCustomerVo vo = customerDictService.queryById(entity.getCustomerId());
+		    if(vo.getContractAttr()==2){
+		        try {
+	                ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+	                queryVo.setCustomerId(entity.getCustomerId());
+	                queryVo.setSettlementTime(entity.getCreateMonth());
+	                queryVo.setBizTypeCode(entity.getBizTypecode());
+	                if("DISPATCH".equals(entity.getBizTypecode())){
+	                    queryVo.setBizTypeCode("DISTRIBUTION");
+	                }
+	                logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
+	                List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+	                logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
+	                if(disCountVo.size()>0){
+	                    newList=getContractList(disCountVo, entity, month);
+	                }
+	            } catch (Exception e) {
+	                // TODO: handle exception
+	                logger.error("查询合同在线折扣异常", e);
+
+	            }
+		    }else{
 				Map<String, String> param = new HashMap<>();
 				if (null != entity) {
 					param.put("customerid", entity.getCustomerId());
@@ -234,21 +244,26 @@ public class BmsDiscountAsynTaskController {
 		// 3.发送商家下所有的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
 			List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
-			
-			try {
-				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId(entity.getCustomerId());
-				queryVo.setSettlementTime(entity.getCreateMonth());
-				logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
-				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
-				if(disCountVo.size()>0){
-					bdatList=getContractList(disCountVo, entity, month);
-				}
-			} catch (Exception e) {
-				logger.error("查询合同在线折扣失败", e);
-				// TODO: handle exception
-				logger.info("查询合同在线报错",e);
+			   //判断合同归属  1 "BMS" 2 "CONTRACT";
+            PubCustomerVo vo = customerDictService.queryById(entity.getCustomerId());
+            if(vo.getContractAttr()==2){
+                try {
+                    ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+                    queryVo.setCustomerId(entity.getCustomerId());
+                    queryVo.setSettlementTime(entity.getCreateMonth());
+                    logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
+                    List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+                    logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
+                    if(disCountVo.size()>0){
+                        bdatList=getContractList(disCountVo, entity, month);
+                    }
+                } catch (Exception e) {
+                    logger.error("查询合同在线折扣失败", e);
+                    // TODO: handle exception
+                    logger.info("查询合同在线报错",e);
+                }
+            }
+            else{
 				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 				// 合同生效期和开始时间比较
 				if (month < 10) {

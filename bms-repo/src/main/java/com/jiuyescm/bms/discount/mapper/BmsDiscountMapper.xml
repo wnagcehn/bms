@@ -130,8 +130,14 @@
 			and create_time>= #{startTime} and create_time<![CDATA[<#{endTime}]]>
 			and del_flag='0' 
 			and is_calculated in ('1','5')
-			<if test="serviceList!=null and serviceList.size()>0">
-	    		and service_type_code not in
+			<if test="notServiceList!=null and notServiceList.size()>0">
+	    		and IFNULL(service_type_code,'') not in
+	    		<foreach collection="notServiceList" index="index" item="item" open="(" separator="," close=")">
+	    			#{item}
+	    		</foreach>
+	    	</if>
+	    	<if test="serviceList!=null and serviceList.size()>0">
+	    		and IFNULL(service_type_code,'') in
 	    		<foreach collection="serviceList" index="index" item="item" open="(" separator="," close=")">
 	    			#{item}
 	    		</foreach>
@@ -147,6 +153,18 @@
 			and create_time>=#{startTime} and create_time<![CDATA[<#{endTime}]]>
 			and del_flag='0' 
 			and is_calculated in ('1','5')
+			<if test="notServiceList!=null and notServiceList.size()>0">
+	    		and IFNULL(service_type_code,'') not in
+	    		<foreach collection="notServiceList" index="index" item="item" open="(" separator="," close=")">
+	    			#{item}
+	    		</foreach>
+	    	</if>
+	    	<if test="serviceList!=null and serviceList.size()>0">
+	    		and IFNULL(service_type_code,'') in
+	    		<foreach collection="serviceList" index="index" item="item" open="(" separator="," close=")">
+	    			#{item}
+	    		</foreach>
+	    	</if>
 		    GROUP BY service_type_code
     </select>
     
@@ -184,6 +202,18 @@
 		where a.create_time >= #{startTime}
 		and a.create_time<![CDATA[<#{endTime}]]>
 		and a.customerid = #{customerId}
+		<if test="notServiceList!=null and notServiceList.size()>0">
+    		and IFNULL(c.service_type_code,'') not in
+    		<foreach collection="notServiceList" index="index" item="item" open="(" separator="," close=")">
+    			#{item}
+    		</foreach>
+    	</if>
+    	<if test="serviceList!=null and serviceList.size()>0">
+    		and IFNULL(c.service_type_code,'') in
+    		<foreach collection="serviceList" index="index" item="item" open="(" separator="," close=")">
+    			#{item}
+    		</foreach>
+    	</if>
 		and a.del_flag = 0 and c.carrierid=#{carrierId} and a.is_calculated in ('1')
     </update>
     
