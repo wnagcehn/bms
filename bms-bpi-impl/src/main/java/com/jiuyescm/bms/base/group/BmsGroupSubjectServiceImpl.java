@@ -281,7 +281,7 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
         Map<String, String> retMap = Maps.newLinkedHashMap();
         Map<String, String> param = new HashMap<>();
         param.put("bizType", "bms_subject");
-        param.put("subjectCode", "wmsValueAddSubjectGroup");
+        param.put("groupCode", "wmsValueAddSubjectGroup");
         List<BmsGroupEntity> nodes = bmsGroupRepository.queryNodesForNode(param);
         if(nodes == null){
             return retMap;
