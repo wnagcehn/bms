@@ -28,6 +28,7 @@ import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.bms.billcheck.service.IBmsAccountOutService;
 import com.jiuyescm.bms.billcheck.vo.BillAccountOutVo;
+import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.exception.BizException;
 
 
@@ -161,6 +162,18 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			if(billCheckReceipt!=null){
 				check.setReceiptDate(billCheckReceipt.getReceiptDate());
 			}
+			//更新收款状态
+			if(check.getReceiptAmount().compareTo(check.getConfirmAmount().add(adjustMoney))>=0){ 
+	            //回款状态
+			    check.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());
+	        }else if(check.getReceiptAmount().compareTo(BigDecimal.ZERO)==0){
+	            //回款状态
+	            check.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());
+	        }else{
+	            //部分回款
+	            check.setReceiptStatus(BillCheckReceiptStateEnum.PART_RECEIPT.getCode());
+	        }
+			
 			billCheckInfoRepository.update(check);
 			//插入日志表
 			log.setOperateDesc("回款增加:预收款冲抵");
@@ -197,6 +210,19 @@ public class BmsBillAccountOutServiceImpl implements IBmsAccountOutService  {
 			if(billCheckReceipt!=null){
 				check.setReceiptDate(billCheckReceipt.getReceiptDate());
 			}
+			
+	         //更新收款状态
+            if(check.getReceiptAmount().compareTo(check.getConfirmAmount().add(adjustMoney))>=0){ 
+                //回款状态
+                check.setReceiptStatus(BillCheckReceiptStateEnum.RECEIPTED.getCode());
+            }else if(check.getReceiptAmount().compareTo(BigDecimal.ZERO)==0){
+                //回款状态
+                check.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());
+            }else{
+                //部分回款
+                check.setReceiptStatus(BillCheckReceiptStateEnum.PART_RECEIPT.getCode());
+            }
+            
 			billCheckInfoRepository.update(check);
 			//插入日志表
 			log.setOperateDesc("回款增加:预收款冲抵");

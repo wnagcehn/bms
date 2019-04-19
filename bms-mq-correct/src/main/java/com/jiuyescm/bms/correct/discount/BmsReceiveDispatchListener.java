@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillService;
@@ -88,6 +90,10 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	
 	@Resource
 	private IContractDiscountService contractDiscountService;
+	
+	@Autowired 
+	private ISystemCodeService systemCodeService;
+
 	
 	@Override
 	public void onMessage(Message message) {
@@ -415,9 +421,23 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			
 			
 			//统计商家的月单量和金额  商家，物流商维度进行统计
-			//物流产品类型,总单量,总金额
+			//物流产品类型,总单量,总金额(需要排除具体的折扣科目)
+			//获取所有的折扣类型
+			List<String> serviceList=new ArrayList<String>();
+			Map<String,Object> map=new HashMap<String,Object>();
+			map.put("typeCode", "DISCOUNT_SERVICE_CODE");
+			map.put("code", task.getCarrierId());
+	        List<SystemCodeEntity> discountServiceList = systemCodeService.queryCodeList(map);
+	        for(SystemCodeEntity s:discountServiceList){
+	            serviceList.add(s.getExtattr1());
+	        }
+	        if(serviceList.size()>0){
+	            condition.put("serviceList", serviceList);
+	        }
+
 			BmsDiscountAccountVo discountAccountVo=bmsDiscountService.queryAccount(condition);
-			logger.info("统计商家的月单量和金额，商家，物流商维度"+JSONObject.fromObject(discountAccountVo));
+            logger.info("统计商家的月单量和金额，商家，物流商维度"+JSONObject.fromObject(discountAccountVo));
+
 			//******日志
 			if(discountAccountVo==null){
 				logger.info(taskId+"没有查询到该商家的统计记录");
@@ -485,6 +505,18 @@ public class BmsReceiveDispatchListener implements MessageListener{
 					bmsDiscountAsynTaskService.update(task);
 					return;
 				}
+				
+				//查询折扣明细报价
+				condition=new HashMap<String,Object>();
+                condition.put("templateCode", template.getTemplateCode());
+                List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
+                List<String> serviceQuote=new ArrayList<>();
+                for(BmsQuoteDiscountDetailEntity entity:discountPriceList){
+                    serviceQuote.add(entity.getServiceTypeCode());
+                }
+                //判断折扣物流产品类型中是否包含已配置的，如果未配置了的，需要新增一条折扣百分百的
+                
+
 						
 				updateProgress(task,40);
 			}else if("contract".equals(task.getCustomerType())){
@@ -731,10 +763,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				
 				logger.info(taskId+"原始报价id为"+fee.getPriceId());
 				//物流产品类型
-				String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();				
+				String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?
+				        discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();				
 				BmsDiscountAccountVo discountAccountVo=new BmsDiscountAccountVo();
+				//为空时取该商家该物流商下所有的单量和金额
+				//不为空时匹配到物流产品类型，匹配到了则取该物流商对应得单量和金额,匹配不到则取所有的单量和金额
+				//discountMap中此时应为所有需要折扣的物流产品类型对应得单量和金额
 				if(StringUtils.isNotBlank(serviceTypeCode)){
-					discountAccountVo=discountMap.get(serviceTypeCode);				
+	                discountAccountVo=discountMap.get(serviceTypeCode);             
 				}else{
 					discountAccountVo=discountAccount;
 				}

@@ -142,6 +142,19 @@ public class BmsCalcuRepositoryImpl extends MyBatisDao<BmsFeesQtyEntity> impleme
         return entity;
 	}
 
+    @Override
+    public List<BmsFeesQtyEntity> queryFeesQtyForStoStandMaterial(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        // TODO Auto-generated method stub
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> entity = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryFeesQtyForStoStandMaterial", map);
+        return entity;
+    }
+
 
 
 

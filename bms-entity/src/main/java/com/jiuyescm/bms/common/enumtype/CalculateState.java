@@ -11,7 +11,7 @@ import java.util.Map;
 public enum CalculateState {
 	
 	All("", "全部"),
-	Begin("0", "未计算"),
+//	Begin("0", "未计算"),
 	Finish("1", "计算成功"),
 	Sys_Error("2", "系统错误"),
 	Contract_Miss("3", "合同不存在"),
@@ -19,7 +19,7 @@ public enum CalculateState {
 	No_Exe("5","不计算"),
 	Other("10", "其他"),
 	Quote_More("6", "多个报价"),
-	Retry("99","待重算");
+	Retry("99","未计算");
 	
 	private String code;
 	private String desc;
@@ -48,7 +48,7 @@ public enum CalculateState {
 	private static Map<String,String> maps = new LinkedHashMap<String,String>();
 	static{
 		maps.put(All.getCode(), All.getDesc());
-		maps.put(Begin.getCode(), Begin.getDesc());
+		/*maps.put(Begin.getCode(), Begin.getDesc());*/
 		maps.put(Finish.getCode(), Finish.getDesc());
 		maps.put(Sys_Error.getCode(), Sys_Error.getDesc());
 		maps.put(Contract_Miss.getCode(),Contract_Miss.getDesc());
