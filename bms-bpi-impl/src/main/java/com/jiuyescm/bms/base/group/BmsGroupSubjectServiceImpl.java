@@ -287,8 +287,7 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
             return retMap;
         }
         for (BmsGroupEntity entity : nodes) {
-            retMap.put("groupCode", entity.getGroupCode());
-            retMap.put("groupName", entity.getGroupName());
+            retMap.put(entity.getGroupCode(), entity.getGroupName());
         }
         return retMap;
     }
