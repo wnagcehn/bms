@@ -18,4 +18,16 @@ public interface ElConditionRepository {
 
 	ElConditionEntity update(ElConditionEntity entity);
 
+	/**
+	 * 根据pullType更新lastTime
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月19日 下午2:12:37
+	 *
+	 * @param condition
+	 * @return
+	 */
+    int updateByPullType(Map<String, Object> condition);
+
 }

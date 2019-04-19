@@ -3,8 +3,8 @@ package com.jiuyescm.bms.file.asyn.repository.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
@@ -48,6 +48,12 @@ public class BmsFileAsynTaskRepositoryImpl extends MyBatisDao<BmsFileAsynTaskEnt
     @Override
     public int update(BmsFileAsynTaskEntity entity) {
         return update("com.jiuyescm.bms.file.asyn.BmsFileAsynTaskMapper.update", entity);
+    }
+    
+    @Override
+    public BmsFileAsynTaskEntity queryMinTask(Map<String, Object> param) {
+        List<BmsFileAsynTaskEntity> list = selectList("com.jiuyescm.bms.file.asyn.BmsFileAsynTaskMapper.queryMinTask", param);
+        return list.size()>0?list.get(0):null;
     }
 	
 }

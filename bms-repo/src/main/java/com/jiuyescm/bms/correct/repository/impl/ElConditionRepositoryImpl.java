@@ -39,4 +39,9 @@ public class ElConditionRepositoryImpl extends MyBatisDao implements ElCondition
         update("com.jiuyescm.bms.correct.ElConditionMapper.update", entity);
         return entity;
     }
+    
+    @Override
+    public int updateByPullType(Map<String, Object> condition) {
+        return this.update("com.jiuyescm.bms.correct.ElConditionMapper.updateByPullType", condition);
+    }
 }

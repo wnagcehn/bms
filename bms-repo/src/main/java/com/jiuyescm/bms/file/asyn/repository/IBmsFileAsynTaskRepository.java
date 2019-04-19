@@ -20,4 +20,16 @@ public interface IBmsFileAsynTaskRepository {
 
     public int update(BmsFileAsynTaskEntity entity);
 
+    /**
+     * 查询最近一次的最小的taskId
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年4月19日 上午10:48:45
+     *
+     * @param param
+     * @return
+     */
+    BmsFileAsynTaskEntity queryMinTask(Map<String, Object> param);
+
 }
