@@ -81,8 +81,13 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 				fees.add(fee);
 				if(isNoExe(entity, fee)){
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-				}		
-				calcuForContract(entity,fee);
+				}
+				
+				if("BMS".equals(contractAttr)){
+                    calcuForBms(entity,fee);
+                }else {
+                    calcuForContract(entity,fee);
+                }
 			} catch (Exception e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -195,7 +200,9 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
     @Override
     public void calcuForBms(BizDispatchPackageEntity entity, FeesReceiveStorageEntity fee) {
         // TODO Auto-generated method stub
-        
+        fee.setCalcuMsg("标准耗材使用费只支持合同在线计费");                
+        fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
+        return;
     }
 
 

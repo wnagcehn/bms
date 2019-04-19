@@ -89,6 +89,8 @@ public interface IBizOutstockPackmaterialRepository {
 	Double getMaxZxVolum(Map<String,Object> condition);
 	
 	Double getMaxVolumByMap(Map<String,Object> condition);
+	
+	Double getStandVolumByMap(Map<String,Object> condition);
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);
 	
@@ -114,6 +116,8 @@ public interface IBizOutstockPackmaterialRepository {
 	 * @return
 	 */
 	public String getMaxBwdVolumn(Map<String, Object> condition);
+	
+	
 	
 	/**
 	 * 删除运单号对应的泡沫箱和纸箱
