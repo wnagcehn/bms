@@ -106,7 +106,10 @@
 		<if test="count != null" >
 				and down_limit<![CDATA[<=#{count}]]> and up_limit>#{count}				
 		</if>
-		and del_flag=0
+		<if test="serviceTypeCode != null" >
+				and service_type_code=#{serviceTypeCode}			
+		</if>		
+		and del_flag='0'
     </select>
     
     <select id="queryByCustomerId" parameterType="com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractDiscountItemEntity">
