@@ -21,13 +21,21 @@ on DUPLICATE KEY update
 mod_time=CURRENT_TIMESTAMP;
     </insert>
     
-      <update id="update" parameterType="com.jiuyescm.bms.correct.ElConditionEntity">
-      update etl_condition 
+	<update id="update" parameterType="com.jiuyescm.bms.correct.ElConditionEntity">
+    	update etl_condition 
 		<set >
 			<if test="lastTime != null" >last_time=#{lastTime,jdbcType=TIMESTAMP},</if>
 			<if test="currTime != null" >curr_time=#{currTime,jdbcType=TIMESTAMP},</if>
 			<if test="takesTime != null" >takes_time=#{takesTime,jdbcType=INTEGER},</if>
 		</set>
-      where id=#{id}
-  </update>
+    where id=#{id}
+	</update>
+	
+	<update id="updateByPullType" parameterType="java.util.Map">
+    	update etl_condition 
+		<set >
+			<if test="lastTime != null" >last_time=#{lastTime,jdbcType=TIMESTAMP},</if>
+		</set>
+    	where pull_type=#{pullType}
+	</update>
 </mapper>

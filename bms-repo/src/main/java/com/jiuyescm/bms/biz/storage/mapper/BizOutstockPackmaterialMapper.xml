@@ -816,4 +816,22 @@
 		</if>
     	GROUP BY a.customer_id,b.subject_code,DATE_FORMAT(a.create_time,'%Y%m');  
     </select>
+    
+    <!-- 只作废泡沫箱，干冰，冰袋 -->
+    <update id="deleteMaterialForUsePackage" parameterType="java.util.Map">
+    	UPDATE biz_outstock_packmaterial a
+		LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
+		SET a.del_flag='1'
+		WHERE 1=1
+		and b.material_type in (
+			'PLATIC_BOX',
+			'DRY_ICE',
+			'ICE_BAG'
+		)
+		and a.waybill_no in (
+			<foreach collection="waybillNos" index="index" item="item" open="(" separator="," close=")">
+		        #{item}
+		    </foreach>
+		)
+    </update>
 </mapper>
