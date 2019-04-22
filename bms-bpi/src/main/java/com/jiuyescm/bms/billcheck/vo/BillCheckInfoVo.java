@@ -175,6 +175,17 @@ public class BillCheckInfoVo implements IEntity {
 	//开票名称
 	private String mkInvoiceName;
 	
+	   //开票商家编码
+    private String mkId;
+    
+    public String getMkId() {
+        return mkId;
+    }
+
+    public void setMkId(String mkId) {
+        this.mkId = mkId;
+    }
+	
 	public BillCheckInfoVo() {
 
 	}
