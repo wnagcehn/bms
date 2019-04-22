@@ -18,6 +18,7 @@
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <!--应用日志文件保存路径-->
     <property name="LOG_APP_HOME" value="${LOG_HOME}/${APP_NAME}/app"/>
+    <property name="BMS_LOG_APP_HOME" value="${LOG_HOME}/${APP_NAME}/calcu"/>
     <!--系统日志文件保存路径-->
     <property name="LOG_SYS_HOME" value="${LOG_HOME}/${APP_NAME}/sys"/>
 
@@ -33,7 +34,7 @@
     <appender name="BMSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>${LOG_APP_HOME}/bmsLog.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>${BMS_LOG_APP_HOME}/bmsLog.%d{yyyy-MM-dd}.log</FileNamePattern>
             <!--日志文件保留天数-->
             <MaxHistory>${LOG_MAX_HISTORY}</MaxHistory>
         </rollingPolicy>

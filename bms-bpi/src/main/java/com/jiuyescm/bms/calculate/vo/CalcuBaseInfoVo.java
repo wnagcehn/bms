@@ -14,7 +14,7 @@ public class CalcuBaseInfoVo {
 	private String calcuTime;
 	private String descrip;
 	private Object data;
-	
+	private String uniqueKey;
 	/**
 	 * 
 	 * @param taskId
@@ -88,6 +88,14 @@ public class CalcuBaseInfoVo {
 	public void setDescrip(String descrip) {
 		this.descrip = descrip;
 	}
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 	
 	
 }
