@@ -31,7 +31,6 @@ import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
-import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.correct.BmsMarkingProductsEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
 import com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity;
@@ -238,41 +237,20 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		FeesReceiveDispatchEntity fee = new FeesReceiveDispatchEntity();
 		fee.setFeesNo(entity.getFeesNo());
 		try {
-			//费用初始化
-			fee.setCreator("system");
-			fee.setCreateTime(entity.getCreateTime());//费用表的创建时间应为业务表的创建时间
-			fee.setOutstockNo(entity.getOutstockNo());		// 出库单号
-			fee.setWarehouseCode(entity.getWarehouseCode());	// 仓库ID
-			fee.setWarehouseName(entity.getWarehouseName());  // 仓库名称
-			fee.setCustomerid(entity.getCustomerid());		// 商家ID
-			fee.setCustomerName(entity.getCustomerName());	// 商家名称
-			fee.setDeliveryid(entity.getDeliverid());         // 物流商ID
-			fee.setDeliverName(entity.getDeliverName());		// 物流商名称
-			fee.setCarrierid(entity.getChargeCarrierId());
-			fee.setCarrierName(carrierMap.get(entity.getChargeCarrierId()));
-	        fee.setWaybillNo(entity.getWaybillNo());			// 运单号
-			fee.setTotalWeight(entity.getTotalWeight());//实际重量
-			fee.setSubjectCode(subjectCode);
-			fee.setOtherSubjectCode(subjectCode);
-			fee.setExternalNo(entity.getExternalNo());        //外部单号
-			fee.setAcceptTime(entity.getAcceptTime());        //揽收时间
-			fee.setSignTime(entity.getSignTime());
-			fee.setStatus("0");
-			fee.setDelFlag("0");
-			fee.setAmount(0.0d);					//入仓金额
-			fee.setTemperatureType(entity.getTemperatureTypeCode());//温度
-			fee.setParam1(TemplateTypeEnum.COMMON.getCode());
-			fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
-			fee.setWeightLimit(0.0d);
-			fee.setUnitPrice(0.0d);
-			fee.setHeadWeight(0.0d);
-			fee.setHeadPrice(0.0d);
-			fee.setContinuedWeight(0.0d);
-			fee.setContinuedPrice(0.0d);
-			fee.setPriceId("");
-			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
-			fee.setCalcuMsg("");
-			
+	        //费用初始化
+            fee.setCreator("system");
+            fee.setStatus("0");
+            fee.setDelFlag("0");
+            fee.setAmount(0.0d);                    //入仓金额
+            fee.setWeightLimit(0.0d);
+            fee.setUnitPrice(0.0d);
+            fee.setHeadWeight(0.0d);
+            fee.setHeadPrice(0.0d);
+            fee.setContinuedWeight(0.0d);
+            fee.setContinuedPrice(0.0d);
+            fee.setPriceId("");
+            fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
+            fee.setCalcuMsg("");
 			
 			//计费参数获取
 	        //1)***********************获取计费物流商******************************
@@ -462,11 +440,16 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				}
 			}
 			
-			//此时费用写入计费重量
-			fee.setChargedWeight(entity.getWeight());
-			fee.setToProvinceName(provinceId);// 目的省
-			fee.setToCityName(cityId);			// 目的市			
-			fee.setToDistrictName(districtId);// 目的区	
+            //此时费用写入计费重量
+            fee.setChargedWeight(entity.getWeight());
+            fee.setToProvinceName(provinceId);// 目的省
+            fee.setToCityName(cityId);          // 目的市          
+            fee.setToDistrictName(districtId);// 目的区
+            fee.setCarrierid(entity.getChargeCarrierId());
+            fee.setCarrierName(carrierMap.get(entity.getChargeCarrierId()));
+            fee.setTotalWeight(entity.getTotalWeight());//实际重量
+            fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
+
 			return fee;
 		
 		} catch (Exception e) {
