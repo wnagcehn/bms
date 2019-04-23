@@ -700,4 +700,15 @@
 	  	</if>
     	group by warehouse_code,warehouse_name
     </select>
+    
+        <select id="queryBizByCusid" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
+    	SELECT * from biz_dispatch_bill where del_flag='0' and customerid=#{customerid}
+    	<if test="(startTime != null and startTime !='')" >
+			    and create_time>= #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[create_time <= #{endTime} ]]>
+		</if>
+		limit 1
+    </select>
 </mapper>

@@ -222,4 +222,10 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
             Map<String, Object> condition) {
         return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryAllWarehouseFromBizData", condition);
     }
+    
+    @Override
+    public List<BizDispatchBillEntity> queryBizByCusid(Map<String, Object> condition) {
+        List<BizDispatchBillEntity> list = this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryBizByCusid", condition);
+        return list;
+    }
 }

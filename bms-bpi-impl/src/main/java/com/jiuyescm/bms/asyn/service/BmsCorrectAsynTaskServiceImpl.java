@@ -27,6 +27,8 @@ import com.jiuyescm.bms.asyn.vo.BmsCorrectAsynTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -55,6 +57,8 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
     private IBmsGroupCustomerService bmsGroupCustomerService;
     @Autowired
     private ISequenceService sequenceService1;
+    @Autowired
+    private IBizDispatchBillRepository bizDispatchBillRepository;
 
     @Override
     public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition, int pageNo, int pageSize)
@@ -235,10 +239,19 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
     @Override
     public String saveCorrect(BmsCorrectAsynTaskVo vo) {
         String customerId = vo.getCustomerId();
+        if(StringUtils.isBlank(customerId)){
+            return "商家不能为空";
+        }
         String year = vo.getYear();
         Integer yearInteger = Integer.valueOf(year);
+        if(null==yearInteger){
+            return "年不能为空";
+        }
         String month = vo.getMonth();
         Integer monthInteger = Integer.valueOf(month);
+        if(null==monthInteger){
+            return "月份不能为空";
+        }
         String creator = vo.getCreator();
         // 查询任务是否存在
         List<BmsCorrectAsynTaskEntity> list = null;
@@ -252,7 +265,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         }
         creMonthStringBuilder.append(monthWithZero);
         String creMonth = creMonthStringBuilder.toString();
-        queryCondition.put("(createMonth", creMonth);
+        queryCondition.put("createMonth", creMonth);
         queryCondition.put("customerId", customerId);
         try {
             list = bmsCorrectAsynTaskRepository.queryList(queryCondition);
@@ -278,11 +291,22 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         // 创建任务
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, yearInteger);
-        cal.set(Calendar.MONTH, monthInteger);
+        cal.set(Calendar.MONTH, monthInteger-1);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         Date startDate = cal.getTime();
         cal.roll(Calendar.DATE, -1);
         Date endDate = cal.getTime();
+        
+        //查询此商家此月份是否存在业务
+        Map<String, Object> bizParam = new HashMap<>();
+        bizParam.put("customerid", customerId);
+        bizParam.put("startTime", startDate);
+        bizParam.put("endTime", endDate);
+        List<BizDispatchBillEntity> entityList=  bizDispatchBillRepository.queryBizCustomerid(bizParam);
+        if(CollectionUtils.isEmpty(entityList)){
+            return "创建失败：当前商家当前月份不存在业务";
+        }
+        
         Timestamp createTime = JAppContext.currentTimestamp();
         BmsCorrectAsynTaskEntity entity1 = createEntity(creMonth, createTime, startDate, endDate, customerId,
                 "weight_correct", creator);
