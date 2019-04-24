@@ -302,11 +302,12 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         bizParam.put("customerid", customerId);
         bizParam.put("startTime", startDate);
         bizParam.put("endTime", endDate);
-        List<BizDispatchBillEntity> entityList=  bizDispatchBillRepository.queryBizCustomerid(bizParam);
+        List<BizDispatchBillEntity> entityList=  bizDispatchBillRepository.queryBizByCusid(bizParam);
         if(CollectionUtils.isEmpty(entityList)){
             return "创建失败：当前商家当前月份不存在业务";
         }
         
+
         Timestamp createTime = JAppContext.currentTimestamp();
         BmsCorrectAsynTaskEntity entity1 = createEntity(creMonth, createTime, startDate, endDate, customerId,
                 "weight_correct", creator);
