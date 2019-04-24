@@ -42,6 +42,8 @@ public interface IFeesReceiveStorageService {
 	
 	public void deleteBatch(Map<String, Object> feesNos);
 	
+	public void updateBatchFeeNo(Map<String, Object> feesNos);
+	
 	public void updateOne(FeesReceiveStorageEntity entity);
 	
 }

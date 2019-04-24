@@ -42,6 +42,8 @@ public interface IFeesReceiveDispatchService {
 	FeesReceiveDispatchEntity validFeesNo(FeesReceiveDispatchEntity entity);
 
 	public void deleteBatch(Map<String, Object> feesMap);
+	
+	public void updateBatchFees(Map<String, Object> feesMap);
 
 	/**
 	 * 根据运单号作废费用
