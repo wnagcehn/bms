@@ -912,7 +912,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
      
             //统计商家的月单量和金额  商家，物流商 物流产品类型维度进行统计
             List<BmsDiscountAccountVo> discountAccountVoList=bmsDiscountService.queryAccountServiceList(condition);
-            logger.info("统计商家的月单量和金额，商家，物流商,物流产品类型维度"+JSONArray.fromObject(discountAccountVoList));
+            logger.info(taskId+"统计商家的月单量和金额，商家，物流商,物流产品类型维度"+JSONArray.fromObject(discountAccountVoList));
             if(discountAccountVoList.size()>0){
                 for(BmsDiscountAccountVo vo:discountAccountVoList){
                     discountMap.put(vo.getServiceTypeCode(), vo);
@@ -1210,7 +1210,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?
                         discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();    
                 condition.put("serviceTypeCode", serviceTypeCode);
-                logger.info("查询特殊物流产品类型折扣报价明细的参数"+JSONObject.fromObject(condition));
+                logger.info(taskId+"查询特殊物流产品类型折扣报价明细的参数"+JSONObject.fromObject(condition));
                 List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
                 //未查询到该物流产品类型对应得折扣，则不折扣
                 if(discountPriceList==null || discountPriceList.size()<=0){
@@ -1241,6 +1241,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
                     //月金额
                     condition.put("count", discountAccountVo.getAmount());
                 }
+                condition.put("serviceTypeCode", serviceTypeCode);
                 List<BmsQuoteDiscountDetailEntity> priceList=priceContractDiscountService.queryDiscountPrice(condition);
                 if(priceList==null || priceList.size()<=0){
                     logger.info(taskId+"未筛选到折扣报价明细");

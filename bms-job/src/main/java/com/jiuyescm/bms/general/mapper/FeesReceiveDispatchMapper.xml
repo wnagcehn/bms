@@ -333,6 +333,14 @@
 			 		#{item}
 		</foreach>
     </delete>
+    
+    <update id="updateBatchFees" parameterType="java.util.Map">
+        update fees_receive_dispatch set del_flag='1' where fees_no in
+    	<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+		</foreach>  
+    </update>
+    
     <update  id="deleteByWayBillNo" parameterType="java.lang.String">
     	update fees_receive_dispatch set del_flag='1',last_modifier='sys_timer',last_modify_time=now()
     	where waybill_no = #{waybillNo}

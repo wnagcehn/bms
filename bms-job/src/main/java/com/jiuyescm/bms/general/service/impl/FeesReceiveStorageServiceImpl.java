@@ -75,6 +75,12 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
 	public void deleteBatch(Map<String, Object> feesNos) {
 		this.delete("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.deleteBatch", feesNos);
 	}
+	
+    @Override
+    public void updateBatchFeeNo(Map<String, Object> feesNos) {
+        // TODO Auto-generated method stub
+        this.update("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.updateBatchFeeNo", feesNos);
+    }
 
 	@Override
 	public void updateOne(FeesReceiveStorageEntity entity) {
@@ -90,5 +96,7 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
 	public void updateBatch(List<FeesReceiveStorageEntity> entity) {
 		this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.update", entity);
 	}
+
+
 
 }

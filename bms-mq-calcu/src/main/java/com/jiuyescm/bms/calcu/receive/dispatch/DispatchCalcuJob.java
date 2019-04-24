@@ -42,6 +42,7 @@ import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
 import com.jiuyescm.bms.quotation.dispatch.repository.IPriceDispatchDao;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
 import com.jiuyescm.bs.util.StringUtil;
+import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.contract.quote.vo.ContractBizTypeEnum;
 import com.jiuyescm.contract.quote.vo.ContractQuoteQueryInfoVo;
@@ -449,7 +450,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
             fee.setCarrierName(carrierMap.get(entity.getChargeCarrierId()));
             fee.setTotalWeight(entity.getTotalWeight());//实际重量
             fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
-
+            fee.setCalculateTime(JAppContext.currentTimestamp());//计算时间
 			return fee;
 		
 		} catch (Exception e) {
