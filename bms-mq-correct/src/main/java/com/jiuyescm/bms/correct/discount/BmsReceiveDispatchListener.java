@@ -658,7 +658,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
 						configVo=sessionMap.get(key);
 					}else{
 						logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价参数"+JSONObject.fromObject(queryVo));
-						configVo=contractDiscountService.queryDiscount(queryVo);					
+						configVo=contractDiscountService.queryDiscount(queryVo);
+					   if(configVo==null){
+                            //费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
+                            discountVo.setRemark(discountVo.getWaybillNo()+"合同在线未查询到折扣报价");
+                            fee.setDerateAmount(0d);
+                            feeList.add(fee);
+                            continue;
+                        }
 						sessionMap.put(key, configVo);
 					}			
 					logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
@@ -1112,7 +1119,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
                         configVo=sessionMap.get(key);
                     }else{
                         logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价参数"+JSONObject.fromObject(queryVo));
-                        configVo=contractDiscountService.queryDiscount(queryVo);                    
+                        configVo=contractDiscountService.queryDiscount(queryVo);
+                        if(configVo==null){
+                            //费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
+                            discountVo.setRemark(discountVo.getWaybillNo()+"合同在线未查询到折扣报价");
+                            fee.setDerateAmount(0d);
+                            feeList.add(fee);
+                            continue;
+                        }
                         sessionMap.put(key, configVo);
                     }           
                     logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
