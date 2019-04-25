@@ -134,7 +134,7 @@ public class BizDispatchPackageController {
                 vo.setCrePersonId(ContextHolder.getLoginUserName());
                 try {
                     bmsCalcuTaskService.sendTask(vo);
-                    logger.info("mq发送成功,商家id:{0},年月:{1},科目id:{2}", vo.getCustomerId(),vo.getCreMonth(),vo.getSubjectCode());
+                    logger.info("mq发送成功,商家id:"+vo.getCustomerId()+",年月:"+vo.getCreMonth()+",科目id:"+vo.getSubjectCode());
                 } catch (Exception e) {
                     logger.error("mq发送失败:", e);
                 }   

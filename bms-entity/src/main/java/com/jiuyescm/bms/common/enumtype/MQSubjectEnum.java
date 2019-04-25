@@ -61,6 +61,7 @@ public enum MQSubjectEnum {
 		maps.put(RMaterialStorage.getCode(), RMaterialStorage.getDesc());
 		maps.put(ROutStockPallet.getCode(), ROutStockPallet.getDesc());
 		maps.put(RProductItemStorage.getCode(), RProductItemStorage.getDesc());
+		maps.put(RDispatchPackage.getCode(), RDispatchPackage.getDesc());
 	}
 	
 	public static Map<String,String> getMap(){
