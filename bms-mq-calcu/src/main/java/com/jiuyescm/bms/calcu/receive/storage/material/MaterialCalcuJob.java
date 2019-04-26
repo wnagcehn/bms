@@ -235,6 +235,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		fee.setCost(new BigDecimal(0));					//入仓金额
 		fee.setFeesNo(entity.getFeesNo());
 		fee.setParam1(TemplateTypeEnum.COMMON.getCode());
+		fee.setCreateTime(entity.getCreateTime());
 		return fee;
 		
 	}
