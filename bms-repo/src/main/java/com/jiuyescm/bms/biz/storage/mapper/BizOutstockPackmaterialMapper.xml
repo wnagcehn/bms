@@ -828,10 +828,9 @@
 			'DRY_ICE',
 			'ICE_BAG'
 		)
-		and a.waybill_no in (
-			<foreach collection="waybillNos" index="index" item="item" open="(" separator="," close=")">
-		        #{item}
-		    </foreach>
-		)
+		and a.waybill_no in 
+		<foreach collection="waybillNos" index="index" item="item" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>	
     </update>
 </mapper>
