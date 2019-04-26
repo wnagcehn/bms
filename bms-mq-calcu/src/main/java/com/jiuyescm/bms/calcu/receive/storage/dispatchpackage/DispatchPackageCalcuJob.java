@@ -201,7 +201,7 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
     public void calcuForBms(BizDispatchPackageEntity entity, FeesReceiveStorageEntity fee) {
         // TODO Auto-generated method stub
         fee.setCalcuMsg("标准耗材使用费只支持合同在线计费");                
-        fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
+        fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
         return;
     }
 
