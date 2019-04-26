@@ -287,11 +287,6 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 				fee.setParam3(quoTemplete.getId()+"");
 				break;
 			case "PRICE_TYPE_STEP"://阶梯价
-				if (DoubleUtil.isBlank(fee.getQuantity())) {
-					fee.setIsCalculated(CalculateState.Sys_Error.getCode());
-					fee.setCalcuMsg("计费数据缺失");
-					return;
-				}
 				Map<String,Object> map=new HashMap<String,Object>();
 				map.put("quotationId", quoTemplete.getId());
 				map.put("num", fee.getQuantity());//根据报价单位判断	
@@ -349,9 +344,15 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
-				logger.info("计算不成功，费用【{}】",fee.getCost());
-				fee.setCalcuMsg("未计算出金额");
+			    if (fee.getQuantity() == 0 || fee.getUnitPrice() == 0) {
+			        fee.setIsCalculated(CalculateState.Finish.getCode());
+	                logger.info("计算成功，费用【{}】",fee.getCost());
+	                fee.setCalcuMsg("计算成功");
+                }else {
+                    fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+                    logger.info("计算不成功，费用【{}】",fee.getCost());
+                    fee.setCalcuMsg("未计算出金额");
+                }
 			}
 		}
 		else{
