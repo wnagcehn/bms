@@ -1127,6 +1127,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
                             feeList.add(fee);
                             continue;
                         }
+                        if(!serviceTypeCode.equals(configVo.getCarrierServiceType())){
+                            discountVo.setRemark("折扣成功");
+                            discountVo.setIsCalculated(CalculateState.Finish.getCode());
+                            fee.setDerateAmount(0d);
+                            feeList.add(fee);
+                            continue;
+                        }
+                        
                         sessionMap.put(key, configVo);
                     }           
                     logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
