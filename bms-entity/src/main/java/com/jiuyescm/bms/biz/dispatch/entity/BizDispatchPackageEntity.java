@@ -48,7 +48,7 @@ public class BizDispatchPackageEntity implements IEntity {
     private String packOperateType;
 	
 	// 运输方式
-	@ExcelField(title = "操作分类", num = 8)
+	@ExcelField(title = "运输方式", num = 8)
     private String transportType;
 	
 	// 配送温区
