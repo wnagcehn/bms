@@ -1128,8 +1128,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
                             continue;
                         }
                         if(!serviceTypeCode.equals(configVo.getCarrierServiceType())){
-                            discountVo.setRemark("折扣成功");
-                            discountVo.setIsCalculated(CalculateState.Finish.getCode());
+                            discountVo.setRemark("不折扣");
+                            discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
                             fee.setDerateAmount(0d);
                             feeList.add(fee);
                             continue;
@@ -1236,8 +1236,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
                 //未查询到该物流产品类型对应得折扣，则不折扣
                 if(discountPriceList==null || discountPriceList.size()<=0){
-                    discountVo.setRemark("折扣成功");
-                    discountVo.setIsCalculated(CalculateState.Finish.getCode());
+                    discountVo.setRemark("不折扣");
+                    discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
                     fee.setDerateAmount(0d);
                     feeList.add(fee);
                     continue;

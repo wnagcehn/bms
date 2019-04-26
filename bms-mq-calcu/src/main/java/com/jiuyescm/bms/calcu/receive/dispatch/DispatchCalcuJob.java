@@ -336,8 +336,9 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 								//物流商重量小于纠正重量
 								double dd = getResult(correctWeight,carrierId);
 								entity.setWeight(dd);
-								double resultWeight = compareWeight(entity.getTotalWeight(), 
-										getResult(entity.getTotalWeight(),carrierId), correctWeight);
+						/*		double resultWeight = compareWeight(entity.getTotalWeight(), 
+										getResult(entity.getTotalWeight(),carrierId), correctWeight);*/
+								double resultWeight = compareTotalWeight(entity.getTotalWeight(),correctWeight,carrierId);
 								entity.setTotalWeight(resultWeight);
 							}
 						}else {
@@ -364,8 +365,10 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 								double dd = getResult(correctWeight,carrierId);
 								entity.setWeight(dd);
 								// 有纠正重量，比较纠正重量和运单重量是否相等
-								double resultWeight = compareWeight(entity.getTotalWeight(), 
+							/*	double resultWeight = compareWeight(entity.getTotalWeight(), 
 										getResult(entity.getTotalWeight(),carrierId), correctWeight);
+								*/
+                                double resultWeight = compareTotalWeight(entity.getTotalWeight(),correctWeight,carrierId);	
 								entity.setTotalWeight(resultWeight);
 							}else if(correctWeight < entity.getCorrectThrowWeight()){
 								// 纠正重量小于抛重时，按抛重算
@@ -430,8 +433,10 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 						double weight=markEntity.getCorrectWeight().doubleValue();
 						entity.setWeight(Math.ceil(weight));//计费重量 : 6
 						// 比较重量
-						double resultWeight = compareWeight(entity.getTotalWeight(), 
-								Math.ceil(entity.getTotalWeight()), weight);
+						/*double resultWeight = compareWeight(entity.getTotalWeight(), 
+								Math.ceil(entity.getTotalWeight()), weight);*/
+                        double resultWeight = compareTotalWeight(entity.getTotalWeight(),weight,carrierId);
+
 						entity.setTotalWeight(resultWeight);//实际重量 eg:5.1
 					}else{
 						entity.setWeight(Math.ceil(entity.getTotalWeight()));//计费重量 : 6
@@ -780,6 +785,28 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			return c;
 		}
 		
+		
+	      /**
+         * 若 运单重量进位 = 纠正重量进位，则返回 运单重量
+         * 若 运单重量进位 != 纠正重量进位，则返回纠正重量
+         * @param waybillWeight 运单重量
+         * @param corrWeight    纠正重量
+         * @return
+         */
+       private double compareTotalWeight(double waybillWeight, double corrWeight,String carrierId){            
+           if (DoubleUtil.isBlank(waybillWeight)) {
+               // 如果运单重量没有，当做0处理
+               waybillWeight = 0.0;
+           }          
+            //进位后的运单重量
+            double newWaybillWeight=getResult(waybillWeight, carrierId);
+            //进位后的纠正重量
+            double newCorrectWeight=getResult(corrWeight, carrierId);
+            
+            return newWaybillWeight == newCorrectWeight ? waybillWeight : corrWeight;
+        }
+		
+		
 		/**
 		 * 若 进位重量 = 纠正重量，则返回 运单重量
 		 * 若 进位重量 != 纠正重量，则返回纠正重量
@@ -788,13 +815,13 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		 * @param corrWeight	纠正重量
 		 * @return
 		 */
-		private double compareWeight(double waybillWeight, double carryWeight, double corrWeight){
+	/*	private double compareWeight(double waybillWeight, double carryWeight, double corrWeight){
 			if (DoubleUtil.isBlank(waybillWeight)) {
 				// 如果运单重量没有，当做0处理
 				waybillWeight = 0.0;
 			}
 			return carryWeight == corrWeight ? waybillWeight : corrWeight;
-		}
+		}*/
 		
 		public double getNewThrowWeight(BizDispatchBillEntity entity){
 			double throwWeight=0d;
@@ -850,8 +877,11 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				if(markEntity!=null && markEntity.getCorrectWeight()!=null && !DoubleUtil.isBlank(markEntity.getCorrectWeight().doubleValue())){
 					double weight=markEntity.getCorrectWeight().doubleValue();
 					// 比较重量
-					double resultWeight = compareWeight(entity.getTotalWeight(), 
+				/*	double resultWeight = compareWeight(entity.getTotalWeight(), 
 							getResult(entity.getTotalWeight(),entity.getChargeCarrierId()), weight);
+					*/
+                    double resultWeight = compareTotalWeight(entity.getTotalWeight(),weight,entity.getChargeCarrierId());
+
 					totalWeight=resultWeight;//实际重量 eg:5.1
 				}else{
 					totalWeight=entity.getTotalWeight();//实际重量 eg:5.1
