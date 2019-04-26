@@ -122,7 +122,7 @@
         <Property name="label">金额</Property>
       </PropertyDef>
       <PropertyDef name="packPlanName">
-        <Property name="label">包材方案名称</Property>
+        <Property name="label">包装方案名称</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtBizDispatchPackageEntityQuery">
