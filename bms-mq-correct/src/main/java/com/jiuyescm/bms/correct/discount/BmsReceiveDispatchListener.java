@@ -1120,6 +1120,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
                     }else{
                         logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价参数"+JSONObject.fromObject(queryVo));
                         configVo=contractDiscountService.queryDiscount(queryVo);
+                        logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
                         if(configVo==null){
                             //费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
                             discountVo.setRemark(discountVo.getWaybillNo()+"合同在线未查询到折扣报价");
@@ -1127,17 +1128,21 @@ public class BmsReceiveDispatchListener implements MessageListener{
                             feeList.add(fee);
                             continue;
                         }
-                        if(!serviceTypeCode.equals(configVo.getCarrierServiceType())){
-                            discountVo.setRemark("不折扣");
-                            discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
-                            fee.setDerateAmount(0d);
-                            feeList.add(fee);
-                            continue;
-                        }
                         
                         sessionMap.put(key, configVo);
-                    }           
+                    }   
+                    
                     logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
+                    
+                    if(!serviceTypeCode.equals(configVo.getCarrierServiceType())){
+                        discountVo.setRemark("不折扣");
+                        discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
+                        fee.setDerateAmount(0d);
+                        feeList.add(fee);
+                        continue;
+                    }
+                    
+                    
                 } catch (Exception e) {
                     // TODO: handle exception
                     //费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
