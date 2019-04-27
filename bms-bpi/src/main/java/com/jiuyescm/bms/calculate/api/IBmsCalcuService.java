@@ -88,5 +88,14 @@ public interface IBmsCalcuService {
 	 * @return
 	 */
 	BmsFeesQtyVo queryFeesQtyForStoPallet(String customerId,String subjectCode,Integer creMonth);
+	
+	 /**
+     * 标准耗材使用费
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryFeesQtyForStoStandMaterial(String customerId,String subjectCode,Integer creMonth);
 
 }

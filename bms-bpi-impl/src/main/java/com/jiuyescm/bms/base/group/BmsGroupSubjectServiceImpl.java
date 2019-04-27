@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.base.group;
 
 import java.util.ArrayList;
@@ -6,11 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.entity.BmsGroupSubEntity;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupRepository;
 import com.jiuyescm.bms.base.group.repository.IBmsGroupSubjectRepository;
@@ -20,7 +26,7 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupSubjectVo;
 @Service("bmsGroupSubjectService")
 public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 	
-	private static final Logger logger = Logger.getLogger(BmsGroupSubjectServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(BmsGroupSubjectServiceImpl.class);
 
 	@Autowired
 	private IBmsGroupRepository bmsGroupRepository;
@@ -147,7 +153,7 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 		} catch (Exception e) {
 			logger.error("getImportSubject:",e);
 		}
-		return resultMap;
+		return resultMap; 
 	}
 	
 	@Override
@@ -264,8 +270,30 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 					result.add(voEntity);
 				}
 		}catch(Exception e){
-			e.printStackTrace();
+		    logger.error("科目查询异常",e);
 		}
 		return result;
 	}
+
+    @Override
+    public Map<String, String> getWmsValueAddSubjectGroups() {
+        
+        Map<String, String> retMap = Maps.newLinkedHashMap();
+        Map<String, String> param = new HashMap<>();
+        param.put("bizType", "bms_subject");
+        param.put("groupCode", "wmsValueAddSubjectGroup");
+        List<BmsGroupEntity> nodes = bmsGroupRepository.queryNodesForNode(param);
+        if(nodes == null){
+            return retMap;
+        }
+        for (BmsGroupEntity entity : nodes) {
+            retMap.put(entity.getGroupCode(), entity.getGroupName());
+        }
+        return retMap;
+    }
+
+    @Override
+    public Map<String, String> getWmsValueAddSubjectDetails(String groupCode) {
+        return getSubject(groupCode);
+    }
 }

@@ -94,6 +94,9 @@ public class BizOutstockPackmaterialTempEntity implements IEntity {
 	//Excel的行号
 	private int rowExcelNo;
 	private String rowExcelName;
+	
+	//包材组编码
+	private String packGroupNo;
 
 	public BizOutstockPackmaterialTempEntity() {
 
@@ -674,5 +677,13 @@ public class BizOutstockPackmaterialTempEntity implements IEntity {
 	public void setRowExcelName(String rowExcelName) {
 		this.rowExcelName = rowExcelName;
 	}
+
+    public String getPackGroupNo() {
+        return packGroupNo;
+    }
+
+    public void setPackGroupNo(String packGroupNo) {
+        this.packGroupNo = packGroupNo;
+    }
     
 }

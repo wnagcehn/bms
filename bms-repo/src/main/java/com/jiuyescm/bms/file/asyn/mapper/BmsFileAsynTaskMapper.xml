@@ -132,4 +132,11 @@
         where task_id = #{taskId,jdbcType=VARCHAR}
     </update>
     
+    <select id="queryMinTask" parameterType="java.util.Map" resultType="com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity">
+    	SELECT MIN(task_id) as taskId, create_time as createTime from bms_file_asyn_task
+		WHERE create_time>(SELECT last_time FROM etl_condition WHERE pull_type=#{pullType})
+		and task_type=#{taskType}
+		and task_status='SUCCESS'
+    </select>
+    
 </mapper>

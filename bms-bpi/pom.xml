@@ -44,6 +44,12 @@
 		</dependency>
 		
 		<dependency>
+    		<groupId>com.jiuyescm.crm</groupId>
+    		<artifactId>crm-open-api</artifactId>
+    		<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>com.jiuyescm.contract</groupId>
 			<artifactId>contract-api</artifactId>
 			<version>${contract.version}</version>

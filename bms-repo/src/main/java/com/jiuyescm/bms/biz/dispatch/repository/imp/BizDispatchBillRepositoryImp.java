@@ -83,7 +83,7 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 	public Properties validRetry(Map<String, Object> param) {
 		Properties ret = new Properties();
 		try{
-			if(param.get("merchantId")==null || param.get("merchantId")==""){
+			if(param.get("merchantId")==null || "".equals(param.get("merchantId"))){
 				int num=(Integer)selectOne("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryCount", param);			
 				SystemCodeTypeEntity system=(SystemCodeTypeEntity) selectOne("com.jiuyescm.bms.base.dictionary.SystemCodeTypeMapper.findByTypeCode", "RETYR_COUNT");
 				if(system!=null && system.getTypeDesc()!=null){
@@ -216,4 +216,16 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
 		// TODO Auto-generated method stub
 		return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryTask", condition);
 	}
+	
+    @Override
+    public List<BizDispatchBillEntity> queryAllWarehouseFromBizData(
+            Map<String, Object> condition) {
+        return this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryAllWarehouseFromBizData", condition);
+    }
+    
+    @Override
+    public List<BizDispatchBillEntity> queryBizByCusid(Map<String, Object> condition) {
+        List<BizDispatchBillEntity> list = this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryBizByCusid", condition);
+        return list;
+    }
 }

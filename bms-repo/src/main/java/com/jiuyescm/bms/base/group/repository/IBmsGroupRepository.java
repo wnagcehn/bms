@@ -32,4 +32,13 @@ public interface IBmsGroupRepository {
 	 * @return
 	 */
 	BmsGroupEntity queryIdByBizType();
+	
+	/**
+	 * 获取指定节点下的二级节点
+	 * @author caojianwei
+	 * @date 2019年4月17日 下午12:57:57
+	 * @param param bizType-业务类型  groupCode-指定节点编码
+	 * @return
+	 */
+	List<BmsGroupEntity> queryNodesForNode(Map<String, String> param);
 }

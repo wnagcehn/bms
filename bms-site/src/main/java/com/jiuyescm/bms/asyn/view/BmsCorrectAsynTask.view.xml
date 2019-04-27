@@ -171,6 +171,20 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
         <Property name="caption">纠正明细</Property>
         <Property name="icon">url(>skin>common/icons.gif) -260px -20px</Property>
       </ToolBarButton>
+      <ToolBarButton id="btnSave">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBmsCorrectAsynTaskEntity.data&quot;);&#xD;
+datas.insert();&#xD;
+&#xD;
+var date=new Date;&#xD;
+var year=date.getFullYear();&#xD;
+var month=date.getMonth();&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);&#xD;
+&#xD;
+view.get(&quot;#dialogTask&quot;).show();</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+        <Property name="caption">创建</Property>
+      </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBmsCorrectAsynTaskEntity">
       <Property name="pageSize">20</Property>
@@ -183,6 +197,11 @@ window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.correct.view.BmsOrderProduct
       <ClientEvent name="onCreate">view.get(&quot;#dsBmsCorrectAsynTaskQuery&quot;).getData().insert();&#xD;
 		  </ClientEvent>
       <Property name="dataType">[dtBmsCorrectAsynTaskTypeQuery]</Property>
+    </DataSet>
+    <DataSet id="dsBmsCorrectAsynTaskSaveEntity">
+      <Property name="readOnly">false</Property>
+      <Property name="dataType">[dtBmsCorrectAsynTaskTypeEntity]</Property>
+      <Property name="loadMode">lazy</Property>
     </DataSet>
     <AutoForm id="queryForm">
       <Property name="dataSet">dsBmsCorrectAsynTaskQuery</Property>
@@ -359,27 +378,22 @@ jQuery(arg.dom).xCreate({&#xD;
 		}&#xD;
 		view.id(&quot;dialogTask&quot;).hide();&#xD;
 	}	&#xD;
-});&#xD;
-</ClientEvent>
+});</ClientEvent>
           <Property name="caption">保存</Property>
           <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
         </Button>
         <Button>
           <ClientEvent name="onClick">view.id(&quot;dsBmsCorrectAsynTaskEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
-		view.id(&quot;dialogTask&quot;).hide();</ClientEvent>
+view.id(&quot;dialogTask&quot;).hide();</ClientEvent>
           <Property name="caption">关闭</Property>
           <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
         </Button>
       </Buttons>
       <Children>
-        <AutoForm>
+        <AutoForm id="AutoForm">
           <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>
           <Property name="cols">*,*</Property>
-          <AutoFormElement layoutConstraint="colSpan:2">
-            <Property name="property">taskName</Property>
-            <Property name="name">taskName</Property>
-            <Editor/>
-          </AutoFormElement>
+          <Property name="createPrivateDataSet">false</Property>
           <AutoFormElement>
             <Property name="name">year</Property>
             <Property name="property">year</Property>
@@ -447,7 +461,7 @@ if (data != null) {&#xD;
       <Tools/>
     </FloatPanel>
     <UpdateAction id="saveAction">
-      <Property name="dataResolver">bmsCorrectAsynTaskController#save</Property>
+      <Property name="dataResolver">bmsCorrectAsynTaskController#saveTask</Property>
       <UpdateItem>
         <Property name="dataPath">[#current]</Property>
         <Property name="dataSet">dsBmsCorrectAsynTaskEntity</Property>

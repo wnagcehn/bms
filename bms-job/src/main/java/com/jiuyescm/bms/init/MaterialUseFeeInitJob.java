@@ -102,8 +102,12 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			XxlJobLogger.log("materialUseFeeInitJob查询条件map:【{0}】  ",map);
 			bizList = bizOutstockPackmaterialService.query(map);
 			if(CollectionUtils.isNotEmpty(bizList)){
-				for (BizOutstockPackmaterialEntity entity : bizList) {
-					FeesReceiveStorageEntity fee = initFees(entity);
+                List<String> feesNos=new ArrayList<>();
+			    for (BizOutstockPackmaterialEntity entity : bizList) {
+			        if(StringUtils.isNotBlank(entity.getFeesNo())){
+                        feesNos.add(entity.getFeesNo());
+                    }
+			        FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);					
 					String customerId = entity.getCustomerId();
 					String subjectCode = fee.getSubjectCode();
@@ -113,7 +117,15 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 					taskVoMap.put(sb1.toString(), sb1.toString());
 				}
 				XxlJobLogger.log("【耗材】查询行数【{0}】", bizList.size());
-				
+				//如果有历史费用，则逻辑删除
+                if(feesNos.size()>0){
+                    Map<String,Object> condition=new HashMap<>();
+                    condition.put("feesNos", feesNos);
+                    long start = System.currentTimeMillis();// 系统开始时间
+                    feesReceiveStorageService.updateBatchFeeNo(condition);
+                    long current = System.currentTimeMillis();
+                    XxlJobLogger.log("删除历史费用数据耗时：【{0}】毫秒",(current - start));
+                }
 				//批量更新业务数据&批量写入费用表
 				updateAndInsertBatch(bizList,feesList);
 			}

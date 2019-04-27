@@ -75,6 +75,12 @@ public class FeesReceiveDispatchServiceImpl extends MyBatisDao implements IFeesR
 		
 	}
 
+    @Override
+    public void updateBatchFees(Map<String, Object> feesMap) {
+        // TODO Auto-generated method stub
+        this.update("com.jiuyescm.bms.general.entity.FeesReceiveDispatchMapper.updateBatchFees",feesMap);
+    }
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public int deleteByWayBillNo(String waybillNo) {
@@ -91,5 +97,7 @@ public class FeesReceiveDispatchServiceImpl extends MyBatisDao implements IFeesR
 	public void updateBatch(List<FeesReceiveDispatchEntity> entity) {
 		this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveDispatchMapper.updateBatch", entity);
 	}
+
+
 
 }

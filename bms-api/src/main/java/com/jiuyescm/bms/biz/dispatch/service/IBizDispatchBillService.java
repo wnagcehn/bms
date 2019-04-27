@@ -106,5 +106,17 @@ public interface IBizDispatchBillService {
 	  * @return
 	  */
 	BizDispatchBillEntity queryByWayNo(Map<String, String> condition);
+
+	/**
+	 * 汇总需要耗材需要分仓的仓库
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月17日 下午7:09:54
+	 *
+	 * @param condition
+	 * @return
+	 */
+    List<BizDispatchBillEntity> queryAllWarehouseFromBizData(Map<String, Object> condition);
 	 
 }

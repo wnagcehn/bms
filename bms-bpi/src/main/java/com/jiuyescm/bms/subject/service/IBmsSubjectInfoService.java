@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.subject.service;
 
 import java.util.List;

@@ -79,6 +79,8 @@
 		<jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
 		
 		<jms:listener destination="BMS.QUEUE.CALCU.VALUE.VALUEADD" ref="addUseCalcuListener"/>    
+	
+		<jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.DISPATCHPACKAGE" ref="dispatchPackageCalcuListener"/>    
     </jms:listener-container>
 </beans>
  
