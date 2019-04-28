@@ -1122,8 +1122,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
                         configVo=contractDiscountService.queryDiscount(queryVo);
                         logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
                         if(configVo==null){
-                            //费用计算失败的、未查询到费用的、者报价为空的、计算规则为空的
-                            discountVo.setRemark(discountVo.getWaybillNo()+"合同在线未查询到折扣报价");
+                            //特殊产品类型找不到折扣报价
+                            discountVo.setRemark(discountVo.getWaybillNo()+"不折扣");
+                            discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
                             fee.setDerateAmount(0d);
                             feeList.add(fee);
                             continue;
@@ -1135,7 +1136,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
                     logger.info(discountVo.getWaybillNo()+"查询合同在线折扣报价结果"+JSONObject.fromObject(configVo));
                     
                     if(!serviceTypeCode.equals(configVo.getCarrierServiceType())){
-                        discountVo.setRemark("不折扣");
+                        discountVo.setRemark(discountVo.getWaybillNo()+"不折扣");
                         discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
                         fee.setDerateAmount(0d);
                         feeList.add(fee);
@@ -1241,7 +1242,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 List<BmsQuoteDiscountDetailEntity> discountPriceList=priceContractDiscountService.queryDiscountPrice(condition);
                 //未查询到该物流产品类型对应得折扣，则不折扣
                 if(discountPriceList==null || discountPriceList.size()<=0){
-                    discountVo.setRemark("不折扣");
+                    discountVo.setRemark(discountVo.getWaybillNo()+"不折扣");
                     discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
                     fee.setDerateAmount(0d);
                     feeList.add(fee);
