@@ -75,4 +75,7 @@
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" ref="bmsCalcuTaskService"/>
 	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsCalcuService" ref="bmsCalcuService"/>
 	<dubbo:service interface="com.jiuyescm.bms.asyn.service.IBmsUserCustomerListenerService" ref="bmsUserCustomerListenerService"/>
+	
+	<!-- 标准包装方案 -->
+	<dubbo:service interface="com.jiuyescm.bms.biz.diapatch.service.IBizDispatchPackageService" ref="bizDispatchPackageService"/>
 </beans>

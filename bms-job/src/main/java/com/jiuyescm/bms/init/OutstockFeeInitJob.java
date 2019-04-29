@@ -203,7 +203,7 @@ public class OutstockFeeInitJob extends IJobHandler{
 		storageFeeEntity.setBizId(String.valueOf(outstock.getId()));//业务数据主键
 		storageFeeEntity.setFeesNo(outstock.getFeesNo());
 		
-		XxlJobLogger.log("-->"+outstock.getId()+"温度类型的map【{0}】",temMap);
+		//XxlJobLogger.log("-->"+outstock.getId()+"温度类型的map【{0}】",temMap);
 		
 		if(StringUtils.isEmpty(outstock.getTemperatureTypeCode())){
 			outstock.setTemperatureTypeCode("LD");
@@ -212,11 +212,11 @@ public class OutstockFeeInitJob extends IJobHandler{
 		else{
 			storageFeeEntity.setTempretureType(outstock.getTemperatureTypeCode());
 			
-			XxlJobLogger.log("-->"+outstock.getId()+"业务数据中温度类型code"+outstock.getTemperatureTypeCode());
+			//XxlJobLogger.log("-->"+outstock.getId()+"业务数据中温度类型code"+outstock.getTemperatureTypeCode());
 
 			outstock.setTemperatureTypeName(temMap.get(outstock.getTemperatureTypeCode()));
 			
-			XxlJobLogger.log("-->"+outstock.getId()+"业务数据中温度类型"+outstock.getTemperatureTypeName());
+			//XxlJobLogger.log("-->"+outstock.getId()+"业务数据中温度类型"+outstock.getTemperatureTypeName());
 		}
 		if(StringUtils.isEmpty(outstock.getTemperatureTypeName())){
 			outstock.setTemperatureTypeName("冷冻");

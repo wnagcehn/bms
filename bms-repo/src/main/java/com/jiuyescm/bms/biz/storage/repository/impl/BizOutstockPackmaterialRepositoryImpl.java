@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -300,6 +301,12 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		return v;
 	}
 		
+   @Override
+    public Double getStandVolumByMap(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        Double v=(Double) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getStandVolumByMap", condition);
+        return v;
+    }
 	@Override
 	public int deleteAllByWayBillNo(List<String> waybillNoList) {
 		Map<String,Object> map=Maps.newHashMap();
@@ -349,4 +356,10 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryTask", condition);
 	}
 
+	@Override
+	public int deleteMaterialForUsePackage(List<String> waybillNos){
+	    Map<String, Object> condition = new HashMap<String, Object>();
+	    condition.put("waybillNos", waybillNos);
+	    return update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteMaterialForUsePackage", condition);
+	}
 }

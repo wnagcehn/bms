@@ -40,4 +40,16 @@ public interface IBizOutstockPackmaterialTempRepository {
 	public List<BizOutstockPackmaterialTempEntity> queryContainsList(
 			String batchNum, int errorCount);
 
+	/**
+	 * 根据taskId将运单查出来
+	 * <用来判断是否使用标准包装方案>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月19日 下午12:02:26
+	 *
+	 * @param batchNum
+	 * @return
+	 */
+    List<BizOutstockPackmaterialTempEntity> queryWaybillByTaskId(String batchNum);
+
 }

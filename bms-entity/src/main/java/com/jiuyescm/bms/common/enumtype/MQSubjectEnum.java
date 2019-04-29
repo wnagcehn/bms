@@ -17,7 +17,8 @@ public enum MQSubjectEnum {
 	RProductStorage("wh_product_storage", "BMS.QUEUE.CALCU.PALLET.PRODUCTSTORAGE"),
 	RMaterialStorage("wh_material_storage", "BMS.QUEUE.CALCU.PALLET.MATERIALSTORAGE"),
 	ROutStockPallet("outstock_pallet_vm", "BMS.QUEUE.CALCU.PALLET.OUTSTOCKPALLET"),
-	RProductItemStorage("wh_product_storage_item", "BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE");
+	RProductItemStorage("wh_product_storage_item", "BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE"),
+	RDispatchPackage("wh_stand_material_use", "BMS.QUEUE.CALCU.MATERIAL.DISPATCHPACKAGE");
 	
 	private String code;
 	private String desc;
@@ -60,6 +61,7 @@ public enum MQSubjectEnum {
 		maps.put(RMaterialStorage.getCode(), RMaterialStorage.getDesc());
 		maps.put(ROutStockPallet.getCode(), ROutStockPallet.getDesc());
 		maps.put(RProductItemStorage.getCode(), RProductItemStorage.getDesc());
+		maps.put(RDispatchPackage.getCode(), RDispatchPackage.getDesc());
 	}
 	
 	public static Map<String,String> getMap(){

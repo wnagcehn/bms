@@ -140,7 +140,19 @@ public class BillCheckInfoEntity implements IEntity {
 	//业务时间
 	private String bizYear;
 	private String bizMonth;
-	public String getBizYear() {
+	
+	//开票商家编码
+    private String mkId;
+	
+	public String getMkId() {
+        return mkId;
+    }
+
+    public void setMkId(String mkId) {
+        this.mkId = mkId;
+    }
+
+    public String getBizYear() {
 		return bizYear;
 	}
 

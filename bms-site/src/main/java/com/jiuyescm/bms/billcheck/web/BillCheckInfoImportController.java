@@ -15,9 +15,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileResolver;
+import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
@@ -310,9 +312,17 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 				//新增日志
 				String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
 				try {
+                    //获取id
+				    Map<String, Object> condition1 = new HashMap<>();
+				    condition1.put("createMonth", vo.getCreateMonth());
+                    condition1.put("billName", vo.getBillName());
+                    PageInfo<BillCheckInfoVo> forId = billCheckInfoService.query(condition1,1,1);
+                    List<BillCheckInfoVo> listVos = forId.getList();
+				    
 					BillCheckLogVo billCheckLogVo=new BillCheckLogVo();
-					
-					billCheckLogVo.setBillCheckId(vo.getId());
+					if(CollectionUtils.isNotEmpty(listVos)){
+		                   billCheckLogVo.setBillCheckId(listVos.get(0).getId());
+					}
 					billCheckLogVo.setBillStatusCode(vo.getBillStatus());
 					billCheckLogVo.setOperateDesc("账单导入");
 					billCheckLogVo.setLogType(0);

@@ -33,5 +33,8 @@
 		<dubbo:reference interface="com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService"
 				version="1.0.0" id="snowflakeSequenceService" timeout="1200000" check="false"/> 		
 		<dubbo:reference interface="com.jiuyescm.framework.sequence.api.ISequenceService"
-				version="1.0.0" id="sequenceService" timeout="1200000" check="false"/>		
+				version="1.0.0" id="redisSequenceService" timeout="1200000" check="false"/>	
+					
+		<dubbo:reference interface="com.jiuyescm.crm.module.api.IModuleDataOpenService"
+		version="1.0.0" id="moduleDataOpenService" timeout="1200000" check="false"/>		
 </beans>

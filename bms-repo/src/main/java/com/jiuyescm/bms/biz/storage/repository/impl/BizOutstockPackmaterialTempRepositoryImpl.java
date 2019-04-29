@@ -4,21 +4,21 @@
  */
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
-import com.jiuyescm.exception.BizException;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialTempRepository;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
+import com.jiuyescm.exception.BizException;
 
 /**
  * 
@@ -101,7 +101,13 @@ public class BizOutstockPackmaterialTempRepositoryImpl extends MyBatisDao<BizOut
 		map.put("batchNum", batchNum);
 		map.put("errorCount", errorCount);
 		return this.selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper.queryContainsListCount", map);
-
 	}
+	
+	@Override
+    public List<BizOutstockPackmaterialTempEntity> queryWaybillByTaskId(String batchNum) {
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("batchNum", batchNum);
+        return selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper.queryWaybillByTaskId", map);
+    }
 	
 }

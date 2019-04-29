@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,10 +99,14 @@ public class ProductStorageInitJob extends IJobHandler {
 		bizList = bizProductStorageService.query(map);
 		// 只要有业务数据，就进行初始化和更新写入操作
 		if (CollectionUtils.isNotEmpty(bizList)) {
-			XxlJobLogger.log("【业务数据】查询行数【{0}】", bizList.size());
+            List<String> feesNos=new ArrayList<>();
+		    XxlJobLogger.log("【业务数据】查询行数【{0}】", bizList.size());
 			// 初始化费用
 			initFees(bizList, feesList);
 			for (BizProductStorageEntity entity : bizList) {
+			    if(StringUtils.isNotBlank(entity.getFeesNo())){
+                    feesNos.add(entity.getFeesNo());
+                }
 				//封装key
 				String customerId = entity.getCustomerid();
 				String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
@@ -109,6 +114,16 @@ public class ProductStorageInitJob extends IJobHandler {
 				sb1.append(customerId).append("-").append(creMonth);
 				taskSet.add(sb1.toString());
 			}
+            XxlJobLogger.log("【托数】查询行数【{0}】", bizList.size());
+			 //如果有历史费用，则逻辑删除
+            if(feesNos.size()>0){
+                Map<String,Object> condition=new HashMap<>();
+                condition.put("feesNos", feesNos);
+                long start = System.currentTimeMillis();// 系统开始时间
+                feesReceiveStorageService.updateBatchFeeNo(condition);
+                long current = System.currentTimeMillis();
+                XxlJobLogger.log("删除历史费用数据耗时：【{0}】毫秒",(current - start));
+            }
 			// 批量更新业务数据&批量写入费用表
 			updateAndInsertBatch(feesList);
 			//继续执行

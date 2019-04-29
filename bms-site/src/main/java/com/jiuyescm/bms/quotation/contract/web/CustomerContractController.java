@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
@@ -23,6 +24,8 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
+import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -73,6 +76,8 @@ public class CustomerContractController {
 	
 	@Resource
 	private IContractDiscountService contractDiscountService;
+   @Autowired 
+    ICustomerDictService customerDictService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CustomerContractController.class.getName());
 	
@@ -795,31 +800,36 @@ public class CustomerContractController {
 	public List<PriceContractInfoEntity> getBizTypeCode(Map<String, Object> param){
 		
 		if(param!=null && param.get("createMonth")!=null && param.get("customerId")!=null){
-			try {
-				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId(param.get("customerId").toString());
-				queryVo.setSettlementTime(param.get("createMonth").toString());
-				queryVo.setBizTypeCode("");
-				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				if(disCountVo.size()>0){
-					List<PriceContractInfoEntity> list=new ArrayList<PriceContractInfoEntity>();
-					if(disCountVo.get(0).getSubjectVoList().size()>0){
-						PriceContractInfoEntity price=new PriceContractInfoEntity();
-						price.setBizTypeName("仓储");
-						price.setBizTypeCode("STORAGE");
-						list.add(price);
-					}			
-					if(disCountVo.get(0).getCarrierVoList().size()>0){
-						PriceContractInfoEntity price=new PriceContractInfoEntity();
-						price.setBizTypeName("配送");
-						price.setBizTypeCode("DISPATCH");
-						list.add(price);
-					}
-					return list;
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-				logger.info("合同在线未查询到折扣信息"+e.getMessage());
+		    //判断合同归属  1 "BMS" 2 "CONTRACT";
+            PubCustomerVo vo = customerDictService.queryById(param.get("customerId").toString());
+            if(vo.getContractAttr()==2){
+                try {
+                    ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+                    queryVo.setCustomerId(param.get("customerId").toString());
+                    queryVo.setSettlementTime(param.get("createMonth").toString());
+                    queryVo.setBizTypeCode("");
+                    List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+                    if(disCountVo.size()>0){
+                        List<PriceContractInfoEntity> list=new ArrayList<PriceContractInfoEntity>();
+                        if(disCountVo.get(0).getSubjectVoList().size()>0){
+                            PriceContractInfoEntity price=new PriceContractInfoEntity();
+                            price.setBizTypeName("仓储");
+                            price.setBizTypeCode("STORAGE");
+                            list.add(price);
+                        }           
+                        if(disCountVo.get(0).getCarrierVoList().size()>0){
+                            PriceContractInfoEntity price=new PriceContractInfoEntity();
+                            price.setBizTypeName("配送");
+                            price.setBizTypeCode("DISPATCH");
+                            list.add(price);
+                        }
+                        return list;
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    logger.info("合同在线未查询到折扣信息"+e.getMessage());
+                }
+            }else{
 				Map<String,String> map=new HashMap<>();
 				String startD = param.get("createMonth").toString() + "-01 00:00:00";
 				map.put("startTime", startD);
@@ -832,64 +842,68 @@ public class CustomerContractController {
 	}
 	
 	@DataProvider
-	public List<PriceContractInfoEntity> getSubjectCode(Map<String, String> param){	
-		
+	public List<PriceContractInfoEntity> getSubjectCode(Map<String, String> param){			
 		List<PriceContractInfoEntity> list=new ArrayList<PriceContractInfoEntity>();
-		
-		try {
-			Map<String, String> feeTypeMap=bmsGroupSubjectService.getSubject("receive_wh_base_quo_subject");
-			if (null != param && param.get("createMonth")!=null && param.get("customerId")!=null) {
-				String bizTypeCode=param.get("bizTypeCode");
-				ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-				queryVo.setCustomerId(param.get("customerId").toString());
-				queryVo.setSettlementTime(param.get("createMonth").toString());
-				queryVo.setBizTypeCode("");
-				List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-				ContractDiscountVo vo=disCountVo.get(0);
-				if(disCountVo.size()>0){					
-					if("STORAGE".equals(bizTypeCode)){
-						if(vo.getSubjectVoList().size()>0){
-							for(SubjectInfoVo s:vo.getSubjectVoList()){
-								PriceContractInfoEntity price=new PriceContractInfoEntity();
-								price.setBizTypeName("仓储");
-								price.setBizTypeCode("STORAGE");
-								price.setSubjectId(s.getSubjectId());
-								price.setCarrierName(feeTypeMap.get(s.getSubjectId()));
-								price.setDiscountType(s.getDiscountType());			   
-								price.setCustomerType("contract");
-								list.add(price);
-							}			
-						}
-					}else if("DISPATCH".equals(bizTypeCode)){
-						if(vo.getCarrierVoList().size()>0){
-							for(CarrierInfoVo s:vo.getCarrierVoList()){
-								PriceContractInfoEntity price=new PriceContractInfoEntity();
-								price.setBizTypeName("配送");
-								price.setBizTypeCode("DISPATCH");
-								price.setCarrierId(s.getCarrierId());
-								SystemCodeEntity entity=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
-								price.setSubjectId(entity.getCode());
-								price.setCarrierName(entity.getCodeName());
-								price.setDiscountType(s.getDiscountType());
-								price.setCustomerType("contract");
-								list.add(price);
-							}
-						}				
-					}			
-				}			
-				if(list.size()>0){
-					return list;
-				}
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			logger.info("合同在线未查询到折扣信息"+e.getMessage());
-			String startD = param.get("createMonth").toString() + "-01 00:00:00";
-			param.put("startTime", startD);
-			list = priceContractService.queryByCustomerIdAndBizType(param);
-			return list;
-		}
-		return null;
+		if (null != param && param.get("createMonth")!=null && param.get("customerId")!=null) {
+		    Map<String, String> feeTypeMap=bmsGroupSubjectService.getSubject("receive_wh_base_quo_subject");
+		    //判断合同归属  1 "BMS" 2 "CONTRACT";
+	        PubCustomerVo cus = customerDictService.queryById(param.get("customerId").toString());
+	        if(cus.getContractAttr()==2){
+	            try {
+	            
+		            String bizTypeCode=param.get("bizTypeCode");
+	                ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
+	                queryVo.setCustomerId(param.get("customerId").toString());
+	                queryVo.setSettlementTime(param.get("createMonth").toString());
+	                queryVo.setBizTypeCode("");
+	                List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
+	                ContractDiscountVo vo=disCountVo.get(0);
+	                if(disCountVo.size()>0){                    
+	                    if("STORAGE".equals(bizTypeCode)){
+	                        if(vo.getSubjectVoList().size()>0){
+	                            for(SubjectInfoVo s:vo.getSubjectVoList()){
+	                                PriceContractInfoEntity price=new PriceContractInfoEntity();
+	                                price.setBizTypeName("仓储");
+	                                price.setBizTypeCode("STORAGE");
+	                                price.setSubjectId(s.getSubjectId());
+	                                price.setCarrierName(feeTypeMap.get(s.getSubjectId()));
+	                                price.setDiscountType(s.getDiscountType());            
+	                                price.setCustomerType("contract");
+	                                list.add(price);
+	                            }           
+	                        }
+	                    }else if("DISPATCH".equals(bizTypeCode)){
+	                        if(vo.getCarrierVoList().size()>0){
+	                            for(CarrierInfoVo s:vo.getCarrierVoList()){
+	                                PriceContractInfoEntity price=new PriceContractInfoEntity();
+	                                price.setBizTypeName("配送");
+	                                price.setBizTypeCode("DISPATCH");
+	                                price.setCarrierId(s.getCarrierId());
+	                                SystemCodeEntity entity=(SystemCodeEntity) getDispatchMap().get(s.getCarrierId());
+	                                price.setSubjectId(entity.getCode());
+	                                price.setCarrierName(entity.getCodeName());
+	                                price.setDiscountType(s.getDiscountType());
+	                                price.setCustomerType("contract");
+	                                list.add(price);
+	                            }
+	                        }               
+	                    }           
+	                }           
+	                if(list.size()>0){
+	                    return list;
+	                }
+	            } catch (Exception e) {
+	                // TODO: handle exception
+	                logger.info("合同在线未查询到折扣信息"+e.getMessage());  
+	            }
+	        }else{
+	            String startD = param.get("createMonth").toString() + "-01 00:00:00";
+                param.put("startTime", startD);
+                list = priceContractService.queryByCustomerIdAndBizType(param);
+                return list;
+	        }
+		  }	
+	  return null;
 	}
 	
 	public Map<String,Object> getDispatchMap(){

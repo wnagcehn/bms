@@ -184,6 +184,14 @@
 		<if test="subjectId != null" >and subject_code = #{subjectId}</if>
     </delete>
     
+    <update id="updateBatchFeeNo" parameterType="java.util.Map">
+       update fees_receive_storage set del_flag='1' where
+        fees_no in
+		<foreach collection="feesNos" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+		</foreach>
+    </update>
+    
     <select id="ValidFeesNo" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity" resultMap ="feesReceiveStorageMap">
         select id from fees_receive_storage where
         biz_id=#{bizId} and subject_code = #{subjectCode} limit 1

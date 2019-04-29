@@ -89,6 +89,8 @@ public interface IBizOutstockPackmaterialRepository {
 	Double getMaxZxVolum(Map<String,Object> condition);
 	
 	Double getMaxVolumByMap(Map<String,Object> condition);
+	
+	Double getStandVolumByMap(Map<String,Object> condition);
 
 	int deleteAllByWayBillNo(List<String> waybillNoList);
 	
@@ -114,6 +116,8 @@ public interface IBizOutstockPackmaterialRepository {
 	 * @return
 	 */
 	public String getMaxBwdVolumn(Map<String, Object> condition);
+	
+	
 	
 	/**
 	 * 删除运单号对应的泡沫箱和纸箱
@@ -147,4 +151,16 @@ public interface IBizOutstockPackmaterialRepository {
 	public List<String> queryFeeNo(Map<String,Object> condition);
 	
 	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
+
+	/**
+	 * 作废使用标准包装方案运单的耗材
+	 * <耗材只作废泡沫箱，干冰，冰袋>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月19日 下午1:51:23
+	 *
+	 * @param waybillNos
+	 * @return
+	 */
+    int deleteMaterialForUsePackage(List<String> waybillNos);
 }

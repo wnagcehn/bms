@@ -15,5 +15,6 @@
     <import resource="classpath*:spring-redis.xml" />
     <import resource="classpath*:spring-lock.xml" /> 
     <import resource="classpath:spring/applicationContext-activeMQ.xml" />
+    <import resource="classpath:spring/disconfApp-config.xml" />
 
 </beans>
