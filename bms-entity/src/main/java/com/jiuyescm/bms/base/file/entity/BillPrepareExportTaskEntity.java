@@ -54,6 +54,11 @@ public class BillPrepareExportTaskEntity implements IEntity {
 	private Timestamp lastModifyTime;
 	// 删除标志 0-未作废 1-作废
 	private String delFlag;
+	
+	//是否折扣
+	private String isDiscount;
+	//备注
+	private String remark;
 
 	public BillPrepareExportTaskEntity() {
 		super();
@@ -212,5 +217,21 @@ public class BillPrepareExportTaskEntity implements IEntity {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+    public String getIsDiscount() {
+        return isDiscount;
+    }
+
+    public void setIsDiscount(String isDiscount) {
+        this.isDiscount = isDiscount;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
     
 }

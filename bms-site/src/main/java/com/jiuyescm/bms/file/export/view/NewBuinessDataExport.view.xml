@@ -65,6 +65,11 @@
         </Property>
         <Property name="required">true</Property>
       </PropertyDef>
+      <PropertyDef name="isDiscount">
+        <Property name="label">运行折扣</Property>
+        <Property name="dataType">boolean</Property>
+        <Property name="defaultValue">true</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskEntity">
       <Property name="creationType">com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity</Property>
@@ -174,6 +179,15 @@
       </PropertyDef>
       <PropertyDef name="materialSplit">
         <Property name="dataType">Long</Property>
+        <Property name="label">耗材分仓</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
         <Property></Property>
@@ -186,6 +200,20 @@
             <Entity>
               <Property name="0">是</Property>
               <Property name="1">否</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="isDiscount">
+        <Property name="label">自动折扣</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="0">否</Property>
+              <Property name="1">是</Property>
             </Entity>
           </Property>
         </Property>
@@ -227,6 +255,60 @@
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
         </Property>
+      </PropertyDef>
+      <PropertyDef name="isSepWarehouse">
+        <Property name="label">耗材分仓</Property>
+        <Property name="required">false</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">ALL</Property>
+                <Property name="value">全部</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">否</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">是</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">ALL</Property>
+      </PropertyDef>
+      <PropertyDef name="taskState">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">ALL</Property>
+                <Property name="value">全部</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">已创建</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">处理中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">失败</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">ALL</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -349,7 +431,7 @@ function isNullOrEmpty(e) {&#xD;
         <Property name="property">creator</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement layoutConstraint="colSpan:2">
+      <AutoFormElement layoutConstraint="colSpan:1.5">
         <Property name="name">taskName</Property>
         <Property name="property">taskName</Property>
         <Property name="editable">true</Property>
@@ -358,6 +440,18 @@ function isNullOrEmpty(e) {&#xD;
       <AutoFormElement>
         <Property name="name">isChild</Property>
         <Property name="property">isChild</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">isSepWarehouse</Property>
+        <Property name="property">isSepWarehouse</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">taskState</Property>
+        <Property name="property">taskState</Property>
+        <Property name="editable">false</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -392,25 +486,17 @@ function isNullOrEmpty(e) {&#xD;
           <Property name="name">endTime</Property>
           <Property name="width">120</Property>
         </DataColumn>
-        <DataColumn name="isChildCustomer">
-          <Property name="property">isChildCustomer</Property>
-        </DataColumn>
         <DataColumn>
           <Property name="property">filePath</Property>
           <Property name="name">filePath</Property>
           <Property name="visible">false</Property>
+          <Property name="width">2</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">progress</Property>
           <Property name="name">progress</Property>
           <Property name="displayFormat">##%</Property>
-        </DataColumn>
-        <DataColumn name="creator">
-          <Property name="property">creator</Property>
-        </DataColumn>
-        <DataColumn name="createTime">
-          <Property name="property">createTime</Property>
-          <Property name="width">120</Property>
+          <Property name="width">80</Property>
         </DataColumn>
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
@@ -432,7 +518,41 @@ if(taskState==2){&#xD;
           <Property name="align">center</Property>
           <Property name="caption">操作</Property>
           <Property name="name">operator</Property>
+          <Property name="width">90</Property>
           <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">remark</Property>
+          <Property name="property">remark</Property>
+          <Property name="width">160</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="isChildCustomer">
+          <Property name="property">isChildCustomer</Property>
+          <Property name="width">90</Property>
+          <Property name="align">center</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">materialSplit</Property>
+          <Property name="property">materialSplit</Property>
+          <Property name="width">90</Property>
+          <Property name="align">center</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">isDiscount</Property>
+          <Property name="property">isDiscount</Property>
+          <Property name="width">90</Property>
+          <Property name="align">center</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn name="creator">
+          <Property name="property">creator</Property>
+          <Property name="width">100</Property>
+        </DataColumn>
+        <DataColumn name="createTime">
+          <Property name="property">createTime</Property>
+          <Property name="width">120</Property>
         </DataColumn>
       </DataGrid>
     </Container>
@@ -519,6 +639,12 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
           <AutoFormElement>
             <Property name="name">isSepWarehouse</Property>
             <Property name="property">isSepWarehouse</Property>
+            <Property name="labelWidth">100</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">isDiscount</Property>
+            <Property name="property">isDiscount</Property>
             <Property name="labelWidth">100</Property>
             <Editor/>
           </AutoFormElement>

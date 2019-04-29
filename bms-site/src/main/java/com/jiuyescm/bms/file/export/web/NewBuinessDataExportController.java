@@ -266,11 +266,23 @@ public class NewBuinessDataExportController extends BaseController {
 							entity.setCustomerid(cu.get("customerId").toString());
 							entity.setMkId(mkId);
 							//区分是否按照子商家生成
-							if ((Boolean)condition.get("isChildCustomer") == true) {
+							if ((Boolean)condition.get("isChildCustomer")) {
 								entity.setIsChildCustomer("0");
 							}else{
 								entity.setIsChildCustomer("1");
 							}
+							//耗材分仓
+							if ((Boolean)condition.get("isSepWarehouse")) {
+							    entity.setMaterialSplit(1l);;
+							}else{
+							    entity.setMaterialSplit(0l);
+							}
+							//是否自动折扣
+							if ((Boolean)condition.get("isDiscount")) {
+                                entity.setIsDiscount("1");
+                            }else{
+                                entity.setIsDiscount("0");
+                            }
 							entity = billPrepareExportTaskService.save(entity);
 
 							// 生成账单文件
@@ -339,14 +351,14 @@ public class NewBuinessDataExportController extends BaseController {
 			condition.put("customerIds", customerIdList);
 		}
 		
-		
+		Map<String, String> transportTypeMap = getEnumList("TRANSPORT_TYPE");
+		Map<String, String> temMap = getEnumList("TEMPERATURE_TYPE");
 		// 配送费
-		handDispatch(xssfWorkbook, poiUtil, condition, filePath);
-				
-		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 50);
+		handDispatch(xssfWorkbook, poiUtil, condition, filePath, transportTypeMap);
 
-		List<String> warehouseList = queryPreBillWarehouse(condition);
-		Map<String, String> temMap=getTemperatureTypeList();
+		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 50);
+		List<String> warehouseList = queryPreBillWarehouse(condition);	
+
 		// 存储费
 		handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
 		//出库(TB)
@@ -915,6 +927,7 @@ public class NewBuinessDataExportController extends BaseController {
 		headMapDict.put("productDetail", "商品明细");
 		headMapDict.put("carrierName", "计费物流商");
 		headMapDict.put("serviceTypeName", "物流产品类型");
+		headMapDict.put("transportType", "运输方式");
 		headMapDict.put("receiver", "收件人");
 		headMapDict.put("receiveProvice", "收件人省");
 		headMapDict.put("receiveCity", "收件人市");
@@ -945,7 +958,7 @@ public class NewBuinessDataExportController extends BaseController {
 		return list;
 	}
 
-	private List<Map<String, Object>> getDispathItemMap(List<FeesReceiveDispatchEntity> dataList) {
+	private List<Map<String, Object>> getDispathItemMap(List<FeesReceiveDispatchEntity> dataList, Map<String, String> transportTypeMap) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		double yunfei = 0d;
@@ -966,6 +979,7 @@ public class NewBuinessDataExportController extends BaseController {
 			map.put("productDetail", entity.getProductDetail());
 			map.put("carrierName", entity.getCarrierName());
 			map.put("serviceTypeName", entity.getServiceTypeName());
+			map.put("transportType", entity.getTransportType()==null?"":transportTypeMap.get(entity.getTransportType()));
 			map.put("receiver", entity.getReceiveName());
 			map.put("receiveProvice", entity.getToProvinceName());
 			map.put("receiveCity", entity.getToCityName());
@@ -1012,7 +1026,7 @@ public class NewBuinessDataExportController extends BaseController {
 	 */
 	@SuppressWarnings("static-access")
 	private void handDispatch(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
-			String filePath) throws Exception {
+			String filePath, Map<String, String> transportTypeMap) throws Exception {
 		int pageNo = 1;
 		boolean doLoop = true;
 		List<FeesReceiveDispatchEntity> dataList = new ArrayList<FeesReceiveDispatchEntity>();
@@ -1048,7 +1062,7 @@ public class NewBuinessDataExportController extends BaseController {
 		}
 		List<Map<String, Object>> headMap = getDispathHeadMap();
 
-		List<Map<String, Object>> itemMap = getDispathItemMap(dataList);
+		List<Map<String, Object>> itemMap = getDispathItemMap(dataList, transportTypeMap);
 		poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook, "宅配", headMap, itemMap);
 	}
 	
@@ -2299,8 +2313,8 @@ public class NewBuinessDataExportController extends BaseController {
 	 * @return
 	 */
 	@DataProvider
-	public Map<String, String> getTemperatureTypeList(){
-		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("TEMPERATURE_TYPE");
+	public Map<String, String> getEnumList(String type){
+		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList(type);
 		Map<String, String> map =new LinkedHashMap<String,String>();
 		if(systemCodeList!=null && systemCodeList.size()>0){
 			for(int i=0;i<systemCodeList.size();i++){

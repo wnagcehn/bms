@@ -62,6 +62,7 @@
   	<result column="storageRemark" property="storageRemark" jdbcType="VARCHAR"/>
   	<result column="dispatchCal" property="dispatchCal" jdbcType="VARCHAR"/>
   	<result column="dispatchRemark" property="dispatchRemark" jdbcType="VARCHAR"/>
+  	<result column="transport_type" property="transportType" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
      id, fees_no, waybill_no, outstock_no, external_no, warehouse_code, warehouse_name,
@@ -71,7 +72,7 @@
      amount, bill_no, rule_no, to_province_name, to_district_name, to_city_name, charged_weight,
      weight_limit, unit_price, head_weight, continued_weight, head_price, continued_price,
      accept_time, sign_time,biz_type, bigstatus, smallstatus, param1, param2, param3, param4, param5, status,
-     creator, create_time, last_modifier, last_modify_time, del_flag,amount,derate_amount,is_calculated
+     creator, create_time, last_modifier, last_modify_time, del_flag,amount,derate_amount,is_calculated,transport_type
   </sql>
   
   <sql id="baseSelectColumns">
@@ -482,7 +483,8 @@
 	a.remark as dispatchRemark,
 	(b.amount-IFNULL(b.derate_amount,0)) as discountAmount,
 	f.servicename as serviceTypeName,
-	(c.cost-IFNULL(c.derate_amount,0)) as operateAmount
+	(c.cost-IFNULL(c.derate_amount,0)) as operateAmount,
+	b.transport_type as transportType
 	from biz_dispatch_bill a
 	left join fees_receive_dispatch b on a.fees_no=b.fees_no and b.del_flag='0'
 	left join biz_outstock_master d on d.waybill_no=a.waybill_no  and d.del_flag='0' and d.b2b_flag = '0'
