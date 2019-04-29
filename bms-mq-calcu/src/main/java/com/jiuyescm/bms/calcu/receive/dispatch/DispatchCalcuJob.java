@@ -843,7 +843,18 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				    maxVolumn=volumn;
 				}
 				if(!DoubleUtil.isBlank(maxVolumn)){
-					throwWeight=(double)maxVolumn/6000;
+				    
+				    //判断是航空还是陆运
+				    if(StringUtils.isBlank(entity.getTransportType())){
+	                    throwWeight=(double)maxVolumn/6000;
+				    }else{
+				      //判断是航空还是陆运
+	                    if("BY-LAND".equals(entity.getTransportType())){
+	                        throwWeight=(double)maxVolumn/12000;//陆运
+	                    }else{
+	                        throwWeight=(double)maxVolumn/6000;//空运
+	                    }
+				    }
 					throwWeight=(double)Math.round(throwWeight*100)/100;
 				}			
 			}catch(Exception ex){ 
