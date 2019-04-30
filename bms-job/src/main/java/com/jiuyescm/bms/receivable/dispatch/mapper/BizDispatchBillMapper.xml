@@ -117,7 +117,7 @@
         adjust_district_id,origin_carrier_id,origin_carrier_name,IFNULL(throw_weight,0) as throw_weight,order_status,origin_weight,
         adjust_service_type_code as adjustServiceTypeCode,IFNULL(carrier_weight,0) as carrier_weight,transport_type
         from biz_dispatch_bill
-        where del_flag = 0
+        where del_flag = 0 and is_calculated in('0','99') 
         <if test="(beginTime != null and beginTime !='')" >
 			and create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
@@ -138,9 +138,6 @@
 		</if>
 		<if test="(id != null and id !='')" >
 			and id = #{id,jdbcType=BIGINT}
-		</if>
-		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = concat(${isCalculated})
 		</if>
 		<if test="(waybillNo != null and waybillNo !='')" >
 			and waybill_no = #{waybillNo,jdbcType=VARCHAR}
