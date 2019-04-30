@@ -1004,15 +1004,16 @@ public class BmsReceiveDispatchListener implements MessageListener{
             condition.put("carrierId", task.getCarrierId());
             condition.put("serviceList", serviceList);
             logger.info(taskId+"更新特殊物流产品类型折扣费用表的参数"+JSONObject.fromObject(condition));
-            int updateResult=bmsDiscountService.updateFeeDiscountTask(condition);
-            if(updateResult<=0){
+            try{
+                bmsDiscountService.updateFeeDiscountTask(condition);
+            }catch(Exception ex){
                 logger.info(taskId+"更新taskId到特殊物流产品类型折扣费用表中");
-                task.setRemark(taskId+"更新taskId到特殊物流产品类型折扣费用表中");
+                task.setRemark(taskId+"更新特殊物流产品类型折扣异常");
                 task.setTaskRate(80);
                 task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
                 bmsDiscountAsynTaskService.update(task);
                 return;
-            }   
+            }
             
             updateProgress(task,50);
             //批量获取业务数据 1000条一次（根据taskId关联）
