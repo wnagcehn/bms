@@ -308,4 +308,13 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
        List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryId",condition);
        return list;
    }
+   
+   @SuppressWarnings("unchecked")
+   @Override
+   public PageInfo<BillCheckInfoEntity> querySimple(Map<String, Object> condition,
+           int pageNo, int pageSize) {
+       List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySimple", condition,new RowBounds(pageNo,pageSize));
+       PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
+       return page;
+   }
 }
