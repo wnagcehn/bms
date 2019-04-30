@@ -105,7 +105,11 @@ public class OutstockFeeInitJob extends IJobHandler{
 			bizList = bizOutstockMasterService.query(map);
 			//只要有业务数据，就进行初始化和更新写入操作
 			if (CollectionUtils.isNotEmpty(bizList)) {
+			    List<String> feesNos=new ArrayList<>();
 				for (BizOutstockMasterEntity entity : bizList) {
+				    if(StringUtils.isNotBlank(entity.getFeesNo())){
+                        feesNos.add(entity.getFeesNo());
+                    }
 					List<FeesReceiveStorageEntity> fees = initFees(entity);
 					feesList.addAll(fees);
 					for (FeesReceiveStorageEntity fee : fees) {
@@ -118,6 +122,16 @@ public class OutstockFeeInitJob extends IJobHandler{
 				}
 				XxlJobLogger.log("【托数】查询行数【{0}】", bizList.size());
 
+				//如果有历史费用，则逻辑删除
+                if(feesNos.size()>0){
+                    Map<String,Object> condition=new HashMap<>();
+                    condition.put("feesNos", feesNos);
+                    long start = System.currentTimeMillis();// 系统开始时间
+                    feesReceiveStorageService.updateBatchFeeNo(condition);
+                    long current = System.currentTimeMillis();
+                    XxlJobLogger.log("删除历史费用数据耗时：【{0}】毫秒",(current - start));
+                }
+				
 				// 批量更新业务数据&批量写入费用表
 				updateAndInsertBatch(bizList, feesList);
 			}
