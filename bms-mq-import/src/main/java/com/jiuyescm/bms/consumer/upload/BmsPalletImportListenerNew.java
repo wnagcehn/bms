@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.consumer.upload;
 
 import java.io.ByteArrayInputStream;
@@ -28,12 +32,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bstek.bdf2.core.context.ContextHolder;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
-import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
@@ -396,8 +398,12 @@ public class BmsPalletImportListenerNew implements MessageListener{
 		List<BizPalletInfoTempEntity> insertList = bizPalletInfoTempService.queryNeedInsert(taskId);
 		//往正式表存数据
 		try{
-			int k=saveData(insertList, updateList);
-			if(k>0){
+			saveData(insertList, updateList);
+			logger.error("托数从写入业务表成功");
+            bmsMaterialImportTaskCommon.setTaskProcess(taskEntity.getTaskId(), 90);
+            BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
+            bmsFileAsynTaskService.update(updateEntity);
+			/*if(k>0){
 				logger.error("托数从写入业务表成功");
 				bmsMaterialImportTaskCommon.setTaskProcess(taskEntity.getTaskId(), 90);
 				BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
@@ -406,7 +412,7 @@ public class BmsPalletImportListenerNew implements MessageListener{
 				logger.error("托数从写入业务表失败，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bmsMaterialImportTaskCommon.setTaskStatus(taskEntity.getTaskId(),99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskEntity.getTaskId()+"】,任务编号【"+taskEntity.getTaskId()+"】");
 				bizPalletInfoTempService.deleteBybatchNum(taskEntity.getTaskId());
-			}
+			}*/
 			newList.clear();
 			headerColumn.clear();
 		}catch(Exception e){
