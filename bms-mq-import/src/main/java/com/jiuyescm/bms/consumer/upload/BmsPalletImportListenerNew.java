@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016, Jiuye SCM and/or its affiliates. All rights reserved.
+ *
+ */
 package com.jiuyescm.bms.consumer.upload;
 
 import java.io.ByteArrayInputStream;
@@ -28,12 +32,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bstek.bdf2.core.context.ContextHolder;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
-import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
