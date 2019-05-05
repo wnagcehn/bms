@@ -20,6 +20,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +37,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
@@ -65,6 +69,7 @@ import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
 import com.jiuyescm.bms.fees.abnormal.service.IFeesAbnormalService;
 import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
@@ -75,12 +80,14 @@ import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.utils.JsonUtils;
 
 @SuppressWarnings("deprecation")
 @Controller("newBuinessDataExportController")
@@ -122,6 +129,8 @@ public class NewBuinessDataExportController extends BaseController {
 	private JmsTemplate jmsQueueTemplate;
 	@Resource
 	private IBizDispatchBillService bizDispatchBillService;
+	@Resource 
+    private SequenceService sequenceService;
 
 	private static final int PAGESIZE = 10000;
 	FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
@@ -185,6 +194,12 @@ public class NewBuinessDataExportController extends BaseController {
 			year = param.get("year").toString();
 			month = param.get("month").toString();
 		}
+		//拼接年月，后面用来调用折扣RPC服务的参数
+		if (Integer.parseInt(month) < 10) {
+		    param.put("creMonth", year + "0" + month);
+        }else {
+            param.put("creMonth", year + month);
+        }
 		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
 			String startDateStr = year + "-" + month + "-01 00:00:00";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -230,36 +245,22 @@ public class NewBuinessDataExportController extends BaseController {
 							Timestamp startDate = DateUtil.formatTimestamp(condition.get("startDate"));
 							Timestamp endDate = DateUtil.formatTimestamp(condition.get("endDate"));
 					
-							//Map<String, Object> queryEntity = new HashMap<String, Object>();
 							SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 							Date date = format.parse(endDate.toString());
 							String endTime = format.format(addDay(1, date));
 							String startTime = format.format(startDate);
-							//queryEntity.put("customerId", customerId);
-
-							//queryEntity.put("startTime", startTime);
-							//queryEntity.put("endTime", endTime);
 							condition.put("startTime", startTime);
 							condition.put("endTime", endTime);
-							//queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
-							//if (checkFileHasDownLoad(queryEntity)) {
-							//	return MessageConstant.BILL_FILE_ISEXIST_MSG;
-							//}
 							DateFormat sdf = new SimpleDateFormat("yyyy-MM");
-							String path = getPath();
-							String filePath = path + "/" + cu.get("customerName").toString() + "-"
-									+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
 							BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
 
 							entity.setTaskName(cu.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
 							entity.setBillNo("");
 							entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
 							entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
-							//entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
 							entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
 							entity.setProgress(0d);
-							entity.setFilePath(filePath);
 							entity.setCreator(username);
 							entity.setCreateTime(JAppContext.currentTimestamp());
 							entity.setDelFlag("0");
@@ -283,25 +284,42 @@ public class NewBuinessDataExportController extends BaseController {
                             }else{
                                 entity.setIsDiscount("0");
                             }
-							entity = billPrepareExportTaskService.save(entity);
-
-							// 生成账单文件
-							condition.put("taskId", entity.getTaskId());
-							condition.put("path2", path);
-							condition.put("filepath", filePath);
 							
-							export(condition, entity.getTaskId(), path, filePath,cu);
+							//生成taskID
+				            String taskId = sequenceService.getBillNoOne(BillPrepareExportTaskEntity.class.getName(), "BF", "0000000000");
+				            entity.setTaskId(taskId);
+							entity = billPrepareExportTaskService.save(entity);	
+							
+							condition.put("taskId", entity.getTaskId());
+							condition.put("cu", cu);
+							condition.put("customerid", cu.get("customerId"));
+							//判断是否自动生成折扣
+							if ("1".equals(entity.getIsDiscount())) {
+                                //调用折扣的RPC服务，先生成折扣，后处理预账单
+							    
+							    
+                            }else {
+                                //直接发送MQ处理预账单
+                                sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
+                            }
+							
+							// 生成账单文件
+//							condition.put("taskId", entity.getTaskId());
+//							condition.put("path2", path);
+//							condition.put("filepath", filePath);
+//							
+//							export(condition, entity.getTaskId(), path, filePath,cu);
 						}
 					} catch (Exception e) {
 							logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
 						}
-					};
+					}
 				}.start();
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-			bmsErrorLogInfoEntity.setClassName("BuinessDataExportController");
+			bmsErrorLogInfoEntity.setClassName("NewBuinessDataExportController");
 			bmsErrorLogInfoEntity.setMethodName("asynExport");
 			//bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
 			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
@@ -2360,5 +2378,19 @@ public class NewBuinessDataExportController extends BaseController {
 		mapValue.put("0", "是");
 		mapValue.put("1", "否");
 		return mapValue;
+	}
+	
+	/*
+	 * 发送MQ
+	 */
+	public void sendMq(String destinationName, Map<String, Object> condition){
+	    //Map------>JSON
+	    final String msg = JsonUtils.toJson(condition);
+	    jmsQueueTemplate.send(destinationName, new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                return session.createTextMessage(msg);
+            }
+        });
 	}
 }
