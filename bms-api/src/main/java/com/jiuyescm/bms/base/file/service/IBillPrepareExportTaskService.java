@@ -24,5 +24,10 @@ public interface IBillPrepareExportTaskService {
     
     //通过主商家找到子商家id
     List<String> getChildCustomerId(String mkId);
+
+    /*
+     * 查询接口
+     */
+    BillPrepareExportTaskEntity queryBillTask(Map<String, Object> param);
     
 }

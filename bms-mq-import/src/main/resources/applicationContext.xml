@@ -11,8 +11,6 @@
 	<import resource="classpath*:applicationContext-config.xml" />
 	<import resource="classpath*:applicationContext-datasource.xml" />
 	<import resource="classpath*:spring-bdf2-datasource.xml" />
-	<import resource="classpath*:spring-redis.xml" />
-	<import resource="classpath*:spring-lock.xml" />
 	<import resource="classpath*:spring-fastdfs.xml"/>
     <import resource="classpath*:applicationContext-consumer.xml" />    
     <import resource="classpath*:applicationContext-activeMQ.xml" />
