@@ -488,7 +488,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setTotalWeight(getBizTotalWeight(entity));
 			fee.setChargedWeight(0d);
 			fee.setIsCalculated(CalculateState.No_Exe.getCode());
-			fee.setCalcuMsg("不计费的宅配商");
+			fee.setCalcuMsg("该运单配送类型是【"+entity.getDeliverName()+"】,金额置0");
 			return true;
         }
 	
