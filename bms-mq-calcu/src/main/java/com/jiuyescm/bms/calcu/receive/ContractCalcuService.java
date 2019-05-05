@@ -127,11 +127,13 @@ public class ContractCalcuService {
             }
 
             if (rtnQuoteInfoVo.getQuoteMaps().size() > 1) {
-                logger.info("taskId={} 费用编号={} 合同在线匹配多条报价，不进行计算，系统错误 ", vo.getTaskId(), feesNo);
-                errorMap.put("success", "fail");
-                errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
-                errorMap.put("msg", "合同在线匹配多条报价");
-                return;
+                if(!"wh_material_use".equals(vo.getSubjectCode())){
+                    logger.info("taskId={} 费用编号={} 合同在线匹配多条报价，不进行计算，系统错误 ", vo.getTaskId(), feesNo);
+                    errorMap.put("success", "fail");
+                    errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+                    errorMap.put("msg", "合同在线匹配多条报价");
+                    return;
+                }
             }
 
             // 调用规则计算费用
