@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -160,7 +161,6 @@ public class BillCheckReportController {
 			param = new HashMap<String, Object>();
 		}
 		PageInfo<BillCheckReceiptVo> pageInfo = billCheckReceiptService.queryReport(param, page.getPageNo(), page.getPageSize());
-		//PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.queryReceiptDetail(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
@@ -451,7 +451,7 @@ public class BillCheckReportController {
     
     
     /**
-     * 应收情况汇总表导出
+     * 导出
      */
     private void hand(POISXSSUtil poiUtil, SXSSFWorkbook workbook, 
             String path, Map<String, Object> param,List<BillCheckReceiptSumVo> sumList)throws Exception{
@@ -537,5 +537,192 @@ public class BillCheckReportController {
         DecimalFormat df = new DecimalFormat();  
         df.applyPattern(style);// 将格式应用于格式化器  
         return df.format(value.doubleValue());  
+    }
+    
+
+    
+    
+    /**
+  * 收款信息查询导出
+  * @param param
+  * @return
+  * @throws Exception
+  */
+ @FileProvider
+ public DownloadFile exportReceipt(Map<String,Object> param) throws Exception{
+
+     if (param == null){
+         param = new HashMap<String, Object>();
+     }
+     PageInfo<BillCheckReceiptVo> pageInfo = billCheckReceiptService.queryReport(param, 1,Integer.MAX_VALUE);
+     
+     long beginTime = System.currentTimeMillis();
+     logger.info("====收款信息查询报表导出：写入Excel begin.");
+     
+     try {
+         //如果存放上传文件的目录不存在就新建
+         String path = getPathReceipt();
+         File storeFolder = new File(path);
+         if(!storeFolder.isDirectory()){
+             storeFolder.mkdirs();
+         }
+         
+         // 如果文件存在直接删除，重新生成
+         String fileName = "收款信息查询报表" + FileConstant.SUFFIX_XLSX;
+         String filePath = path + FileConstant.SEPARATOR + fileName;
+         File file = new File(filePath);
+         if (file.exists()) {
+             file.delete();
+         }
+         
+         POISXSSUtil poiUtil = new POISXSSUtil();
+         SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
+                                 
+         //导出方法
+         handReceipt(poiUtil, workbook, filePath, param,pageInfo);
+         
+         //最后写到文件
+         poiUtil.write2FilePath(workbook, filePath);
+                     
+         logger.info("====收款信息查询报表：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
+
+         InputStream is = new FileInputStream(filePath);
+         return new DownloadFile(fileName, is);
+     } catch (Exception e) {
+         //bmsErrorLogInfoService.
+         logger.error("收款信息查询报表导出失败", e);
+     }
+     return null;
+ }
+    
+    /**
+     * 收款信息查询报表导出
+     */
+    private void handReceipt(POISXSSUtil poiUtil, SXSSFWorkbook workbook, 
+            String path, Map<String, Object> param,PageInfo<BillCheckReceiptVo> pageInfo)throws Exception{
+        List<BillCheckReceiptVo> list = pageInfo.getList();
+        
+        logger.info("收款信息查询报表导出...");
+        Sheet sheet = poiUtil.getXSSFSheet(workbook,"收款信息查询报表");
+        sheet.setColumnWidth(0, 3000);
+        sheet.setColumnWidth(1, 8000);
+        sheet.setColumnWidth(2, 8000);
+        sheet.setColumnWidth(3, 3000);
+        sheet.setColumnWidth(4, 3000);
+        sheet.setColumnWidth(5, 3000);
+        sheet.setColumnWidth(6, 8000);
+        sheet.setColumnWidth(7, 3000);
+        sheet.setColumnWidth(8, 3000);
+        sheet.setColumnWidth(9, 8000);
+        sheet.setColumnWidth(10, 6000);
+        
+        Font font = workbook.createFont();
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(CellStyle.ALIGN_CENTER);
+        style.setWrapText(true);
+        style.setFont(font);
+
+        //第一行（表头）
+        Row row0 = sheet.createRow(0);  
+        Cell cell0 = row0.createCell(0);
+        cell0.setCellValue("业务月份");
+        cell0.setCellStyle(style);
+        Cell cell1 = row0.createCell(1);
+        cell1.setCellValue("商家合同名称");
+        cell1.setCellStyle(style);
+        Cell cell2 = row0.createCell(2);
+        cell2.setCellValue("账单名称");
+        cell2.setCellStyle(style);
+        Cell cell3 = row0.createCell(3);
+        cell3.setCellValue("责任部门");
+        cell3.setCellStyle(style);
+        Cell cell4 = row0.createCell(4);
+        cell4.setCellValue("区域");
+        cell4.setCellStyle(style);
+        Cell cell5 = row0.createCell(5);
+        cell5.setCellValue("销售员");
+        cell5.setCellStyle(style);
+        Cell cell6 = row0.createCell(6);
+        cell6.setCellValue("收款金额");
+        cell6.setCellStyle(style);
+        Cell cell7 = row0.createCell(7);
+        cell7.setCellValue("收款日期");
+        cell7.setCellStyle(style);
+        Cell cell8 = row0.createCell(8);
+        cell8.setCellValue("创建人");
+        cell8.setCellStyle(style);
+        Cell cell9 = row0.createCell(9);
+        cell9.setCellValue("创建日期");
+        cell9.setCellStyle(style);
+        Cell cell10 = row0.createCell(10);
+        cell10.setCellValue("备注");
+        cell10.setCellStyle(style);
+        
+        CellStyle style2 = workbook.createCellStyle();
+        DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
+        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));//数据格式只显示整数
+
+        int RowIndex = 1;
+        if(CollectionUtils.isNotEmpty(list)){
+            for(int i=0;i<list.size();i++){ 
+                BillCheckReceiptVo vo = list.get(i);
+                Row row = sheet.createRow(RowIndex);
+                RowIndex++;
+                //业务月份
+                Cell cel0 = row.createCell(0);
+                cel0.setCellValue(vo.getCreateMonth()+"");
+                cel0.setCellStyle(style2);
+                //商家合同名称
+                Cell cel1 = row.createCell(1);
+                cel1.setCellValue(vo.getInvoiceName());
+                cel1.setCellStyle(style2);
+                //账单名称
+                Cell cel2 = row.createCell(2);
+                cel2.setCellValue(vo.getBillName());
+                cel2.setCellStyle(style2);
+                //责任部门
+                Cell cel3 = row.createCell(3);
+                cel3.setCellValue(vo.getDeptName());
+                cel3.setCellStyle(style2);
+                //区域
+                Cell cel4 = row.createCell(4);
+                cel4.setCellValue(vo.getArea());
+                cel4.setCellStyle(style2);
+                //销售员
+                Cell cel5 = row.createCell(5);
+                cel5.setCellValue(vo.getSellerName());
+                cel5.setCellStyle(style2);
+                //收款金额
+                Cell cel6 = row.createCell(6);
+                cel6.setCellValue(vo.getReceiptAmount()==null?0d:vo.getReceiptAmount().doubleValue());
+                cel6.setCellStyle(style2);
+                //收款日期
+                Cell cel7 = row.createCell(7);
+                cel7.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(vo.getReceiptDate()));
+                cel7.setCellStyle(style2);
+                //创建人
+                Cell cel8 = row.createCell(8);
+                cel8.setCellValue(vo.getCreator());
+                cel8.setCellStyle(style2);
+                //创建日期
+                Cell cel9 = row.createCell(9);
+                cel9.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(vo.getCreateTime()));
+                cel9.setCellStyle(style2);
+                //备注
+                Cell cel10 = row.createCell(10);
+                cel10.setCellValue(vo.getRemark());
+                cel10.setCellStyle(style2);
+            }
+        }
+    }
+    
+    private String getPathReceipt(){
+        SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode("GLOABL_PARAM", "EXPORT_BILL_CHECK_RECEIPT_REPORT");
+        if(systemCodeEntity == null){
+            throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_BILL_CHECK_RECEIPT_REPORT");
+        }
+        return systemCodeEntity.getExtattr1();
     }
 }
