@@ -335,6 +335,9 @@ public class BmsDiscountAsynTaskController {
 
 	private void saveToTask(BmsDiscountAsynTaskEntity entity, int month, List<BmsDiscountAsynTaskEntity> newList,
 			List<PriceContractDiscountItemEntity> bizList, String taskId) throws ParseException {
+	    
+	    Map<String,String> customerMap=new HashMap<>();
+	    
 		for (PriceContractDiscountItemEntity bizEntity : bizList) {
 			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 			if (month < 10) {
@@ -353,7 +356,13 @@ public class BmsDiscountAsynTaskController {
 				newEntity.setEndDate(endTime);
 			}
 			// 生成任务，写入任务表
-			taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+			customerMap.clear();
+			if(customerMap.containsKey(bizEntity.getCustomerId())){
+			    taskId=customerMap.get(bizEntity.getCustomerId());
+			}else{
+		         taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		         customerMap.put(bizEntity.getCustomerId(), taskId);
+			}	
 			newEntity.setTaskId(taskId);
 			newEntity.setCarrierId(bizEntity.getCarrierId());
 			newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
@@ -409,6 +418,7 @@ public class BmsDiscountAsynTaskController {
 		String taskId = "";
 		List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
 		for(ContractDiscountVo vo:disCountVo){
+            taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 			if(vo.getSubjectVoList().size()>0){
 				for(SubjectInfoVo s:vo.getSubjectVoList()){
 					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
@@ -428,7 +438,6 @@ public class BmsDiscountAsynTaskController {
 						newEntity.setEndDate(endTime);
 					}
 					// 生成任务，写入任务表
-					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 					newEntity.setTaskId(taskId);
 					//newEntity.setCarrierId(bizEntity.getCarrierId());
 					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
@@ -464,7 +473,6 @@ public class BmsDiscountAsynTaskController {
 						newEntity.setEndDate(endTime);
 					}
 					// 生成任务，写入任务表
-					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 					newEntity.setTaskId(taskId);
 					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
 					newEntity.setTaskRate(0);
