@@ -44,7 +44,7 @@
         <Property name="label">区域</Property>
       </PropertyDef>
       <PropertyDef name="deptName">
-        <Property/>
+        <Property></Property>
         <Property name="label">责任部门</Property>
       </PropertyDef>
     </DataType>
@@ -112,10 +112,10 @@
         <Property name="label">区域</Property>
       </PropertyDef>
       <PropertyDef name="receiptType">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="deptName">
-        <Property/>
+        <Property></Property>
         <Property name="label">责任部门</Property>
       </PropertyDef>
     </DataType>
@@ -150,9 +150,10 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var condition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
-        <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="formCondition">
@@ -264,13 +265,6 @@ arg.dom.innerHTML=&quot;合计: &lt;span style='color:red;'>&quot;+amount+&quot;
         </DataColumn>
       </DataGrid>
     </Container>
-    <Export2ReportAction id="export2ReportAction">
-      <Property name="caption">导出Excel数据</Property>
-      <Property name="dataScope">serverAll</Property>
-      <Property name="template">dataList</Property>
-      <Property name="dataFontSize">10</Property>
-      <Property name="maxSize">100000</Property>
-    </Export2ReportAction>
     <Trigger id="triggerDeptUser">
       <ClientEvent name="onExecute">/*&#xD;
 var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
@@ -312,5 +306,8 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DownloadAction id="bizDownAction">
+      <Property name="fileProvider">billCheckReportController#exportReceipt</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>
