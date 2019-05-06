@@ -196,9 +196,9 @@ public class NewBuinessDataExportController extends BaseController {
 		}
 		//拼接年月，后面用来调用折扣RPC服务的参数
 		if (Integer.parseInt(month) < 10) {
-		    param.put("creMonth", year + "0" + month);
+		    param.put("creMonth", year + "-0" + month);
         }else {
-            param.put("creMonth", year + month);
+            param.put("creMonth", year + "-" + month);
         }
 		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
 			String startDateStr = year + "-" + month + "-01 00:00:00";
