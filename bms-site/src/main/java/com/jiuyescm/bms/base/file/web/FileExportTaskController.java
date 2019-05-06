@@ -105,6 +105,16 @@ public class FileExportTaskController {
         if (StringUtils.isBlank(taskName)) {
             throw new Exception(MessageConstant.FILE_EXPORT_TASKNAME_NULL_MSG);
         }
+        //走服务器下载
+        if (filePath.contains("/opt/export")) {
+            InputStream is = new FileInputStream(filePath);
+            if(filePath.contains(FileConstant.SUFFIX_XLSX)){
+                return new DownloadFile(taskName + FileConstant.SUFFIX_XLSX, is);
+            }else{
+                return new DownloadFile(taskName + FileConstant.SUFFIX_XLS, is);
+            }
+        }
+        //走fastdfs下载
         byte[] bytes=storageClient.downloadFile(parameter.get("filePath"),new DownloadByteArray());
         try{
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new ByteArrayInputStream(bytes));
