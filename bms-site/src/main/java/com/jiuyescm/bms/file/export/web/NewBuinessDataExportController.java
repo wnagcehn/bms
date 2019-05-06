@@ -290,6 +290,7 @@ public class NewBuinessDataExportController extends BaseController {
 				            entity.setTaskId(taskId);
 							entity = billPrepareExportTaskService.save(entity);	
 							
+							//添加调用RPC服务的参数
 							condition.put("taskId", entity.getTaskId());
 							condition.put("cu", cu);
 							condition.put("customerid", cu.get("customerId"));
@@ -302,13 +303,6 @@ public class NewBuinessDataExportController extends BaseController {
                                 //直接发送MQ处理预账单
                                 sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
                             }
-							
-							// 生成账单文件
-//							condition.put("taskId", entity.getTaskId());
-//							condition.put("path2", path);
-//							condition.put("filepath", filePath);
-//							
-//							export(condition, entity.getTaskId(), path, filePath,cu);
 						}
 					} catch (Exception e) {
 							logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
