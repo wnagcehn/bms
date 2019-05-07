@@ -1106,7 +1106,7 @@ and invoice_name in
     </select>
     
         <select id="queryMkId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-SELECT source_id mkId FROM pub_customer_base
+SELECT source_id sourceId FROM pub_customer_base
  WHERE mk_invoice_name =#{invoiceName}
     </select>
     

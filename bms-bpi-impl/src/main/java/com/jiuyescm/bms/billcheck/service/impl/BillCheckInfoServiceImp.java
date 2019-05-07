@@ -879,26 +879,26 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         Map<String, Object> mkConditionMap = new HashMap<>();
         String invoiceName = entity.getInvoiceName();
         mkConditionMap.put("invoiceName", invoiceName);
-        List<BillCheckInfoEntity> mkEntities = billCheckInfoRepository.queryMkId(mkConditionMap);
+        List<BillCheckInfoEntity> mkEntities = billCheckInfoRepository.querySourceId(mkConditionMap);
         if (CollectionUtils.isEmpty(mkEntities)) {
             logger.info("根据invoiceName在pub_customer_base未查询到商家：" + invoiceName);
             return null;
         }
         BillCheckInfoEntity mkEntity = mkEntities.get(0);
-        String mkIdString = mkEntity.getMkId();
-        if(StringUtils.isBlank(mkIdString)){
+        String sourceIdString = mkEntity.getSourceId();
+        if(StringUtils.isBlank(sourceIdString)){
             logger.info("source_id为空：" + invoiceName);
             return null;
         }
-        Long mkId = null;
+        Long sId = null;
         try {
-            mkId = Long.valueOf(mkIdString);
+            sId = Long.valueOf(sourceIdString);
         } catch (NumberFormatException e) {
             logger.info("source_id转换long失败：" + invoiceName);
             e.printStackTrace();
             return null;
         }
-        FieldDataOpenVO vo1 = getFieldDataOpenVO("mk_id",mkId, "customer", true);
+        FieldDataOpenVO vo1 = getFieldDataOpenVO("mk_id",sId, "customer", true);
         // 获取账单状态
         Map<String, String> enumMap = CheckBillStatusEnum.getMap();
         String billStatusString = enumMap.get(entity.getBillStatus());
