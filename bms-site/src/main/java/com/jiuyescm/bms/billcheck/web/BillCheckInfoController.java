@@ -1056,9 +1056,12 @@ public class BillCheckInfoController{
 		}
 		
 		billCheckInfoService.update(checkVo);
+		
+        // 保存CRM
+        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
+        checkEntity.setId(checkVo.getId());
+        billCheckInfoService.saveCrm(checkEntity);
 	}
-	
-	
 	
 	
 	/**

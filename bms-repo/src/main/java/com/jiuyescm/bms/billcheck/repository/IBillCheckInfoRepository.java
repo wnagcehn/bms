@@ -204,7 +204,7 @@ public interface IBillCheckInfoRepository {
 	List<BillCheckInfoEntity> queryIncomeReportCalCus(
 			Map<String, Object> condition);
 
-    List<BillCheckInfoEntity> queryMkId(Map<String, Object> condition);
+    List<BillCheckInfoEntity> querySourceId(Map<String, Object> condition);
 
     List<BillCheckInfoEntity> queryId(Map<String, Object> condition);
 

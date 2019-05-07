@@ -298,8 +298,8 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	}
 	
    @Override
-    public List<BillCheckInfoEntity> queryMkId(Map<String,Object> condition) {
-        List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryMkId",condition);
+    public List<BillCheckInfoEntity> querySourceId(Map<String,Object> condition) {
+        List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySourceId",condition);
         return list;
     }
    

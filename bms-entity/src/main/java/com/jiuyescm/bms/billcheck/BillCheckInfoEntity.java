@@ -143,6 +143,15 @@ public class BillCheckInfoEntity implements IEntity {
 	
 	//开票商家编码
     private String mkId;
+    private String sourceId;
+    
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
 	
 	public String getMkId() {
         return mkId;
