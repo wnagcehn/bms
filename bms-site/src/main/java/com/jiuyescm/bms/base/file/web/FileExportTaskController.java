@@ -116,9 +116,10 @@ public class FileExportTaskController {
         }
         //走fastdfs下载
         byte[] bytes=storageClient.downloadFile(parameter.get("filePath"),new DownloadByteArray());
+        ByteArrayOutputStream os = null;
         try{
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new ByteArrayInputStream(bytes));
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            os = new ByteArrayOutputStream();
             xssfWorkbook.write(os);
             byte[] b1 = os.toByteArray();
             if(filePath.contains(FileConstant.SUFFIX_XLSX)){
@@ -130,6 +131,10 @@ public class FileExportTaskController {
         catch(Exception ex){
             logger.error("文件格式不正确", ex);
             return null;
+        }finally {
+            if (null != os) {
+                os.close();
+            }
         }
     }
 	

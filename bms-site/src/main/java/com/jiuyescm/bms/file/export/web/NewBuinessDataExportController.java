@@ -47,6 +47,7 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity;
@@ -79,6 +80,7 @@ import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.exception.BizException;
@@ -131,6 +133,8 @@ public class NewBuinessDataExportController extends BaseController {
 	private IBizDispatchBillService bizDispatchBillService;
 	@Resource 
     private SequenceService sequenceService;
+    @Autowired
+    private IBmsDiscountAsynTaskService bmsDiscountAsynTaskService;
 
 	private static final int PAGESIZE = 10000;
 	FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
@@ -196,10 +200,11 @@ public class NewBuinessDataExportController extends BaseController {
 		}
 		//拼接年月，后面用来调用折扣RPC服务的参数
 		if (Integer.parseInt(month) < 10) {
-		    param.put("creMonth", year + "-0" + month);
+		    param.put("createMonth", year + "-0" + month);
         }else {
-            param.put("creMonth", year + "-" + month);
+            param.put("createMonth", year + "-" + month);
         }
+		//拼接startDate和endDate
 		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
 			String startDateStr = year + "-" + month + "-01 00:00:00";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -214,7 +219,7 @@ public class NewBuinessDataExportController extends BaseController {
 			param.put("startDate", startDate);
 			param.put("endDate", endDate);
 		}
-		String customerId = param.get("customerId").toString();
+		final String customerId = param.get("customerId").toString();
 		
 		List<Map<String,String>> cuList=new ArrayList<Map<String,String>>();
 		Map<String,String> cuMap=new HashMap<>();
@@ -266,41 +271,60 @@ public class NewBuinessDataExportController extends BaseController {
 							entity.setDelFlag("0");
 							entity.setCustomerid(cu.get("customerId").toString());
 							entity.setMkId(mkId);
-							//区分是否按照子商家生成
+							// 区分是否按照子商家生成
 							if ((Boolean)condition.get("isChildCustomer")) {
 								entity.setIsChildCustomer("0");
 							}else{
 								entity.setIsChildCustomer("1");
 							}
-							//耗材分仓
+							// 耗材分仓
 							if ((Boolean)condition.get("isSepWarehouse")) {
 							    entity.setMaterialSplit(1l);;
 							}else{
 							    entity.setMaterialSplit(0l);
 							}
-							//是否自动折扣
+							// 是否自动折扣
 							if ((Boolean)condition.get("isDiscount")) {
                                 entity.setIsDiscount("1");
                             }else{
                                 entity.setIsDiscount("0");
                             }
 							
-							//生成taskID
+							// 生成taskID
 				            String taskId = sequenceService.getBillNoOne(BillPrepareExportTaskEntity.class.getName(), "BF", "0000000000");
 				            entity.setTaskId(taskId);
 							entity = billPrepareExportTaskService.save(entity);	
 							
-							//添加调用RPC服务的参数
+							// 添加调用RPC服务的参数
 							condition.put("taskId", entity.getTaskId());
 							condition.put("cu", cu);
 							condition.put("customerid", cu.get("customerId"));
-							//判断是否自动生成折扣
+							// 判断是否自动生成折扣
 							if ("1".equals(entity.getIsDiscount())) {
-                                //调用折扣的RPC服务，先生成折扣，后处理预账单
-							    
-							    
+							    // 1.如果是按照主商家生成折扣
+							    if (!(Boolean)condition.get("isChildCustomer")) {
+							        //通过主商家--->子商家（折扣按照子商家处理）
+							        List<Map<String,String>> childCustomerList = billPrepareExportTaskService.getChildCustomer(customerId);
+							        String result = "";
+                                    condition.put("childCustomerList", childCustomerList);
+                                    //调用折扣的RPC服务，先生成折扣，后处理预账单（如果子商家都无折扣，更新备注，发送MQ）
+                                    result = bmsDiscountAsynTaskService.sendTask(condition);
+							        if (StringUtils.isNotBlank(result)) {
+							            updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0, result, null);
+							            sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
+                                    } 
+                                }
+							    // 2.如果按照子商家生成折扣
+							    else {
+	                                // 调用折扣的RPC服务，先生成折扣，后处理预账单（如果子商家无折扣，更新备注，发送MQ）
+	                                String result = bmsDiscountAsynTaskService.sendTask(condition);
+	                                if (StringUtils.isNotBlank(result)) {
+	                                    updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0, result, null);
+	                                    sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
+	                                }
+                                }
                             }else {
-                                //直接发送MQ处理预账单
+                                // 直接发送MQ处理预账单
                                 sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
                             }
 						}
@@ -2373,6 +2397,33 @@ public class NewBuinessDataExportController extends BaseController {
 		mapValue.put("1", "否");
 		return mapValue;
 	}
+	
+	/**
+     * 更新导出任务表
+     * 
+     * @param taskId
+     * @param process
+     * @param taskState
+     * @param remark
+     * @param filePath
+     */
+    private void updateExportTask(String taskId, String taskState, double process, String remark, String filePath) {
+        BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
+        if (StringUtils.isNotEmpty(taskState)) {
+            entity.setTaskState(taskState);
+        }
+        if (StringUtils.isNotEmpty(remark)) {
+            entity.setRemark(remark);
+        }
+        if (StringUtils.isNotEmpty(filePath)) {
+            entity.setFilePath(filePath);
+        }
+        if (!DoubleUtil.isBlank(process)) {
+            entity.setProgress(process);
+        }
+        entity.setTaskId(taskId);
+        billPrepareExportTaskService.update(entity);
+    }
 	
 	/*
 	 * 发送MQ

@@ -13,9 +13,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -41,6 +38,9 @@ import com.jiuyescm.contract.quote.vo.ContractDiscountQueryVo;
 import com.jiuyescm.contract.quote.vo.ContractDiscountVo;
 import com.jiuyescm.contract.quote.vo.SubjectInfoVo;
 import com.jiuyescm.utils.JsonUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * ..ServiceImpl
@@ -173,10 +173,10 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
 	}
 
     @Override
-    public int sendTask(Map<String, Object> map) {
+    public String sendTask(Map<String, Object> map) {
         // TODO Auto-generated method stub
         if(map==null || map.get("customerid")==null || map.get("createMonth")==null || map.get("taskId")==null){
-            return 0;
+            return "商家id、时间、任务id必传";
         }
         
         List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
@@ -264,7 +264,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
             } catch (Exception e) {
                 logger.error("查询合同在线折扣失败", e);
                 // TODO: handle exception
-                return 0;
+                return "查询合同在线折扣失败";
             }
         }
         else{
@@ -280,7 +280,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                 List<PriceContractDiscountItemEntity> cusList = priceContractDiscountRepository.queryByCustomerId(entity);
                 if(cusList.isEmpty()){
                     logger.info("BMS未查询到商家折扣报价或商家合同过期");
-                    return 0;
+                    return "BMS未查询到商家折扣报价或商家合同过期";
                 }
                 
                 
@@ -312,7 +312,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
             } catch (Exception e) {
                 // TODO: handle exception
                 logger.error("BMS未查询到商家折扣异常",e);
-                return 0;
+                return "BMS未查询到商家折扣异常";
             }
             
         }
@@ -321,9 +321,9 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
             for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : bdatList) {
                 try {           
                     logger.info("开始发送MQ");
-                    Map<String,Object> condition=new HashMap<>();
-                    condition.put("taskId", bmsDiscountAsynTaskEntity.getTaskId());
-                    final String msg = JsonUtils.toJson(condition);
+//                    Map<String,Object> condition=new HashMap<>();
+//                    condition.put("taskId", bmsDiscountAsynTaskEntity.getTaskId());
+                    final String msg = JsonUtils.toJson(map);
                     jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
                         @Override
                         public Message createMessage(Session session) throws JMSException {
@@ -337,7 +337,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
             }      
         }
 
-        return 1;
+        return "";
     }
 	
     
