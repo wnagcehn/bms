@@ -509,7 +509,7 @@ if(taskState==2){&#xD;
 		    content:&quot;下载&quot;,&#xD;
 			style:&quot;margin-left:10px;&quot;,&#xD;
 		    onclick: function() {&#xD;
-			  var action=view.get(&quot;#fileExportDownAction&quot;);&#xD;
+			  var action=view.get(&quot;#downloadAction&quot;);&#xD;
 			  action.set(&quot;parameter&quot;,arg.data).execute();&#xD;
 	    	}&#xD;
 		}&#xD;
@@ -691,11 +691,6 @@ if (data != null) {&#xD;
         <Property name="dataPath">[#current]</Property>
       </UpdateItem>
     </UpdateAction>
-    <DownloadAction id="fileExportDownAction">
-      <Property name="fileProvider">fileExportTaskController#exportDetail</Property>
-      <Property name="caption">导出</Property>
-      <Property name="successMessage">操作成功!</Property>
-    </DownloadAction>
     <Trigger id="triggerCus">
       <ClientEvent name="onExecute">view.get(&quot;#panelCus&quot;).show();</ClientEvent>
     </Trigger>
@@ -773,5 +768,8 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">fileExportTaskController#exportForFastdfs</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

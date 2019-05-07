@@ -4,6 +4,8 @@
  */
 package com.jiuyescm.bms.base.file.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -13,6 +15,8 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -26,6 +30,8 @@ import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.framework.fastdfs.client.StorageClient;
+import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
 
 /**
  * 文件导出任务列表
@@ -38,6 +44,9 @@ public class FileExportTaskController {
 
 	@Resource
 	private IFileExportTaskService fileExportTaskService;
+	@Autowired
+    private StorageClient storageClient;
+
 
 	/**
 	 * 分页查询
@@ -79,6 +88,50 @@ public class FileExportTaskController {
 	
 	}
 	
+	/**
+     * 从fastdfs上导出文件
+     * @throws Exception 
+     */
+    @FileProvider
+    public DownloadFile exportForFastdfs(Map<String, String> parameter) throws Exception {
+        if (parameter == null || parameter.isEmpty()) {
+            throw new Exception(MessageConstant.BILL_INFO_ISNULL_MSG);
+        }
+        String filePath=parameter.get("filePath").toString();
+        if (StringUtils.isBlank(filePath)) {
+            throw new Exception(MessageConstant.FILE_EXPORT_FILEPATH_NULL_MSG);
+        }
+        final String taskName=parameter.get("taskName").toString();
+        if (StringUtils.isBlank(taskName)) {
+            throw new Exception(MessageConstant.FILE_EXPORT_TASKNAME_NULL_MSG);
+        }
+        //走服务器下载
+        if (filePath.contains("/opt/export")) {
+            InputStream is = new FileInputStream(filePath);
+            if(filePath.contains(FileConstant.SUFFIX_XLSX)){
+                return new DownloadFile(taskName + FileConstant.SUFFIX_XLSX, is);
+            }else{
+                return new DownloadFile(taskName + FileConstant.SUFFIX_XLS, is);
+            }
+        }
+        //走fastdfs下载
+        byte[] bytes=storageClient.downloadFile(parameter.get("filePath"),new DownloadByteArray());
+        try{
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new ByteArrayInputStream(bytes));
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            xssfWorkbook.write(os);
+            byte[] b1 = os.toByteArray();
+            if(filePath.contains(FileConstant.SUFFIX_XLSX)){
+                return new DownloadFile(taskName + FileConstant.SUFFIX_XLSX, new ByteArrayInputStream(b1));
+            }else {
+                return new DownloadFile(taskName + FileConstant.SUFFIX_XLS, new ByteArrayInputStream(b1));
+            }
+        }
+        catch(Exception ex){
+            logger.error("文件格式不正确", ex);
+            return null;
+        }
+    }
 	
 	/**
 	 * 删除导出任务

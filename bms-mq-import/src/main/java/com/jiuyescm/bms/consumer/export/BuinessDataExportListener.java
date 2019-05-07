@@ -12,8 +12,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -137,6 +139,8 @@ public class BuinessDataExportListener implements MessageListener{
     @Override
     public void onMessage(Message message) {
         logger.info("--------------------MQ处理操作日志开始---------------------------");
+        //初始化进度
+        process = 0d;
         StopWatch sw = new StopWatch();
         sw.start();
         logger.info("预账单导出异步处理");
@@ -174,6 +178,28 @@ public class BuinessDataExportListener implements MessageListener{
             logger.info("未传入json");
             return;
         }
+        
+        //日期重新转换，发MQ日期格式错误
+        String year = "";
+        String month = "";
+        if (condition.containsKey("year") && condition.containsKey("month")) {
+            year = condition.get("year").toString();
+            month = condition.get("month").toString();
+        }
+        if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
+            String startDateStr = year + "-" + month + "-01 00:00:00";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startDate = sdf.parse(startDateStr);
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, Integer.parseInt(year));
+            cal.set(Calendar.MONTH, Integer.parseInt(month)-1);
+            int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            cal.set(Calendar.DAY_OF_MONTH, lastDay);
+            Date endDate = cal.getTime();
+            condition.put("startDate", startDate);
+            condition.put("endDate", endDate);
+        }
+
         
         //获取任务ID
         String taskId = condition.get("taskId").toString();
@@ -286,9 +312,11 @@ public class BuinessDataExportListener implements MessageListener{
         
         //上传到Fastdfs
         String filePath = "";
+        InputStream inputStream = null;
+        ByteArrayOutputStream out = null;
+
         try {
-            InputStream inputStream = null;
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            out = new ByteArrayOutputStream();
             xssfWorkbook.write(out);
             inputStream = new ByteArrayInputStream(out.toByteArray());
             StorePath storePath = storageClient.uploadFile(inputStream, inputStream.available(), "xlsx");
@@ -297,7 +325,15 @@ public class BuinessDataExportListener implements MessageListener{
             logger.error("上传到Fastdfs失败", e);
             updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"上传Fastdfs失败":entity.getRemark()+";上传Fastdfs失败", null);
             return;
+        } finally {
+            if (null != inputStream) {
+                inputStream.close();
+            }
+            if (null != out) {
+                out.close();
+            }
         }
+
         
         updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), process+=5, null, filePath);
         stw.stop();
