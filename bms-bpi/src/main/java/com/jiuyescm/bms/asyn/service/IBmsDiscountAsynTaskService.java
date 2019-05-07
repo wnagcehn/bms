@@ -44,6 +44,6 @@ public interface IBmsDiscountAsynTaskService {
 	 */
 	int saveBatch(List<BmsDiscountAsynTaskEntity> voList) throws Exception;
 	
-	int sendTask(Map<String,Object> map);
+	String sendTask(Map<String,Object> map);
 
 }

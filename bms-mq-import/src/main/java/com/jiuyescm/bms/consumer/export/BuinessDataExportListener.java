@@ -273,7 +273,7 @@ public class BuinessDataExportListener implements MessageListener{
             handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
         } catch (Exception e) {
             logger.error("仓储费导出失败!", e);
-            updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"仓储费失败":entity.getRemark()+";仓储费失败", null);
+            updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"仓储费失败":entity.getRemark()+"仓储费失败", null);
             return;
         }
         updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), process+=20, null, null);
@@ -334,8 +334,16 @@ public class BuinessDataExportListener implements MessageListener{
             }
         }
 
+        //折扣运行失败后,预账单一样需要产生,并且可以下载: 只是状态是失败, 进度条是70%.
+        //折扣运行成功，预账单成功，状态为成功，进度条是100%
+        process+=5;
+        if (process == 70) {
+            updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), process, null, filePath);
+        }
+        if (process == 100) {
+            updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), process, null, filePath);
+        }
         
-        updateExportTask(taskId, FileTaskStateEnum.SUCCESS.getCode(), process+=5, null, filePath);
         stw.stop();
         logger.info("====预账单导出：" + "[" + customerMap.get("customerName").toString() + "]" + "写入Excel end.==总耗时："
                 + stw.getTotalTimeMillis() + "毫秒");

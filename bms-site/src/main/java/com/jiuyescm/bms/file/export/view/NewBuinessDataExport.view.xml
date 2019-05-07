@@ -501,7 +501,8 @@ function isNullOrEmpty(e) {&#xD;
         <DataColumn>
           <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
 var taskState=arg.data.get(&quot;taskState&quot;);&#xD;
-if(taskState==2){&#xD;
+var progress=arg.data.get(&quot;progress&quot;);&#xD;
+if(taskState==2 || (taskState==3&amp;&amp;progress==70)){&#xD;
 	jQuery(arg.dom).xCreate([&#xD;
 		{&#xD;
 		    tagName: &quot;A&quot;,&#xD;
@@ -514,7 +515,8 @@ if(taskState==2){&#xD;
 	    	}&#xD;
 		}&#xD;
 	]);&#xD;
-}</ClientEvent>
+}&#xD;
+</ClientEvent>
           <Property name="align">center</Property>
           <Property name="caption">操作</Property>
           <Property name="name">operator</Property>

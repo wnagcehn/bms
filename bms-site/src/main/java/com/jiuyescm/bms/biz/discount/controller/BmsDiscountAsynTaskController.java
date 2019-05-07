@@ -254,8 +254,8 @@ public class BmsDiscountAsynTaskController {
 	            map.put("createMonth", entity.getYear()+"-"+entity.getMonth());    
 	            taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 	            map.put("taskId", taskId);
-	            int sendResult=bmsDiscountAsynTaskService.sendTask(map);
-	            if(sendResult>0){
+	            String sendResult=bmsDiscountAsynTaskService.sendTask(map);
+	            if(StringUtils.isBlank(sendResult)){
 	                result.put("success", "保存成功");
 	            }else{
 	                result.put("fail", "保存失败");
