@@ -144,11 +144,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			    entity.setProgress(0d);
 			    entity.setRemark("折扣失败");
 			}
-			try {
-				
-			} catch (Exception e2) {
-				logger.error("保存mq错误日志失败，错误日志：{}",e2);
-			}
 			return;
 		}
 		
@@ -183,7 +178,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			return;
 		}
 				
-		
+		boolean flag=false;
 		for(BmsDiscountAsynTaskEntity task:taskList){
 		    if("STORAGE".equals(task.getBizTypecode())){
 	            logger.info(taskId+"进入仓储折扣计算");
@@ -199,6 +194,15 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	            //配送折扣(特殊折扣的物流产品类型)
 	            discountServiceDispatch(task,entity);
 	        }
+		    
+		    if(entity!=null && entity.getProgress()==0){
+		        flag=true;
+		    }
+		}
+		
+		if(flag && entity!=null){
+		    entity.setRemark(StringUtils.isBlank(entity.getRemark())?"折扣失败":entity.getRemark()+",折扣失败");
+		    entity.setProgress(0d);
 		}
 	}
 	
@@ -227,10 +231,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(feeList.size()>0){
 				logger.info(taskId+"该商家存在计算失败的费用");
 				task.setRemark(taskId+"该商家存在计算失败的费用");
-				if(entity!=null){
-	                entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"该商家存在计算失败的费用":entity.getRemark()+";"+task.getSubjectName()+"该商家存在计算失败的费用");
-	                entity.setProgress(0d);
-				}
 				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);	
@@ -242,10 +242,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(discountAccountVo==null){
 				logger.info(taskId+"没有查询到该商家的统计记录");
 				task.setRemark(taskId+"没有查询到该商家的统计记录");
-			    if(entity!=null){
-	                 entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"没有查询到该商家的统计记录":entity.getRemark()+";"+task.getSubjectName()+"没有查询到该商家的统计记录");
-	                 entity.setProgress(0d);
-			    }
 				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);	
@@ -286,10 +282,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 						// TODO: handle exception
 						logger.info(taskId+"合同在线查询折扣报价失败"+e.getMessage());
 						task.setRemark(taskId+"合同在线查询折扣报价失败"+e.getMessage());				
-					    if(entity!=null){
-		                     entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"合同在线查询折扣报价失败":entity.getRemark()+";"+task.getSubjectName()+"合同在线查询折扣报价失败");
-		                     entity.setProgress(0d);
-					    }
 						task.setTaskRate(80);
 						task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 						bmsDiscountAsynTaskService.update(task);	
@@ -301,10 +293,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				if(configVo==null){
 					logger.info(taskId+"合同在线未查询到折扣报价");
 					task.setRemark(taskId+"合同在线未查询到折扣报价");
-					if(entity!=null){
-                           entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"合同在线未查询到折扣报价":entity.getRemark()+";"+task.getSubjectName()+"合同在线未查询到折扣报价");
-                           entity.setProgress(0d);
-					}
 					task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 					task.setTaskRate(80);
 					bmsDiscountAsynTaskService.update(task);
@@ -324,10 +312,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(updateResult<=0){
 				logger.info(taskId+"更新taskId到折扣费用表中失败");
 				task.setRemark(taskId+"更新taskId到折扣费用表中失败");
-				if(entity!=null){
-                    entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"更新taskId到折扣费用表中失败":entity.getRemark()+";"+task.getSubjectName()+"更新taskId到折扣费用表中失败");
-                    entity.setProgress(0d);
-				}
 				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);
@@ -372,10 +356,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			
 		} catch (Exception e1) {
 			logger.info(taskId+"折扣处理失败",e1);
-			 if(entity!=null){
-                 entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"折扣处理失败":entity.getRemark()+";"+task.getSubjectName()+"折扣处理失败");
-                 entity.setProgress(0d);
-             }
 			task.setTaskRate(80);
 			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 			task.setRemark("折扣处理失败");
@@ -485,10 +465,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(bizList.size()>0){
 				logger.info(taskId+"该商家存在未计算或待重算的业务数据");
 				task.setRemark(taskId+"该商家存在未计算或待重算的业务数据");
-				if(entity!=null){
-                    entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"该商家存在未计算或待重算的业务数据":entity.getRemark()+";"+task.getSubjectName()+"该商家存在未计算或待重算的业务数据");
-                    entity.setProgress(0d);
-                }
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);	
 				return;
@@ -517,10 +493,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(discountAccountVo==null){
 				logger.info(taskId+"没有查询到该商家的统计记录");
 				task.setRemark(taskId+"没有查询到该商家的统计记录");
-				if(entity!=null){
-                    entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"没有查询到该商家的统计记录":entity.getRemark()+";"+task.getSubjectName()+"没有查询到该商家的统计记录");
-                    entity.setProgress(0d);
-                }
 				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);	
@@ -553,10 +525,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				if(item==null){
 					logger.info(taskId+"该商家未签约折扣服务");
 					task.setRemark(taskId+"该商家未签约折扣服务");
-				    if(entity!=null){
-	                    entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"bms该商家未签约折扣服务":entity.getRemark()+";"+task.getSubjectName()+"bms该商家未签约折扣服务");
-	                    entity.setProgress(0d);
-	                }
 					task.setTaskRate(80);
 					task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 					bmsDiscountAsynTaskService.update(task);
@@ -573,10 +541,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				if(template==null){
 					logger.info(taskId+"未查询到折扣报价模板");
 					task.setRemark(taskId+"未查询到折扣报价模板");
-				    if(entity!=null){
-                        entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"bms未查询到折扣报价模板":entity.getRemark()+";"+task.getSubjectName()+"bms未查询到折扣报价模板");
-                        entity.setProgress(0d);
-                    }
 					task.setTaskRate(80);
 					task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 					bmsDiscountAsynTaskService.update(task);
@@ -587,10 +551,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				if(StringUtils.isBlank(template.getDiscountType())){
 					logger.info(taskId+"模板"+template.getTemplateCode()+"未查询到折扣方式");
 					task.setRemark(taskId+"模板"+template.getTemplateCode()+"未查询到折扣方式");
-				    if(entity!=null){
-                        entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"bms未查询到折扣方式":entity.getRemark()+";"+task.getSubjectName()+"bms未查询未查询到折扣方式");
-                        entity.setProgress(0d);
-                    }
 					task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 					task.setTaskRate(80);
 					bmsDiscountAsynTaskService.update(task);
@@ -631,10 +591,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
 				logger.info(taskId+"更新taskId到折扣费用表中失败");
 				task.setRemark(taskId+"更新taskId到折扣费用表中失败");
 				task.setTaskRate(80);
-				if(entity!=null){
-                     entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"更新taskId到折扣费用表中失败":entity.getRemark()+";"+task.getSubjectName()+"更新taskId到折扣费用表中失败");
-                     entity.setProgress(0d);
-                }
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);
 				return;
@@ -675,17 +631,13 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			task.setRemark(taskId+"折扣计算成功");
 			if(entity!=null){
                 entity.setProgress(30d);
-           }
+            }
 			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
 			updateProgress(task,100);
 		} catch (Exception e1) {
 			logger.info(taskId+"折扣处理失败",e1);
 			task.setTaskRate(80);
 			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
-			if(entity!=null){
-                entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"折扣处理失败":entity.getRemark()+";"+task.getSubjectName()+"折扣处理失败");
-                entity.setProgress(0d);
-           }
 			bmsDiscountAsynTaskService.update(task);
 		}
 		
@@ -986,6 +938,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
      * @param task 能唯一指定指定商家  指定物流商  指定科目的任务
      */
     private void discountServiceDispatch(BmsDiscountAsynTaskEntity task,BillPrepareExportTaskEntity entity){
+        logger.info(task.getTaskId()+"进入特殊物流产品类型折扣");
         String taskId=task.getTaskId();
         Map<String,Object> condition=new HashMap<String,Object>();
         task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
@@ -997,7 +950,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
             condition.put("customerId", task.getCustomerId());
             condition.put("carrierId", task.getCarrierId());
                     
-            logger.info(taskId+"查询费用和统计的参数"+JSONObject.fromObject(condition));  
+            logger.info(taskId+"特殊物流产品类型查询费用和统计的参数"+JSONObject.fromObject(condition));  
             //统计商家的月单量和金额  商家，物流商维度,特殊物流产品类型进行统计
             //物流产品类型,总单量,总金额(需要具体的折扣科目)
             //获取所有的折扣类型
@@ -1015,7 +968,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
      
             //统计商家的月单量和金额  商家，物流商 物流产品类型维度进行统计
             List<BmsDiscountAccountVo> discountAccountVoList=bmsDiscountService.queryAccountServiceList(condition);
-            logger.info(taskId+"统计商家的月单量和金额，商家，物流商,物流产品类型维度"+JSONArray.fromObject(discountAccountVoList));
+            logger.info(taskId+"特殊物流产品类型统计商家的月单量和金额，商家，物流商,物流产品类型维度"+JSONArray.fromObject(discountAccountVoList));
             if(discountAccountVoList.size()>0){
                 for(BmsDiscountAccountVo vo:discountAccountVoList){
                     discountMap.put(vo.getServiceTypeCode(), vo);
@@ -1039,10 +992,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 if(item==null){
                     logger.info(taskId+"bms该商家未签约折扣服务");
                     task.setRemark(taskId+"bms该商家未签约折扣服务");
-                    if(entity!=null){
-                        entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"bms特殊物流产品类型没有查询到该商家的统计记录":entity.getRemark()+";"+task.getSubjectName()+"bms特殊物流产品类型没有查询到该商家的统计记录");
-                        entity.setProgress(0d);
-                    }
                     task.setTaskRate(80);
                     task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
                     bmsDiscountAsynTaskService.update(task);
@@ -1059,10 +1008,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 if(template==null){
                     logger.info(taskId+"bms未查询到折扣报价模板");
                     task.setRemark(taskId+"bms未查询到折扣报价模板");
-                    if(entity!=null){
-                        entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"bms特殊物流产品类型未查询到折扣报价模板":entity.getRemark()+";"+task.getSubjectName()+"bms特殊物流产品类型未查询到折扣报价模板");
-                        entity.setProgress(0d);
-                    }
                     task.setTaskRate(80);
                     task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
                     bmsDiscountAsynTaskService.update(task);
@@ -1073,10 +1018,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 if(StringUtils.isBlank(template.getDiscountType())){
                     logger.info(taskId+"模板"+template.getTemplateCode()+"未查询到折扣方式");
                     task.setRemark(taskId+"模板"+template.getTemplateCode()+"未查询到折扣方式");
-                    if(entity!=null){
-                        entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"bms特殊物流产品类型未查询到折扣方式":entity.getRemark()+";"+task.getSubjectName()+"bms特殊物流产品类型未查询到折扣方式");
-                        entity.setProgress(0d);
-                    }
                     task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
                     task.setTaskRate(80);
                     bmsDiscountAsynTaskService.update(task);
@@ -1112,19 +1053,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
             condition.put("carrierId", task.getCarrierId());
             condition.put("serviceList", serviceList);
             logger.info(taskId+"更新特殊物流产品类型折扣费用表的参数"+JSONObject.fromObject(condition));
-            try{
-                bmsDiscountService.updateFeeDiscountTask(condition);
-            }catch(Exception ex){
-                logger.info(taskId+"更新taskId到特殊物流产品类型折扣费用表中异常");
-                task.setRemark(taskId+"更新taskId到特殊物流产品类型折扣费用表中异常");
-                if(entity!=null){
-                    entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"更新taskId到特殊物流产品类型折扣费用表中异常":entity.getRemark()+";"+task.getSubjectName()+"更新taskId到特殊物流产品类型折扣费用表中异常");
-                    entity.setProgress(0d);
-                }
-                task.setTaskRate(80);
-                task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
-                bmsDiscountAsynTaskService.update(task);
-                return;
+            int result=  bmsDiscountService.updateFeeDiscountTask(condition);
+            if(result<=0){
+              logger.info(taskId+"更新taskId到特殊物流产品类型折扣费用表中异常");
+              task.setRemark(taskId+"更新taskId到特殊物流产品类型折扣费用表中异常");
+              task.setTaskRate(80);
+              task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
+              bmsDiscountAsynTaskService.update(task);
+              return;
             }
             
             updateProgress(task,50);
@@ -1169,10 +1105,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
             logger.info(taskId+"特殊物流产品类型折扣处理失败",e1);
             task.setTaskRate(80);
             task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
-            if(entity!=null){
-                entity.setRemark(StringUtils.isBlank(entity.getRemark())?task.getSubjectName()+"特殊物流产品类型折扣处理失败":entity.getRemark()+";"+task.getSubjectName()+"特殊物流产品类型折扣处理失败");
-                entity.setProgress(0d);
-            }
             bmsDiscountAsynTaskService.update(task);
         }
         

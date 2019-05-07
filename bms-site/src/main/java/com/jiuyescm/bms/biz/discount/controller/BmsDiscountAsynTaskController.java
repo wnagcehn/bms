@@ -357,23 +357,30 @@ public class BmsDiscountAsynTaskController {
 	private void sendMQ(Map<String, String> result, List<BmsDiscountAsynTaskEntity> newList) throws Exception {
 		bmsDiscountAsynTaskService.saveBatch(newList);
 		result.put("success", "保存成功");
-		for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
-			try {			
-				logger.info("开始发送MQ");
-                Map<String,Object> map=new HashMap<>();
-                map.put("taskId", bmsDiscountAsynTaskEntity.getTaskId());
-                final String msg = JsonUtils.toJson(map);
-				jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
-					@Override
-					public Message createMessage(Session session) throws JMSException {
-						return session.createTextMessage(msg);
-					}
-				});
-				logger.info("MQ发送成功");
-			} catch (Exception e) {
-				logger.error("send MQ:", e);
+		List<String> taskList=new ArrayList<String>();
+		for (BmsDiscountAsynTaskEntity entity : newList) {
+			if(!taskList.contains(entity.getTaskId())){
+			    taskList.add(entity.getTaskId());
 			}
 		}
+		
+	    for(String taskId:taskList){
+	        try {         
+	            logger.info("开始发送MQ");
+	            Map<String,Object> map=new HashMap<>();
+	            map.put("taskId", taskId);
+	            final String msg = JsonUtils.toJson(map);
+	            jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
+	                @Override
+	                public Message createMessage(Session session) throws JMSException {
+	                    return session.createTextMessage(msg);
+	                }
+	            });
+	            logger.info("MQ发送成功");
+	        } catch (Exception e) {
+	            logger.error("send MQ:", e);
+	        }
+	    }	
 	}
 
 	/**

@@ -172,6 +172,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
 		}
 	}
 
+    @SuppressWarnings("unchecked")
     @Override
     public String sendTask(Map<String, Object> map) {
         // TODO Auto-generated method stub
@@ -181,6 +182,57 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
         
         List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
         
+        //判断是否是主商家还是子商家
+        if (map.get("childCustomerList")!=null) {
+            List<Map<String,String>> cuList= (List<Map<String, String>>) map.get("childCustomerList");
+            //主商家
+            for(Map<String,String> cumap:cuList){
+                Map<String,Object> newMap=new HashMap<>();
+                //商家id
+                String customerId=cumap.get("customerId").toString();
+                //时间格式 201903
+                String createMonth=map.get("createMonth").toString();
+                //任务id
+                String taskId=map.get("taskId").toString();
+                newMap.put("customerid", customerId);
+                newMap.put("createMonth", createMonth);
+                newMap.put("taskId", taskId);
+                List<BmsDiscountAsynTaskEntity> sendList=getMqList(newMap);
+                if(sendList.size()>0){
+                    bdatList.addAll(sendList);
+                }
+            }
+          
+        }else{
+            //子商家
+            bdatList=getMqList(map);
+        }
+        
+        if (bdatList.size() > 0) {
+            bmsDiscountAsynTaskRepository.saveBatch(bdatList);
+            try {           
+                logger.info("开始发送MQ");
+                final String msg = JsonUtils.toJson(map);
+                jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        return session.createTextMessage(msg);
+                    }
+                });
+                logger.info("MQ发送成功");
+            } catch (Exception e) {
+                logger.error("send MQ:", e);
+            }                
+        }else{
+            return "未查询到折扣报价";
+        }
+
+        return "";
+    }
+	
+    public List<BmsDiscountAsynTaskEntity> getMqList(Map<String, Object> map){
+        
+        List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();        
         //商家id
         String customerId=map.get("customerid").toString();
         //时间格式 201903
@@ -262,9 +314,8 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                     }
                 }
             } catch (Exception e) {
-                logger.error("查询合同在线折扣失败", e);
+                logger.error(customerId+"查询合同在线折扣失败", e);
                 // TODO: handle exception
-                return "查询合同在线折扣失败";
             }
         }
         else{
@@ -279,11 +330,9 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                 
                 List<PriceContractDiscountItemEntity> cusList = priceContractDiscountRepository.queryByCustomerId(entity);
                 if(cusList.isEmpty()){
-                    logger.info("BMS未查询到商家折扣报价或商家合同过期");
-                    return "BMS未查询到商家折扣报价或商家合同过期";
+                    logger.info(customerId+"BMS未查询到商家折扣报价或商家合同过期");
                 }
-                
-                
+                           
                 for (PriceContractDiscountItemEntity bizEntity : cusList) {
                     BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();          
                     String startDateStr = createMonth + "-01 00:00:00";
@@ -311,35 +360,12 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                 } 
             } catch (Exception e) {
                 // TODO: handle exception
-                logger.error("BMS未查询到商家折扣异常",e);
-                return "BMS未查询到商家折扣异常";
+                logger.error(customerId+"BMS未查询到商家折扣异常",e);
             }
             
         }
-        if (bdatList.size() > 0) {
-            bmsDiscountAsynTaskRepository.saveBatch(bdatList);
-            for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : bdatList) {
-                try {           
-                    logger.info("开始发送MQ");
-//                    Map<String,Object> condition=new HashMap<>();
-//                    condition.put("taskId", bmsDiscountAsynTaskEntity.getTaskId());
-                    final String msg = JsonUtils.toJson(map);
-                    jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
-                        @Override
-                        public Message createMessage(Session session) throws JMSException {
-                            return session.createTextMessage(msg);
-                        }
-                    });
-                    logger.info("MQ发送成功");
-                } catch (Exception e) {
-                    logger.error("send MQ:", e);
-                }
-            }      
-        }
-
-        return "";
+        return bdatList;
     }
-	
     
     public Map<String,Object> getDispatchMap(){
         Map<String,Object> map=new HashMap<String,Object>();
