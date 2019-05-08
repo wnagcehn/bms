@@ -276,14 +276,35 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
         where fees_no=#{feesNo}
     </update> 
     
-        <update id="updatebizInstockInfoById" parameterType ="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
-    	update biz_instock_info
-    	<set >
-			<if test="isCalculated != null" >is_calculated=1,</if>
-			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
-			<if test="bizCalculateTime != null" >calculate_time=#{bizCalculateTime,jdbcType=TIMESTAMP},</if>
-		</set>
-        where id=#{bId}
+    <update id="updatebizInstockInfoById" parameterType="java.util.Map">
+         update biz_instock_info 
+	    <trim prefix="set" suffixOverrides=",">
+	        <trim prefix="is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.isCalculated != null" >
+                      when id=#{biz.bId} then '1'
+                    </if>
+                </foreach>
+            </trim>
+    	    <trim prefix="fees_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.feesNo!= null" >
+                       when id=#{biz.bId} then #{biz.feesNo}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.bizCalculateTime != null" >
+                      when id=#{biz.bId} then #{biz.bizCalculateTime}
+                    </if>
+                </foreach>
+            </trim>         
+    	</trim>
+	    where id in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+            #{biz.bId,jdbcType=BIGINT}
+        </foreach>
     </update> 
     
 </mapper>

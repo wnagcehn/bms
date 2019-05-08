@@ -1,8 +1,10 @@
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -42,9 +44,11 @@ public class IBizOutstockPackmaterialServiceImpl extends MyBatisDao implements I
 	}
 
 	@Override
-	public void updateBatch(List<BizOutstockPackmaterialEntity> list) {
+	public void updateBatch(@Param(value = "list")List<BizOutstockPackmaterialEntity> list) {
 		try{
-			this.updateBatch("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.updatebizOutstockMeterial", list);
+		    Map<String,Object> map=new HashMap<>();
+		    map.put("list", list);
+			this.update("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.updatebizOutstockMeterial", map);
 		}
 		catch(Exception ex){
 			logger.error("【商品存储费任务】批量更新主表异常"+ex.getMessage());

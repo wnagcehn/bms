@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,9 @@ public class BizProductStorageServiceImpl extends MyBatisDao implements IBizProd
 	@Override
 	public void updateProductStorageById(List<FeesReceiveStorageEntity> list) {
 		try{
-			this.updateBatch("com.jiuyescm.bms.receivable.storage.BizProductStorageMapper.updateProductStorageById", list);
+		    Map<String,Object> map=new HashMap<String, Object>();
+            map.put("list", list);
+			this.update("com.jiuyescm.bms.receivable.storage.BizProductStorageMapper.updateProductStorageById", map);
 		}
 		catch(Exception ex){
 			logger.error("【商品存储费任务】批量更新主表异常"+ex.getMessage());

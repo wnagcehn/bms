@@ -117,15 +117,42 @@
 		LIMIT #{num}
     </select>
 
-    <update id="updateCalculate" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity">
-        update biz_outstock_master 
-		<set >
-			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
-			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
-			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
-			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-		</set>
-        where id=#{id}
+    <update id="updateCalculate" parameterType="java.util.Map">
+    	update biz_outstock_master 
+	    <trim prefix="set" suffixOverrides=",">
+	        <trim prefix="is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.isCalculated != null" >
+                      when id=#{biz.id} then #{biz.isCalculated}
+                    </if>
+                </foreach>
+            </trim>
+    	    <trim prefix="fees_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.feesNo!= null" >
+                       when id=#{biz.id} then #{biz.feesNo}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="remark =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.remark != null" >
+                      when id=#{biz.id} then #{biz.remark}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calculateTime != null" >
+                      when id=#{biz.id} then #{biz.calculateTime}
+                    </if>
+                </foreach>
+            </trim>         
+    	</trim>
+	    where id in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+            #{biz.id,jdbcType=BIGINT}
+        </foreach>
     </update>
     
     <!-- 新定时任务更新业务数据 -->

@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,10 @@ public class BizOutstockMasterServiceImpl extends MyBatisDao implements IBizOuts
 	@Override
 	public void updateOutstockBatch(List<BizOutstockMasterEntity> OutStocks) {
 		try{
-			this.updateBatch("com.jiuyescm.bms.receivable.storage.BizOutstockMasterMapper.updateCalculate", OutStocks);
+		    
+		    Map<String,Object> map=new HashMap<String, Object>();
+		    map.put("list", OutStocks);
+			this.update("com.jiuyescm.bms.receivable.storage.BizOutstockMasterMapper.updateCalculate", map);
 		}
 		catch(Exception ex){
 			XxlJobLogger.log("【订单操作费订单任务】更新主表异常"+ex.getMessage());

@@ -1,9 +1,12 @@
 package com.jiuyescm.bms.general.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -144,7 +147,9 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
 	
 	@Override
 	public void updatebizInstockInfoById(List<FeesReceiveStorageEntity> entities) {
-		this.updateBatch("com.jiuyescm.bms.general.mapper.BmsBizInstockInfoMapper.updatebizInstockInfoById", entities);
+	    Map<String,Object> map=new HashMap<String, Object>();
+	    map.put("list", entities);    
+		this.update("com.jiuyescm.bms.general.mapper.BmsBizInstockInfoMapper.updatebizInstockInfoById", map);
 	}
 	
 }
