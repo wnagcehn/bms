@@ -983,4 +983,215 @@ public class BillCheckReportController {
         }
         return systemCodeEntity.getExtattr1();
     }
+    
+    
+    /**
+     * 开票信息报表导出
+     * 
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @FileProvider
+    public DownloadFile exportInvoiceReport(Map<String, Object> param) throws Exception {
+
+        if (param == null) {
+            param = new HashMap<String, Object>();
+        }
+        PageInfo<BillCheckInvoiceVo> pageInfo = billCheckInvoiceService.queryReport(param, 1,Integer.MAX_VALUE);
+        long beginTime = System.currentTimeMillis();
+        logger.info("====开票信息报表导出：写入Excel begin.");
+
+        try {
+            // 如果存放上传文件的目录不存在就新建
+            String path = getPathInvoiceReport();
+            File storeFolder = new File(path);
+            if (!storeFolder.isDirectory()) {
+                storeFolder.mkdirs();
+            }
+
+            // 如果文件存在直接删除，重新生成
+            String fileName = "开票信息报表" + FileConstant.SUFFIX_XLSX;
+            String filePath = path + FileConstant.SEPARATOR + fileName;
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+
+            POISXSSUtil poiUtil = new POISXSSUtil();
+            SXSSFWorkbook workbook = poiUtil.getXSSFWorkbook();
+
+            // 导出方法
+            handInvoiceReport(poiUtil, workbook, filePath, param, pageInfo);
+
+            // 最后写到文件
+            poiUtil.write2FilePath(workbook, filePath);
+
+            logger.info("====开票信息报表：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
+
+            InputStream is = new FileInputStream(filePath);
+            return new DownloadFile(fileName, is);
+        } catch (Exception e) {
+            // bmsErrorLogInfoService.
+            logger.error("开票信息报表导出失败", e);
+        }
+        return null;
+    }
+
+    /**
+     * 开票信息报表导出
+     */
+    private void handInvoiceReport(POISXSSUtil poiUtil, SXSSFWorkbook workbook, String path, Map<String, Object> param,
+            PageInfo<BillCheckInvoiceVo> pageInfo) throws Exception {
+        List<BillCheckInvoiceVo> list = pageInfo.getList();
+
+        logger.info("开票信息报表导出...");
+        Sheet sheet = poiUtil.getXSSFSheet(workbook, "开票信息报表");
+        sheet.setColumnWidth(0, 3000);
+        sheet.setColumnWidth(1, 8000);
+        sheet.setColumnWidth(2, 8000);
+        sheet.setColumnWidth(3, 8000);
+        sheet.setColumnWidth(4, 4000);
+        sheet.setColumnWidth(5, 4000);
+        sheet.setColumnWidth(6, 8000);
+        sheet.setColumnWidth(7, 8000);
+        sheet.setColumnWidth(8, 4000);
+        sheet.setColumnWidth(9, 8000);
+        sheet.setColumnWidth(10, 8000);
+        sheet.setColumnWidth(11, 4000);
+        sheet.setColumnWidth(12, 8000);
+
+        Font font = workbook.createFont();
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(CellStyle.ALIGN_CENTER);
+        style.setWrapText(true);
+        style.setFont(font);
+
+        // 第一行（表头）
+        Row row0 = sheet.createRow(0);
+        Cell cell0 = row0.createCell(0);
+        cell0.setCellValue("业务月份");
+        cell0.setCellStyle(style);
+        Cell cell1 = row0.createCell(1);
+        cell1.setCellValue("商家合同名称");
+        cell1.setCellStyle(style);
+        Cell cell2 = row0.createCell(2);
+        cell2.setCellValue("开票名称");
+        cell2.setCellStyle(style);
+        Cell cell3 = row0.createCell(3);
+        cell3.setCellValue("账单名称");
+        cell3.setCellStyle(style);
+        Cell cell4 = row0.createCell(4);
+        cell4.setCellValue("区域");
+        cell4.setCellStyle(style);
+        Cell cell5 = row0.createCell(5);
+        cell5.setCellValue("销售员");
+        cell5.setCellStyle(style);
+        Cell cell6 = row0.createCell(6);
+        cell6.setCellValue("发票金额");
+        cell6.setCellStyle(style);
+        Cell cell7 = row0.createCell(7);
+        cell7.setCellValue("发票号");
+        cell7.setCellStyle(style);
+        Cell cell8 = row0.createCell(8);
+        cell8.setCellValue("开票日期");
+        cell8.setCellStyle(style);
+        Cell cell9 = row0.createCell(9);
+        cell9.setCellValue("快递单号");
+        cell9.setCellStyle(style);
+        Cell cell10 = row0.createCell(10);
+        cell10.setCellValue("创建日期");
+        cell10.setCellStyle(style);
+        Cell cell11 = row0.createCell(11);
+        cell11.setCellValue("创建人");
+        cell11.setCellStyle(style);
+        Cell cell12 = row0.createCell(12);
+        cell12.setCellValue("备注");
+        cell12.setCellStyle(style);
+
+        CellStyle style2 = workbook.createCellStyle();
+        DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
+        style2.setDataFormat(df.getFormat("###,###,###,##0.00"));// 数据格式只显示整数
+        
+        //设置数值类型
+        CellStyle style3 = workbook.createCellStyle();
+        DataFormat df2 = workbook.createDataFormat();
+        style3.setDataFormat(df2.getFormat("0"));
+
+        int RowIndex = 1;
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (int i = 0; i < list.size(); i++) {
+                BillCheckInvoiceVo vo = list.get(i);
+                Row row = sheet.createRow(RowIndex);
+                RowIndex++;
+                // 业务月份
+                Cell cel0 = row.createCell(0);
+                cel0.setCellValue(vo.getCreateMonth() + "");
+                cel0.setCellStyle(style2);
+                // 商家合同名称
+                Cell cel1 = row.createCell(1);
+                cel1.setCellValue(vo.getInvoiceName());
+                cel1.setCellStyle(style2);
+                // 开票名称
+                Cell cel2 = row.createCell(2);
+                cel2.setCellValue(vo.getMkInvoiceName());
+                cel2.setCellStyle(style2);
+                // 账单名称
+                Cell cel3 = row.createCell(3);
+                cel3.setCellValue(vo.getBillName());
+                cel3.setCellStyle(style2);
+                // 区域
+                Cell cel4 = row.createCell(4);
+                cel4.setCellValue(vo.getArea());
+                cel4.setCellStyle(style2);
+                // 销售员
+                Cell cel5 = row.createCell(5);
+                cel5.setCellValue(vo.getSellerName());
+                cel5.setCellStyle(style2);
+                // 发票金额
+                Cell cel6 = row.createCell(6);
+                cel6.setCellValue(vo.getInvoiceAmount() == null ? 0d : vo.getInvoiceAmount().doubleValue());
+                cel6.setCellStyle(style2);
+                // 发票号
+                Cell cel7 = row.createCell(7);
+                cel7.setCellValue(vo.getInvoiceNo());
+                cel7.setCellStyle(style2);
+                // 开票日期
+                Cell cel8 = row.createCell(8);
+                if(null!=vo.getInvoiceDate()){
+                    cel8.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(vo.getInvoiceDate()));
+                }
+                cel8.setCellStyle(style2);
+                // 快递单号
+                Cell cel9 = row.createCell(9);
+                cel9.setCellValue(vo.getWaybillNo());
+                cel9.setCellStyle(style2);
+                // 创建日期
+                Cell cel10 = row.createCell(10);
+                if (null != vo.getCreateTime()) {
+                    cel10.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(vo.getCreateTime()));
+                }
+                cel10.setCellStyle(style2);
+                // 创建人
+                Cell cel11 = row.createCell(11);
+                cel11.setCellValue(vo.getCreator());
+                cel11.setCellStyle(style2);
+                // 备注
+                Cell cel12 = row.createCell(12);
+                cel11.setCellValue(vo.getRemark());
+                cel12.setCellStyle(style2);
+            }
+        }
+    }
+
+    private String getPathInvoiceReport() {
+        SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode("GLOABL_PARAM",
+                "EXPORT_INVOICE_REPORT");
+        if (systemCodeEntity == null) {
+            throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_INVOICE_REPORT");
+        }
+        return systemCodeEntity.getExtattr1();
+    }
 }
