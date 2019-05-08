@@ -950,7 +950,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
             condition.put("customerId", task.getCustomerId());
             condition.put("carrierId", task.getCarrierId());
                     
-            logger.info(taskId+"特殊物流产品类型查询费用和统计的参数"+JSONObject.fromObject(condition));  
             //统计商家的月单量和金额  商家，物流商维度,特殊物流产品类型进行统计
             //物流产品类型,总单量,总金额(需要具体的折扣科目)
             //获取所有的折扣类型
@@ -966,6 +965,8 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 condition.put("serviceList", serviceList);
             }
      
+            logger.info(taskId+"特殊物流产品类型查询费用和统计的参数"+JSONObject.fromObject(condition));  
+            
             //统计商家的月单量和金额  商家，物流商 物流产品类型维度进行统计
             List<BmsDiscountAccountVo> discountAccountVoList=bmsDiscountService.queryAccountServiceList(condition);
             logger.info(taskId+"特殊物流产品类型统计商家的月单量和金额，商家，物流商,物流产品类型维度"+JSONArray.fromObject(discountAccountVoList));
@@ -973,7 +974,13 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 for(BmsDiscountAccountVo vo:discountAccountVoList){
                     discountMap.put(vo.getServiceTypeCode(), vo);
                 }
+            }else{
+                //未统计到，则直接返回
+                updateProgress(task,100);
+                return;
             }
+            
+    
             
             updateProgress(task,20);
             
