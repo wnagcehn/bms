@@ -567,7 +567,12 @@ if(month==0){&#xD;
 	month=12;&#xD;
 }&#xD;
 view.get(&quot;#AutoForm.entity&quot;).set(&quot;year&quot;,year);&#xD;
-view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;month&quot;,month);&#xD;
+&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;isChildCustomer&quot;,false);&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;isSepWarehouse&quot;,false);&#xD;
+view.get(&quot;#AutoForm.entity&quot;).set(&quot;isDiscount&quot;,true);&#xD;
+</ClientEvent>
       <Property name="caption">生成预账单</Property>
       <Property name="width">450</Property>
       <Property name="height">300</Property>

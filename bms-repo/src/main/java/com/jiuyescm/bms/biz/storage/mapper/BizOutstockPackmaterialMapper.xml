@@ -198,97 +198,101 @@
     </select>
     <select id="queryWarehouseGroupCount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-        select customer_name,warehouse_name,COUNT(DISTINCT waybill_no) as num
-        from  biz_outstock_packmaterial
-        where del_flag = 0 
+        select a.customer_name,a.warehouse_name,COUNT(DISTINCT a.waybill_no) as num
+		from  biz_outstock_packmaterial a
+		LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
+        where a.del_flag = 0 
         <if test="(feesNo != null and feesNo !='')" >
-			and fees_no = #{feesNo,jdbcType=VARCHAR}
+			and a.fees_no = #{feesNo,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
-			and customer_id = #{customerId,jdbcType=VARCHAR}
+			and a.customer_id = #{customerId,jdbcType=VARCHAR}
 		</if>
 		<if test="(outstockNo != null and outstockNo !='')" >
-			and outstock_no = #{outstockNo,jdbcType=VARCHAR}
+			and a.outstock_no = #{outstockNo,jdbcType=VARCHAR}
 		</if>
 		<if test="(waybillNo != null and waybillNo !='')" >
-			and waybill_no = #{waybillNo,jdbcType=VARCHAR}
+			and a.waybill_no = #{waybillNo,jdbcType=VARCHAR}
 		</if>
 		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = #{isCalculated,jdbcType=VARCHAR}
+			and b.is_calculated = #{isCalculated,jdbcType=VARCHAR}
 		</if>
 		<if test="(startTime != null and startTime !='')" >
-			and create_time <![CDATA[>= ]]>#{startTime,jdbcType=TIMESTAMP}
+			and a.create_time <![CDATA[>= ]]>#{startTime,jdbcType=TIMESTAMP}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and create_time<![CDATA[ <= ]]>#{endTime,jdbcType=TIMESTAMP}
+			and a.create_time<![CDATA[ <= ]]>#{endTime,jdbcType=TIMESTAMP}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
-			and consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
+			and a.consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
 		</if>
-		GROUP BY customer_name,warehouse_name
+		GROUP BY a.customer_name,a.warehouse_name
 	</select>
 	
 	<select id="queryErrorCal" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-		select customer_id,customer_name,warehouse_code, warehouse_name,consumer_material_code,
-		consumer_material_name,is_calculated,count(0) as num from biz_outstock_packmaterial 
+		select a.customer_id,a.customer_name,a.warehouse_code, a.warehouse_name,a.consumer_material_code,
+		a.consumer_material_name,b.is_calculated,count(0) as num from biz_outstock_packmaterial a
+		LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
 		where 1=1
 		<if test="isCalculated != null" >
-			and is_calculated = #{isCalculated,jdbcType=VARCHAR}
+			and b.is_calculated = #{isCalculated,jdbcType=VARCHAR}
 		</if>
 		<if test="isCalculateds != null" >
-			and is_calculated in ('2','3','4')
+			and b.is_calculated in ('2','3','4')
 		</if>
 		<if test="createTime != null and createTime !='' " >
-			and create_time <![CDATA[>= ]]>#{createTime,jdbcType=TIMESTAMP}
+			and a.create_time <![CDATA[>= ]]>#{createTime,jdbcType=TIMESTAMP}
 		</if>
 		<if test="createEndTime != null and createEndTime !='' " >
-			and create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=TIMESTAMP}
+			and a.create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=TIMESTAMP}
 		</if>
 		<if test="warehouseCode != null and warehouseCode !='' " >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="customerId != null and customerId !='' " >
-			and customer_id = #{customerId,jdbcType=VARCHAR}
+			and a.customer_id = #{customerId,jdbcType=VARCHAR}
 		</if>
-		group by customer_name,warehouse_name,consumer_material_name,is_calculated
+		group by a.customer_name,a.warehouse_name,a.consumer_material_name,b.is_calculated
 	</select>
 	
     <select id="queryPriceGroupCount" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-        select customer_name,warehouse_name,consumer_material_code,is_calculated,count(0) as num  FROM biz_outstock_packmaterial
-		where 1=1  and del_flag = '0'
+        select a.customer_name,a.warehouse_name,a.consumer_material_code,b.is_calculated,count(0) as num  
+        FROM biz_outstock_packmaterial a
+        LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
+		where 1=1  and a.del_flag = '0'
 		 <if test="(feesNo != null and feesNo !='')" >
-			and fees_no = #{feesNo,jdbcType=VARCHAR}
+			and a.fees_no = #{feesNo,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
-			and customer_id = #{customerId,jdbcType=VARCHAR}
+			and a.customer_id = #{customerId,jdbcType=VARCHAR}
 		</if>
 		<if test="(outstockNo != null and outstockNo !='')" >
-			and outstock_no = #{outstockNo,jdbcType=VARCHAR}
+			and a.outstock_no = #{outstockNo,jdbcType=VARCHAR}
 		</if>
 		<if test="(waybillNo != null and waybillNo !='')" >
-			and waybill_no = #{waybillNo,jdbcType=VARCHAR}
+			and a.waybill_no = #{waybillNo,jdbcType=VARCHAR}
 		</if>
 		<if test="(isCalculated != null and isCalculated !='')" >
-			and is_calculated = #{isCalculated,jdbcType=VARCHAR}
+			and b.is_calculated = #{isCalculated,jdbcType=VARCHAR}
 		</if>
 		<if test="(startTime != null and startTime !='')" >
-			and create_time <![CDATA[>= ]]>#{startTime,jdbcType=TIMESTAMP}
+			and a.create_time <![CDATA[>= ]]>#{startTime,jdbcType=TIMESTAMP}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and create_time<![CDATA[ <= ]]>#{endTime,jdbcType=TIMESTAMP}
+			and a.create_time<![CDATA[ <= ]]>#{endTime,jdbcType=TIMESTAMP}
 		</if>
 		<if test="(warehouseCode != null and warehouseCode !='')" >
-			and warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
+			and a.warehouse_code = #{warehouseCode,jdbcType=VARCHAR}
 		</if>
 		<if test="(consumerMaterialCode != null and consumerMaterialCode !='')" >
-			and consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
+			and a.consumer_material_code = #{consumerMaterialCode,jdbcType=VARCHAR}
 		</if>
-		GROUP BY customer_name,warehouse_name,consumer_material_code,is_calculated
+		GROUP BY a.customer_name,a.warehouse_name,a.consumer_material_code,b.is_calculated
 	</select>
 	
 	
