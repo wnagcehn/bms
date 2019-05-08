@@ -41,7 +41,7 @@ import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 
 
-@Service("bmsCorrectMaterialTaskNewListener")
+@Service("bmsCorrectMaterialTaskListener")
 public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 
 	private static final Logger logger = Logger.getLogger(BmsCorrectMaterialTaskNewListener.class.getName());
@@ -171,9 +171,9 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	}
 	
 	private String handPmx(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
-		long start = 0l;
-		long end = 0l;
-		long totalRetry = 0l;
+		long start = 0L;
+		long end = 0L;
+		long totalRetry = 0L;
 		Map<String,Object> condition=new HashMap<String,Object>();
 		//获取不纠正的订单类型
 		List<String> noCorrectList=getNoCorrectList();
@@ -246,8 +246,8 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 						List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxPmx(condition);
 						end = System.currentTimeMillis();
 						logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
-						long total = 0l;
-						long delTimeTotal = 0l;
+						long total = 0L;
+						long delTimeTotal = 0L;
 						List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();
 						List<String> waybillNoList=new ArrayList<String>();					
 						for(int j=0,lenth=notMaxList.size();j<lenth;j++){
@@ -348,9 +348,9 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	}
 	
 	private String handZx(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
-		long start = 0l;
-		long end = 0l;
-		long totalRetry = 0l;
+		long start = 0L;
+		long end = 0L;
+		long totalRetry = 0L;
 		Map<String,Object> condition=new HashMap<String,Object>();
 		//获取不纠正的订单类型
 		List<String> noCorrectList=getNoCorrectList();
@@ -423,8 +423,8 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 						List<BizOutstockPackmaterialEntity> notMaxList=bmsProductsMaterialService.queyNotMaxZx(condition);
 						end = System.currentTimeMillis();
 						logger.info(taskId+"------------------找出未使用标准的运单号耗时：" + (end-start) + "毫秒------------------");
-						long total = 0l;
-						long delTimeTotal = 0l;
+						long total = 0L;
+						long delTimeTotal = 0L;
 						List<BizOutstockPackmaterialEntity> newList=new ArrayList<BizOutstockPackmaterialEntity>();
 						List<String> waybillNoList=new ArrayList<String>();					
 						for(int j=0,lenth=notMaxList.size();j<lenth;j++){
@@ -540,10 +540,10 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 	 * @throws Exception
 	 */
 	private String handBwd(BmsCorrectAsynTaskVo taskVo,String taskId,StringBuffer errorMessage) throws Exception{
-		long start = 0l;
-		long end = 0l;
+		long start = 0L;
+		long end = 0L;
 		long totalStart = System.currentTimeMillis();
-		long totalRetry = 0l;
+		long totalRetry = 0L;
 		Map<String,Object> condition=new HashMap<String,Object>();
 		//获取不纠正的订单类型
 		List<String> noCorrectList=getNoCorrectList();
