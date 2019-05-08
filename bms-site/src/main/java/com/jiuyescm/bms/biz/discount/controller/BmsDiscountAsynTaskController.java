@@ -254,6 +254,7 @@ public class BmsDiscountAsynTaskController {
 	            map.put("createMonth", entity.getYear()+"-"+entity.getMonth());    
 	            taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 	            map.put("taskId", taskId);
+	            map.put("username", JAppContext.currentUserName());
 	            String sendResult=bmsDiscountAsynTaskService.sendTask(map);
 	            if(StringUtils.isBlank(sendResult)){
 	                result.put("success", "保存成功");
@@ -327,7 +328,6 @@ public class BmsDiscountAsynTaskController {
 				newEntity.setEndDate(endTime);
 			}
 			// 生成任务，写入任务表
-			customerMap.clear();
 			if(customerMap.containsKey(bizEntity.getCustomerId())){
 			    taskId=customerMap.get(bizEntity.getCustomerId());
 			}else{

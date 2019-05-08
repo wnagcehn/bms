@@ -13,6 +13,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -38,9 +41,6 @@ import com.jiuyescm.contract.quote.vo.ContractDiscountQueryVo;
 import com.jiuyescm.contract.quote.vo.ContractDiscountVo;
 import com.jiuyescm.contract.quote.vo.SubjectInfoVo;
 import com.jiuyescm.utils.JsonUtils;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * ..ServiceImpl
@@ -194,9 +194,12 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                 String createMonth=map.get("createMonth").toString();
                 //任务id
                 String taskId=map.get("taskId").toString();
+                //创建人
+                String username=map.get("username").toString();
                 newMap.put("customerid", customerId);
                 newMap.put("createMonth", createMonth);
                 newMap.put("taskId", taskId);
+                newMap.put("username", username);
                 List<BmsDiscountAsynTaskEntity> sendList=getMqList(newMap);
                 if(sendList.size()>0){
                     bdatList.addAll(sendList);
@@ -239,6 +242,10 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
         String createMonth=map.get("createMonth").toString();
         //任务id
         String taskId=map.get("taskId").toString();
+        //创建人
+        String userName=map.get("username").toString();
+        
+        
         //创建时间
         PubCustomerVo customer = customerDictService.queryById(customerId);
         if(customer.getContractAttr()==2){
@@ -269,7 +276,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                                 newEntity.setTaskRate(0);
                                 newEntity.setDelFlag("0");
                                 newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-                                newEntity.setCreator(JAppContext.currentUserName());
+                                newEntity.setCreator(userName);
                                 newEntity.setCreateTime(JAppContext.currentTimestamp());
                                 newEntity.setBizTypecode("STORAGE");
                                 newEntity.setCustomerId(vo.getCustomerId());
@@ -296,7 +303,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                                 newEntity.setTaskRate(0);
                                 newEntity.setDelFlag("0");
                                 newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-                                newEntity.setCreator(JAppContext.currentUserName());
+                                newEntity.setCreator(userName);
                                 newEntity.setCreateTime(JAppContext.currentTimestamp());
                                 newEntity.setBizTypecode("DISPATCH");
                                 newEntity.setCustomerId(vo.getCustomerId());                
@@ -349,7 +356,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
                     newEntity.setTaskRate(0);
                     newEntity.setDelFlag("0");
                     newEntity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
-                    newEntity.setCreator(JAppContext.currentUserName());
+                    newEntity.setCreator(userName);
                     newEntity.setCreateTime(JAppContext.currentTimestamp());
                     newEntity.setBizTypecode(bizEntity.getBizTypeCode());
                     newEntity.setCustomerId(customerId);
