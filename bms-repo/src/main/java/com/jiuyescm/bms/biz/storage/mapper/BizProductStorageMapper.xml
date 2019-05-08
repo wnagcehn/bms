@@ -143,11 +143,11 @@
 				and del_flag = #{delFlag}
 		</if>
 		<if test="(startTime != null and startTime !='') " >
-			    and <![CDATA[cur_time >= #{startTime}]]> 
+			    and <![CDATA[create_time >= #{startTime}]]> 
 		</if>
 		
 		<if test="(endTime != null and endTime !='')" >
-			    and <![CDATA[cur_time <= #{endTime}]]>
+			    and <![CDATA[create_time <= #{endTime}]]>
 		</if>
 		<if test="(extattr1 != null and extattr1 !='')" >
 				and extattr1 = #{extattr1}
@@ -249,11 +249,11 @@
 				and a.del_flag = #{delFlag}
 		</if>
 		<if test="(startTime != null and startTime !='') " >
-			    and <![CDATA[a.cur_time >= #{startTime}]]> 
+			    and <![CDATA[a.create_time >= #{startTime}]]> 
 		</if>
 		
 		<if test="(endTime != null and endTime !='')" >
-			    and <![CDATA[a.cur_time <= #{endTime}]]>
+			    and <![CDATA[a.create_time <= #{endTime}]]>
 		</if>
 		<if test="(extattr1 != null and extattr1 !='')" >
 				and a.extattr1 = #{extattr1}

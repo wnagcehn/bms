@@ -116,27 +116,7 @@
 		</if>
     </sql>
     
-     <select id="queryAll" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
-        select
-		a.id,a.warehouse_code, a.warehouse_name,a.customerid,a.customer_name,a.outstock_no,a.external_no,a.waybill_no,a.zexpressnum,a.bigstatus,a.smallstatus,a.temperature_type_name,a.total_weight,a.adjust_weight,a.totalqty,
-		a.throw_weight,a.product_detail,a.deliver_name,	a.month_fee_count,a.expresstype,a.receive_name,a.receive_province_id,a.receive_city_id,a.receive_district_id,a.adjust_province_id,a.adjust_city_id,a.adjust_district_id,a.create_time,a.accept_time,a.sign_time,c.calcu_msg as remark,
-		a.carrier_id,a.carrier_name,a.origin_carrier_id,a.origin_carrier_name,a.adjust_carrier_id,a.adjust_carrier_name,a.fees_no,c.is_calculated,a.temperature_type_code,
-		b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,s.servicecode as servicecode, s.servicename as servicename,
-		a.send_province_id, a.send_city_id, a.origin_weight as originWeight,a.order_status as orderStatus, a.correct_throw_weight as correctThrowWeight, a.system_weight as systemWeight,
-		a.adjust_service_type_code as adjustServiceTypeCode, t.servicename as adjustServiceTypeName,a.shop_name,a.carrier_weight,a.transport_type
-		from biz_dispatch_bill a
-		LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
-		LEFT JOIN fees_receive_dispatch c on c.fees_no=a.fees_no and c.del_flag='0' and c.subject_code='de_delivery_amount'
-		LEFT JOIN pub_carrier_servicetype s on s.carrierid = a.carrier_id and s.servicecode=a.service_type_code and s.delflag='0'
-		LEFT JOIN pub_carrier_servicetype t on
-		CASE 
-		WHEN  a.adjust_carrier_id='' or a.adjust_carrier_id is NULL
-		THEN  t.carrierid = a.carrier_id 
-		ELSE  t.carrierid = a.adjust_carrier_id
-		END
-		and t.servicecode=a.adjust_service_type_code and t.delflag='0'
-		where a.del_flag = '0'
+    <sql id="baseSelectColumnsNew">
 		<if test="(outstockNo != null and outstockNo !='')" >
 				and a.outstock_no = #{outstockNo}
 		</if>
@@ -182,6 +162,23 @@
 		<if test="(orderStatus != null and orderStatus !='')" >
 				and a.order_status = #{orderStatus}
 		</if>
+    </sql>
+    
+     <select id="queryAll" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
+        select
+		a.id,a.warehouse_code, a.warehouse_name,a.customerid,a.customer_name,a.outstock_no,a.external_no,a.waybill_no,a.zexpressnum,a.bigstatus,a.smallstatus,a.temperature_type_name,a.total_weight,a.adjust_weight,a.totalqty,
+		a.throw_weight,a.product_detail,a.deliver_name,	a.month_fee_count,a.expresstype,a.receive_name,a.receive_province_id,a.receive_city_id,a.receive_district_id,a.adjust_province_id,a.adjust_city_id,a.adjust_district_id,a.create_time,a.accept_time,a.sign_time,c.calcu_msg as remark,
+		a.carrier_id,a.carrier_name,a.origin_carrier_id,a.origin_carrier_name,a.adjust_carrier_id,a.adjust_carrier_name,a.fees_no,c.is_calculated,a.temperature_type_code,
+		b.duty_type,b.update_reason_detail,c.charged_weight as chargeWeight,c.carrier_name as chargeCarrierName,s.servicecode as servicecode, s.servicename as servicename,
+		a.send_province_id, a.send_city_id, a.origin_weight as originWeight,a.order_status as orderStatus, a.correct_throw_weight as correctThrowWeight, a.system_weight as systemWeight,
+		a.adjust_service_type_code as adjustServiceTypeCode,a.shop_name,a.carrier_weight,a.transport_type
+		from biz_dispatch_bill a
+		LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no and b.duty_type is not null
+		LEFT JOIN fees_receive_dispatch c on c.fees_no=a.fees_no and c.del_flag='0' and c.subject_code='de_delivery_amount'
+		LEFT JOIN pub_carrier_servicetype s on s.carrierid = a.carrier_id and s.servicecode=a.service_type_code and s.delflag='0'
+		where a.del_flag = '0'
+		<include refid="baseSelectColumnsNew" />
 		order by a.create_time desc
     </select>
     
@@ -203,51 +200,7 @@
 		LEFT JOIN fees_receive_storage e on e.fees_no=d.fees_no and e.del_flag='0' and e.subject_code='wh_b2c_work'
 		LEFT JOIN bms_marking_products f on a.waybill_no=f.waybill_no
         where a.del_flag = '0'
-		<if test="(outstockNo != null and outstockNo !='')" >
-				and a.outstock_no = #{outstockNo}
-		</if>
-		<if test="(merchantId != null and merchantId !='')" >
-				and a.customerid = #{merchantId}
-		</if>
-		<if test="(logistics != null and logistics !='')" >
-				and a.carrier_id = #{logistics}
-		</if>
-		<if test="(waybillNo != null and waybillNo !='')" >
-				and a.waybill_no = #{waybillNo}
-		</if>
-		<if test="(accountState != null and accountState !='')" >
-				and c.is_calculated =#{accountState}
-		</if>
-		<if test="(wareHousename != null and wareHousename !='')" >
-				and a.warehouse_code = #{wareHousename}
-		</if>
-		<if test="(feesNo != null and feesNo !='')" >
-				and a.fees_no = #{feesNo}
-		</if>
-		<if test="(createTime != null and createTime !='')" >
-			    and a.create_time>= #{createTime}
-		</if>
-		<if test="(endTime != null and endTime !='')" >
-			    and <![CDATA[a.create_time <= #{endTime} ]]>
-		</if>
-		<if test="(zexpressnum != null and zexpressnum !='')" >
-				and a.zexpressnum = #{zexpressnum}
-		</if>
-		<if test="(bigstatus != null and bigstatus !='')" >
-				and a.bigstatus = #{bigstatus}
-		</if>
-		<if test="(smallstatus != null and smallstatus !='')" >
-				and a.smallstatus = #{smallstatus}
-		</if>
-		<if test="(extattr1 != null and extattr1 !='')" >
-				and a.extattr1 = #{extattr1}
-		</if>
-		<if test="(dutyType != null and dutyType !='')" >
-				and b.duty_type = #{dutyType}
-		</if>
-		<if test="(orderStatus != null and orderStatus !='')" >
-				and a.order_status = #{orderStatus}
-		</if>
+		<include refid="baseSelectColumnsNew" />
 		order by a.create_time desc
     </select>
 
@@ -320,8 +273,9 @@
 		a.receive_district_id as receiveDistrictId,a.adjust_province_id,a.adjust_city_id,a.adjust_district_id,
 		count(DISTINCT a.waybill_no) as extattr5 from biz_dispatch_bill a
 		LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no
+		LEFT JOIN fees_receive_dispatch c on a.fees_no=c.fees_no and c.del_flag='0'
     	where 1=1 and a.del_flag = '0'
-    	<include refid="baseSelectColumns" />
+    	<include refid="baseSelectColumnsNew" />
     	<if test="(dutyType != null and dutyType !='')" >
 				and b.duty_type = #{dutyType}
 		</if>
@@ -334,8 +288,9 @@
         resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
 		select a.warehouse_code as warehouseCode,a.customer_name as customerName,a.carrier_name as carrierName,count(DISTINCT a.waybill_no) as extattr5 from biz_dispatch_bill a
     	LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no
+    	LEFT JOIN fees_receive_dispatch c on a.fees_no=c.fees_no and c.del_flag='0'
     	where 1=1 and a.del_flag = '0'
-    	<include refid="baseSelectColumns" />
+    	<include refid="baseSelectColumnsNew" />
     	<if test="(dutyType != null and dutyType !='')" >
 				and b.duty_type = #{dutyType}
 		</if>
@@ -344,14 +299,15 @@
     
     <select id="queryAllCalculate" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity">
-        select a.customer_name,a.is_calculated,COUNT(0) as extattr5 from biz_dispatch_bill a
+        select a.customer_name,c.is_calculated,COUNT(0) as extattr5 from biz_dispatch_bill a
         LEFT JOIN biz_dispatch_carrier_change b on a.waybill_no=b.waybill_no
+        LEFT JOIN fees_receive_dispatch c on a.fees_no=c.fees_no and c.del_flag='0'
         where 1=1 and a.del_flag = '0'
-        <include refid="baseSelectColumns" />
+        <include refid="baseSelectColumnsNew" />
         <if test="(dutyType != null and dutyType !='')" >
 				and b.duty_type = #{dutyType}
 		</if>
-        GROUP BY a.customer_name,a.is_calculated
+        GROUP BY a.customer_name,c.is_calculated
     </select>
     
     <select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">

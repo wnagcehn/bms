@@ -27,6 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
@@ -155,9 +156,10 @@ public class DispatchBillController{
 	 * 
 	 * @param page
 	 * @param param
+	 * @throws Exception 
 	 */
 	@DataProvider
-	public void queryAll(Page<BizDispatchBillEntity> page, Map<String, Object> param) {
+	public void queryAll(Page<BizDispatchBillEntity> page, Map<String, Object> param) throws Exception {
 		if (param == null){
 			param = new HashMap<String, Object>();
 		}
@@ -173,12 +175,30 @@ public class DispatchBillController{
 		}
 		
 		PageInfo<BizDispatchBillEntity> pageInfo = bizDispatchBillService.queryAll(param, page.getPageNo(), page.getPageSize());
+		Map<String, String> serviceMap=getServiceMap();
+		String carrierId = "";
 		if (pageInfo != null) {
+		    if (CollectionUtils.isNotEmpty(pageInfo.getList())) {
+		        for (BizDispatchBillEntity billEntity : pageInfo.getList()) {
+	                carrierId=StringUtils.isNotBlank(billEntity.getAdjustCarrierId())?billEntity.getAdjustCarrierId():billEntity.getCarrierId();
+	                billEntity.setAdjustServiceTypeName(serviceMap.get(carrierId+"&"+billEntity.getAdjustServiceTypeCode()));
+	            }
+            }
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
 	}
 	
+	public Map<String,String> getServiceMap() throws Exception{
+        Map<String,String> map=new HashMap<String,String>();
+        Map<String,Object> con=new HashMap<String,Object>();
+        con.put("delflag", "0");
+        List<CarrierProductVo> list=carrierProductService.query(con);
+        for(CarrierProductVo p:list){
+            map.put(p.getCarrierid()+"&"+p.getServicecode(), p.getServicename());
+        }
+        return map;
+    }
 	
 	/**
 	 * 作废表示
