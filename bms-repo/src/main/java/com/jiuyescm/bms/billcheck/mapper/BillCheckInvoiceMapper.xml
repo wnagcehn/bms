@@ -83,7 +83,7 @@
     <select id="queryReport" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.billcheck.entity.BillInvoiceEntity">
         select a.id, a.bill_check_id, a.sort_no, a.invoice_no, a.invoice_amount, a.invoice_date, a.waybill_no, a.invoice_days, a.remark, a.creator_id,a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.del_flag,
-		b.create_month,b.invoice_name,b.bill_name,b.seller_name,b.area
+		b.create_month,b.invoice_name,b.bill_name,b.seller_name,b.area,a.mk_invoice_name
 		from bill_check_invoice a inner JOIN bill_check_info b on a.bill_check_id=b.id
         and a.del_flag='0' and b.del_flag='0' and b.bill_status not in ('INVALIDATE','BAD_BILL')
         <if test="(invoiceNo != null and invoiceNo !='')" >
@@ -121,6 +121,9 @@
 		</if>
 		<if test="(area != null and area !='')" >
 				and b.area like '%${area}%'
+		</if>
+		<if test="(mkInvoiceName != null and mkInvoiceName !='')" >
+				and a.mk_invoice_name like '%${mkInvoiceName}%'
 		</if>
     </select>
 

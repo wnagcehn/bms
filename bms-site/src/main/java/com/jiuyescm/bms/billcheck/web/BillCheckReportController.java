@@ -881,6 +881,11 @@ public class BillCheckReportController {
         CellStyle style2 = workbook.createCellStyle();
         DataFormat df = workbook.createDataFormat(); // 此处设置数据格式
         style2.setDataFormat(df.getFormat("###,###,###,##0.00"));// 数据格式只显示整数
+        
+        //设置数值类型
+        CellStyle style3 = workbook.createCellStyle();
+        DataFormat df2 = workbook.createDataFormat();
+        style3.setDataFormat(df2.getFormat("0"));
 
         int RowIndex = 1;
         if (CollectionUtils.isNotEmpty(list)) {
@@ -947,17 +952,25 @@ public class BillCheckReportController {
                 }
                 cel12.setCellStyle(style2);
                 // 超期天数
-                Cell cel13 = row.createCell(13);
-                cel13.setCellValue(vo.getOverDays());
-                cel13.setCellStyle(style2);
+                try {
+                    Cell cel13 = row.createCell(13);
+                    cel13.setCellValue(Integer.parseInt(vo.getOverDays()));
+                    cel13.setCellStyle(style3);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
                 // 备注
                 Cell cel14 = row.createCell(14);
                 cel14.setCellValue(vo.getRemark());
                 cel14.setCellStyle(style2);
                 // 应收账款天数
-                Cell cel15 = row.createCell(15);
-                cel15.setCellValue(vo.getReceiptDays());
-                cel15.setCellStyle(style2);
+                try {
+                    Cell cel15 = row.createCell(15);
+                    cel15.setCellValue(Integer.parseInt(vo.getReceiptDays()));
+                    cel15.setCellStyle(style3);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
