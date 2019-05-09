@@ -60,7 +60,7 @@
 	但是在activemq补充了一个自定义的ACK模式:
 	INDIVIDUAL_ACKNOWLEDGE = 4：单条消息确认 -->
     
-    <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="1-1">
+    <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-4">
     	<jms:listener destination="BMS_FILE_EXPORT_QUEUE" ref="bmsFileExportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK" ref="bmsPackmaterialImportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListener"/>

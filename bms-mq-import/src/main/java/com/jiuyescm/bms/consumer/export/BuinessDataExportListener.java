@@ -10,7 +10,6 @@ import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.context.ContextLoader;
@@ -33,8 +32,6 @@ public class BuinessDataExportListener implements MessageListener{
     @Override
     public void onMessage(Message message) {
         logger.info("--------------------MQ处理操作日志开始---------------------------");
-        //初始化进度
-        
         StopWatch sw = new StopWatch();
         sw.start();
         logger.info("预账单导出异步处理");
