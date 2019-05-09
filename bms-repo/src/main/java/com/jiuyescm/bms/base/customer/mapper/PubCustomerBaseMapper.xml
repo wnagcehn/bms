@@ -32,36 +32,11 @@ mk_id, mk_invoice_name, creator, create_time, last_modifier, last_modify_time, d
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity">
-        select
-        <include refid="BASE_COLUMNS_ALL" />
-        from pub_customer_base
-        where 1 = 1
-        	<if test=" id != null and id !='' ">
-				and id = #{id}
-			</if>
-        	<if test=" mkId != null and mkId !='' ">
-				and mk_id = #{mkId}
-			</if>
-        	<if test=" mkInvoiceName != null and mkInvoiceName !='' ">
-				and mk_invoice_name = #{mkInvoiceName}
-			</if>
-        	<if test=" creator != null and creator !='' ">
-				and creator = #{creator}
-			</if>
-        	<if test=" createTime != null and createTime !='' ">
-				and create_time = #{createTime}
-			</if>
-        	<if test=" lastModifier != null and lastModifier !='' ">
-				and last_modifier = #{lastModifier}
-			</if>
-        	<if test=" lastModifyTime != null and lastModifyTime !='' ">
-				and last_modify_time = #{lastModifyTime}
-			</if>
-        	<if test=" delFlag != null and delFlag !='' ">
-				and del_flag = #{delFlag}
-			</if>
-        	<if test=" writeTime != null and writeTime !='' ">
-				and write_time = #{writeTime}
-			</if>
+		select distinct b.mk_invoice_name,a.mk_id from pub_customer a
+		inner join pub_customer_base b on a.mk_id = b.mk_id
+		where  a.del_flag = '0' and b.del_flag = '0'
+		<if test="(mkInvoiceName != null and mkInvoiceName !='')" >
+		and b.mk_invoice_name like '%${mkInvoiceName}%'
+		</if>
     </select>
 </mapper>
