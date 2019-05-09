@@ -179,6 +179,11 @@ public class NewBuinessDataExportController extends BaseController {
 		PageInfo<BillPrepareExportTaskEntity> pageInfo = billPrepareExportTaskService.queryBillTask(param, page.getPageNo(),
 				page.getPageSize());
 		if (pageInfo != null) {
+		    if (CollectionUtils.isNotEmpty(pageInfo.getList())) {
+		        for (BillPrepareExportTaskEntity billPrepareExportTaskEntity : pageInfo.getList()) {
+	                billPrepareExportTaskEntity.setProcess(billPrepareExportTaskEntity.getProgress().intValue()+"%");
+	            }
+            }
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
@@ -299,6 +304,7 @@ public class NewBuinessDataExportController extends BaseController {
 							condition.put("taskId", entity.getTaskId());
 							condition.put("cu", cu);
 							condition.put("customerid", cu.get("customerId"));
+							condition.put("username", username);
 							// 判断是否自动生成折扣
 							if ("1".equals(entity.getIsDiscount())) {
 							    // 1.如果是按照主商家生成折扣

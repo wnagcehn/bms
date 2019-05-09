@@ -59,6 +59,9 @@ public class BillPrepareExportTaskEntity implements IEntity {
 	private String isDiscount;
 	//备注
 	private String remark;
+	
+	//字符串进度
+	private String process;
 
 	public BillPrepareExportTaskEntity() {
 		super();
@@ -232,6 +235,14 @@ public class BillPrepareExportTaskEntity implements IEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getProcess() {
+        return process;
+    }
+
+    public void setProcess(String process) {
+        this.process = process;
     }
     
 }

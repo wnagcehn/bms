@@ -26,22 +26,7 @@
         <property name="maxConnections" value="${activemq.maxConnections}" />  
     </bean>  
     
-    <!-- 连接池配置 -->
-    <bean id="queueMessageExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
-	    <property name="corePoolSize" value="15" />  
-	    <property name="maxPoolSize" value="50" />  
-	    <property name="daemon" value="true" />  
-	    <property name="keepAliveSeconds" value="120" />  
-	</bean>
-	
-	<bean id="queueMessageExecutorTimer" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
-	    <property name="corePoolSize" value="15" />  
-	    <property name="maxPoolSize" value="50" />  
-	    <property name="daemon" value="true" />  
-	    <property name="keepAliveSeconds" value="120" />  
-	</bean>
-    
-    <!-- 定义JmsTemplate的Queue类型 -->
+     <!-- 定义JmsTemplate的Queue类型 -->
     <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
         <constructor-arg ref="pooledConnectionFactory" />
         <!-- 非pub/sub模型（发布/订阅），即队列模式 -->
@@ -51,6 +36,22 @@
         <!-- 应答模式是 INDIVIDUAL_ACKNOWLEDGE -->  
         <property name="sessionAcknowledgeMode" value="4"></property>  
     </bean>
+    
+    <!-- 连接池配置 -->
+    <bean id="queueMessageExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="15" />  
+	    <property name="maxPoolSize" value="50" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+	
+	<bean id="prepareBillExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+    
     
     <!-- AUTO_ACKNOWLEDGE = 1 ：自动确认
 	CLIENT_ACKNOWLEDGE = 2：客户端手动确认 
@@ -63,14 +64,13 @@
     	<jms:listener destination="BMS_FILE_EXPORT_QUEUE" ref="bmsFileExportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK" ref="bmsPackmaterialImportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListener"/>
-    	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListenerNew"/>
-    	<jms:listener destination="BMS.QUEUE.BUINESSDATA_EXPORT" ref="buinessDataExportListener"/>
-<!--     	<jms:listener destination="BMS.QUEUE.DISPATCH_BILL_EXPORT" ref="dispatchBillExportListener"/>
-    	<jms:listener destination="BMS.QUEUE.DISPATCH_BILL_PAY_EXPORT" ref="dispatchBillPayExportListener"/>
-    	<jms:listener destination="BMS.QUEUE.OUTSTOCK_PACKMATERIAL_EXPORT" ref="bizOutStockPackMaterialExportListener"/>
-    	<jms:listener destination="BMS.QUEUE.BUINESSDATA_EXPORT" ref="buinessDataExportListener"/>
-    	<jms:listener destination="BMS.QUEUE.OUTSTOCK_PACKMATERIAL_ORIGIN_EXPORT" ref="bizOutStockPackOriginExportListener"/> -->
-    </jms:listener-container>
+    	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListener"/>
+	</jms:listener-container>
+   
+   <jms:listener-container task-executor="prepareBillExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-4">
+   		<jms:listener destination="BMS.QUEUE.BUINESSDATA_EXPORT" ref="buinessDataExportListener"/>
+   </jms:listener-container>
+   
    
 </beans>
  

@@ -26,21 +26,6 @@
         <property name="maxConnections" value="${activemq.maxConnections}" />  
     </bean>  
     
-    <!-- 连接池配置 -->
-    <bean id="queueMessageExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
-	    <property name="corePoolSize" value="15" />  
-	    <property name="maxPoolSize" value="50" />  
-	    <property name="daemon" value="true" />  
-	    <property name="keepAliveSeconds" value="120" />  
-	</bean>
-	
-	<bean id="queueMessageExecutorTimer" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
-	    <property name="corePoolSize" value="15" />  
-	    <property name="maxPoolSize" value="50" />  
-	    <property name="daemon" value="true" />  
-	    <property name="keepAliveSeconds" value="120" />  
-	</bean>
-    
     <!-- 定义JmsTemplate的Queue类型 -->
     <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
         <constructor-arg ref="pooledConnectionFactory" />
@@ -52,6 +37,28 @@
         <property name="sessionAcknowledgeMode" value="4"></property>  
     </bean>
     
+    <!-- 连接池配置 -->
+    <bean id="correctWeightExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+	
+	<bean id="correctMaterialExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+	
+	<bean id="discountExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+    
     <!-- AUTO_ACKNOWLEDGE = 1 ：自动确认
 	CLIENT_ACKNOWLEDGE = 2：客户端手动确认 
 	DUPS_OK_ACKNOWLEDGE = 3： 自动批量确认
@@ -59,15 +66,17 @@
 	但是在activemq补充了一个自定义的ACK模式:
 	INDIVIDUAL_ACKNOWLEDGE = 4：单条消息确认 -->
     
-   <!--  <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="1-2">
-    	<jms:listener destination="BMS.CORRECT.ASYN.TASK" ref="bmsMaterialTaskListener"/>
-    </jms:listener-container> -->
-    
-     <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="1-2">
-    	<jms:listener destination="BMS.CORRECT.ASYN.TASK" ref="bmsProductTaskListener"/>
+    <jms:listener-container task-executor="correctWeightExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-2">
     	<jms:listener destination="BMS.CORRECT.WEIGHT.ASYN.TASK" ref="bmsCorrectWeightTaskListener"/>
-    	<jms:listener destination="BMS.CORRECT.MATERIAL.ASYN.TASK" ref="bmsCorrectMaterialTaskNewListener"/>
+    </jms:listener-container>
+    
+    <jms:listener-container task-executor="correctMaterialExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-2">
+    	<jms:listener destination="BMS.CORRECT.MATERIAL.ASYN.TASK" ref="bmsCorrectMaterialTaskListener"/>
+    </jms:listener-container>
+    
+    <jms:listener-container task-executor="discountExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-2">
     	<jms:listener destination="BMS.DISCOUNT.ASYN.TASK" ref="bmsReceiveDispatchListener"/>
     </jms:listener-container>
+    
 </beans>
  

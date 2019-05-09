@@ -116,8 +116,8 @@
         </Property>
       </PropertyDef>
       <PropertyDef name="progress">
-        <Property name="dataType">Double</Property>
         <Property name="label">进度</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="filePath">
         <Property></Property>
@@ -217,6 +217,9 @@
             </Entity>
           </Property>
         </Property>
+      </PropertyDef>
+      <PropertyDef name="process">
+        <Property name="label">进度</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskCondition">
@@ -493,9 +496,8 @@ function isNullOrEmpty(e) {&#xD;
           <Property name="width">2</Property>
         </DataColumn>
         <DataColumn>
-          <Property name="property">progress</Property>
-          <Property name="name">progress</Property>
-          <Property name="displayFormat">##%</Property>
+          <Property name="property">process</Property>
+          <Property name="name">process</Property>
           <Property name="width">80</Property>
         </DataColumn>
         <DataColumn>
