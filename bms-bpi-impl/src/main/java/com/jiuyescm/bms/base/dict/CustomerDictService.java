@@ -233,7 +233,6 @@ public class CustomerDictService implements ICustomerDictService {
 	public PageInfo<PubCustomerBaseVo> queryPubCustomerBase(
 			Map<String, Object> condition, int pageNo, int pageSize) {
 		PageInfo<PubCustomerBaseVo> page = new PageInfo<PubCustomerBaseVo>();
-		condition.put("delFlag", "0");
 		PageInfo<PubCustomerBaseEntity> pageEntity = pubCustomerBaseRepository
 				.query(condition, pageNo, pageSize);
 		if (pageEntity != null) {
