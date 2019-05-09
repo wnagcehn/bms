@@ -52,7 +52,6 @@
 	    <property name="keepAliveSeconds" value="120" />  
 	</bean>
     
-   
     
     <!-- AUTO_ACKNOWLEDGE = 1 ：自动确认
 	CLIENT_ACKNOWLEDGE = 2：客户端手动确认 
@@ -65,7 +64,7 @@
     	<jms:listener destination="BMS_FILE_EXPORT_QUEUE" ref="bmsFileExportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTBATCH.TASK" ref="bmsPackmaterialImportTaskListener"/>
     	<jms:listener destination="BMS.QUEUE.PACKMATERIALIMPORTWMS.TASK" ref="bmsPackmaterialImportWmsListener"/>
-    	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListenerNew"/>
+    	<jms:listener destination="BMS.QUEUE.PALLET_STORAGE_IMPORT.TASK" ref="bmsPalletImportListener"/>
 	</jms:listener-container>
    
    <jms:listener-container task-executor="prepareBillExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-4">

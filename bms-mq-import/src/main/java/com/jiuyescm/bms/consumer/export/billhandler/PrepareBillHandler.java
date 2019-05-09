@@ -136,9 +136,8 @@ public class PrepareBillHandler {
      * 异步导出
      */
     public void export(String json) throws Exception{
-        
-        process = 0d;
-        
+        //初始化进度
+        process = 0d;    
         logger.info("JSON开始解析……");
         Map<String, Object> condition = resolveJsonToMap(json);
         if (null == condition) {
@@ -166,7 +165,6 @@ public class PrepareBillHandler {
             condition.put("startDate", startDate);
             condition.put("endDate", endDate);
         }
-
         
         //获取任务ID
         String taskId = condition.get("taskId").toString();

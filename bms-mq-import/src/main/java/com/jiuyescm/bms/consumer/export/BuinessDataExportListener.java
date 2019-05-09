@@ -10,6 +10,7 @@ import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.context.ContextLoader;
@@ -28,7 +29,7 @@ import com.jiuyescm.bms.consumer.export.billhandler.PrepareBillHandler;
 public class BuinessDataExportListener implements MessageListener{
     
     private static final Logger logger = LoggerFactory.getLogger(BuinessDataExportListener.class);
-    
+
     @Override
     public void onMessage(Message message) {
         logger.info("--------------------MQ处理操作日志开始---------------------------");
@@ -48,10 +49,10 @@ public class BuinessDataExportListener implements MessageListener{
         //导出
         try {
             WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext(); 
-            PrepareBillHandler prepareBillHandler = (PrepareBillHandler)ctx.getBean("dispatchCalcuJob");
+            PrepareBillHandler prepareBillHandler = (PrepareBillHandler)ctx.getBean("prepareBillHandler");
             prepareBillHandler.export(json);
         } catch (Exception e1) {
-            logger.info("文件导出失败");
+            logger.info("文件导出失败", e1);
             return;
         }
         try {
@@ -62,7 +63,6 @@ public class BuinessDataExportListener implements MessageListener{
         sw.stop();
         logger.info("--------------------MQ处理操作日志结束,耗时:"+sw.getTotalTimeMillis()+"ms---------------");   
     }
-    
     
 }
 
