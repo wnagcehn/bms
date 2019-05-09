@@ -195,11 +195,14 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	            discountServiceDispatch(task,entity);
 	        }
 		    
+		    //进度为100，则为成功
 		    if(task.getTaskRate()==100){
 		         task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
+		         bmsDiscountAsynTaskService.update(task); 
 		    }
 		    
-		    if(entity!=null && entity.getProgress()==0){
+		    //如果有失败的，则最终的账单折扣是失败
+		    if(BmsCorrectAsynTaskStatusEnum.FAIL.getCode().equals(task.getTaskStatus())){
 		        flag=true;
 		    }
 		}
