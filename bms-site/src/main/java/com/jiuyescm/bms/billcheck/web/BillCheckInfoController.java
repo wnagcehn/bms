@@ -1959,4 +1959,36 @@ public class BillCheckInfoController{
 		return "sucess";
 	}
 	
+	 /**
+     * @param billCheckInfoVo
+     * @return
+     */
+    @DataResolver
+    public String unFinishBill(BillCheckInfoVo billCheckInfoVo){
+        billCheckInfoVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+        billCheckInfoVo.setLastModifier(JAppContext.currentUserName());
+        billCheckInfoVo.setLastModifyTime(JAppContext.currentTimestamp());
+        billCheckInfoService.update(billCheckInfoVo);
+        
+        try {
+            
+            String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
+
+            BillCheckLogVo vo=new BillCheckLogVo();
+            vo.setBillCheckId(billCheckInfoVo.getId());
+            vo.setBillStatusCode(CheckBillStatusEnum.RECEIPTED.getCode());
+            vo.setLogType(0);
+            vo.setOperateDesc("取消收款");
+            vo.setCreator(JAppContext.currentUserName());
+            vo.setCreatorId(JAppContext.currentUserID());
+            vo.setCreateTime(JAppContext.currentTimestamp());
+            vo.setDeptName(groupName);
+            
+            billCheckLogService.addBillCheckLog(vo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "取消收款成功!";
+    }
+	
 }

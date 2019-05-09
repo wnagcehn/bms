@@ -1158,6 +1158,43 @@ if(data.current){&#xD;
         <Property name="caption">一键收款</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
       </ToolBarButton>
+      <ToolBarButton id="btnUnReceipt">
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length == 1){&#xD;
+ 	//修改，只能选择一条&#xD;
+	var entity=selectDatas[0];&#xD;
+	if(entity!=null){&#xD;
+		//非已收款状态无法修改&#xD;
+		if(entity.get(&quot;billStatus&quot;)!=&quot;RECEIPTED&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;只有已收款账单才能取消收款!&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+&#xD;
+		dorado.MessageBox.confirm(&quot;是否需要取消收款?&quot;,function(){&#xD;
+			view.get(&quot;#unFinishAction&quot;).execute(&#xD;
+				function(result){&#xD;
+					var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+					var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+					tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+					dorado.MessageBox.alert(result);&#xD;
+				}&#xD;
+			);&#xD;
+&#xD;
+		});&#xD;
+&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请勾选一条账单&quot;);&#xD;
+	}&#xD;
+}else if(selectDatas.length > 1) {&#xD;
+	dorado.MessageBox.alert(&quot;只能勾选一条账单!&quot;); &#xD;
+}else if (selectDatas.length &lt; 1) {&#xD;
+	dorado.MessageBox.alert(&quot;请勾选一条账单!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">取消收款</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
       <ToolBarButton id="btnBadApply">
         <ClientEvent name="onClick">//选中的记录&#xD;
 var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
@@ -3827,5 +3864,12 @@ if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
       <Property name="visible">false</Property>
       <Property name="hideMode">display</Property>
     </Label>
+    <UpdateAction id="unFinishAction">
+      <Property name="dataResolver">billCheckInfoController#unFinishBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>
