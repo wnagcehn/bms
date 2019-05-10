@@ -13,14 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -456,23 +454,10 @@ public class BizOutstockMasterController extends BaseController {
 
 	@Expose
 	public String reCalculate(Map<String, Object> param) {
-		// 只查询计算状态为1的业务数据，这样的业务数据一定有费用编号
-		List<BizOutstockMasterEntity> outstockMasterEntities = bizOutstockMasterService
-				.queryNewList(param);
-		if (CollectionUtils.isNotEmpty(outstockMasterEntities)) {
-			List<String> feeList = new ArrayList<>();
-			for (BizOutstockMasterEntity bizOutstockMasterEntity : outstockMasterEntities) {
-				feeList.add(bizOutstockMasterEntity.getFeesNo());
-			}
-			Map<String, Object> conMap = new HashMap<String, Object>();
-			conMap.put("feeList", feeList);
-			if (param.containsKey("subjectCode")) {
-				String subjectCode = (String) param.get("subjectCode");
-				conMap.put("subjectCode", subjectCode);
-			}
-			// 更改费用计算状态为99
-			bizOutstockMasterService.retryForCalcuFee(conMap);
-			
+		// 更改费用计算状态为99
+		if(bizOutstockMasterService.reCalculate(param)==0){
+		    return "重算异常";
+		}else{
 			//汇总需要发mq的数据
 			List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryOutstockTask(param);
 			for (BmsCalcuTaskVo calcuTaskVo : list) {
@@ -485,15 +470,6 @@ public class BizOutstockMasterController extends BaseController {
 					logger.error("mq发送失败:", e);
 				}
 			}
-			// 如果界面指定了费用科目，则按指定费用科目重算，否则全部重算
-//			if (param.containsKey("subjectCode")) {
-//				String subjectCode = (String) param.get("subjectCode");
-//				List<String> subjectList = Arrays.asList(subjectCode);
-//				sendTask(subjectList);
-//				list = bmsCalcuTaskService.queryOutstockTask(param);
-//			} else {
-//				sendTask(subjectList3);
-//			}
 		}
 		return "操作成功! 正在重算...";
 	}

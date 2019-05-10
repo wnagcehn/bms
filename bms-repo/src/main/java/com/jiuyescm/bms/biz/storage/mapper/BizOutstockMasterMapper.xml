@@ -368,8 +368,13 @@
     </select>
 	
 	<update id="retryForCalcu" parameterType="java.util.Map">
-        update biz_outstock_master a set a.is_calculated = 99 where a.del_flag = 0
-        <include refid="baseSelectColumns" />
+		update fees_receive_storage b
+ 		LEFT JOIN biz_outstock_master a on a.fees_no=b.fees_no and a.del_flag='0' set b.is_calculated = '99' 
+ 		where 1=1 and b.del_flag='0'
+	     <include refid="baseSelectColumns" />
+	     <if test="(subjectCode != null and subjectCode !='')" >
+				and b.subject_code = #{subjectCode}
+		</if>
     </update>
     
       <select id="queryExceptionOne" parameterType="java.util.Map" resultMap="baseResultMap">
@@ -431,8 +436,8 @@
 		</if>
     </select>
     
-	<update id="retryForCalcuFee" parameterType="java.util.Map">
-		update fees_receive_storage set is_calculated = '99' where fees_no in
+	<update id="retryForCalcuFee" parameterType="java.util.Map">		
+		update fees_receive_storage  set is_calculated = '99' where fees_no in
 		<foreach collection="feeList" item="item" index="index" open="(" separator="," close=")">
 			#{item}
 		</foreach>
