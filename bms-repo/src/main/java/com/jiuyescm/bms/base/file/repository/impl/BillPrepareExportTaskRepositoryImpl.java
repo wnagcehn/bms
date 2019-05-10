@@ -24,6 +24,12 @@ public class BillPrepareExportTaskRepositoryImpl extends MyBatisDao implements I
 				param, new RowBounds(pageNo, pageSize));
 	    return new PageInfo<BillPrepareExportTaskEntity>(list);
 	}
+	
+	@Override
+	public BillPrepareExportTaskEntity queryBillTask(Map<String, Object> param){
+	    List<BillPrepareExportTaskEntity> list = selectList("com.jiuyescm.bms.base.file.mapper.BillPrepareExportTaskMapper.queryBillTask", param);
+	    return list.size()>0?list.get(0):null;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

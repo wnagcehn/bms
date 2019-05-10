@@ -209,10 +209,11 @@ public class DispatchBillExportController extends BaseController{
 			myparam.put("logistics", null);
 		}
 		
-		Map<String, String> temMap=getTemperatureTypeList();
-		Map<String,String> b2bMap=getIstB();
-		Map<String,String> orderStatusMap=getOrderStatus();
-		Map<String,String> serviceMap=getServiceMap();
+		Map<String, String> temMap=getEnumList("TEMPERATURE_TYPE");
+		Map<String, String> b2bMap=getIstB();
+		Map<String, String> orderStatusMap=getOrderStatus();
+		Map<String, String> serviceMap=getServiceMap();
+		Map<String, String> transportTypeMap = getEnumList("TRANSPORT_TYPE");
 		int pageNo = 1;
 		int lineNo = 1;
 		boolean doLoop = true;
@@ -231,7 +232,7 @@ public class DispatchBillExportController extends BaseController{
 			
 			//头、内容信息
 			List<Map<String, Object>> headDetailMapList = getBizHead(); 
-			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap,serviceMap);
+			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap,serviceMap,transportTypeMap);
 			
 			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
 					lineNo, headDetailMapList, dataDetailList);
@@ -427,6 +428,12 @@ public class DispatchBillExportController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "运输方式");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "transportType");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
         itemMap.put("title", "发件人省");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "sendProvinceId");
@@ -585,7 +592,7 @@ public class DispatchBillExportController extends BaseController{
         return headInfoList;
 	}
 	
-	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap,Map<String,String> serviceMap){
+	private List<Map<String, Object>> getBizHeadItem(List<BizDispatchBillVo> list,Map<String, String> temMap,Map<String,String> b2bMap,Map<String,String> orderStatusMap,Map<String,String> serviceMap,Map<String, String> transportTypeMap){
 		 List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();	 
 	        Map<String, Object> dataItem = null;
 	        for (BizDispatchBillVo entity : list) {
@@ -623,7 +630,8 @@ public class DispatchBillExportController extends BaseController{
 	   
 	        	String carrierId=StringUtils.isNotBlank(entity.getAdjustCarrierId())?entity.getAdjustCarrierId():entity.getCarrierId();        	
 		        dataItem.put("servicename", serviceMap.get(entity.getCarrierId()+"&"+entity.getServiceTypeCode()));					
-		        dataItem.put("adjustServiceTypeName", serviceMap.get(carrierId+"&"+entity.getAdjustServiceTypeCode()));				
+		        dataItem.put("adjustServiceTypeName", serviceMap.get(carrierId+"&"+entity.getAdjustServiceTypeCode()));	
+		        dataItem.put("transportType", entity.getTransportType()==null?"":transportTypeMap.get(entity.getTransportType()));               
 	        	dataItem.put("sendProvinceId", entity.getSendProvinceId());
 	        	dataItem.put("sendCityId", entity.getSendCityId());        	
 	        	dataItem.put("receiveName", entity.getReceiveName());
@@ -674,22 +682,6 @@ public class DispatchBillExportController extends BaseController{
 	}
 	
 	/**
-	 * 温度类型
-	 * @return
-	 */
-	@DataProvider
-	public Map<String, String> getTemperatureTypeList(){
-		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("TEMPERATURE_TYPE");
-		Map<String, String> map =new LinkedHashMap<String,String>();
-		if(systemCodeList!=null && systemCodeList.size()>0){
-			for(int i=0;i<systemCodeList.size();i++){
-				map.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
-			}
-		}
-		return map;
-	}
-	
-	/**
 	 * B2B标识
 	 * @return
 	 */
@@ -720,4 +712,25 @@ public class DispatchBillExportController extends BaseController{
 		}
 		return map;
 	}
+	
+	/**
+	 * 获取运输方式
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年4月29日 上午10:25:58
+	 *
+	 * @return
+	 */
+    @DataProvider
+    public Map<String, String> getEnumList(String type){
+        List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList(type);
+        Map<String, String> map =new LinkedHashMap<String,String>();
+        if(systemCodeList!=null && systemCodeList.size()>0){
+            for(int i=0;i<systemCodeList.size();i++){
+                map.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
+            }
+        }
+        return map;
+    }
 }

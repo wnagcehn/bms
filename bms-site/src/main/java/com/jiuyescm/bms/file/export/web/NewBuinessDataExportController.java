@@ -20,6 +20,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +37,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
@@ -43,6 +47,7 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity;
@@ -65,6 +70,7 @@ import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.log.entity.BmsErrorLogInfoEntity;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
 import com.jiuyescm.bms.fees.abnormal.service.IFeesAbnormalService;
 import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
@@ -74,13 +80,16 @@ import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.MQConstants;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.utils.JsonUtils;
 
 @SuppressWarnings("deprecation")
 @Controller("newBuinessDataExportController")
@@ -122,6 +131,10 @@ public class NewBuinessDataExportController extends BaseController {
 	private JmsTemplate jmsQueueTemplate;
 	@Resource
 	private IBizDispatchBillService bizDispatchBillService;
+	@Resource 
+    private SequenceService sequenceService;
+    @Autowired
+    private IBmsDiscountAsynTaskService bmsDiscountAsynTaskService;
 
 	private static final int PAGESIZE = 10000;
 	FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
@@ -166,6 +179,11 @@ public class NewBuinessDataExportController extends BaseController {
 		PageInfo<BillPrepareExportTaskEntity> pageInfo = billPrepareExportTaskService.queryBillTask(param, page.getPageNo(),
 				page.getPageSize());
 		if (pageInfo != null) {
+		    if (CollectionUtils.isNotEmpty(pageInfo.getList())) {
+		        for (BillPrepareExportTaskEntity billPrepareExportTaskEntity : pageInfo.getList()) {
+	                billPrepareExportTaskEntity.setProcess(billPrepareExportTaskEntity.getProgress().intValue()+"%");
+	            }
+            }
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}
@@ -185,6 +203,13 @@ public class NewBuinessDataExportController extends BaseController {
 			year = param.get("year").toString();
 			month = param.get("month").toString();
 		}
+		//拼接年月，后面用来调用折扣RPC服务的参数
+		if (Integer.parseInt(month) < 10) {
+		    param.put("createMonth", year + "-0" + month);
+        }else {
+            param.put("createMonth", year + "-" + month);
+        }
+		//拼接startDate和endDate
 		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
 			String startDateStr = year + "-" + month + "-01 00:00:00";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -199,7 +224,7 @@ public class NewBuinessDataExportController extends BaseController {
 			param.put("startDate", startDate);
 			param.put("endDate", endDate);
 		}
-		String customerId = param.get("customerId").toString();
+		final String customerId = param.get("customerId").toString();
 		
 		List<Map<String,String>> cuList=new ArrayList<Map<String,String>>();
 		Map<String,String> cuMap=new HashMap<>();
@@ -230,66 +255,95 @@ public class NewBuinessDataExportController extends BaseController {
 							Timestamp startDate = DateUtil.formatTimestamp(condition.get("startDate"));
 							Timestamp endDate = DateUtil.formatTimestamp(condition.get("endDate"));
 					
-							//Map<String, Object> queryEntity = new HashMap<String, Object>();
 							SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 							Date date = format.parse(endDate.toString());
 							String endTime = format.format(addDay(1, date));
 							String startTime = format.format(startDate);
-							//queryEntity.put("customerId", customerId);
-
-							//queryEntity.put("startTime", startTime);
-							//queryEntity.put("endTime", endTime);
 							condition.put("startTime", startTime);
 							condition.put("endTime", endTime);
-							//queryEntity.put("taskType", FileTaskTypeEnum.BILL_RE_DOWN.getCode());
-							//if (checkFileHasDownLoad(queryEntity)) {
-							//	return MessageConstant.BILL_FILE_ISEXIST_MSG;
-							//}
 							DateFormat sdf = new SimpleDateFormat("yyyy-MM");
-							String path = getPath();
-							String filePath = path + "/" + cu.get("customerName").toString() + "-"
-									+ sdf.format(startDate) + "-预账单"+System.currentTimeMillis() + FileConstant.SUFFIX_XLSX;
 							BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
 
 							entity.setTaskName(cu.get("customerName").toString() + "-" + sdf.format(startDate) + "-预账单");
 							entity.setBillNo("");
 							entity.setStartTime(Timestamp.valueOf(startTime + " 00:00:00"));
 							entity.setEndTime(Timestamp.valueOf(format.format(date) + " 00:00:00"));
-							//entity.setTaskType(FileTaskTypeEnum.BILL_RE_DOWN.getCode());
 							entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
 							entity.setProgress(0d);
-							entity.setFilePath(filePath);
 							entity.setCreator(username);
 							entity.setCreateTime(JAppContext.currentTimestamp());
 							entity.setDelFlag("0");
 							entity.setCustomerid(cu.get("customerId").toString());
 							entity.setMkId(mkId);
-							//区分是否按照子商家生成
-							if ((Boolean)condition.get("isChildCustomer") == true) {
+							// 区分是否按照子商家生成
+							if ((Boolean)condition.get("isChildCustomer")) {
 								entity.setIsChildCustomer("0");
 							}else{
 								entity.setIsChildCustomer("1");
 							}
-							entity = billPrepareExportTaskService.save(entity);
-
-							// 生成账单文件
-							condition.put("taskId", entity.getTaskId());
-							condition.put("path2", path);
-							condition.put("filepath", filePath);
+							// 耗材分仓
+							if ((Boolean)condition.get("isSepWarehouse")) {
+							    entity.setMaterialSplit(1l);;
+							}else{
+							    entity.setMaterialSplit(0l);
+							}
+							// 是否自动折扣
+							if ((Boolean)condition.get("isDiscount")) {
+                                entity.setIsDiscount("1");
+                            }else{
+                                entity.setIsDiscount("0");
+                            }
 							
-							export(condition, entity.getTaskId(), path, filePath,cu);
+							// 生成taskID
+				            String taskId = sequenceService.getBillNoOne(BillPrepareExportTaskEntity.class.getName(), "BF", "0000000000");
+				            entity.setTaskId(taskId);
+							entity = billPrepareExportTaskService.save(entity);	
+							
+							// 添加调用RPC服务的参数
+							condition.put("taskId", entity.getTaskId());
+							condition.put("cu", cu);
+							condition.put("customerid", cu.get("customerId"));
+							condition.put("username", username);
+							// 判断是否自动生成折扣
+							if ("1".equals(entity.getIsDiscount())) {
+							    // 1.如果是按照主商家生成折扣
+							    if (!(Boolean)condition.get("isChildCustomer")) {
+							        //通过主商家--->子商家（折扣按照子商家处理）
+							        List<Map<String,String>> childCustomerList = billPrepareExportTaskService.getChildCustomer(customerId);
+							        String result = "";
+                                    condition.put("childCustomerList", childCustomerList);
+                                    //调用折扣的RPC服务，先生成折扣，后处理预账单（如果子商家都无折扣，更新备注，发送MQ）
+                                    result = bmsDiscountAsynTaskService.sendTask(condition);
+							        if (StringUtils.isNotBlank(result)) {
+							            updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0, result, null);
+							            sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
+                                    } 
+                                }
+							    // 2.如果按照子商家生成折扣
+							    else {
+	                                // 调用折扣的RPC服务，先生成折扣，后处理预账单（如果子商家无折扣，更新备注，发送MQ）
+	                                String result = bmsDiscountAsynTaskService.sendTask(condition);
+	                                if (StringUtils.isNotBlank(result)) {
+	                                    updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0, result, null);
+	                                    sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
+	                                }
+                                }
+                            }else {
+                                // 直接发送MQ处理预账单
+                                sendMq(MQConstants.BUINESSDATA_EXPORT, condition);
+                            }
 						}
 					} catch (Exception e) {
 							logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
 						}
-					};
+					}
 				}.start();
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG, e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
-			bmsErrorLogInfoEntity.setClassName("BuinessDataExportController");
+			bmsErrorLogInfoEntity.setClassName("NewBuinessDataExportController");
 			bmsErrorLogInfoEntity.setMethodName("asynExport");
 			//bmsErrorLogInfoEntity.setIdentify("MQ发送失败");
 			bmsErrorLogInfoEntity.setErrorMsg(e.toString());
@@ -339,14 +393,14 @@ public class NewBuinessDataExportController extends BaseController {
 			condition.put("customerIds", customerIdList);
 		}
 		
-		
+		Map<String, String> transportTypeMap = getEnumList("TRANSPORT_TYPE");
+		Map<String, String> temMap = getEnumList("TEMPERATURE_TYPE");
 		// 配送费
-		handDispatch(xssfWorkbook, poiUtil, condition, filePath);
-				
-		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 50);
+		handDispatch(xssfWorkbook, poiUtil, condition, filePath, transportTypeMap);
 
-		List<String> warehouseList = queryPreBillWarehouse(condition);
-		Map<String, String> temMap=getTemperatureTypeList();
+		updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 50);
+		List<String> warehouseList = queryPreBillWarehouse(condition);	
+
 		// 存储费
 		handStorage(xssfWorkbook, condition, poiUtil, warehouseList);
 		//出库(TB)
@@ -915,6 +969,7 @@ public class NewBuinessDataExportController extends BaseController {
 		headMapDict.put("productDetail", "商品明细");
 		headMapDict.put("carrierName", "计费物流商");
 		headMapDict.put("serviceTypeName", "物流产品类型");
+		headMapDict.put("transportType", "运输方式");
 		headMapDict.put("receiver", "收件人");
 		headMapDict.put("receiveProvice", "收件人省");
 		headMapDict.put("receiveCity", "收件人市");
@@ -945,7 +1000,7 @@ public class NewBuinessDataExportController extends BaseController {
 		return list;
 	}
 
-	private List<Map<String, Object>> getDispathItemMap(List<FeesReceiveDispatchEntity> dataList) {
+	private List<Map<String, Object>> getDispathItemMap(List<FeesReceiveDispatchEntity> dataList, Map<String, String> transportTypeMap) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		double yunfei = 0d;
@@ -966,6 +1021,7 @@ public class NewBuinessDataExportController extends BaseController {
 			map.put("productDetail", entity.getProductDetail());
 			map.put("carrierName", entity.getCarrierName());
 			map.put("serviceTypeName", entity.getServiceTypeName());
+			map.put("transportType", entity.getTransportType()==null?"":transportTypeMap.get(entity.getTransportType()));
 			map.put("receiver", entity.getReceiveName());
 			map.put("receiveProvice", entity.getToProvinceName());
 			map.put("receiveCity", entity.getToCityName());
@@ -1012,7 +1068,7 @@ public class NewBuinessDataExportController extends BaseController {
 	 */
 	@SuppressWarnings("static-access")
 	private void handDispatch(SXSSFWorkbook xssfWorkbook, POISXSSUtil poiUtil, Map<String, Object> condition,
-			String filePath) throws Exception {
+			String filePath, Map<String, String> transportTypeMap) throws Exception {
 		int pageNo = 1;
 		boolean doLoop = true;
 		List<FeesReceiveDispatchEntity> dataList = new ArrayList<FeesReceiveDispatchEntity>();
@@ -1048,7 +1104,7 @@ public class NewBuinessDataExportController extends BaseController {
 		}
 		List<Map<String, Object>> headMap = getDispathHeadMap();
 
-		List<Map<String, Object>> itemMap = getDispathItemMap(dataList);
+		List<Map<String, Object>> itemMap = getDispathItemMap(dataList, transportTypeMap);
 		poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook, "宅配", headMap, itemMap);
 	}
 	
@@ -2299,8 +2355,8 @@ public class NewBuinessDataExportController extends BaseController {
 	 * @return
 	 */
 	@DataProvider
-	public Map<String, String> getTemperatureTypeList(){
-		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("TEMPERATURE_TYPE");
+	public Map<String, String> getEnumList(String type){
+		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList(type);
 		Map<String, String> map =new LinkedHashMap<String,String>();
 		if(systemCodeList!=null && systemCodeList.size()>0){
 			for(int i=0;i<systemCodeList.size();i++){
@@ -2346,5 +2402,46 @@ public class NewBuinessDataExportController extends BaseController {
 		mapValue.put("0", "是");
 		mapValue.put("1", "否");
 		return mapValue;
+	}
+	
+	/**
+     * 更新导出任务表
+     * 
+     * @param taskId
+     * @param process
+     * @param taskState
+     * @param remark
+     * @param filePath
+     */
+    private void updateExportTask(String taskId, String taskState, double process, String remark, String filePath) {
+        BillPrepareExportTaskEntity entity = new BillPrepareExportTaskEntity();
+        if (StringUtils.isNotEmpty(taskState)) {
+            entity.setTaskState(taskState);
+        }
+        if (StringUtils.isNotEmpty(remark)) {
+            entity.setRemark(remark);
+        }
+        if (StringUtils.isNotEmpty(filePath)) {
+            entity.setFilePath(filePath);
+        }
+        if (!DoubleUtil.isBlank(process)) {
+            entity.setProgress(process);
+        }
+        entity.setTaskId(taskId);
+        billPrepareExportTaskService.update(entity);
+    }
+	
+	/*
+	 * 发送MQ
+	 */
+	public void sendMq(String destinationName, Map<String, Object> condition){
+	    //Map------>JSON
+	    final String msg = JsonUtils.toJson(condition);
+	    jmsQueueTemplate.send(destinationName, new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                return session.createTextMessage(msg);
+            }
+        });
 	}
 }

@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.general.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,7 +91,9 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
 
 	@Override
 	public void updateBatch(List<FeesReceiveStorageEntity> entity) {
-		this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.update", entity);
+	    Map<String,Object> map=new HashMap<String, Object>();
+	    map.put("list", entity);
+		this.update("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.update", map);
 	}
 
 }

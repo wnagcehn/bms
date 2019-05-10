@@ -218,6 +218,9 @@ public class BizDispatchBillEntity implements IEntity {
 	//包装方案编号
 	private String packPlanNo;
 	
+	//运输方式
+	private String transportType;
+	
 	public Double getCarrierWeight() {
 		return carrierWeight;
 	}
@@ -1339,6 +1342,14 @@ public class BizDispatchBillEntity implements IEntity {
 
     public void setPackPlanNo(String packPlanNo) {
         this.packPlanNo = packPlanNo;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
     }
 	
 	

@@ -30,18 +30,18 @@ public class BillPrepareExportTaskServiceImpl implements IBillPrepareExportTaskS
 		return billPrepareExportTaskRepository.queryBillTask(param,pageNo,pageSize);
 
 	}
+	
+	@Override
+	public BillPrepareExportTaskEntity queryBillTask(Map<String, Object> param){
+	    return billPrepareExportTaskRepository.queryBillTask(param);
+	}
 
 	@Override
 	public BillPrepareExportTaskEntity save(BillPrepareExportTaskEntity entity)
 			throws Exception {
-		// TODO Auto-generated method stub
-		if (null != entity) {
-    		String taskId = sequenceService.getBillNoOne(BillPrepareExportTaskEntity.class.getName(), "BF", "0000000000");
-    		if (StringUtils.isBlank(taskId)) {
-    			throw new Exception("生成导出文件编号失败,请稍后重试!");
-    		}
-    		entity.setTaskId(taskId);
-		}
+		if (StringUtils.isBlank(entity.getTaskId())) {
+			throw new Exception("生成导出文件编号失败,请稍后重试!");
+		}		
         return billPrepareExportTaskRepository.save(entity);
 	}
 

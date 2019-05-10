@@ -177,7 +177,7 @@ public class DispatchBillInitJob extends IJobHandler {
 	    feeEntity.setDeliveryid(entity.getDeliverid());         // 物流商ID
 	    feeEntity.setDeliverName(entity.getDeliverName());        // 物流商名称
 	    feeEntity.setTemperatureType(entity.getTemperatureTypeCode());//温度
-
+        feeEntity.setTransportType(entity.getTransportType());//运输方式
 		return feeEntity;
 	}
 

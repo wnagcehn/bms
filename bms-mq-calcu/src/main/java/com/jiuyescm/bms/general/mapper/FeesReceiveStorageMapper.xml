@@ -111,30 +111,147 @@
     </select>
     
     <!-- 根据费用编号更新费用 -->
-    <update id="update" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
-        update fees_receive_storage 
-		<set >
-			<if test="tempretureType != null" >tempreture_type=#{tempretureType,jdbcType=VARCHAR},</if>
-			<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER},</if>
-			<if test="box != null" >box=#{box,jdbcType=DOUBLE},</if>
-			<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
-			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
-			<if test="volume != null" >volume=#{volume,jdbcType=DOUBLE},</if>
-			<if test="varieties != null" >varieties=#{varieties,jdbcType=INTEGER},</if>
-			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
-			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DOUBLE},</if>
-			<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
-			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
-			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
-			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
-			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
-			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
-			<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
-			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
-			<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>
-		</set>
-        where fees_no=#{feesNo} and subject_code = #{subjectCode}
+    <update id="update" parameterType="java.util.Map">
+    	update fees_receive_storage 
+	    <trim prefix="set" suffixOverrides=",">
+	        <trim prefix="tempreture_type =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.tempretureType != null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.tempretureType}
+                    </if>
+                </foreach>
+            </trim>
+    	    <trim prefix="quantity =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.quantity != null" >
+                       when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.quantity}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="box =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.box != null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.box}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="unit =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.unit != null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.unit}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="weight=case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.weight != null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.weight}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="volume =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.volume != null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.volume}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="varieties =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.varieties != null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.varieties}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="unit_price =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.unitPrice!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.unitPrice}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="continued_price =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.continuedPrice!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.continuedPrice}
+                    </if>
+                </foreach>
+            </trim>
+           <trim prefix="cost =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.cost!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.cost}
+                    </if>
+                </foreach>
+            </trim>
+           <trim prefix="is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.isCalculated!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.isCalculated}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calculateTime!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.calculateTime}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="param1 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param1!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.param1}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="param2 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param2!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.param2}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="param3 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param3!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.param3}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="param4 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param4!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.param4}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="param6 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param6!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode} then #{biz.param6}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="rule_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.ruleNo!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.ruleNo}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="calcu_msg =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calcuMsg!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.calcuMsg}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+	    where fees_no in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+             #{biz.feesNo}
+        </foreach>
     </update>
     
     <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">

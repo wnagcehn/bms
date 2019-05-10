@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -1958,5 +1959,48 @@ public class BillCheckInfoController{
 		}
 		return "sucess";
 	}
+	
+    /**
+     * @param billCheckInfoVo
+     * @return
+     */
+    @DataResolver
+    public String unFinishBill(BillCheckInfoVo billCheckInfoVo) {
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("id", billCheckInfoVo.getId());
+            PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.query(param, 1, 20);
+            List<BillCheckInfoVo> list = pageInfo.getList();
+            if (CollectionUtils.isEmpty(list)) {
+                return "取消收款失败!";
+            }
+            if(!"RECEIPTED".equals(list.get(0).getBillStatus())){
+                return "只有已收款账单才能取消收款!";
+            }
+            //更新
+            billCheckInfoVo.setBillStatus(CheckBillStatusEnum.TB_RECEIPT.getCode());
+            billCheckInfoVo.setLastModifier(JAppContext.currentUserName());
+            billCheckInfoVo.setLastModifyTime(JAppContext.currentTimestamp());
+            billCheckInfoService.update(billCheckInfoVo);
+
+            String groupName = bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
+
+            BillCheckLogVo vo = new BillCheckLogVo();
+            vo.setBillCheckId(billCheckInfoVo.getId());
+            vo.setBillStatusCode(CheckBillStatusEnum.RECEIPTED.getCode());
+            vo.setLogType(0);
+            vo.setOperateDesc("取消收款");
+            vo.setCreator(JAppContext.currentUserName());
+            vo.setCreatorId(JAppContext.currentUserID());
+            vo.setCreateTime(JAppContext.currentTimestamp());
+            vo.setDeptName(groupName);
+
+            billCheckLogService.addBillCheckLog(vo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "取消收款失败!";
+        }
+        return "取消收款成功!";
+    }
 	
 }

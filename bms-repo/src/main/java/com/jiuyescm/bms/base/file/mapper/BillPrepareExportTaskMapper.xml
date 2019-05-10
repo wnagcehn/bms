@@ -21,14 +21,16 @@
 	   	<result column="last_modifier" property="lastModifier" jdbcType="VARCHAR" />
 	   	<result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
 	   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+	   	<result column="is_discount" property="isDiscount" jdbcType="VARCHAR" />
+	   	<result column="remark" property="remark" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id,task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, isChildCustomer,progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
+        id,task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, isChildCustomer,progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag, is_discount, remark
     </sql>
 	  
 	<sql id="BASE_COLUMNS_WITHOUT_ID">
-		task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, isChildCustomer, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag
+		task_id, task_name, bill_no, mk_id, customerid, start_time, end_time, task_state, storage_split, material_split, isChildCustomer, progress, file_path, creator, create_time, last_modifier, last_modify_time, del_flag, is_discount, remark
     </sql>
 	  
     <select id="queryBillTask" parameterType="java.util.Map"  resultType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
@@ -57,17 +59,20 @@
        	<if test=" endTime != null and endTime !='' ">
 			and end_time = #{endTime}
 		</if>
-       	<if test=" taskState != null and taskState !='' ">
+       	<if test=" taskState != null and taskState !='' and taskState !='ALL' ">
 			and task_state = #{taskState}
 		</if>
        	<if test=" storageSplit != null and storageSplit !='' ">
 			and storage_split = #{storageSplit}
 		</if>
-       	<if test=" materialSplit != null and materialSplit !='' ">
-			and material_split = #{materialSplit}
+       	<if test=" isSepWarehouse != null and isSepWarehouse !='' and isSepWarehouse !='ALL' ">
+			and material_split = #{isSepWarehouse}
 		</if>
 		<if test=" isChild != null and isChild !='' ">
 			and isChildCustomer = #{isChild}
+		</if>
+		<if test=" isDiscount != null and isDiscount !='' ">
+			and is_discount = #{isDiscount}
 		</if>
        	<if test=" progress != null and progress !='' ">
 			and progress = #{progress}
@@ -118,7 +123,9 @@
 			#{createTime,jdbcType=TIMESTAMP}, 
 			#{lastModifier,jdbcType=VARCHAR}, 
 			#{lastModifyTime,jdbcType=TIMESTAMP}, 
-			#{delFlag,jdbcType=VARCHAR}
+			#{delFlag,jdbcType=VARCHAR},
+			#{isDiscount,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -176,6 +183,12 @@
 			</if>
 			<if test=" delFlag != null and delFlag !='' ">
 				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+			<if test=" isDiscount != null and isDiscount !='' ">
+				is_discount = #{isDiscount,jdbcType=VARCHAR},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
 			</if>
         </trim>
          where task_id = #{taskId,jdbcType=VARCHAR}

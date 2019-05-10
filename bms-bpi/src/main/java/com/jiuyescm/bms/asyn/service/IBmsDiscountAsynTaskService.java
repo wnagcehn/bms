@@ -1,7 +1,8 @@
 package com.jiuyescm.bms.asyn.service;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
 
@@ -42,5 +43,7 @@ public interface IBmsDiscountAsynTaskService {
 	 * @throws Exception
 	 */
 	int saveBatch(List<BmsDiscountAsynTaskEntity> voList) throws Exception;
+	
+	String sendTask(Map<String,Object> map);
 
 }

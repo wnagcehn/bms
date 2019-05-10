@@ -938,4 +938,31 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         vo.setRelationField(bool);
         return vo;
     }
+    
+    @Override
+    public PageInfo<BillCheckInfoVo> querySimple(Map<String, Object> condition, int pageNo, int pageSize) {
+        try {
+            PageInfo<BillCheckInfoEntity> pageInfo = billCheckInfoRepository.querySimple(condition, pageNo, pageSize);
+
+            PageInfo<BillCheckInfoVo> result = new PageInfo<BillCheckInfoVo>();
+
+            PropertyUtils.copyProperties(result, pageInfo);
+
+            List<BillCheckInfoVo> voList = new ArrayList<BillCheckInfoVo>();
+
+            for (BillCheckInfoEntity entity : pageInfo.getList()) {
+                //因为vo的createMonth为int类型，如果entity的createMonth为null会导致转换失败
+                entity.setCreateMonth(0);
+                BillCheckInfoVo vo = new BillCheckInfoVo();
+                PropertyUtils.copyProperties(vo, entity);
+                voList.add(vo);
+            }
+
+            result.setList(voList);
+            return result;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}", ex);
+        }
+        return null;
+    }
 }

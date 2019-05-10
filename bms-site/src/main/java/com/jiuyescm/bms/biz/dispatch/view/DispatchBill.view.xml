@@ -367,6 +367,12 @@
         <Property name="dataType">Double</Property>
         <Property name="label">物流商重量</Property>
       </PropertyDef>
+      <PropertyDef name="transportType">
+        <Property name="label">运输方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList&quot;).getResult(&quot;TRANSPORT_TYPE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="outstockNo">
@@ -1297,6 +1303,12 @@ view.id(&quot;updateBillAction&quot;).execute(&#xD;
                 <Property name="width">130</Property>
                 <Property name="name">adjustServiceTypeName</Property>
                 <Property name="property">adjustServiceTypeName</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">transportType</Property>
+                <Property name="property">transportType</Property>
+                <Property name="width">120</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn name="receiveTime">

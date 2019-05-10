@@ -1544,8 +1544,8 @@ if (data != null) {&#xD;
     <FloatPanel id="panelQueryInvoice">
       <ClientEvent name="onHide">var data = this.get(&quot;#queyViewSelectInvoice.userData&quot;);&#xD;
 if (data != null) {&#xD;
-	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;customName&quot;))&#xD;
-	//view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;customNo&quot;))&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceName&quot;,data.get(&quot;mkInvoiceName&quot;))&#xD;
+	//view.get(&quot;#queryForm.entity&quot;).set(&quot;invoiceId&quot;,data.get(&quot;mkId&quot;))&#xD;
 	}</ClientEvent>
       <Property name="caption">合同商家选择</Property>
       <Property name="center">true</Property>

@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.general.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +93,9 @@ public class FeesReceiveDispatchServiceImpl extends MyBatisDao implements IFeesR
 
 	@Override
 	public void updateBatch(List<FeesReceiveDispatchEntity> entity) {
-		this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveDispatchMapper.updateBatch", entity);
+	    Map<String,Object> map=new HashMap<String,Object>();
+	    map.put("list", entity);    
+		this.update("com.jiuyescm.bms.general.entity.FeesReceiveDispatchMapper.updateBatch", map);
 	}
 
 }
