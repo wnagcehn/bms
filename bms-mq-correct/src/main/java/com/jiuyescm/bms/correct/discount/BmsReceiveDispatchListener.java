@@ -189,18 +189,13 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	            //配送折扣(除特殊折扣的物流产品类型)
 	            discountDispatch(task,entity);
 	            if(task.getRemark().contains("该商家存在未计算或待重算的业务数据")){
+	                flag=true;
 	                return;
 	            }       
 	            //配送折扣(特殊折扣的物流产品类型)
 	            discountServiceDispatch(task,entity);
 	        }
-		    
-		    //进度为100，则为成功
-		    if(task.getTaskRate()==100){
-		         task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
-		         bmsDiscountAsynTaskService.update(task); 
-		    }
-		    
+		    	    
 		    //如果有失败的，则最终的账单折扣是失败
 		    if(BmsCorrectAsynTaskStatusEnum.FAIL.getCode().equals(task.getTaskStatus())){
 		        flag=true;
@@ -472,6 +467,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 			if(bizList.size()>0){
 				logger.info(taskId+"该商家存在未计算或待重算的业务数据");
 				task.setRemark("该商家存在未计算或待重算的业务数据");
+				task.setTaskRate(80);
 				task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 				bmsDiscountAsynTaskService.update(task);	
 				return;
@@ -972,7 +968,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
             if(serviceList.size()>0){
                 condition.put("serviceList", serviceList);
             }else{
-                updateProgress(task,100);
                 return;
             }
      
@@ -987,7 +982,6 @@ public class BmsReceiveDispatchListener implements MessageListener{
                 }
             }else{
                 //未统计到，则直接返回
-                updateProgress(task,100);
                 return;
             }
                
