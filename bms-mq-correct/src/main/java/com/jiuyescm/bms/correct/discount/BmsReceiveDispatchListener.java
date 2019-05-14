@@ -944,9 +944,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
         logger.info(task.getTaskId()+"进入特殊物流产品类型折扣");
         String taskId=task.getTaskId();
         Map<String,Object> condition=new HashMap<String,Object>();
-        task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
         Map<String,BmsDiscountAccountVo> discountMap=new HashMap<String,BmsDiscountAccountVo>();
-        bmsDiscountAsynTaskService.update(task);
         try {
             condition.put("startTime", task.getStartDate());
             condition.put("endTime", task.getEndDate());
@@ -979,7 +977,9 @@ public class BmsReceiveDispatchListener implements MessageListener{
             if(discountAccountVoList.size()>0){
                 for(BmsDiscountAccountVo vo:discountAccountVoList){
                     discountMap.put(vo.getServiceTypeCode(), vo);
-                }
+                }              
+                task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.PROCESS.getCode());
+                bmsDiscountAsynTaskService.update(task);                
             }else{
                 //未统计到，则直接返回
                 return;
