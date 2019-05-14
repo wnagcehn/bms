@@ -79,7 +79,8 @@
 	    <result column="origin_weight" property="originWeight" jdbcType="DECIMAL" />
 	    <result column="carrier_weight" property="carrierWeight" jdbcType="DECIMAL" />
 	    <result column="adjust_service_type_code" property="adjustServiceTypeCode" jdbcType="VARCHAR" />
-	    <result column="pack_plan_no" property="packPlanNo" jdbcType="VARCHAR" />		        
+	    <result column="pack_plan_no" property="packPlanNo" jdbcType="VARCHAR" />
+	    <result column="transport_type" property="transportType" jdbcType="VARCHAR" />    		        
     </resultMap>
   
      <resultMap id="baseChangeResultMap" type="com.jiuyescm.bms.general.entity.BizDispatchCarrierChangeEntity" >
@@ -113,7 +114,7 @@
         a.adjust_deliver_name, a.adjust_carrier_id, a.adjust_carrier_name,a.adjust_province_id,a.adjust_city_id,
         a.adjust_district_id,a.origin_carrier_id,a.origin_carrier_name,IFNULL(a.throw_weight,0) as throw_weight,a.order_status,a.origin_weight,
         a.adjust_service_type_code as adjustServiceTypeCode,IFNULL(a.carrier_weight,0) as carrier_weight,c.pack_plan_no,a.create_time,
-        a.send_province_id,a.send_city_id,a.send_district_id
+        a.send_province_id,a.send_city_id,a.send_district_id,a.transport_type
         from biz_dispatch_bill a 
 		LEFT JOIN fees_receive_dispatch b on a.waybill_no=b.waybill_no
 		LEFT JOIN biz_dispatch_package c on a.waybill_no=c.waybill_no and c.del_flag='0'

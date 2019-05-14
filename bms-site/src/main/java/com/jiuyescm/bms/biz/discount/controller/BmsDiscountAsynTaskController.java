@@ -47,6 +47,7 @@ import com.jiuyescm.contract.quote.vo.CarrierInfoVo;
 import com.jiuyescm.contract.quote.vo.ContractDiscountQueryVo;
 import com.jiuyescm.contract.quote.vo.ContractDiscountVo;
 import com.jiuyescm.contract.quote.vo.SubjectInfoVo;
+import com.jiuyescm.utils.JsonUtils;
 
 /**
  * ..Controller
@@ -182,7 +183,9 @@ public class BmsDiscountAsynTaskController {
 			result.put("success", "保存成功");
 			try {				
 				logger.info("开始发送MQ");
-				final String msg = entity.getTaskId();
+				Map<String,Object> map=new HashMap<>();
+				map.put("taskId", entity.getTaskId());
+		        final String msg = JsonUtils.toJson(map);
 				jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
 					@Override
 					public Message createMessage(Session session) throws JMSException {
@@ -243,52 +246,21 @@ public class BmsDiscountAsynTaskController {
 		
 		// 3.发送商家下所有的
 		if (StringUtils.isNotEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
-			List<BmsDiscountAsynTaskEntity> bdatList = new ArrayList<>();
-			   //判断合同归属  1 "BMS" 2 "CONTRACT";
-            PubCustomerVo vo = customerDictService.queryById(entity.getCustomerId());
-            if(vo.getContractAttr()==2){
-                try {
-                    ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
-                    queryVo.setCustomerId(entity.getCustomerId());
-                    queryVo.setSettlementTime(entity.getCreateMonth());
-                    logger.info("查询合同在线折扣参数"+JSONObject.fromObject(queryVo));
-                    List<ContractDiscountVo> disCountVo=contractDiscountService.querySubject(queryVo);
-                    logger.info("查询合同在线折扣结果"+JSONArray.fromObject(disCountVo));
-                    if(disCountVo.size()>0){
-                        bdatList=getContractList(disCountVo, entity, month);
-                    }
-                } catch (Exception e) {
-                    logger.error("查询合同在线折扣失败", e);
-                    // TODO: handle exception
-                    logger.info("查询合同在线报错",e);
-                }
-            }
-            else{
-				BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
-				// 合同生效期和开始时间比较
-				if (month < 10) {
-					newEntity.setMonth("0" + entity.getMonth().toString());
-				}else{
-					newEntity.setMonth(entity.getMonth().toString());
-				}
-				String startD = entity.getYear() + "-" + newEntity.getMonth() + "-01 00:00:00";
-				SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date startDa = sd.parse(startD);
-				Timestamp starttime = new Timestamp(startDa.getTime());
-				newEntity.setStartDate(starttime);
-				newEntity.setCustomerId(entity.getCustomerId());
-				
-				List<PriceContractDiscountItemEntity> cusList = priceContractDiscountService.queryByCustomerId(newEntity);
-				if(cusList.isEmpty()){
-					result.put("fail", "未查询到商家折扣报价或商家合同过期");
-					return result;
-				}
-				//生成任务，写入任务表
-				saveToTask(entity, month, bdatList, cusList, taskId);
-			}
-			if (bdatList.size() > 0) {
-				sendMQ(result, bdatList);			
-			}
+	         if (month < 10) {
+	                entity.setMonth("0" + entity.getMonth().toString());
+	            }
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("customerid", entity.getCustomerId());
+	            map.put("createMonth", entity.getYear()+"-"+entity.getMonth());    
+	            taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+	            map.put("taskId", taskId);
+	            map.put("username", JAppContext.currentUserName());
+	            String sendResult=bmsDiscountAsynTaskService.sendTask(map);
+	            if(StringUtils.isBlank(sendResult)){
+	                result.put("success", "保存成功");
+	            }else{
+	                result.put("fail", "保存失败");
+	            }
 		}		
 		// 4.发送所有
 		if (StringUtils.isEmpty(entity.getCustomerId()) && StringUtils.isEmpty(entity.getBizTypecode()) && StringUtils.isEmpty(entity.getSubjectCode())) {
@@ -335,6 +307,9 @@ public class BmsDiscountAsynTaskController {
 
 	private void saveToTask(BmsDiscountAsynTaskEntity entity, int month, List<BmsDiscountAsynTaskEntity> newList,
 			List<PriceContractDiscountItemEntity> bizList, String taskId) throws ParseException {
+	    
+	    Map<String,String> customerMap=new HashMap<>();
+	    
 		for (PriceContractDiscountItemEntity bizEntity : bizList) {
 			BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
 			if (month < 10) {
@@ -353,7 +328,12 @@ public class BmsDiscountAsynTaskController {
 				newEntity.setEndDate(endTime);
 			}
 			// 生成任务，写入任务表
-			taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+			if(customerMap.containsKey(bizEntity.getCustomerId())){
+			    taskId=customerMap.get(bizEntity.getCustomerId());
+			}else{
+		         taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
+		         customerMap.put(bizEntity.getCustomerId(), taskId);
+			}	
 			newEntity.setTaskId(taskId);
 			newEntity.setCarrierId(bizEntity.getCarrierId());
 			newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
@@ -377,21 +357,30 @@ public class BmsDiscountAsynTaskController {
 	private void sendMQ(Map<String, String> result, List<BmsDiscountAsynTaskEntity> newList) throws Exception {
 		bmsDiscountAsynTaskService.saveBatch(newList);
 		result.put("success", "保存成功");
-		for (BmsDiscountAsynTaskEntity bmsDiscountAsynTaskEntity : newList) {
-			try {			
-				logger.info("开始发送MQ");
-				final String msg = bmsDiscountAsynTaskEntity.getTaskId();
-				jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
-					@Override
-					public Message createMessage(Session session) throws JMSException {
-						return session.createTextMessage(msg);
-					}
-				});
-				logger.info("MQ发送成功");
-			} catch (Exception e) {
-				logger.error("send MQ:", e);
+		List<String> taskList=new ArrayList<String>();
+		for (BmsDiscountAsynTaskEntity entity : newList) {
+			if(!taskList.contains(entity.getTaskId())){
+			    taskList.add(entity.getTaskId());
 			}
 		}
+		
+	    for(String taskId:taskList){
+	        try {         
+	            logger.info("开始发送MQ");
+	            Map<String,Object> map=new HashMap<>();
+	            map.put("taskId", taskId);
+	            final String msg = JsonUtils.toJson(map);
+	            jmsQueueTemplate.send(BMS_DISCOUNT_ASYN_TASK, new MessageCreator() {
+	                @Override
+	                public Message createMessage(Session session) throws JMSException {
+	                    return session.createTextMessage(msg);
+	                }
+	            });
+	            logger.info("MQ发送成功");
+	        } catch (Exception e) {
+	            logger.error("send MQ:", e);
+	        }
+	    }	
 	}
 
 	/**
@@ -409,6 +398,7 @@ public class BmsDiscountAsynTaskController {
 		String taskId = "";
 		List<BmsDiscountAsynTaskEntity> newList = new ArrayList<>();
 		for(ContractDiscountVo vo:disCountVo){
+            taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 			if(vo.getSubjectVoList().size()>0){
 				for(SubjectInfoVo s:vo.getSubjectVoList()){
 					BmsDiscountAsynTaskEntity newEntity = new BmsDiscountAsynTaskEntity();
@@ -428,7 +418,6 @@ public class BmsDiscountAsynTaskController {
 						newEntity.setEndDate(endTime);
 					}
 					// 生成任务，写入任务表
-					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 					newEntity.setTaskId(taskId);
 					//newEntity.setCarrierId(bizEntity.getCarrierId());
 					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
@@ -464,7 +453,6 @@ public class BmsDiscountAsynTaskController {
 						newEntity.setEndDate(endTime);
 					}
 					// 生成任务，写入任务表
-					taskId = sequenceService.getBillNoOne(BmsFileAsynTaskEntity.class.getName(), "AT", "0000000000");
 					newEntity.setTaskId(taskId);
 					newEntity.setCreateMonth(entity.getYear() + "-" + newEntity.getMonth());
 					newEntity.setTaskRate(0);

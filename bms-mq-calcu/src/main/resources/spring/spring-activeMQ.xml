@@ -24,22 +24,7 @@
     <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">  
         <property name="connectionFactory" ref="targetConnectionFactory" />  
         <property name="maxConnections" value="${activemq.maxConnections}" />  
-    </bean>  
-    
-    <!-- 连接池配置 -->
-    <bean id="queueMessageExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
-	    <property name="corePoolSize" value="15" />  
-	    <property name="maxPoolSize" value="50" />  
-	    <property name="daemon" value="true" />  
-	    <property name="keepAliveSeconds" value="120" />  
-	</bean>
-	
-	<bean id="queueMessageExecutorTimer" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
-	    <property name="corePoolSize" value="15" />  
-	    <property name="maxPoolSize" value="50" />  
-	    <property name="daemon" value="true" />  
-	    <property name="keepAliveSeconds" value="120" />  
-	</bean>
+    </bean> 
     
     <!-- 定义JmsTemplate的Queue类型 -->
     <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -52,6 +37,43 @@
         <property name="sessionAcknowledgeMode" value="4"></property>  
     </bean>
     
+    <!-- 连接池配置 -->
+    <bean id="lessExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="10" />  
+	    <property name="maxPoolSize" value="20" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+	
+	<bean id="storageExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+    
+    <bean id="dispatchExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+	
+	 <bean id="materialuseExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+	
+	 <bean id="dispatchPackageExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+	    <property name="corePoolSize" value="5" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="daemon" value="true" />  
+	    <property name="keepAliveSeconds" value="120" />  
+	</bean>
+    
+    
     <!-- AUTO_ACKNOWLEDGE = 1 ：自动确认
 	CLIENT_ACKNOWLEDGE = 2：客户端手动确认 
 	DUPS_OK_ACKNOWLEDGE = 3： 自动批量确认
@@ -59,28 +81,33 @@
 	但是在activemq补充了一个自定义的ACK模式:
 	INDIVIDUAL_ACKNOWLEDGE = 4：单条消息确认 -->
     
-     <jms:listener-container task-executor="queueMessageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-5">
-     
-    	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.INSTOCKWORK" ref="whInstockWorkCalcuListener"/>
+     <jms:listener-container task-executor="lessExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="10-20">
+     	<jms:listener destination="BMS.QUEUE.CALCU.VALUE.VALUEADD" ref="addUseCalcuListener"/>    
+     	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.INSTOCKWORK" ref="whInstockWorkCalcuListener"/>
     	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.B2CHANDWORK" ref="whInstockB2BCalcuListener"/>
-    	
-	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BHANDWORK" ref="outstockB2BHandWorkCalcuListener"/>
+    	<jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BHANDWORK" ref="outstockB2BHandWorkCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2BWORK" ref="outstockB2BWorkCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2CWORK" ref="outstockB2CWorkCalcuListener"/>
-	    
-	    <jms:listener destination="BMS.QUEUE.CALCU.WAYBILL.DISPATCH" ref="dispatchCalcuListener"/>
-	    
-	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.PRODUCTSTORAGE" ref="palletProductCalcuListener"/>
+     </jms:listener-container>
+     
+     <jms:listener-container task-executor="storageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     	<jms:listener destination="BMS.QUEUE.CALCU.PALLET.PRODUCTSTORAGE" ref="palletProductCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.MATERIALSTORAGE" ref="palletMaterialCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.DISPOSAL" ref="palletDisposalCalcuListener"/>
-	    
-	    <jms:listener destination="BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE" ref="productItemCalcuListener"/>
-	    
-		<jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
-		
-		<jms:listener destination="BMS.QUEUE.CALCU.VALUE.VALUEADD" ref="addUseCalcuListener"/>    
-	
-		<jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.DISPATCHPACKAGE" ref="dispatchPackageCalcuListener"/>    
-    </jms:listener-container>
+     </jms:listener-container>
+     
+     <jms:listener-container task-executor="dispatchExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+	    <jms:listener destination="BMS.QUEUE.CALCU.WAYBILL.DISPATCH" ref="dispatchCalcuListener"/>
+	 </jms:listener-container>
+    
+     <jms:listener-container task-executor="materialuseExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
+     </jms:listener-container>
+    
+     <jms:listener-container task-executor="dispatchPackageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     	<jms:listener destination="BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE" ref="productItemCalcuListener"/>
+	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.DISPATCHPACKAGE" ref="dispatchPackageCalcuListener"/>    
+     </jms:listener-container>
+     
 </beans>
  

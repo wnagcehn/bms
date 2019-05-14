@@ -54,7 +54,15 @@ public class BillInvoiceEntity implements IEntity{
 	private String area;
 	//合计金额
 	private BigDecimal totalPrice;
-	
+	private String mkInvoiceName;
+   public String getMkInvoiceName() {
+        return mkInvoiceName;
+    }
+
+    public void setMkInvoiceName(String mkInvoiceName) {
+        this.mkInvoiceName = mkInvoiceName;
+    }
+
 	public BillInvoiceEntity() {
 
 	}

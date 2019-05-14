@@ -227,6 +227,9 @@ public class BizDispatchBillVo implements IEntity {
 	//物流商重量
 	private Double carrierWeight;
 	
+	//运输方式
+	private String transportType;
+	
 	public Double getCarrierWeight() {
 		return carrierWeight;
 	}
@@ -1414,6 +1417,14 @@ public class BizDispatchBillVo implements IEntity {
 	public void setOperateAmount(Double operateAmount) {
 		this.operateAmount = operateAmount;
 	}
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
+    }
 
     
 	

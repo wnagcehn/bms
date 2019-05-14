@@ -136,6 +136,9 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	private Double derateAmount;
 	
 	private String calcuMsg;
+	
+	   //运输类型
+    private String transportType;
 	public FeesReceiveDispatchEntity() {
 
 	}
@@ -1035,6 +1038,14 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	public void setCalcuMsg(String calcuMsg) {
 		this.calcuMsg = calcuMsg;
 	}
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
+    }
 
 	
 	

@@ -207,4 +207,6 @@ public interface IBillCheckInfoRepository {
     List<BillCheckInfoEntity> querySourceId(Map<String, Object> condition);
 
     List<BillCheckInfoEntity> queryId(Map<String, Object> condition);
+
+    PageInfo<BillCheckInfoEntity> querySimple(Map<String, Object> condition, int pageNo, int pageSize);
 }

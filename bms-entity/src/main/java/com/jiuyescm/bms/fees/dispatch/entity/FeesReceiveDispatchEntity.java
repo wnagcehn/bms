@@ -180,6 +180,9 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	
 	//店铺名称
 	private String shopName;
+	
+	//运输类型
+	private String transportType;
  	
     public String getShopName() {
 		return shopName;
@@ -835,7 +838,15 @@ public class FeesReceiveDispatchEntity implements IEntity {
 
 	public void setOperateAmount(Double operateAmount) {
 		this.operateAmount = operateAmount;
-	}	
+	}
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
+    }	
 	
 	
 }

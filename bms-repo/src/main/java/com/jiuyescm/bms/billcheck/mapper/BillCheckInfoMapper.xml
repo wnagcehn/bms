@@ -1116,4 +1116,12 @@ receipt_amount receiptAmount,un_receipt_amount unReceiptAmount
 FROM bill_check_info
  WHERE id =#{id}
     </select>
+    
+  <select id="querySimple" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        select b.dept_name, b.bill_status, b.invoice_status, ifnull(b.confirm_amount,0) as confirm_amount, 
+		 b.isneed_invoice,ifnull(b.receipt_amount,0) as receipt_amount
+		from bill_check_info b
+        where b.del_flag='0'
+		<include refid="queryColumns" />
+    </select>
 </mapper>

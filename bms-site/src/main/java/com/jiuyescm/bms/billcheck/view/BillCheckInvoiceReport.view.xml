@@ -55,6 +55,10 @@
         <Property></Property>
         <Property name="label">区域</Property>
       </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtBillCheckInvoice">
       <Property name="creationType">com.jiuyescm.bms.billcheck.vo.BillCheckInvoiceVo</Property>
@@ -131,6 +135,10 @@
         <Property></Property>
         <Property name="label">区域</Property>
       </PropertyDef>
+      <PropertyDef name="mkInvoiceName">
+        <Property></Property>
+        <Property name="label">开票名称</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -163,9 +171,10 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var condition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
-        <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="formCondition">
@@ -191,13 +200,14 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">billName</Property>
-        <Property name="property">billName</Property>
+        <Property name="name">mkInvoiceName</Property>
+        <Property name="property">mkInvoiceName</Property>
+        <Property name="labelWidth">85</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">invoiceNo</Property>
-        <Property name="property">invoiceNo</Property>
+        <Property name="name">billName</Property>
+        <Property name="property">billName</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -215,17 +225,46 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
       <AutoFormElement>
         <Property name="name">waybillNo</Property>
         <Property name="property">waybillNo</Property>
+        <Property name="labelWidth">85</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <Property name="name">invoiceNo</Property>
+        <Property name="property">invoiceNo</Property>
+        <Property name="labelWidth">85</Property>
+        <Editor/>
+      </AutoFormElement>
+      <Button id="more">
+        <ClientEvent name="onClick">if(view.id(&quot;more&quot;).get(&quot;icon&quot;) == &quot;url(>skin>common/icons.gif) -60px -300px&quot;){&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -80px -300px&quot;);&#xD;
+	view.get(&quot;#sellerName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#area&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,50);&#xD;
+}else{&#xD;
+	view.id(&quot;more&quot;).set(&quot;icon&quot;,&quot;url(>skin>common/icons.gif) -60px -300px&quot;);&#xD;
+	view.get(&quot;#sellerName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#area&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#formCondition&quot;).set(&quot;height&quot;,10);&#xD;
+}</ClientEvent>
+        <Property name="caption">更多查询条件</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -300px</Property>
+      </Button>
+      <AutoFormElement id="sellerName">
         <Property name="name">sellerName</Property>
         <Property name="property">sellerName</Property>
         <Property name="trigger">triggerDeptUser</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">220</Property>
         <Editor/>
       </AutoFormElement>
-      <AutoFormElement>
+      <AutoFormElement id="area">
         <Property name="name">area</Property>
         <Property name="property">area</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
+        <Property name="width">210</Property>
+        <Property name="labelWidth">65</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -243,6 +282,11 @@ tmpDataSet.set(&quot;parameter&quot;, entity).flushAsync();</ClientEvent>
         <DataColumn name="invoiceName">
           <Property name="property">invoiceName</Property>
           <Property name="width">180</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">mkInvoiceName</Property>
+          <Property name="width">180</Property>
+          <Property name="name">mkInvoiceName</Property>
         </DataColumn>
         <DataColumn name="billName">
           <Property name="property">billName</Property>
@@ -292,14 +336,6 @@ arg.dom.innerHTML=&quot;合计: &lt;span style='color:red;'>&quot;+amount+&quot;
         </DataColumn>
       </DataGrid>
     </Container>
-    <Export2ReportAction id="export2ReportAction">
-      <Property name="caption">导出Excel数据</Property>
-      <Property name="dataScope">serverAll</Property>
-      <Property name="template">dataList</Property>
-      <Property name="dataFontSize">10</Property>
-      <Property name="maxSize">100000</Property>
-      <Property name="userData"></Property>
-    </Export2ReportAction>
     <Trigger id="triggerDeptUser">
       <ClientEvent name="onExecute">/*&#xD;
 var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
@@ -341,5 +377,8 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DownloadAction id="bizDownAction">
+      <Property name="fileProvider">billCheckReportController#exportInvoiceReport</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

@@ -46,4 +46,5 @@ public class MQConstants {
 	 * 预账单导出
 	 */
 	public static final String BUINESSDATA_EXPORT = "BMS.QUEUE.BUINESSDATA_EXPORT";
+	
 }

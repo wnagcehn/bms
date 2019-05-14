@@ -4,115 +4,34 @@
   <Context/>
   <Model>
     <DataType name="dtCondLookupCustomer">
-      <PropertyDef name="invoiceId">
+      <PropertyDef name="mkId">
         <Property name="label">合同商家编号</Property>
       </PropertyDef>
-      <PropertyDef name="customName">
+      <PropertyDef name="mkInvoiceName">
         <Property name="label">合同商家名称</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtInvoice">
-      <Property name="creationType">com.jiuyescm.contract.custom.vo.ContractCustomBaseVo</Property>
+      <Property name="creationType">com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo</Property>
       <PropertyDef name="id">
-        <Property name="dataType">int</Property>
-      </PropertyDef>
-      <PropertyDef name="customNo">
-        <Property></Property>
-        <Property name="label">合同商家编号</Property>
-      </PropertyDef>
-      <PropertyDef name="customName">
-        <Property></Property>
-        <Property name="label">合同商家名称</Property>
-      </PropertyDef>
-      <PropertyDef name="status">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <PropertyDef name="invoiceName">
-        <Property></Property>
+      <PropertyDef name="mkId">
+        <Property/>
+        <Property name="label">合同商家编号</Property>
       </PropertyDef>
-      <PropertyDef name="prePayCode">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="businessNum">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="taxId">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="companyType">
-        <Property name="dataType">Long</Property>
-      </PropertyDef>
-      <PropertyDef name="level">
-        <Property name="dataType">Long</Property>
-      </PropertyDef>
-      <PropertyDef name="businessPicName">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="businessPicPath">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="linkMan">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="linkManPhone">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="linkManTelphone">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="province">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="city">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="area">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="customAddress">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="zipCode">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="billAddress">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="bigArea">
-        <Property name="dataType">Long</Property>
-      </PropertyDef>
-      <PropertyDef name="seller">
-        <Property name="dataType">Long</Property>
-      </PropertyDef>
-      <PropertyDef name="sellerName">
-        <Property></Property>
+      <PropertyDef name="mkInvoiceName">
+        <Property/>
+        <Property name="label">合同商家名称</Property>
       </PropertyDef>
       <PropertyDef name="creator">
-        <Property name="dataType">Long</Property>
-      </PropertyDef>
-      <PropertyDef name="creatorName">
-        <Property></Property>
+        <Property/>
       </PropertyDef>
       <PropertyDef name="lastModifier">
-        <Property name="dataType">Long</Property>
-      </PropertyDef>
-      <PropertyDef name="lastModifierName">
-        <Property></Property>
+        <Property/>
       </PropertyDef>
       <PropertyDef name="delFlag">
-        <Property name="dataType">int</Property>
-      </PropertyDef>
-      <PropertyDef name="mainProduct">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="productDescription">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="companyProfile">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="projectContent">
-        <Property></Property>
+        <Property/>
       </PropertyDef>
     </DataType>
   </Model>
@@ -149,8 +68,8 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <Property name="cols">*,*</Property>
       <Property name="labelWidth">100</Property>
       <AutoFormElement>
-        <Property name="name">customName</Property>
-        <Property name="property">customName</Property>
+        <Property name="name">mkInvoiceName</Property>
+        <Property name="property">mkInvoiceName</Property>
         <Property name="label">合同商家名称</Property>
         <Editor/>
       </AutoFormElement>
@@ -162,15 +81,15 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
       <Property name="readOnly">true</Property>
       <RowNumColumn/>
       <DataColumn>
-        <Property name="property">customNo</Property>
-        <Property name="name">customNo</Property>
+        <Property name="property">mkId</Property>
+        <Property name="name">mkId</Property>
         <Property name="visible">true</Property>
         <Property name="width">230</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">customName</Property>
-        <Property name="name">customName</Property>
-        <Property name="width">230</Property>
+        <Property name="property">mkInvoiceName</Property>
+        <Property name="name">mkInvoiceName</Property>
+        <Property name="width">258</Property>
       </DataColumn>
     </DataGrid>
     <Action id="actionSelectCustomer">

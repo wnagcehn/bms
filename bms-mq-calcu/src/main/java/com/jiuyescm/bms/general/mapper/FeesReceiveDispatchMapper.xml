@@ -199,71 +199,435 @@
         where fees_no=#{feesNo}
     </update>
     
-    <update id="updateBatch" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity">
-    	update fees_receive_dispatch 
-		<set >
-			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
-			<if test="waybillNo != null" >waybill_no=#{waybillNo,jdbcType=VARCHAR},</if>
-			<if test="outstockNo != null" >outstock_no=#{outstockNo,jdbcType=VARCHAR},</if>
-			<if test="externalNo != null" >external_no=#{externalNo,jdbcType=VARCHAR},</if>
-			<if test="warehouseCode != null" >warehouse_code=#{warehouseCode,jdbcType=VARCHAR},</if>
-			<if test="warehouseName != null" >warehouse_name=#{warehouseName,jdbcType=VARCHAR},</if>
-			<if test="customerid != null" >customerid=#{customerid,jdbcType=VARCHAR},</if>
-			<if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
-			<if test="carrierid != null" >carrierid=#{carrierid,jdbcType=VARCHAR},</if>
-			<if test="carrierName != null" >carrier_name=#{carrierName,jdbcType=VARCHAR},</if>
-			<if test="deliveryid != null" >deliveryid=#{deliveryid,jdbcType=VARCHAR},</if>
-			<if test="deliverName != null" >deliver_name=#{deliverName,jdbcType=VARCHAR},</if>
-			<if test="subjectCode != null" >subject_code=#{subjectCode,jdbcType=VARCHAR},</if>
-			<if test="otherSubjectCode != null" >other_subject_code=#{otherSubjectCode,jdbcType=VARCHAR},</if>
-			<if test="unpacking != null" >unpacking=#{unpacking,jdbcType=VARCHAR},</if>
-			<if test="unpackNum != null" >unpack_num=#{unpackNum,jdbcType=DECIMAL},</if>
-			<if test="deliveryDate != null" >delivery_date=#{deliveryDate,jdbcType=TIMESTAMP},</if>
-			<if test="temperatureType != null" >temperature_type=#{temperatureType,jdbcType=VARCHAR},</if>
-			<if test="billType != null" >bill_type=#{billType,jdbcType=VARCHAR},</if>
-			<if test="b2bFlag != null" >b2b_flag=#{b2bFlag,jdbcType=VARCHAR},</if>
-			<if test="totalWeight != null" >total_weight=#{totalWeight,jdbcType=DECIMAL},</if>
-			<if test="totalQuantity != null" >total_quantity=#{totalQuantity,jdbcType=DECIMAL},</if>
-			<if test="totalVarieties != null" >total_varieties=#{totalVarieties,jdbcType=DECIMAL},</if>
-			<if test="splitSingle != null" >split_single=#{splitSingle,jdbcType=VARCHAR},</if>
-			<if test="templateId != null" >template_id=#{templateId,jdbcType=VARCHAR},</if>
-			<if test="priceId != null" >price_id=#{priceId,jdbcType=VARCHAR},</if>
-			<if test="amount != null" >amount=#{amount,jdbcType=DECIMAL},</if>
-			<if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
-			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
-			<if test="toProvinceName != null" >to_province_name=#{toProvinceName,jdbcType=VARCHAR},</if>
-			<if test="toDistrictName != null" >to_district_name=#{toDistrictName,jdbcType=VARCHAR},</if>
-			<if test="toCityName != null" >to_city_name=#{toCityName,jdbcType=VARCHAR},</if>
-			<if test="chargedWeight != null" >charged_weight=#{chargedWeight,jdbcType=DECIMAL},</if>
-			<if test="weightLimit != null" >weight_limit=#{weightLimit,jdbcType=DECIMAL},</if>
-			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
-			<if test="headWeight != null" >head_weight=#{headWeight,jdbcType=DECIMAL},</if>
-			<if test="continuedWeight != null" >continued_weight=#{continuedWeight,jdbcType=DECIMAL},</if>
-			<if test="headPrice != null" >head_price=#{headPrice,jdbcType=DECIMAL},</if>
-			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
-			<if test="acceptTime != null" >accept_time=#{acceptTime,jdbcType=TIMESTAMP},</if>
-			<if test="signTime != null" >sign_time=#{signTime,jdbcType=TIMESTAMP},</if>
-			<if test="bizType != null" >biz_type=#{bizType,jdbcType=VARCHAR},</if>
-			<if test="bigstatus != null" >bigstatus=#{bigstatus,jdbcType=VARCHAR},</if>
-			<if test="smallstatus != null" >smallstatus=#{smallstatus,jdbcType=VARCHAR},</if>
-			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
-			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
-			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
-			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
-			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
-			<if test="param5 != null" >param5=#{param5,jdbcType=VARCHAR},</if>
-			<if test="status != null" >status=#{status,jdbcType=VARCHAR},</if>
-			<if test="creator != null" >creator=#{creator,jdbcType=VARCHAR},</if>
-			<if test="createTime != null" >create_time=#{createTime,jdbcType=TIMESTAMP},</if>
-			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
-			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
-			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
-			<if test="derateAmount != null" >derate_amount=#{derateAmount,jdbcType=DECIMAL},</if>
-			<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>	
-			<if test="serviceTypeCode != null" >service_type_code=#{serviceTypeCode,jdbcType=VARCHAR},</if>		
-		</set>
-        where fees_no=#{feesNo} and del_flag='0'
+    <update id="updateBatch" parameterType="java.util.Map">
+    	update fees_receive_dispatch
+	    <trim prefix="set" suffixOverrides=",">
+	        <trim prefix="fees_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.feesNo != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.feesNo}
+                    </if>
+                </foreach>
+            </trim>
+    	    <trim prefix="waybill_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.waybillNo != null" >
+                       when fees_no=#{biz.feesNo}  then #{biz.waybillNo}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="outstock_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.outstockNo != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.outstockNo}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="external_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.externalNo != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.externalNo}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="warehouse_code =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.warehouseCode != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.warehouseCode}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="warehouse_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.warehouseName != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.warehouseName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="customerid =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.customerid != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.customerid}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="customer_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.customerName != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.customerName}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="carrierid =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.carrierid != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.carrierid}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="carrier_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.carrierName != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.carrierName}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="deliveryid =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.deliveryid != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.deliveryid}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="deliver_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.deliverName != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.deliverName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="subject_code =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.subjectCode != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.subjectCode}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="other_subject_code =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.otherSubjectCode != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.otherSubjectCode}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="unpacking =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.unpacking != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.unpacking}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="unpack_num =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.unpackNum != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.unpackNum}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="delivery_date =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.deliveryDate != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.deliveryDate}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="temperature_type =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.temperatureType != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.temperatureType}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="bill_type =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.billType != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.billType}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="b2b_flag =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.b2bFlag != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.b2bFlag}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="total_weight =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.totalWeight != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.totalWeight}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="total_quantity =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.totalQuantity != null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.totalQuantity}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="total_varieties =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.totalVarieties!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.totalVarieties}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="split_single =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.splitSingle!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.splitSingle}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="template_id =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.templateId!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.templateId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="price_id =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.priceId!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.priceId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="amount =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.amount!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.amount}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="bill_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.billNo!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.billNo}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="rule_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.ruleNo!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.ruleNo}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="to_province_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.toProvinceName!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.toProvinceName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="to_district_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.toDistrictName!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.toDistrictName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="to_city_name =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.toCityName!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.toCityName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="charged_weight =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.chargedWeight!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.chargedWeight}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="weight_limit =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.weightLimit!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.weightLimit}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="unit_price =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.unitPrice!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.unitPrice}
+                    </if>
+                </foreach>
+            </trim>
+              <trim prefix="head_weight =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.headWeight!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.headWeight}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="continued_weight =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.continuedWeight!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.continuedWeight}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="head_price =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.headPrice!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.headPrice}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="continued_price =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.continuedPrice!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.continuedPrice}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="accept_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.acceptTime!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.acceptTime}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="sign_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.signTime!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.signTime}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="biz_type =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.bizType!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.bizType}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="bigstatus =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.bigstatus!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.bigstatus}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="smallstatus =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.smallstatus!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.smallstatus}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.isCalculated!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.isCalculated}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calculateTime!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.calculateTime}
+                    </if>
+                </foreach>
+            </trim>
+           <trim prefix="param1 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param1!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.param1}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="param2 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param2!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.param2}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="param3 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param3!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.param3}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="param4 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param4!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.param4}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="param5 =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.param5!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.param5}
+                    </if>
+                </foreach>
+            </trim>
+               <trim prefix="status =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.status!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.status}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="creator =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.creator!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.creator}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="create_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.createTime!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.createTime}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="last_modifier =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.lastModifier!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.lastModifier}
+                    </if>
+                </foreach>
+            </trim>
+              <trim prefix="last_modify_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.lastModifyTime!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.lastModifyTime}
+                    </if>
+                </foreach>
+            </trim>
+                <trim prefix="del_flag =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.delFlag!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.delFlag}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="derate_amount =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.derateAmount!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.derateAmount}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="calcu_msg =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calcuMsg!= null" >
+                      when fees_no=#{biz.feesNo}  then #{biz.calcuMsg}
+                    </if>
+                </foreach>
+            </trim>
+              <trim prefix="service_type_code =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.serviceTypeCode!= null" >
+                      when fees_no=#{biz.feesNo} then #{biz.serviceTypeCode}
+                    </if>
+                </foreach>
+            </trim>
+    	</trim>
+	    where fees_no in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+            #{biz.feesNo,jdbcType=VARCHAR}
+        </foreach>
+        and del_flag='0'
     </update>
     
     

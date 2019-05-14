@@ -227,6 +227,9 @@ public interface IBillCheckInfoService {
      * @param vo
      * @return 
      */
-    void saveCrm(BillCheckInfoEntity entity); 
+    void saveCrm(BillCheckInfoEntity entity);
+
+
+    PageInfo<BillCheckInfoVo> querySimple(Map<String, Object> condition, int pageNo, int pageSize); 
 	
 	}

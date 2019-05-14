@@ -60,9 +60,10 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
         <Property name="caption">查询</Property>
       </ToolBarButton>
       <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var condition=view.get(&quot;#formCondition.entity&quot;);&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,condition).execute();</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
-        <Property name="action">export2ReportAction</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="formCondition">
@@ -97,12 +98,8 @@ tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).
         </DataColumn>
       </DataGrid>
     </Container>
-    <Export2ReportAction id="export2ReportAction">
-      <Property name="caption">导出Excel数据</Property>
-      <Property name="dataScope">serverAll</Property>
-      <Property name="template">receiptList</Property>
-      <Property name="dataFontSize">10</Property>
-      <Property name="maxSize">100000</Property>
-    </Export2ReportAction>
+    <DownloadAction id="bizDownAction">
+      <Property name="fileProvider">billCheckReportController#export</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

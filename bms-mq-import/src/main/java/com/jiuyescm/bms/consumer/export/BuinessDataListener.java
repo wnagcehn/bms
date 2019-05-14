@@ -71,7 +71,7 @@ import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
  * @author wangchen870
  *
  */
-@Service("buinessDataExportListener")
+@Service("buinessDataListener")
 public class BuinessDataListener implements MessageListener{
 
 	private static final Logger logger = LoggerFactory.getLogger(BuinessDataListener.class);

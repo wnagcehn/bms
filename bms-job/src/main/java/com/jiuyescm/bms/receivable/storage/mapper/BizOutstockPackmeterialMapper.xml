@@ -85,18 +85,70 @@
 	</select>
   
 
-    <update id="updatebizOutstockMeterial" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-		update biz_outstock_packmaterial 
-		<set >
-			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
-			<if test="feesNo != null" >fees_no=#{feesNo,jdbcType=VARCHAR},</if>
-			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
-			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
-			<if test="costCalculateTime!=null">cost_calculate_time=#{costCalculateTime},</if>
-			<if test="costIsCalculated!=null">cost_is_calculated=#{costIsCalculated},</if>
-			<if test="costFeesNo!=null">cost_fees_no=#{costFeesNo},</if>
-			<if test="costRemark!=null">cost_remark=#{costRemark}</if>
-		</set>
-        where id=#{id}
+    <update id="updatebizOutstockMeterial" parameterType="java.util.Map">  
+    	update biz_outstock_packmaterial
+	    <trim prefix="set" suffixOverrides=",">
+	        <trim prefix="is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.isCalculated != null" >
+                      when id=#{biz.id} then #{biz.isCalculated}
+                    </if>
+                </foreach>
+            </trim>
+    	    <trim prefix="fees_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                     <if test="biz.feesNo!= null" >
+                       when id=#{biz.id} then #{biz.feesNo}
+                     </if>
+                </foreach>
+            </trim>
+             <trim prefix="remark =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.remark != null" >
+                      when id=#{biz.id} then #{biz.remark}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.calculateTime != null" >
+                      when id=#{biz.id} then #{biz.calculateTime}
+                    </if>
+                </foreach>
+            </trim>         
+            <trim prefix="cost_calculate_time =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.costCalculateTime != null" >
+                      when id=#{biz.id} then #{biz.costCalculateTime}
+                    </if>
+                </foreach>
+            </trim>
+             <trim prefix="cost_is_calculated =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.costIsCalculated != null" >
+                      when id=#{biz.id} then #{biz.costIsCalculated}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="cost_fees_no =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.costFeesNo != null" >
+                      when id=#{biz.id} then #{biz.costFeesNo}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="cost_remark =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.costRemark != null" >
+                      when id=#{biz.id} then #{biz.costRemark}
+                      
+                    </if>
+                </foreach>
+            </trim>
+    	</trim>
+	    where id in
+        <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
+            #{biz.id,jdbcType=BIGINT}
+        </foreach>
     </update>
 </mapper>
