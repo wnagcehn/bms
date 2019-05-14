@@ -190,7 +190,7 @@ public class BmsReceiveDispatchListener implements MessageListener{
 	            discountDispatch(task,entity);
 	            if(task.getRemark().contains("该商家存在未计算或待重算的业务数据")){
 	                flag=true;
-	                return;
+	                break;
 	            }       
 	            //配送折扣(特殊折扣的物流产品类型)
 	            discountServiceDispatch(task,entity);
