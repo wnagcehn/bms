@@ -473,4 +473,40 @@
 		</if>
     	group by a.customerid,s.subject_code, DATE_FORMAT(a.create_time,'%Y%m')
     </select>
+    
+        <insert id="omssave" useGeneratedKeys="true" keyProperty="id" parameterType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+        insert into biz_add_fee(wms_id,operation_time, warehouse_code, warehouse_name, customerid, customer_name, num, fees_no, fees_type,fees_type_name,fees_unit, item, is_calculated, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, adjust_num,remark, external_no,
+        service_content,remark_content,pay_no,fixed_amount,first_subject,first_subject_name)
+        values (
+#{wmsId,jdbcType=VARCHAR},
+#{operationTime,jdbcType=TIMESTAMP}, 
+#{warehouseCode,jdbcType=VARCHAR}, 
+#{warehouseName,jdbcType=VARCHAR}, 
+#{customerid,jdbcType=VARCHAR}, 
+#{customerName,jdbcType=VARCHAR}, 
+#{num,jdbcType=DOUBLE}, 
+#{feesNo,jdbcType=VARCHAR}, 
+#{feesType,jdbcType=VARCHAR}, 
+#{feesTypeName,jdbcType=VARCHAR}, 
+#{feesUnit,jdbcType=VARCHAR}, 
+#{item,jdbcType=VARCHAR}, 
+#{isCalculated,jdbcType=VARCHAR}, 
+#{creator,jdbcType=VARCHAR}, 
+#{createTime,jdbcType=TIMESTAMP}, 
+#{lastModifier,jdbcType=VARCHAR}, 
+#{lastModifyTime,jdbcType=TIMESTAMP}, 
+#{delFlag,jdbcType=VARCHAR}, 
+#{calculateTime,jdbcType=TIMESTAMP}, 
+#{writeTime,jdbcType=TIMESTAMP}, 
+#{adjustNum,jdbcType=DOUBLE},
+#{remark},
+#{externalNo,jdbcType=VARCHAR},
+#{serviceContent,jdbcType=VARCHAR},
+#{remarkContent,jdbcType=VARCHAR},
+#{payNo,jdbcType=VARCHAR},
+#{fixedAmount,jdbcType=DOUBLE},
+#{firstSubject,jdbcType=VARCHAR},
+#{firstSubjectName,jdbcType=VARCHAR}
+        )
+    </insert>
 </mapper>

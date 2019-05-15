@@ -14,10 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
-import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
-import com.jiuyescm.bms.biz.storage.entity.BizBaseFeeEntity;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 
 /**
@@ -160,4 +157,9 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
 
 	}
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public int omssave(List<BizAddFeeEntity> addList) {
+        return insertBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.omssave",addList);
+    }
 }
