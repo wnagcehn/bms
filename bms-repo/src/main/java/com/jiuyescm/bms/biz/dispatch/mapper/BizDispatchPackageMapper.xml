@@ -269,7 +269,8 @@ waybill_no, outstock_no, warehouse_code, warehouse_name, customerid, customer_na
     <!-- 重算 -->
     <update id="retryForCalcu" parameterType="java.util.Map">
 		update fees_receive_storage b 
-		INNER JOIN biz_dispatch_package a on b.fees_no=a.fees_no set b.is_calculated='99'
+		INNER JOIN biz_dispatch_package a on b.fees_no=a.fees_no 
+		set b.is_calculated='99', b.calcu_msg=''
 		where b.del_flag='0' and a.del_flag='0'
 		<if test=" waybillNo != null and waybillNo !='' ">
 			and a.waybill_no = #{waybillNo}
