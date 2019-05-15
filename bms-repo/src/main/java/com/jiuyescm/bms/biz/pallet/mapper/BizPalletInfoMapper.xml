@@ -194,7 +194,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         resultType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
     	select i.customer_name, i.warehouse_name, s.subject_code as subjectCode, s.is_calculated, COUNT(*) as totalNum from fees_receive_storage s
 		LEFT JOIN biz_pallet_info i on i.fees_no=s.fees_no and i.del_flag = '0'
-		WHERE 1=1 and s.subject_code != 'outstock_pallet_vm'
+		WHERE 1=1 and s.subject_code != 'outstock_pallet_vm' and s.del_flag = '0'
 		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
 			and i.biz_type = #{bizType}
 		</if>
@@ -229,12 +229,13 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
         where id = #{id}
     </delete>
    
-   <!-- 新重算 -->
+   <!-- 新重算 (备注清空，状态修改)-->
    <update id="retryForCalcuNew" parameterType="com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity">
    		UPDATE fees_receive_storage s
 		LEFT JOIN biz_pallet_info p on s.fees_no=p.fees_no and p.del_flag='0' and p.biz_type != 'outstock'
 		<trim prefix="set" suffixOverrides=",">
 			s.is_calculated='99',
+			s.calcu_msg='',
 		</trim>
 		WHERE 1=1 and s.del_flag='0'
 		<if test=" bizType != null and bizType !='' and bizType != 'ALL' ">
