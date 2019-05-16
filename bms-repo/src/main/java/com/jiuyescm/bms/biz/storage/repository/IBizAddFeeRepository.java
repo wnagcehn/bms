@@ -67,4 +67,6 @@ public interface IBizAddFeeRepository {
 	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 
     int omssave(List<BizAddFeeEntity> addList);
+    
+    public BizAddFeeEntity queryPayNo(Map<String, Object> param);
 }

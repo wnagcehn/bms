@@ -509,4 +509,8 @@
 #{firstSubjectName,jdbcType=VARCHAR}
         )
     </insert>
+    
+    <select id="queryPayNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
+    	select pay_no payNo from biz_add_fee where pay_no=#{payNo,jdbcType=VARCHAR}
+    </select>
 </mapper>

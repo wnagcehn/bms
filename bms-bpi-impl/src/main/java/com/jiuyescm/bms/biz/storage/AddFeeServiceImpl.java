@@ -1,7 +1,9 @@
 package com.jiuyescm.bms.biz.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
@@ -26,6 +29,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
         //保存list
         List<BizAddFeeEntity> addlist = new ArrayList<>();
         StringBuilder result = new StringBuilder();
+        Map<String, Object> param = new HashMap<>(); 
         //校验
         for (BizAddFeeEntity bizAddFeeEntity : list) {
             String payNo =bizAddFeeEntity.getPayNo();
@@ -80,16 +84,22 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 result.append(payNo+"：费用类型名称为空;");
                 continue;
             }
-            addlist.add(bizAddFeeEntity);
+            param.put("payNo", payNo);
+            BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
+            if(null!=checkEntity&&StringUtils.isEmpty(checkEntity.getPayNo())){
+                addlist.add(bizAddFeeEntity);
+            }
         }
         try {
-            bizAddFeeRepository.omssave(addlist);
+            if(CollectionUtils.isNotEmpty(addlist)){
+                bizAddFeeRepository.omssave(addlist);
+            }
             logger.info("oms对接接口保存成功");
         } catch (Exception e) {
             logger.info("保存失败："+addlist.toString());
         }
         String resultString = result.toString();
-        if(StringUtils.isEmpty(resultString)){
+        if(StringUtils.isBlank(resultString)){
             return "保存成功";
         }else{
             return resultString;

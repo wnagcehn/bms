@@ -162,4 +162,10 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
     public int omssave(List<BizAddFeeEntity> addList) {
         return insertBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.omssave",addList);
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public BizAddFeeEntity queryPayNo(Map<String, Object> param) {
+        return (BizAddFeeEntity) selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.queryPayNo", param);
+    }
 }
