@@ -200,7 +200,7 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         select a.customer_name,a.warehouse_name,COUNT(DISTINCT a.waybill_no) as num
 		from  biz_outstock_packmaterial a
-		LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
+		LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
         where a.del_flag = 0 
         <if test="(feesNo != null and feesNo !='')" >
 			and a.fees_no = #{feesNo,jdbcType=VARCHAR}
@@ -236,8 +236,8 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
 		select a.customer_id,a.customer_name,a.warehouse_code, a.warehouse_name,a.consumer_material_code,
 		a.consumer_material_name,b.is_calculated,count(0) as num from biz_outstock_packmaterial a
-		LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
-		where 1=1
+		LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no  and b.del_flag='0'
+		where 1=1 and a.del_flag='0'
 		<if test="isCalculated != null" >
 			and b.is_calculated = #{isCalculated,jdbcType=VARCHAR}
 		</if>
@@ -263,7 +263,7 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         select a.customer_name,a.warehouse_name,a.consumer_material_code,b.is_calculated,count(0) as num  
         FROM biz_outstock_packmaterial a
-        LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
+        LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
 		where 1=1  and a.del_flag = '0'
 		 <if test="(feesNo != null and feesNo !='')" >
 			and a.fees_no = #{feesNo,jdbcType=VARCHAR}
@@ -301,7 +301,7 @@
         select a.waybill_no from biz_outstock_packmaterial a
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
-		where a.del_flag = 0 
+		where a.del_flag = 0 and b.del_flag = 0
 		<include refid="baseSelectColumns" />
 		LIMIT 1
     </select>
@@ -398,7 +398,7 @@
     
     <select id="queryMaterialCodeByBillNo" parameterType="java.util.Map"
         resultType="java.util.Map">
-		SELECT b.product_no as  code  from  (SELECT product_no from fees_receive_storage  where bill_no = #{billNo,jdbcType=VARCHAR} and subject_code = 'wh_material_use') b GROUP BY b.product_no
+		SELECT b.product_no as  code  from  (SELECT product_no from fees_receive_storage  where bill_no = #{billNo,jdbcType=VARCHAR} and subject_code = 'wh_material_use' and del_flag='0') b GROUP BY b.product_no
     </select>
     <select id="queryPackMaterialByOutstockNo" parameterType="java.util.Map" resultMap="BaseResultMap">
     	select * from biz_outstock_packmaterial where waybill_no in

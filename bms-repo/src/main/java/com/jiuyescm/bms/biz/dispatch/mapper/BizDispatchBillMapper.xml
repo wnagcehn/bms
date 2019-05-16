@@ -489,7 +489,7 @@
     
     <select id="queryNotCalculate" parameterType="java.util.Map" resultMap="baseResultMap">
     	select * from biz_dispatch_bill a
-    	left join fees_receive_dispatch b on a.fees_no = b.fees_no
+    	left join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag='0'
 	    	where  a.del_flag='0'
 	    	and a.customerId=#{customerId} 
 	    	and a.create_time>=#{startTime} and <![CDATA[a.create_time<#{endTime}]]>
@@ -568,7 +568,7 @@
 	<update id="updateIsCalcuByFeesNo" parameterType="java.util.Map">
     	update fees_receive_dispatch
     	set is_calculated='99'
-    	where 1=1
+    	where 1=1 and del_flag='0' 
     	<if test="feesNo !=null and feesNo != ''">
     		and fees_no = #{feesNo}
     	</if>
@@ -578,7 +578,7 @@
     	update fees_receive_dispatch a
 		LEFT JOIN biz_dispatch_bill b on a.fees_no=b.fees_no and b.del_flag='0' 
 		SET a.is_calculated='99'
-		WHERE 1=1
+		WHERE 1=1 and a.del_flag='0' 
     	<if test="waybillNo !=null and waybillNo != ''">
     		and a.waybill_no = #{waybillNo}
     	</if>
