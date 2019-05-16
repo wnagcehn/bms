@@ -274,11 +274,11 @@
 			area_id=#{areaId,jdbcType=VARCHAR},
 			<if test="weightDown != null" >weight_down=#{weightDown,jdbcType=DECIMAL},</if>
 			<if test="weightUp != null" >weight_up=#{weightUp,jdbcType=DECIMAL},</if>
-			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DECIMAL},</if>
-			<if test="firstWeight != null" >first_weight=#{firstWeight,jdbcType=DECIMAL},</if>
-			<if test="firstWeightPrice != null" >first_weight_price=#{firstWeightPrice,jdbcType=DECIMAL},</if>
-			<if test="continuedWeight != null" >continued_weight=#{continuedWeight,jdbcType=DECIMAL},</if>
-			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DECIMAL},</if>
+			unit_price=#{unitPrice,jdbcType=DECIMAL},
+			first_weight=#{firstWeight,jdbcType=DECIMAL},
+			first_weight_price=#{firstWeightPrice,jdbcType=DECIMAL},
+			continued_weight=#{continuedWeight,jdbcType=DECIMAL},
+			continued_price=#{continuedPrice,jdbcType=DECIMAL},
 			<if test="weightLimit != null" >weight_limit=#{weightLimit,jdbcType=DECIMAL},</if>
 			<if test="timeliness != null" >timeliness=#{timeliness,jdbcType=VARCHAR},</if>
 			<if test="temperatureTypeCode != null" >temperature_type_code=#{temperatureTypeCode,jdbcType=VARCHAR},</if>
