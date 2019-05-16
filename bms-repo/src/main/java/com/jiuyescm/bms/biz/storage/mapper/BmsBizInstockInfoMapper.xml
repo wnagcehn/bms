@@ -189,7 +189,9 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
     </delete>
     
     <update id="retryForCalcu" parameterType="com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity">
-        update fees_receive_storage i set i.is_calculated = 99 where i.fees_no = #{feesNo} AND i.subject_code = #{subjectCode} and i.del_flag='0'
+        update fees_receive_storage i 
+        set i.is_calculated = 99, i.calcu_msg = ''
+        where i.fees_no = #{feesNo} AND i.subject_code = #{subjectCode} and i.del_flag='0'
     </update>
     
     <select id="groupCount" parameterType="java.util.Map"

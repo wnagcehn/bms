@@ -531,8 +531,7 @@ public class PrepareBillHandler {
             List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
             for (FeesReceiveStorageEntity entity : itemsList) {
                 conIndex++;
-                if (!set.contains(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()))) {
-                    
+                if (!set.contains(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()))) { 
                     set.add(entity.getCustomerId()+"&"+sdf.format(entity.getCreateTime()));
                     
                 }

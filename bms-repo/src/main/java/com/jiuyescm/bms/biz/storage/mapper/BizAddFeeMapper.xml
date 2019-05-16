@@ -390,7 +390,7 @@
     <update id="retryCalcu" parameterType="java.util.Map">
     	UPDATE fees_receive_storage s
 		LEFT JOIN biz_add_fee a on s.fees_no=a.fees_no and a.del_flag='0'
-		SET s.is_calculated='99'
+		SET s.is_calculated='99', s.calcu_msg=''
 		WHERE 1=1 and s.del_flag='0'
 		<if test="(customerid != null and customerid !='')" >
 			and a.customerid = #{customerid}

@@ -315,7 +315,8 @@
 	
 	<update id="retryForCalcu" parameterType="java.util.Map">
 		update fees_receive_storage s 
-		INNER JOIN biz_outstock_packmaterial a on s.fees_no=a.fees_no set s.is_calculated='99'
+		INNER JOIN biz_outstock_packmaterial a on s.fees_no=a.fees_no 
+		set s.is_calculated='99', s.calcu_msg=''
 		where s.del_flag='0' and a.del_flag='0'
 		<if test="(feesNo != null and feesNo !='')" >
 				and a.fees_no = #{feesNo}

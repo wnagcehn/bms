@@ -266,7 +266,7 @@
          select
 a.id, a.wms_id, a.data_num, a.cur_day, a.cur_time, a.warehouse_code, a.warehouse_name, a.customerid, a.customer_name, a.product_id, a.product_name, 
 a.stock_place_code, a.stock_place, a.batch_code, a.aqty, a.product_date, a.expiry_date, a.in_time, a.fees_no, a.dbname, a.temperature, a.weight, a.volume, 
-a.pallet_num, a.piece_num, a.remark, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,b.calculate_time, a.del_flag, a.extattr1, 
+a.pallet_num, a.piece_num, b.calcu_msg as remark, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,b.calculate_time, a.del_flag, a.extattr1, 
 a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
         from biz_product_storage a
         left join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0' 
@@ -421,7 +421,7 @@ a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
     </select>
     
      <update id="retryForCalcu" parameterType="java.util.Map">
-        update fees_receive_storage set is_calculated = 99 where fees_no in
+        update fees_receive_storage set is_calculated = 99, calcu_msg='' where fees_no in
            <foreach collection="feeList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
