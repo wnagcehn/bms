@@ -36,7 +36,63 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 result.append(payNo+"：时间为空;");
                 continue;
             }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getWarehouseCode())){
+                result.append(payNo+"：仓库ID为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getWarehouseName())){
+                result.append(payNo+"：仓库名为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getCustomerid())){
+                result.append(payNo+"：商家ID为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getCustomerName())){
+                result.append(payNo+"：商家名称为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getFeesUnit())){
+                result.append(payNo+"：费用单位为空;");
+                continue;
+            }
+            if(null==bizAddFeeEntity.getNum()){
+                result.append(payNo+"：数量为空;");
+                continue;
+            }
+            if(null==bizAddFeeEntity.getFixedAmount()){
+                result.append(payNo+"：一口价为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getFirstSubject())){
+                result.append(payNo+"：增值主科目编码为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getFirstSubjectName())){
+                result.append(payNo+"：增值主科目名称为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getFeesType())){
+                result.append(payNo+"：费用类型为空;");
+                continue;
+            }
+            if(StringUtils.isEmpty(bizAddFeeEntity.getFeesTypeName())){
+                result.append(payNo+"：费用类型名称为空;");
+                continue;
+            }
+            addlist.add(bizAddFeeEntity);
         }
-        return null;
+        try {
+            bizAddFeeRepository.omssave(addlist);
+            logger.info("oms对接接口保存成功");
+        } catch (Exception e) {
+            logger.info("保存失败："+addlist.toString());
+        }
+        String resultString = result.toString();
+        if(StringUtils.isEmpty(resultString)){
+            return "保存成功";
+        }else{
+            return resultString;
+        }
     }
 }
