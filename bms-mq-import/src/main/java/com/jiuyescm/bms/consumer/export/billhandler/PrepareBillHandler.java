@@ -377,9 +377,9 @@ public class PrepareBillHandler {
         headMapDict.put("shopName", "店铺名称");
         headMapDict.put("orderNo", "九曳订单号");
         headMapDict.put("externalNo", "商家订单号");
-        headMapDict.put("waybillNo", "运单号");
+        headMapDict.put("waybillNo", "转寄后运单号");
         headMapDict.put("createTime", "运单生成时间");
-        headMapDict.put("zexpressNum", "转寄后运单号");
+//        headMapDict.put("zexpressNum", "转寄后运单号");
         headMapDict.put("totalWeight", "运单重量");
         headMapDict.put("totalQty", "商品数量");
         headMapDict.put("productDetail", "商品明细");
@@ -432,9 +432,10 @@ public class PrepareBillHandler {
             map.put("shopName", entity.getShopName());
             map.put("orderNo", entity.getOutstockNo());
             map.put("externalNo", entity.getExternalNo());
-            map.put("waybillNo", entity.getWaybillNo());
+            //有转寄运单号取转寄的   没有的取运单号
+            map.put("waybillNo", StringUtils.isBlank(entity.getZexpressnum())?entity.getWaybillNo():entity.getZexpressnum());
             map.put("createTime", entity.getCreateTime() == null ? "" : sdf.format(entity.getCreateTime()));
-            map.put("zexpressNum", entity.getZexpressnum());
+//            map.put("zexpressNum", entity.getZexpressnum());
             map.put("totalWeight", entity.getTotalWeight() == null ? 0 : entity.getTotalWeight());
             map.put("totalQty", entity.getTotalQuantity() == null ? 0 : entity.getTotalQuantity());
             map.put("productDetail", entity.getProductDetail());
@@ -477,6 +478,28 @@ public class PrepareBillHandler {
     }
     
     /**
+     * 获取商家类别配置
+     * 
+     * @author wangchen870
+     * @date 2019年5月16日 上午10:56:54
+     *
+     * @param groupCode
+     * @param bizType
+     * @return
+     */
+    private List<String> getSettingsCus(String groupCode, String bizType){
+        Map<String,Object> map= new HashMap<String, Object>();
+        List<String> cusList = null;
+        map.put("groupCode", groupCode);
+        map.put("bizType", bizType);
+        BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+        if(bmsGroup!=null){
+            cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
+        }
+        return cusList;
+    }
+    
+    /**
      * 预账单仓储
      * 
      * @param workbook
@@ -492,24 +515,20 @@ public class PrepareBillHandler {
         Timestamp startTime = DateUtil.formatTimestamp(parameter.get("startDate"));
 
         for (String warehouseCode : warehouseList) {
+            //配置按件商家，是否显示处置费列
             int conIndex = 0;
             int newIndex = 0;
             int move2 = 0;
-            parameter.put("warehouseCode", warehouseCode);
+            //库存件数列显示标识和移动的列数
+            boolean itemFlag = true;
+            int itemMove = 0;
             
+            parameter.put("warehouseCode", warehouseCode);
             FastDateFormat sdf = FastDateFormat.getInstance("yyyy/MM/dd");
-
             Set<String> set = new TreeSet<String>();
             
             //判断是否是按件商家
-            Map<String,Object> map= new HashMap<String, Object>();
-            List<String> cusList=null;
-            map.put("groupCode", "customer_unit");
-            map.put("bizType", "group_customer");
-            BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
-            if(bmsGroup!=null){
-                cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
-            }
+            List<String> cusList = getSettingsCus("customer_unit", "group_customer");
             
             //判断是否是按子商家导出       
             if ((Boolean)parameter.get("isChildCustomer") == true) {                
@@ -526,6 +545,26 @@ public class PrepareBillHandler {
                     }
                 }
             }
+            
+            //判断是否是"不需要库存件数的商家"
+            cusList = getSettingsCus("no_need_item_customer", "group_customer");
+
+            //判断是否是按子商家导出       
+            if ((Boolean)parameter.get("isChildCustomer") == true) {                
+                for (String cus : cusList) {
+                    if (parameter.get("customerId").equals(cus)) {
+                        itemFlag = false;
+                    }
+                }
+            }else {         
+                List<String> customerList=(List<String>) parameter.get("customerIds");
+                for (String cus : cusList) {
+                    if (customerList.contains(cus)) {
+                        itemFlag = false;
+                    }
+                }
+            }
+            
             
             // 商品按件存储
             List<FeesReceiveStorageEntity> itemsList = feesReceiveStorageService.queryPreBillStorageByItems(parameter);
@@ -576,13 +615,19 @@ public class PrepareBillHandler {
             cell3.setCellValue("库存板数");
             cell3.setCellStyle(style);
             
-            Cell cell4 = row0.createCell(9);
-            cell4.setCellStyle(style);
-            cell4.setCellValue("库存件数");
+            //如果配置了"不需要库存件数的商家"，itemFlag为false，不显示列
+            if (itemFlag) {
+                Cell cell4 = row0.createCell(9);
+                cell4.setCellStyle(style);
+                cell4.setCellValue("库存件数");
+            }else {
+                itemMove = 1;
+            }  
+            
             //如果商品按件存储有数据，展示入库件数/存储费小计列
             if (newIndex > 0) {
                 
-                Cell cell8 = row0.createCell(18);
+                Cell cell8 = row0.createCell(18-itemMove);
                 cell8.setCellValue("存储费按件小计/元");
                 cell8.setCellStyle(style);
                 
@@ -590,58 +635,104 @@ public class PrepareBillHandler {
                 sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
                 sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));
                 sheet.addMergedRegion(new CellRangeAddress(0, 0, 3, 8));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 12, 17));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 20, 20));
                 
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17));
-                
+                //如果配置了"不需要库存件数的商家"，itemFlag=false，不显示列
+                if (itemFlag) {
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, 12, 17));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 20, 20));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17)); 
+                }else {
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, 11, 16));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+                }  
             }else {
                 move2 = 1;
                 
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));                
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 3, 8));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
+              //如果配置了"不需要库存件数的商家"，itemFlag=false，不显示列
+                if (itemFlag) {
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));                
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, 3, 8));
                     
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 12, 17));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
-                sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
-                
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
-                sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 11, 11));
+                        
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, 12, 17));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 19, 19));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 17, 17));
+                }else {
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));                
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, 3, 8));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 9, 9));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 10, 10));
+                        
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, 11, 16));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 17, 17));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 2, 18, 18));
+                    
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 11, 11));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 12, 12));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 13, 13));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 14, 14));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 15, 15));
+                    sheet.addMergedRegion(new CellRangeAddress(1, 2, 16, 16));
+                }
             }
             
-            Cell cell5 = row0.createCell(10);
+            Cell cell5 = row0.createCell(10-itemMove);
             cell5.setCellStyle(style);
             cell5.setCellValue("入库板数");
-            Cell cell6 = row0.createCell(11);
+            Cell cell6 = row0.createCell(11-itemMove);
             cell6.setCellValue("出库板数");
             cell6.setCellStyle(style);
-            Cell cell7 = row0.createCell(12);
+            Cell cell7 = row0.createCell(12-itemMove);
             cell7.setCellValue("仓储费/托/元");
             cell7.setCellStyle(style);
 
-            Cell cell9 = row0.createCell(19-move2);
+            Cell cell9 = row0.createCell(19-move2-itemMove);
             cell9.setCellValue("处置费小计/元");
             cell9.setCellStyle(style);
-            Cell cell10 = row0.createCell(20-move2);
+            Cell cell10 = row0.createCell(20-move2-itemMove);
             cell10.setCellValue("收入合计");
             cell10.setCellStyle(style);
 
@@ -672,27 +763,27 @@ public class PrepareBillHandler {
             cell28.setCellValue("冷冻包材");
             cell28.setCellStyle(style);
 
-            Cell cellk29 = row1.createCell(12);
+            Cell cellk29 = row1.createCell(12-itemMove);
             cellk29.setCellValue("冷冻费小计/元");
             cellk29.setCellStyle(style);
 
-            Cell cellk30 = row1.createCell(13);
+            Cell cellk30 = row1.createCell(13-itemMove);
             cellk30.setCellValue("冷藏费小计/元");
             cellk30.setCellStyle(style);
 
-            Cell cellk31 = row1.createCell(14);
+            Cell cellk31 = row1.createCell(14-itemMove);
             cellk31.setCellValue("恒温费小计/元");
             cellk31.setCellStyle(style);
 
-            Cell cellk32 = row1.createCell(15);
+            Cell cellk32 = row1.createCell(15-itemMove);
             cellk32.setCellValue("常温费小计/元");
             cellk32.setCellStyle(style);
 
-            Cell cellk33 = row1.createCell(16);
+            Cell cellk33 = row1.createCell(16-itemMove);
             cellk33.setCellValue("常温包材费小计/元");
             cellk33.setCellStyle(style);
             
-            Cell cellk34 = row1.createCell(17);
+            Cell cellk34 = row1.createCell(17-itemMove);
             cellk34.setCellValue("冷冻包材费小计/元");
             cellk34.setCellStyle(style);
 
@@ -776,19 +867,19 @@ public class PrepareBillHandler {
                                 // 列小计
                                 double cost = entity.getCost().doubleValue();
                                 if ("LD".equals(tempretureType)) {
-                                    Cell cell49 = row.createCell(12);
+                                    Cell cell49 = row.createCell(12-itemMove);
                                     cell49.setCellValue(cost);
                                     ldcost = ldcost + cost;
                                 } else if ("LC".equals(tempretureType)) {
-                                    Cell cell49 = row.createCell(13);
+                                    Cell cell49 = row.createCell(13-itemMove);
                                     cell49.setCellValue(cost);
                                     lccost = lccost + cost;
                                 } else if ("HW".equals(tempretureType)) {
-                                    Cell cell49 = row.createCell(14);
+                                    Cell cell49 = row.createCell(14-itemMove);
                                     cell49.setCellValue(cost);
                                     hwcost = hwcost + cost;
                                 } else if ("CW".equals(tempretureType)) {
-                                    Cell cell49 = row.createCell(15);
+                                    Cell cell49 = row.createCell(15-itemMove);
                                     cell49.setCellValue(cost);
                                     cwcost = cwcost + cost;
                                 }
@@ -806,7 +897,7 @@ public class PrepareBillHandler {
                                 
                                 //不是当月的时间，则是上月结余，上月结余的不显示金额
                                 if(!entity.getCreateTime().before(startTime)){
-                                    Cell cell49 = row.createCell(16);
+                                    Cell cell49 = row.createCell(16-itemMove);
                                     cell49.setCellValue(materialCost);
                                     //累加行
                                     cwCost = cwCost+materialCost;
@@ -820,7 +911,7 @@ public class PrepareBillHandler {
                                 
                                 //不是当月的时间，则是上月结余，上月结余的不显示金额
                                 if(!entity.getCreateTime().before(startTime)){
-                                    Cell cell50 = row.createCell(17);
+                                    Cell cell50 = row.createCell(17-itemMove);
                                     cell50.setCellValue(materialCost+ldCost);
                                     //累加行
                                     ldCost = materialCost+ldCost;
@@ -834,11 +925,11 @@ public class PrepareBillHandler {
                             double palletCost = entity.getCost().doubleValue();
                             if ("instock".equals(entity.getBizType())) {
                                 //入库托数
-                                Cell cell70 = row.createCell(10);
+                                Cell cell70 = row.createCell(10-itemMove);
                                 cell70.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
                             }else if ("outstock".equals(entity.getBizType())) {
                                 //出库托数
-                                Cell cell71 = row.createCell(11);
+                                Cell cell71 = row.createCell(11-itemMove);
                                 cell71.setCellValue(entity.getAdjustNum()==0?entity.getQuantity():entity.getAdjustNum());
                             }else {
                                 continue;
@@ -847,7 +938,7 @@ public class PrepareBillHandler {
                             //不是当月的时间，则是上月结余，上月结余的不显示金额
                             if(!entity.getCreateTime().before(startTime)){
                                 //处置费小计
-                                Cell cell72 = row.createCell(19-move2);
+                                Cell cell72 = row.createCell(19-move2-itemMove);
                                 dispalCost=dispalCost+palletCost;
                                 cell72.setCellValue(dispalCost);
                                 
@@ -893,7 +984,7 @@ public class PrepareBillHandler {
                         //不是当月的时间，则是上月结余，上月结余的不显示金额
                         if(!entity.getCreateTime().before(startTime) && newIndex > 0){
                             //存储费按件小计
-                            Cell cell61 = row.createCell(18);
+                            Cell cell61 = row.createCell(18-itemMove);
                             cell61.setCellValue(productCost+cCost);
                             //累加行
                             cCost = cCost + productCost;
@@ -902,11 +993,12 @@ public class PrepareBillHandler {
                             ccfcost = ccfcost+productCost;
                         }   
                         
-                        
-                        Cell cell60 = row.createCell(9);
-                        cell60.setCellValue(entity.getQuantity()+qty);
-                        //件数累加
-                        qty = qty+entity.getQuantity();                 
+                        if (itemFlag) {
+                            Cell cell60 = row.createCell(9);
+                            cell60.setCellValue(entity.getQuantity()+qty);
+                            //件数累加
+                            qty = qty+entity.getQuantity(); 
+                        }                  
                     }else {
                         rowProCost = 0.0;
                     }       
@@ -919,38 +1011,38 @@ public class PrepareBillHandler {
                 // 总计
                 totalcost = rowCost + totalcost;
                 // 行小计
-                Cell cell49 = row.createCell(20-move2);
+                Cell cell49 = row.createCell(20-move2-itemMove);
                 cell49.setCellValue(rowCost);
             }
 
             Row row = sheet.createRow(rowIndex);
-            Cell cellLast0 = row.createCell(12);
+            Cell cellLast0 = row.createCell(12-itemMove);
             cellLast0.setCellValue(ldcost);
 
-            Cell cellLast1 = row.createCell(13);
+            Cell cellLast1 = row.createCell(13-itemMove);
             cellLast1.setCellValue(lccost);
 
-            Cell cellLast6 = row.createCell(14);
+            Cell cellLast6 = row.createCell(14-itemMove);
             cellLast6.setCellValue(hwcost);
 
-            Cell cellLast2 = row.createCell(15);
+            Cell cellLast2 = row.createCell(15-itemMove);
             cellLast2.setCellValue(cwcost);
 
-            Cell cellLast3 = row.createCell(16);
+            Cell cellLast3 = row.createCell(16-itemMove);
             cellLast3.setCellValue(cwpackcost);
             
-            Cell cellLast4 = row.createCell(17);
+            Cell cellLast4 = row.createCell(17-itemMove);
             cellLast4.setCellValue(colcost);
             
             if (newIndex > 0) {
-                Cell cellLast5 = row.createCell(18);
+                Cell cellLast5 = row.createCell(18-itemMove);
                 cellLast5.setCellValue(ccfcost);
             }
             
-            Cell cellLast7 = row.createCell(19-move2);
+            Cell cellLast7 = row.createCell(19-move2-itemMove);
             cellLast7.setCellValue(czfcost);
 
-            Cell cellLast = row.createCell(20-move2);
+            Cell cellLast = row.createCell(20-move2-itemMove);
             cellLast.setCellValue(totalcost);
         }
     }
