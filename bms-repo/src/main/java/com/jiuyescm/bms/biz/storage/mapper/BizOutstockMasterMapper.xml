@@ -353,7 +353,7 @@
     
     <select id="validBillForRetry" parameterType="java.util.Map" resultType = "String">
         select a.waybill_no from biz_outstock_master a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
 		where a.del_flag = 0 
 		<include refid="baseSelectColumns" />
@@ -437,7 +437,7 @@
     </select>
     
 	<update id="retryForCalcuFee" parameterType="java.util.Map">		
-		update fees_receive_storage  set is_calculated = '99' where fees_no in
+		update fees_receive_storage  set is_calculated = '99' where del_flag='0' and fees_no in
 		<foreach collection="feeList" item="item" index="index" open="(" separator="," close=")">
 			#{item}
 		</foreach>
