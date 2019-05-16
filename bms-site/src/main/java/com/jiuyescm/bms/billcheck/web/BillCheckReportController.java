@@ -563,6 +563,18 @@ public class BillCheckReportController {
         if (param == null) {
             param = new HashMap<String, Object>();
         }
+        if(null!=param.get("receiptDateStart")){
+            String receiptDateStart = (String) param.get("receiptDateStart");
+            String str=receiptDateStart.substring(0, receiptDateStart.indexOf(" "));
+            str+=" 00:00:00";
+            param.put("receiptDateStart", str);
+        }
+        if(null!=param.get("receiptDateEnd")){
+            String receiptDateEnd = (String) param.get("receiptDateEnd");
+            String str=receiptDateEnd.substring(0, receiptDateEnd.indexOf(" "));
+            str+=" 00:00:00";
+            param.put("receiptDateEnd", str);
+        }
         PageInfo<BillCheckReceiptVo> pageInfo = billCheckReceiptService.queryReport(param, 1, Integer.MAX_VALUE);
 
         long beginTime = System.currentTimeMillis();
@@ -997,6 +1009,18 @@ public class BillCheckReportController {
 
         if (param == null) {
             param = new HashMap<String, Object>();
+        }
+        if(null!=param.get("invoiceDateStart")){
+            String invoiceDateStart = (String) param.get("invoiceDateStart");
+            String str=invoiceDateStart.substring(0, invoiceDateStart.indexOf(" "));
+            str+=" 00:00:00";
+            param.put("invoiceDateStart", str);
+        }
+        if(null!=param.get("invoiceDateEnd")){
+            String invoiceDateEnd = (String) param.get("invoiceDateEnd");
+            String str=invoiceDateEnd.substring(0, invoiceDateEnd.indexOf(" "));
+            str+=" 00:00:00";
+            param.put("invoiceDateEnd", str);
         }
         PageInfo<BillCheckInvoiceVo> pageInfo = billCheckInvoiceService.queryReport(param, 1,Integer.MAX_VALUE);
         long beginTime = System.currentTimeMillis();
