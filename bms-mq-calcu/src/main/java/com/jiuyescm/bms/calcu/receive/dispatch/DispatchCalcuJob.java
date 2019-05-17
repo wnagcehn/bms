@@ -546,7 +546,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		        break;
 		    }
 		}
-	    logger.info("合同信息{}",contract);
+	    logger.info("合同信息{}",contract.getContractNo());
 		
 		if(contract==null){
 		    fee.setIsCalculated(CalculateState.Contract_Miss.getCode());

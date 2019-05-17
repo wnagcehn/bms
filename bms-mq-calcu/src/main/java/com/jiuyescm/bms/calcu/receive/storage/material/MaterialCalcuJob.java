@@ -299,7 +299,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
             return;
         }
         
-		logger.info("合同信息{}",contract.getContractNo());//
+		logger.info("合同信息{}",contract.getContractNo());
 		
 		String quoTempleteCode=contract.getModelNo();
 		
