@@ -16,6 +16,7 @@ import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 
 /**
  * 
@@ -167,5 +168,11 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
     @Override
     public BizAddFeeEntity queryPayNo(Map<String, Object> param) {
         return (BizAddFeeEntity) selectOne("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.queryPayNo", param);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public int feesave(List<FeesReceiveStorageEntity> feeList) {
+        return insertBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.feesave",feeList);
     }
 }

@@ -513,4 +513,57 @@
     <select id="queryPayNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
     	select pay_no payNo from biz_add_fee where pay_no=#{payNo,jdbcType=VARCHAR}
     </select>
+    
+    
+        <insert id="feesave" parameterType="com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity">
+        insert into fees_receive_storage(fees_no, creator, create_time, last_modifier, last_modify_time, customer_id, customer_name, warehouse_code, warehouse_name, order_type, order_no, product_type, cost_type, subject_code,other_subject_code, tempreture_type, product_no, product_name, external_product_no, quantity, unit, weight, volume, varieties, box, unit_price, continued_price, cost,biz_type,is_calculated, calculate_time, param1, param2, param3, param4, param6, rule_no, bill_no, `status`, operate_time,biz_id,del_flag,first_num, first_price, continue_num, continue_price)
+        values (
+			#{feesNo,jdbcType=VARCHAR}, 
+			#{creator,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{lastModifier,jdbcType=VARCHAR}, 
+			#{lastModifyTime,jdbcType=TIMESTAMP}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{orderType,jdbcType=VARCHAR}, 
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{productType,jdbcType=VARCHAR}, 
+			#{costType,jdbcType=VARCHAR}, 
+			#{subjectCode,jdbcType=VARCHAR},
+			#{otherSubjectCode,jdbcType=VARCHAR}, 
+			#{tempretureType,jdbcType=VARCHAR}, 
+			#{productNo,jdbcType=VARCHAR}, 
+			#{productName,jdbcType=VARCHAR}, 
+			#{externalProductNo,jdbcType=VARCHAR}, 
+			#{quantity,jdbcType=INTEGER}, 
+			#{unit,jdbcType=VARCHAR}, 
+			#{weight,jdbcType=DOUBLE}, 
+			#{volume,jdbcType=DOUBLE}, 
+			#{varieties,jdbcType=INTEGER}, 
+			#{box,jdbcType=INTEGER}, 
+			#{unitPrice,jdbcType=DOUBLE}, 
+			#{continuedPrice,jdbcType=DOUBLE}, 
+			#{cost,jdbcType=DECIMAL}, 
+			#{bizType,jdbcType=VARCHAR},
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{calculateTime,jdbcType=TIMESTAMP},
+			#{param1,jdbcType=VARCHAR}, 
+			#{param2,jdbcType=VARCHAR}, 
+			#{param3,jdbcType=VARCHAR}, 
+			#{param4,jdbcType=VARCHAR}, 
+			#{param6,jdbcType=VARCHAR}, 
+			#{ruleNo,jdbcType=VARCHAR}, 
+			#{billNo,jdbcType=VARCHAR}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{operateTime,jdbcType=TIMESTAMP},
+			#{bizId,jdbcType=VARCHAR},
+			#{delFlag,jdbcType=VARCHAR},
+			#{firstNum,jdbcType=DOUBLE},
+			#{firstPrice,jdbcType=DOUBLE},
+			#{continueNum,jdbcType=DOUBLE},
+			#{continuePrice,jdbcType=DOUBLE}
+        )
+    </insert>
 </mapper>

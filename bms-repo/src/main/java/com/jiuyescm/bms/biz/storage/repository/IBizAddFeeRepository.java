@@ -10,6 +10,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 
 /**
  * 
@@ -69,4 +70,6 @@ public interface IBizAddFeeRepository {
     int omssave(List<BizAddFeeEntity> addList);
     
     public BizAddFeeEntity queryPayNo(Map<String, Object> param);
+
+    int feesave(List<FeesReceiveStorageEntity> feeList);
 }
