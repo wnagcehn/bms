@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 @Service("feesReceiveStorageService")
 public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesReceiveStorageService {
@@ -95,5 +95,12 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
 	    map.put("list", entity);
 		this.update("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.update", map);
 	}
+
+    @Override
+    public void updateFee(List<FeesReceiveStorageEntity> entity) {
+        // TODO Auto-generated method stub
+        this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.updateFee", entity);
+
+    }
 
 }

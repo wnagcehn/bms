@@ -252,7 +252,36 @@
         <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
              #{biz.feesNo}
         </foreach>
+       and del_flag='0'
     </update>
+    
+    
+    <update id="updateFee" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
+        update fees_receive_storage 
+		<set >
+			<if test="tempretureType != null" >tempreture_type=#{tempretureType,jdbcType=VARCHAR},</if>
+			<if test="quantity != null" >quantity=#{quantity,jdbcType=INTEGER},</if>
+			<if test="box != null" >box=#{box,jdbcType=DOUBLE},</if>
+			<if test="unit != null" >unit=#{unit,jdbcType=VARCHAR},</if>
+			<if test="weight != null" >weight=#{weight,jdbcType=DOUBLE},</if>
+			<if test="volume != null" >volume=#{volume,jdbcType=DOUBLE},</if>
+			<if test="varieties != null" >varieties=#{varieties,jdbcType=INTEGER},</if>
+			<if test="unitPrice != null" >unit_price=#{unitPrice,jdbcType=DOUBLE},</if>
+			<if test="continuedPrice != null" >continued_price=#{continuedPrice,jdbcType=DOUBLE},</if>
+			<if test="cost != null" >cost=#{cost,jdbcType=DECIMAL},</if>
+			<if test="isCalculated != null" >is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
+			<if test="param1 != null" >param1=#{param1,jdbcType=VARCHAR},</if>
+			<if test="param2 != null" >param2=#{param2,jdbcType=VARCHAR},</if>
+			<if test="param3 != null" >param3=#{param3,jdbcType=VARCHAR},</if>
+			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
+			<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
+			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>
+		</set>
+        where fees_no=#{feesNo} and subject_code = #{subjectCode} and del_flag='0'
+    </update>
+    
     
     <update id="updateOne" parameterType="com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity">
         update fees_receive_storage  
