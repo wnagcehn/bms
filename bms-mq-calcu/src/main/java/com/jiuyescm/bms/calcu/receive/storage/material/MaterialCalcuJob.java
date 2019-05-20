@@ -30,11 +30,12 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calcu.CalcuLog;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
+import com.jiuyescm.bms.calcu.receive.BmsContractBase;
 import com.jiuyescm.bms.calcu.receive.CommonService;
 import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
-import com.jiuyescm.bms.calcu.receive.BmsContractBase;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
+import com.jiuyescm.bms.calculate.vo.CalcuContractVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
@@ -106,12 +107,12 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Override
 	public void getQuoTemplete(){
-		Map<String, Object> map = new HashMap<>();
-		if(quoTempleteCode!=null){
+		//Map<String, Object> map = new HashMap<>();
+		/*if(quoTempleteCode!=null){
 			map.put("subjectId",serviceSubjectCode);
 			map.put("quotationNo", quoTempleteCode);
 			//quoTemplete = priceGeneralQuotationRepository.query(map);
-		}
+		}*/
 	}
 	
 	@Override
@@ -275,24 +276,43 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Override
 	public void calcuForBms(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity fee){
 		//合同校验
-		if(contractInfo == null){
+		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
 			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "bms合同缺失", null, cbiVo);
 			return;
 		}
-		logger.info("合同信息{}",contractInfo.getContractNo());
+		
+	      //业务时间和合同时间进行匹配
+        //合同
+		CalcuContractVo contract=null;
+        for(CalcuContractVo con:contractList){
+            if(con.getStartDate().before(entity.getCreateTime()) && entity.getCreateTime().before(con.getExpireDate())){
+                contract=con;
+                break;
+            }
+        }
+		
+        if(contract==null){
+            fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
+            fee.setCalcuMsg("bms合同缺失");
+            return;
+        }
+        
+		logger.info("合同信息{}",contract.getContractNo());
+		
+		String quoTempleteCode=contract.getModelNo();
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			fee.setCalcuMsg("未签约服务");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contractInfo, cbiVo);
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contract, cbiVo);
 			return;
 		}
 		
 		try{
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("contractCode", contractInfo.getContractNo());
+			map.put("contractCode", contract.getContractNo());
 			map.put("subjectId",subjectCode);
 			map.put("materialCode",entity.getConsumerMaterialCode());
 			List<PriceMaterialQuotationEntity> list=priceMaterialQuotationRepository.queryMaterialQuatationByContract(map);

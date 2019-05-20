@@ -1,10 +1,14 @@
 package com.jiuyescm.bms.calcu.receive;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +36,12 @@ public class BmsContractBase {
 	protected String subjectCode;					//费用科目
 	protected String serviceSubjectCode;			//签约服务编码
 	protected String contractAttr;					//合同归属
-	protected String quoTempleteCode = null;		//报价模板编码
-	protected CalcuContractVo contractInfo;
-	protected Map<String, String> contractItemMap = null; //合同签约服务集合 用于配送 <科目编码，报价模板编号>
+	//protected String quoTempleteCode = null;		//报价模板编码
+	//protected CalcuContractVo contractInfo;
+	//protected Map<String, String> contractItemMap = null; //合同签约服务集合 用于配送 <科目编码，报价模板编号>
 	protected int unCalcuCount = 0; 				//初始未计算单量
 	protected int calceCount = 0;					//已计算单量
+	protected List<CalcuContractVo> contractList;   //合同集合
 	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		this.taskVo = taskVo;
@@ -64,21 +69,48 @@ public class BmsContractBase {
 			Map<String,Object> map=new HashMap<String,Object>();
 			map.put("customerid", customerId);
 			map.put("contractTypeCode", "CUSTOMER_CONTRACT");
-			PriceContractInfoEntity bmsContractInfo = jobPriceContractInfoService.queryContractByCustomer(map);
-			if(bmsContractInfo == null || bmsContractInfo.getContractCode() == null){
+			
+			String creMonth=vo.getCreMonth()+"";
+			
+	        String year = creMonth.substring(0,4);
+	        String month =creMonth.substring(4);
+
+	        if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
+	            String startDateStr = year + "-" + month + "-01 00:00:00";
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            Date startDate = sdf.parse(startDateStr);
+	            Date endDate = DateUtils.addMonths(startDate, 1);
+	            map.put("startDate", startDate);
+	            map.put("endDate", endDate);
+	        }
+	        
+			map.put("creMonth", vo.getCreMonth());
+			List<PriceContractInfoEntity> bmsContractList = jobPriceContractInfoService.queryContract(map);
+			if(bmsContractList.size()<=0){
 				return;
 			}
 			else{
-				contractInfo = new CalcuContractVo();
-				contractInfo.setContractNo(bmsContractInfo.getContractCode());
-				logger.info("taskId={} 合同编码{}",vo.getTaskId(),contractInfo.getContractNo());
-				//配送单独处理 因为配送科目（de_delivery_amount）对应多个签约服务项
-				if(!"de_delivery_amount".equals(vo.getSubjectCode())){
-					initBmsService();
-				}
-				else{
-					initContractService();
-				}
+			    //合同集合
+			    contractList=new ArrayList<CalcuContractVo>();
+			    //签约服务的集合
+			    for(PriceContractInfoEntity contract:bmsContractList){
+			        logger.info("taskId={} 合同编码{}",vo.getTaskId(),contract.getContractCode());
+			        CalcuContractVo contractVo=new CalcuContractVo();
+			        contractVo.setContractNo(contract.getContractCode());
+			        contractVo.setStartDate(contract.getStartDate());
+			        contractVo.setExpireDate(contract.getExpireDate());
+			        
+	                //配送单独处理 因为配送科目（de_delivery_amount）对应多个签约服务项
+	                if(!"de_delivery_amount".equals(vo.getSubjectCode())){
+	                    initBmsService(contractVo);
+	                }
+	                else{
+	                    initContractService(contractVo);
+	                }	                
+	                contractList.add(contractVo);
+			    }
+			    
+				
 			}
 			
 		}catch(Exception ex){
@@ -92,21 +124,21 @@ public class BmsContractBase {
 	 * @param subjectId 科目编号  注：配送应该是 JIUYE-DISPATCH...
 	 * @return 模板编码-存在签约服务 fail-不存在签约服务
 	 */
-	public void initBmsService(){
+	public void initBmsService(CalcuContractVo contrat){
 		Map<String,Object> contractItems_map=new HashMap<String,Object>();
-		contractItems_map.put("contractCode", contractInfo.getContractNo());
+		contractItems_map.put("contractCode", contrat.getContractNo());
 		contractItems_map.put("subjectId", subjectCode);
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		if(contractItems == null || contractItems.size() == 0 || StringUtils.isEmpty(contractItems.get(0).getTemplateId())) {
-			quoTempleteCode = "fail";
+			contrat.setModelNo("fail");
 		}
 		else{
-			quoTempleteCode = contractItems.get(0).getTemplateId();
+			String quoTempleteCode = contractItems.get(0).getTemplateId();
 			if(StringUtils.isEmpty(quoTempleteCode)){
-				quoTempleteCode = "fail";
+	            contrat.setModelNo("fail");
 			}
 			else{
-				contractInfo.setModelNo(quoTempleteCode);
+			    contrat.setModelNo(quoTempleteCode);
 			}
 		}
 	}
@@ -116,16 +148,18 @@ public class BmsContractBase {
 	 * @param contractCode
 	 * @param subjectId 
 	 */
-	public void initContractService(){
+	public void initContractService(CalcuContractVo contrat){
 		//合同签约服务集合 用于配送 <科目编码，报价模板编号>
-		contractItemMap = new HashMap<String, String>();
+		Map<String,String> contractItemMap = new HashMap<String, String>();
 		Map<String,Object> contractItems_map=new HashMap<String,Object>();
-		contractItems_map.put("contractCode", contractInfo.getContractNo());
+		contractItems_map.put("contractCode", contrat.getContractNo());
 		contractItems_map.put("bizTypeCode", "DISPATCH");
 		List<PriceContractItemEntity> contractItems = priceContractItemRepository.query(contractItems_map);
 		for (PriceContractItemEntity item : contractItems) {
 			contractItemMap.put(item.getSubjectId(), item.getTemplateId());
 		}
+		contrat.setItemMap(contractItemMap);
+		
 	}
 	
 	
