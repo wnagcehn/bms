@@ -152,7 +152,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 }
                 addlist.add(bizAddFeeEntity);
             }
-            resultMap.put(payNo, "success");
+            resultMap.put(payNo, "SUCCESS");
         }
         try {
             if (!CollectionUtils.isEmpty(addlist)) {
