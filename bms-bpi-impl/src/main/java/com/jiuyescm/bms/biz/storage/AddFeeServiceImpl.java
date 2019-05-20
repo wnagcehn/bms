@@ -7,19 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
+import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 
 @Service("addFeeService")
 public class AddFeeServiceImpl implements IAddFeeService {
@@ -32,7 +34,23 @@ public class AddFeeServiceImpl implements IAddFeeService {
     private ISnowflakeSequenceService snowflakeSequenceService;
 
     @Override
-    public String save(List<BizAddFeeEntity> list) {
+    public String save(List<BizAddFeeVo> listVo) {
+        if(CollectionUtils.isEmpty(listVo)){
+            return "保存失败：保存数据为空";
+        }
+        
+        List<BizAddFeeEntity> list = new ArrayList<BizAddFeeEntity>();
+        for(BizAddFeeVo vo : listVo) {
+            BizAddFeeEntity paramEntity = new BizAddFeeEntity();
+            try {
+                PropertyUtils.copyProperties(paramEntity, vo);
+            } catch (Exception ex) {
+               logger.error("转换失败");
+            }
+            list.add(paramEntity);
+        }
+        
+
         // 保存list
         List<BizAddFeeEntity> addlist = new ArrayList<>();
         List<FeesReceiveStorageEntity> feelist = new ArrayList<>();
@@ -136,11 +154,11 @@ public class AddFeeServiceImpl implements IAddFeeService {
             }
         }
         try {
-            if (CollectionUtils.isNotEmpty(addlist)) {
+            if (!CollectionUtils.isEmpty(addlist)) {
                 bizAddFeeRepository.omssave(addlist);
                 logger.info("oms对接生成"+addlist.size()+"条业务数据");
             }
-            if (CollectionUtils.isNotEmpty(feelist)) {
+            if (!CollectionUtils.isEmpty(feelist)) {
                 bizAddFeeRepository.feesave(feelist);
                 logger.info("通过一口价生成"+feelist.size()+"条费用");
             }
