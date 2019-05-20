@@ -34,11 +34,11 @@ public class AddFeeServiceImpl implements IAddFeeService {
     private ISnowflakeSequenceService snowflakeSequenceService;
 
     @Override
-    public String save(List<BizAddFeeVo> listVo) {
+    public Map<String, String> save(List<BizAddFeeVo> listVo) {
         if(CollectionUtils.isEmpty(listVo)){
-            return "保存失败：保存数据为空";
+            return null;
         }
-        
+        logger.info("OMS入参：" + listVo.toString());
         List<BizAddFeeEntity> list = new ArrayList<BizAddFeeEntity>();
         for(BizAddFeeVo vo : listVo) {
             BizAddFeeEntity paramEntity = new BizAddFeeEntity();
@@ -50,66 +50,66 @@ public class AddFeeServiceImpl implements IAddFeeService {
             list.add(paramEntity);
         }
         
-
         // 保存list
         List<BizAddFeeEntity> addlist = new ArrayList<>();
         List<FeesReceiveStorageEntity> feelist = new ArrayList<>();
-        StringBuilder result = new StringBuilder();
         Map<String, Object> param = new HashMap<>();
+        Map<String, String> resultMap = new HashMap<>();
         // 校验
         for (BizAddFeeEntity bizAddFeeEntity : list) {
             String payNo = bizAddFeeEntity.getPayNo();
             if (StringUtils.isEmpty(payNo)) {
+                resultMap.put(payNo, "增值费编号为空");
                 continue;
             }
             if (null == bizAddFeeEntity.getCreateTime()) {
-                result.append(payNo + "：时间为空;");
+                resultMap.put(payNo, "时间为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getWarehouseCode())) {
-                result.append(payNo + "：仓库ID为空;");
+                resultMap.put(payNo, "仓库ID为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getWarehouseName())) {
-                result.append(payNo + "：仓库名为空;");
+                resultMap.put(payNo, "仓库名为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getCustomerid())) {
-                result.append(payNo + "：商家ID为空;");
+                resultMap.put(payNo, "商家ID为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getCustomerName())) {
-                result.append(payNo + "：商家名称为空;");
+                resultMap.put(payNo, "商家名称为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getFeesUnit())) {
-                result.append(payNo + "：费用单位为空;");
+                resultMap.put(payNo, "费用单位为空");
                 continue;
             }
             if (null == bizAddFeeEntity.getNum()) {
-                result.append(payNo + "：数量为空;");
-                continue;
-            }
-            Double fixedAmount = bizAddFeeEntity.getFixedAmount();
-            if (null == fixedAmount) {
-                result.append(payNo + "：一口价为空;");
+                resultMap.put(payNo, "数量为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getFirstSubject())) {
-                result.append(payNo + "：增值主科目编码为空;");
+                resultMap.put(payNo, "增值主科目编码为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getFirstSubjectName())) {
-                result.append(payNo + "：增值主科目名称为空;");
+                resultMap.put(payNo, "增值主科目名称为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getFeesType())) {
-                result.append(payNo + "：费用类型为空;");
+                resultMap.put(payNo, "费用类型为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getFeesTypeName())) {
-                result.append(payNo + "：费用类型名称为空;");
+                resultMap.put(payNo, "费用类型名称为空");
                 continue;
+            }
+            Double fixedAmount = bizAddFeeEntity.getFixedAmount();
+            //如果一口价为空，设置默认值0
+            if (null == fixedAmount) {
+                fixedAmount = 0.0;
             }
             param.put("payNo", payNo);
             // 校验payNo是否存在
@@ -152,6 +152,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 }
                 addlist.add(bizAddFeeEntity);
             }
+            resultMap.put(payNo, "SUCCESS");
         }
         try {
             if (!CollectionUtils.isEmpty(addlist)) {
@@ -166,11 +167,6 @@ public class AddFeeServiceImpl implements IAddFeeService {
         } catch (Exception e) {
             logger.info("保存失败：" + addlist.toString());
         }
-        String resultString = result.toString();
-        if (StringUtils.isBlank(resultString)) {
-            return "保存成功";
-        } else {
-            return resultString;
-        }
+        return resultMap;
     }
 }
