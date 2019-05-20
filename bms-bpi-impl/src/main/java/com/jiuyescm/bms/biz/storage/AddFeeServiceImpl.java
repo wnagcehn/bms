@@ -63,7 +63,11 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 continue;
             }
             if (null == bizAddFeeEntity.getCreateTime()) {
-                resultMap.put(payNo, "时间为空");
+                resultMap.put(payNo, "业务时间为空");
+                continue;
+            }
+            if (null == bizAddFeeEntity.getOperationTime()) {
+                resultMap.put(payNo, "操作时间为空");
                 continue;
             }
             if (StringUtils.isEmpty(bizAddFeeEntity.getWarehouseCode())) {

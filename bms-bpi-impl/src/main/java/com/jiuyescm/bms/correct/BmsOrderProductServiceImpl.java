@@ -36,12 +36,6 @@ public class BmsOrderProductServiceImpl implements IBmsOrderProductService {
     @Override
     public PageInfo<BmsOrderProductVo> query(Map<String, Object> condition,
             int pageNo, int pageSize) throws Exception {
-        String waybillNo = (String) condition.get("waybillNo");
-        if(null!=waybillNo){
-            
-        }
-        
-        
     	PageInfo<BmsOrderProductVo> pageVoInfo=null;
 		try{
 			pageVoInfo=new PageInfo<BmsOrderProductVo>();
