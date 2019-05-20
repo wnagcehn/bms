@@ -520,5 +520,20 @@ public class BizAddFeeVo implements IEntity {
     public void setTotalNum(Integer totalNum) {
         this.totalNum = totalNum;
     }
+    
+    @Override
+    public String toString() {
+        return "BizAddFeeVo [id=" + id + ", wmsId=" + wmsId + ", operationTime=" + operationTime + ", warehouseCode="
+                + warehouseCode + ", warehouseName=" + warehouseName + ", customerid=" + customerid + ", customerName="
+                + customerName + ", num=" + num + ", feesNo=" + feesNo + ", feesType=" + feesType + ", feesUnit="
+                + feesUnit + ", item=" + item + ", isCalculated=" + isCalculated + ", creator=" + creator
+                + ", createTime=" + createTime + ", lastModifier=" + lastModifier + ", lastModifyTime="
+                + lastModifyTime + ", delFlag=" + delFlag + ", calculateTime=" + calculateTime + ", writeTime="
+                + writeTime + ", adjustNum=" + adjustNum + ", feesTypeName=" + feesTypeName + ", price=" + price
+                + ", unitPrice=" + unitPrice + ", remark=" + remark + ", externalNo=" + externalNo
+                + ", serviceContent=" + serviceContent + ", remarkContent=" + remarkContent + ", cost=" + cost
+                + ", totalNum=" + totalNum + ", payNo=" + payNo + ", fixedAmount=" + fixedAmount + ", firstSubject="
+                + firstSubject + ", firstSubjectName=" + firstSubjectName + "]";
+    }
 
 }

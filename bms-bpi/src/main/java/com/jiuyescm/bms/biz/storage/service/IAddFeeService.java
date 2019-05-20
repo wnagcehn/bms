@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.biz.storage.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 
@@ -15,6 +16,6 @@ public interface IAddFeeService {
 	 * @param param
 	 * @return
 	 */
-	String save(List<BizAddFeeVo> listVo);
+    Map<String, String> save(List<BizAddFeeVo> listVo);
 
 }
