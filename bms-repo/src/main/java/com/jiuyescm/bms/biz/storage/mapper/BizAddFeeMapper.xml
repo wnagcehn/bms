@@ -130,7 +130,7 @@
 		a.customerid, a.customer_name, a.num, a.fees_no, a.fees_type,a.fees_type_name, 
 		a.fees_unit, a.item, s.is_calculated, a.creator, a.create_time, a.last_modifier, 
 		a.last_modify_time, a.del_flag, a.calculate_time, a.write_time, a.adjust_num, s.calcu_msg as remark, 
-		a.external_no,a.service_content,a.remark_content, 
+		a.external_no,a.service_content,a.remark_content, a.pay_no,a.fixed_amount,a.first_subject,a.first_subject_name,
 		s.cost as cost, s.unit_price as unitPrice from biz_add_fee a
 		LEFT JOIN fees_receive_storage s on a.fees_no=s.fees_no and s.del_flag='0'
 		WHERE 1=1

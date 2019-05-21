@@ -425,7 +425,7 @@ with (view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;)){&#xD;
               </DataColumn>
               <DataColumn name="waybillNo">
                 <Property name="property">waybillNo</Property>
-                <Property name="visible">false</Property>
+                <Property name="visible">true</Property>
               </DataColumn>
               <DataColumn name="customerId">
                 <Property name="property">customerId</Property>
