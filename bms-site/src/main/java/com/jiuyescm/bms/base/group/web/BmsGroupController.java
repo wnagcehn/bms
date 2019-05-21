@@ -538,7 +538,13 @@ public class BmsGroupController {
 
    @DataProvider
     public Map<String,String> getAddFeeSubject(String groupCode){
-        return bmsGroupSubjectService.getWmsValueAddSubjectGroups();
+       Map<String,String> map = new LinkedHashMap<>();
+       map.put("", "");
+       Map<String,String> resultMap = bmsGroupSubjectService.getWmsValueAddSubjectGroups();
+       for (String key : resultMap.keySet()) {
+           map.put(key, resultMap.get(key));
+        }
+        return map;
     }
 
    @DataProvider

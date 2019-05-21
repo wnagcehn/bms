@@ -194,6 +194,9 @@
 		<if test="(adjustNum != null and adjustNum !='')" >
 				and a.adjust_num = #{adjustNum}
 		</if>
+		<if test="(firstSubject != null and firstSubject !='')" >
+				and a.first_subject = #{firstSubject}
+		</if>
     </select>
     
     <select id="queryRecount" parameterType="java.util.Map"

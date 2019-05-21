@@ -214,7 +214,7 @@
       </PropertyDef>
       <PropertyDef name="feesTypeName">
         <Property></Property>
-        <Property name="label">费用类型名称</Property>
+        <Property name="label">费用类型</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
@@ -606,20 +606,28 @@ var nowdays = new Date();&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <ClientEvent name="onFocus">var entity = view.id(&quot;queryFormProductPalletStorage&quot;).get(&quot;entity&quot;);&#xD;
+entity.set(&quot;feesType&quot;,&quot;&quot;);&#xD;
+entity.set(&quot;feesTypeName&quot;,&quot;&quot;);</ClientEvent>
         <Property name="name">firstSubject</Property>
         <Property name="property">firstSubject</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">feesType</Property>
-        <Property name="property">feesType</Property>
-        <Property name="trigger">ddropDowmQuerySubject</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="visible">true</Property>
+        <Property name="editable">false</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">feesTypeName</Property>
         <Property name="property">feesTypeName</Property>
         <Property name="trigger">ddropDowmQuerySubject</Property>
+        <Property name="visible">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">feesType</Property>
+        <Property name="property">feesType</Property>
+        <Property name="trigger">ddropDowmQuerySubject</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -657,6 +665,11 @@ if(data.current){&#xD;
         <Property name="selectionMode">multiRows</Property>
         <RowNumColumn/>
         <DataColumn>
+          <Property name="property">payNo</Property>
+          <Property name="width">120</Property>
+          <Property name="name">payNo</Property>
+        </DataColumn>
+        <DataColumn>
           <Property name="name">feesNo</Property>
           <Property name="property">feesNo</Property>
           <Property name="width">120</Property>
@@ -673,6 +686,12 @@ if(data.current){&#xD;
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
           <Property name="width">140</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">firstSubjectName</Property>
+          <Property name="width">120</Property>
+          <Property name="name">firstSubjectName</Property>
+          <Property name="visible">true</Property>
         </DataColumn>
         <DataColumn name="feesType">
           <Property name="property">feesType</Property>
@@ -724,6 +743,11 @@ if(data.current){&#xD;
           <Property name="name">isCalculated</Property>
           <Property name="width">80</Property>
         </DataColumn>
+        <DataColumn>
+          <Property name="property">fixedAmount</Property>
+          <Property name="width">120</Property>
+          <Property name="name">fixedAmount</Property>
+        </DataColumn>
         <DataColumn name="remarkContent">
           <Property name="property">remarkContent</Property>
           <Property name="width">140</Property>
@@ -745,24 +769,10 @@ if(data.current){&#xD;
           <Editor/>
         </DataColumn>
         <DataColumn>
-          <Property name="property">payNo</Property>
-          <Property name="width">120</Property>
-          <Property name="name">payNo</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">fixedAmount</Property>
-          <Property name="width">120</Property>
-          <Property name="name">fixedAmount</Property>
-        </DataColumn>
-        <DataColumn>
           <Property name="property">firstSubject</Property>
           <Property name="width">120</Property>
           <Property name="name">firstSubject</Property>
-        </DataColumn>
-        <DataColumn>
-          <Property name="property">firstSubjectName</Property>
-          <Property name="width">120</Property>
-          <Property name="name">firstSubjectName</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>
