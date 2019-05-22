@@ -83,15 +83,14 @@ public class BmsContractBase {
 	            map.put("startDate", startDate);
 	            map.put("endDate", endDate);
 	        }
-	        
+	        //合同集合
+            contractList=new ArrayList<CalcuContractVo>();
 			map.put("creMonth", vo.getCreMonth());
 			List<PriceContractInfoEntity> bmsContractList = jobPriceContractInfoService.queryContract(map);
 			if(bmsContractList.size()<=0){
 				return;
 			}
 			else{
-			    //合同集合
-			    contractList=new ArrayList<CalcuContractVo>();
 			    //签约服务的集合
 			    for(PriceContractInfoEntity contract:bmsContractList){
 			        logger.info("taskId={} 合同编码{}",vo.getTaskId(),contract.getContractCode());
