@@ -168,4 +168,19 @@
         </trim>
         where id = #{id}
     </update>
+    
+    <select id="queryByWaybillNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity">
+    	select id, waybill_no as waybillNo, outstock_no as outstockNo, warehouse_code as warehouseCode, 
+    	warehouse_name as warehouseName, customerid, customer_name as customerName, transport_type as transportType, 
+    	transport_temperature_type as transportTemperatureType, holding_time as holdingTime, pack_operate_type as packOperateType, 
+    	season, pack_box_type as packBoxType, pack_group_no as packGroupNo, pack_plan_no as packPlanNo, pack_plan_name as packPlanName, 
+    	fees_no as feesNo, is_calculated as isCalculated, del_flag as delFlag, write_time as writeTime, calculate_time as calculateTime, remark
+    	from biz_dispatch_package
+    	where 1=1
+		and waybill_no in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+         	#{item}
+        </foreach>
+    </select>
+    
 </mapper>

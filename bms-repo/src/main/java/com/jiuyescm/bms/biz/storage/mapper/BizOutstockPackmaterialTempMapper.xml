@@ -311,4 +311,9 @@
 		GROUP BY a.waybill_no
     </select>
     
+    <select id="queryDistinctWaybillNoBytaskId" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity">
+    	select DISTINCT waybill_no from biz_outstock_packmaterial_temp 
+    	WHERE batchNum=#{batchNum}
+    </select>
+    
 </mapper>

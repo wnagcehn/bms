@@ -822,20 +822,56 @@
     	GROUP BY a.customer_id,b.subject_code,DATE_FORMAT(a.create_time,'%Y%m');  
     </select>
     
-    <!-- 只作废泡沫箱，干冰，冰袋 -->
-    <update id="deleteMaterialForUsePackage" parameterType="java.util.Map">
+    <!-- 作废耗材,通过标准包装方案作废的状态为2 ; 将通过配置表作废的耗材恢复到不作废-->
+    <!-- 如果是缓冲材料，只作废气泡枕和葫芦球 -->
+    <update id="deleteOrRevertMaterialStatus" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	UPDATE biz_outstock_packmaterial a
 		LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
-		SET a.del_flag='1'
-		WHERE 1=1
-		and b.material_type in (
-			'PLATIC_BOX',
-			'DRY_ICE',
-			'ICE_BAG'
-		)
-		and a.waybill_no in 
-		<foreach collection="waybillNos" index="index" item="item" open="(" separator="," close=")">
-	        #{item}
-	    </foreach>	
+		<set>
+			<if test="isCalculated != null" >a.is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="delFlag != null" >a.del_flag=#{delFlag,jdbcType=VARCHAR}</if>	
+		</set>
+		WHERE 1=1 
+		and a.del_flag != '1'
+		and b.material_type = #{materialType}
+		and a.waybill_no = #{waybillNo}
+		<if test='materialType == "CUSHIONING_MATERIAL"' >
+			and a.consumer_material_code in (
+				'JY-HLQ','JYQPZ'
+			)
+		</if>
     </update>
+    
+    <select id="queryByWaybillNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select a.id, a.waybill_no as waybillNo,
+    	a.consumer_material_code as consumerMaterialCode,
+	    a.consumer_material_name as consumerMaterialName, 
+	    a.is_calculated as isCalculated, a.del_flag as delFlag,
+    	b.material_type as materialType 
+    	from biz_outstock_packmaterial a
+    	LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
+    	where 1=1
+    	and a.del_flag in ('0','2')
+		and a.waybill_no in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+         	#{item}
+        </foreach>
+        <!-- group by a.waybill_no, b.material_type -->
+    </select>
+    
+   <update id="delFees" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	UPDATE fees_receive_storage a
+    	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1'
+		LEFT JOIN pub_material_info c on b.consumer_material_code=c.material_code and c.del_flag='0'
+		SET a.del_flag='1'
+		WHERE 1=1 
+		and c.material_type = #{materialType}
+		and b.waybill_no = #{waybillNo}
+		<if test='materialType == "CUSHIONING_MATERIAL"' >
+			and b.consumer_material_code in (
+				'JY-HLQ','JYQPZ'
+			)
+		</if>
+    </update>
+
 </mapper>

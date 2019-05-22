@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialCancelMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="waybill_no_import" property="waybillNoImport" jdbcType="VARCHAR" />
+		   	<result column="waybill_no_package" property="waybillNoPackage" jdbcType="VARCHAR" />
+		   	<result column="status" property="status" jdbcType="VARCHAR" />
+		   	<result column="descrip" property="descrip" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+		   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+		   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+		   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, waybill_no_import, waybill_no_package, status, descrip, customer_id, customer_name, warehouse_code, warehouse_name, write_time, mod_time, waybill_no
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+waybill_no_import, waybill_no_package, status, descrip, customer_id, customer_name, warehouse_code, warehouse_name, write_time, mod_time, waybill_no
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_outstock_packmaterial_cancel
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from biz_outstock_packmaterial_cancel
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" waybillNoImport != null and waybillNoImport !='' ">
+				and waybill_no_import = #{waybillNoImport}
+			</if>
+        	<if test=" waybillNoPackage != null and waybillNoPackage !='' ">
+				and waybill_no_package = #{waybillNoPackage}
+			</if>
+        	<if test=" status != null and status !='' ">
+				and status = #{status}
+			</if>
+        	<if test=" descrip != null and descrip !='' ">
+				and descrip = #{descrip}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" writeTime != null and writeTime !='' ">
+				and write_time = #{writeTime}
+			</if>
+        	<if test=" modTime != null and modTime !='' ">
+				and mod_time = #{modTime}
+			</if>
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
+        insert into biz_outstock_packmaterial_cancel(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{waybillNoImport,jdbcType=VARCHAR}, 
+			#{waybillNoPackage,jdbcType=VARCHAR}, 
+			#{status,jdbcType=VARCHAR}, 
+			#{descrip,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{warehouseCode,jdbcType=VARCHAR}, 
+			#{warehouseName,jdbcType=VARCHAR}, 
+			#{writeTime,jdbcType=TIMESTAMP}, 
+			#{modTime,jdbcType=TIMESTAMP}, 
+			#{waybillNo,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
+        update biz_outstock_packmaterial_cancel
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" waybillNoImport != null and waybillNoImport !='' ">
+				waybill_no_import = #{waybillNoImport,jdbcType=VARCHAR},
+			</if>
+			<if test=" waybillNoPackage != null and waybillNoPackage !='' ">
+				waybill_no_package = #{waybillNoPackage,jdbcType=VARCHAR},
+			</if>
+			<if test=" status != null and status !='' ">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test=" descrip != null and descrip !='' ">
+				descrip = #{descrip,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseName != null and warehouseName !='' ">
+				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" modTime != null and modTime !='' ">
+				mod_time = #{modTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from biz_outstock_packmaterial_cancel 
+        where id = #{id}
+    </delete>
+    
+    <!-- 表里有就更新，没有就新增 -->
+    <insert id="saveOrUpdate" parameterType="java.util.List">
+    	insert into biz_outstock_packmaterial_cancel(waybill_no, waybill_no_import, `status`, write_time)
+    	values 
+  		<foreach collection="list" item="item" index="index" separator=",">
+  		(
+		  #{item.waybillNo,jdbcType=VARCHAR},
+		  #{item.waybillNoImport,jdbcType=VARCHAR},
+		  #{item.status,jdbcType=VARCHAR},
+		  #{item.writeTime,jdbcType=TIMESTAMP}
+		 )
+  		</foreach>
+  		ON DUPLICATE KEY UPDATE 
+  		waybill_no_import = VALUES(waybill_no_import),
+  		mod_time = VALUES(write_time)
+    </insert>
+    
+    <!-- 查询需要作废 -->
+    <select id="queryNeedCancel" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
+    	select a.waybill_no,a.waybill_no_import,a.waybill_no_package,a.customer_id,b.contract_attr as contractAttr from biz_outstock_packmaterial_cancel a
+		LEFT JOIN pub_customer b on a.customer_id=b.customer_id and b.del_flag='0'
+		WHERE 1=1
+		and a.`status`='BEGIN'
+		and a.waybill_no_import=a.waybill_no_package
+    </select>
+    
+    <!-- 更新 -->
+    <update id="updateBatch" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
+        update biz_outstock_packmaterial_cancel
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" status != null and status !='' ">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test=" descrip != null and descrip !='' ">
+				descrip = #{descrip,jdbcType=VARCHAR},
+			</if>
+			<if test=" modTime != null and modTime !='' ">
+				mod_time = #{modTime,jdbcType=TIMESTAMP},
+			</if>
+        </trim>
+        where waybill_no = #{waybillNo}
+    </update>
+    
+    
+</mapper>

@@ -78,4 +78,6 @@
 	
 	<!-- 标准包装方案 -->
 	<dubbo:service interface="com.jiuyescm.bms.biz.diapatch.service.IBizDispatchPackageService" ref="bizDispatchPackageService"/>
+	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" ref="bizOutstockPackmaterialCancelService"/>
+	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" ref="pubPackageDictService"/>
 </beans>

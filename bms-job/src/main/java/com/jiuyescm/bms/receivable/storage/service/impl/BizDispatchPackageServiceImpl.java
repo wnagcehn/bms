@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,22 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
 		}
 	}
 
-	
+	/**
+     * 通过运单号批量查询
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月17日 下午6:36:14
+     *
+     * @param list
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<BizDispatchPackageEntity> queryByWaybillNo(List<String> list){
+        Map<String, Object> cond = new HashMap<String, Object>();
+        cond.put("list", list);
+        return this.selectList("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryByWaybillNo", cond);
+    }
 	
 }
