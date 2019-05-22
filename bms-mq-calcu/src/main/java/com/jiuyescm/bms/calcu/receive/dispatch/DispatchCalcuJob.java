@@ -546,13 +546,15 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		        break;
 		    }
 		}
-	    logger.info("合同信息{}",contract.getContractNo());
 		
 		if(contract==null){
 		    fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
             fee.setCalcuMsg("bms合同缺失");
             return;
 		}
+		
+	    logger.info("合同信息{}",contract.getContractNo());
+
 		
 		contractItemMap=contract.getItemMap();
 		//根据计费物流商 获取 物流商配送科目 SHUNFENG_DISPATCH    JIUYE_DISPATCH
@@ -844,22 +846,10 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		public double getNewThrowWeight(BizDispatchBillEntity entity){
 			double throwWeight=0d;
 			try{
-			    Double maxVolumn=0d;
 				Map<String,Object> condition=new HashMap<String,Object>();
 				condition.put("waybillNo", entity.getWaybillNo());
 				//获取耗材明细表里的最高体积
-				Double volumn=bizOutstockPackmaterialRepository.getMaxVolumByMap(condition);
-				//判断是否使用了标准包装方案
-				if(StringUtils.isNotBlank(entity.getPackPlanNo())){
-				    Double standVolumn=bizOutstockPackmaterialRepository.getStandVolumByMap(condition);
-				    if(volumn>=standVolumn){
-				        maxVolumn=volumn;
-				    }else{
-				        maxVolumn=standVolumn; 
-				    }
-				}else{
-				    maxVolumn=volumn;
-				}
+				Double maxVolumn=bizOutstockPackmaterialRepository.getMaxVolumByMap(condition);
 				if(!DoubleUtil.isBlank(maxVolumn)){
 				    
 				    //判断是航空还是陆运
