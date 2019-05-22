@@ -39,4 +39,16 @@ public interface IBizOutstockPackmaterialTempService {
 	List<BizOutstockPackmaterialTempEntity> queryContainsList(String batchNum,
 			int errorCount);
 
+	/**
+	 * 通过taskId查询运单号并去重
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年5月17日 上午9:30:40
+	 *
+	 * @param batchNum
+	 * @return
+	 */
+    List<BizOutstockPackmaterialTempEntity> queryDistinctWaybillNoBytaskId(String batchNum);
+
 }

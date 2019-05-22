@@ -48,4 +48,9 @@
 		 <dubbo:reference id="bmsSubjectInfoService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" version="1.0.0"/>
 		
 		<dubbo:reference id="sequenceService1" interface="com.jiuyescm.framework.sequence.api.ISequenceService"  />
+		
+		<!-- 耗材作废表 -->
+		 <dubbo:reference id="bizOutstockPackmaterialCancelService" interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" version="1.0.0"/>
+		 <dubbo:reference id="pubPackageDictService" interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" version="1.0.0"/>
+		 
 </beans>							

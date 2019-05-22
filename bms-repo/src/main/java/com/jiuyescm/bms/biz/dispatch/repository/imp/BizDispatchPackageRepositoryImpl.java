@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.biz.dispatch.repository.imp;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,4 +125,5 @@ public class BizDispatchPackageRepositoryImpl extends MyBatisDao implements IBiz
         PageInfo<BizDispatchPackageEntity> p=new PageInfo<>(list);
         return p;
     }
+
 }

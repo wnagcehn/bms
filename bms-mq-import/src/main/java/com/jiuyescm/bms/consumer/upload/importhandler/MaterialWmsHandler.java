@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,10 +30,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsFileAsynTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsFileAsynTaskVo;
+import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialTempEntity;
+import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialTempService;
 import com.jiuyescm.bms.common.enumtype.status.FileAsynTaskStatusEnum;
@@ -74,6 +78,7 @@ public class MaterialWmsHandler {
     @Autowired private IBizOutstockPackmaterialTempService bizOutstockPackmaterialTempService;
     @Autowired private IBizOutstockPackmaterialService bizOutstockPackmaterialService;
     @Autowired private IBmsProductsMaterialService bmsProductsMaterialService;
+    @Autowired private IBizOutstockPackmaterialCancelService bizOutstockPackmaterialCancelService;
     
     
     private static final String REMARK = "导入数据不规范,请下载查看最后一列说明";
@@ -99,6 +104,9 @@ public class MaterialWmsHandler {
     
     List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
     private int roNo = 1;
+    
+    //cancel表状态：初始
+    private static final String BEGIN = "BEGIN";
     
     //----------初始化基础数据---------
     public void initKeyValue(){
@@ -296,6 +304,27 @@ public class MaterialWmsHandler {
                 BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
                 bmsFileAsynTaskService.update(updateEntity);
                 newList.clear();
+                
+                //通过taskId去临时表中获取运单号并去重，写入cancel表（不存在的新增，存在的更新）
+                List<BizOutstockPackmaterialCancelEntity> cancelList = new ArrayList<BizOutstockPackmaterialCancelEntity>();
+                List<BizOutstockPackmaterialTempEntity> tempList = bizOutstockPackmaterialTempService.queryDistinctWaybillNoBytaskId(taskId);
+                if (CollectionUtils.isNotEmpty(tempList)) {
+                    for (BizOutstockPackmaterialTempEntity tempEntity : tempList) {
+                        BizOutstockPackmaterialCancelEntity calEntity = new BizOutstockPackmaterialCancelEntity();
+                        calEntity.setWaybillNo(tempEntity.getWaybillNo());
+                        calEntity.setWaybillNoImport(tempEntity.getWaybillNo());
+                        calEntity.setStatus(BEGIN);
+                        calEntity.setWriteTime(new Timestamp(System.currentTimeMillis()));
+                        cancelList.add(calEntity);
+                    }
+                    int result = bizOutstockPackmaterialCancelService.saveOrUpdate(cancelList);
+                    if (result > 0) {
+                        logger.error("任务ID【{}】 -> 从临时表保存到cancel表成功",taskId);
+                    }else {
+                        logger.error("任务ID【{}】 -> 从临时表保存到cancel表失败，数据有问题！",taskId);
+                    } 
+                }     
+                
             }else{
                 logger.error("任务ID【{}】 -> 未从临时表中保存数据到业务表",taskId);
                 bmsMaterialImportTaskCommon.setTaskStatus(taskId,99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从临时表中保存数据到业务表，批次号【"+taskId+"】,任务编号【"+taskId+"】");

@@ -17,4 +17,16 @@ public interface IBizDispatchPackageService {
 
     public void updateBatch(List<BizDispatchPackageEntity> list);
 
+    /**
+     * 通过运单号批量查询
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月17日 下午6:43:40
+     *
+     * @param contractList
+     * @return
+     */
+    List<BizDispatchPackageEntity> queryByWaybillNo(List<String> contractList);
+    
 }
