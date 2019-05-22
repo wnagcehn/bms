@@ -543,7 +543,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		//业务时间和合同时间进行匹配
 		//合同
 		for(CalcuContractVo con:contractList){
-		    if(con.getStartDate().before(entity.getCreateTime()) && entity.getCreateTime().before(con.getExpireDate())){
+		    if(con.getStartDate().getTime()<=entity.getCreateTime().getTime() && entity.getCreateTime().getTime()<=con.getExpireDate().getTime()){
 		        contract=con;
 		        break;
 		    }

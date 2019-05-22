@@ -239,7 +239,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
         //合同
         CalcuContractVo contract=null;
         for(CalcuContractVo con:contractList){
-            if(con.getStartDate().before(entity.getCreateTime()) && entity.getCreateTime().before(con.getExpireDate())){
+            if(con.getStartDate().getTime()<=entity.getCreateTime().getTime() && entity.getCreateTime().getTime()<=con.getExpireDate().getTime()){
                 contract=con;
                 break;
             }
