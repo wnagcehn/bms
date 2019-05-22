@@ -70,4 +70,6 @@
 		 
 		 <dubbo:reference id="customerDictService" interface="com.jiuyescm.bms.base.dict.api.ICustomerDictService" version="1.0.0" registry="bms"/>
 		 <dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" version="1.0.0" registry="bms"/>
+		 
+		 <dubbo:reference id="bizOutstockPackmaterialCancelService" interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" version="1.0.0" registry="bms"/>
 </beans> 

@@ -832,7 +832,7 @@
 			<if test="delFlag != null" >a.del_flag=#{delFlag,jdbcType=VARCHAR}</if>	
 		</set>
 		WHERE 1=1 
-		and a.del_flag != '1'
+		and a.del_flag in ('0','3')
 		and b.material_type = #{materialType}
 		and a.waybill_no = #{waybillNo}
 		<if test='materialType == "CUSHIONING_MATERIAL"' >
@@ -851,7 +851,7 @@
     	from biz_outstock_packmaterial a
     	LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
     	where 1=1
-    	and a.del_flag in ('0','2')
+    	and a.del_flag in ('0','3')
 		and a.waybill_no in
 		<foreach collection="list" item="item" separator="," open="(" close=")">
          	#{item}
@@ -861,7 +861,7 @@
     
    <update id="delFees" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	UPDATE fees_receive_storage a
-    	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1'
+    	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1' and b.del_flag != '2'
 		LEFT JOIN pub_material_info c on b.consumer_material_code=c.material_code and c.del_flag='0'
 		SET a.del_flag='1'
 		WHERE 1=1 
