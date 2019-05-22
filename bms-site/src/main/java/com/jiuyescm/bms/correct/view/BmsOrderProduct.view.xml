@@ -423,15 +423,15 @@ with (view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;)){&#xD;
               <DataColumn name="productDetail">
                 <Property name="property">productDetail</Property>
               </DataColumn>
-              <DataColumn name="waybillNo">
-                <Property name="property">waybillNo</Property>
-                <Property name="visible">true</Property>
-              </DataColumn>
               <DataColumn name="customerId">
                 <Property name="property">customerId</Property>
               </DataColumn>
               <DataColumn name="createTime">
                 <Property name="property">createTime</Property>
+              </DataColumn>
+              <DataColumn name="waybillNo">
+                <Property name="property">waybillNo</Property>
+                <Property name="visible">false</Property>
               </DataColumn>
             </DataGrid>
           </Container>
