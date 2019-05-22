@@ -30,6 +30,7 @@ import com.jiuyescm.bms.calcu.receive.CommonService;
 import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
+import com.jiuyescm.bms.calculate.vo.CalcuContractVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.correct.BmsMarkingProductsEntity;
 import com.jiuyescm.bms.correct.repository.IBmsProductsWeightRepository;
@@ -89,8 +90,8 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	private Map<String, String> carrierMap=null;
 	private Map<String,WarehouseVo> wareMap=null;
 	private List<SystemCodeEntity> throwWeightList=null;
-
-
+	private Map<String, String> contractItemMap = null;
+    private CalcuContractVo contract=null;
 	
 	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
@@ -532,14 +533,31 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	@Override
 	public void calcuForBms(BizDispatchBillEntity entity,FeesReceiveDispatchEntity fee) {
 		//合同校验
-		if(contractInfo == null){
+		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
 			return;
 		}
+		//业务时间和合同时间进行匹配
+		//合同
+		for(CalcuContractVo con:contractList){
+		    if(con.getStartDate().before(entity.getCreateTime()) && entity.getCreateTime().before(con.getExpireDate())){
+		        contract=con;
+		        break;
+		    }
+		}
+	    logger.info("合同信息{}",contract.getContractNo());
+		
+		if(contract==null){
+		    fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
+            fee.setCalcuMsg("bms合同缺失");
+            return;
+		}
+		
+		contractItemMap=contract.getItemMap();
 		//根据计费物流商 获取 物流商配送科目 SHUNFENG_DISPATCH    JIUYE_DISPATCH
 		String carrierSubjectCode = dispatchSubjectMap.get(fee.getCarrierid());
-		if(!contractItemMap.containsKey(carrierSubjectCode)){
+		if(contractItemMap==null || !contractItemMap.containsKey(carrierSubjectCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			fee.setCalcuMsg("未签约服务");
 			return;
@@ -937,7 +955,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		 */
 		private List<BmsQuoteDispatchDetailVo> queryPriceByCustomer(BizDispatchBillEntity entity,String subjectId) {
 			Map<String,Object> map=new HashMap<String,Object>();
-			map.put("contractCode",contractInfo.getContractNo());
+			map.put("contractCode",contract.getContractNo());
 			map.put("templateCode", contractItemMap.get(subjectId));
 			//map.put("subjectId",subjectId);
 			map.put("wareHouseId", entity.getWarehouseCode());

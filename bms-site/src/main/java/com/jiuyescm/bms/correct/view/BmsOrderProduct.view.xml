@@ -35,7 +35,7 @@
         <Property name="label">商品明细</Property>
       </PropertyDef>
       <PropertyDef name="waybillNo">
-        <Property name="label">代表运单号</Property>
+        <Property name="label">运单号</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家Id</Property>
@@ -71,7 +71,7 @@
         <Property name="label">类型</Property>
       </PropertyDef>
       <PropertyDef name="materialDetail">
-        <Property/>
+        <Property></Property>
         <Property name="label">耗材明细</Property>
       </PropertyDef>
     </DataType>
@@ -425,6 +425,7 @@ with (view.get(&quot;#dsBmsProductsWeightAccountEntity&quot;)){&#xD;
               </DataColumn>
               <DataColumn name="waybillNo">
                 <Property name="property">waybillNo</Property>
+                <Property name="visible">true</Property>
               </DataColumn>
               <DataColumn name="customerId">
                 <Property name="property">customerId</Property>

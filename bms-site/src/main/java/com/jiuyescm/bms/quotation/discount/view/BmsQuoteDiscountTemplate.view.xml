@@ -903,6 +903,11 @@ if(parseFloat(entity.get(&quot;upLimit&quot;)) &lt;= parseFloat(entity.get(&quot
 	dorado.MessageBox.alert(&quot;上限必须大于下限&quot;);&#xD;
 	return;&#xD;
 }&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;serviceTypeName&quot;))){&#xD;
+	entity.set(&quot;serviceTypeCode&quot;,&quot;&quot;);&#xD;
+}&#xD;
+&#xD;
 if(entity.get(&quot;firstPrice&quot;) != undefined &amp;&amp; entity.get(&quot;firstPrice&quot;) != &quot;&quot;){&#xD;
 	count++;&#xD;
 }&#xD;
@@ -1351,12 +1356,16 @@ correctAction.execute(function(result){&#xD;
     <FloatPanel id="panelServiceType">
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectServiceType.userData&quot;);&#xD;
 if (data != null) {&#xD;
+	alert(1);&#xD;
 	var entity = this.get(&quot;#dsBmsQuoteDiscountDetailEntity&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
         serviceTypeCode:data.get(&quot;servicecode&quot;),&#xD;
 		serviceTypeName:data.get(&quot;servicename&quot;)&#xD;
     });&#xD;
-}</ClientEvent>
+	this.set(&quot;#viewSelectServiceType.userData&quot;,null);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
       <Property name="caption">物流产品类型选择</Property>
       <Property name="center">true</Property>
       <Property name="closeable">true</Property>

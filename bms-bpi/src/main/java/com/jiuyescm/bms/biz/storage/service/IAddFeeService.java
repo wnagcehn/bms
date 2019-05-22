@@ -1,8 +1,9 @@
 package com.jiuyescm.bms.biz.storage.service;
 
 import java.util.List;
+import java.util.Map;
 
-import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 
 /**
  * oms对接保存接口
@@ -15,5 +16,6 @@ public interface IAddFeeService {
 	 * @param param
 	 * @return
 	 */
-	String save(List<BizAddFeeEntity> list);
+    Map<String, String> save(List<BizAddFeeVo> listVo);
+
 }
