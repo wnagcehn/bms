@@ -153,7 +153,7 @@ public class MaterialToDelJob extends IJobHandler {
                 BizOutstockPackmaterialEntity packmaterialEntity = new BizOutstockPackmaterialEntity();
                 packmaterialEntity.setWaybillNo(bizEntity.getWaybillNo());
                 packmaterialEntity.setMaterialType(materialType);
-                packmaterialEntity.setDelFlag("2");
+                packmaterialEntity.setDelFlag("3");
                 delMaterialList.add(packmaterialEntity);
             }
             
@@ -169,7 +169,7 @@ public class MaterialToDelJob extends IJobHandler {
         }    
         XxlJobLogger.log("作废耗材&修改状态完成！");
         
-        //组装需要恢复成未作废状态的耗材（耗材不在需要作废耗材的里面并且之前作废状态是2）
+        //组装需要恢复成未作废状态的耗材（耗材不在需要作废耗材的里面并且之前作废状态是3）
         for (BizOutstockPackmaterialEntity material : materialLists) {
             boolean exe = false;
             for (BizOutstockPackmaterialEntity delEntity : delMaterialList) {
@@ -177,7 +177,7 @@ public class MaterialToDelJob extends IJobHandler {
                     exe = true;
                 }
             }
-            if (!exe && "2".equals(material.getDelFlag())) {
+            if (!exe && "3".equals(material.getDelFlag())) {
                 material.setDelFlag("0");
                 material.setIsCalculated("0");
                 delToNoDels.add(material);

@@ -108,6 +108,9 @@ public class MaterialWmsHandler {
     //cancel表状态：初始
     private static final String BEGIN = "BEGIN";
     
+    //WMS模板标识
+    private boolean isWMS = true;
+    
     //----------初始化基础数据---------
     public void initKeyValue(){
         errMap = new HashMap<Integer, String>();
@@ -127,7 +130,7 @@ public class MaterialWmsHandler {
             initKeyValue();
         } catch (Exception e) {
             logger.info("任务ID【{}】 -> 初始化仓库,商家,耗材数据异常",taskId);
-            bmsMaterialImportTaskCommon.setTaskStatus(taskId, 10, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+            bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.EXCEPTION.getCode());
             return;
         }
         
@@ -163,6 +166,14 @@ public class MaterialWmsHandler {
 
                 @Override
                 public void readTitle(List<String> columns) {
+                    //模板校验
+                    if (!columns.contains("冰袋名称")) {
+                        isWMS = false;
+                        logger.info("任务ID【{}】 -> 模板错误，请使用WMS模板!",taskId);
+                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用WMS模板!");
+                        bmsFileAsynTaskService.update(updateEntity);
+                        return;
+                    }
                     //源生表头
                     int a = 1;
                     for (String column : columns) {
@@ -175,7 +186,7 @@ public class MaterialWmsHandler {
                     String[] str = {"出库日期", "仓库", "商家", "出库单号", "运单号"}; //必填列
                     if(!checkTitle(columns,str)){
                         logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号",taskId);
-                        bmsMaterialImportTaskCommon.setTaskStatus(taskId, 38, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
+                        bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
                         return;
                     }
                     logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
@@ -184,6 +195,9 @@ public class MaterialWmsHandler {
 
                 @Override
                 public void read(DataRow dr) {
+                    if (!isWMS) {
+                        return;
+                    }
                     //行错误信息
                     String errorMsg="";                 
                     
@@ -217,7 +231,10 @@ public class MaterialWmsHandler {
                 }
 
                 @Override
-                public void finish() {  
+                public void finish() { 
+                    if (!isWMS) {
+                        return;
+                    }
                     repeatMap.clear();
                     bmsMaterialImportTaskCommon.setTaskProcess(taskId, 70);
                     //保存数据到临时表
@@ -231,19 +248,24 @@ public class MaterialWmsHandler {
 
                 @Override
                 public void error(Exception ex) {
-                    // TODO Auto-generated method stub
-                    
+                    if (!isWMS) {
+                        return;
+                    } 
                 }
             });
+            
+            if (!isWMS) {
+                return;
+            }
             
             //更新文件读取行数
             if(sheet.getRowCount()<=0){
                 logger.info("未从excel读取到任何数据");
-                bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.FAIL.getCode(),"未从excel读取到任何数据");
+                bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(),"未从excel读取到任何数据");
                 return;
             }
             logger.info("excel读取完成，读取行数【"+sheet.getRowCount()+"】");
-            BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 72,null, sheet.getRowCount(), null, null, null, null);
+            BmsFileAsynTaskVo updateEntity2 = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 80,null, sheet.getRowCount(), null, null, null, null);
             bmsFileAsynTaskService.update(updateEntity2);
         
             stw.stop();
@@ -251,7 +273,7 @@ public class MaterialWmsHandler {
         }
         catch(Exception ex){
             logger.error("任务ID【{}】 -> excel解析异常{}",taskId,ex);
-            bmsMaterialImportTaskCommon.setTaskStatus(taskId, 20, FileAsynTaskStatusEnum.EXCEPTION.getCode());
+            bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.EXCEPTION.getCode());
             return;
         }/*finally {
             reader.close();
@@ -289,7 +311,7 @@ public class MaterialWmsHandler {
             return;
         }
         
-        bmsMaterialImportTaskCommon.setTaskProcess(taskId, 80); 
+        bmsMaterialImportTaskCommon.setTaskProcess(taskId, 85); 
         logger.info("************ OK **********");
         
         //保存数据到正式表

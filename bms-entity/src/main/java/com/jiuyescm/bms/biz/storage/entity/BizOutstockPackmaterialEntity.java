@@ -418,18 +418,5 @@ public class BizOutstockPackmaterialEntity implements IEntity {
     public void setMaterialType(String materialType) {
         this.materialType = materialType;
     }
-	
-    //重写hashCode和equals
-    @Override
-    public int hashCode() {
-        String result = waybillNo + consumerMaterialCode;
-        return result.hashCode();
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        BizOutstockPackmaterialEntity packmaterialEntity = (BizOutstockPackmaterialEntity)obj;
-        return this.getWaybillNo().equals(packmaterialEntity.getWaybillNo()) && (this.getConsumerMaterialCode().equals(packmaterialEntity.getConsumerMaterialCode()));
-    }
     
 }
