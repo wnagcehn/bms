@@ -758,8 +758,8 @@ if (data != null) {&#xD;
 if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsFileExportTaskCondition&quot;).getData(&quot;#&quot;);&#xD;
     entity.set({&#xD;
-        customerId: data.get(&quot;customNo&quot;),&#xD;
-		customerName:data.get(&quot;customName&quot;)&#xD;
+        customerId: data.get(&quot;mkId&quot;),&#xD;
+		customerName:data.get(&quot;mkInvoiceName&quot;)&#xD;
     });&#xD;
 }</ClientEvent>
       <Property name="caption">合同商家选择</Property>

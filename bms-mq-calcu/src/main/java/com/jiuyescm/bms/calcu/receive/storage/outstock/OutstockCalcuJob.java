@@ -450,7 +450,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	public void updateBatch(List<BizOutstockMasterEntity> bizList,List<FeesReceiveStorageEntity> feeList) {
 		StopWatch sw = new StopWatch();
 		sw.start();
-		feesReceiveStorageService.updateBatch(feeList);
+		feesReceiveStorageService.updateFee(feeList);
 		sw.stop();
 		logger.info("taskId={} 更新仓储费用行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
 	}
