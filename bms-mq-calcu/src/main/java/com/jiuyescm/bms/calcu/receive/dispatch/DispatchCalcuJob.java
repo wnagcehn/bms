@@ -532,7 +532,9 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 
 	@Override
 	public void calcuForBms(BizDispatchBillEntity entity,FeesReceiveDispatchEntity fee) {
-		//合同校验
+		//初始化合同
+	    contract=null;
+	    //合同校验
 		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
