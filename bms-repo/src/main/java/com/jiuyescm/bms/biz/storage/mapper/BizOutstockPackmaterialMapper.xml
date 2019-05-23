@@ -837,7 +837,7 @@
 		and a.waybill_no = #{waybillNo}
 		<if test='materialType == "CUSHIONING_MATERIAL"' >
 			and a.consumer_material_code in (
-				'JY-HLQ','JYQPZ'
+				'JY-HLQ','JYQPZ','JY-QPZ','QPZ'
 			)
 		</if>
     </update>
